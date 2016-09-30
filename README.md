@@ -1,6 +1,6 @@
 #DRIP
 
-v2.34, 29 September 2016
+**v2.34**  *29 September 2016*
 
 DRIP aims to quantitative libraries for pricing/risk managing frequently used financial products, evaluate strategies and investments, and construct holdings portfolios.
 
