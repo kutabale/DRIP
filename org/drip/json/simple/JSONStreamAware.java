@@ -40,8 +40,13 @@ package org.drip.json.simple;
  */
 
 public interface JSONStreamAware {
+
     /**
      * write JSON string to out.
+     * 
+     * @param out Output Writer
+	 * 
+	 * @throws java.io.IOException Thrown if the Inputs are invalid
      */
     void writeJSONString(java.io.Writer out) throws java.io.IOException;
 }

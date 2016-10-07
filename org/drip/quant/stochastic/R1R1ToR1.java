@@ -31,7 +31,7 @@ package org.drip.quant.stochastic;
 
 /**
  * R1R1ToR1 interface exposes the stubs for the evaluation of the objective function and its derivatives for
- *  a R^1 Deterministic + R^1 Random -> R^1 Stochastic Function with one Random Component.
+ *  a R^1 Deterministic + R^1 Random To R^1 Stochastic Function with one Random Component.
  *
  * @author Lakshmi Krishnamurthy
  */

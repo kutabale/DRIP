@@ -126,7 +126,7 @@ public class FlatForwardDiscountCurve extends org.drip.state.discount.ExplicitBo
 	 * @param strCurrency Currency
 	 * @param aiDate Array of Dates
 	 * @param adblForwardRate Array of Forward Rates
-	 * @param bDiscreteCompounding TRUE => Compounding is Discrete
+	 * @param bDiscreteCompounding TRUE - Compounding is Discrete
 	 * @param strCompoundingDayCount Day Count Convention to be used for Discrete Compounding
 	 * @param iCompoundingFreq Frequency to be used for Discrete Compounding
 	 * 

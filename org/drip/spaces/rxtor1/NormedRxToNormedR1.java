@@ -30,7 +30,7 @@ package org.drip.spaces.rxtor1;
  */
 
 /**
- * NormedRxToNormedR1 is the Abstract Class that exposes f : Normed R^x (x >= 1) -> Normed R^1 Function
+ * NormedRxToNormedR1 is the Abstract Class that exposes f : Normed R^x (x .gte. 1) To Normed R^1 Function
  *  Space.
  * 
  * The Reference we've used is:

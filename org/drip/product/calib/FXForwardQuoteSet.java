@@ -59,7 +59,7 @@ public class FXForwardQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblFXForwardOutright The Terminal FX Forward Outright
 	 * 
-	 * @return TRUE => The Terminal FX Forward Outright successfully set
+	 * @return TRUE - The Terminal FX Forward Outright successfully set
 	 */
 
 	public boolean setOutright (
@@ -71,7 +71,7 @@ public class FXForwardQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the Terminal FX Forward Outright Field exists
 	 * 
-	 * @return TRUE => Terminal FX Forward Outright Field Exists
+	 * @return TRUE - Terminal FX Forward Outright Field Exists
 	 */
 
 	public boolean containsOutright()
@@ -82,7 +82,7 @@ public class FXForwardQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Retrieve the Terminal FX Forward Outright
 	 * 
-	 * Terminal FX Forward Outright Basis
+	 * @return Terminal FX Forward Outright Basis
 	 * 
 	 * @throws java.lang.Exception Thrown if the Terminal FX Forward Outright Field does not exist
 	 */
@@ -98,7 +98,7 @@ public class FXForwardQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblFXForwardPIP The Terminal FX Forward PIP
 	 * 
-	 * @return TRUE => The Terminal FX Forward PIP successfully set
+	 * @return TRUE - The Terminal FX Forward PIP successfully set
 	 */
 
 	public boolean setPIP (
@@ -110,7 +110,7 @@ public class FXForwardQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the Terminal FX Forward PIP Field exists
 	 * 
-	 * @return TRUE => Terminal FX Forward PIP Field Exists
+	 * @return TRUE - Terminal FX Forward PIP Field Exists
 	 */
 
 	public boolean containsPIP()
@@ -121,7 +121,7 @@ public class FXForwardQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Retrieve the Terminal FX Forward PIP
 	 * 
-	 * Terminal FX Forward PIP Basis
+	 * @return Terminal FX Forward PIP Basis
 	 * 
 	 * @throws java.lang.Exception Thrown if the Terminal FX Forward PIP Field does not exist
 	 */

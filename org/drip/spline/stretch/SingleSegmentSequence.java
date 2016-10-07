@@ -59,7 +59,7 @@ public interface SingleSegmentSequence {
 	 * @param bs The Calibration Boundary Condition
 	 * @param iCalibrationDetail The Calibration Detail
 	 * 
-	 * @return TRUE => Set up was successful
+	 * @return TRUE - Set up was successful
 	 */
 
 	public abstract boolean setup (
@@ -141,7 +141,7 @@ public interface SingleSegmentSequence {
 	/**
 	 * Indicate if all the comprising Segments are Monotone
 	 * 
-	 * @return TRUE => Fully locally monotonic
+	 * @return TRUE - Fully locally monotonic
 	 * 
 	 * @throws java.lang.Exception Thrown if the Segment Monotone Type could not be estimated
 	 */
@@ -154,7 +154,7 @@ public interface SingleSegmentSequence {
 	 * 
 	 * @param adblMeasuredResponse The Array of Measured Responses
 	 * 
-	 * @return TRUE => Stretch is co-monotonic with the measured Responses
+	 * @return TRUE - Stretch is co-monotonic with the measured Responses
 	 * 
 	 * @throws java.lang.Exception Thrown if the Segment Monotone Type could not be estimated
 	 */
@@ -168,7 +168,7 @@ public interface SingleSegmentSequence {
 	 * 
 	 * @param dblPredictorOrdinate Predictor Ordinate
 	 * 
-	 * @return TRUE => Given Predictor Ordinate corresponds to a Knot
+	 * @return TRUE - Given Predictor Ordinate corresponds to a Knot
 	 */
 
 	public abstract boolean isKnot (
@@ -180,7 +180,7 @@ public interface SingleSegmentSequence {
 	 * @param iPredictorOrdinateNodeIndex The Predictor Ordinate Node Index whose Response is to be reset
 	 * @param dblResetResponse The Response to reset
 	 * 
-	 * @return TRUE => Reset succeeded
+	 * @return TRUE - Reset succeeded
 	 */
 
 	public abstract boolean resetNode (
@@ -193,7 +193,7 @@ public interface SingleSegmentSequence {
 	 * @param iNodeIndex The Predictor Ordinate Node Index whose Response is to be reset
 	 * @param srvcReset The Segment Constraint
 	 * 
-	 * @return TRUE => Reset succeeded
+	 * @return TRUE - Reset succeeded
 	 */
 
 	public abstract boolean resetNode (

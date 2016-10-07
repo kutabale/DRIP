@@ -75,7 +75,7 @@ public class Matrix {
 	 * @param aadblZ2XJack Source Matrix
 	 * @param aadblZ2YJack Target Matrix
 	 * 
-	 * @return TRUE => Diagonalization was successful
+	 * @return TRUE - Diagonalization was successful
 	 */
 
 	public static final boolean DiagonalizeRow (
@@ -569,14 +569,14 @@ public class Matrix {
 	}
 
 	/**
-	 * Dot Product of Vectora A and E
+	 * Dot Product of Vectors A and E
 	 * 
 	 * @param adblA Vector A
 	 * @param adblE Vector E
 	 * 
 	 * @return The Dot Product
 	 * 
-	 * @throws Thrown if the Dot-Product cannot be computed
+	 * @throws java.lang.Exception Thrown if the Dot-Product cannot be computed
 	 */
 
 	public static final double DotProduct (

@@ -63,7 +63,7 @@ public class ZeroRateDiscountCurve extends org.drip.state.discount.MergedDiscoun
 	 * @param strCurrency Currency
 	 * @param span The Span Instance
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ZeroRateDiscountCurve (

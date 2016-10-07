@@ -58,7 +58,7 @@ public class HestonOptionPricerParams {
 	 * @param dblLambda Lambda
 	 * @param iMultiValuePhaseTrackerType The Multi Valued Phase Tracking Error Corrector
 	 * 
-	 * @throws Thrown if the Inputs are Invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public HestonOptionPricerParams (

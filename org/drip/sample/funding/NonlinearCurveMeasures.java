@@ -88,7 +88,7 @@ public class NonlinearCurveMeasures {
 		);
 	}
 
-	/**
+	/*
 	 * Sample API demonstrating the creation of the discount curve from the rates input instruments
 	 * 
 	 *  	USE WITH CARE: This sample ignores errors and does not handle exceptions.

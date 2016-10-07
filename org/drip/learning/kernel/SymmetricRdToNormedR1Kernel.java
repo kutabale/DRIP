@@ -30,7 +30,7 @@ package org.drip.learning.kernel;
  */
 
 /**
- * SymmetricRdToNormedR1Kernel exposes the Functionality behind the Kernel that is Normed R^d X Normed R^d ->
+ * SymmetricRdToNormedR1Kernel exposes the Functionality behind the Kernel that is Normed R^d X Normed R^d To
  *  Supremum R^1, that is, a Kernel that symmetric in the Input Metric Vector Space in terms of both the
  *  Metric and the Dimensionality.
  *  
@@ -104,12 +104,12 @@ public abstract class SymmetricRdToNormedR1Kernel {
 	}
 
 	/**
-	 * Compute the Kernel's R^d X R^d -> R^1 Value
+	 * Compute the Kernel's R^d X R^d To R^1 Value
 	 * 
 	 * @param adblX Validated Vector Instance X
 	 * @param adblY Validated Vector Instance Y
 	 * 
-	 * @return The Kernel's R^d X R^d -> R^1 Value
+	 * @return The Kernel's R^d X R^d To R^1 Value
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
 	 */

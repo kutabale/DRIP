@@ -166,11 +166,11 @@ public abstract class R1Multivariate {
 	}
 
 	/**
-	 * Compute the Expectation of the Specified R^d -> R^1 Function Instance
+	 * Compute the Expectation of the Specified R^d To R^1 Function Instance
 	 * 
-	 * @param funcRdToR1 The R^d -> R^1 Function Instance
+	 * @param funcRdToR1 The R^d To R^1 Function Instance
 	 * 
-	 * @return The Expectation of the Specified R^d -> R^1 Function Instance
+	 * @return The Expectation of the Specified R^d To R^1 Function Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

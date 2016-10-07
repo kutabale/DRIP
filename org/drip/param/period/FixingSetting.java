@@ -65,7 +65,7 @@ public class FixingSetting {
 	 * 
 	 * @param iType The FX Fixing Type
 	 * 
-	 * @return TRUE => FX Fixing is One of the Valid Types
+	 * @return TRUE - FX Fixing is One of the Valid Types
 	 */
 
 	public static final boolean ValidateType (

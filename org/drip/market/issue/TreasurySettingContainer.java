@@ -64,7 +64,7 @@ public class TreasurySettingContainer {
 	/**
 	 * Initialize the Treasury Settings Container
 	 * 
-	 * @return TRUE => Initialization Successful
+	 * @return TRUE - Initialization Successful
 	 */
 
 	public static final boolean Init()

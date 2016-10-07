@@ -299,11 +299,11 @@ public class EmpiricalPenaltySupremumEstimator extends org.drip.sequence.functio
 	}
 
 	/**
-	 * Retrieve the Supremum R^1 -> R^1 Function Instance for the specified Variate Sequence
+	 * Retrieve the Supremum R^1 To R^1 Function Instance for the specified Variate Sequence
 	 * 
 	 * @param adblX The Predictor Instance
 	 * 
-	 * @return The Supremum R^1 -> R^1 Function Instance
+	 * @return The Supremum R^1 To R^1 Function Instance
 	 */
 
 	public org.drip.function.definition.R1ToR1 supremumR1ToR1 (
@@ -324,11 +324,11 @@ public class EmpiricalPenaltySupremumEstimator extends org.drip.sequence.functio
 	}
 
 	/**
-	 * Retrieve the Supremum R^d -> R^1 Function Instance for the specified Variate Sequence
+	 * Retrieve the Supremum R^d To R^1 Function Instance for the specified Variate Sequence
 	 * 
 	 * @param aadblX The Predictor Instance
 	 * 
-	 * @return The Supremum R^d -> R^1 Function Instance
+	 * @return The Supremum R^d To R^1 Function Instance
 	 */
 
 	public org.drip.function.definition.RdToR1 supremumRdToR1 (

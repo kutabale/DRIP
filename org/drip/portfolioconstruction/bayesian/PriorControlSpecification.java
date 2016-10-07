@@ -48,7 +48,7 @@ public class PriorControlSpecification {
 	/**
 	 * PriorControlSpecification Constructor
 	 * 
-	 * @param bAlternateReferenceModel TRUE => Use Alternate Reference in place of the Traditional Black
+	 * @param bAlternateReferenceModel TRUE - Use Alternate Reference in place of the Traditional Black
 	 * 	Litterman Model
 	 * @param dblRiskFreeRate The Risk Free Rate
 	 * @param dblTau The Asset Space Excess Returns "Confidence" Parameter
@@ -72,7 +72,7 @@ public class PriorControlSpecification {
 	/**
 	 * Retrieve the Flag indicating if the Alternate Reference Model is to be used
 	 * 
-	 * @return TRUE => Use Alternate Reference in place of the Traditional Black Litterman Model
+	 * @return TRUE - Use Alternate Reference in place of the Traditional Black Litterman Model
 	 */
 
 	public boolean useAlternateReferenceModel()

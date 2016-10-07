@@ -44,7 +44,7 @@ public class ShortTermFuturesContainer {
 	/**
 	 * Initialize the Short Term Futures Container with the pre-set Short Term Contracts
 	 * 
-	 * @return TRUE => The Short Term Futures Container successfully initialized with the pre-set Short Term
+	 * @return TRUE - The Short Term Futures Container successfully initialized with the pre-set Short Term
 	 *  Contracts
 	 */
 
@@ -111,7 +111,7 @@ public class ShortTermFuturesContainer {
 	/**
 	 * Retrieve the Short Term Futures Exchange Info From the Corresponding Forward Label
 	 * 
-	 * @param forwardLabel The Forward Label
+	 * @param strFullyQualifiedName The Forward Label
 	 * 
 	 * @return The Short Term Futures Exchange Info
 	 */

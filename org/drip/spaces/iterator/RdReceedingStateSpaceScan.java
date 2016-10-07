@@ -42,7 +42,7 @@ public class RdReceedingStateSpaceScan extends org.drip.spaces.iterator.RdSpanni
 	 * RdReceedingStateSpaceScan Constructor
 	 * 
 	 * @param aiTerminalStateIndex Upper Array Bounds for each Dimension
-	 * @param bCyclicalScan TRUE => Cycle Post a Full Scan
+	 * @param bCyclicalScan TRUE - Cycle Post a Full Scan
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

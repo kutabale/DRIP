@@ -59,9 +59,9 @@ public class WolfeEvolutionVerifierMetrics extends
 	 * WolfeEvolutionVerifierMetrics Constructor
 	 * 
 	 * @param dblArmijoParameter The Armijo Criterion Parameter
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
 	 * @param dblCurvatureParameter The Curvature Criterion Parameter
-	 * @param bStrongCurvatureCriterion TRUE => Apply the "Strong" Curvature Criterion
+	 * @param bStrongCurvatureCriterion TRUE - Apply the "Strong" Curvature Criterion
 	 * @param uvTargetDirection The Target Direction Unit Vector
 	 * @param adblCurrentVariate Array of the Current Variate
 	 * @param dblStepLength The Incremental Step Length
@@ -116,7 +116,7 @@ public class WolfeEvolutionVerifierMetrics extends
 	/**
 	 * Indicate if the Check is for Minimizer/Maximizer
 	 * 
-	 * @return TRUE => The Check is for Maximizer
+	 * @return TRUE - The Check is for Maximizer
 	 */
 
 	public boolean maximizerCheck()
@@ -138,7 +138,7 @@ public class WolfeEvolutionVerifierMetrics extends
 	/**
 	 * Retrieve Whether of not the "Strong" Curvature Criterion needs to be met
 	 * 
-	 * @return TRUE => The "Strong" Curvature Criterion needs to be met
+	 * @return TRUE - The "Strong" Curvature Criterion needs to be met
 	 */
 
 	public boolean strongCurvatureCriterion()
@@ -182,7 +182,7 @@ public class WolfeEvolutionVerifierMetrics extends
 	/**
 	 * Indicate if the Wolfe Criterion has been met
 	 * 
-	 * @return TRUE => The Wolfe Criterion has been met
+	 * @return TRUE - The Wolfe Criterion has been met
 	 */
 
 	public boolean verify()

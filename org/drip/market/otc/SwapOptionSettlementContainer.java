@@ -44,7 +44,7 @@ public class SwapOptionSettlementContainer {
 	 * Initialize the Swap Option Settlement Conventions Container with the pre-set Swap Option Settlement
 	 *  Conventions
 	 * 
-	 * @return TRUE => The Swap Option Settlement Conventions Container successfully initialized with the
+	 * @return TRUE - The Swap Option Settlement Conventions Container successfully initialized with the
 	 *  pre-set Swap Option Settlement Conventions
 	 */
 

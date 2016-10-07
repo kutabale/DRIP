@@ -59,7 +59,7 @@ public class FRAComponentQuoteSet extends org.drip.product.calib.ProductQuoteSet
 	 * 
 	 * @param dblFRARate The FRA Rate
 	 * 
-	 * @return TRUE => The FRA Rate successfully set
+	 * @return TRUE - The FRA Rate successfully set
 	 */
 
 	public boolean setFRARate (
@@ -71,7 +71,7 @@ public class FRAComponentQuoteSet extends org.drip.product.calib.ProductQuoteSet
 	/**
 	 * Indicate if the FRA Rate Field exists
 	 * 
-	 * @return TRUE => FRA Rate Field Exists
+	 * @return TRUE - FRA Rate Field Exists
 	 */
 
 	public boolean containsFRARate()
@@ -98,7 +98,7 @@ public class FRAComponentQuoteSet extends org.drip.product.calib.ProductQuoteSet
 	 * 
 	 * @param dblParForwardRate The Par Forward Rate
 	 * 
-	 * @return TRUE => The Par Forward Rate successfully set
+	 * @return TRUE - The Par Forward Rate successfully set
 	 */
 
 	public boolean setParForwardRate (
@@ -110,7 +110,7 @@ public class FRAComponentQuoteSet extends org.drip.product.calib.ProductQuoteSet
 	/**
 	 * Indicate if the Par Forward Rate Field exists
 	 * 
-	 * @return TRUE => Par Forward Rate Field Exists
+	 * @return TRUE - Par Forward Rate Field Exists
 	 */
 
 	public boolean containsParForwardRate()

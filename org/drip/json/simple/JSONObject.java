@@ -50,7 +50,7 @@ package org.drip.json.simple;
      * Allows creation of a JSONObject from a Map. After that, both the
      * generated JSONObject and the Map can be modified independently.
      * 
-     * @param map
+     * @param map Input JSON Map
      */
 
     @SuppressWarnings ("unchecked") public JSONObject(java.util.Map map) {
@@ -62,10 +62,12 @@ package org.drip.json.simple;
  * Encode a map into JSON text and write it to out.
  * If this map is also a JSONAware or JSONStreamAware, JSONAware or JSONStreamAware specific behaviours will be ignored at this top level.
  * 
- * @see org.json.simple.JSONValue#writeJSONString(Object, Writer)
+ * @see org.drip.json.simple.JSONValue#writeJSONString(Object, Writer)
  * 
- * @param map
- * @param out
+ * @param map Input Map
+ * @param out Output Writer
+ * 
+ * @throws java.io.IOException Thrown if the Inputs are Invalid
  */
     public static void writeJSONString(java.util.Map map, java.io.Writer out) throws java.io.IOException {
             if(map == null){
@@ -100,9 +102,10 @@ package org.drip.json.simple;
      * Convert a map to JSON text. The result is a JSON object. 
      * If this map is also a JSONAware, JSONAware specific behaviours will be omitted at this top level.
      * 
-     * @see org.json.simple.JSONValue#toJSONString(Object)
+     * @see org.drip.json.simple.JSONValue#toJSONString(Object)
      * 
-     * @param map
+     * @param map The JSON Map
+     * 
      * @return JSON text, or "null" if map is null.
      */
     public static String toJSONString(java.util.Map map){
@@ -158,10 +161,10 @@ package org.drip.json.simple;
      * Escape quotes, \, /, \r, \n, \b, \f, \t and other control characters (U+0000 through U+001F).
      * It's the same as JSONValue.escape() only for compatibility here.
      * 
-     * @see org.json.simple.JSONValue#escape(String)
+     * @see org.drip.json.simple.JSONValue#escape(String)
      * 
-     * @param s
-     * @return
+     * @param s The Input String
+     * @return Escaped String
      */
     public static String escape(String s){
             return JSONValue.escape(s);

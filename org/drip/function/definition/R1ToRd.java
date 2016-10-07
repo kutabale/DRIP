@@ -30,7 +30,7 @@ package org.drip.function.definition;
  */
 
 /**
- * R1ToRd provides the evaluation of the R^1 -> R^d Objective Function and its derivatives for a specified
+ * R1ToRd provides the evaluation of the R^1 To R^d Objective Function and its derivatives for a specified
  *  variate. Default implementation of the derivatives are for non-analytical black box objective functions.
  *
  * @author Lakshmi Krishnamurthy
@@ -50,7 +50,7 @@ public abstract class R1ToRd {
 	/**
 	 * Evaluate for the given Input R^1 Variate
 	 * 
-	 * @param adblVariate Array of Input R^1 Variate
+	 * @param dblVariate The Input R^1 Variate
 	 *  
 	 * @return The Output R^d Array
 	 */

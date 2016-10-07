@@ -60,9 +60,9 @@ public class StringUtil {
 	 * 
 	 * @param strFieldToMatch Field To Match
 	 * @param astrMatchSet Array of fields to compare with
-	 * @param bCaseMatch TRUE => Match case
+	 * @param bCaseMatch TRUE - Match case
 	 * 
-	 * @return TRUE => Match found according to the criteria specified
+	 * @return TRUE - Match found according to the criteria specified
 	 */
 
 	public static final boolean MatchInStringArray (
@@ -90,9 +90,9 @@ public class StringUtil {
 	 * 
 	 * @param astrFieldToMatch Field Array To Match
 	 * @param astrMatchSet Array of fields to compare with
-	 * @param bCaseMatch TRUE => Match case
+	 * @param bCaseMatch TRUE - Match case
 	 * 
-	 * @return TRUE => Match found according to the criteria specified
+	 * @return TRUE - Match found according to the criteria specified
 	 */
 
 	public static final boolean MatchInStringArray (
@@ -200,7 +200,7 @@ public class StringUtil {
 	 * 
 	 * @param strUnitaryBoolean String input
 	 * 
-	 * @return TRUE => Unitary Boolean
+	 * @return TRUE - Unitary Boolean
 	 */
 
 	public static final boolean ParseFromUnitaryString (
@@ -431,7 +431,7 @@ public class StringUtil {
 	 * 
 	 * @param str The Input String
 	 * 
-	 * @return TRUE => The Input String is Empty
+	 * @return TRUE - The Input String is Empty
 	 */
 
 	public static final boolean IsEmpty (
@@ -446,7 +446,7 @@ public class StringUtil {
 	 * @param strLeft The Left String
 	 * @param strRight The Right String
 	 * 
-	 * @return TRUE => The Strings Match
+	 * @return TRUE - The Strings Match
 	 */
 
 	public static final boolean StringMatch (

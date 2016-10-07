@@ -402,6 +402,8 @@ public class Yylex {
 	    
 	  /**
 	   * Closes the input stream.
+	   * 
+	   * @throws java.io.IOException Thrown if the Inputs are Invalid
 	   */
 	  public final void yyclose() throws java.io.IOException {
 	    zzAtEOF = true;            /* indicate end of file */
@@ -435,7 +437,10 @@ public class Yylex {
 
 	  /**
 	   * Returns the current lexical state.
+	   * 
+	   * @return The Current Lexical State.
 	   */
+
 	  public final int yystate() {
 	    return zzLexicalState;
 	  }
@@ -453,7 +458,10 @@ public class Yylex {
 
 	  /**
 	   * Returns the text matched by the current regular expression.
+	   * 
+	   * @return The Text.
 	   */
+
 	  public final String yytext() {
 	    return new String( zzBuffer, zzStartRead, zzMarkedPos-zzStartRead );
 	  }
@@ -477,6 +485,8 @@ public class Yylex {
 
 	  /**
 	   * Returns the length of the matched text region.
+	   * 
+	   * @return The Length.
 	   */
 	  public final int yylength() {
 	    return zzMarkedPos-zzStartRead;
@@ -531,8 +541,12 @@ public class Yylex {
 	   * the end of input is encountered or an I/O-Error occurs.
 	   *
 	   * @return      the next token
-	   * @exception   java.io.IOException  if any I/O-Error occurs
+	   * 
+	   * @throws   java.io.IOException  if any I/O-Error occurs
+	   * 
+	   * @throws ParseException Thrown if Inputs are Invalid
 	   */
+
 	  public Yytoken yylex() throws java.io.IOException, ParseException {
 	    int zzInput;
 	    int zzAction;

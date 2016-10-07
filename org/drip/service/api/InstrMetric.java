@@ -46,6 +46,8 @@ public class InstrMetric {
 	 * 
 	 * @param fwdMetric The Forward Rates Metric
 	 * @param pnlMetric The Daily Carry/Roll PnL Metric
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public InstrMetric (

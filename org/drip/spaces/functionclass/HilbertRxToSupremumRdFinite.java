@@ -30,7 +30,7 @@ package org.drip.spaces.functionclass;
  */
 
 /**
- * HilbertRxToSupremumRdFinite implements the Class F with f E f : Hilbert R^x -> Supremum R^d Space of
+ * HilbertRxToSupremumRdFinite implements the Class F with f E f : Hilbert R^x To Supremum R^d Space of
  *  Finite Functions.
  * 
  *  The References are:
@@ -53,7 +53,7 @@ public class HilbertRxToSupremumRdFinite extends org.drip.spaces.functionclass.N
 	 * HilbertRxToSupremumRdFinite Constructor
 	 * 
 	 * @param dblMaureyConstant Maurey Constant
-	 * @param aHilbertRxToSupremumRd Array of the Hilbert R^x -> Supremum R^d Spaces
+	 * @param aHilbertRxToSupremumRd Array of the Hilbert R^x To Supremum R^d Spaces
 	 *  
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

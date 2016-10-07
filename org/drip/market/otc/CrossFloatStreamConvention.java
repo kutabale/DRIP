@@ -45,7 +45,7 @@ public class CrossFloatStreamConvention {
 	 * 
 	 * @param strCurrency Floating Stream Currency
 	 * @param strTenor Floating Stream Tenor
-	 * @param bApplySpread TRUE => Apply Spread to this Stream
+	 * @param bApplySpread TRUE - Apply Spread to this Stream
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
 	 */

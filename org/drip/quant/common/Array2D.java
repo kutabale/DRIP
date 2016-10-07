@@ -320,7 +320,7 @@ public class Array2D {
 	 * 
 	 * @param a2DOther The "Other" Array2D Instance
 	 * 
-	 * @return TRUE => The Array2D Instances match Entry-by-Entry
+	 * @return TRUE - The Array2D Instances match Entry-by-Entry
 	 */
 
 	public boolean match (

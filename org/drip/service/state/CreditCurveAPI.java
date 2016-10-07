@@ -39,11 +39,11 @@ public class CreditCurveAPI {
 	/**
 	 * Generate the Horizon Metrics for the Specified Inputs
 	 * 
-	 * @param adtSpot Array of Horizon Dates
+	 * @param dtSpot The Spot Date
 	 * @param astrFundingFixingMaturityTenor Array of the Funding Fixing Curve Calibration Instrument Tenors
-	 * @param aadblFundingFixingQuote Array of the Funding Fixing Curve Calibration Instrument Quotes
-	 * @param astrFullCreditIndexName Array of the Full Credit Index Names
-	 * @param adblCreditIndexQuotedSpread Array of the Credit Index Quoted Spreads
+	 * @param adblFundingFixingQuote Array of the Funding Fixing Curve Calibration Instrument Quotes
+	 * @param strFullCreditIndexName The Full Credit Index Name
+	 * @param dblCreditIndexQuotedSpread The Credit Index Quoted Spread
 	 * @param astrForTenor Array of the "For" Tenors
 	 * 
 	 * @return Map of the Dated Credit Curve Metrics

@@ -41,7 +41,7 @@ public class CSVParser {
 	 * Parse the Contents of the CSV File into a List of String Arrays
 	 * 
 	 * @param strCSVFile The CSV File
-	 * @param bIgnoreHeader TRUE => Ignore the Leading Row as a Header
+	 * @param bIgnoreHeader TRUE - Ignore the Leading Row as a Header
 	 * 
 	 * @return List of String Arrays
 	 */

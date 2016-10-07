@@ -30,7 +30,7 @@ package org.drip.spaces.functionclass;
  */
 
 /**
- * NormedR1ToNormedR1Finite implements the Class F of f : Normed R^1 -> Normed R^1 Spaces of Finite
+ * NormedR1ToNormedR1Finite implements the Class F of f : Normed R^1 To Normed R^1 Spaces of Finite
  * 	Functions.
  * 
  * The Reference we've used is:
@@ -66,9 +66,9 @@ public class NormedR1ToNormedR1Finite extends org.drip.spaces.functionclass.Norm
 	}
 
 	/**
-	 * Retrieve the Finite Class of R^1 -> R^1 Functions
+	 * Retrieve the Finite Class of R^1 To R^1 Functions
 	 * 
-	 * @return The Finite Class of R^1 -> R^1 Functions
+	 * @return The Finite Class of R^1 To R^1 Functions
 	 */
 
 	public org.drip.function.definition.R1ToR1[] functionR1ToR1Set()

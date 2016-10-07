@@ -63,7 +63,7 @@ public class FormatUtil {
 	 * @param iNumLeft Integer representing the number of left justifying zeros
 	 * @param iNumRight Integer representing the number of right justifying zeros
 	 * @param dblMultiplier Double representing the multiplier
-	 * @param bLeadingSpaceForPositive TRUE => A Leading Space will be emitted for Adjusted Positive Numbers.
+	 * @param bLeadingSpaceForPositive TRUE - A Leading Space will be emitted for Adjusted Positive Numbers.
 	 * 		For Adjusted Negatives this will be the '-' sign.
 	 * 
 	 * @return String representing the formatted input

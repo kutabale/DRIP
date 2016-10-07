@@ -75,9 +75,11 @@ public class RegressionRunOutput {
 		org.drip.regression.core.RegressionRunDetail();
 
 	/**
-	 * Empty Regression Run Output Constructor
+	 * Regression Run Output Constructor
 	 * 
 	 * @param strRegressionScenarioName Regression Scenario Name
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public RegressionRunOutput (
@@ -92,9 +94,9 @@ public class RegressionRunOutput {
 	/**
 	 * Set the termination status for the regression output
 	 * 
-	 * @param bSuccess TRUE => Regression Run succeeded
+	 * @param bSuccess TRUE - Regression Run succeeded
 	 * 
-	 * @return TRUE => Termination status successfully set
+	 * @return TRUE - Termination status successfully set
 	 */
 
 	public boolean setTerminationStatus (

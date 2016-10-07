@@ -76,7 +76,7 @@ public class CurveStretch extends org.drip.spline.stretch.CalibratableMultiSegme
 	 * @param iSegment The Current Segment Range Built
 	 * @param setLSL Set of the merging Latent State Labels
 	 * 
-	 * @return TRUE => Range successfully marked as "built"
+	 * @return TRUE - Range successfully marked as "built"
 	 */
 
 	public boolean markSegmentBuilt (
@@ -109,7 +109,7 @@ public class CurveStretch extends org.drip.spline.stretch.CalibratableMultiSegme
 	/**
 	 * Clear the built range mark to signal the start of a fresh calibration run
 	 * 
-	 * @return TRUE => Built Range successfully cleared
+	 * @return TRUE - Built Range successfully cleared
 	 */
 
 	public boolean clearBuiltRange()
@@ -125,7 +125,7 @@ public class CurveStretch extends org.drip.spline.stretch.CalibratableMultiSegme
 	 * 
 	 * @param dblPredictorOrdinate The Predictor Ordinate
 	 * 
-	 * @return TRUE => The specified Predictor Ordinate is inside the "Built" Range
+	 * @return TRUE - The specified Predictor Ordinate is inside the "Built" Range
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */

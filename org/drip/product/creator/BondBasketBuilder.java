@@ -49,7 +49,7 @@ public class BondBasketBuilder {
 	 * @param aBond Component bonds
 	 * @param adblWeights Component Bond weights
 	 * 
-	 * @throws java.lang.Exception Thrown if inputs are invalid
+	 * @return The BasketProduct Instance
 	 */
 
 	public static final org.drip.product.definition.BasketProduct CreateBondBasket (

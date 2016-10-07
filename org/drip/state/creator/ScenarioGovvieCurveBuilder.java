@@ -587,9 +587,7 @@ public class ScenarioGovvieCurveBuilder {
 		final int iEpochDate,
 		final java.lang.String strTreasuryCode,
 		final java.lang.String strCurrency,
-		final double dblYield)
-		throws java.lang.Exception
-	{
+		final double dblYield)	{
 		try {
 			return new org.drip.state.nonlinear.FlatYieldGovvieCurve (iEpochDate, strTreasuryCode,
 				strCurrency, new int[] {iEpochDate}, new double[] {dblYield});

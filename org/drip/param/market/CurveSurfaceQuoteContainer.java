@@ -552,7 +552,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param dcPayCurrencyCollateralCurrency The Discount Curve associated with the Pay Cash-flow
 	 *  Collateralized using a different Collateral Currency Numeraire
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setPayCurrencyCollateralCurrencyCurve (
@@ -641,7 +641,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param cc The Credit State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditState (
@@ -678,7 +678,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param equityLabel The Equity Latent State Label
 	 * @param auEquity The Equity State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityState (
@@ -716,7 +716,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param fc Forward State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardState (
@@ -751,9 +751,9 @@ public class CurveSurfaceQuoteContainer {
 	/**
 	 * (Re)-set the Funding State
 	 * 
-	 * @param dcFunding Funding State
+	 * @param dc Funding State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingState (
@@ -789,7 +789,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param fxfc The FX State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXState (
@@ -807,7 +807,7 @@ public class CurveSurfaceQuoteContainer {
 	/**
 	 * Retrieve the Government State for the specified Label
 	 * 
-	 * @param lslGovvie Govvie Latent State Label
+	 * @param govvieLabel Govvie Latent State Label
 	 * 
 	 * @return Government Curve for the specified Label
 	 */
@@ -827,7 +827,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param gc Govvie State Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setGovvieState (
@@ -864,7 +864,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param dcOvernight Overnight State Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setOvernightState (
@@ -901,7 +901,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auPaydown The Pay-down State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setPaydownCurve (
@@ -937,9 +937,9 @@ public class CurveSurfaceQuoteContainer {
 	 * (Re)-set the Rating State for the specified Rating Latent State Label
 	 * 
 	 * @param ratingLabel The Rating Latent State Label
-	 * @param auRating The Rating State
+	 * @param dcRating The Rating State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRatingCurve (
@@ -977,7 +977,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param rc The Recovery State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRecoveryState (
@@ -1013,7 +1013,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param repoState Repo State
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRepoState (
@@ -1029,7 +1029,7 @@ public class CurveSurfaceQuoteContainer {
 	/**
 	 * Retrieve the Volatility Curve for the specified Collateral Label
 	 * 
-	 * @param strCurrency The Collateral Currency
+	 * @param collateralLabel The Collateral Currency
 	 * 
 	 * @return The Volatility Curve for the Collateral Label
 	 */
@@ -1050,7 +1050,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcCollateral The Collateral Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralVolatility (
@@ -1087,7 +1087,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcCredit The Credit Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditVolatility (
@@ -1124,7 +1124,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcCustom The Custom Metric Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomVolatility (
@@ -1161,7 +1161,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcEquity The Equity Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityVolatility (
@@ -1198,7 +1198,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcForward The Forward Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardVolatility (
@@ -1235,7 +1235,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcFunding The Funding Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingVolatility (
@@ -1271,7 +1271,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcFX The FX Volatility Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXVolatility (
@@ -1308,7 +1308,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcGovvie The Govvie Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setGovvieVolatility (
@@ -1345,7 +1345,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcOvernight The Overnight Volatility Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setOvernightVolatility (
@@ -1382,7 +1382,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcPaydown The Pay down Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setPaydownVolatility (
@@ -1419,7 +1419,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcRating The Rating Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRatingVolatility (
@@ -1456,7 +1456,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcRecovery The Recovery Volatility Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRecoveryVolatility (
@@ -1492,7 +1492,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param vcRepo The Repo Volatility Curve
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRepoVolatility (
@@ -1535,7 +1535,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param strCurrency2 Collateral Currency #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralCollateralCorrelation (
@@ -1589,7 +1589,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param creditLabel2 The Credit Curve Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditCreditCorrelation (
@@ -1645,7 +1645,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param customLabel2 The Custom Metric Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomCustomCorrelation (
@@ -1695,7 +1695,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param equityLabel2 EquityCurve Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityEquityCorrelation (
@@ -1747,7 +1747,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param forwardLabel2 Forward Curve Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardForwardCorrelation (
@@ -1800,7 +1800,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fundingLabel2 Funding Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingFundingCorrelation (
@@ -1851,7 +1851,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fxLabel2 The FX Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXFXCorrelation (
@@ -1908,7 +1908,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param govvieLabel2 The Govvie Curve Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setGovvieGovvieCorrelation (
@@ -1961,7 +1961,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel2 Overnight Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setOvernightOvernightCorrelation (
@@ -2022,7 +2022,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel2 The Pay-down Curve Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setPaydownPaydownCorrelation (
@@ -2081,7 +2081,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel2 The Recovery Curve Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRecoveryRecoveryCorrelation (
@@ -2134,7 +2134,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel2 Repo Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRepoRepoCorrelation (
@@ -2186,7 +2186,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param creditLabel The Credit Curve Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralCreditCorrelation (
@@ -2232,7 +2232,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param customLabel The Custom Metric Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralCustomCorrelation (
@@ -2278,7 +2278,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param equityLabel The Equity Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralEquityCorrelation (
@@ -2325,7 +2325,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param forwardLabel The Forward Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralForwardCorrelation (
@@ -2372,7 +2372,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fundingLabel The Funding Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralFundingCorrelation (
@@ -2418,7 +2418,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fxLabel The FX Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralFXCorrelation (
@@ -2465,7 +2465,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param govvieLabel The Govvie Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralGovvieCorrelation (
@@ -2512,7 +2512,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel The Overnight Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralOvernightCorrelation (
@@ -2559,7 +2559,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralPaydownCorrelation (
@@ -2606,7 +2606,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralRatingCorrelation (
@@ -2653,7 +2653,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralRecoveryCorrelation (
@@ -2700,7 +2700,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCollateralRepoCorrelation (
@@ -2747,7 +2747,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param customLabel The Custom Metric Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditCustomCorrelation (
@@ -2792,7 +2792,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param equityLabel The Equity Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditEquityCorrelation (
@@ -2837,7 +2837,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param forwardLabel The Forward Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditForwardCorrelation (
@@ -2882,7 +2882,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fundingLabel The Funding Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditFundingCorrelation (
@@ -2926,7 +2926,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fxLabel The FX Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditFXCorrelation (
@@ -2971,7 +2971,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param govvieLabel The Govvie Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditGovvieCorrelation (
@@ -3016,7 +3016,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel The Overnight Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditOvernightCorrelation (
@@ -3061,7 +3061,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditPaydownCorrelation (
@@ -3106,7 +3106,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditRatingCorrelation (
@@ -3150,7 +3150,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditRepoCorrelation (
@@ -3195,7 +3195,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCreditRecoveryCorrelation (
@@ -3240,7 +3240,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param equityLabel The Equity Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomEquityCorrelation (
@@ -3285,7 +3285,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param forwardLabel The Forward Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomForwardCorrelation (
@@ -3330,7 +3330,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fundingLabel The Funding Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomFundingCorrelation (
@@ -3374,7 +3374,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fxLabel The FX Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomFXCorrelation (
@@ -3419,7 +3419,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param govvieLabel The Govvie Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomGovvieCorrelation (
@@ -3464,7 +3464,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel The Overnight Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomOvernightCorrelation (
@@ -3509,7 +3509,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomPaydownCorrelation (
@@ -3554,7 +3554,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomRatingCorrelation (
@@ -3599,7 +3599,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomRecoveryCorrelation (
@@ -3643,7 +3643,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setCustomRepoCorrelation (
@@ -3688,7 +3688,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param forwardLabel The Forward Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityForwardCorrelation (
@@ -3733,7 +3733,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fundingLabel The Funding Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityFundingCorrelation (
@@ -3777,7 +3777,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fxLabel The FX Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityFXCorrelation (
@@ -3822,7 +3822,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param govvieLabel The Govvie Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityGovvieCorrelation (
@@ -3867,7 +3867,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel The Overnight Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityOvernightCorrelation (
@@ -3912,7 +3912,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityPaydownCorrelation (
@@ -3957,7 +3957,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityRecoveryCorrelation (
@@ -4002,7 +4002,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityRatingCorrelation (
@@ -4046,7 +4046,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setEquityRepoCorrelation (
@@ -4091,7 +4091,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fundingLabel The Funding Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardFundingCorrelation (
@@ -4135,7 +4135,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fxLabel The FX Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardFXCorrelation (
@@ -4180,7 +4180,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param govvieLabel The Govvie Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardGovvieCorrelation (
@@ -4225,7 +4225,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel The Overnight Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardOvernightCorrelation (
@@ -4270,7 +4270,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardPaydownCorrelation (
@@ -4315,7 +4315,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardRatingCorrelation (
@@ -4360,7 +4360,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardRecoveryCorrelation (
@@ -4404,7 +4404,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setForwardRepoCorrelation (
@@ -4448,7 +4448,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param fxLabel The FX Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingFXCorrelation (
@@ -4493,7 +4493,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param govvieLabel The Govvie Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingGovvieCorrelation (
@@ -4538,7 +4538,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel The Overnight Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingOvernightCorrelation (
@@ -4583,7 +4583,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingPaydownCorrelation (
@@ -4628,7 +4628,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingRecoveryCorrelation (
@@ -4673,7 +4673,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingRecoveryCorrelation (
@@ -4717,7 +4717,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFundingRepoCorrelation (
@@ -4761,7 +4761,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param govvieLabel The Govvie Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXGovvieCorrelation (
@@ -4805,7 +4805,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel The Overnight Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXOvernightCorrelation (
@@ -4849,7 +4849,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXPaydownCorrelation (
@@ -4893,7 +4893,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXRatingCorrelation (
@@ -4937,7 +4937,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXRecoveryCorrelation (
@@ -4981,7 +4981,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setFXRepoCorrelation (
@@ -5004,7 +5004,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param overnightLabel The Overnight Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setGovvieOvernightCorrelation (
@@ -5071,7 +5071,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setGovviePaydownCorrelation (
@@ -5116,7 +5116,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setGovvieRatingCorrelation (
@@ -5161,7 +5161,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setGovvieRecoveryCorrelation (
@@ -5205,7 +5205,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setGovvieRepoCorrelation (
@@ -5250,7 +5250,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param paydownLabel The Pay-down Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setOvernightPaydownCorrelation (
@@ -5295,7 +5295,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setOvernightRatingCorrelation (
@@ -5340,7 +5340,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setOvernightRecoveryCorrelation (
@@ -5385,7 +5385,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setOvernightRepoCorrelation (
@@ -5430,7 +5430,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel The Rating Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setPaydownRatingCorrelation (
@@ -5475,7 +5475,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setPaydownRecoveryCorrelation (
@@ -5519,7 +5519,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setPaydownRepoCorrelation (
@@ -5564,7 +5564,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param ratingLabel2 The Rating Latent State Label #2
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRatingRatingCorrelation (
@@ -5609,7 +5609,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param recoveryLabel The Recovery Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRatingRecoveryCorrelation (
@@ -5653,7 +5653,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRatingRepoCorrelation (
@@ -5698,7 +5698,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param repoLabel The Repo Latent State Label
 	 * @param auCorrelation The Correlation Surface
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRecoveryRepoCorrelation (
@@ -5738,7 +5738,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param strProductCode Product Code
 	 * @param pq Product Quote
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setProductQuote (
@@ -5770,7 +5770,7 @@ public class CurveSurfaceQuoteContainer {
 	 * 
 	 * @param mapQuote Map of Quotes
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setQuoteMap (
@@ -5802,7 +5802,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param lsl The Fixing Label
 	 * @param dblFixing The Fixing Amount
 	 * 
-	 * @return TRUE => Entry successfully added
+	 * @return TRUE - Entry successfully added
 	 */
 
 	public boolean setFixing (
@@ -5820,7 +5820,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param lsl The Fixing Label
 	 * @param dblFixing The Fixing Amount
 	 * 
-	 * @return TRUE => Entry successfully added
+	 * @return TRUE - Entry successfully added
 	 */
 
 	public boolean setFixing (
@@ -5837,7 +5837,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param dt The Fixing Date
 	 * @param lsl The Fixing Label
 	 * 
-	 * @return TRUE => Entry successfully removed if it existed
+	 * @return TRUE - Entry successfully removed if it existed
 	 */
 
 	public boolean removeFixing (
@@ -5853,7 +5853,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param iDate The Fixing Date
 	 * @param lsl The Fixing Label
 	 * 
-	 * @return TRUE => Entry successfully removed if it existed
+	 * @return TRUE - Entry successfully removed if it existed
 	 */
 
 	public boolean removeFixing (
@@ -5907,7 +5907,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param dt The Date
 	 * @param lsl The Label
 	 * 
-	 * @return TRUE => The Fixing for the Specified LSL Label on the specified Date 
+	 * @return TRUE - The Fixing for the Specified LSL Label on the specified Date 
 	 */
 
 	public boolean available (
@@ -5923,7 +5923,7 @@ public class CurveSurfaceQuoteContainer {
 	 * @param iDate The Date
 	 * @param lsl The Label
 	 * 
-	 * @return TRUE => The Fixing for the Specified LSL Label on the specified Date 
+	 * @return TRUE - The Fixing for the Specified LSL Label on the specified Date 
 	 */
 
 	public boolean available (

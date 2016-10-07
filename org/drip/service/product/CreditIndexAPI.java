@@ -264,7 +264,7 @@ public class CreditIndexAPI {
 	 * @param astrFundingFixingMaturityTenor Array of Funding Fixing Maturity Tenors
 	 * @param aadblFundingFixingQuote Double Array of Funding Fixing Swap Rates
 	 * @param astrFullCreditIndexName Array of the Full Credit Index Names
-	 * @param adblQuotedSpread Array of the Quoted Spreads
+	 * @param adblCreditIndexQuotedSpread Array of the Quoted Spreads
 	 * 
 	 * @return The Funding/Credit Curve Horizon Metrics
 	 */

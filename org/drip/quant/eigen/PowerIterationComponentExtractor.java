@@ -88,7 +88,7 @@ public class PowerIterationComponentExtractor implements org.drip.quant.eigen.Co
 	/**
 	 * Indicate if the specified Tolerance is Absolute
 	 * 
-	 * @return TRUE => The specified Tolerance is Absolute
+	 * @return TRUE - The specified Tolerance is Absolute
 	 */
 
 	public boolean isToleranceAbsolute()

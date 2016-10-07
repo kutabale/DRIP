@@ -103,10 +103,10 @@ public class ProductDailyPnL {
 	 * @param dbl1DMaturityRollUpFairPremiumWithFixingPnL 1D Curve Maturity Roll Up implied Fair Premium With
 	 * 	Fixing PnL
 	 * @param dbl1DCurveShiftPnL 1D Curve Shift PnL
+	 * @param dbl1MCarryPnL 1M Carry PnL
 	 * @param dbl1MMaturityRollDownSwapRatePnL 1M Curve Maturity Roll Down implied Par Swap rate PnL
-	 * @param dbl1MTimeRollPnL 1M Time Roll PnL
+	 * @param dbl3MCarryPnL 3M Carry PnL
 	 * @param dbl3MMaturityRollDownSwapRatePnL 3M Curve Maturity Roll Down implied Par Swap rate PnL
-	 * @param dbl3MTimeRollPnL 3M Time Roll PnL
 	 * @param dblDV01 DV01
 	 * @param dblDV01WithFixing DV01 With Fixing
 	 * @param dblCleanFixedDV01 Clean Fixed DV01
@@ -126,6 +126,8 @@ public class ProductDailyPnL {
 	 * @param dblPeriodCurveFloatingRate The Period Curve Floating Rate
 	 * @param dblPeriodProductFloatingRate The Period Product Floating Rate
 	 * @param dblPeriodFloatingRateUsed The Period Floating Rate Used
+	 * @param i1DFixedAccrualDays 1D Fixed Accrual Days
+	 * @param i1DFloatingAccrualDays 1D Floating Accrual Days
 	 * @param dbl1DFixedDCF 1D Fixed Coupon DCF
 	 * @param dbl1DFloatingDCF 1D Floating Coupon DCF
 	 * @param dbl1MFixedDCF 1M Fixed Coupon DCF

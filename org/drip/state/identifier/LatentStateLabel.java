@@ -53,7 +53,7 @@ public interface LatentStateLabel {
 	 * 
 	 * @param lslOther The Supplied Label
 	 * 
-	 * @return TRUE => The Supplied Label matches this.
+	 * @return TRUE - The Supplied Label matches this.
 	 */
 
 	public abstract boolean match (

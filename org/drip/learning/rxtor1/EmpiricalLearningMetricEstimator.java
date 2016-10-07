@@ -75,7 +75,7 @@ public interface EmpiricalLearningMetricEstimator {
 	 * 
 	 * @param gvvi The Validated Instance Vector Sequence
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Loss Class Sample Covering Number - L-Infinity or L-p based Based
 	 * 
@@ -91,7 +91,7 @@ public interface EmpiricalLearningMetricEstimator {
 	/**
 	 * Compute the Empirical Sample Loss
 	 * 
-	 * @param funcLearnerR1ToR1 The R^1 -> R^1 Learner Function
+	 * @param funcLearnerR1ToR1 The R^1 To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -109,7 +109,7 @@ public interface EmpiricalLearningMetricEstimator {
 	/**
 	 * Compute the Empirical Sample Loss
 	 * 
-	 * @param funcLearnerRdToR1 The R^d -> R^1 Learner Function
+	 * @param funcLearnerRdToR1 The R^d To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -143,7 +143,7 @@ public interface EmpiricalLearningMetricEstimator {
 	/**
 	 * Compute the Structural Sample Loss
 	 * 
-	 * @param funcLearnerR1ToR1 The R^1 -> R^1 Learner Function
+	 * @param funcLearnerR1ToR1 The R^1 To R^1 Learner Function
 	 * @param gvvi The Validated Predictor Instance
 	 * 
 	 * @return The Structural Loss
@@ -159,7 +159,7 @@ public interface EmpiricalLearningMetricEstimator {
 	/**
 	 * Compute the Structural Sample Loss
 	 * 
-	 * @param funcLearnerRdToR1 The R^d -> R^1 Learner Function
+	 * @param funcLearnerRdToR1 The R^d To R^1 Learner Function
 	 * @param gvvi The Validated Predictor Instance
 	 * 
 	 * @return The Structural Loss
@@ -189,7 +189,7 @@ public interface EmpiricalLearningMetricEstimator {
 	/**
 	 * Compute the Regularized Sample Loss (Empirical + Structural)
 	 * 
-	 * @param funcLearnerR1ToR1 The R^1 -> R^1 Learner Function
+	 * @param funcLearnerR1ToR1 The R^1 To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -207,7 +207,7 @@ public interface EmpiricalLearningMetricEstimator {
 	/**
 	 * Compute the Regularized Sample Loss (Empirical + Structural)
 	 * 
-	 * @param funcLearnerRdToR1 The R^d -> R^1 Learner Function
+	 * @param funcLearnerRdToR1 The R^d To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -242,7 +242,7 @@ public interface EmpiricalLearningMetricEstimator {
 	 * Compute the Empirical Sample Risk
 	 * 
 	 * @param distR1R1 R^1 R^1 Multivariate Measure
-	 * @param funcLearnerR1ToR1 The R^1 -> R^1 Learner Function
+	 * @param funcLearnerR1ToR1 The R^1 To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -262,7 +262,7 @@ public interface EmpiricalLearningMetricEstimator {
 	 * Compute the Empirical Sample Risk
 	 * 
 	 * @param distRdR1 R^d R^1 Multivariate Measure
-	 * @param funcLearnerRdToR1 The R^d -> R^1 Learner Function
+	 * @param funcLearnerRdToR1 The R^d To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -318,7 +318,7 @@ public interface EmpiricalLearningMetricEstimator {
 	 * Compute the Structural Sample Risk
 	 * 
 	 * @param distR1R1 R^1 R^1 Multivariate Measure
-	 * @param funcLearnerR1ToR1 The R^1 -> R^1 Learner Function
+	 * @param funcLearnerR1ToR1 The R^1 To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -338,7 +338,7 @@ public interface EmpiricalLearningMetricEstimator {
 	 * Compute the Structural Sample Risk
 	 * 
 	 * @param distRdR1 R^d R^1 Multivariate Measure
-	 * @param funcLearnerRdToR1 The R^d -> R^1 Learner Function
+	 * @param funcLearnerRdToR1 The R^d To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -394,7 +394,7 @@ public interface EmpiricalLearningMetricEstimator {
 	 * Compute the Regularized Sample Risk (Empirical + Structural)
 	 * 
 	 * @param distR1R1 R^1 R^1 Multivariate Measure
-	 * @param funcLearnerR1ToR1 The R^1 -> R^1 Learner Function
+	 * @param funcLearnerR1ToR1 The R^1 To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 
@@ -414,7 +414,7 @@ public interface EmpiricalLearningMetricEstimator {
 	 * Compute the Regularized Sample Risk (Empirical + Structural)
 	 * 
 	 * @param distRdR1 R^d R^1 Multivariate Measure
-	 * @param funcLearnerRdToR1 The R^d -> R^1 Learner Function
+	 * @param funcLearnerRdToR1 The R^d To R^1 Learner Function
 	 * @param gvviX The Validated Predictor Instance
 	 * @param gvviY The Validated Response Instance
 	 * 

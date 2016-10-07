@@ -163,8 +163,8 @@ public class LocalControlStretchBuilder {
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return Hermite/Bessel C1 Cubic Spline Stretch
 	 */
@@ -200,8 +200,8 @@ public class LocalControlStretchBuilder {
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return Hyman (1983) Monotone Preserving Stretch
 	 */
@@ -237,8 +237,8 @@ public class LocalControlStretchBuilder {
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return Hyman (1989) Monotone Preserving Stretch
 	 */
@@ -274,8 +274,8 @@ public class LocalControlStretchBuilder {
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return Harmonic Monotone Preserving Stretch
 	 */
@@ -311,8 +311,8 @@ public class LocalControlStretchBuilder {
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return The Van Leer Limiter Stretch
 	 */
@@ -348,8 +348,8 @@ public class LocalControlStretchBuilder {
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return The Kruger Stretch
 	 */
@@ -384,8 +384,8 @@ public class LocalControlStretchBuilder {
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return The Huynh Le Floch Limiter Stretch
 	 */
@@ -421,8 +421,8 @@ public class LocalControlStretchBuilder {
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return The Akima Local Control Stretch Instance
 	 */
@@ -456,13 +456,14 @@ public class LocalControlStretchBuilder {
 	 * 	Hagan, P., and G. West (2008): Methods for Curve a Yield Curve, Wilmott Magazine: 70-81.
 	 * 
 	 * @param strName Stretch Name
+	 * @param adblPredictorOrdinate Array of Predictor Ordinates
 	 * @param adblObservation Array of Observations
 	 * @param aSCBC Array of Segment Builder Parameters
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * @param iSetupMode Segment Setup Mode
 	 * @param bLinearNodeInference Apply Linear Node Inference from Observations
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return The Monotone-Convex Local Control Stretch Instance
 	 */

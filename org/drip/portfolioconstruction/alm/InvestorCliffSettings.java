@@ -129,7 +129,7 @@ public class InvestorCliffSettings {
 	 * 
 	 * @param dblAge The Age whose Retirement Indicator is needed
 	 * 
-	 * @return TRUE => The Age indicates that the Investor has retired
+	 * @return TRUE - The Age indicates that the Investor has retired
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -146,7 +146,7 @@ public class InvestorCliffSettings {
 	 * 
 	 * @param dblAge The Age whose "Is Alive" Indicator is needed
 	 * 
-	 * @return TRUE => The Age indicates that the Investor "Is Alive"
+	 * @return TRUE - The Age indicates that the Investor "Is Alive"
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

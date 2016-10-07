@@ -72,7 +72,6 @@ public class BasisSplineRegressorSet implements org.drip.regression.core.Regress
 	 */
 
 	public BasisSplineRegressorSet()
-		throws java.lang.Exception
 	{
 	}
 

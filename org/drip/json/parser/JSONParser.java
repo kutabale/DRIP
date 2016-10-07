@@ -74,8 +74,6 @@ public void reset(){
  * Reset the parser to the initial state with a new character reader.
  * 
  * @param in - The new character reader.
- * @throws IOException
- * @throws ParseException
  */
     public void reset(java.io.Reader in){
             lexer.yyreset(in);
@@ -93,6 +91,17 @@ public void reset(){
             return parse(s, (ContainerFactory)null);
     }
     
+    /**
+     * Parse the JSON String
+     * 
+     * @param s The String
+     * @param containerFactory The Container Factory
+     * 
+     * @return The JSON Object
+     * 
+     * @throws ParseException Thrown if the Inputs are Invalid
+     */
+
     public Object parse(String s, ContainerFactory containerFactory) throws ParseException{
     	java.io.StringReader in=new java.io.StringReader(s);
             try{
@@ -113,7 +122,7 @@ public void reset(){
     /**
      * Parse JSON text into java object from the input source.
      *      
-     * @param in
+     * @param in The Input Reader
  * @param containerFactory - Use this factory to createyour own JSON object and JSON array containers.
      * @return Instance of the following:
      *  org.json.simple.JSONObject,
@@ -123,8 +132,9 @@ public void reset(){
      *      java.lang.Boolean,
      *      null
      * 
-     * @throws IOException
-     * @throws ParseException
+	 * @throws java.io.IOException Thrown if the Inputs are Invalid
+     * 
+	 * @throws ParseException Thrown if the Inputs are Invalid
      */
     @SuppressWarnings ({"rawtypes", "unchecked"}) public Object parse(java.io.Reader in, ContainerFactory containerFactory) throws java.io.IOException, ParseException{
             reset(in);
@@ -335,14 +345,15 @@ public void reset(){
      * 
      * @see ContentHandler
      * 
-     * @param in
-     * @param contentHandler
+     * @param in The Input Reader
+     * @param contentHandler The Content Handler Instance
      * @param isResume - Indicates if it continues previous parsing operation.
  *                   If set to true, resume parsing the old stream, and parameter 'in' will be ignored. 
      *                   If this method is called for the first time in this instance, isResume will be ignored.
      * 
-     * @throws IOException
-     * @throws ParseException
+     * @throws java.io.IOException Thrown if the Inputs are Invalid
+     * 
+	 * @throws ParseException Thrown if the Inputs are Invalid
      */
     @SuppressWarnings ({"rawtypes", "unchecked"}) public void parse(java.io.Reader in, ContentHandler contentHandler, boolean isResume) throws java.io.IOException, ParseException{
             if(!isResume){

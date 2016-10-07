@@ -67,7 +67,7 @@ public class BoundedPortfolioConstructionParameters extends
 	 * @param dblLowerBound The Asset Share Lower Bound
 	 * @param dblUpperBound The Asset Share Upper Bound
 	 * 
-	 * @return TRUE => The Asset Bounds successfully set
+	 * @return TRUE - The Asset Bounds successfully set
 	 */
 
 	public boolean addBound (

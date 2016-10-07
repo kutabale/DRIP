@@ -99,11 +99,11 @@ public interface RdNormed extends org.drip.spaces.metric.GeneralizedMetricVector
 		throws java.lang.Exception;
 
 	/**
-	 * Compute the Borel Measure Expectation for the specified R^d -> R^1 Function over the full Input Space
+	 * Compute the Borel Measure Expectation for the specified R^d To R^1 Function over the full Input Space
 	 * 
-	 * @param funcRdToR1 R^d -> R^1 Function
+	 * @param funcRdToR1 R^d To R^1 Function
 	 * 
-	 * @return The Borel Measure Expectation for the specified R^d -> R^1 Function over the full Input Space
+	 * @return The Borel Measure Expectation for the specified R^d To R^1 Function over the full Input Space
 	 * 
 	 * @throws java.lang.Exception Thrown if the Population Mode cannot be calculated
 	 */

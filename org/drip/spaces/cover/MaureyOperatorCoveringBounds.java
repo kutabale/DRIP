@@ -31,7 +31,7 @@ package org.drip.spaces.cover;
 
 /**
  * MaureyOperatorCoveringBounds implements the estimate the Upper Bounds and/or Absolute Values of the
- * 	Covering Number for the Hilbert R^d -> Supremum R^d Operator Class. The Main References are:
+ * 	Covering Number for the Hilbert R^d To Supremum R^d Operator Class. The Main References are:
  * 
  *  1) Carl, B. (1985): Inequalities of the Bernstein-Jackson type and the Degree of Compactness of Operators
  *  	in Banach Spaces, Annals of the Fourier Institute 35 (3) 79-118.
@@ -64,12 +64,12 @@ public class MaureyOperatorCoveringBounds {
 	private double _dblMaureyConstant = java.lang.Double.NaN;
 
 	/**
-	 * Construct an Instance Hilbert -> Supremum Identity Map based Maurey Operator Covering Bounds
+	 * Construct an Instance Hilbert To Supremum Identity Map based Maurey Operator Covering Bounds
 	 * 
 	 * @param iSupremumDimension The Operator Supremum Output Space Dimension
 	 * @param dblOperatorNorm The Operator Norm of Interest
 	 * 
-	 * @return The Instance Hilbert -> Supremum Identity Map based Maurey Operator Covering Bounds
+	 * @return The Instance Hilbert To Supremum Identity Map based Maurey Operator Covering Bounds
 	 */
 
 	public static final MaureyOperatorCoveringBounds HilbertSupremumIdentityMap (

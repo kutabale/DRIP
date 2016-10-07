@@ -33,9 +33,9 @@ package org.drip.json.simple;
  * ItemList is an Adaptation of the ItemList Interface from the RFC4627 compliant JSON Simple
  *  (https://code.google.com/p/json-simple/).
  *
- * 		|a:b:c| => |a|,|b|,|c|
- * 		|:| => ||,||
- * 		|a:| => |a|,||
+ * 		|a:b:c| = |a|,|b|,|c|
+ * 		|:| = ||,||
+ * 		|a:| = |a|,||
  * 
  * @author Fang Yidong
  * @author Lakshmi Krishnamurthy
@@ -134,7 +134,7 @@ public class ItemList {
     
     /**
      * @param i 0-based
-     * @return
+     * @return i
      */
     public String get(int i){
             return (String)items.get(i);

@@ -56,7 +56,7 @@ public class MergeSubStretchManager {
 	 * @param dblDate The  Date Node
 	 * @param lsl The Latent State Label
 	 * 
-	 * @return TRUE => The specified Latent State Label is Part of the Merge Stretch
+	 * @return TRUE - The specified Latent State Label is Part of the Merge Stretch
 	 */
 
 	public boolean partOfMergeState (
@@ -78,7 +78,7 @@ public class MergeSubStretchManager {
 	 * 
 	 * @param lsms The Merge Stretch
 	 * 
-	 * @return TRUE => Successfully added
+	 * @return TRUE - Successfully added
 	 */
 
 	public boolean addMergeStretch (

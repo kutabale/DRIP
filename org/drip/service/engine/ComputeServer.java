@@ -83,7 +83,7 @@ public class ComputeServer {
 	/**
 	 * Initialize the Compute Server Engine Listener Setup
 	 * 
-	 * @return TRUE => The Compute Server Engine Listener Setup
+	 * @return TRUE - The Compute Server Engine Listener Setup
 	 */
 
 	public boolean initialize()
@@ -102,7 +102,7 @@ public class ComputeServer {
 	/**
 	 * Spin on the Listener Loop
 	 * 
-	 * @return FALSE => Spinning Terminated
+	 * @return FALSE - Spinning Terminated
 	 */
 
 	public boolean spin()

@@ -46,8 +46,8 @@ public class ResponseScalingShapeControl {
 	/**
 	 * ResponseScalingShapeControl constructor
 	 * 
-	 * @param bIsLocal TRUE => Shape Control is applied on a local segment basis
-	 * @param auShapeControl => Univariate Shape Controller Function
+	 * @param bIsLocal TRUE - Shape Control is applied on a local segment basis
+	 * @param auShapeControl - Univariate Shape Controller Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
 	 */
@@ -66,7 +66,7 @@ public class ResponseScalingShapeControl {
 	/**
 	 * Indicate if the Control is applied on a Local or a Global Predicate Ordinate Basis
 	 * 
-	 * @return TRUE => Control is applied on a Local Predicate Ordinate Basis
+	 * @return TRUE - Control is applied on a Local Predicate Ordinate Basis
 	 */
 
 	public boolean isLocal()

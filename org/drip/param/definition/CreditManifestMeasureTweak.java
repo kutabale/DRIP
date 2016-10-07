@@ -76,11 +76,13 @@ public class CreditManifestMeasureTweak extends ManifestMeasureTweak {
 	 * 
 	 * @param strParamType Node Tweak Parameter Type
 	 * @param strMeasureType Node Tweak Measure Type
-	 * @param iTweakNode Node to be tweaked - Set to NODE_FLAT_TWEAK for flat curve tweak
-	 * @param bIsProportional True => Tweak is proportional, False => parallel
+	 * @param iNode Node to be tweaked - Set to NODE_FLAT_TWEAK for flat curve tweak
+	 * @param bIsProportional True - Tweak is proportional, False - parallel
 	 * @param dblAmount Amount to be tweaked - proportional tweaks are represented as percent, parallel
 	 * 			tweaks are absolute numbers
 	 * @param bSingleNodeCalib Flat Calibration using a single node?
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public CreditManifestMeasureTweak (
@@ -107,7 +109,7 @@ public class CreditManifestMeasureTweak extends ManifestMeasureTweak {
 	/**
 	 * Single Node Calibration Flag
 	 * 
-	 * @return TRUE => Turn on Single Node Calibration
+	 * @return TRUE - Turn on Single Node Calibration
 	 */
 
 	public boolean singleNodeCalib()

@@ -163,7 +163,7 @@ public abstract class ComposableUnitPeriod {
 	/**
 	 * Retrieve the Flag indicating whether Coupon DCF is computed off of the DCF Flag
 	 * 
-	 * @return TRUE => The Flag indicating whether Coupon DCF is computed off of the DCF Flag
+	 * @return true - The Flag indicating whether Coupon DCF is computed off of the DCF Flag
 	 */
 
 	public boolean couponDCFOffOfFreq()
@@ -240,7 +240,8 @@ public abstract class ComposableUnitPeriod {
 	 * 
 	 * @return The Accrual DCF
 	 * 
-	 * @exception Thrown if inputs are invalid, or if the date does not lie within the period
+	 * @throws java.lang.Exception Thrown if inputs are invalid, or if the date does not lie within the
+	 * 	period
 	 */
 
 	public double accrualDCF (
@@ -273,7 +274,7 @@ public abstract class ComposableUnitPeriod {
 	 * 
 	 * @return The Period Full Coupon Rate
 	 * 
-	 * @exception Thrown if the full Coupon Rate cannot be calculated
+	 * @throws java.lang.Exception Thrown if the full Coupon Rate cannot be calculated
 	 */
 
 	public double fullCouponRate (
@@ -290,7 +291,7 @@ public abstract class ComposableUnitPeriod {
 	 * 
 	 * @return The Period Base Coupon Rate
 	 * 
-	 * @exception Thrown if the base Coupon Rate cannot be calculated
+	 * @throws java.lang.Exception Thrown if the base Coupon Rate cannot be calculated
 	 */
 
 	public abstract double baseRate (

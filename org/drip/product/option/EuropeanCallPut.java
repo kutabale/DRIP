@@ -86,9 +86,9 @@ public class EuropeanCallPut {
 	 * 
 	 * @param valParams The Valuation Parameters
 	 * @param dblUnderlier The Underlier
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dc Discount Curve
-	 * @param dblVolatility The Option Volatility
+	 * @param auVolatility The Option Volatility Function
 	 * @param fpg The Fokker Planck-based Option Pricer
 	 * 
 	 * @return The Map of the Measures
@@ -250,7 +250,7 @@ public class EuropeanCallPut {
 	 * 
 	 * @param valParams The Valuation Parameters
 	 * @param dblUnderlier The Underlier
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dc Discount Curve
 	 * @param dblCallPrice The Option Call Price
 	 * 
@@ -288,7 +288,7 @@ public class EuropeanCallPut {
 	 * 
 	 * @param valParams The Valuation Parameters
 	 * @param dblUnderlier The Underlier
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dc Discount Curve
 	 * @param dblPutPrice The Option Put Price
 	 * 

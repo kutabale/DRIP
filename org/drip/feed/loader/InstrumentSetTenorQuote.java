@@ -56,7 +56,7 @@ public class InstrumentSetTenorQuote {
 	 * @param dblQuote Quote Value
 	 * @param dblScale Quote Scale
 	 * 
-	 * @return TRUE => Group Set successfully added
+	 * @return TRUE - Group Set successfully added
 	 */
 
 	public boolean add (
@@ -166,7 +166,7 @@ public class InstrumentSetTenorQuote {
 	/**
 	 * Indicates whether the ISTQ is Empty or not
 	 * 
-	 * @return TRUE => ISTQ is Empty
+	 * @return TRUE - ISTQ is Empty
 	 */
 
 	public boolean isEmpty()

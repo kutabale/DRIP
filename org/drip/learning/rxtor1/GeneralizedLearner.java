@@ -30,7 +30,7 @@ package org.drip.learning.rxtor1;
  */
 
 /**
- * GeneralizedLearner implements the Learner Class that holds the Space of Normed R^x -> Normed R^1 Learning
+ * GeneralizedLearner implements the Learner Class that holds the Space of Normed R^x To Normed R^1 Learning
  * 	Functions along with their Custom Empirical Loss. Class-Specific Asymptotic Sample, Covering Number based
  *  Upper Probability Bounds and other Parameters are also maintained.
  *  
@@ -62,7 +62,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	/**
 	 * GeneralizedLearner Constructor
 	 * 
-	 * @param funcClassRxToR1 R^x -> R^1 Function Class
+	 * @param funcClassRxToR1 R^x To R^1 Function Class
 	 * @param funcClassCNLB The Function Class Covering Number based Deviation Upper Probability Bound
 	 * 	Generator
 	 * @param regularizerFunc The Regularizer Function
@@ -462,7 +462,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	 * 
 	 * @param iSampleSize The Sample Size
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Upper Bound of the Probability of the Absolute Deviation of the Empirical Mean from the
 	 * 	Population Mean using the Function Class Supremum Covering Number for General-Purpose Learning
@@ -487,7 +487,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	 *  
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
 	 * @param dblDeviationUpperProbabilityBound The Upper Bound of the Probability for the given Deviation
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Minimum Possible Sample Size
 	 * 
@@ -534,7 +534,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	 * @param gvvi The Validated Instance Vector Sequence
 	 * @param iSampleSize The Sample Size
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Sample/Data Dependent Upper Bound of the Probability of the Absolute Deviation between
 	 *  the Empirical and the Population Means using the Function Class Supremum Covering Number for
@@ -561,7 +561,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	 * @param gvvi The Validated Instance Vector Sequence
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
 	 * @param dblDeviationUpperProbabilityBound The Upper Bound of the Probability for the given Deviation
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Minimum Possible Sample Size
 	 * 
@@ -607,7 +607,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	 * 
 	 * @param iSampleSize The Sample Size
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Upper Bound of the Probability of the Absolute Deviation between the Empirical and the
 	 * 	Population Means using the Function Class Supremum Covering Number for Regression Learning
@@ -649,7 +649,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	 *  
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
 	 * @param dblDeviationUpperProbabilityBound The Upper Bound of the Probability for the given Deviation
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Minimum Possible Sample Size
 	 * 
@@ -696,7 +696,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	 * @param gvvi The Validated Instance Vector Sequence
 	 * @param iSampleSize The Sample Size
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Sample/Data Dependent Upper Bound of the Probability of the Absolute Deviation between
 	 *  the Empirical and the Population Means using the Function Class Supremum Covering Number for
@@ -740,7 +740,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	 * @param gvvi The Validated Instance Vector Sequence
 	 * @param dblEpsilon The Deviation of the Empirical Mean from the Population Mean
 	 * @param dblDeviationUpperProbabilityBound The Upper Bound of the Probability for the given Deviation
-	 * @param bSupremum TRUE => Use the Supremum Metric in place of the Built-in Metric
+	 * @param bSupremum TRUE To Use the Supremum Metric in place of the Built-in Metric
 	 * 
 	 * @return The Minimum Possible Sample Size
 	 * 

@@ -178,7 +178,6 @@ public class VolatilityCurveScenario {
 	 * @param aFRACapFloor Array of the FRA Cap Floor Instruments
 	 * @param adblCalibQuote Array of component quotes
 	 * @param astrCalibMeasure Array of the calibration measures
-	 * @param dblRecovery Component recovery
 	 * @param bFlat Flat Calibration (True), or real bootstrapping (false)
 	 * @param dblBump Amount of bump applied to the tenor
 	 * @param dc Base Discount Curve

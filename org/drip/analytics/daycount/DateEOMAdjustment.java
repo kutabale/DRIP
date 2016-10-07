@@ -49,7 +49,7 @@ public class DateEOMAdjustment {
 	 * 
 	 * @param iStartDate Start Date
 	 * @param iEndDate End Date
-	 * @param bApplyEOMAdj TRUE => Apply EOM Adjustment
+	 * @param bApplyEOMAdj TRUE - Apply EOM Adjustment
 	 * 
 	 * @return DateEOMAdjustment Instance
 	 */
@@ -100,7 +100,7 @@ public class DateEOMAdjustment {
 	 * 
 	 * @param iStartDate Start Date
 	 * @param iEndDate End Date
-	 * @param bApplyEOMAdj TRUE => Apply EOM Adjustment
+	 * @param bApplyEOMAdj TRUE - Apply EOM Adjustment
 	 * 
 	 * @return DateEOMAdjustment Instance
 	 */
@@ -145,7 +145,7 @@ public class DateEOMAdjustment {
 	 * 
 	 * @param iStartDate Start Date
 	 * @param iEndDate End Date
-	 * @param bApplyEOMAdj TRUE => Apply EOM Adjustment
+	 * @param bApplyEOMAdj TRUE - Apply EOM Adjustment
 	 * 
 	 * @return DateEOMAdjustment Instance
 	 */
@@ -183,7 +183,7 @@ public class DateEOMAdjustment {
 	 * 
 	 * @param iStartDate Start Date
 	 * @param iEndDate End Date
-	 * @param bApplyEOMAdj TRUE => Apply EOM Adjustment
+	 * @param bApplyEOMAdj TRUE - Apply EOM Adjustment
 	 * 
 	 * @return DateEOMAdjustment Instance
 	 */
@@ -217,7 +217,7 @@ public class DateEOMAdjustment {
 	 * 
 	 * @param iStartDate Start Date
 	 * @param iEndDate End Date
-	 * @param bApplyEOMAdj TRUE => Apply EOM Adjustment
+	 * @param bApplyEOMAdj TRUE - Apply EOM Adjustment
 	 * 
 	 * @return DateEOMAdjustment instance
 	 */
@@ -253,7 +253,7 @@ public class DateEOMAdjustment {
 	 * 
 	 * @param iStartDate Start Date
 	 * @param iEndDate End Date
-	 * @param bApplyEOMAdj TRUE => Apply EOM Adjustment
+	 * @param bApplyEOMAdj TRUE - Apply EOM Adjustment
 	 * 
 	 * @return DateEOMAdjustment instance
 	 */

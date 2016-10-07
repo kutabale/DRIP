@@ -65,7 +65,7 @@ public class FundingFixFloatMarksReconstitutor {
 	 * @param mapISTQ The ISTQ Map
 	 * @param iLatentStateType SHAPE PRESERVING/SMOOTH
 	 * 
-	 * @return TRUE => The Regularized ISTQ Map Successfully Dumped
+	 * @return TRUE - The Regularized ISTQ Map Successfully Dumped
 	 */
 
 	public static final boolean RegularizeMarks (

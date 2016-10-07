@@ -46,7 +46,7 @@ public class PolynomialFunctionSetParams implements org.drip.spline.basis.Functi
 	 * 
 	 * @param iNumBasis Number of Spline Basis Functions in the Set
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public PolynomialFunctionSetParams (

@@ -72,7 +72,7 @@ public class TerminationSetting implements org.drip.product.params.Validatable {
 	/**
 	 * Indicate if the contract has defaulted
 	 * 
-	 * @return TRUE => The Contract has defaulted
+	 * @return TRUE - The Contract has defaulted
 	 */
 
 	public boolean defaulted()
@@ -83,7 +83,7 @@ public class TerminationSetting implements org.drip.product.params.Validatable {
 	/**
 	 * Indicate if the contract is perpetual
 	 * 
-	 * @return TRUE => The Contract is Perpetual
+	 * @return TRUE - The Contract is Perpetual
 	 */
 
 	public boolean perpetual()
@@ -94,7 +94,7 @@ public class TerminationSetting implements org.drip.product.params.Validatable {
 	/**
 	 * Indicate if the contract has been exercised
 	 * 
-	 * @return TRUE => The Contract has been exercised
+	 * @return TRUE - The Contract has been exercised
 	 */
 
 	public boolean exercised()

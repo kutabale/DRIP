@@ -90,7 +90,7 @@ public class SingleSequenceAgnosticMetrics {
 	 * Compute the Specified Central Moment of the Sample Sequence
 	 * 
 	 * @param iMoment The Moment
-	 * @param bAbsolute TRUE => The Moment sought is on the Absolute Value
+	 * @param bAbsolute TRUE - The Moment sought is on the Absolute Value
 	 * 
 	 * @return The Specified Central Moment of the Sample Sequence
 	 * 
@@ -123,7 +123,7 @@ public class SingleSequenceAgnosticMetrics {
 	 * Compute the Specified Raw Moment of the Sample Sequence
 	 * 
 	 * @param iMoment The Moment
-	 * @param bAbsolute TRUE => The Moment sought is on the Absolute Value
+	 * @param bAbsolute TRUE - The Moment sought is on the Absolute Value
 	 * 
 	 * @return The Specified Raw Moment of the Sample Sequence
 	 * 
@@ -154,7 +154,7 @@ public class SingleSequenceAgnosticMetrics {
 	 * 
 	 * @param iMoment The Moment
 	 * @param dblAnchor The Anchor Pivot off of which the Moment is calculated
-	 * @param bAbsolute TRUE => The Moment sought is on the Absolute Value
+	 * @param bAbsolute TRUE - The Moment sought is on the Absolute Value
 	 * 
 	 * @return The Specified Anchor Moment of the Sample Sequence
 	 * 
@@ -270,7 +270,7 @@ public class SingleSequenceAgnosticMetrics {
 	/**
 	 * Retrieve the Sequence Positiveness Flag
 	 * 
-	 * @return TRUE => The Sequence is Positiveness
+	 * @return TRUE - The Sequence is Positiveness
 	 */
 
 	public boolean isPositive()
@@ -291,7 +291,7 @@ public class SingleSequenceAgnosticMetrics {
 
 	/**
 	 * Retrieve the Markov Upper Limiting Probability Bound for the Specified Level:
-	 * 	- P (X >= t) <= E[f(X)] / f(t)
+	 * 	- P (X gte t) lte E[f(X)] / f(t)
 	 * 
 	 * @param dblLevel The Specified Level
 	 * @param auNonDecreasing The Non-decreasing Bounding Transformer Function
@@ -401,7 +401,6 @@ public class SingleSequenceAgnosticMetrics {
 
 	public org.drip.sequence.metrics.PivotedDepartureBounds chebyshevCantelliBound (
 		final double dblLevel)
-		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblLevel) || dblLevel <= 0.) return null;
 
@@ -425,9 +424,9 @@ public class SingleSequenceAgnosticMetrics {
 	 * Retrieve the Chebyshev's Association Joint Expectation Bound
 	 * 
 	 * @param au1 Function 1 Operating On Sequence 1
-	 * @param bNonDecreasing1 TRUE => Function 1 is non-decreasing
+	 * @param bNonDecreasing1 TRUE - Function 1 is non-decreasing
 	 * @param au2 Function 2 Operating On Sequence 2
-	 * @param bNonDecreasing2 TRUE => Function 2 is non-decreasing
+	 * @param bNonDecreasing2 TRUE - Function 2 is non-decreasing
 	 * 
 	 * @return The Chebyshev's Association Joint Expectation Bound
 	 */

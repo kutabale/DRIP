@@ -83,7 +83,7 @@ public class PredictorResponseWeightConstraint {
 	 * @param dblPredictor The Predictor Node
 	 * @param dblResponseWeight The Response Weight at the Node
 	 * 
-	 * @return TRUE => Successfully added
+	 * @return TRUE - Successfully added
 	 */
 
 	public boolean addPredictorResponseWeight (
@@ -101,7 +101,7 @@ public class PredictorResponseWeightConstraint {
 	 * @param dblDResponseWeightDManifestMeasure The Response Weight-to-Manifest Measure Sensitivity at the
 	 * 	Node
 	 * 
-	 * @return TRUE => Successfully added
+	 * @return TRUE - Successfully added
 	 */
 
 	public boolean addDResponseWeightDManifestMeasure (
@@ -118,7 +118,7 @@ public class PredictorResponseWeightConstraint {
 	 * 
 	 * @param dblValue The Constraint Value Update Increment
 	 * 
-	 * @return TRUE => This Update Succeeded
+	 * @return TRUE - This Update Succeeded
 	 */
 
 	public boolean updateValue (
@@ -133,7 +133,7 @@ public class PredictorResponseWeightConstraint {
 	 * @param strManifestMeasure The Manifest Measure
 	 * @param dblDValueDManifestMeasure The Constraint Value Sensitivity Update Increment
 	 * 
-	 * @return TRUE => This Sensitivity Update Succeeded
+	 * @return TRUE - This Sensitivity Update Succeeded
 	 */
 
 	public boolean updateDValueDManifestMeasure (
@@ -181,7 +181,7 @@ public class PredictorResponseWeightConstraint {
 	 * 
 	 * @param lslMerge The Merging Latent State Label
 	 * 
-	 * @return TRUE => The Latent State Label Successfully Added
+	 * @return TRUE - The Latent State Label Successfully Added
 	 */
 
 	public boolean addMergeLabel (
@@ -208,9 +208,9 @@ public class PredictorResponseWeightConstraint {
 	}
 
 	/**
-	 * Retrieve the Predictor <-> Response Weight Map
+	 * Retrieve the Predictor To-From Response Weight Map
 	 * 
-	 * @return The Predictor <-> Response Weight Map
+	 * @return The Predictor To-From Response Weight Map
 	 */
 
 	public java.util.TreeMap<java.lang.Double, java.lang.Double> getPredictorResponseWeight()
@@ -219,11 +219,11 @@ public class PredictorResponseWeightConstraint {
 	}
 
 	/**
-	 * Retrieve the Predictor <-> Response Weight Sensitivity Map
+	 * Retrieve the Predictor To-From Response Weight Sensitivity Map
 	 * 
 	 * @param strManifestMeasure The Manifest Measure
 	 * 
-	 * @return The Predictor <-> Response Weight Sensitivity Map
+	 * @return The Predictor To-From Response Weight Sensitivity Map
 	 */
 
 	public java.util.TreeMap<java.lang.Double, java.lang.Double> getDResponseWeightDManifestMeasure (
@@ -238,7 +238,7 @@ public class PredictorResponseWeightConstraint {
 	 * 
 	 * @param prwcOther The "Other" PRWC Instance
 	 * 
-	 * @return TRUE => At least one entry of the "Other" was absorbed
+	 * @return TRUE - At least one entry of the "Other" was absorbed
 	 */
 
 	public boolean absorb (
@@ -289,6 +289,8 @@ public class PredictorResponseWeightConstraint {
 
 	/**
 	 * Display the Constraints and the corresponding Weights
+	 * 
+	 * @param strComment The Prefix Comment
 	 */
 
 	public void displayString (

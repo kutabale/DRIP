@@ -58,7 +58,7 @@ public class HermiteBasisSplineRegressor extends org.drip.regression.spline.Basi
 	 * @param iNumBasis Number of Basis Functions
 	 * @param iCk Ck
 	 * 
-	 * @throws java.lang.Exception Thrown if inputs are invalid
+	 * @return The BasisSplineRegressor Instance
 	 */
 
 	public static final org.drip.regression.spline.BasisSplineRegressor CreateHermiteSplineRegressor (

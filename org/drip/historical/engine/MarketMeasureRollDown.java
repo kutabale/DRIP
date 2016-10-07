@@ -74,7 +74,7 @@ public class MarketMeasureRollDown {
 	 * @param strHorizon The Custom Horizon
 	 * @param dblHorizonRollDown The Custom Horizon Market Measure Roll Down Metric Value
 	 * 
-	 * @return TRUE => The Custom Horizon Market Measure Roll Down Metric Value successfully set
+	 * @return TRUE - The Custom Horizon Market Measure Roll Down Metric Value successfully set
 	 */
 
 	public boolean add (

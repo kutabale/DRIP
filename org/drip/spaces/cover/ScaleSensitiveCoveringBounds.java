@@ -152,8 +152,8 @@ public class ScaleSensitiveCoveringBounds implements org.drip.spaces.cover.Funct
 	/**
 	 * Compute the Log of the Weight Loading Coefficient for the Maximum Cover Term in:
 	 * 
-	 * 	{Probability that the Empirical Error > Cover} <= 4 * exp (-m * Cover^2 / 128) *
-	 * 		<Max Covering Number Over the Specified Sample>
+	 * 	{Probability that the Empirical Error .gt. Cover} .lte. 4 * exp (-m * Cover^2 / 128) *
+	 * 		[[Max Covering Number Over the Specified Sample]]
 	 * 
 	 * Reference is:
 	 *

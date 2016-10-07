@@ -49,7 +49,7 @@ public class ProjectionSpecification {
 	 * ProjectionSpecification Constructor
 	 * 
 	 * @param r1mnExcessReturnsDistribution The R^1 Projection Space Excess Returns Normal Distribution
-	 * @param aadblAssetSpaceLoading Double Array of Asset <-> Projection Portfolio Pick Weights
+	 * @param aadblAssetSpaceLoading Double Array of Asset To-From Projection Portfolio Pick Weights
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -84,9 +84,9 @@ public class ProjectionSpecification {
 	}
 
 	/**
-	 * Retrieve the Matrix of Asset <-> Projection Portfolio Pick Weights
+	 * Retrieve the Matrix of Asset To-From Projection Portfolio Pick Weights
 	 * 
-	 * @return The Matrix of Asset <-> Projection Portfolio Pick Weights
+	 * @return The Matrix of Asset To-From Projection Portfolio Pick Weights
 	 */
 
 	public double[][] assetSpaceLoading()

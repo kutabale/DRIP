@@ -46,7 +46,7 @@ public class ScenarioBasisCurveBuilder {
 	 * @param dtSpot The Spot Date
 	 * @param friReference Reference Leg FRI
 	 * @param friDerived Derived Leg FRI
-	 * @param bBasisOnReference TRUE => The Basis Quote is on the Reference Leg
+	 * @param bBasisOnReference TRUE - The Basis Quote is on the Reference Leg
 	 * @param astrTenor Array of the Tenors
 	 * @param adblBasis Array of the Basis Spreads
 	 * @param scbc The Segment Custom Builder Control
@@ -115,7 +115,7 @@ public class ScenarioBasisCurveBuilder {
 	 * @param dtStart The Tenor Start Date
 	 * @param friReference Reference Leg FRI
 	 * @param friDerived Derived Leg FRI
-	 * @param bBasisOnReference TRUE => The Basis Quote is on the Reference Leg
+	 * @param bBasisOnReference TRUE - The Basis Quote is on the Reference Leg
 	 * @param astrTenor Array of the Tenors
 	 * @param adblBasis Array of the Basis Spreads
 	 * 
@@ -151,7 +151,7 @@ public class ScenarioBasisCurveBuilder {
 	 * @param dtStart The Tenor Start Date
 	 * @param friReference Reference Leg FRI
 	 * @param friDerived Derived Leg FRI
-	 * @param bBasisOnReference TRUE => The Basis Quote is on the Reference Leg
+	 * @param bBasisOnReference TRUE - The Basis Quote is on the Reference Leg
 	 * @param astrTenor Array of the Tenors
 	 * @param adblBasis Array of the Basis Spreads
 	 * 
@@ -187,7 +187,7 @@ public class ScenarioBasisCurveBuilder {
 	 * @param dtStart The Tenor Start Date
 	 * @param friReference Reference Leg FRI
 	 * @param friDerived Derived Leg FRI
-	 * @param bBasisOnReference TRUE => The Basis Quote is on the Reference Leg
+	 * @param bBasisOnReference TRUE - The Basis Quote is on the Reference Leg
 	 * @param astrTenor Array of the Tenors
 	 * @param adblBasis Array of the Basis Spreads
 	 * 
@@ -223,7 +223,7 @@ public class ScenarioBasisCurveBuilder {
 	 * @param dtStart The Tenor Start Date
 	 * @param friReference Reference Leg FRI
 	 * @param friDerived Derived Leg FRI
-	 * @param bBasisOnReference TRUE => The Basis Quote is on the Reference Leg
+	 * @param bBasisOnReference TRUE - The Basis Quote is on the Reference Leg
 	 * @param astrTenor Array of the Tenors
 	 * @param adblBasis Array of the Basis Spreads
 	 * @param dblTension The Tension Parameter
@@ -261,7 +261,7 @@ public class ScenarioBasisCurveBuilder {
 	 * @param dtStart The Tenor Start Date
 	 * @param friReference Reference Leg FRI
 	 * @param friDerived Derived Leg FRI
-	 * @param bBasisOnReference TRUE => The Basis Quote is on the Reference Leg
+	 * @param bBasisOnReference TRUE - The Basis Quote is on the Reference Leg
 	 * @param astrTenor Array of the Tenors
 	 * @param adblBasis Array of the Basis Spreads
 	 * @param dblTension The Tension Parameter
@@ -299,7 +299,7 @@ public class ScenarioBasisCurveBuilder {
 	 * @param dtStart The Tenor Start Date
 	 * @param friReference Reference Leg FRI
 	 * @param friDerived Derived Leg FRI
-	 * @param bBasisOnReference TRUE => The Basis Quote is on the Reference Leg
+	 * @param bBasisOnReference TRUE - The Basis Quote is on the Reference Leg
 	 * @param astrTenor Array of the Tenors
 	 * @param adblBasis Array of the Basis Spreads
 	 * @param dblTension The Tension Parameter

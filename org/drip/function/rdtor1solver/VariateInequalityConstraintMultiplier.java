@@ -290,7 +290,9 @@ public class VariateInequalityConstraintMultiplier {
 	 * @param dblAbsoluteToleranceFallback The Absolute Tolerance Fall-back Between the Variates
 	 * @param iNumComparisonVariate The Number of Variates to Compare
 	 * 
-	 * @return TRUE => The VICM Instances are Close (Enough)
+	 * @return TRUE - The VICM Instances are Close (Enough)
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final boolean Compare (
@@ -336,7 +338,7 @@ public class VariateInequalityConstraintMultiplier {
 	/**
 	 * VariateInequalityConstraintMultiplier Constructor
 	 * 
-	 * @param bIncremental TRUE => Tuple represents an Incremental Unit
+	 * @param bIncremental TRUE - Tuple represents an Incremental Unit
 	 * @param adblVariate Array of Variates
 	 * @param adblConstraintMultiplier Array of Constraint Multipliers
 	 * 
@@ -360,7 +362,7 @@ public class VariateInequalityConstraintMultiplier {
 	/**
 	 * Retrieve the Incremental Flag
 	 * 
-	 * @return TRUE => Tuple is Incremental
+	 * @return TRUE - Tuple is Incremental
 	 */
 
 	public boolean incremental()

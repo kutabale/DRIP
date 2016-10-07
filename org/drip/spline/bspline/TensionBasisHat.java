@@ -63,7 +63,7 @@ public abstract class TensionBasisHat extends org.drip.function.definition.R1ToR
 	 * 
 	 * @param dblPredictorOrdinate The Predictor Ordinate
 	 * 
-	 * @return TRUE => The Ordinate is local to the Specified Range
+	 * @return TRUE - The Ordinate is local to the Specified Range
 	 * 
 	 * @throws java.lang.Exception Thrown if the inputs are invalid
 	 */

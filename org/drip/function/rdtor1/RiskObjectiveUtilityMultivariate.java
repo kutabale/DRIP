@@ -29,7 +29,7 @@ package org.drip.function.rdtor1;
  */
 
 /**
- * RiskObjectiveUtilityMultivariate implements the Risk Objective R^d -> R^1 Multivariate Function used in
+ * RiskObjectiveUtilityMultivariate implements the Risk Objective R^d To R^1 Multivariate Function used in
  *  Portfolio Allocation. It accommodates both the Risk Tolerance and Risk Aversion Variants.
  *
  * @author Lakshmi Krishnamurthy

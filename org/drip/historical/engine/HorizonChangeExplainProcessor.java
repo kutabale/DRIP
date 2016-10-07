@@ -242,7 +242,7 @@ public abstract class HorizonChangeExplainProcessor {
 	/**
 	 * Update the Fixings (if any) to the Second Market Parameters
 	 * 
-	 * @return TRUE => The Fixings were successfully updated to the Second Market Parameters
+	 * @return TRUE - The Fixings were successfully updated to the Second Market Parameters
 	 */
 
 	public abstract boolean updateFixings();

@@ -48,7 +48,7 @@ public class GlivenkoCantelliUniformDeviation extends org.drip.sequence.function
 	 * @param biur The Bounded Idempotent Univariate Random Function
 	 * @param iNumSample Number of Empirical Samples
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The GlivenkoCantelliUniformDeviation Instance
 	 */
 
 	public static final GlivenkoCantelliUniformDeviation Create (

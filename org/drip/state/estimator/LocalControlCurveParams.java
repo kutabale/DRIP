@@ -57,10 +57,10 @@ public class LocalControlCurveParams extends org.drip.state.estimator.SmoothingC
 	 * @param iCalibrationDetail The Calibration Detail
 	 * @param sbfr Curve Fitness Weighted Response
 	 * @param sbfrSensitivity Curve Fitness Weighted Response Sensitivity
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
-	 * @throws java.lang.Exception Thrown if the inputs are invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public LocalControlCurveParams (

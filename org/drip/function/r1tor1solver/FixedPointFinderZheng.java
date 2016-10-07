@@ -76,7 +76,7 @@ public class FixedPointFinderZheng extends org.drip.function.r1tor1solver.FixedP
 	 * 
 	 * @param dblOFGoal OF Goal
 	 * @param of Objective Function
-	 * @param bWhine TRUE => Balk on Encountering Exception
+	 * @param bWhine TRUE - Balk on Encountering Exception
 	 * 
 	 * @throws java.lang.Exception Propogated from below
 	 */

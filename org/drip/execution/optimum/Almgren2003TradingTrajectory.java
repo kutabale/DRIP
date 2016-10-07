@@ -61,7 +61,7 @@ public class Almgren2003TradingTrajectory extends org.drip.execution.optimum.Con
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
 	 * @param dblMaxExecutionTime The Optimal Trajectory's Maximal Execution Time (if it exists)
 	 * @param dblHyperboloidBoundaryValue The Hyperboloid Boundary Value
-	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 -> R^1 Holdings Function
+	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 To R^1 Holdings Function
 	 * 
 	 * @return The Standard Almgren2003TradingTrajectory Instance
 	 */
@@ -117,7 +117,7 @@ public class Almgren2003TradingTrajectory extends org.drip.execution.optimum.Con
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
 	 * @param dblMaxExecutionTime The Optimal Trajectory's Maximal Execution Time (if it exists)
 	 * @param dblHyperboloidBoundaryValue The Hyperboloid Boundary Value
-	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 -> R^1 Holdings Function
+	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 To R^1 Holdings Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

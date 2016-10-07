@@ -38,10 +38,10 @@ package org.drip.spline.params;
  * 
  * 			C := Sigma_(i,j) [W_i * B_i(x_j)] = V where
  * 
- * 	x_j => The Predictor Ordinate at Node j
- * 	B_i => The Coefficient for the Response Basis Function i
- * 	W_i => Weight applied for the Response Basis Function i
- * 	V => Value of the Constraint
+ * 	x_j - The Predictor Ordinate at Node j
+ * 	B_i - The Coefficient for the Response Basis Function i
+ * 	W_i - Weight applied for the Response Basis Function i
+ * 	V - Value of the Constraint
  * 
  * SegmentBasisFlexureConstraint can be viewed as the localized basis function transpose of
  *  SegmentResponseValueConstraint.

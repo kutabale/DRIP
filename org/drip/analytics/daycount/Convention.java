@@ -719,7 +719,7 @@ public class Convention {
 	 * @param strCalendar Location Calendar Set
 	 * @param iHolType WEEKDAY_HOLS or WEEKEND_HOLS
 	 * 
-	 * @return TRUE => it is a Holiday
+	 * @return TRUE - it is a Holiday
 	 */
 
 	public static final boolean IsHoliday (
@@ -737,7 +737,7 @@ public class Convention {
 	 * @param iDate Date
 	 * @param strCalendar Location Calendar Set
 	 * 
-	 * @return TRUE => it is a Holiday
+	 * @return TRUE - it is a Holiday
 	 */
 
 	public static final boolean IsHoliday (

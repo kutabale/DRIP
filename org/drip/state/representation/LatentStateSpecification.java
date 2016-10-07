@@ -103,7 +103,7 @@ public class LatentStateSpecification {
 	 * 
 	 * @param lssOther The "Other" Latent State Specification Instance
 	 * 
-	 * @return TRUE => Matches the Specified Latent State Specification Instance
+	 * @return TRUE - Matches the Specified Latent State Specification Instance
 	 */
 
 	public boolean match (

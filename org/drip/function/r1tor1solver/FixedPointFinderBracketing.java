@@ -183,7 +183,7 @@ public class FixedPointFinderBracketing extends org.drip.function.r1tor1solver.F
 	 * @param of Objective Function
 	 * @param ec Execution Control
 	 * @param iIteratorPrimitive Iterator Primitive
-	 * @param bWhine TRUE => Balk on Encountering Exception
+	 * @param bWhine TRUE - Balk on Encountering Exception
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */

@@ -44,7 +44,7 @@ public class FixedBondAPI {
 	 * @param iBondMaturityDate Bond Maturity Date
 	 * @param dblBondCoupon Bond Coupon
 	 * @param iBondCouponFrequency Bond Coupon Frequency
-	 * @param strBondCouponDaycount Bond Coupon Day Count
+	 * @param strBondCouponDayCount Bond Coupon Day Count
 	 * @param strBondCouponCurrency Bond Coupon Currency
 	 * @param iSpotDate Spot Date
 	 * @param astrFundingCurveDepositTenor Deposit Instruments Tenor (for Funding Curve)
@@ -64,7 +64,7 @@ public class FixedBondAPI {
 	 * @param adblGovvieCurveTreasuryYield Array of the Treasury Instrument Yield (for Treasury Curve)
 	 * @param strGovvieCurveTreasuryMeasure Treasury Instrument Measure (for Treasury Curve)
 	 * @param strCreditCurveName Credit Curve Name (for Credit Curve)
-	 * @param astrCreditCurveCDSMaturityTenor CDS Maturity Tenor (for Credit Curve)
+	 * @param astrCreditCurveCDSTenor CDS Maturity Tenor (for Credit Curve)
 	 * @param adblCreditCurveCDSCoupon Array of CDS Fixed Coupon (for Credit Curve)
 	 * @param adblCreditCurveCDSQuote Array of CDS Market Quotes (for Credit Curve)
 	 * @param strCreditCurveCDSMeasure CDS Calibration Measure (for Credit Curve)
@@ -206,7 +206,7 @@ public class FixedBondAPI {
 	 * @param iBondMaturityDate Bond Maturity Date
 	 * @param dblBondCoupon Bond Coupon
 	 * @param iBondCouponFrequency Bond Coupon Frequency
-	 * @param strBondCouponDaycount Bond Coupon Day Count
+	 * @param strBondCouponDayCount Bond Coupon Day Count
 	 * @param strBondCouponCurrency Bond Coupon Currency
 	 * @param iSpotDate Spot Date
 	 * @param strGovvieCode Govvie Bond Code (for Treasury Curve)
@@ -491,7 +491,7 @@ public class FixedBondAPI {
 	 * @param iBondMaturityDate Bond Maturity Date
 	 * @param dblBondCoupon Bond Coupon
 	 * @param iBondCouponFrequency Bond Coupon Frequency
-	 * @param strBondCouponDaycount Bond Coupon Day Count
+	 * @param strBondCouponDayCount Bond Coupon Day Count
 	 * @param strBondCouponCurrency Bond Coupon Currency
 	 * @param iSpotDate Spot Date
 	 * @param astrFundingCurveDepositTenor Deposit Instruments Tenor (for Funding Curve)
@@ -511,7 +511,7 @@ public class FixedBondAPI {
 	 * @param adblGovvieCurveTreasuryYield Array of the Treasury Instrument Yield (for Treasury Curve)
 	 * @param strGovvieCurveTreasuryMeasure Treasury Instrument Measure (for Treasury Curve)
 	 * @param strCreditCurveName Credit Curve Name (for Credit Curve)
-	 * @param astrCreditCurveCDSMaturityTenor CDS Maturity Tenor (for Credit Curve)
+	 * @param astrCreditCurveCDSTenor CDS Maturity Tenor (for Credit Curve)
 	 * @param adblCreditCurveCDSCoupon Array of CDS Fixed Coupon (for Credit Curve)
 	 * @param adblCreditCurveCDSQuote Array of CDS Market Quotes (for Credit Curve)
 	 * @param strCreditCurveCDSMeasure CDS Calibration Measure (for Credit Curve)

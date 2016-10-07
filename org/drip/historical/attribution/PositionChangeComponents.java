@@ -46,7 +46,7 @@ public class PositionChangeComponents {
 	/**
 	 * PositionChangeComponents Constructor
 	 * 
-	 * @param bChangeTypeReturn TRUE => Change Type is Return (Relative)
+	 * @param bChangeTypeReturn TRUE - Change Type is Return (Relative)
 	 * @param pmsFirst The First Position Market Snapshot Instance
 	 * @param pmsSecond The Second Position Market Snapshot Instance
 	 * @param dblAccrualChange The Accrual Change Component of Interval Return/Change
@@ -75,7 +75,7 @@ public class PositionChangeComponents {
 	/**
 	 * Return the Position Change Type
 	 * 
-	 * @return TRUE => Change Type is Return (Relative)
+	 * @return TRUE - Change Type is Return (Relative)
 	 */
 
 	public boolean changeTypeReturn()

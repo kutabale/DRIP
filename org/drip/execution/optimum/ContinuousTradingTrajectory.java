@@ -59,7 +59,7 @@ public class ContinuousTradingTrajectory extends org.drip.execution.optimum.Effi
 	 * @param dblTransactionCostExpectation The Expected Transaction Cost
 	 * @param dblTransactionCostVariance The Variance of the Transaction Cost
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
-	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 -> R^1 Holdings Function
+	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 To R^1 Holdings Function
 	 * 
 	 * @return The Standard ContinuousTradingTrajectory Instance
 	 */
@@ -111,7 +111,7 @@ public class ContinuousTradingTrajectory extends org.drip.execution.optimum.Effi
 	 * @param dblTransactionCostExpectation The Expected Transaction Cost
 	 * @param dblTransactionCostVariance The Variance of the Transaction Cost
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
-	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 -> R^1 Holdings Function
+	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 To R^1 Holdings Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

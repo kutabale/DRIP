@@ -82,7 +82,7 @@ public class TenorDurationNodeMetrics {
 	 * @param strKRDNode KRD Node Key
 	 * @param dblKRDValue KRD Node Value
 	 * 
-	 * @return TRUE => The KRD Entry successfully inserted
+	 * @return TRUE - The KRD Entry successfully inserted
 	 */
 
 	public boolean addKRDNode (
@@ -115,7 +115,7 @@ public class TenorDurationNodeMetrics {
 	 * @param strKey The Key
 	 * @param dtCustom The Custom Date Entry
 	 * 
-	 * @return TRUE => Custom Date successfully set
+	 * @return TRUE - Custom Date successfully set
 	 */
 
 	public boolean setDate (
@@ -149,7 +149,7 @@ public class TenorDurationNodeMetrics {
 	 * @param strKey The Key
 	 * @param strC1 The Custom C^1 Entry
 	 * 
-	 * @return TRUE => Custom C^1 Entry successfully set
+	 * @return TRUE - Custom C^1 Entry successfully set
 	 */
 
 	public boolean setC1 (
@@ -183,7 +183,7 @@ public class TenorDurationNodeMetrics {
 	 * @param strKey The Key
 	 * @param dblR1 The Custom R^1 Entry
 	 * 
-	 * @return TRUE => Custom Number successfully set
+	 * @return TRUE - Custom Number successfully set
 	 */
 
 	public boolean setR1 (

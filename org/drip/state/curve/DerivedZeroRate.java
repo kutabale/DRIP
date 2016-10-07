@@ -107,15 +107,16 @@ public class DerivedZeroRate extends org.drip.state.discount.ZeroCurve {
 	 * @param strDCZC Zero Curve Day Count
 	 * @param strCalendarZC Zero Curve Calendar
 	 * @param bApplyEOMAdjZC Zero Coupon EOM Adjustment Flag
-	 * @param lsCouponPeriod List of bond coupon periods
-	 * @param iWorkoutDate Work-out date
+	 * @param lsCouponPeriod List of Bond coupon periods
+	 * @param iWorkoutDate Work-out Date
+	 * @param iValueDate Value Date
 	 * @param iCashPayDate Cash-Pay Date
 	 * @param dc Underlying Discount Curve
 	 * @param dblZCBump DC Bump
 	 * @param vcp Valuation Customization Parameters
 	 * @param scbc Segment Custom Builder Control Parameters
 	 * 
-	 * @throws java.lang.Exception
+	 * @return The Derived Zero Rate Instance
 	 */
 
 	public static final DerivedZeroRate FromDiscountCurve (
@@ -260,14 +261,15 @@ public class DerivedZeroRate extends org.drip.state.discount.ZeroCurve {
 	 * @param strCalendarZC Zero Curve Calendar
 	 * @param bApplyEOMAdjZC Zero Coupon EOM Adjustment Flag
 	 * @param lsCouponPeriod List of bond coupon periods
-	 * @param iWorkoutDate Work-out date
+	 * @param iWorkoutDate Work-out Date
+	 * @param iValueDate Value Date
 	 * @param iCashPayDate Cash-Pay Date
 	 * @param gc Underlying Govvie Curve
 	 * @param dblZCBump DC Bump
 	 * @param vcp Valuation Customization Parameters
 	 * @param scbc Segment Custom Builder Control Parameters
 	 * 
-	 * @throws java.lang.Exception
+	 * @return The Derived Zero Rate Instance
 	 */
 
 	public static final DerivedZeroRate FromGovvieCurve (
@@ -409,19 +411,20 @@ public class DerivedZeroRate extends org.drip.state.discount.ZeroCurve {
 	/**
 	 * Construct an Instance from the Input Curve and the related Parameters
 	 * 
-	 * @param iFreqZC Zero Curve Frequency
-	 * @param strDCZC Zero Curve Day Count
-	 * @param strCalendarZC Zero Curve Calendar
-	 * @param bApplyEOMAdjZC Zero Coupon EOM Adjustment Flag
+	 * @param iFreq Zero Curve Frequency
+	 * @param strDayCount Zero Curve Day Count
+	 * @param strCalendar Zero Curve Calendar
+	 * @param bApplyEOMAdj Zero Coupon EOM Adjustment Flag
 	 * @param lsCouponPeriod List of bond coupon periods
-	 * @param iWorkoutDate Work-out date
+	 * @param iWorkoutDate Work-out Date
+	 * @param iValueDate Value Date
 	 * @param iCashPayDate Cash-Pay Date
 	 * @param dc Underlying Discount Curve
-	 * @param dblZCBump DC Bump
+	 * @param dblBump DC Bump
 	 * @param vcp Valuation Customization Parameters
 	 * @param scbc Segment Custom Builder Control Parameters
 	 * 
-	 * @throws java.lang.Exception
+	 * @return The Derived Zero Rate Instance
 	 */
 
 	public static final DerivedZeroRate FromBaseCurve (

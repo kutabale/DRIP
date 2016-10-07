@@ -30,7 +30,7 @@ package org.drip.learning.kernel;
  */
 
 /**
- * IntegralOperator implements the R^x L2 -> R^x L2 Mercer Kernel Integral Operator defined by:
+ * IntegralOperator implements the R^x L2 To R^x L2 Mercer Kernel Integral Operator defined by:
  * 
  * 		T_k [f(.)] := Integral Over Input Space {k (., y) * f(y) * d[Prob(y)]}
  *  
@@ -56,8 +56,8 @@ public abstract class IntegralOperator {
 	/**
 	 * IntegralOperator Constructor
 	 * 
-	 * @param kernel The Symmetric Mercer Kernel - this should be R^x L2 X R^x L2 -> R^1
-	 * @param funcRdToR1 The R^d -> R^1 Operator Function
+	 * @param kernel The Symmetric Mercer Kernel - this should be R^x L2 X R^x L2 To R^1
+	 * @param funcRdToR1 The R^d To R^1 Operator Function
 	 * @param r1OperatorOutput The Kernel Integral Operator Output Space - this is R^1 L2
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
@@ -75,9 +75,9 @@ public abstract class IntegralOperator {
 	}
 
 	/**
-	 * Retrieve the Symmetric R^d -> R^1 Kernel
+	 * Retrieve the Symmetric R^d To R^1 Kernel
 	 * 
-	 * @return The Symmetric R^d -> R^1 Kernel
+	 * @return The Symmetric R^d To R^1 Kernel
 	 */
 
 	public org.drip.learning.kernel.SymmetricRdToNormedR1Kernel kernel()
@@ -86,9 +86,9 @@ public abstract class IntegralOperator {
 	}
 
 	/**
-	 * Retrieve the R^d -> R^1 Kernel Operator Function
+	 * Retrieve the R^d To R^1 Kernel Operator Function
 	 * 
-	 * @return The R^d -> R^1 Kernel Operator Function
+	 * @return The R^d To R^1 Kernel Operator Function
 	 */
 
 	public org.drip.function.definition.RdToR1 kernelOperatorFunction()
@@ -154,13 +154,12 @@ public abstract class IntegralOperator {
 	 * 
 	 * @param adblX Validated Vector Instance X
 	 * 
-	 * @return TRUE => The Kernel Operator Integral is Positive Definite across the specified X Variate
+	 * @return TRUE - The Kernel Operator Integral is Positive Definite across the specified X Variate
 	 *  Instance
 	 */
 
 	public boolean isPositiveDefinite (
 		final double[] adblX)
-		throws java.lang.Exception
 	{
 		try {
 			return 0 < computeOperatorIntegral (adblX);

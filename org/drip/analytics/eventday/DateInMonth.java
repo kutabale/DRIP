@@ -67,7 +67,7 @@ public class DateInMonth {
 	 * DateInMonth Constructor
 	 * 
 	 * @param iInstanceGeneratorRule Instance Generation Rule
-	 * @param bFromBack TRUE => Apply Rules from Back of EOM
+	 * @param bFromBack TRUE - Apply Rules from Back of EOM
 	 * @param iLag The Lag
 	 * @param iDayOfWeek Day of Week
 	 * @param iWeekInMonth Week in the Month
@@ -110,7 +110,7 @@ public class DateInMonth {
 	/**
 	 * Retrieve the Flag indicating whether the Lag is from the Front/Back
 	 * 
-	 * @return TRUE => The Lag is from the Back.
+	 * @return TRUE - The Lag is from the Back.
 	 */
 
 	public boolean fromBack()

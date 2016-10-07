@@ -78,7 +78,7 @@ public class BondCouponMeasures {
 	 * 
 	 * @param dblCashPayDF Cash Pay discount factor
 	 * 
-	 * @return TRUE => if the adjustment has been successfully applied
+	 * @return TRUE - if the adjustment has been successfully applied
 	 */
 
 	public boolean adjustForSettlement (
@@ -143,9 +143,9 @@ public class BondCouponMeasures {
 	 * @param dblAccrued01 Accrued 01
 	 * @param dblCoupon Coupon during the accrued phase
 	 * @param dblIndex Index Rate during the accrued phase
-	 * @param bDirtyFromClean True => Change measures from Clean to Dirty
+	 * @param bDirtyFromClean True - Change measures from Clean to Dirty
 	 * 
-	 * @return True => if the adjustment has been successfully applied
+	 * @return True - if the adjustment has been successfully applied
 	 */
 
 	public boolean adjustForAccrual (

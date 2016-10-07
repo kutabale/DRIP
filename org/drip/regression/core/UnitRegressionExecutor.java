@@ -68,7 +68,7 @@ public abstract class UnitRegressionExecutor implements org.drip.regression.core
 	/**
 	 * One-time initialization to set up the objects needed for the regression
 	 * 
-	 * @return TRUE => Initialization successful
+	 * @return TRUE - Initialization successful
 	 */
 
 	public boolean preRegression()
@@ -89,7 +89,7 @@ public abstract class UnitRegressionExecutor implements org.drip.regression.core
 	 * 
 	 * @param rnvd Regression Run Detail object to capture the regression details
 	 * 
-	 * @return TRUE => Clean-up successful
+	 * @return TRUE - Clean-up successful
 	 */
 
 	public boolean postRegression (

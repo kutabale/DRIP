@@ -59,7 +59,7 @@ public abstract class TransactionFunction extends org.drip.function.definition.R
 	/**
 	 * Regularize the Input Function using the specified Trade Inputs
 	 * 
-	 * @param dblTradeAmount The Trade Amount
+	 * @param dblTradeInterval The Trade Interval
 	 * 
 	 * @return The Regularize Input
 	 * 
@@ -73,14 +73,14 @@ public abstract class TransactionFunction extends org.drip.function.definition.R
 	/**
 	 * Modulate/Scale the Impact Output
 	 * 
-	 * @param dblTradeAmount The Trade Amount
+	 * @param dblTradeInterval The Trade Interval
 	 * 
 	 * @return The Modulated Output
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double modulate(
+	public abstract double modulate (
 		final double dblTradeInterval)
 		throws java.lang.Exception;
 

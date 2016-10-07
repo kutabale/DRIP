@@ -103,7 +103,7 @@ public class ComputeClient {
 	/**
 	 * Establish a Connection to the Compute Server Engine
 	 * 
-	 * @return TRUE => Connection to the Compute Server Engine Established
+	 * @return TRUE - Connection to the Compute Server Engine Established
 	 */
 
 	public boolean initialize()

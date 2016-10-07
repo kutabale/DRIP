@@ -63,7 +63,7 @@ public class LatentStateFixingsContainer {
 	 * @param lsl The Latent State Label
 	 * @param dblFixing The Fixing Amount
 	 * 
-	 * @return TRUE => Entry successfully added
+	 * @return TRUE - Entry successfully added
 	 */
 
 	public boolean add (
@@ -109,7 +109,7 @@ public class LatentStateFixingsContainer {
 	 * @param lsl The Latent State Fixing Label
 	 * @param dblFixing The Fixing Amount
 	 * 
-	 * @return TRUE => Entry successfully added
+	 * @return TRUE - Entry successfully added
 	 */
 
 	public boolean add (
@@ -126,7 +126,7 @@ public class LatentStateFixingsContainer {
 	 * @param dt The Fixing Date
 	 * @param lsl The Latent State Fixing Label
 	 * 
-	 * @return TRUE => Entry successfully removed if it existed
+	 * @return TRUE - Entry successfully removed if it existed
 	 */
 
 	public boolean remove (
@@ -160,7 +160,7 @@ public class LatentStateFixingsContainer {
 	 * @param iDate The Fixing Date
 	 * @param lsl The Latent State Fixing Label
 	 * 
-	 * @return TRUE => Entry successfully removed if it existed
+	 * @return TRUE - Entry successfully removed if it existed
 	 */
 
 	public boolean remove (
@@ -253,7 +253,7 @@ public class LatentStateFixingsContainer {
 	 * @param dt The Date
 	 * @param lsl The Label
 	 * 
-	 * @return TRUE => The Fixing for the Specified LSL Label on the specified Date 
+	 * @return TRUE - The Fixing for the Specified LSL Label on the specified Date 
 	 */
 
 	public boolean available (
@@ -283,7 +283,7 @@ public class LatentStateFixingsContainer {
 	 * @param iDate The Date
 	 * @param lsl The Label
 	 * 
-	 * @return TRUE => The Fixing for the Specified LSL on the specified Date 
+	 * @return TRUE - The Fixing for the Specified LSL on the specified Date 
 	 */
 
 	public boolean available (

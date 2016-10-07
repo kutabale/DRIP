@@ -237,7 +237,6 @@ public class ScenarioDiscountCurveBuilder {
 	 * @param dcShapePreserver Instance of the Shape Preserving Discount Curve
 	 * @param llsc The Linear Latent State Calibrator Instance
 	 * @param gccp Global Smoothing Curve Control Parameters
-	 * @param aSRS Array of the Instrument Representation Stretches
 	 * @param valParam Valuation Parameters
 	 * @param pricerParam Pricer Parameters
 	 * @param csqs Market Parameters
@@ -438,7 +437,7 @@ public class ScenarioDiscountCurveBuilder {
 	 * @param adblQuote2 Array of Calibration Quotes #2
 	 * @param astrManifestMeasure2 Array of Manifest Measures for component Array #2
 	 * @param dblEpochResponse The Stretch Start DF
-	 * @param bZeroSmooth TRUE => Turn on the Zero Rate Smoothing
+	 * @param bZeroSmooth TRUE - Turn on the Zero Rate Smoothing
 	 * 
 	 * @return Instance of the Shape Preserver of the desired basis type
 	 */
@@ -627,7 +626,7 @@ public class ScenarioDiscountCurveBuilder {
 	 * @param aCalibComp2 Array of Calibration Components #2
 	 * @param adblQuote2 Array of Calibration Quotes #2
 	 * @param astrManifestMeasure2 Array of Manifest Measures for component Array #2
-	 * @param bZeroSmooth TRUE => Turn on the Zero Rate Smoothing
+	 * @param bZeroSmooth TRUE - Turn on the Zero Rate Smoothing
 	 * 
 	 * @return Instance of the Shape Preserver of the desired basis type
 	 */
@@ -668,7 +667,7 @@ public class ScenarioDiscountCurveBuilder {
 	 * @param aCalibComp2 Array of Calibration Components #2
 	 * @param adblQuote2 Array of Calibration Quotes #2
 	 * @param astrManifestMeasure2 Array of Manifest Measures for component Array #2
-	 * @param bZeroSmooth TRUE => Turn on the Zero Rate Smoothing
+	 * @param bZeroSmooth TRUE - Turn on the Zero Rate Smoothing
 	 * 
 	 * @return Instance of the Shape Preserver of the desired basis type
 	 */
@@ -706,7 +705,7 @@ public class ScenarioDiscountCurveBuilder {
 	 *  - Nahum, E. (2004): Changes to Yield Curve Construction – Linear Stripping of the Short End of the
 	 *  	Curve F. A. S. T. Research Documentation Bear Sterns.
 	 *  
-	 *  - Kinlay, J., and X. Bai (2009): Yield Curve Construction Models – Tools & Techniques 
+	 *  - Kinlay, J., and X. Bai (2009): Yield Curve Construction Models – Tools and Techniques 
 	 *  	(http://www.jonathankinlay.com/Articles/Yield Curve Construction Models.pdf)
 	 *  
 	 * @param strName The Curve Name
@@ -817,7 +816,7 @@ public class ScenarioDiscountCurveBuilder {
 	 *  - Nahum, E. (2004): Changes to Yield Curve Construction – Linear Stripping of the Short End of the
 	 *  	Curve F. A. S. T. Research Documentation Bear Sterns.
 	 *  
-	 *  - Kinlay, J., and X. Bai (2009): Yield Curve Construction Models – Tools & Techniques 
+	 *  - Kinlay, J., and X. Bai (2009): Yield Curve Construction Models – Tools and Techniques 
 	 *  	(http://www.jonathankinlay.com/Articles/Yield Curve Construction Models.pdf)
 	 *  
 	 * @param strName The Curve Name
@@ -859,7 +858,7 @@ public class ScenarioDiscountCurveBuilder {
 	 *  - Nahum, E. (2004): Changes to Yield Curve Construction – Linear Stripping of the Short End of the
 	 *  	Curve F. A. S. T. Research Documentation Bear Sterns.
 	 *  
-	 *  - Kinlay, J., and X. Bai (2009): Yield Curve Construction Models – Tools & Techniques 
+	 *  - Kinlay, J., and X. Bai (2009): Yield Curve Construction Models – Tools and Techniques 
 	 *  	(http://www.jonathankinlay.com/Articles/Yield Curve Construction Models.pdf)
 	 *  
 	 * @param strName The Curve Name

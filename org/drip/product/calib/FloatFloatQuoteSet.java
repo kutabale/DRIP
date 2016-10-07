@@ -60,7 +60,7 @@ public class FloatFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblPV The PV
 	 * 
-	 * @return TRUE => PV successfully set
+	 * @return TRUE - PV successfully set
 	 */
 
 	public boolean setPV (
@@ -72,7 +72,7 @@ public class FloatFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the PV Field exists
 	 * 
-	 * @return TRUE => PV Field Exists
+	 * @return TRUE - PV Field Exists
 	 */
 
 	public boolean containsPV()
@@ -99,7 +99,7 @@ public class FloatFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblDerivedParBasisSpread The Derived Par Basis Spread
 	 * 
-	 * @return TRUE => The Derived Par Basis Spread successfully set
+	 * @return TRUE - The Derived Par Basis Spread successfully set
 	 */
 
 	public boolean setDerivedParBasisSpread (
@@ -111,7 +111,7 @@ public class FloatFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the Derived Par Basis Spread Field exists
 	 * 
-	 * @return TRUE => The Derived Par Basis Spread Field Exists
+	 * @return TRUE - The Derived Par Basis Spread Field Exists
 	 */
 
 	public boolean containsDerivedParBasisSpread()
@@ -138,7 +138,7 @@ public class FloatFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblReferenceParBasisSpread The Reference Par Basis Spread
 	 * 
-	 * @return TRUE => The Reference Par Basis Spread successfully set
+	 * @return TRUE - The Reference Par Basis Spread successfully set
 	 */
 
 	public boolean setReferenceParBasisSpread (
@@ -150,7 +150,7 @@ public class FloatFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the Reference Par Basis Spread Field exists
 	 * 
-	 * @return TRUE => The Reference Par Basis Spread Field Exists
+	 * @return TRUE - The Reference Par Basis Spread Field Exists
 	 */
 
 	public boolean containsReferenceParBasisSpread()

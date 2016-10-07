@@ -52,7 +52,7 @@ public class ArmijoEvolutionVerifier extends org.drip.function.rdtor1descent.Lin
 
 	/**
 	 * Construct the Nocedal-Wright Armijo Evolution Verifier
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
 	 * 
 	 * @return The Nocedal-Wright Armijo Evolution Verifier Instance
 	 */
@@ -73,7 +73,7 @@ public class ArmijoEvolutionVerifier extends org.drip.function.rdtor1descent.Lin
 	 * ArmijoEvolutionVerifier Constructor
 	 * 
 	 * @param dblArmijoParameter The Armijo Parameter
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -92,7 +92,7 @@ public class ArmijoEvolutionVerifier extends org.drip.function.rdtor1descent.Lin
 	/**
 	 * Indicate if the Check is for Minimizer/Maximizer
 	 * 
-	 * @return TRUE => The Check is for Maximizer
+	 * @return TRUE - The Check is for Maximizer
 	 */
 
 	public boolean maximizerCheck()

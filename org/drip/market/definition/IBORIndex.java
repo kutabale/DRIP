@@ -49,6 +49,7 @@ public class IBORIndex extends org.drip.market.definition.FloaterIndex {
 	 * @param strCurrency Index Currency
 	 * @param strDayCount Index Day Count
 	 * @param strCalendar Index Holiday Calendar
+	 * @param iSpotLag The Spot Lag
 	 * @param strShortestMaturity Index Shortest Maturity
 	 * @param strLongestMaturity Index Longest Maturity
 	 * @param iAccrualCompoundingRule Accrual Compounding Rule

@@ -76,7 +76,7 @@ public class FundingCurveMetrics {
 	 * @param strForTenor "For" Forward Tenor
 	 * @param dblForwardRate Forward Rate
 	 * 
-	 * @return TRUE => The Native Forward Rate successfully added
+	 * @return TRUE - The Native Forward Rate successfully added
 	 */
 
 	public boolean addNativeForwardRate (

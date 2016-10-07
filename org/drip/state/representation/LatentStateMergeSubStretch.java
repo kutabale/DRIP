@@ -86,7 +86,7 @@ public class LatentStateMergeSubStretch {
 	 * 
 	 * @param dblNewStartDate The new Date to be Shifted to
 	 * 
-	 * @return TRUE => Start Date successfully shifted
+	 * @return TRUE - Start Date successfully shifted
 	 */
 
 	public boolean shiftStart (
@@ -114,7 +114,7 @@ public class LatentStateMergeSubStretch {
 	 * 
 	 * @param dblNewEndDate The new Date to be Shifted to
 	 * 
-	 * @return TRUE => End Date successfully shifted
+	 * @return TRUE - End Date successfully shifted
 	 */
 
 	public boolean shiftEnd (
@@ -142,7 +142,7 @@ public class LatentStateMergeSubStretch {
 	 * 
 	 * @param lsmsOther The Supplied Merge Stretch
 	 * 
-	 * @return TRUE => Merge Stretches Index Match
+	 * @return TRUE - Merge Stretches Index Match
 	 */
 
 	public boolean indexMatch (
@@ -156,7 +156,7 @@ public class LatentStateMergeSubStretch {
 	 * 
 	 * @param dblDate Date whose "inside"ness is asked for
 	 * 
-	 * @return TRUE => Date is Inside
+	 * @return TRUE - Date is Inside
 	 */
 
 	public boolean in (
@@ -172,7 +172,7 @@ public class LatentStateMergeSubStretch {
 	 * 
 	 * @param lsmlOther The Supplied Merge Stretch
 	 * 
-	 * @return TRUE => Merge Stretches Overlap
+	 * @return TRUE - Merge Stretches Overlap
 	 */
 
 	public boolean overlap (

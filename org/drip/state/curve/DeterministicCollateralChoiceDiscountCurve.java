@@ -50,7 +50,7 @@ public class DeterministicCollateralChoiceDiscountCurve extends org.drip.state.d
 	 * @param aFCDC Array of The Foreign Collateralized Curves
 	 * @param iDiscreteCollateralizationIncrement The Discrete Collateralization Increment
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public DeterministicCollateralChoiceDiscountCurve (

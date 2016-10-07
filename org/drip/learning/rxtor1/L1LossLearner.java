@@ -30,7 +30,7 @@ package org.drip.learning.rxtor1;
  */
 
 /**
- * L1LossLearner implements the Learner Class that holds the Space of Normed R^x -> Normed R^1 Learning
+ * L1LossLearner implements the Learner Class that holds the Space of Normed R^x To Normed R^1 Learning
  * 	Functions that employs L1 Empirical Loss Routine. Class-Specific Asymptotic Sample, Covering Number based
  *  Upper Probability Bounds and other Parameters are also maintained.
  *  
@@ -59,7 +59,7 @@ public class L1LossLearner extends org.drip.learning.rxtor1.GeneralizedLearner {
 	/**
 	 * L1LossLearner Constructor
 	 * 
-	 * @param funcClassRxToR1 R^x -> R^1 Function Class
+	 * @param funcClassRxToR1 R^x To R^1 Function Class
 	 * @param cdpb The Covering Number based Deviation Upper Probability Bound Generator
 	 * @param regularizerFunc The Regularizer Function
 	 * @param cleb The Concentration of Measure based Loss Expectation Upper Bound Evaluator

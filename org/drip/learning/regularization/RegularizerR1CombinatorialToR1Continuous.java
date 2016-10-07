@@ -31,7 +31,7 @@ package org.drip.learning.regularization;
 
 /**
  * RegularizerR1CombinatorialToR1Continuous computes the Structural Loss and Risk for the specified Normed
- *  R^1 Combinatorial -> Normed R^1 Continuous Learning Function.
+ *  R^1 Combinatorial To Normed R^1 Continuous Learning Function.
  *  
  * The References are:
  *  
@@ -60,7 +60,7 @@ public class RegularizerR1CombinatorialToR1Continuous extends
 	/**
 	 * RegularizerR1CombinatorialToR1Continuous Function Space Constructor
 	 * 
-	 * @param funcRegularizerR1ToR1 The R^1 -> R^1 Regularizer Function
+	 * @param funcRegularizerR1ToR1 The R^1 To R^1 Regularizer Function
 	 * @param r1CombinatorialInput The Combinatorial R^1 Input Metric Vector Space
 	 * @param r1ContinuousOutput The Continuous R^1 Output Metric Vector Space
 	 * @param dblLambda The Regularization Lambda

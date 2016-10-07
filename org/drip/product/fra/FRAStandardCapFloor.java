@@ -50,7 +50,7 @@ public class FRAStandardCapFloor extends org.drip.product.option.OptionComponent
 	 * @param strName Name of the Cap/Floor Instance
 	 * @param stream The Underlying Stream
 	 * @param strManifestMeasure Measure of the Underlying Component
-	 * @param bIsCap Is the FRA Option a Cap? TRUE => YES
+	 * @param bIsCap Is the FRA Option a Cap? TRUE - YES
 	 * @param dblStrike Strike of the Underlying Component's Measure
 	 * @param ltds Last Trading Date Setting
 	 * @param csp Cash Settle Parameters
@@ -225,7 +225,7 @@ public class FRAStandardCapFloor extends org.drip.product.option.OptionComponent
 	/**
 	 * Indicate if this is a Cap or Floor
 	 * 
-	 * @return TRUE => The Product is a Cap
+	 * @return TRUE - The Product is a Cap
 	 */
 
 	public boolean isCap()
@@ -466,7 +466,7 @@ public class FRAStandardCapFloor extends org.drip.product.option.OptionComponent
 	 * @param dblCapVolatility The Flat Cap Volatility
 	 * @param mapDateVol The Date/Volatility Map
 	 * 
-	 * @return TRUE => The Forward Rate Volatility of the Unmarked Segment of the Volatility Term Structure
+	 * @return TRUE - The Forward Rate Volatility of the Unmarked Segment of the Volatility Term Structure
 	 * 	successfully implied
 	 */
 

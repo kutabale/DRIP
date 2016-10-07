@@ -63,7 +63,7 @@ public class UnitRegressionStat {
 	 * 
 	 * @param lExecTime Execution Time
 	 * 
-	 * @return TRUE => Executed time run successfully added
+	 * @return TRUE - Executed time run successfully added
 	 */
 
 	public boolean addExecTime (
@@ -77,7 +77,7 @@ public class UnitRegressionStat {
 	/**
 	 * Generate the statistics across all the execution times generated
 	 * 
-	 * @return TRUE => Statistics successfully generated
+	 * @return TRUE - Statistics successfully generated
 	 */
 
 	public boolean generateStat()

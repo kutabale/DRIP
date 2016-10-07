@@ -108,7 +108,7 @@ public class AssetUniverseStatisticalProperties {
 	 * 
 	 * @param asp ASP Instance
 	 * 
-	 * @return TRUE => ASP Instance Successfully added
+	 * @return TRUE - ASP Instance Successfully added
 	 */
 
 	public boolean setASP (

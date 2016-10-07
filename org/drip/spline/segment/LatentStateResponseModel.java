@@ -258,7 +258,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param strManifestMeasure The Manifest Measure
 	 * @param pmsc The Preceeding Manifest Sensitivity Control Instance
 	 * 
-	 * @return TRUE => Named Preceeding Manifest Sensitivity Control Instance Successfully Set
+	 * @return TRUE - Named Preceeding Manifest Sensitivity Control Instance Successfully Set
 	 */
 
 	public boolean setPreceedingManifestSensitivityControl (
@@ -328,7 +328,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * 
 	 * @param ssciState The Segment State Calibration Inputs Set
 	 * 
-	 * @return TRUE => Calibration Successful
+	 * @return TRUE - Calibration Successful
 	 */
 
 	public boolean calibrateState (
@@ -582,10 +582,10 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * 	Set
 	 * 
 	 * @param strManifestMeasure Latent State Manifest Measure
-	 * @param sscManifestSensitivity The Segment Manifest Calibration Parameter Sensitivity
+	 * @param ssciManifestSensitivity The Segment Manifest Calibration Parameter Sensitivity
 	 * @param aSBFCState Array of Segment State Basis Flexure Constraints
 	 * 
-	 * @return TRUE => Local Manifest Sensitivity Calibration Successful
+	 * @return TRUE - Local Manifest Sensitivity Calibration Successful
 	 */
 
 	public boolean calibrateLocalManifestJacobian (
@@ -614,7 +614,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param ssciPreceedingManifestSensitivity The Segment Preceeding Manifest Calibration Parameter
 	 * 	Sensitivity
 	 * 
-	 * @return TRUE => Preceeding Manifest Sensitivity Calibration Successful
+	 * @return TRUE - Preceeding Manifest Sensitivity Calibration Successful
 	 */
 
 	public boolean calibratePreceedingManifestJacobian (
@@ -642,7 +642,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param srvcState The Segment State Response Value Constraint
 	 * @param sbfrState Segment's Best Fit Weighted State Response Values
 	 * 
-	 * @return TRUE => If the calibration succeeds
+	 * @return TRUE - If the calibration succeeds
 	 */
 
 	public boolean calibrate (
@@ -706,7 +706,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param dblRightStateValue Response Value at the Right Predictor Ordinate
 	 * @param sbfrState Segment's Best Fit Weighted Response Values
 	 * 
-	 * @return TRUE => If the calibration succeeds
+	 * @return TRUE - If the calibration succeeds
 	 */
 
 	public boolean calibrate (
@@ -737,7 +737,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param dblRightValue Right Edge Response Value
 	 * @param sbfrState Segment's Best Fit Weighted Response Values
 	 * 
-	 * @return TRUE => The Calibration Succeeded
+	 * @return TRUE - The Calibration Succeeded
 	 */
 
 	public boolean calibrate (
@@ -772,7 +772,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param wrvcStateRight Right Edge Response Value Constraint
 	 * @param sbfrState Segment's Best Fit Weighted Response
 	 * 
-	 * @return TRUE => If the calibration succeeds
+	 * @return TRUE - If the calibration succeeds
 	 */
 
 	public boolean calibrate (
@@ -810,7 +810,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param srvcManifestSensitivity The Segment State Response Value Constraint Manifest Sensitivity
 	 * @param sbfrManifestSensitivity Segment's Best Fit Weighted State Response Value Manifest Sensitivity
 	 * 
-	 * @return TRUE => If the calibration succeeds
+	 * @return TRUE - If the calibration succeeds
 	 */
 
 	public boolean manifestMeasureSensitivity (
@@ -881,7 +881,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * 	Ordinate
 	 * @param sbfrManifestSensitivity Segment's Best Fit Weighted Response Value Manifest Sensitivity
 	 * 
-	 * @return TRUE => If the calibration succeeds
+	 * @return TRUE - If the calibration succeeds
 	 */
 
 	public boolean manifestMeasureSensitivity (
@@ -942,7 +942,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param dblRightManifestSensitivity Right Edge Response Value Manifest Sensitivity
 	 * @param sbfrManifestSensitivity Segment's Best Fit Weighted Response Values Manifest Sensitivity
 	 * 
-	 * @return TRUE => The Calibration Succeeded
+	 * @return TRUE - The Calibration Succeeded
 	 */
 
 	public boolean manifestMeasureSensitivity (
@@ -983,7 +983,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param wrvcStateRightManifestSensitivity Right Edge Response Value Constraint Manifest Sensitivity
 	 * @param sbfrManifestSensitivity Segment's Best Fit Weighted Response Manifest Sensitivity
 	 * 
-	 * @return TRUE => If the calibration succeeds
+	 * @return TRUE - If the calibration succeeds
 	 */
 
 	public boolean manifestMeasureSensitivity (
@@ -1142,7 +1142,7 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * 	calculated
 	 * @param iOrder Derivative Order
 	 * 
-	 * @throws Thrown if the Ordered Response Value Derivative cannot be calculated
+	 * @throws java.lang.Exception Thrown if the Ordered Response Value Derivative cannot be calculated
 	 * 
 	 * @return Retrieve the Ordered Response Value Derivative
 	 */
@@ -1164,7 +1164,8 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * 	Manifest is to be calculated
 	 * @param iOrder Derivative Order
 	 * 
-	 * @throws Thrown if the Ordered Derivative of the Response to the Manifest cannot be calculated
+	 * @throws java.lang.Exception Thrown if the Ordered Derivative of the Response to the Manifest cannot be
+	 *  calculated
 	 * 
 	 * @return Retrieve the Ordered Derivative of the Response to the Manifest
 	 */
@@ -1197,7 +1198,8 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * 	Manifest is to be calculated
 	 * @param iOrder Derivative Order
 	 * 
-	 * @throws Thrown if the Ordered Derivative of the Response to the Manifest cannot be calculated
+	 * @throws java.lang.Exception Thrown if the Ordered Derivative of the Response to the Manifest cannot be
+	 *  calculated
 	 * 
 	 * @return Retrieve the Ordered Derivative of the Response to the Preceeding Manifest
 	 */
@@ -1241,6 +1243,8 @@ public class LatentStateResponseModel extends org.drip.spline.segment.LatentStat
 	 * @param strManifestMeasure Manifest Measure whose Sensitivity is sought
 	 * 
 	 * @return The Manifest Measure Preceeding Manifest Impact Flag
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public boolean impactFade (

@@ -53,7 +53,7 @@ public class ForwardRates {
 	 * 
 	 * @param dblForward The Forward Rate to be added
 	 * 
-	 * @return TRUE => Successfully added
+	 * @return TRUE - Successfully added
 	 */
 
 	public boolean addForward (

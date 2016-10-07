@@ -61,7 +61,7 @@ public class TreasuryFuturesMarketSnap extends org.drip.historical.attribution.P
 	 * @param dblYieldSensitivity The Position Yield Sensitivity
 	 * @param dblYieldRollDown The Position Yield Roll Down
 	 * 
-	 * @return TRUE => The Yield Level and the Position Sensitivity successfully set
+	 * @return TRUE - The Yield Level and the Position Sensitivity successfully set
 	 */
 
 	public boolean setYieldMarketFactor (
@@ -77,7 +77,7 @@ public class TreasuryFuturesMarketSnap extends org.drip.historical.attribution.P
 	 * 
 	 * @param dtExpiry The Expiry Date
 	 * 
-	 * @return TRUE => The Expiry Date successfully set
+	 * @return TRUE - The Expiry Date successfully set
 	 */
 
 	public boolean setExpiryDate (
@@ -102,7 +102,7 @@ public class TreasuryFuturesMarketSnap extends org.drip.historical.attribution.P
 	 * 
 	 * @param strCTDName Name of the CTD Bond
 	 * 
-	 * @return TRUE => The CTD Bond Name successfully set
+	 * @return TRUE - The CTD Bond Name successfully set
 	 */
 
 	public boolean setCTDName (
@@ -127,7 +127,7 @@ public class TreasuryFuturesMarketSnap extends org.drip.historical.attribution.P
 	 * 
 	 * @param dblExpiryCleanPrice The Clean Price of the CTD at Expiry
 	 * 
-	 * @return TRUE => The Clean Expiry Price Successfully Set
+	 * @return TRUE - The Clean Expiry Price Successfully Set
 	 */
 
 	public boolean setCleanExpiryPrice (
@@ -155,7 +155,7 @@ public class TreasuryFuturesMarketSnap extends org.drip.historical.attribution.P
 	 * 
 	 * @param dblConversionFactor The Conversion Factor at Expiry
 	 * 
-	 * @return TRUE => The CTD Conversion Factor at Expiry Successfully Set
+	 * @return TRUE - The CTD Conversion Factor at Expiry Successfully Set
 	 */
 
 	public boolean setConversionFactor (

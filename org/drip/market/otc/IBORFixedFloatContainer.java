@@ -68,7 +68,7 @@ public class IBORFixedFloatContainer {
 	/**
 	 * Initialize the Fix-Float Conventions Container with the pre-set Fix-Float Contracts
 	 * 
-	 * @return TRUE => The Fix-Float Conventions Container successfully initialized with the pre-set
+	 * @return TRUE - The Fix-Float Conventions Container successfully initialized with the pre-set
 	 *  Fix-Float Contracts
 	 */
 

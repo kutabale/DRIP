@@ -112,7 +112,7 @@ public class ExponentialTension extends org.drip.function.definition.R1ToR1 {
 	/**
 	 * Is the base natural?
 	 * 
-	 * @return TRUE => Base is off of natural logarithm
+	 * @return TRUE - Base is off of natural logarithm
 	 */
 
 	public boolean isBaseNatural()

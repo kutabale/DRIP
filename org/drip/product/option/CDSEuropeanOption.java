@@ -45,7 +45,7 @@ public class CDSEuropeanOption extends org.drip.product.option.OptionComponent {
 	 * @param strName Name
 	 * @param cds The Underlying CDS Component
 	 * @param strManifestMeasure Measure of the Underlying Component
-	 * @param bIsReceiver Is the Option a Receiver/Payer? TRUE => Receiver
+	 * @param bIsReceiver Is the Option a Receiver/Payer? TRUE - Receiver
 	 * @param dblStrike Strike of the Underlying Component's Measure
 	 * @param ltds Last Trading Date Setting
 	 * @param fpg The Fokker Planck Pricer Instance

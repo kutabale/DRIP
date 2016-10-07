@@ -84,7 +84,8 @@ public class TrajectoryShortfallEstimator implements
 	 * Generate the Detailed Cost Realization Sequence given the Specified Inputs
 	 * 
 	 * @param dblStartingEquilibriumPrice The Starting Equilibrium Price
-	 * @param adblWalkRealization Array of the Realized Walk Random Variable Suite
+	 * @param aWS Array of the Realized Walk Random Variable Suite
+	 * @param apep The Price Evolution Parameters
 	 * 
 	 * @return The Detailed Cost Realization Sequence given the Specified Inputs
 	 */
@@ -140,6 +141,8 @@ public class TrajectoryShortfallEstimator implements
 
 	/**
 	 * Generate the Detailed Total Cost Distribution for the Trading Trajectory
+	 * 
+	 * @param apep The Price Evolution Parameters
 	 * 
 	 * @return The Detailed Total Cost Distribution for the Trading Trajectory
 	 */

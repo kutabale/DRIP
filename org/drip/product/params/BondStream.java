@@ -80,7 +80,7 @@ public class BondStream extends org.drip.product.rates.Stream {
 		final int iMaturityDate,
 		final int iEffectiveDate,
 		final int iFinalMaturityDate,
-		final int iFirstCouponDateDate,
+		final int iFirstCouponDate,
 		final int iInterestAccrualStartDate,
 		final int iFreq,
 		final double dblCoupon,

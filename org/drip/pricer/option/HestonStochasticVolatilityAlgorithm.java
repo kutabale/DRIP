@@ -417,7 +417,7 @@ public class HestonStochasticVolatilityAlgorithm extends org.drip.pricer.option.
 	 * @param dblRiskFreeRate Risk Free Rate
 	 * @param dblSpot Spot
 	 * @param dblInitialVolatility Initial Volatility
-	 * @param bLeft TRUE => Phase Correction applied to Left
+	 * @param bLeft TRUE - Phase Correction applied to Left
 	 * 
 	 * @return Map of the Phase Correction Record
 	 */

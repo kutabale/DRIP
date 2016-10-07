@@ -108,7 +108,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param dblCalcTime The Calculation Time
 	 * 
-	 * @return TRUE => The Calculation Time Successfully Set
+	 * @return TRUE - The Calculation Time Successfully Set
 	 */
 
 	public boolean setCalcTime (
@@ -136,7 +136,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mapBaseMeasures The Base Measures Map
 	 * 
-	 * @return TRUE => The Base Measures Map Successfully Set
+	 * @return TRUE - The Base Measures Map Successfully Set
 	 */
 
 	public boolean setBaseMeasures (
@@ -164,7 +164,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mapFlatIRDeltaMeasures The Flat IR Delta Measures Map
 	 * 
-	 * @return TRUE => The Flat IR Delta Measures Map Successfully Set
+	 * @return TRUE - The Flat IR Delta Measures Map Successfully Set
 	 */
 
 	public boolean setFlatIRDeltaMeasures (
@@ -192,7 +192,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mapFlatIRGammaMeasures The Flat IR Gamma Measures Map
 	 * 
-	 * @return TRUE => The Flat IR Gamma Measures Map Successfully Set
+	 * @return TRUE - The Flat IR Gamma Measures Map Successfully Set
 	 */
 
 	public boolean setFlatIRGammaMeasures (
@@ -220,7 +220,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mapFlatRRDeltaMeasures The Flat RR Delta Measures Map
 	 * 
-	 * @return TRUE => The Flat RR Delta Measures Map Successfully Set
+	 * @return TRUE - The Flat RR Delta Measures Map Successfully Set
 	 */
 
 	public boolean setFlatRRDeltaMeasures (
@@ -248,7 +248,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mapFlatRRGammaMeasures The Flat RR Gamma Measures Map
 	 * 
-	 * @return TRUE => The Flat RR Gamma Measures Map Successfully Set
+	 * @return TRUE - The Flat RR Gamma Measures Map Successfully Set
 	 */
 
 	public boolean setFlatRRGammaMeasures (
@@ -276,7 +276,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mapFlatCreditDeltaMeasures The Flat Credit Delta Measures Map
 	 * 
-	 * @return TRUE => The Flat Credit Delta Measures Map Successfully Set
+	 * @return TRUE - The Flat Credit Delta Measures Map Successfully Set
 	 */
 
 	public boolean setFlatCreditDeltaMeasures (
@@ -304,7 +304,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mapFlatCreditGammaMeasures The Flat Credit Gamma Measures Map
 	 * 
-	 * @return TRUE => The Flat Credit Gamma Measures Map Successfully Set
+	 * @return TRUE - The Flat Credit Gamma Measures Map Successfully Set
 	 */
 
 	public boolean setFlatCreditGammaMeasures (
@@ -334,7 +334,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mmTenorIRDeltaMeasures The Tenor IR Delta Double Measures Map
 	 * 
-	 * @return TRUE => The Tenor IR Delta Double Measures Map Successfully Set
+	 * @return TRUE - The Tenor IR Delta Double Measures Map Successfully Set
 	 */
 
 	public boolean setTenorIRDeltaMeasures (
@@ -366,7 +366,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mmTenorIRGammaMeasures The Tenor IR Gamma Double Measures Map
 	 * 
-	 * @return TRUE => The Tenor IR Gamma Double Measures Map Successfully Set
+	 * @return TRUE - The Tenor IR Gamma Double Measures Map Successfully Set
 	 */
 
 	public boolean setTenorIRGammaMeasures (
@@ -398,7 +398,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mmTenorCreditDeltaMeasures The Tenor Credit Delta Double Measures Map
 	 * 
-	 * @return TRUE => The Tenor Credit Delta Double Measures Map Successfully Set
+	 * @return TRUE - The Tenor Credit Delta Double Measures Map Successfully Set
 	 */
 
 	public boolean setTenorCreditDeltaMeasures (
@@ -430,7 +430,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mmTenorCreditGammaMeasures The Tenor Credit Gamma Double Measures Map
 	 * 
-	 * @return TRUE => The Tenor Credit Gamma Double Measures Map Successfully Set
+	 * @return TRUE - The Tenor Credit Gamma Double Measures Map Successfully Set
 	 */
 
 	public boolean setTenorCreditGammaMeasures (
@@ -462,7 +462,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mmTenorRRDeltaMeasures The Tenor RR Delta Double Measures Map
 	 * 
-	 * @return TRUE => The Tenor RR Delta Double Measures Map Successfully Set
+	 * @return TRUE - The Tenor RR Delta Double Measures Map Successfully Set
 	 */
 
 	public boolean setTenorRRDeltaMeasures (
@@ -494,7 +494,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mmTenorRRGammaMeasures The Tenor IR Gamma Double Measures Map
 	 * 
-	 * @return TRUE => The Tenor RR Gamma Double Measures Map Successfully Set
+	 * @return TRUE - The Tenor RR Gamma Double Measures Map Successfully Set
 	 */
 
 	public boolean setTenorRRGammaMeasures (
@@ -526,7 +526,7 @@ public class ComponentMeasures {
 	 * 
 	 * @param mmCustomMeasures The Custom Double Measures Map
 	 * 
-	 * @return TRUE => The Custom Double Measures Map Successfully Set
+	 * @return TRUE - The Custom Double Measures Map Successfully Set
 	 */
 
 	public boolean setCustomMeasures (

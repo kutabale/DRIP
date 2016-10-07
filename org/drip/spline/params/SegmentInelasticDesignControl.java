@@ -96,7 +96,7 @@ public class SegmentInelasticDesignControl {
 	 * @param sfpcLength Segment Length Penalty
 	 * @param sfpcCurvature Segment Curvature Penalty
 	 * 
-	 * @throws Thrown if the Inputs are invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are invalid
 	 */
 
 	public SegmentInelasticDesignControl (

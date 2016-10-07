@@ -47,7 +47,7 @@ public class FRAStandardCapFloorlet extends org.drip.product.option.OptionCompon
 	 * @param strName Name
 	 * @param fra The Underlying FRA Standard Component
 	 * @param strManifestMeasure Measure of the Underlying Component
-	 * @param bIsCaplet Is the FRA Option a Caplet? TRUE => YES
+	 * @param bIsCaplet Is the FRA Option a Caplet? TRUE - YES
 	 * @param dblStrike Strike of the Underlying Component's Measure
 	 * @param dblNotional Option Notional
 	 * @param ltds Last Trading Date Setting
@@ -92,7 +92,7 @@ public class FRAStandardCapFloorlet extends org.drip.product.option.OptionCompon
 	/**
 	 * Indicate whether this a Caplet/Floorlet
 	 * 
-	 * @return TRUE => This is a Caplet
+	 * @return TRUE - This is a Caplet
 	 */
 
 	public boolean isCaplet()

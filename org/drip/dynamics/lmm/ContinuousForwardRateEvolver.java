@@ -100,6 +100,7 @@ public class ContinuousForwardRateEvolver implements org.drip.dynamics.evolution
 	 * @param lslFunding The Funding Latent State Label
 	 * @param lslForward The Forward Latent State Label
 	 * @param mfv The Multi-Factor Volatility Instance
+	 * @param auInitialInstantaneousForwardRate The Instantaneous Forward Rate Function
 	 * 
 	 * @throws java.lang.Exception Thrown if Inputs are Invalid
 	 */

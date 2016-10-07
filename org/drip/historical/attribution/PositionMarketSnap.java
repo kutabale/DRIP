@@ -101,7 +101,7 @@ public class PositionMarketSnap {
 	 * @param dblManifestMeasureSensitivity The Manifest Measure Sensitivity
 	 * @param dblManifestMeasureRollDown The Manifest Measure Roll Down
 	 * 
-	 * @return TRUE => The Manifest Measure Snap Metrics successfully added
+	 * @return TRUE - The Manifest Measure Snap Metrics successfully added
 	 */
 
 	public boolean addManifestMeasureSnap (
@@ -156,7 +156,7 @@ public class PositionMarketSnap {
 	 * @param strKey The Key
 	 * @param dtCustom The Custom Date Entry
 	 * 
-	 * @return TRUE => Custom Date successfully set
+	 * @return TRUE - Custom Date successfully set
 	 */
 
 	public boolean setDate (
@@ -190,7 +190,7 @@ public class PositionMarketSnap {
 	 * @param strKey The Key
 	 * @param strC1 The Custom C^1 Entry
 	 * 
-	 * @return TRUE => Custom C^1 Entry successfully set
+	 * @return TRUE - Custom C^1 Entry successfully set
 	 */
 
 	public boolean setC1 (
@@ -223,9 +223,9 @@ public class PositionMarketSnap {
 	 * 
 	 * @param strKey The Key
 	 * @param dblR1 The Custom R^1 Entry
-	 * @param bIgnoreNaN TRUE => Ignore NaN Entry
+	 * @param bIgnoreNaN TRUE - Ignore NaN Entry
 	 * 
-	 * @return TRUE => Custom Number successfully set
+	 * @return TRUE - Custom Number successfully set
 	 */
 
 	public boolean setR1 (
@@ -248,7 +248,7 @@ public class PositionMarketSnap {
 	 * @param strKey The Key
 	 * @param dblR1 The Custom R^1 Entry
 	 * 
-	 * @return TRUE => Custom Number successfully set
+	 * @return TRUE - Custom Number successfully set
 	 */
 
 	public boolean setR1 (
@@ -334,9 +334,9 @@ public class PositionMarketSnap {
 	/**
 	 * Set the Cumulative Coupon Amount
 	 * 
-	 * @param dblAccrued The Cumulative Coupon Amount
+	 * @param dblCumulativeCouponAmount The Cumulative Coupon Amount
 	 * 
-	 * @return TRUE => The Cumulative Coupon Amount successfully set
+	 * @return TRUE - The Cumulative Coupon Amount successfully set
 	 */
 
 	public boolean setCumulativeCouponAmount (

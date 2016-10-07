@@ -117,7 +117,7 @@ public class Weekend {
 	/**
 	 * Is the given date a right weekend day
 	 * 
-	 * @param iDate Date
+	 * @param dblDate Date
 	 * 
 	 * @return True (Right weekend day)
 	 */
@@ -135,7 +135,7 @@ public class Weekend {
 	/**
 	 * Is the given date a weekend day
 	 * 
-	 * @param dblDate Date
+	 * @param iDate Date
 	 * 
 	 * @return True (Weekend day)
 	 */

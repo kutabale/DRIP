@@ -266,7 +266,7 @@ public class MultiFactorStateEvolver implements org.drip.dynamics.evolution.Poin
 	 * @param iTargetDate The Target Date
 	 * @param dblCompoundedShortRate The Compounded Short Rate
 	 * @param dblShortRate The Short Rate
-	 * @param dblViewTimeIncrement The View Time Increment
+	 * @param iViewTimeIncrement The View Time Increment
 	 * 
 	 * @return The Short Rate Increment
 	 * 

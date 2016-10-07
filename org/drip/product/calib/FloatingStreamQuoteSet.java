@@ -59,7 +59,7 @@ public class FloatingStreamQuoteSet extends org.drip.product.calib.ProductQuoteS
 	 * 
 	 * @param dblPV The PV
 	 * 
-	 * @return TRUE => PV successfully set
+	 * @return TRUE - PV successfully set
 	 */
 
 	public boolean setPV (
@@ -71,7 +71,7 @@ public class FloatingStreamQuoteSet extends org.drip.product.calib.ProductQuoteS
 	/**
 	 * Indicate if the PV Field exists
 	 * 
-	 * @return TRUE => PV Field Exists
+	 * @return TRUE - PV Field Exists
 	 */
 
 	public boolean containsPV()
@@ -98,7 +98,7 @@ public class FloatingStreamQuoteSet extends org.drip.product.calib.ProductQuoteS
 	 * 
 	 * @param dblForwardRate The Forward Rate
 	 * 
-	 * @return TRUE => The Forward Rate successfully set
+	 * @return TRUE - The Forward Rate successfully set
 	 */
 
 	public boolean setForwardRate (
@@ -110,7 +110,7 @@ public class FloatingStreamQuoteSet extends org.drip.product.calib.ProductQuoteS
 	/**
 	 * Indicate if the Forward Rate Field exists
 	 * 
-	 * @return TRUE => Forward Rate Field Exists
+	 * @return TRUE - Forward Rate Field Exists
 	 */
 
 	public boolean containsForwardRate()
@@ -137,7 +137,7 @@ public class FloatingStreamQuoteSet extends org.drip.product.calib.ProductQuoteS
 	 * 
 	 * @param dblSpread The Spread
 	 * 
-	 * @return TRUE => The Spread successfully set
+	 * @return TRUE - The Spread successfully set
 	 */
 
 	public boolean setSpread (
@@ -149,7 +149,7 @@ public class FloatingStreamQuoteSet extends org.drip.product.calib.ProductQuoteS
 	/**
 	 * Indicate if the Spread Field exists
 	 * 
-	 * @return TRUE => Spread Field Exists
+	 * @return TRUE - Spread Field Exists
 	 */
 
 	public boolean containsSpread()

@@ -76,7 +76,7 @@ public interface Span {
 	 * @param dblPredictorOrdinate The Predictor Ordinate
 	 * @param lsl Merge State Label
 	 * 
-	 * @return TRUE => The specified Label is part of the Merge State at the specified Predictor Ordinate
+	 * @return TRUE - The specified Label is part of the Merge State at the specified Predictor Ordinate
 	 */
 
 	public abstract boolean isMergeState (
@@ -118,7 +118,7 @@ public interface Span {
 	 * 
 	 * @param mss Stretch to be added
 	 * 
-	 * @return TRUE => Stretch added successfully
+	 * @return TRUE - Stretch added successfully
 	 */
 
 	public abstract boolean addStretch (
@@ -166,7 +166,7 @@ public interface Span {
 	 * 
 	 * @param dblPredictorOrdinate Predictor Ordinate
 	 * 
-	 * @return TRUE => Predictor Ordinate is in the Range
+	 * @return TRUE - Predictor Ordinate is in the Range
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
 	 */
@@ -177,6 +177,8 @@ public interface Span {
 
 	/**
 	 * Display the Span Edge Coordinates
+	 * 
+	 * @return The Edge Coordinates String
 	 */
 
 	public java.lang.String displayString();

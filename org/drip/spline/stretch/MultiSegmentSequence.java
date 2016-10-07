@@ -104,7 +104,7 @@ public interface MultiSegmentSequence extends org.drip.spline.stretch.SingleSegm
 	 * @param iSetupMode Set up Mode (i.e., set up ITEP only, or fully calibrate the Stretch, or calibrate
 	 * 	 	Stretch plus compute Jacobian)
 	 * 
-	 * @return TRUE => Set up was successful
+	 * @return TRUE - Set up was successful
 	 */
 
 	public abstract boolean setupHermite (
@@ -122,7 +122,7 @@ public interface MultiSegmentSequence extends org.drip.spline.stretch.SingleSegm
 	 * @param dblStretchRightResponse Response Value at the Right Edge of the Stretch
 	 * @param sbfr Stretch Fitness Weighted Response
 	 * 
-	 * @return TRUE => Left slope successfully set
+	 * @return TRUE - Left slope successfully set
 	 */
 
 	public abstract boolean setLeftNode (
@@ -175,7 +175,7 @@ public interface MultiSegmentSequence extends org.drip.spline.stretch.SingleSegm
 	 * 
 	 * @param dblPredictorOrdinate Predictor Ordinate
 	 * 
-	 * @return TRUE => Predictor Ordinate is in the Range
+	 * @return TRUE - Predictor Ordinate is in the Range
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
 	 */
@@ -188,8 +188,8 @@ public interface MultiSegmentSequence extends org.drip.spline.stretch.SingleSegm
 	 * Return the Index for the Segment containing specified Predictor Ordinate
 	 * 
 	 * @param dblPredictorOrdinate Predictor Ordinate
-	 * @param bIncludeLeft TRUE => Less than or equal to the Left Predictor Ordinate
-	 * @param bIncludeRight TRUE => Less than or equal to the Right Predictor Ordinate
+	 * @param bIncludeLeft TRUE - Less than or equal to the Left Predictor Ordinate
+	 * @param bIncludeRight TRUE - Less than or equal to the Right Predictor Ordinate
 	 * 
 	 * @return Index for the Segment containing specified Predictor Ordinate
 	 * 
@@ -209,7 +209,7 @@ public interface MultiSegmentSequence extends org.drip.spline.stretch.SingleSegm
 	 * @param ssb The Segment Sequence Builder Instance
 	 * @param iCalibrationDetail The Calibration Detail
 	 * 
-	 * @return TRUE => Set up was successful
+	 * @return TRUE - Set up was successful
 	 */
 
 	public abstract boolean setup (
@@ -226,7 +226,7 @@ public interface MultiSegmentSequence extends org.drip.spline.stretch.SingleSegm
 	 * @param bs The Calibration Boundary Condition
 	 * @param iCalibrationDetail The Calibration Detail
 	 * 
-	 * @return TRUE => Set up was successful
+	 * @return TRUE - Set up was successful
 	 */
 
 	public abstract boolean setup (
@@ -246,7 +246,7 @@ public interface MultiSegmentSequence extends org.drip.spline.stretch.SingleSegm
 	 * @param bs The Calibration Boundary Condition
 	 * @param iCalibrationDetail The Calibration Detail
 	 * 
-	 * @return TRUE => Set up was successful
+	 * @return TRUE - Set up was successful
 	 */
 
 	public abstract boolean setup (
@@ -330,6 +330,8 @@ public interface MultiSegmentSequence extends org.drip.spline.stretch.SingleSegm
 
 	/**
 	 * Display the Segments
+	 * 
+	 * @return The Segements String
 	 */
 
 	public abstract java.lang.String displayString();

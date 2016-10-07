@@ -116,7 +116,7 @@ public class FixFloatPnLAttributor {
 	 * Generate the Tenor Horizon Explain Components
 	 * 
 	 * @param strCurrency The Fix-Float Swap Currency
-	 * @param strMaturityTenor[] Array of Fix-Float Swap Maturity Tenors
+	 * @param astrMaturityTenor Array of Fix-Float Swap Maturity Tenors
 	 * @param aiHorizonGap Array of the Valuation Horizon Gaps
 	 * @param strFeedTranformLocation The Closing Funding Curve Quotes Location
 	 * @param astrFundingDepositTenor The Funding Curve Deposit Instrument Maturity Tenors

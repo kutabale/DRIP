@@ -29,7 +29,7 @@ package org.drip.function.rdtor1;
  */
 
 /**
- * LinearBoundMultivariate implements a Bounded R^d -> R^1 Function.
+ * LinearBoundMultivariate implements a Bounded R^d To R^1 Function.
  *
  * @author Lakshmi Krishnamurthy
  */
@@ -44,7 +44,7 @@ public class LinearBoundMultivariate extends org.drip.function.definition.RdToR1
 	/**
 	 * LinearBoundMultivariate Constructor
 	 * 
-	 * @param bIsUpper TRUE => The Bound is an Upper Bound
+	 * @param bIsUpper TRUE To The Bound is an Upper Bound
 	 * @param iBoundVariateIndex The Bound Variate Index
 	 * @param iNumTotalVariate The Total Number of Variates
 	 * @param dblBoundValue The Bounding Value

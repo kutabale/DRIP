@@ -65,7 +65,7 @@ public class LatentStateManifestSensitivity {
 	 * @param adblDBasisCoeffDLocalManifest The Array containing the Sensitivities of the Basis Coefficients
 	 * 	to the Local Manifest Measure
 	 * 
-	 * @return TRUE => Basis Coefficient Manifest Measure Sensitivity Array Entries successfully set
+	 * @return TRUE - Basis Coefficient Manifest Measure Sensitivity Array Entries successfully set
 	 */
 
 	public boolean setDBasisCoeffDLocalManifest (
@@ -102,10 +102,10 @@ public class LatentStateManifestSensitivity {
 	 * Set the Array containing the Sensitivities of the Basis Coefficients to the Preceeding Manifest
 	 * 	Measure
 	 * 
-	 * @param adblDBasisCoeffDLocalManifest The Array containing the Sensitivities of the Basis Coefficients
-	 * 	to the Preceeding Manifest Measure
+	 * @param adblDBasisCoeffDPreceedingManifest The Array containing the Sensitivities of the Basis
+	 *  Coefficients to the Preceeding Manifest Measure
 	 * 
-	 * @return TRUE => Array Entries successfully set
+	 * @return TRUE - Array Entries successfully set
 	 */
 
 	public boolean setDBasisCoeffDPreceedingManifest (
@@ -143,10 +143,10 @@ public class LatentStateManifestSensitivity {
 	/**
 	 * Set the Sensitivity of the Segment Response to the Preceeding Manifest Measure
 	 * 
-	 * @param dblDResponseDPreceedingQuote Sensitivity of the Segment Response to the Preceeding Manifest
+	 * @param dblDResponseDPreceedingManifest Sensitivity of the Segment Response to the Preceeding Manifest
 	 * 	Measure
 	 * 
-	 * @return TRUE => Sensitivity of the Segment Response to the Preceeding Manifest Measure successfully
+	 * @return TRUE - Sensitivity of the Segment Response to the Preceeding Manifest Measure successfully
 	 * 	set
 	 */
 

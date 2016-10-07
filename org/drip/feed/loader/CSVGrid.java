@@ -139,7 +139,7 @@ public class CSVGrid {
 	 * 
 	 * @param astrHeader The Column Headers
 	 * 
-	 * @return TRUE => Column Headers successfully set
+	 * @return TRUE - Column Headers successfully set
 	 */
 
 	public boolean setHeader (
@@ -156,7 +156,7 @@ public class CSVGrid {
 	 * 
 	 * @param astr The String Array
 	 * 
-	 * @return TRUE => The String Array successfully added
+	 * @return TRUE - The String Array successfully added
 	 */
 
 	public boolean add (

@@ -70,7 +70,7 @@ public class CrossFloatConventionContainer {
 	 * Initialize the Cross-Currency Float-Float Conventions Container with the pre-set Floating Stream
 	 * 	Contracts
 	 * 
-	 * @return TRUE => The Cross-Currency Float-Float Conventions Container successfully initialized
+	 * @return TRUE - The Cross-Currency Float-Float Conventions Container successfully initialized
 	 */
 
 	public static final boolean Init()

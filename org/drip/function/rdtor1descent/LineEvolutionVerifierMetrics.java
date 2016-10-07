@@ -133,7 +133,7 @@ public abstract class LineEvolutionVerifierMetrics {
 	/**
 	 * Indicate if the Evolution Criterion has been met
 	 * 
-	 * @return TRUE => The Evolution Criterion has been met
+	 * @return TRUE - The Evolution Criterion has been met
 	 */
 
 	public abstract boolean verify();

@@ -83,7 +83,7 @@ public class BigC1Array {
 	 * @param iPivotIndex The Pivot Index
 	 * @param iBlockSize The Block Size
 	 * 
-	 * @return TRUE => The Translation succeeded
+	 * @return TRUE - The Translation succeeded
 	 */
 
 	public boolean translateAtPivot (

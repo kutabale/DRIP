@@ -46,7 +46,7 @@ package org.drip.product.creator;
  * 		settle, first coupon, interest accrual start, next coupon, previous coupon, penultimate coupon, and
  * 		issue dates), embedded option parameters (callable, putable, has been exercised), currency parameters
  * 		(trade, coupon, and redemption currencies), floater parameters (floater flag, floating coupon
- * 		convention, current coupon, rate index, spread), trade status, ratings (S & P, Moody, and Fitch), and
+ * 		convention, current coupon, rate index, spread), trade status, ratings (SnP, Moody, and Fitch), and
  * 		whether the bond is private placement, is registered, is a bearer bond, is reverse convertible, is a
  * 		structured note, can be unit traded, is perpetual or has defaulted.
  * 
@@ -478,7 +478,7 @@ public class BondRefDataBuilder implements org.drip.product.params.Validatable {
 	public java.lang.String _strMoody = "";
 
 	/**
-	 * S&P rating
+	 * SnP rating
 	 */
 
 	public java.lang.String _strSnP = "";
@@ -2267,9 +2267,9 @@ public class BondRefDataBuilder implements org.drip.product.params.Validatable {
 	}
 
 	/**
-	 * Set the S&P Rating
+	 * Set the SnP Rating
 	 * 
-	 * @param strSnP S&P Rating
+	 * @param strSnP SnP Rating
 	 * 
 	 * @return True (success), false (failure)
 	 */

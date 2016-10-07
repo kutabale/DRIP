@@ -29,7 +29,7 @@ package org.drip.execution.principal;
  */
 
 /**
- * GrossProfitExpectation implements the R^1 -> R^1 Univariate that computes the Explicit Profit of a
+ * GrossProfitExpectation implements the R^1 To R^1 Univariate that computes the Explicit Profit of a
  *  Principal Execution given the Optimal Trajectory. The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).

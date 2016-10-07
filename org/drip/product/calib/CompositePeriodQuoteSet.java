@@ -58,7 +58,7 @@ public class CompositePeriodQuoteSet extends org.drip.product.calib.ProductQuote
 	 * 
 	 * @param dblBaseRate The Base Rate
 	 * 
-	 * @return TRUE => Base Rate successfully set
+	 * @return TRUE - Base Rate successfully set
 	 */
 
 	public boolean setBaseRate (
@@ -70,7 +70,7 @@ public class CompositePeriodQuoteSet extends org.drip.product.calib.ProductQuote
 	/**
 	 * Indicate if the Base Rate Field exists
 	 * 
-	 * @return TRUE => Base Rate Field Exists
+	 * @return TRUE - Base Rate Field Exists
 	 */
 
 	public boolean containsBaseRate()
@@ -97,7 +97,7 @@ public class CompositePeriodQuoteSet extends org.drip.product.calib.ProductQuote
 	 * 
 	 * @param dblBasis The Basis
 	 * 
-	 * @return TRUE => Basis successfully set
+	 * @return TRUE - Basis successfully set
 	 */
 
 	public boolean setBasis (
@@ -109,7 +109,7 @@ public class CompositePeriodQuoteSet extends org.drip.product.calib.ProductQuote
 	/**
 	 * Indicate if the Basis Field exists
 	 * 
-	 * @return TRUE => Basis Field Exists
+	 * @return TRUE - Basis Field Exists
 	 */
 
 	public boolean containsBasis()

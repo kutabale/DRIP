@@ -166,7 +166,7 @@ public class RegressionEngine {
 	/**
 	 * One-time initialization of the regression engine environment
 	 * 
-	 * @return TRUE => Regression Environment initialized successfully
+	 * @return TRUE - Regression Environment initialized successfully
 	 */
 
 	public boolean initRegressionEnv()
@@ -177,7 +177,7 @@ public class RegressionEngine {
 	/**
 	 * Launch the Regression Engine and execute the regression sets
 	 * 
-	 * @return TRUE => Launch Successful
+	 * @return TRUE - Launch Successful
 	 */
 
 	protected final boolean launch()

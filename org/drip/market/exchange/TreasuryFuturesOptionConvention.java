@@ -49,7 +49,7 @@ public class TreasuryFuturesOptionConvention {
 	 * @param astrCode Array of Option Codes
 	 * @param strTreasuryFuturesIndex Underlying Futures Index
 	 * @param dblNotional Exchange Notional
-	 * @param bPremiumType TRUE => Premium Up-front Type; FALSE => Margin Type
+	 * @param bPremiumType TRUE - Premium Up-front Type; FALSE - Margin Type
 	 * @param aLTDS Array of Last Trading Date Settings
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
@@ -133,7 +133,7 @@ public class TreasuryFuturesOptionConvention {
 	/**
 	 * Retrieve the Trading Type PREMIUM/MARGIN
 	 * 
-	 * @return TRUE => Trading Type is PREMIUM
+	 * @return TRUE - Trading Type is PREMIUM
 	 */
 
 	public boolean premiumType()

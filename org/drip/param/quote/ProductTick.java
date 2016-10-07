@@ -60,7 +60,7 @@ public class ProductTick {
 	 * @param pq Product Quote
 	 * @param strCounterParty Counter Party
 	 * @param strSource Quote Source
-	 * @param bIsMark TRUE => This Quote may be treated as a Mark
+	 * @param bIsMark TRUE - This Quote may be treated as a Mark
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */
@@ -128,7 +128,7 @@ public class ProductTick {
 	/**
 	 * Indicate whether the quote may be treated as a mark
 	 * 
-	 * @return TRUE => Treat the Quote as a Mark
+	 * @return TRUE - Treat the Quote as a Mark
 	 */
 
 	public boolean isMark()

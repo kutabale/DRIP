@@ -51,7 +51,7 @@ public class CurvatureEvolutionVerifierMetrics extends
 	 * CurvatureEvolutionVerifierMetrics Constructor
 	 * 
 	 * @param dblCurvatureParameter The Curvature Criterion Parameter
-	 * @param bStrongCurvatureCriterion TRUE => Apply the "Strong" Curvature Criterion
+	 * @param bStrongCurvatureCriterion TRUE - Apply the "Strong" Curvature Criterion
 	 * @param uvTargetDirection The Target Direction Unit Vector
 	 * @param adblCurrentVariate Array of Current Variate
 	 * @param dblStepLength The Incremental Step Length
@@ -96,7 +96,7 @@ public class CurvatureEvolutionVerifierMetrics extends
 	/**
 	 * Retrieve Whether of not the "Strong" Curvature Criterion needs to be met
 	 * 
-	 * @return TRUE => The "Strong" Curvature Criterion needs to be met
+	 * @return TRUE - The "Strong" Curvature Criterion needs to be met
 	 */
 
 	public boolean strongCriterion()
@@ -118,7 +118,7 @@ public class CurvatureEvolutionVerifierMetrics extends
 	/**
 	 * Indicate if the Curvature Criterion has been met
 	 * 
-	 * @return TRUE => The Curvature Criterion has been met
+	 * @return TRUE - The Curvature Criterion has been met
 	 */
 
 	public boolean verify()

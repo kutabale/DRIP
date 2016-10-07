@@ -149,11 +149,11 @@ public class PortfolioConstructionParameters {
 	}
 
 	/**
-	 * Retrieve the Equality Constraint R^d -> R^1 Corresponding to the Specified Constraint Type
+	 * Retrieve the Equality Constraint R^d To R^1 Corresponding to the Specified Constraint Type
 	 * 
 	 * @param ausp The Asset Universe Statistical Properties Instance
 	 * 
-	 * @return The Equality Constraint R^d -> R^1  Corresponding to the Specified Constraint Type
+	 * @return The Equality Constraint R^d To R^1  Corresponding to the Specified Constraint Type
 	 */
 
 	public org.drip.function.definition.RdToR1[] equalityConstraintRdToR1 (

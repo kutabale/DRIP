@@ -56,7 +56,7 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
 	 * @param iNumInterval The Number of Fixed Intervals
-	 * @param a2003pe Almgren 2003 Impact Price Walk Parameters
+	 * @param tevp Almgren 2003 Impact Price Walk Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
 	 * @return The LinearTradingEnhancedScheme Instance

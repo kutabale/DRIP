@@ -66,7 +66,7 @@ public interface GeneralizedVector {
 	 * 
 	 * @param gvsOther The "Other" Generalized Vector Space
 	 * 
-	 * @return TRUE => The "Other" Generalized Vector Space matches this
+	 * @return TRUE - The "Other" Generalized Vector Space matches this
 	 */
 
 	public abstract boolean match (
@@ -77,7 +77,7 @@ public interface GeneralizedVector {
 	 * 
 	 * @param gvsOther The "Other" Generalized Vector Space
 	 * 
-	 * @return TRUE => The "Other" Generalized Vector Space is a Subset of this
+	 * @return TRUE - The "Other" Generalized Vector Space is a Subset of this
 	 */
 
 	public abstract boolean subset (

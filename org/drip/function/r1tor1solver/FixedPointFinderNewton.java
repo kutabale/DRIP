@@ -94,7 +94,7 @@ public class FixedPointFinderNewton extends org.drip.function.r1tor1solver.Fixed
 	 * 
 	 * @param dblOFGoal OF Goal
 	 * @param of Objective Function
-	 * @param bWhine TRUE => Balk on Encountering Exception
+	 * @param bWhine TRUE - Balk on Encountering Exception
 	 * 
 	 * @throws java.lang.Exception Propogated from underneath
 	 */

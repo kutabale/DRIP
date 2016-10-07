@@ -99,14 +99,13 @@ public class CashSettleParams {
 	/**
 	 * Construct and return the cash settle date from the valuation date
 	 * 
-	 * @param iValue Valuation Date
+	 * @param iValueDate Valuation Date
 	 * 
 	 * @return Cash settle date
 	 */
 
 	public int cashSettleDate (
 		final int iValueDate)
-		throws java.lang.Exception
 	{
 		return org.drip.analytics.daycount.Convention.Adjust (iValueDate + _iLag, _strCalendar,
 			_iAdjustMode);

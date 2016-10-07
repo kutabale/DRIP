@@ -42,7 +42,7 @@ public class RequestResponseDecorator {
 	 * 
 	 * @param jsonRequest The JSON Request
 	 * 
-	 * @return TRUE => The Headers successfully affixed
+	 * @return TRUE - The Headers successfully affixed
 	 */
 
 	@SuppressWarnings ("unchecked") public static final boolean AffixRequestHeaders (
@@ -65,7 +65,7 @@ public class RequestResponseDecorator {
 	 * @param jsonResponse The JSON Response
 	 * @param jsonRequest The JSON Request
 	 * 
-	 * @return TRUE => The Headers successfully affixed
+	 * @return TRUE - The Headers successfully affixed
 	 */
 
 	@SuppressWarnings ("unchecked") public static final boolean AffixResponseHeaders (

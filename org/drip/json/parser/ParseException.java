@@ -71,7 +71,7 @@ public class ParseException extends java.lang.Exception {
     }
     
     /**
-     * @see org.json.simple.parser.JSONParser#getPosition()
+     * @see org.drip.json.parser.JSONParser#getPosition()
      * 
      * @return The character position (starting with 0) of the input where the error occurs.
      */
@@ -84,7 +84,7 @@ public class ParseException extends java.lang.Exception {
     }
     
     /**
-     * @see org.json.simple.parser.Yytoken
+     * @see org.drip.json.parser.Yytoken
      * 
      * @return One of the following base on the value of errorType:
      *                      ERROR_UNEXPECTED_CHAR           java.lang.Character

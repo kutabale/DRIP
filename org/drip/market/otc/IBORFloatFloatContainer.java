@@ -42,7 +42,7 @@ public class IBORFloatFloatContainer {
 	/**
 	 * Initialize the Float-Float Conventions Container with the pre-set Float-Float Contracts
 	 * 
-	 * @return TRUE => The Float-Float Conventions Container successfully initialized with the pre-set
+	 * @return TRUE - The Float-Float Conventions Container successfully initialized with the pre-set
 	 *  Float-Float Contracts
 	 */
 

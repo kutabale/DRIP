@@ -30,7 +30,7 @@ package org.drip.function.definition;
  */
 
 /**
- * RdToR1 provides the evaluation of the R^d -> R^1 objective function and its derivatives for a specified
+ * RdToR1 provides the evaluation of the R^d To R^1 objective function and its derivatives for a specified
  * 	set of R^d variates. Default implementation of the derivatives are for non-analytical black box objective
  * 	functions.
  *
@@ -171,7 +171,6 @@ public abstract class RdToR1 {
 		final double[] adblVariate,
 		final int iVariateIndex,
 		final int iOrder)
-		throws java.lang.Exception
 	{
 		return differential (adblVariate, iVariateIndex, iOrder).calcSlope (true);
 	}

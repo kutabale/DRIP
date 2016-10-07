@@ -203,6 +203,8 @@ public class BestFitFlexurePenalizer {
 	 * @param iBasisIndexI I Basis Index (I is the Summation Index)
 	 * @param iBasisIndexR R Basis Index (R is the Separator Index)
 	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * 
 	 * @return The Basis Pair Penalty Coefficient for the Fitness and the Curvature Penalties
 	 */
 

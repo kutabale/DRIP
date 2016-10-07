@@ -38,19 +38,19 @@ package org.drip.portfolioconstruction.allocator;
 public class PortfolioEqualityConstraintSettings {
 
 	/**
-	 * NO_CONSTRAINT => No Constraint of any Kind
+	 * NO_CONSTRAINT - No Constraint of any Kind
 	 */
 
 	public static final int NO_CONSTRAINT = 1;
 
 	/**
-	 * FULLY_INVESTED_CONSTRAINT => The Mandatory Completely Invested Constraint
+	 * FULLY_INVESTED_CONSTRAINT - The Mandatory Completely Invested Constraint
 	 */
 
 	public static final int FULLY_INVESTED_CONSTRAINT = 2;
 
 	/**
-	 * RETURNS_CONSTRAINT => The Mandatory Returns Constraint
+	 * RETURNS_CONSTRAINT - The Mandatory Returns Constraint
 	 */
 
 	public static final int RETURNS_CONSTRAINT = 4;

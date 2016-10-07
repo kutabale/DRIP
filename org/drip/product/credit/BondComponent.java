@@ -11922,7 +11922,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		 * @param iWorkoutDate JulianDate Work-out
 		 * @param dblWorkoutFactor Work-out factor
 		 * @param dblPrice Price to be calibrated to
-		 * @param bFlat TRUE => Calibrate to Flat Curve
+		 * @param bFlat TRUE - Calibrate to Flat Curve
 		 * 
 		 * @return The calibrated Credit Basis
 		 * 

@@ -47,7 +47,7 @@ public class OvernightIndexSwapAPI {
 	 * @param adblOvernightCurveDepositQuote Overnight Tenor Calibration Deposit Quote
 	 * @param astrOvernightCurveOISTenor Overnight Curve Calibration OIS Tenor
 	 * @param adblOvernightCurveOISQuote Overnight Curve Calibration OIS Quote
-	 * @param bFund TRUE => Floater Based off of Fund
+	 * @param bFund TRUE - Floater Based off of Fund
 	 * 
 	 * @return Map of Valuation Metrics
 	 */

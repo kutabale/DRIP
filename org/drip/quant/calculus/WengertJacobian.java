@@ -105,7 +105,7 @@ public class WengertJacobian {
 	 * @param iWengertIndex Wengert Variable Index 
 	 * @param dblWengert The Value for the Wengert Variable
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setWengert (
@@ -123,7 +123,7 @@ public class WengertJacobian {
 	/**
 	 * Get the Value for the Wengert Variable
 	 * 
-	 * @param iWengertIndex Wengert Variable Index 
+	 * @param iIndex Wengert Variable Index 
 	 * 
 	 * @return The Value for the Wengert variable
 	 * 
@@ -147,7 +147,7 @@ public class WengertJacobian {
 	 * @param iParameterIndex Parameter Index
 	 * @param dblDWengertDParameter The incremental {D(Wengert)}/{D(Parameter)}
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean accumulatePartialFirstDerivative (
@@ -185,7 +185,7 @@ public class WengertJacobian {
 	 * 
 	 * @param wjOther CurveWengertJacobian to be accumulated and merged
 	 * 
-	 * @return TRUE => Successfully accumulated and merged
+	 * @return TRUE - Successfully accumulated and merged
 	 */
 
 	public boolean cumulativeMerge (
@@ -209,7 +209,7 @@ public class WengertJacobian {
 	 * @param wjOther CurveWengertJacobian to be accumulated and merged
 	 * @param dblWeight The Weight
 	 * 
-	 * @return TRUE => Successfully accumulated and merged
+	 * @return TRUE - Successfully accumulated and merged
 	 */
 
 	public boolean cumulativeMerge (
@@ -233,7 +233,7 @@ public class WengertJacobian {
 	 * 
 	 * @param dblScale Factor by which the partials are to be scaled by
 	 * 
-	 * @return TRUE => Scaling down successful
+	 * @return TRUE - Scaling down successful
 	 */
 
 	public boolean scale (

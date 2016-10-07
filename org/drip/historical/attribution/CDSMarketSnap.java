@@ -61,7 +61,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * @param dblFairPremiumSensitivity The Position Fair Premium Sensitivity
 	 * @param dblFairPremiumRollDown The Position Fair Premium Roll Down
 	 * 
-	 * @return TRUE => The Fair Premium and the Position Sensitivity successfully set
+	 * @return TRUE - The Fair Premium and the Position Sensitivity successfully set
 	 */
 
 	public boolean setFairPremiumMarketFactor (
@@ -78,7 +78,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dtEffective The Effective Date
 	 * 
-	 * @return TRUE => The Effective Date successfully set
+	 * @return TRUE - The Effective Date successfully set
 	 */
 
 	public boolean setEffectiveDate (
@@ -103,7 +103,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dtMaturity The Maturity Date
 	 * 
-	 * @return TRUE => The Maturity Date successfully set
+	 * @return TRUE - The Maturity Date successfully set
 	 */
 
 	public boolean setMaturityDate (
@@ -128,7 +128,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblInitialFairPremium The Initial Fair Premium
 	 * 
-	 * @return TRUE => The Initial Fair Premium Successfully set
+	 * @return TRUE - The Initial Fair Premium Successfully set
 	 */
 
 	public boolean setInitialFairPremium (
@@ -156,7 +156,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblCurrentFairPremium The Current Fair Premium
 	 * 
-	 * @return TRUE => The Current Fair Premium Successfully Set
+	 * @return TRUE - The Current Fair Premium Successfully Set
 	 */
 
 	public boolean setCurrentFairPremium (
@@ -184,7 +184,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblFixedCoupon The Fixed Coupon
 	 * 
-	 * @return TRUE => The Fixed Coupon Successfully Set
+	 * @return TRUE - The Fixed Coupon Successfully Set
 	 */
 
 	public boolean setFixedCoupon (
@@ -212,7 +212,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblCleanDV01 The Clean DV01
 	 * 
-	 * @return TRUE => The Clean DV01 Successfully Set
+	 * @return TRUE - The Clean DV01 Successfully Set
 	 */
 
 	public boolean setCleanDV01 (
@@ -240,7 +240,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblRollDownFairPremium The Roll Down Fair Premium
 	 * 
-	 * @return TRUE => The Roll Down Fair Premium Successfully Set
+	 * @return TRUE - The Roll Down Fair Premium Successfully Set
 	 */
 
 	public boolean setRollDownFairPremium (
@@ -268,7 +268,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblAccrued The Accrued
 	 * 
-	 * @return TRUE => The Accrued successfully set
+	 * @return TRUE - The Accrued successfully set
 	 */
 
 	public boolean setAccrued (
@@ -294,9 +294,9 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	/**
 	 * Set the Cumulative Coupon Amount
 	 * 
-	 * @param dblAccrued The Cumulative Coupon Amount
+	 * @param dblCumulativeCouponAmount The Cumulative Coupon Amount
 	 * 
-	 * @return TRUE => The Cumulative Coupon Amount successfully set
+	 * @return TRUE - The Cumulative Coupon Amount successfully set
 	 */
 
 	public boolean setCumulativeCouponAmount (
@@ -324,7 +324,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param strCreditLabel Credit Label
 	 * 
-	 * @return TRUE => The Credit Label successfully set
+	 * @return TRUE - The Credit Label successfully set
 	 */
 
 	public boolean setCreditLabel (
@@ -349,7 +349,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblRecoveryRate The Recovery Rate
 	 * 
-	 * @return TRUE => The Recovery Rate successfully set
+	 * @return TRUE - The Recovery Rate successfully set
 	 */
 
 	public boolean setRecoveryRate (
@@ -377,7 +377,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblCouponPV The Coupon PV
 	 * 
-	 * @return TRUE => The Coupon PV successfully set
+	 * @return TRUE - The Coupon PV successfully set
 	 */
 
 	public boolean setCouponPV (
@@ -405,7 +405,7 @@ public class CDSMarketSnap extends org.drip.historical.attribution.PositionMarke
 	 * 
 	 * @param dblLossPV The Loss PV
 	 * 
-	 * @return TRUE => The Loss PV successfully set
+	 * @return TRUE - The Loss PV successfully set
 	 */
 
 	public boolean setLossPV (

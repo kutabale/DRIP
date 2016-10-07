@@ -42,7 +42,7 @@ public class OvernightLabel extends org.drip.state.identifier.ForwardLabel {
 	/**
 	 * Construct an OvernightLabel from the Jurisdiction
 	 * 
-	 * @param The Currency
+	 * @param strCurrency The Currency
 	 * 
 	 * @return The OvernightLabel Instance
 	 */
@@ -134,7 +134,7 @@ public class OvernightLabel extends org.drip.state.identifier.ForwardLabel {
 	/**
 	 * Indicate if the Index is an Overnight Index
 	 * 
-	 * @return TRUE => Overnight Index
+	 * @return TRUE - Overnight Index
 	 */
 
 	public boolean overnight()

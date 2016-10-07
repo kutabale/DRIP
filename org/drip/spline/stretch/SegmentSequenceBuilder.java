@@ -49,7 +49,7 @@ public interface SegmentSequenceBuilder {
 	 * 
 	 * @param mss The Stretch that needs to be calibrated
 	 * 
-	 * @return TRUE => Stretch successfully set
+	 * @return TRUE - Stretch successfully set
 	 */
 
 	public abstract boolean setStretch (
@@ -68,7 +68,7 @@ public interface SegmentSequenceBuilder {
 	 * 
 	 * @param dblLeftSlope The Slope
 	 * 
-	 * @return TRUE => The Segment was successfully set up.
+	 * @return TRUE - The Segment was successfully set up.
 	 */
 
 	public abstract boolean calibStartingSegment (
@@ -79,7 +79,7 @@ public interface SegmentSequenceBuilder {
 	 * 
 	 * @param iStartingSegment The Starting Segment in the Sequence
 	 * 
-	 * @return TRUE => The Segment Sequence successfully calibrated
+	 * @return TRUE - The Segment Sequence successfully calibrated
 	 */
 
 	public abstract boolean calibSegmentSequence (
@@ -90,7 +90,7 @@ public interface SegmentSequenceBuilder {
 	 * 
 	 * @param dblLeftSlopeSensitivity The Leading Segment Left Slope Sensitivity
 	 * 
-	 * @return TRUE => The Stretch Manifest Measure Sensitivity Sequence successfully computed
+	 * @return TRUE - The Stretch Manifest Measure Sensitivity Sequence successfully computed
 	 */
 
 	public boolean manifestMeasureSensitivity (

@@ -32,7 +32,7 @@ package org.drip.quant.calculus;
  */
 
 /**
- * R1ToR1Integrator implements the following routines for integrating the R^1 -> R^1 objective Function:
+ * R1ToR1Integrator implements the following routines for integrating the R^1 To R^1 objective Function:
  * 	- Linear Quadrature
  * 	- Mid-Point Scheme
  * 	- Trapezoidal Scheme

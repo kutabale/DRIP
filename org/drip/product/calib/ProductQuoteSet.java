@@ -82,7 +82,7 @@ public class ProductQuoteSet {
 	 * 
 	 * @param strLatentStateType The Requested Latent State Type
 	 * 
-	 * @return TRUE => The requested Latent State Type is contained in the Quote Set
+	 * @return TRUE - The requested Latent State Type is contained in the Quote Set
 	 */
 
 	public boolean containsLatentStateType (
@@ -187,7 +187,7 @@ public class ProductQuoteSet {
 	 * 
 	 * @param strLatentStateQuantificationMetric The Requested Latent State Quantification Metric
 	 * 
-	 * @return TRUE => The requested Latent State Quantification Metric is contained in the Quote Set
+	 * @return TRUE - The requested Latent State Quantification Metric is contained in the Quote Set
 	 */
 
 	public boolean containsLatentStateQuantificationMetric (
@@ -211,7 +211,7 @@ public class ProductQuoteSet {
 	 * @param strLatentStateQuantificationMetric The Latent State Quantification Metric
 	 * @param label The Specific Latent State Label
 	 * 
-	 * @return TRUE => The Specified External Latent State Specification is contained in the Array
+	 * @return TRUE - The Specified External Latent State Specification is contained in the Array
 	 */
 
 	public boolean contains (
@@ -243,7 +243,7 @@ public class ProductQuoteSet {
 	 * @param strManifestMeasure The Manifest Measure
 	 * @param dblManifestMeasureQuote The Quote Value
 	 * 
-	 * @return TRUE => The Manifest Measure Quote Value successfully set
+	 * @return TRUE - The Manifest Measure Quote Value successfully set
 	 */
 
 	public boolean set (
@@ -275,7 +275,7 @@ public class ProductQuoteSet {
 	{
 		if (null == strManifestMeasure || strManifestMeasure.isEmpty() || !_mapQuote.containsKey
 			(strManifestMeasure))
-			throw new java.lang.Exception ("ProductQuoteSet::get => Invalid Inputs");
+			throw new java.lang.Exception ("ProductQuoteSet::get - Invalid Inputs");
 
 		return _mapQuote.get (strManifestMeasure);
 	}
@@ -285,7 +285,7 @@ public class ProductQuoteSet {
 	 * 
 	 * @param strManifestMeasure The Manifest Measure
 	 * 
-	 * @return TRUE => The Manifest Measure is Available
+	 * @return TRUE - The Manifest Measure is Available
 	 */
 
 	public boolean contains (

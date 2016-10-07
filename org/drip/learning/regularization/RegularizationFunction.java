@@ -30,9 +30,7 @@ package org.drip.learning.regularization;
  */
 
 /**
- * RegularizerFunction the R^1 -> R^1 and the R^d -> R^1 Regularization Functions.
- *  
- * The References are:
+ * RegularizerFunction the R^1 To R^1 and the R^d To R^1 Regularization Functions. The References are:
  *  
  *  1) Alon, N., S. Ben-David, N. Cesa Bianchi, and D. Haussler (1997): Scale-sensitive Dimensions, Uniform
  *  	Convergence, and Learnability, Journal of Association of Computational Machinery, 44 (4) 615-631.
@@ -59,8 +57,8 @@ public class RegularizationFunction {
 	/**
 	 * RegularizationFunction Constructor
 	 * 
-	 * @param regR1ToR1 R^1 -> R^1 Regularization Function
-	 * @param regRdToR1 R^d -> R^1 Regularization Function
+	 * @param regR1ToR1 R^1 To R^1 Regularization Function
+	 * @param regRdToR1 R^d To R^1 Regularization Function
 	 * @param dblLambda The Regularizer Lambda
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -78,9 +76,9 @@ public class RegularizationFunction {
 	}
 
 	/**
-	 * Retrieve the R^1 -> R^1 Regularization Function
+	 * Retrieve the R^1 To R^1 Regularization Function
 	 * 
-	 * @return The R^1 -> R^1 Regularization Function Instance
+	 * @return The R^1 To R^1 Regularization Function Instance
 	 */
 
 	public org.drip.function.definition.R1ToR1 r1Tor1()
@@ -89,9 +87,9 @@ public class RegularizationFunction {
 	}
 
 	/**
-	 * Retrieve the R^d -> R^1 Regularization Function
+	 * Retrieve the R^d To R^1 Regularization Function
 	 * 
-	 * @return The R^d -> R^1 Regularization Function Instance
+	 * @return The R^d To R^1 Regularization Function Instance
 	 */
 
 	public org.drip.function.definition.RdToR1 rdTor1()

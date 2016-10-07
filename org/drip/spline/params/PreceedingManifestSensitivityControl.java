@@ -46,7 +46,7 @@ public class PreceedingManifestSensitivityControl {
 	/**
 	 * PreceedingManifestSensitivityControl constructor
 	 * 
-	 * @param bImpactFade TRUE => Fade the Manifest Sensitivity Impact; FALSE => Retain it
+	 * @param bImpactFade TRUE - Fade the Manifest Sensitivity Impact; FALSE - Retain it
 	 * @param iCkDBasisCoeffDPreceedingManifest Ck of DBasisCoeffDPreceedingManifest
 	 * @param be Basis Evaluator Instance
 	 * 

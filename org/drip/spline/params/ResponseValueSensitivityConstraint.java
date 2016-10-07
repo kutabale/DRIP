@@ -68,7 +68,7 @@ public class ResponseValueSensitivityConstraint {
 	 * @param strManifestMeasure The Manifest Measure
 	 * @param srvc The SRVC Instance
 	 * 
-	 * @return TRUE => The SRVC Instance was successfully added
+	 * @return TRUE - The SRVC Instance was successfully added
 	 */
 
 	public boolean addManifestMeasureSensitivity (

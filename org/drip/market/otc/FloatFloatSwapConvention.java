@@ -110,10 +110,10 @@ public class FloatFloatSwapConvention {
 	 * 
 	 * @param strCurrency The Currency
 	 * @param strReferenceTenor The Reference Tenor
-	 * @param bBasisOnDerivedStream TRUE => Apply the Basis to the Derived Stream
-	 * @param bBasisOnDerivedComponent TRUE => Apply the Basis to the Derived Component
-	 * @param bIsDerivedCompoundedToReference TRUE => The Derived Periods are Compounded onto the Reference
-	 * @param bIsComponentPair TRUE => The Float-Float Swap is a Component Pair of 2 Fix-Float Swaps
+	 * @param bBasisOnDerivedStream TRUE - Apply the Basis to the Derived Stream
+	 * @param bBasisOnDerivedComponent TRUE - Apply the Basis to the Derived Component
+	 * @param bIsDerivedCompoundedToReference TRUE - The Derived Periods are Compounded onto the Reference
+	 * @param bIsComponentPair TRUE - The Float-Float Swap is a Component Pair of 2 Fix-Float Swaps
 	 * @param iSpotLag Spot Lag
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -164,7 +164,7 @@ public class FloatFloatSwapConvention {
 	/**
 	 * Retrieve the Flag indicating whether the Basis is to be applied to the Derived or the Reference Stream
 	 * 
-	 * @return TRUE => The Basis is applied to the Derived Stream
+	 * @return TRUE - The Basis is applied to the Derived Stream
 	 */
 
 	public boolean basisOnDerivedStream()
@@ -176,7 +176,7 @@ public class FloatFloatSwapConvention {
 	 * Retrieve the Flag indicating whether the Basis is to be applied to the Derived or the Reference
 	 * 	Component
 	 * 
-	 * @return TRUE => The Basis is applied to the Derived Component
+	 * @return TRUE - The Basis is applied to the Derived Component
 	 */
 
 	public boolean basisOnDerivedComponent()
@@ -188,7 +188,7 @@ public class FloatFloatSwapConvention {
 	 * Retrieve the Flag indicating whether the Derived Periods are to be compounded onto the Reference
 	 *  Period
 	 * 
-	 * @return TRUE => The Derived Periods are Compounded onto the Reference
+	 * @return TRUE - The Derived Periods are Compounded onto the Reference
 	 */
 
 	public boolean derivedCompoundedToReference()
@@ -199,7 +199,7 @@ public class FloatFloatSwapConvention {
 	/**
 	 * Retrieve the Flag indicating whether the Float-Float Swap is a Component Pair of 2 Fix-Float Swaps
 	 * 
-	 * @return TRUE => The Float-Float Swap is a Component Pair of 2 Fix-Float Swaps
+	 * @return TRUE - The Float-Float Swap is a Component Pair of 2 Fix-Float Swaps
 	 */
 
 	public boolean componentPair()

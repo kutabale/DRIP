@@ -92,6 +92,8 @@ public class DateAdjustParams {
 	 * @param iDate date
 	 * 
 	 * @return The Rolled Date
+	 * 
+	 * @throws java.lang.Exception Thrown if the input day is invalid
 	 */
 
 	public int roll (

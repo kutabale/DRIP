@@ -44,7 +44,7 @@ public class DeliverableSwapFuturesContainer {
 	/**
 	 * Initialize the Deliverable Swap Futures Container with the pre-set Deliverable Swap Futures Contract
 	 * 
-	 * @return TRUE => The Deliverable Swap Futures Container successfully initialized with the pre-set
+	 * @return TRUE - The Deliverable Swap Futures Container successfully initialized with the pre-set
 	 *  Deliverable Swap Futures Contract
 	 */
 

@@ -377,7 +377,7 @@ public class CDSComponent extends org.drip.product.definition.CreditDefaultSwap 
 	 * @param crValParams Credit Valuation Parameters
 	 * @param strCalendar Calendar
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if Inputs are Invalid
 	 */
 
 	public CDSComponent (
@@ -1392,12 +1392,10 @@ public class CDSComponent extends org.drip.product.definition.CreditDefaultSwap 
 		 * @param valParams ValuationParams
 		 * @param pricerParams PricerParams
 		 * @param csqs ComponentMarketParams
-		 * @param dblPriceCalib Market price to be calibrated
 		 * @param vcp Valuation Customization Parameters
+		 * @param dblPriceCalib Market price to be calibrated
 		 * 
 		 * @return Calibrated hazard
-		 * 
-		 * @throws java.lang.Exception Thrown if calibration failed
 		 */
 
 		public SpreadCalibOP calibrateHazardFromPrice (

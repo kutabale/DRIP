@@ -46,7 +46,7 @@ public class BasisSplineBasisCurve extends org.drip.state.basis.BasisCurve {
 	 * 
 	 * @param friReference The Reference Leg FRI
 	 * @param friDerived The Derived Leg FRI
-	 * @param bBasisOnReference TRUE => Is the Quoted Basis On the Reference Leg/Derived Leg
+	 * @param bBasisOnReference TRUE - Is the Quoted Basis On the Reference Leg/Derived Leg
 	 * @param span The Span over which the Basis Representation is valid
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid

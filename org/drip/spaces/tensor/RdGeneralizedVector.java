@@ -59,7 +59,7 @@ public interface RdGeneralizedVector extends org.drip.spaces.tensor.GeneralizedV
 	 * 
 	 * @param adblInstance The Input Instance
 	 * 
-	 * @return TRUE => Instance is a Valid Entry in the Space
+	 * @return TRUE - Instance is a Valid Entry in the Space
 	 */
 
 	public abstract boolean validateInstance (

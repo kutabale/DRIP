@@ -148,6 +148,8 @@ public class SegmentBestFitResponse {
 	/**
 	 * Retrieve the Indexed Fitness Weight Element
 	 * 
+	 * @param iIndex The Element Index
+	 * 
 	 * @return The Indexed Fitness Weight Element
 	 * 
 	 * @throws java.lang.Exception Thrown if the Index is Invalid
@@ -177,6 +179,8 @@ public class SegmentBestFitResponse {
 	/**
 	 * Retrieve the Indexed Predictor Ordinate Element
 	 * 
+	 * @param iIndex The Element Index
+	 * 
 	 * @return The Indexed Predictor Ordinate Element
 	 * 
 	 * @throws java.lang.Exception Thrown if the Index is Invalid
@@ -205,6 +209,8 @@ public class SegmentBestFitResponse {
 
 	/**
 	 * Retrieve the Indexed Response Element
+	 * 
+	 * @param iIndex The Element Index
 	 * 
 	 * @return The Indexed Response Element
 	 * 

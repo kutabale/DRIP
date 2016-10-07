@@ -66,7 +66,7 @@ public class PredictorResponseRelationSetup {
 	 * 
 	 * @param dblValue The Constraint Value Update Increment
 	 * 
-	 * @return TRUE => This Update Succeeded
+	 * @return TRUE - This Update Succeeded
 	 */
 
 	public boolean updateValue (
@@ -84,7 +84,7 @@ public class PredictorResponseRelationSetup {
 	 * @param dblPredictor The Predictor Node
 	 * @param dblResponseWeight The Response Weight at the Node
 	 * 
-	 * @return TRUE => Successfully added
+	 * @return TRUE - Successfully added
 	 */
 
 	public boolean addPredictorResponseWeight (
@@ -115,9 +115,9 @@ public class PredictorResponseRelationSetup {
 	}
 
 	/**
-	 * Retrieve the Predictor <-> Response Weight Map
+	 * Retrieve the Predictor To-From Response Weight Map
 	 * 
-	 * @return The Predictor <-> Response Weight Map
+	 * @return The Predictor To-From Response Weight Map
 	 */
 
 	public java.util.TreeMap<java.lang.Double, java.lang.Double> getPredictorResponseWeight()
@@ -130,7 +130,7 @@ public class PredictorResponseRelationSetup {
 	 * 
 	 * @param prrsOther The "Other" PRRS
 	 * 
-	 * @return TRUE => At least one Entry was absorbed
+	 * @return TRUE - At least one Entry was absorbed
 	 */
 
 	public boolean absorb (

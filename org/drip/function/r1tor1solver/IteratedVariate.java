@@ -79,7 +79,7 @@ public class IteratedVariate {
 	 * 
 	 * @param dblVariate Variate
 	 * 
-	 * @return TRUE => Variate set successfully
+	 * @return TRUE - Variate set successfully
 	 */
 
 	public boolean setVariate (
@@ -107,7 +107,7 @@ public class IteratedVariate {
 	 * 
 	 * @param dblOF Objective Function Value
 	 * 
-	 * @return TRUE => Objective Function Value set successfully
+	 * @return TRUE - Objective Function Value set successfully
 	 */
 
 	public boolean setOF (

@@ -44,7 +44,7 @@ public class OvernightFixedFloatContainer {
 	/**
 	 * Initialize the Fix-Float Conventions Container with the pre-set Fix-Float Contracts
 	 * 
-	 * @return TRUE => The Fix-Float Conventions Container successfully initialized with the pre-set
+	 * @return TRUE - The Fix-Float Conventions Container successfully initialized with the pre-set
 	 *  Fix-Float Contracts
 	 */
 
@@ -167,7 +167,7 @@ public class OvernightFixedFloatContainer {
 	 * Retrieve the Fix-Float Overnight Index Convention for the specified Jurisdiction
 	 * 
 	 * @param strJurisdictionName The Jurisdiction Name
-	 * @param strMaturityTenor
+	 * @param strMaturityTenor The Maturity Tenor
 	 * 
 	 * @return The Fix-Float Overnight Index Convention
 	 */

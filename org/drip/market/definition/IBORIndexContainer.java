@@ -51,7 +51,7 @@ public class IBORIndexContainer {
 	/**
 	 * Initialize the IBOR Index Container with the Overnight Indexes
 	 * 
-	 * @return TRUE => The IBOR Index Container successfully initialized with the indexes
+	 * @return TRUE - The IBOR Index Container successfully initialized with the indexes
 	 */
 
 	public static final boolean Init()

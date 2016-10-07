@@ -29,7 +29,8 @@ package org.drip.function.rdtor1;
  */
 
 /**
- * CovarianceEllipsoidMultivariate implements an R^d -> R^1 Co-variance Estimate of the specified Distribution.
+ * CovarianceEllipsoidMultivariate implements an R^d To R^1 Co-variance Estimate of the specified
+ *  Distribution.
  *
  * @author Lakshmi Krishnamurthy
  */

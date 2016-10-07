@@ -57,7 +57,7 @@ public class VolatilityProductQuoteSet extends org.drip.product.calib.ProductQuo
 	 * 
 	 * @param dblOptionPV The PV of an Option on the Product
 	 * 
-	 * @return TRUE => PV of an Option on the Product successfully set
+	 * @return TRUE - PV of an Option on the Product successfully set
 	 */
 
 	public boolean setOptionPV (
@@ -69,7 +69,7 @@ public class VolatilityProductQuoteSet extends org.drip.product.calib.ProductQuo
 	/**
 	 * Indicate if the PV of an Option on the Product Field exists
 	 * 
-	 * @return TRUE => PV of an Option on the Product Field Exists
+	 * @return TRUE - PV of an Option on the Product Field Exists
 	 */
 
 	public boolean containsOptionPV()
@@ -89,7 +89,7 @@ public class VolatilityProductQuoteSet extends org.drip.product.calib.ProductQuo
 		throws java.lang.Exception
 	{
 		if (!containsOptionPV())
-			throw new java.lang.Exception ("ProductQuoteSet::optionPV => Does not contain Option PV");
+			throw new java.lang.Exception ("ProductQuoteSet::optionPV - Does not contain Option PV");
 
 		return get ("OptionPV");
 	}

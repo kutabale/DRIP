@@ -43,7 +43,7 @@ public class TreasuryFuturesConventionContainer {
 	/**
 	 * Initialize the Bond Futures Convention Container with the Conventions
 	 * 
-	 * @return TRUE => The Bond Futures Convention Container successfully initialized with the Conventions
+	 * @return TRUE - The Bond Futures Convention Container successfully initialized with the Conventions
 	 */
 
 	public static final boolean Init()

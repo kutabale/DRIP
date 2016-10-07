@@ -29,8 +29,8 @@ package org.drip.function.rdtor1solver;
  */
 
 /**
- * NewtonFixedPointFinder generates the Iterators for solving R^d -> R^1 Convex/Non-Convex Functions Using
- *  the Multi-variate Newton Method.
+ * NewtonFixedPointFinder generates the Iterators for solving R^d To R^1 Convex/Non-Convex Functions Using
+ *  the Multivariate Newton Method.
  *
  * @author Lakshmi Krishnamurthy
  */

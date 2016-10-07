@@ -30,7 +30,7 @@ package org.drip.spaces.functionclass;
  */
 
 /**
- * NormedRxToNormedR1Finite implements the Class F with f E f : Normed R^x -> Normed R^1 Space of Finite 
+ * NormedRxToNormedR1Finite implements the Class F with f E f : Normed R^x To Normed R^1 Space of Finite 
  * 	Functions.
  * 
  * The Reference we've used is:

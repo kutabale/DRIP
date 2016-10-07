@@ -56,7 +56,7 @@ public class SegmentResponseConstraintSet {
 	 * 
 	 * @param srvcBase The Base Segment Response Value Constraint
 	 * 
-	 * @return TRUE => The Base Segment Response Value Constraint Successfully Set
+	 * @return TRUE - The Base Segment Response Value Constraint Successfully Set
 	 */
 
 	public boolean addBase (
@@ -73,7 +73,7 @@ public class SegmentResponseConstraintSet {
 	 * 
 	 * @param srvcSensitivity The Base Segment Response Value Constraint Sensitivity
 	 * 
-	 * @return TRUE => The Base Segment Response Value Constraint Sensitivity Successfully Set
+	 * @return TRUE - The Base Segment Response Value Constraint Sensitivity Successfully Set
 	 */
 
 	public boolean addSensitivity (

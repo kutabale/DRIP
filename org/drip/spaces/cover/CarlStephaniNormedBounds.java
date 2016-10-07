@@ -31,7 +31,7 @@ package org.drip.spaces.cover;
 
 /**
  * CarlStephaniNormedBounds contains the Normed Bounds that result from the Convolution Product of 2 Normed
- *  R^x -> Normed R^x Function Spaces.
+ *  R^x To Normed R^x Function Spaces.
  * 
  *  The References are:
  *  

@@ -75,6 +75,9 @@ public class YieldInterpreter extends org.drip.param.quoting.MeasureInterpreter 
 	 * 
 	 * @param strDC Quoting Day Count
 	 * @param iFreq Quoting Frequency
+	 * @param bApplyEOMAdj TRUE - Apply the EOM Adjustment
+	 * @param aap The ActActDCParams Instance
+	 * @param strCalendar The Calendar
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */

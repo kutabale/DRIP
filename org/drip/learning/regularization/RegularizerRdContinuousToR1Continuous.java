@@ -31,7 +31,7 @@ package org.drip.learning.regularization;
 
 /**
  * RegularizerRdContinuousToR1Continuous computes the Structural Loss and Risk for the specified Normed R^d
- * 	Continuous -> Normed R^1 Continuous Learning Function.
+ * 	Continuous To Normed R^1 Continuous Learning Function.
  *  
  * The References are:
  *  
@@ -60,7 +60,7 @@ public class RegularizerRdContinuousToR1Continuous extends
 	/**
 	 * RegularizerRdContinuousToR1Continuous Function Space Constructor
 	 * 
-	 * @param funcRdToR1 The R^d -> R^1 Function
+	 * @param funcRdToR1 The R^d To R^1 Function
 	 * @param rdContinuousInput The Continuous R^d Input Metric Vector Space
 	 * @param r1ContinuousOutput The Continuous R^1 Output Metric Vector Space
 	 * @param dblLambda The Regularization Lambda

@@ -58,7 +58,7 @@ public class BasisSplineRegressor extends org.drip.regression.core.UnitRegressio
 	 * @param iNumBasis Number of Basis Functions
 	 * @param iCk Ck
 	 * 
-	 * @throws java.lang.Exception Thrown if inputs are invalid
+	 * @return The BasisSplineRegressor Instance
 	 */
 
 	public static final BasisSplineRegressor CreatePolynomialSplineRegressor (
@@ -88,7 +88,7 @@ public class BasisSplineRegressor extends org.drip.regression.core.UnitRegressio
 	 * @param iNumBasis Number of Basis Functions
 	 * @param iCk Ck
 	 * 
-	 * @throws java.lang.Exception Thrown if inputs are invalid
+	 * @return The BasisSplineRegressor Instance
 	 */
 
 	public static final BasisSplineRegressor CreateBernsteinPolynomialSplineRegressor (
@@ -117,7 +117,7 @@ public class BasisSplineRegressor extends org.drip.regression.core.UnitRegressio
 	 * @param strScenarioName Regressor Scenario Name
 	 * @param dblTension Tension Parameter
 	 * 
-	 * @throws java.lang.Exception Thrown if inputs are invalid
+	 * @return The BasisSplineRegressor Instance
 	 */
 
 	public static final BasisSplineRegressor CreateExponentialTensionSplineRegressor (
@@ -145,7 +145,7 @@ public class BasisSplineRegressor extends org.drip.regression.core.UnitRegressio
 	 * @param strScenarioName Regressor Scenario Name
 	 * @param dblTension Tension Parameter
 	 * 
-	 * @throws java.lang.Exception Thrown if inputs are invalid
+	 * @return The BasisSplineRegressor Instance
 	 */
 
 	public static final BasisSplineRegressor CreateHyperbolicTensionSplineRegressor (
@@ -173,7 +173,7 @@ public class BasisSplineRegressor extends org.drip.regression.core.UnitRegressio
 	 * @param strScenarioName Regressor Scenario Name
 	 * @param iKPPolynomialTension KP Polynomial Tension Parameter
 	 * 
-	 * @throws java.lang.Exception Thrown if inputs are invalid
+	 * @return The BasisSplineRegressor Instance
 	 */
 
 	public static final BasisSplineRegressor CreateKaklisPandelisSplineRegressor (

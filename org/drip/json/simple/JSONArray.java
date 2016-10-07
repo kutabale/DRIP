@@ -46,11 +46,14 @@ package org.drip.json.simple;
  * Encode a list into JSON text and write it to out. 
  * If this list is also a JSONStreamAware or a JSONAware, JSONStreamAware and JSONAware specific behaviours will be ignored at this top level.
  * 
- * @see org.json.simple.JSONValue#writeJSONString(Object, Writer)
+ * @see org.drip.json.simple.JSONValue#writeJSONString(Object, Writer)
  * 
- * @param list
- * @param out
+ * @param list List
+ * @param out Output Writer
+ * 
+ * @throws java.io.IOException Thrown if the Inputs are invalid
  */
+
     public static void writeJSONString(java.util.List list, java.io.Writer out) throws java.io.IOException{
             if(list == null){
                     out.write("null");
@@ -86,9 +89,9 @@ package org.drip.json.simple;
      * Convert a list to JSON text. The result is a JSON array. 
      * If this list is also a JSONAware, JSONAware specific behaviours will be omitted at this top level.
      * 
-     * @see org.json.simple.JSONValue#toJSONString(Object)
+     * @see org.drip.json.simple.JSONValue#toJSONString(Object)
      * 
-     * @param list
+     * @param list List
      * @return JSON text, or "null" if list is null.
      */
     public static String toJSONString(java.util.List list){

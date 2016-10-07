@@ -122,7 +122,7 @@ public abstract class CompositePeriod {
 	 * 
 	 * @param iDate Date
 	 * 
-	 * @return TRUE => The specified Date is inside the Period
+	 * @return TRUE - The specified Date is inside the Period
 	 */
 
 	public boolean contains (
@@ -210,7 +210,7 @@ public abstract class CompositePeriod {
 	/**
 	 * Is this Cash Flow FX MTM'ed?
 	 * 
-	 * @return TRUE => FX MTM is on (i.e., FX is not driven by fixing)
+	 * @return TRUE - FX MTM is on (i.e., FX is not driven by fixing)
 	 */
 
 	public boolean isFXMTM()
@@ -411,8 +411,8 @@ public abstract class CompositePeriod {
 	/**
 	 * Coupon Period Notional Aggregated over the specified Dates
 	 * 
-	 * @param dblDate1 The Date #1
-	 * @param dblDate2 The Date #2
+	 * @param iDate1 The Date #1
+	 * @param iDate2 The Date #2
 	 * 
 	 * @return The Period Notional Aggregated over the specified Dates
 	 * 
@@ -1012,7 +1012,7 @@ public abstract class CompositePeriod {
 	 * @param comp Component for which the measures are to be generated
 	 * @param valParams ValuationParams from which the periods are generated
 	 * @param pricerParams PricerParams that control the generation characteristics
-	 * @param dblWorkoutDate Double JulianDate representing the absolute end of all the generated periods
+	 * @param iWorkoutDate Double JulianDate representing the absolute end of all the generated periods
 	 * @param csqs Market Parameters
 	 *  
 	 * @return The Generated Loss Quadrature Metrics

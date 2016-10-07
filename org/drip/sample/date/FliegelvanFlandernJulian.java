@@ -33,7 +33,7 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * Fliegel van Flandern demonstrates Gregorian <-> Julian Date Conversion Functionality. The References are:
+ * Fliegel van Flandern demonstrates Gregorian To-From Julian Date Conversion Functionality. The References are:
  * 
  * 	1) Fliegel, H. F., and T. C. van Flandern (1968): A Machine Algorithm for Processing Calendar Dates,
  * 		Communications of the ACM 11 657.

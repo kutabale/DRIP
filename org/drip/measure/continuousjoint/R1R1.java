@@ -57,8 +57,8 @@ public abstract class R1R1 {
 	/**
 	 * Compute the Incremental under the Distribution between the Variate Pair
 	 * 
-	 * @param dblXLeft R^1 Left Variate from which the Cumulative is to be computed
-	 * @param dblXLeft R^1 Left Variate from which the Cumulative is to be computed
+	 * @param dblXLeft R^1 Left X Variate from which the Cumulative is to be computed
+	 * @param dblYLeft R^1 Left Y Variate from which the Cumulative is to be computed
 	 * @param dblXRight R^1 Right X Variate to which the Cumulative is to be computed
 	 * @param dblYRight R^1 Right Y Variate to which the Cumulative is to be computed
 	 * 

@@ -223,7 +223,7 @@ public class CreditCurveScenarioContainer {
 	 * @param rvtpTSY Node Tweak Parameters for the TSY Discount Curve
 	 * @param rvtpCC Node Tweak Parameters for the Credit Curve
 	 * 
-	 * @return True => Credit Curve successfully created
+	 * @return True - Credit Curve successfully created
 	 */
 
 	public boolean cookCustomCC (

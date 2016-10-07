@@ -30,7 +30,7 @@ package org.drip.spaces.functionclass;
  */
 
 /**
- * NormedRxToNormedRdFinite implements the Class F with f E f : Normed R^x -> Normed R^d Space of Finite
+ * NormedRxToNormedRdFinite implements the Class F with f E f : Normed R^x To Normed R^d Space of Finite
  * 	Functions.
  * 
  *  The References are:
@@ -54,7 +54,7 @@ public class NormedRxToNormedRdFinite extends org.drip.spaces.functionclass.Norm
 	 * NormedRxToNormedRdFinite Constructor
 	 * 
 	 * @param dblMaureyConstant Maurey Constant
-	 * @param aNormedRxToNormedRd Array of the Normed R^x -> Normed R^d Spaces
+	 * @param aNormedRxToNormedRd Array of the Normed R^x To Normed R^d Spaces
 	 *  
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -273,7 +273,7 @@ public class NormedRxToNormedRdFinite extends org.drip.spaces.functionclass.Norm
 	 * Estimate for the Scale-Sensitive Sample Covering Number Array for the specified Cover Size
 	 * 
 	 * @param gvvi The Validated Instance Vector Sequence
-	 * @param adblCover The Size of the Cover Array
+	 * @param dblCover The Size of the Cover Array
 	 * 
 	 * @return The Scale-Sensitive Sample Covering Number Array for the specified Cover Size
 	 */

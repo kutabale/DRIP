@@ -29,7 +29,7 @@ package org.drip.function.rdtor1;
  */
 
 /**
- * BoundMultivariate Interface implements R^d -> R^1 Bounds.
+ * BoundMultivariate Interface implements R^d To R^1 Bounds.
  *
  * @author Lakshmi Krishnamurthy
  */
@@ -39,7 +39,7 @@ public interface BoundMultivariate {
 	/**
 	 * Retrieve the Bound Type Indicator Flag
 	 * 
-	 * @return TRUE => Bound is Upper Type
+	 * @return TRUE - Bound is Upper Type
 	 */
 
 	public abstract boolean isUpper();
@@ -65,7 +65,7 @@ public interface BoundMultivariate {
 	 * 
 	 * @param dblVariate The Variate
 	 * 
-	 * @return TRUE => The Bound has been violated
+	 * @return TRUE - The Bound has been violated
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

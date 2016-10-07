@@ -84,7 +84,7 @@ public class IteratedBracket {
 	 * 
 	 * @param dblVariateLeft Left Variate
 	 * 
-	 * @return TRUE => Left Variate set successfully
+	 * @return TRUE - Left Variate set successfully
 	 */
 
 	public boolean setVariateLeft (
@@ -112,7 +112,7 @@ public class IteratedBracket {
 	 * 
 	 * @param dblVariateRight Right Variate
 	 * 
-	 * @return TRUE => Right Variate set successfully
+	 * @return TRUE - Right Variate set successfully
 	 */
 
 	public boolean setVariateRight (
@@ -140,7 +140,7 @@ public class IteratedBracket {
 	 * 
 	 * @param dblOFLeft Left Objective Function Value
 	 * 
-	 * @return TRUE => Left Objective Function set successfully
+	 * @return TRUE - Left Objective Function set successfully
 	 */
 
 	public boolean setOFLeft (
@@ -168,7 +168,7 @@ public class IteratedBracket {
 	 * 
 	 * @param dblOFRight Right Objective Function Value
 	 * 
-	 * @return TRUE => Right Objective Function set successfully
+	 * @return TRUE - Right Objective Function set successfully
 	 */
 
 	public boolean setOFRight (

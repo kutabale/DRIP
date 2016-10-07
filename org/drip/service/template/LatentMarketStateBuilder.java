@@ -1140,7 +1140,7 @@ public class LatentMarketStateBuilder {
 	 * @param dtSpot Spot Date
 	 * @param cp The FX Currency Pair
 	 * @param astrMaturityTenor Array of Maturity Tenors
-	 * @param adblFXForward Array of FX Forwards
+	 * @param adblQuote Array of FX Forwards
 	 * @param strMeasure Calibration Measure
 	 * @param dblFXSpot FX Spot
 	 * @param scbc Segment Custom Builder Builder Parameters
@@ -1181,7 +1181,7 @@ public class LatentMarketStateBuilder {
 	 * @param dtSpot Spot Date
 	 * @param cp The FX Currency Pair
 	 * @param astrMaturityTenor Array of Maturity Tenors
-	 * @param adblFXForward Array of FX Forwards
+	 * @param adblQuote Array of FX Forwards
 	 * @param strMeasure Calibration Measure
 	 * @param dblFXSpot FX Spot
 	 * 
@@ -1215,7 +1215,7 @@ public class LatentMarketStateBuilder {
 	 * @param dtSpot Spot Date
 	 * @param cp The FX Currency Pair
 	 * @param astrMaturityTenor Array of Maturity Tenors
-	 * @param adblFXForward Array of FX Forwards
+	 * @param adblQuote Array of FX Forwards
 	 * @param strMeasure Calibration Measure
 	 * @param dblFXSpot FX Spot
 	 * 
@@ -1249,7 +1249,7 @@ public class LatentMarketStateBuilder {
 	 * @param dtSpot Spot Date
 	 * @param cp The FX Currency Pair
 	 * @param astrMaturityTenor Array of Maturity Tenors
-	 * @param adblFXForward Array of FX Forwards
+	 * @param adblQuote Array of FX Forwards
 	 * @param strMeasure Calibration Measure
 	 * @param dblFXSpot FX Spot
 	 * @param iLatentStateType SHAPE PRESERVING/SMOOTH
@@ -1280,7 +1280,7 @@ public class LatentMarketStateBuilder {
 	 * 
 	 * @param dtSpot Spot Date
 	 * @param forwardLabel Forward Label
-	 * @param bIsCap TRUE => Create and Use Array of Caps
+	 * @param bIsCap TRUE - Create and Use Array of Caps
 	 * @param astrMaturityTenor Array of Cap/floor Maturities
 	 * @param adblStrike Array of Cap/Floor Strikes
 	 * @param adblQuote Array of Cap/Floor Quotes
@@ -1335,7 +1335,7 @@ public class LatentMarketStateBuilder {
 	 * @param strFixFloatMeasure Fix Float Calibration Measure
 	 * @param iLatentStateType SHAPE_PRESERVING/SMOOTH
 	 * @param dblBump The Tenor Node Bump Amount
-	 * @param bIsProportional TRUE => The Bump Applied is Proportional
+	 * @param bIsProportional TRUE - The Bump Applied is Proportional
 	 * 
 	 * @return The Tenor Bumped Funding Curve Map
 	 */
@@ -1493,7 +1493,7 @@ public class LatentMarketStateBuilder {
 	 * @param fcReference The Reference Forward Curve
 	 * @param iLatentStateType SHAPE_PRESERVING/SMOOTH
 	 * @param dblBump The Tenor Node Bump Amount
-	 * @param bIsProportional TRUE => The Bump Applied is Proportional
+	 * @param bIsProportional TRUE - The Bump Applied is Proportional
 	 * 
 	 * @return The Tenor Bumped Forward Curve Map
 	 */
@@ -1761,7 +1761,7 @@ public class LatentMarketStateBuilder {
 	 * @param strLongEndOISMeasure Long End OIS Measure
 	 * @param iLatentStateType SHAPE PRESERVING/SMOOTH
 	 * @param dblBump The Tenor Node Bump Amount
-	 * @param bIsProportional TRUE => The Bump Applied is Proportional
+	 * @param bIsProportional TRUE - The Bump Applied is Proportional
 	 * 
 	 * @return Map of Overnight Curves
 	 */
@@ -1974,7 +1974,7 @@ public class LatentMarketStateBuilder {
 	 * @param strMeasure Calibration Measure
 	 * @param dc Discount Curve
 	 * @param dblBump The Tenor Node Bump Amount
-	 * @param bIsProportional TRUE => The Bump Applied is Proportional
+	 * @param bIsProportional TRUE - The Bump Applied is Proportional
 	 * 
 	 * @return Map of Bumped Credit Curves
 	 */
@@ -2036,7 +2036,7 @@ public class LatentMarketStateBuilder {
 	/**
 	 * Construct a Tenor + Parallel Map of Govvie Curves from the Treasury Instruments
 	 * 
-	 * @param strCode
+	 * @param strCode The Govvie Code
 	 * @param dtSpot Spot Date
 	 * @param adtEffective Array of Effective Dates
 	 * @param adtMaturity Array of Maturity Dates
@@ -2045,7 +2045,7 @@ public class LatentMarketStateBuilder {
 	 * @param strMeasure Calibration Measure
 	 * @param iLatentStateType SHAPE PRESERVING/SMOOTH
 	 * @param dblBump The Tenor Node Bump Amount
-	 * @param bIsProportional TRUE => The Bump Applied is Proportional
+	 * @param bIsProportional TRUE - The Bump Applied is Proportional
 	 * 
 	 * @return Map of Govvie Curve Instance
 	 */
@@ -2111,12 +2111,12 @@ public class LatentMarketStateBuilder {
 	 * @param dtSpot Spot Date
 	 * @param cp The FX Currency Pair
 	 * @param astrMaturityTenor Array of Maturity Tenors
-	 * @param adblFXForward Array of FX Forwards
+	 * @param adblQuote Array of FX Forwards
 	 * @param strMeasure Calibration Measure
 	 * @param dblFXSpot FX Spot
 	 * @param iLatentStateType SHAPE PRESERVING/SMOOTH
 	 * @param dblBump The Tenor Node Bump Amount
-	 * @param bIsProportional TRUE => The Bump Applied is Proportional
+	 * @param bIsProportional TRUE - The Bump Applied is Proportional
 	 * 
 	 * @return Map of FX Curve Instance
 	 */
@@ -2181,7 +2181,7 @@ public class LatentMarketStateBuilder {
 	 * 
 	 * @param dtSpot Spot Date
 	 * @param forwardLabel Forward Label
-	 * @param bIsCap TRUE => Create and Use Array of Caps
+	 * @param bIsCap TRUE - Create and Use Array of Caps
 	 * @param astrMaturityTenor Array of Cap/floor Maturities
 	 * @param adblStrike Array of Cap/Floor Strikes
 	 * @param adblQuote Array of Cap/Floor Quotes
@@ -2189,7 +2189,7 @@ public class LatentMarketStateBuilder {
 	 * @param dc Discount Curve Instance
 	 * @param fc Forward Curve Instance
 	 * @param dblBump The Tenor Node Bump Amount
-	 * @param bIsProportional TRUE => The Bump Applied is Proportional
+	 * @param bIsProportional TRUE - The Bump Applied is Proportional
 	 * 
 	 * @return Map of Forward Volatility Curve Instance
 	 */

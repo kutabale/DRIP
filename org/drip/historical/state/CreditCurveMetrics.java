@@ -76,7 +76,7 @@ public class CreditCurveMetrics {
 	 * @param dt The Date
 	 * @param dblSurvivalProbability The Survival Probability
 	 * 
-	 * @return TRUE => The Dated Survival Probability successfully added
+	 * @return TRUE - The Dated Survival Probability successfully added
 	 */
 
 	public boolean addSurvivalProbability (
@@ -96,7 +96,7 @@ public class CreditCurveMetrics {
 	 * @param dt The Date
 	 * @param dblRecoveryRate The Recovery Rate
 	 * 
-	 * @return TRUE => The Dated Recovery Rate successfully added
+	 * @return TRUE - The Dated Recovery Rate successfully added
 	 */
 
 	public boolean addRecoveryRate (

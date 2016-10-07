@@ -56,7 +56,7 @@ public class FXSettingContainer {
 	/**
 	 * Initialize the FXSettingContainer
 	 * 
-	 * @return TRUE => FXSettingsContainer successfully initialized
+	 * @return TRUE - FXSettingsContainer successfully initialized
 	 */
 
 	public static final boolean Init()

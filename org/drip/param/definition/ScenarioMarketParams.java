@@ -210,7 +210,7 @@ public abstract class ScenarioMarketParams {
 	/**
 	 * Remove the component quote
 	 * 
-	 * @param strCompID Component ID
+	 * @param strComponentID Component ID
 	 * 
 	 * @return Removed successfully (true)
 	 */
@@ -256,7 +256,7 @@ public abstract class ScenarioMarketParams {
 	 * @param strScenarioName Scenario Name
 	 * @param csqs Market Parameters
 	 * 
-	 * @return True => Added successfully
+	 * @return True - Added successfully
 	 */
 
 	public abstract boolean addScenarioMarketParams (
@@ -291,7 +291,7 @@ public abstract class ScenarioMarketParams {
 	 * Get the Map of Funding Tenor Bumped Market Parameters corresponding to the Component
 	 * 
 	 * @param comp Component
-	 * @param bBumpUp TRUE => Bump Up
+	 * @param bBumpUp TRUE - Bump Up
 	 * 
 	 * @return Map of the Funding Tenor Bumped Market Parameters
 	 */

@@ -109,7 +109,7 @@ public class BracketingOutput extends org.drip.function.r1tor1solver.ExecutionIn
 	 * @param dblOFRight Right OF
 	 * @param dblStartingVariate Starting Variate
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean done (

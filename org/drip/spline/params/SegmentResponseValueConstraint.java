@@ -38,10 +38,10 @@ package org.drip.spline.params;
  * 
  * 			C = Sigma_j [W_j * y_j] = V where
  * 
- * 	x_j => Predictor j
- * 	y_j => Response j
- * 	W_j => Weight at ordinate j
- * 	V => Value of the Constraint
+ * 	x_j - Predictor j
+ * 	y_j - Response j
+ * 	W_j - Weight at ordinate j
+ * 	V - Value of the Constraint
  * 
  * SegmentResponseValueConstraint exports the following functionality:
  * 	- Retrieve the Array of Predictor Ordinates.
@@ -117,7 +117,7 @@ public class SegmentResponseValueConstraint {
 	 *  Predictor Ordinate
 	 * @param dblWeightedResponseValueConstraint The Value of the Weighted Response Value Constraint
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Throws if the Inputs are Invalid
 	 */
 
 	public SegmentResponseValueConstraint (

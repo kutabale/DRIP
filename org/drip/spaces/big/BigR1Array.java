@@ -98,7 +98,7 @@ public class BigR1Array {
 	 * @param iPickupIndex The Pickup Index
 	 * @param iDropOffIndex The Drop off Index
 	 * 
-	 * @return TRUE => Successfully transferred the Pickup to the Drop off Locations and the related
+	 * @return TRUE - Successfully transferred the Pickup to the Drop off Locations and the related
 	 *  Translations
 	 */
 
@@ -131,7 +131,7 @@ public class BigR1Array {
 	 * @param iLow Lower Index of the Range (Inclusive)
 	 * @param iHigh Upper Index of the Range (Inclusive)
 	 * 
-	 * @return TRUE => The Range has been successfully sorted
+	 * @return TRUE - The Range has been successfully sorted
 	 */
 
 	public boolean quickSort (
@@ -167,7 +167,7 @@ public class BigR1Array {
 	/**
 	 * Sort the Full Array using Quick Sort
 	 * 
-	 * @return TRUE => The Full Array has been successfully sorted
+	 * @return TRUE - The Full Array has been successfully sorted
 	 */
 
 	public boolean quickSort()
@@ -183,7 +183,7 @@ public class BigR1Array {
 	 * @param i2Start The Right Starting Index (Inclusive)
 	 * @param i2End The Right End Index (Inclusive)
 	 * 
-	 * @return TRUE => Successfully Merged the Sorted Array Pair and Re-assigned Back to the Master
+	 * @return TRUE - Successfully Merged the Sorted Array Pair and Re-assigned Back to the Master
 	 */
 
 	public boolean mergeSort (
@@ -243,7 +243,7 @@ public class BigR1Array {
 	 * @param iStart The Master Starting Index (Inclusive)
 	 * @param iEnd The Master Ending Index (Inclusive)
 	 * 
-	 * @return TRUE => Successfully Merged the Sorted Array Stretch and Re-assigned Back to the Master
+	 * @return TRUE - Successfully Merged the Sorted Array Stretch and Re-assigned Back to the Master
 	 */
 
 	public boolean mergeSort (
@@ -303,7 +303,7 @@ public class BigR1Array {
 	/**
 	 * In-place Big Array Merge Sort
 	 * 
-	 * @return TRUE => Successfully Merged the Big Double Array and Re-assigned Back to the Master
+	 * @return TRUE - Successfully Merged the Big Double Array and Re-assigned Back to the Master
 	 */
 
 	public boolean mergeSort()
@@ -314,7 +314,7 @@ public class BigR1Array {
 	/**
 	 * Heap Sort the Big Array
 	 * 
-	 * @return TRUE => Successfully Merged the Big Double Array and Re-assigned Back to the Master
+	 * @return TRUE - Successfully Merged the Big Double Array and Re-assigned Back to the Master
 	 */
 
 	public boolean heapSort()
@@ -345,7 +345,7 @@ public class BigR1Array {
 	/**
 	 * Insertion Sort the Big Array
 	 * 
-	 * @return TRUE => Successfully Merged the Big Double Array and Re-assigned Back to the Master
+	 * @return TRUE - Successfully Merged the Big Double Array and Re-assigned Back to the Master
 	 */
 
 	public boolean insertionSort()

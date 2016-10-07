@@ -48,7 +48,7 @@ public class ExponentialRationalSetParams implements org.drip.spline.basis.Funct
 	 * @param dblExponentialTension Segment Tension
 	 * @param dblRationalTension Segment Tension
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ExponentialRationalSetParams (

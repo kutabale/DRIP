@@ -140,7 +140,7 @@ public class ExecutionControl {
 	 * @param dblOF OF Value
 	 * @param dblOFGoal OF Goal
 	 * 
-	 * @return TRUE => If the OF has reached the goal
+	 * @return TRUE - If the OF has reached the goal
 	 * 
 	 * @throws java.lang.Exception Thrown if the inputs are invalid
 	 */
@@ -162,7 +162,7 @@ public class ExecutionControl {
 	/**
 	 * Indicate if the variate convergence check has been turned on
 	 * 
-	 * @return TRUE => Variate convergence check has been turned on
+	 * @return TRUE - Variate convergence check has been turned on
 	 */
 
 	public boolean isVariateConvergenceCheckEnabled()

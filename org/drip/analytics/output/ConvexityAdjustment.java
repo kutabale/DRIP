@@ -61,7 +61,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblCollateralCredit The Collateral/Credit Convexity Adjustment
 	 * 
-	 * @return TRUE => The Collateral/Credit Convexity Adjustment successfully set
+	 * @return TRUE - The Collateral/Credit Convexity Adjustment successfully set
 	 */
 
 	public boolean setCollateralCredit (
@@ -89,7 +89,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblCollateralForward The Collateral/Forward Convexity Adjustment
 	 * 
-	 * @return TRUE => The Collateral/Forward Convexity Adjustment successfully set
+	 * @return TRUE - The Collateral/Forward Convexity Adjustment successfully set
 	 */
 
 	public boolean setCollateralForward (
@@ -117,7 +117,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblCollateralFunding The Collateral/Funding Convexity Adjustment
 	 * 
-	 * @return TRUE => The Collateral/Funding Convexity Adjustment successfully set
+	 * @return TRUE - The Collateral/Funding Convexity Adjustment successfully set
 	 */
 
 	public boolean setCollateralFunding (
@@ -145,7 +145,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblCollateralFX The Collateral/FX Convexity Adjustment
 	 * 
-	 * @return TRUE => The Collateral/FX Convexity Adjustment successfully set
+	 * @return TRUE - The Collateral/FX Convexity Adjustment successfully set
 	 */
 
 	public boolean setCollateralFX (
@@ -173,7 +173,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblCreditForward The Credit/Forward Convexity Adjustment
 	 * 
-	 * @return TRUE => The Credit/Forward Convexity Adjustment successfully set
+	 * @return TRUE - The Credit/Forward Convexity Adjustment successfully set
 	 */
 
 	public boolean setCreditForward (
@@ -201,7 +201,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblCreditFunding The Credit/Funding Convexity Adjustment
 	 * 
-	 * @return TRUE => The Credit/Funding Convexity Adjustment successfully set
+	 * @return TRUE - The Credit/Funding Convexity Adjustment successfully set
 	 */
 
 	public boolean setCreditFunding (
@@ -229,7 +229,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblCreditFX The Credit/FX Convexity Adjustment
 	 * 
-	 * @return TRUE => The Credit/FX Convexity Adjustment successfully set
+	 * @return TRUE - The Credit/FX Convexity Adjustment successfully set
 	 */
 
 	public boolean setCreditFX (
@@ -257,7 +257,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblForwardFunding The Forward/Funding Convexity Adjustment
 	 * 
-	 * @return TRUE => The Forward/Funding Convexity Adjustment successfully set
+	 * @return TRUE - The Forward/Funding Convexity Adjustment successfully set
 	 */
 
 	public boolean setForwardFunding (
@@ -285,7 +285,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblForwardFX The Forward/FX Convexity Adjustment
 	 * 
-	 * @return TRUE => The Forward/FX Convexity Adjustment successfully set
+	 * @return TRUE - The Forward/FX Convexity Adjustment successfully set
 	 */
 
 	public boolean setForwardFX (
@@ -313,7 +313,7 @@ public class ConvexityAdjustment {
 	 * 
 	 * @param dblFundingFX The Funding/FX Convexity Adjustment
 	 * 
-	 * @return TRUE => The Funding/FX Convexity Adjustment successfully set
+	 * @return TRUE - The Funding/FX Convexity Adjustment successfully set
 	 */
 
 	public boolean setFundingFX (

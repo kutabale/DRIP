@@ -65,7 +65,7 @@ public class LSQMCurveIncrement {
 	 * 
 	 * @param lsl The Latent State Label
 	 * 
-	 * @return TRUE => Quantification Metrics are available for the specified Latent State
+	 * @return TRUE - Quantification Metrics are available for the specified Latent State
 	 */
 
 	public boolean containsLatentState (
@@ -80,7 +80,7 @@ public class LSQMCurveIncrement {
 	 * @param lsl The Latent State Label
 	 * @param strQM The Quantification Metric
 	 * 
-	 * @return TRUE => The Requested Value is available
+	 * @return TRUE - The Requested Value is available
 	 */
 
 	public boolean containsQM (
@@ -101,7 +101,7 @@ public class LSQMCurveIncrement {
 	 * @param strQM The Quantification Metric
 	 * @param spanIncrement The Increment Span
 	 * 
-	 * @return TRUE => The LSQM Increment Span successfully set
+	 * @return TRUE - The LSQM Increment Span successfully set
 	 */
 
 	public boolean setQMSpan (

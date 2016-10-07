@@ -91,7 +91,7 @@ public class SequenceIndexIterator {
 	 * IndexIterator Constructor
 	 * 
 	 * @param aiMax Maximum Entries per Index
-	 * @param bCycle TRUE => Cycle around the Index Entries
+	 * @param bCycle TRUE - Cycle around the Index Entries
 	 * 
 	 * @throws java.lang.Exception Thrown if Inputs are incalid
 	 */

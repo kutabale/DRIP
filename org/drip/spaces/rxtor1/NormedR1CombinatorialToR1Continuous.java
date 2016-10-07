@@ -30,7 +30,7 @@ package org.drip.spaces.rxtor1;
  */
 
 /**
- * NormedR1CombinatorialToR1Continuous implements the f : Validated Normed R^1 Combinatorial -> Validated
+ * NormedR1CombinatorialToR1Continuous implements the f : Validated Normed R^1 Combinatorial To Validated
  * 	Normed R^1 Continuous Function Spaces.
  * 
  * The Reference we've used is:

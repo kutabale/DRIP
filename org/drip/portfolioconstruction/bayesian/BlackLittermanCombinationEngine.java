@@ -521,21 +521,19 @@ public class BlackLittermanCombinationEngine {
 	}
 
 	/**
-	 * Generate the Squared Tilt Departure R^1 -> R^1
+	 * Generate the Squared Tilt Departure R^1 To R^1
 	 * 
 	 * @param adblUserConfidenceProjectionTilt Array of the User Confidence induced Projection Tilts
 	 * @param iProjectionIndex The Index into the Projection Meta
-	 * @param dblProjectionVariance The Projection Variance
-	 * @param bDerivative TRUE => Generate the Derivative of the Tilt Departure
+	 * @param bDerivative TRUE - Generate the Derivative of the Tilt Departure
 	 * 
-	 * @return The Squared Tilt Departure R^1 -> R^1
+	 * @return The Squared Tilt Departure R^1 To R^1
 	 */
 
 	public org.drip.function.definition.R1ToR1 tiltDepartureR1ToR1 (
 		final double[] adblUserConfidenceProjectionTilt,
 		final int iProjectionIndex,
 		final boolean bDerivative)
-		throws java.lang.Exception
 	{
 		final org.drip.function.definition.R1ToR1 r1ToR1TiltDeparture = new
 			org.drip.function.definition.R1ToR1 (null) {

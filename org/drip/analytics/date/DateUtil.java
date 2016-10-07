@@ -31,7 +31,7 @@ package org.drip.analytics.date;
  */
 
 /**
- * DateUtil contains Various Utilities for manipulating Date. The Julian Date <-> Gregorian Date Inter
+ * DateUtil contains Various Utilities for manipulating Date. The Julian Date - Gregorian Date Inter
  * 	Conversion follows the following References:
  * 
  * 	1) Fliegel, H. F., and T. C. van Flandern (1968): A Machine Algorithm for Processing Calendar Dates,
@@ -396,7 +396,7 @@ public class DateUtil {
 	 * 
 	 * @param iDate Input Date
 	 * 
-	 * @return TRUE => Date falls on a Leap Year
+	 * @return TRUE - Date falls on a Leap Year
 	 * 
 	 * @throws java.lang.Exception Thrown if Input is invalid
 	 */
@@ -416,7 +416,7 @@ public class DateUtil {
 	 * @param iIncludeSide INCLUDE_LEFT or INCLUDE_RIGHT indicating whether the starting date, the ending
 	 * 	date, or both dates are to be included
 	 *  
-	 * @return TRUE => There is at least One Feb29 between the Dates
+	 * @return TRUE - There is at least One Feb29 between the Dates
 	 * 
 	 * @throws java.lang.Exception If inputs are invalid
 	 */
@@ -610,8 +610,6 @@ public class DateUtil {
 	 * @param iDay Integer representing the day
 	 * 
 	 * @return String representing the English word for the day
-	 * 
-	 * @throws java.lang.Exception Thrown if the input day is invalid
 	 */
 
 	public static java.lang.String DayChars (
@@ -682,7 +680,7 @@ public class DateUtil {
 	 * 
 	 * @param iDate The Date
 	 * 
-	 * @return TRUE => Date Corresponds to EOM
+	 * @return TRUE - Date Corresponds to EOM
 	 * 
 	 * @throws java.lang.Exception Thrown if input date is invalid
 	 */
@@ -699,7 +697,7 @@ public class DateUtil {
 	 *  
 	 * @param iYear Year
 	 * @param iMonth Month
-	 * @param iDay Date
+	 * @param iDate Date
 	 * 
 	 * @return Julian Date corresponding to the specified Year/Month/Date
 	 */
@@ -866,7 +864,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * Return the Month corresponding to the java.util.Date Instance. 1 => January, and 12 => December
+	 * Return the Month corresponding to the java.util.Date Instance. 1 is January, and 12 is December
 	 * 
 	 * @param dt The java.util.Date Instance
 	 * 

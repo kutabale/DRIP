@@ -64,7 +64,7 @@ public abstract class BigR2Array {
 	 *  
 	 * @param iX The Current X Node
 	 * @param iY The Current Y Node
-	 * @param dblPriorPathProduct The Path Product Associated with the Given Prior Navigation Sequence
+	 * @param dblPriorPathResponse The Path Product Associated with the Given Prior Navigation Sequence
 	 * 
 	 * @return The Path Response
 	 *  
@@ -129,7 +129,7 @@ public abstract class BigR2Array {
 	 * @param iX The Current X Node
 	 * @param iY The Current Y Node
 	 * 
-	 * @return TRUE => The Index Pair is Valid
+	 * @return TRUE - The Index Pair is Valid
 	 */
 
 	public boolean validateIndex (

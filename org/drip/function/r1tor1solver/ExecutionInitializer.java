@@ -299,7 +299,7 @@ public class ExecutionInitializer {
 	 * 
 	 * @param of Objective Function
 	 * @param ccp Convergence Control Parameters
-	 * @param bTrendBracketRight TRUE => Start Right Trending in search of a Bracket Variate
+	 * @param bTrendBracketRight TRUE - Start Right Trending in search of a Bracket Variate
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */

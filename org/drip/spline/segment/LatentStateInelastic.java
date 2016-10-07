@@ -94,7 +94,7 @@ public class LatentStateInelastic implements java.lang.Comparable<LatentStateIne
 	 * 
 	 * @param dblPredictorOrdinate Predictor Ordinate
 	 * 
-	 * @return TRUE => Predictor Ordinate is inside the segment
+	 * @return TRUE - Predictor Ordinate is inside the segment
 	 * 
 	 * @throws java.lang.Exception Thrown if the input is invalid
 	 */

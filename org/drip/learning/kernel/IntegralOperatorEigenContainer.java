@@ -31,7 +31,7 @@ package org.drip.learning.kernel;
 
 /**
  * IntegralOperatorEigenContainer holds the Group of Eigen-Components that result from the Eigenization of
- *  the R^x L2 -> R^x L2 Kernel Linear Integral Operator defined by:
+ *  the R^x L2 To R^x L2 Kernel Linear Integral Operator defined by:
  * 
  * 		T_k [f(.)] := Integral Over Input Space {k (., y) * f(y) * d[Prob(y)]}
  *  
@@ -104,7 +104,7 @@ public class IntegralOperatorEigenContainer {
 	 * Generate the Diagonally Scaled Normed Vector Space of the RKHS Feature Space Bounds that results on
 	 *  applying the Diagonal Scaling Operator
 	 * 
-	 * @param adblDiagonalScalingOperator The Diagonal Scaling Operator
+	 * @param dso The Diagonal Scaling Operator
 	 * 
 	 * @return The Diagonally Scaled Normed Vector Space of the RKHS Feature Space
 	 */
@@ -139,7 +139,7 @@ public class IntegralOperatorEigenContainer {
 	 * Generate the Operator Class Covering Number Bounds of the RKHS Feature Space Bounds that result on the
 	 *  Application of the Diagonal Scaling Operator
 	 * 
-	 * @param adblDiagonalScalingOperator The Diagonal Scaling Operator
+	 * @param dso The Diagonal Scaling Operator
 	 * 
 	 * @return The Operator Class Covering Number Bounds of the RKHS Feature Space
 	 */

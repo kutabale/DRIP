@@ -29,7 +29,7 @@ package org.drip.function.rdtor1solver;
  */
 
 /**
- * BarrierFixedPointFinder invokes the Iterative Finders for locating the Fixed Point for R^d -> R^1
+ * BarrierFixedPointFinder invokes the Iterative Finders for locating the Fixed Point for R^d To R^1
  *  Convex/Non-Convex Functions Under Inequality Constraints using Barrier Sequences of decaying Strengths.
  *
  * @author Lakshmi Krishnamurthy

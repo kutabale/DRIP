@@ -131,18 +131,16 @@ public class NonlinearCurveBuilder {
 	 * @param calibComp The Calibration Component
 	 * @param dblCalibValue The Value to be Calibrated to
 	 * @param strCalibMeasure The Calibration Measure
-	 * @param bFlat TRUE => Calibrate a Flat Curve across all Tenors
+	 * @param bFlat TRUE - Calibrate a Flat Curve across all Tenors
 	 * @param iCurveSegmentIndex The Curve Segment Index
 	 * @param ebcc The Credit Curve to be calibrated
 	 * @param dc The discount curve to be bootstrapped
 	 * @param gc The Govvie Curve
-	 * @param pricerParamsIn Input Pricer Parameters
+	 * @param pricerParams Input Pricer Parameters
 	 * @param lsfc The Latent State Fixings Container
 	 * @param vcp Valuation Customization Parameters
 	 * 
 	 * @return The successfully calibrated State Hazard Rate Point
-	 * 
-	 * @throws java.lang.Exception Thrown if the Bootstrapping is unsuccessful
 	 */
 
 	public static final boolean CreditCurve (
@@ -180,7 +178,7 @@ public class NonlinearCurveBuilder {
 	 * @param comp The Calibration Component
 	 * @param dblCalibValue The Value to be Calibrated to
 	 * @param strCalibMeasure The Calibration Measure
-	 * @param bFlat TRUE => Calibrate a Flat Curve across all Tenors
+	 * @param bFlat TRUE - Calibrate a Flat Curve across all Tenors
 	 * @param iCurveSegmentIndex The Curve Segment Index
 	 * @param ebdc The discount curve to be bootstrapped
 	 * @param gc The Govvie Curve
@@ -245,13 +243,13 @@ public class NonlinearCurveBuilder {
 	 * @param adblCalibValue Array of Calibration Values
 	 * @param astrCalibMeasure Array of Calibration Measures
 	 * @param dblBump Amount to bump the Quotes by
-	 * @param bFlat TRUE => Calibrate a Flat Curve across all Tenors
+	 * @param bFlat TRUE - Calibrate a Flat Curve across all Tenors
 	 * @param ebdc The discount curve to be bootstrapped
 	 * @param gc The Govvie Curve
 	 * @param lsfc Latent State Fixings Container
 	 * @param vcp Valuation Customization Parameters
 	 * 
-	 * @return TRUE => Bootstrapping was successful
+	 * @return TRUE - Bootstrapping was successful
 	 */
 
 	public static final boolean DiscountCurve (
@@ -298,7 +296,7 @@ public class NonlinearCurveBuilder {
 	 * @param comp The Calibration Component
 	 * @param dblCalibValue The Value to be Calibrated to
 	 * @param strCalibMeasure The Calibration Measure
-	 * @param bFlat TRUE => Calibrate a Flat Curve across all Tenors
+	 * @param bFlat TRUE - Calibrate a Flat Curve across all Tenors
 	 * @param iCurveSegmentIndex The Curve Segment Index
 	 * @param ebvc The Volatility Curve to be bootstrapped
 	 * @param dc The Discount Curve
@@ -374,14 +372,14 @@ public class NonlinearCurveBuilder {
 	 * @param adblCalibValue Array of Calibration Values
 	 * @param astrCalibMeasure Array of Calibration Measures
 	 * @param dblBump Amount to bump the Quotes by
-	 * @param bFlat TRUE => Calibrate a Flat Curve across all Tenors
+	 * @param bFlat TRUE - Calibrate a Flat Curve across all Tenors
 	 * @param ebvc The Volatility Curve to be bootstrapped
 	 * @param dc The Discount Curve
 	 * @param fc The Forward Curve
 	 * @param lsfc Latent State Fixings Container
 	 * @param vcp Valuation Customization Parameters
 	 * 
-	 * @return TRUE => Bootstrapping was successful
+	 * @return TRUE - Bootstrapping was successful
 	 */
 
 	public static final boolean VolatilityCurve (

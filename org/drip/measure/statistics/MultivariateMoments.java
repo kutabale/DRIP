@@ -169,7 +169,7 @@ public class MultivariateMoments {
 	 * @param strVariateName The Named Variate
 	 * @param dblMean The Variate Mean
 	 * 
-	 * @return TRUE => The Variate Mean successfully added
+	 * @return TRUE - The Variate Mean successfully added
 	 */
 
 	public boolean addMean (
@@ -212,7 +212,7 @@ public class MultivariateMoments {
 	 * @param strVariate2Name The Named Variate #2
 	 * @param dblCovariance The Variate Mean
 	 * 
-	 * @return TRUE => The Variate Pair Co-variance successfully added
+	 * @return TRUE - The Variate Pair Co-variance successfully added
 	 */
 
 	public boolean addCovariance (

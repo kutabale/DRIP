@@ -31,7 +31,7 @@ package org.drip.learning.kernel;
 
 /**
  * IntegralOperatorEigenComponent holds the Eigen-Function Space and the Eigenvalue Functions/Spaces of the
- *  R^x L2 -> R^x L2 Kernel Linear Integral Operator defined by:
+ *  R^x L2 To R^x L2 Kernel Linear Integral Operator defined by:
  * 
  * 		T_k [f(.)] := Integral Over Input Space {k (., y) * f(y) * d[Prob(y)]}
  *  
@@ -56,7 +56,7 @@ public class IntegralOperatorEigenComponent {
 	/**
 	 * IntegralOperatorEigenComponent Constructor
 	 * 
-	 * @param efRdToR1 Normed R^d -> Normed R^1 Eigen-Function
+	 * @param efRdToR1 Normed R^d To Normed R^1 Eigen-Function
 	 * @param dblEigenValue The Eigenvalue
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid

@@ -48,7 +48,7 @@ public class GlivenkoCantelliFunctionSupremum extends org.drip.sequence.function
 	 * @param fsur The Supremum Univariate Random Function
 	 * @param iNumSample Number of Empirical Samples
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The GlivenkoCantelliFunctionSupremum Instance
 	 */
 
 	public static final GlivenkoCantelliFunctionSupremum Create (

@@ -117,7 +117,7 @@ public class NotionalSetting implements org.drip.product.params.Validatable {
 	/**
 	 * Retrieve "Price Off Of Original Notional" Flag
 	 * 
-	 * @return TRUE => Price Quote is based off of the original notional
+	 * @return TRUE - Price Quote is based off of the original notional
 	 */
 
 	public boolean priceOffOfOriginalNotional()

@@ -40,7 +40,7 @@ public class KeyHoleSkeleton {
 	/**
 	 * JSON Based in/out Generic Thunker
 	 * 
-	 * @param strJSON JSON Request
+	 * @param jsonInput JSON Request
 	 * 
 	 * @return JSON Response
 	 */
@@ -124,7 +124,7 @@ public class KeyHoleSkeleton {
 	/**
 	 * JSON String Based in/out Generic Thunker
 	 * 
-	 * @param strJSON JSON String Request
+	 * @param strJSONRequest JSON String Request
 	 * 
 	 * @return JSON String Response
 	 */

@@ -29,7 +29,7 @@ package org.drip.function.rdtor1;
  */
 
 /**
- * LinearMultivariate implements an R^d -> R^1 Function using a Multivariate Vector.
+ * LinearMultivariate implements an R^d To R^1 Function using a Multivariate Vector.
  *
  * @author Lakshmi Krishnamurthy
  */

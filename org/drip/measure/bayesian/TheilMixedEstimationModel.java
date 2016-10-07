@@ -565,6 +565,7 @@ public class TheilMixedEstimationModel {
 	 * 
 	 * @param spvd The Scoping/Projection Distribution
 	 * @param strProjection Name of Projection
+	 * @param r1mnUnconditional The Unconditional Distribution
 	 * 
 	 * @return The Projection Induced Scoping Deviation Adjusted Mean
 	 */

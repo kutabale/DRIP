@@ -80,10 +80,10 @@ public abstract class LineEvolutionVerifier {
 	 * 
 	 * @param uvTargetDirection The Target Direction Unit Vector
 	 * @param adblCurrentVariate The Current Variate
-	 * @param funcRdToR1 The R^d -> R^1 Function
+	 * @param funcRdToR1 The R^d To R^1 Function
 	 * @param dblStepLength The Incremental Step Length
 	 * 
-	 * @return TRUE => The Specified Inputs satisfy the Criterion
+	 * @return TRUE - The Specified Inputs satisfy the Criterion
 	 * 
 	 * @throws java.lang.Exception Thrown if the Verification cannot be performed
 	 */
@@ -108,7 +108,7 @@ public abstract class LineEvolutionVerifier {
 	 * 
 	 * @param uvTargetDirection The Target Direction Unit Vector
 	 * @param adblCurrentVariate The Current Variate
-	 * @param funcRdToR1 The R^d -> R^1 Function
+	 * @param funcRdToR1 The R^d To R^1 Function
 	 * @param dblStepLength The Incremental Step Length
 	 * 
 	 * @return The Verifier Metrics

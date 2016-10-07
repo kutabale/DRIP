@@ -65,7 +65,7 @@ public class EmbeddedOptionSchedule {
 	 * @param bIsPut True (Put), False (Call)
 	 * @param bIsDiscrete True (Discrete), False (Continuous)
 	 * @param iScheduleStart Schedule start Date
-	 * @param bFixToFloatOnExercise True => component becomes a floater on call
+	 * @param bFixToFloatOnExercise True - component becomes a floater on call
 	 * @param dblFixToFloatExerciseDate Date at which the fix to float conversion happens
 	 * @param strFloatIndex Floater Rate Index
 	 * @param dblFixToFloatSpread Floater Spread
@@ -121,7 +121,7 @@ public class EmbeddedOptionSchedule {
 	 * @param adblFactor Matched Array of Factors
 	 * @param bIsPut True (Put), False (Call)
 	 * @param iNoticePeriod Exercise Notice Period
-	 * @param bFixToFloatOnExercise True => component becomes a floater on call
+	 * @param bFixToFloatOnExercise True - component becomes a floater on call
 	 * @param dblFixToFloatExerciseDate Date at which the fix to float conversion happens
 	 * @param strFloatIndex Floater Rate Index
 	 * @param dblFixToFloatSpread Floater Spread
@@ -199,7 +199,7 @@ public class EmbeddedOptionSchedule {
 	 * @param adblFactor Matched Array of Factors
 	 * @param bIsPut True (Put), False (Call)
 	 * @param iNoticePeriod Exercise Notice Period
-	 * @param bFixToFloatOnExercise True => component becomes a floater on call
+	 * @param bFixToFloatOnExercise True - component becomes a floater on call
 	 * @param dblFixToFloatExerciseDate Date at which the fix to float conversion happens
 	 * @param strFloatIndex Floater Rate Index
 	 * @param dblFixToFloatSpread Floater Spread

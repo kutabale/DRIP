@@ -30,7 +30,7 @@ package org.drip.spaces.functionclass;
  */
 
 /**
- * NormedR1ToL1R1Finite implements the Class f E F : Normed R^1 -> L1 R^1 Spaces of Finite Functions.
+ * NormedR1ToL1R1Finite implements the Class f E F : Normed R^1 To L1 R^1 Spaces of Finite Functions.
  * 
  * The Reference we've used is:
  * 
@@ -43,15 +43,15 @@ package org.drip.spaces.functionclass;
 public class NormedR1ToL1R1Finite extends org.drip.spaces.functionclass.NormedR1ToNormedR1Finite {
 
 	/**
-	 * Create Bounded R^1 -> Bounded L1 R^1 Function Class for the specified Bounded Class of Finite
+	 * Create Bounded R^1 To Bounded L1 R^1 Function Class for the specified Bounded Class of Finite
 	 *  Functions
 	 * 
 	 * @param dblMaureyConstant Maurey Constant
-	 * @param aR1ToR1 The Bounded R^1 -> Bounded R^1 Function Set
+	 * @param aR1ToR1 The Bounded R^1 To Bounded R^1 Function Set
 	 * @param dblPredictorSupport The Set Predictor Support
 	 * @param dblResponseBound The Set Response Bound
 	 * 
-	 * @return The Bounded R^1 -> Bounded R^1 Function Class for the specified Function Set
+	 * @return The Bounded R^1 To Bounded R^1 Function Class for the specified Function Set
 	 */
 
 	public static final NormedR1ToL1R1Finite BoundedPredictorBoundedResponse (

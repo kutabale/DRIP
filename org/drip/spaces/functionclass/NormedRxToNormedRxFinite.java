@@ -30,7 +30,7 @@ package org.drip.spaces.functionclass;
  */
 
 /**
- * NormedRxToNormedRxFinite exposes the Space of Functions that are a Transform from the Normed R^x -> Normed
+ * NormedRxToNormedRxFinite exposes the Space of Functions that are a Transform from the Normed R^x To Normed
  *  R^x Spaces.
  *  
  *  The References are:
@@ -149,7 +149,7 @@ public abstract class NormedRxToNormedRxFinite {
 	 *  Function Class
 	 * 
 	 * @param gvvi The Validated Instance Vector Sequence
-	 * @param funcR1ToR1FatShatter The Cover Fat Shattering Coefficient R^1 -> R^1
+	 * @param funcR1ToR1FatShatter The Cover Fat Shattering Coefficient R^1 To R^1
 	 * 
 	 * @return The Scale-Sensitive Covering Number Upper/Lower Bounds given the Specified Sample for the
 	 *  Function Class

@@ -47,7 +47,7 @@ public class CacheManager {
 	/**
 	 * Initialize the Cache Manager
 	 * 
-	 * @return TRUE => The Cache Manager successfully initialized
+	 * @return TRUE - The Cache Manager successfully initialized
 	 */
 
 	public static final boolean Init()

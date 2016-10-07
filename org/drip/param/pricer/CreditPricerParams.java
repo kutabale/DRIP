@@ -133,7 +133,7 @@ public class CreditPricerParams implements org.drip.param.pricer.PricerParams {
 	/**
 	 * Retrieve the flag indicating whether the Survival is to be computed to the Pay Date (TRUE) or not
 	 * 
-	 * @return TRUE => Survival is to be computed to the Pay Date
+	 * @return TRUE - Survival is to be computed to the Pay Date
 	 */
 
 	public boolean survivalToPayDate()

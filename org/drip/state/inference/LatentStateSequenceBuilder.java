@@ -243,7 +243,7 @@ public class LatentStateSequenceBuilder implements org.drip.spline.stretch.Segme
 	 * @param vcp Valuation Customization Parameters
 	 * @param span The Containing Span this Stretch will become a part of
 	 * @param sbfr Stretch Fitness Weighted Response
-	 * @param pmsc Preceeding Manifest Sensitivity Control Parameters
+	 * @param mapPMSC Map of Preceeding Manifest Sensitivity Control Parameters
 	 * @param sbfrQuoteSensitivity Stretch Fitness Weighted Response Quote Sensitivity
 	 * @param bs The Calibration Boundary Condition
 	 * 

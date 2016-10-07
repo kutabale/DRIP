@@ -45,7 +45,7 @@ public class FundingFuturesClosesReconstitutor {
 	 * @param iLastPriceIndex Last Price Column Index
 	 * @param iFuturesExpiryDateIndex Futures Expiry Date Column Index
 	 * 
-	 * @return TRUE => The Regularization is Successful
+	 * @return TRUE - The Regularization is Successful
 	 */
 
 	public static final boolean RegularizeCloses (

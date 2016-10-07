@@ -91,7 +91,7 @@ public class FuturesOptions {
 	 * @param strExchange Named Exchange
 	 * @param aLTDS Array of LTDS
 	 * 
-	 * @return TRUE => Named Exchange LTDS Array Map Entry successfully added
+	 * @return TRUE - Named Exchange LTDS Array Map Entry successfully added
 	 */
 
 	public boolean setLDTS (

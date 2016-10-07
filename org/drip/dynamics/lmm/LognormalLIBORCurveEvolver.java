@@ -74,7 +74,6 @@ public class LognormalLIBORCurveEvolver implements org.drip.dynamics.evolution.C
 		final org.drip.state.identifier.ForwardLabel lslForward,
 		final int iNumForwardTenor,
 		final org.drip.spline.params.SegmentCustomBuilderControl scbc)
-		throws java.lang.Exception
 	{
 		try {
 			return new LognormalLIBORCurveEvolver (lslFunding, lslForward, iNumForwardTenor, scbc, scbc,

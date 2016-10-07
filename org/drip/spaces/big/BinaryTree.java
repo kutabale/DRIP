@@ -197,7 +197,7 @@ public class BinaryTree {
 	 * 
 	 * @param lsNode The Node List
 	 * 
-	 * @return TRUE => The Ascending Node List Successfully Built
+	 * @return TRUE - The Ascending Node List Successfully Built
 	 */
 
 	public boolean ascendingNodeList (
@@ -231,9 +231,11 @@ public class BinaryTree {
 	 * Build a Consolidated Ascending Array of all the Constituent Nodes
 	 * 
 	 * @param adblNode The Node Array
-	 * @param iIndexToUpdate The Index To Update
+	 * @param iUpdateStartIndex The Update Start Index
 	 * 
-	 * @return TRUE => The Ascending Node Array Successfully Built
+	 * @return TRUE - The Ascending Node Array Successfully Built
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public int ascendingNodeArray (
@@ -261,7 +263,7 @@ public class BinaryTree {
 	 * 
 	 * @param lsNode The Node List
 	 * 
-	 * @return TRUE => The Descending Node List Successfully Built
+	 * @return TRUE - The Descending Node List Successfully Built
 	 */
 
 	public boolean descendingNodeList (
@@ -284,7 +286,7 @@ public class BinaryTree {
 	 * @param adblNode The Node Array
 	 * @param iIndexToUpdate The Index To Update
 	 * 
-	 * @return TRUE => The Descending Node Array Successfully Built
+	 * @return TRUE - The Descending Node Array Successfully Built
 	 */
 
 	public boolean descendingNodeArray (

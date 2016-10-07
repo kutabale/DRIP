@@ -157,6 +157,8 @@ public class Converter {
 	 * @param strEntryKey The Entry Key
 	 * 
 	 * @return The Double Form of the JSON Entry
+     * 
+     * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final double DoubleEntry (
@@ -284,6 +286,8 @@ public class Converter {
 	 * @param strEntryKey The Entry Key
 	 * 
 	 * @return The Integer Form of the JSON Entry
+     * 
+     * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final int IntegerEntry (
@@ -304,8 +308,7 @@ public class Converter {
 	/**
 	 * Convert the JSON Entry to an Integer Array
 	 * 
-	 * @param json The Object
-	 * @param strEntryKey The Entry Key
+	 * @param objJSON The JSON Object
 	 * 
 	 * @return The Integer Array From of the JSON Entry
 	 */
@@ -341,6 +344,8 @@ public class Converter {
 	 * @param strEntryKey The Entry Key
 	 * 
 	 * @return The Boolean Form of the JSON Entry
+     * 
+     * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final boolean BooleanEntry (
@@ -361,8 +366,7 @@ public class Converter {
 	/**
 	 * Convert the JSON Entry to a Boolean Array
 	 * 
-	 * @param json The Object
-	 * @param strEntryKey The Entry Key
+	 * @param objJSON The Object
 	 * 
 	 * @return The Boolean Array From of the JSON Entry
 	 */

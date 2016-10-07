@@ -144,7 +144,7 @@ public class UnitCouponAccrualSetting {
 	/**
 	 * Retrieve the Flag indicating whether Coupon DCF is computed off of the DCF Flag
 	 * 
-	 * @return TRUE => The Flag indicating whether Coupon DCF is computed off of the DCF Flag
+	 * @return TRUE - The Flag indicating whether Coupon DCF is computed off of the DCF Flag
 	 */
 
 	public boolean couponDCFOffOfFreq()

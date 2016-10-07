@@ -55,10 +55,10 @@ public class ValuationCustomizationParams {
 	 * 
 	 * @param strDC Quoting Day Count
 	 * @param iFrequency Quoting Frequency
-	 * @param bApplyEOMAdj TRUE => Apply the EOM Adjustment
-	 * @param aap => Quoting Act/Act Parameters
-	 * @param strCalendar => Quoting Calendar
-	 * @param bSpreadQuoted => TRUE => Market Quotes are Spread Quoted
+	 * @param bApplyEOMAdj TRUE - Apply the EOM Adjustment
+	 * @param aap - Quoting Act/Act Parameters
+	 * @param strCalendar - Quoting Calendar
+	 * @param bSpreadQuoted - TRUE - Market Quotes are Spread Quoted
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */
@@ -119,7 +119,7 @@ public class ValuationCustomizationParams {
 	/**
 	 * Indicate if spread Quoted
 	 * 
-	 * @return TRUE => Spread Quoted
+	 * @return TRUE - Spread Quoted
 	 */
 
 	public boolean spreadQuoted()
@@ -141,7 +141,7 @@ public class ValuationCustomizationParams {
 	/**
 	 * Indicate if EOM Adjustment is to be made for the Yield Calculation
 	 * 
-	 * @return TRUE => EOM Adjustment is to be made for the Yield Calculation
+	 * @return TRUE - EOM Adjustment is to be made for the Yield Calculation
 	 */
 
 	public boolean applyYieldEOMAdj()

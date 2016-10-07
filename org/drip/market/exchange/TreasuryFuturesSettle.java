@@ -89,7 +89,7 @@ public class TreasuryFuturesSettle {
 	 * @param iExpiryLastTradingLag Lag between the Expiry and the Last Trading Day
 	 * @param iSettleType Settlement Type
 	 * @param iSettleQuoteStyle Settlement Quote Style
-	 * @param bWildCardOption TRUE => Turn ON the Wild Card Option
+	 * @param bWildCardOption TRUE - Turn ON the Wild Card Option
 	 * @param dblReferenceCouponCurrent The Current Reference Coupon
 	 * @param dblReferenceCouponOriginal The Original Reference Coupon
 	 * @param aiDeliveryMonth Array of the Delivery Months

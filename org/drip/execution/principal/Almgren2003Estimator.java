@@ -78,7 +78,7 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 	 * 
 	 * @return The Horizon that results in the Optimal Information Ratio
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double optimalInformationRatioHorizon (

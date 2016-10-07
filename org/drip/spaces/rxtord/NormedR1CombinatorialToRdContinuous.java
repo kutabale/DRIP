@@ -30,7 +30,7 @@ package org.drip.spaces.rxtord;
  */
 
 /**
- * NormedRdCombinatorialToRdContinuous implements the f : Validated Normed R^d Combinatorial -> Normed
+ * NormedRdCombinatorialToRdContinuous implements the f : Validated Normed R^d Combinatorial To Normed
  *  Validated R^d Continuous Function Spaces.
  * 
  * The Reference we've used is:

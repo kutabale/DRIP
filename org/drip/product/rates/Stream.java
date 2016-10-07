@@ -1523,7 +1523,7 @@ public class Stream {
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.pricer.CreditPricerParams pricerParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
-		final org.drip.param.valuation.ValuationCustomizationParams quotingParams,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final org.drip.product.calib.ProductQuoteSet pqs)
 	{
 		if (null == valParams || null == pqs) return null;
@@ -1595,7 +1595,7 @@ public class Stream {
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.pricer.CreditPricerParams pricerParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
-		final org.drip.param.valuation.ValuationCustomizationParams quotingParams,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final org.drip.product.calib.ProductQuoteSet pqs)
 	{
 		if (null == valParams || null == pqs) return null;
@@ -1828,6 +1828,7 @@ public class Stream {
 	/**
 	 * Generate the micro-Jacobian of the Manifest Measure to the Discount Factor
 	 * 
+	 * @param strManifestMeasure The Manifest Measure
 	 * @param valParams The Valuation Parameters
 	 * @param pricerParams The Pricer parameters
 	 * @param csqs The Market Parameters

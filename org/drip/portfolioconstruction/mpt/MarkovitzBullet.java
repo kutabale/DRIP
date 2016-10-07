@@ -94,7 +94,7 @@ public class MarkovitzBullet {
 	 * 
 	 * @param op The Returns Constrained Optimal Portfolio
 	 * 
-	 * @return TRUE => The Returns Constrained Optimal Portfolio Successfully Added
+	 * @return TRUE - The Returns Constrained Optimal Portfolio Successfully Added
 	 */
 
 	public boolean addOptimalPortfolio (

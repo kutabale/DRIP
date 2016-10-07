@@ -77,7 +77,7 @@ public class FixedPointFinderOutput {
 	 * 
 	 * @param dblRoot Root
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setRoot (
@@ -93,7 +93,7 @@ public class FixedPointFinderOutput {
 	/**
 	 * Indicate whether the root is present in the output, i.e., if the finder has successfully completed.
 	 * 
-	 * @return TRUE => Root exists in the output
+	 * @return TRUE - Root exists in the output
 	 */
 
 	public boolean containsRoot()
@@ -126,7 +126,7 @@ public class FixedPointFinderOutput {
 	/**
 	 * Increment the number of Iterations
 	 * 
-	 * @return TRUE => Successfully incremented
+	 * @return TRUE - Successfully incremented
 	 */
 
 	public boolean incrIterations()
@@ -149,7 +149,7 @@ public class FixedPointFinderOutput {
 	/**
 	 * Increment the number of Objective Function evaluations
 	 * 
-	 * @return TRUE => Successfully incremented
+	 * @return TRUE - Successfully incremented
 	 */
 
 	public boolean incrOFCalcs()
@@ -172,7 +172,7 @@ public class FixedPointFinderOutput {
 	/**
 	 * Increment the number of Objective Function Derivative evaluations
 	 * 
-	 * @return TRUE => Successfully incremented
+	 * @return TRUE - Successfully incremented
 	 */
 
 	public boolean incrOFDerivCalcs()

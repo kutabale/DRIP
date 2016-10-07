@@ -55,7 +55,7 @@ public class TurnListDiscountFactor {
 	 * 
 	 * @param turn The Turn Instance to be added
 	 * 
-	 * @return TRUE => Successfully added
+	 * @return TRUE - Successfully added
 	 */
 
 	public boolean addTurn (

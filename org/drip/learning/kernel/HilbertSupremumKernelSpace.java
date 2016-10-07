@@ -30,7 +30,7 @@ package org.drip.learning.kernel;
  */
 
 /**
- * HilbertSupremumKernelSpace contains the Space of Kernels S that are a Transform from the R^d L2 Hilbert ->
+ * HilbertSupremumKernelSpace contains the Space of Kernels S that are a Transform from the R^d L2 Hilbert To
  * 	R^m L-Infinity Supremum Banach Spaces. 
  *  
  *  The References are:

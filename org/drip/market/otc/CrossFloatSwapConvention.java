@@ -92,7 +92,7 @@ public class CrossFloatSwapConvention {
 	 * @param crossStreamReference Reference Cross Float Stream
 	 * @param crossStreamDerived Derived Cross Float Stream
 	 * @param iFixingType Fixing Type
-	 * @param bFXMTM TRUE => The Cross Currency Swap is of the FX MTM type
+	 * @param bFXMTM TRUE - The Cross Currency Swap is of the FX MTM type
 	 * @param iSpotLag Spot Lag
 	 * 
 	 * @throws java.lang.Exception Thrown if Inputs are Invalid

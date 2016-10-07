@@ -116,7 +116,7 @@ public class ContinuouslyCompoundedForwardProcess {
 	 * Compute the Realized/Expected Instantaneous Forward Rate Integral to the Target Date
 	 * 
 	 * @param iTargetDate The Target Date
-	 * @param bRealized TRUE => Compute the Realized (TRUE) / Expected (FALSE) Instantaneous Forward Rate
+	 * @param bRealized TRUE - Compute the Realized (TRUE) / Expected (FALSE) Instantaneous Forward Rate
 	 *  Integral
 	 * 
 	 * @return The Realized/Expected Instantaneous Forward Rate Integral
@@ -142,7 +142,7 @@ public class ContinuouslyCompoundedForwardProcess {
 	 * Retrieve a Realized/Expected Value of the Discount to the Target Date
 	 * 
 	 * @param iTargetDate The Target Date
-	 * @param bRealized TRUE => Compute the Realized (TRUE) / Expected (FALSE) Instantaneous Forward Rate
+	 * @param bRealized TRUE - Compute the Realized (TRUE) / Expected (FALSE) Instantaneous Forward Rate
 	 *  Integral
 	 * 
 	 * @return The Realized/Expected Value of the Discount to the Target Date
@@ -169,7 +169,7 @@ public class ContinuouslyCompoundedForwardProcess {
 	 * 
 	 * @param iTargetDate The Target Date
 	 * @param strTenor The LIBOR Tenor
-	 * @param bRealized TRUE => Compute the Realized (TRUE) / Expected (FALSE) LIBOR Rate
+	 * @param bRealized TRUE - Compute the Realized (TRUE) / Expected (FALSE) LIBOR Rate
 	 * 
 	 * @return The Realized/Expected Value of the LIBOR Rate at the Target Date
 	 * 

@@ -53,7 +53,9 @@ public class ShortRateUpdate extends org.drip.dynamics.evolution.LSQMPointUpdate
 	 * @param dblExpectedFinalShortRate The Expected Final Short Rate
 	 * @param dblFinalShortRateVariance The Final Variance of the Short Rate
 	 * @param dblZeroCouponBondPrice The Zero Coupon Bond Price
-	 *  
+	 * 
+	 * @return The ShortRateUpdate Instance
+	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 

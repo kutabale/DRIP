@@ -66,6 +66,7 @@ public class TreasuryFuturesConvention {
 	 * @param astrExchange Exchange Array
 	 * @param strUnderlierType Underlier Type
 	 * @param strUnderlierSubtype Underlier Sub-Type
+	 * @param dimExpiry The Expiry Date-In-Month Setting
 	 * @param bfe Eligibility Settings
 	 * @param bfs Settlement Settings
 	 * 
@@ -352,7 +353,7 @@ public class TreasuryFuturesConvention {
 	 * @param dblOutstandingNotional The Outstanding Notional
 	 * @param strIssuer The Issuer
 	 * 
-	 * @return TRUE => The given bond is eligible to be delivered
+	 * @return TRUE - The given bond is eligible to be delivered
 	 */
 
 	public boolean isEligible (

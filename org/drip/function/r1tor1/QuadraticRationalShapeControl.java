@@ -39,7 +39,7 @@ package org.drip.function.r1tor1;
  * 
  *		where is the normalized ordinate mapped as
  * 
- * 			x => (x - x_i-1) / (x_i - x_i-1)
+ * 			x ==== (x - x_i-1) / (x_i - x_i-1)
  * 
  * @author Lakshmi Krishnamurthy
  */

@@ -91,7 +91,7 @@ public class ExchangeInstrumentBuilder {
 	 * @param adblCoupon Array of Coupons
 	 * @param adblConversionFactor The Bond Conversion Factor
 	 * @param strUnderlierType The Underlier Type, e.g., TREASURY
-	 * @param strUnderlierSubType The Futures Underlier Sub-type, i.e., BONDS
+	 * @param strUnderlierSubtype The Futures Underlier Sub-type, i.e., BONDS
 	 * @param strMaturityTenor The Futures Maturity Tenor
 	 * 
 	 * @return The Treasury Futures Instance

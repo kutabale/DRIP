@@ -122,6 +122,8 @@ public class SubMatrixSetExtractor {
 	 * @param iStartColumn The Starting Column
 	 * 
 	 * @return The List of all the sub-matrices
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final double MaxCompositeSubMatrix (
@@ -156,6 +158,8 @@ public class SubMatrixSetExtractor {
 	 * @param iStartColumn The Starting Column
 	 * 
 	 * @return The List of all the sub-matrices
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final double LeanMaxCompositeSubMatrix (

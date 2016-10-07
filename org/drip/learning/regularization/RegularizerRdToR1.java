@@ -30,7 +30,7 @@ package org.drip.learning.regularization;
  */
 
 /**
- * RegularizerRdxToR1 exposes the Structural Loss and Risk Calculations for the specified Normed R^d -> Normed
+ * RegularizerRdxToR1 exposes the Structural Loss and Risk Calculations for the specified Normed R^d To Normed
  *  R^1 Learning Function.
  *  
  * The References are:
@@ -65,7 +65,7 @@ public interface RegularizerRdToR1 {
 	/**
 	 * Compute the Regularization Sample Structural Loss
 	 * 
-	 * @param funcRdToR1 R^d -> R^1 Function Instance
+	 * @param funcRdToR1 R^d To R^1 Function Instance
 	 * @param aadblX The Sample Instance
 	 * 
 	 * @return The Regularization Sample Structural Loss
@@ -82,7 +82,7 @@ public interface RegularizerRdToR1 {
 	 * Compute the Regularization Sample Structural Loss
 	 * 
 	 * @param distRdR1 R^d R^1 Multivariate Measure
-	 * @param funcRdToR1 R^d -> R^1 Function Instance
+	 * @param funcRdToR1 R^d To R^1 Function Instance
 	 * @param aadblX The Sample Instance
 	 * @param adblY The Response Instance
 	 * 

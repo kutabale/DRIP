@@ -84,7 +84,7 @@ public abstract class ExecutionInitializationOutput {
 	/**
 	 * Increment the Number of Iterations
 	 * 
-	 * @return TRUE => Successfully incremented
+	 * @return TRUE - Successfully incremented
 	 */
 
 	public final boolean incrIterations()
@@ -107,7 +107,7 @@ public abstract class ExecutionInitializationOutput {
 	/**
 	 * Increment the Number of Objective Function Evaluations
 	 * 
-	 * @return TRUE => Successfully incremented
+	 * @return TRUE - Successfully incremented
 	 */
 
 	public final boolean incrOFCalcs()
@@ -130,7 +130,7 @@ public abstract class ExecutionInitializationOutput {
 	/**
 	 * Increment the number of Objective Function Derivative evaluations
 	 * 
-	 * @return TRUE => Successfully incremented
+	 * @return TRUE - Successfully incremented
 	 */
 
 	public final boolean incrOFDerivCalcs()
@@ -153,7 +153,7 @@ public abstract class ExecutionInitializationOutput {
 	/**
 	 * Indicate if the execution initialization is done
 	 * 
-	 * @return TRUE => Execution initialization is done
+	 * @return TRUE - Execution initialization is done
 	 */
 
 	public final boolean isDone()
@@ -177,7 +177,7 @@ public abstract class ExecutionInitializationOutput {
 	 * 
 	 * @param dblStartingVariate Starting Variate
 	 * 
-	 * @return TRUE => Starting Variate set successfully
+	 * @return TRUE - Starting Variate set successfully
 	 */
 
 	public boolean setStartingVariate (

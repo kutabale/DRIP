@@ -49,7 +49,7 @@ public class TreasuryFuturesClosesReconstitutor {
 	 * @param iMaturityDateIndex Maturity Date Column Index
 	 * @param iExpiryProxyIndex Expiry Proxy Column Index
 	 * 
-	 * @return TRUE => The Regularization Successful
+	 * @return TRUE - The Regularization Successful
 	 */
 
 	public static final boolean RegularizeCloses (
@@ -135,7 +135,7 @@ public class TreasuryFuturesClosesReconstitutor {
 	 * 
 	 * @param strClosesLocation The UST Futures Closes Feed Location
 	 * 
-	 * @return TRUE => Regularization Successful
+	 * @return TRUE - Regularization Successful
 	 */
 
 	public static final boolean USTRegularizeCloses (

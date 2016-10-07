@@ -218,11 +218,10 @@ public class TreasuryAPI {
 	/**
 	 * Generate the Govvie Curve Horizon Metrics
 	 * 
-	 * @param dtFirst The First Date
-	 * @param dtSecond The Second Date
+	 * @param adtSpot Array of the Spot Dates
+	 * @param iHorizonGap The Horizon Gap
 	 * @param astrGovvieTreasuryInstrumentTenor Array of Govvie Curve Treasury Instrument Maturity Tenors
-	 * @param adblFirstGovvieTreasuryInstrument Array of First Date Govvie Curve Treasury Instrument Quotes
-	 * @param adblSecondGovvieTreasuryInstrument Array of Second Date Govvie Curve Treasury Instrument Quotes
+	 * @param aadblGovvieTreasuryInstrumentQuote Array of Govvie Curve Treasury Instrument Quotes
 	 * @param strMaturityTenor Treasury Bond Maturity Tenor
 	 * @param strCode Treasury Bond Code
 	 * @param astrRollDownHorizon Array of the Roll Down Horizon Tenors

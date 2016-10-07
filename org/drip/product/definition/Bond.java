@@ -339,7 +339,7 @@ public abstract class Bond extends CreditComponent {
 	 * 
 	 * @param iDate Valuation Date
 	 * 
-	 * @return True => The given date is in the first coupon period
+	 * @return True - The given date is in the first coupon period
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */
@@ -353,7 +353,7 @@ public abstract class Bond extends CreditComponent {
 	 * 
 	 * @param iDate Valuation Date
 	 * 
-	 * @return True => The given date is in the last coupon period
+	 * @return True - The given date is in the last coupon period
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */
@@ -434,7 +434,7 @@ public abstract class Bond extends CreditComponent {
 	 * Return the next exercise info of the given exercise type (call/put) subsequent to the specified date
 	 * 
 	 * @param dt Valuation Date
-	 * @param bGetPut TRUE => Gets the next put date
+	 * @param bGetPut TRUE - Gets the next put date
 	 * 
 	 * @return Next Exercise Information
 	 */
@@ -12156,7 +12156,7 @@ public abstract class Bond extends CreditComponent {
 	public abstract double yieldFromPrice (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
-		final org.drip.param.valuation.ValuationCustomizationParams quocptingParams,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblPrice)
 		throws java.lang.Exception;
 

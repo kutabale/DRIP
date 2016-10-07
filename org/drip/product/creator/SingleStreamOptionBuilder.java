@@ -46,7 +46,7 @@ public class SingleStreamOptionBuilder {
 	 * @param forwardLabel The Forward Label
 	 * @param dblStrike The Option Strike
 	 * @param strManifestMeasure Measure of the Underlying Component
-	 * @param bIsCaplet Is the Futures Option a Caplet? TRUE => YES
+	 * @param bIsCaplet Is the Futures Option a Caplet? TRUE - YES
 	 * @param csp Cash Settle Parameters
 	 * 
 	 * @return The Standard Futures Option Instance
@@ -85,7 +85,7 @@ public class SingleStreamOptionBuilder {
 	 * @param forwardLabel The Forward Label
 	 * @param dblStrike The Option Strike
 	 * @param strManifestMeasure Measure of the Underlying Component
-	 * @param bIsCaplet Is the Futures Option a Caplet? TRUE => YES
+	 * @param bIsCaplet Is the Futures Option a Caplet? TRUE - YES
 	 * @param strTradingMode The Trading Mode
 	 * @param strExchange The Exchange
 	 * 

@@ -72,7 +72,7 @@ public class ConvergenceOutput extends org.drip.function.r1tor1solver.ExecutionI
 	 * 
 	 * @param dblStartingVariate Starting Variate
 	 * 
-	 * @return TRUE => Initialization successfully completed
+	 * @return TRUE - Initialization successfully completed
 	 */
 
 	public boolean done (

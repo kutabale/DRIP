@@ -42,7 +42,7 @@ public interface R1GeneralizedVector extends org.drip.spaces.tensor.GeneralizedV
 	 * 
 	 * @param dblInstance The Input Instance Ordinate
 	 * 
-	 * @return TRUE => Instance Ordinate is a Valid Entry in the Space
+	 * @return TRUE - Instance Ordinate is a Valid Entry in the Space
 	 */
 
 	public abstract boolean validateInstance (

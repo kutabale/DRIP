@@ -59,7 +59,7 @@ public class FixedStreamQuoteSet extends org.drip.product.calib.ProductQuoteSet 
 	 * 
 	 * @param dblPV The PV
 	 * 
-	 * @return TRUE => PV successfully set
+	 * @return TRUE - PV successfully set
 	 */
 
 	public boolean setPV (
@@ -71,7 +71,7 @@ public class FixedStreamQuoteSet extends org.drip.product.calib.ProductQuoteSet 
 	/**
 	 * Indicate if the PV Field exists
 	 * 
-	 * @return TRUE => PV Field Exists
+	 * @return TRUE - PV Field Exists
 	 */
 
 	public boolean containsPV()
@@ -98,7 +98,7 @@ public class FixedStreamQuoteSet extends org.drip.product.calib.ProductQuoteSet 
 	 * 
 	 * @param dblCoupon The Coupon
 	 * 
-	 * @return TRUE => The Coupon successfully set
+	 * @return TRUE - The Coupon successfully set
 	 */
 
 	public boolean setCoupon (
@@ -110,7 +110,7 @@ public class FixedStreamQuoteSet extends org.drip.product.calib.ProductQuoteSet 
 	/**
 	 * Indicate if the Coupon Field exists
 	 * 
-	 * @return TRUE => Coupon Field Exists
+	 * @return TRUE - Coupon Field Exists
 	 */
 
 	public boolean containsCoupon()
@@ -137,7 +137,7 @@ public class FixedStreamQuoteSet extends org.drip.product.calib.ProductQuoteSet 
 	 * 
 	 * @param dblCouponBasis The Coupon Basis
 	 * 
-	 * @return TRUE => The Coupon Basis successfully set
+	 * @return TRUE - The Coupon Basis successfully set
 	 */
 
 	public boolean setCouponBasis (
@@ -149,7 +149,7 @@ public class FixedStreamQuoteSet extends org.drip.product.calib.ProductQuoteSet 
 	/**
 	 * Indicate if the Coupon Basis Field exists
 	 * 
-	 * @return TRUE => Coupon Basis Field Exists
+	 * @return TRUE - Coupon Basis Field Exists
 	 */
 
 	public boolean containsCouponBasis()

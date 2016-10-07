@@ -66,7 +66,7 @@ public class StandardCDXParams {
 	 * @param strCurrency CDX Currency
 	 * @param dblCoupon CDX Coupon
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public StandardCDXParams (

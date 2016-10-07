@@ -96,7 +96,7 @@ public abstract class MergedDiscountForwardCurve implements org.drip.state.disco
 	 * 
 	 * @param tldf Turn List Discount Factor
 	 * 
-	 * @return TRUE => Valid Turn List Discount Factor Set
+	 * @return TRUE - Valid Turn List Discount Factor Set
 	 */
 
 	public boolean setTurns (
@@ -347,8 +347,8 @@ public abstract class MergedDiscountForwardCurve implements org.drip.state.disco
 	/**
 	 * Compute the LIBOR between 2 dates given the Day Count
 	 * 
-	 * @param iDt1 First Date
-	 * @param iDt2 Second Date
+	 * @param iDate1 First Date
+	 * @param iDate2 Second Date
 	 * @param dblDCF Day Count Fraction
 	 * 
 	 * @return LIBOR
@@ -371,8 +371,8 @@ public abstract class MergedDiscountForwardCurve implements org.drip.state.disco
 	/**
 	 * Compute the LIBOR between 2 dates
 	 * 
-	 * @param dblDt1 First Date
-	 * @param dblDt2 Second Date
+	 * @param iDate1 First Date
+	 * @param iDate2 Second Date
 	 * 
 	 * @return LIBOR
 	 * 
@@ -394,7 +394,7 @@ public abstract class MergedDiscountForwardCurve implements org.drip.state.disco
 	/**
 	 * Calculate the LIBOR to the given tenor at the specified date
 	 * 
-	 * @param iDate Date
+	 * @param iStartDate Start Date
 	 * @param strTenor Tenor
 	 * 
 	 * @return LIBOR
@@ -600,6 +600,7 @@ public abstract class MergedDiscountForwardCurve implements org.drip.state.disco
 	 * Retrieve the Forward Curve that might be implied by the Latent State of this Discount Curve Instance
 	 * 	corresponding to the specified Floating Rate Index
 	 * 
+	 * @param iDate The Date
 	 * @param fri The Floating Rate Index
 	 * 
 	 * @return The Forward Curve Implied by the Discount Curve Latent State

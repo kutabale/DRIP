@@ -46,7 +46,7 @@ public class ExponentialMixtureSetParams implements org.drip.spline.basis.Functi
 	 * 
 	 * @param adblTension Array of the Tension Parameters
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ExponentialMixtureSetParams (
@@ -60,7 +60,11 @@ public class ExponentialMixtureSetParams implements org.drip.spline.basis.Functi
 	/**
 	 * Get the Indexed Exponential Tension Entry
 	 * 
+	 * @param iIndex The Index
+	 * 
 	 * @return The Indexed Exponential Tension Entry
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double tension (

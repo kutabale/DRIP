@@ -55,7 +55,7 @@ public class ManifestMeasureTweak {
 	 * ManifestMeasureTweak constructor
 	 * 
 	 * @param iNode Node to be tweaked - Set to NODE_FLAT_TWEAK for flat curve tweak
-	 * @param bIsProportional True => Tweak is proportional, False => parallel
+	 * @param bIsProportional True - Tweak is proportional, False - parallel
 	 * @param dblAmount Amount to be tweaked - proportional tweaks are represented as percent, parallel
 	 * 	tweaks are absolute numbers
 	 * 
@@ -100,7 +100,7 @@ public class ManifestMeasureTweak {
 	/**
 	 * Is the Tweak Proportional
 	 * 
-	 * @return TRUE => The Tweak is Proportional
+	 * @return TRUE - The Tweak is Proportional
 	 */
 
 	public boolean isProportional()

@@ -30,7 +30,7 @@ package org.drip.function.definition;
  */
 
 /**
- * RdToRd provides the evaluation of the R^d -> R^d objective function and its derivatives for a specified
+ * RdToRd provides the evaluation of the R^d To R^d objective function and its derivatives for a specified
  * 	set of R^d variates. Default implementation of the derivatives are for non-analytical black box objective
  * 	functions.
  *

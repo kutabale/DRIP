@@ -29,7 +29,7 @@ package org.drip.function.rdtor1solver;
  */
 
 /**
- * ConvergenceControl contains the R^d -> R^1 Convergence Control/Tuning Parameters.
+ * ConvergenceControl contains the R^d To R^1 Convergence Control/Tuning Parameters.
  *
  * @author Lakshmi Krishnamurthy
  */

@@ -30,7 +30,7 @@ package org.drip.spaces.rxtor1;
  */
 
 /**
- * NormedR1ContinuousToR1Continuous implements the f : Validated Normed R^1 Continuous -> Validated Normed
+ * NormedR1ContinuousToR1Continuous implements the f : Validated Normed R^1 Continuous To Validated Normed
  * 	R^1 Continuous Function Spaces.
  * 
  * The Reference we've used is:
@@ -46,9 +46,9 @@ public class NormedR1ContinuousToR1Continuous extends org.drip.spaces.rxtor1.Nor
 	/**
 	 * NormedR1ContinuousToR1Continuous Function Space Constructor
 	 * 
-	 * @param cruInput The R^1 Input Metric Vector Space
-	 * @param cruOutput The R^1 Output Metric Vector Space
-	 * @param funcR1ToR1 The R^1 -> R^1 Function
+	 * @param r1ContinuousInput The R^1 Input Metric Vector Space
+	 * @param r1ContinuousOutput The R^1 Output Metric Vector Space
+	 * @param funcR1ToR1 The R^1 To R^1 Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

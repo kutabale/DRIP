@@ -123,8 +123,8 @@ public class ComponentPair extends org.drip.product.definition.BasketProduct {
 	 * @param valParams Valuation Parameters
 	 * @param mktParams Market Parameters
 	 * @param dblBasis The Basis on either the Reference Component or the Derived Component
-	 * @param bBasisOnDerivedComponent TRUE => Apply the Basis on the Derived Component
-	 * @param bBasisOnDerivedStream TRUE => Apply the Basis on the Derived Stream (FALSE => Reference Stream)
+	 * @param bBasisOnDerivedComponent TRUE - Apply the Basis on the Derived Component
+	 * @param bBasisOnDerivedStream TRUE - Apply the Basis on the Derived Stream (FALSE - Reference Stream)
 	 * 
 	 * @return The Derived Forward Latent State Segment Specification
 	 */
@@ -224,7 +224,7 @@ public class ComponentPair extends org.drip.product.definition.BasketProduct {
 	 * @param valParams Valuation Parameters
 	 * @param mktParams Market Parameters
 	 * @param dblReferenceComponentBasis The Reference Component Basis
-	 * @param bBasisOnDerivedLeg TRUE => Apply basis on the Derived Leg
+	 * @param bBasisOnDerivedLeg TRUE - Apply basis on the Derived Leg
 	 * @param dblSwapRate The Swap Rate
 	 * 
 	 * @return The Derived Forward/Funding Latent State Segment Specification

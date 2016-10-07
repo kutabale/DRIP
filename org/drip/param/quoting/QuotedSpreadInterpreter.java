@@ -67,7 +67,7 @@ public class QuotedSpreadInterpreter extends org.drip.param.quoting.MeasureInter
 	 * @param strCDSContractType The CDS Contract Type
 	 * @param dblCouponStrike The Coupon Strike
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public QuotedSpreadInterpreter (

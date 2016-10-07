@@ -70,7 +70,7 @@ public class CreditCDSIndexMarksReconstitutor {
 	 * @param iSpotDateIndex Spot Date Column Index
 	 * @param iQuotedSpreadIndex Quoted Spread Column Index
 	 * 
-	 * @return TRUE => The Regularization is Successful
+	 * @return TRUE - The Regularization is Successful
 	 */
 
 	public static final boolean RegularizeCloses (

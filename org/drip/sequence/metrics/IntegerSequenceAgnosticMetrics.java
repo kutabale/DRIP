@@ -61,9 +61,9 @@ public class IntegerSequenceAgnosticMetrics extends
 	}
 
 	/**
-	 * Retrieve the Upper Bound on Probability of X > 0
+	 * Retrieve the Upper Bound on Probability of X gt 0
 	 * 
-	 * @return The Upper Bound on Probability of X > 0
+	 * @return The Upper Bound on Probability of X gt 0
 	 */
 
 	public double probGreaterThanZeroUpperBound()

@@ -42,7 +42,7 @@ public class IterationHelper {
 	 * 
 	 * @param ai The Index Array
 	 * 
-	 * @return TRUE => A Repeating Index exists
+	 * @return TRUE - A Repeating Index exists
 	 */
 
 	public static final boolean CheckForRepeatingIndex (

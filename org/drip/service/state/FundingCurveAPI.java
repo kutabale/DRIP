@@ -43,7 +43,7 @@ public class FundingCurveAPI {
 	 * @param astrFixFloatMaturityTenor Array of Fix Float Maturity Tenors
 	 * @param adblFixFloatQuote Array of Fix Float Swap Rates
 	 * @param astrInTenor Array of "In" Tenors
-	 * @param strForTenor "For" Tenor
+	 * @param astrForTenor Array of "For" Tenors
 	 * @param strCurrency Funding Currency
 	 * @param iLatentStateType Latent State Type
 	 * 
@@ -120,7 +120,7 @@ public class FundingCurveAPI {
 	 * @param astrFixFloatMaturityTenor Array of Fix Float Maturity Tenors
 	 * @param aadblFixFloatQuote Array of Fix Float Swap Rates
 	 * @param astrInTenor Array of "In" Tenors
-	 * @param strForTenor "For" Tenor
+	 * @param astrForTenor Array of "For" Tenors
 	 * @param strCurrency Funding Currency
 	 * @param iLatentStateType Latent State Type
 	 * 

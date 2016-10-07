@@ -123,8 +123,6 @@ public class ReferenceIndexPeriod {
 	 * Retrieve the Reference Period Day Count Fraction
 	 * 
 	 * @return The Reference Period Day Count Fraction
-	 * 
-	 * @throws java.lang.Exception Thrown if the Reference Period Day Count Fraction cannot be calculated
 	 */
 
 	public double dcf()

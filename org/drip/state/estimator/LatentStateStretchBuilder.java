@@ -307,10 +307,10 @@ public class LatentStateStretchBuilder {
 	 * @param valParams The Valuation Parameters
 	 * @param mktParams The Basket Market Parameters to imply the Market Quote Measure
 	 * @param adblBasis Array of the Basis on either the Reference Component or the Derived Component
-	 * @param bBasisOnDerivedComponent TRUE => Apply the Basis on the Derived Component
-	 * @param bBasisOnDerivedStream TRUE => Apply the Basis on the Derived Stream (FALSE => Reference Stream)
+	 * @param bBasisOnDerivedComponent TRUE - Apply the Basis on the Derived Component
+	 * @param bBasisOnDerivedStream TRUE - Apply the Basis on the Derived Stream (FALSE - Reference Stream)
 	 * 
-	 * return Instance of LatentStateStretchSpec
+	 * @return Instance of LatentStateStretchSpec
 	 */
 
 	public static final org.drip.state.inference.LatentStateStretchSpec ComponentPairForwardStretch (
@@ -364,9 +364,9 @@ public class LatentStateStretchBuilder {
 	 * @param mktParams The Basket Market Parameters to imply the Market Quote Measure
 	 * @param adblReferenceComponentBasis Array of the Reference Component Reference Leg Basis Spread
 	 * @param adblSwapRate Array of the IRS Calibration Swap Rates
-	 * @param bBasisOnDerivedLeg TRUE => Apply the Basis on the Derived Leg (FALSE => Reference Leg)
+	 * @param bBasisOnDerivedLeg TRUE - Apply the Basis on the Derived Leg (FALSE - Reference Leg)
 	 * 
-	 * return Instance of LatentStateStretchSpec
+	 * @return Instance of LatentStateStretchSpec
 	 */
 
 	public static final org.drip.state.inference.LatentStateStretchSpec ComponentPairDiscountStretch (

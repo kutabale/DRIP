@@ -50,7 +50,7 @@ public class ArmijoEvolutionVerifierMetrics extends
 	 * ArmijoEvolutionVerifierMetrics Constructor
 	 * 
 	 * @param dblArmijoParameter The Armijo Parameter
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
 	 * @param uvTargetDirection the Target Direction Unit Vector
 	 * @param adblCurrentVariate Array of the Current Variate
 	 * @param dblStepLength The Incremental Step Length
@@ -97,7 +97,7 @@ public class ArmijoEvolutionVerifierMetrics extends
 	/**
 	 * Indicate if the Check is for Minimizer/Maximizer
 	 * 
-	 * @return TRUE => The Check is for Maximizer
+	 * @return TRUE - The Check is for Maximizer
 	 */
 
 	public boolean maximizerCheck()
@@ -130,7 +130,7 @@ public class ArmijoEvolutionVerifierMetrics extends
 	/**
 	 * Indicate if the Armijo Criterion has been met
 	 * 
-	 * @return TRUE => The Armijo Criterion has been met
+	 * @return TRUE - The Armijo Criterion has been met
 	 */
 
 	public boolean verify()

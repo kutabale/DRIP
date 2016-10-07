@@ -106,7 +106,7 @@ public class TreasuryBondPnLAttributor {
 	 * @param aiGovvieTreasuryColumn The Govvie Curve Treasury Bond Maturity Columns
 	 * @param astrRollDownHorizonTenor Array of the Roll Down Horizon Tenors
 	 * 
-	 * @return TRUE => The Treasury Bond Tenor Explain Components Successfully generated
+	 * @return TRUE - The Treasury Bond Tenor Explain Components Successfully generated
 	 */
 
 	public static final boolean TenorHorizonExplainComponents (

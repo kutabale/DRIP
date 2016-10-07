@@ -30,8 +30,8 @@ package org.drip.spaces.cover;
  */
 
 /**
- * CarlStephaniProductBounds implements the Bounds that result from the Convolution Product Product of 2 Normed R^x
- *  -> Normed R^x Function Spaces.
+ * CarlStephaniProductBounds implements the Bounds that result from the Convolution Product Product of 2
+ *  Normed R^x To Normed R^x Function Spaces.
  * 
  *  The References are:
  *  
@@ -205,7 +205,7 @@ public class CarlStephaniProductBounds {
 	 * @param mocbA The Maurey Operator Covering Bounds for Class A
 	 * @param mocbB The Maurey Operator Covering Bounds for Class B
 	 * @param iEntropyNumberIndex Entropy Number Index for either Class
-	 * @param bUseSupremumNorm TRUE/FALSE => Use the Supremum/Metric Bound as the Operator Function Class
+	 * @param bUseSupremumNorm TRUE/FALSE - Use the Supremum/Metric Bound as the Operator Function Class
 	 * 
 	 * @return The Normed Upper Entropy Convolution Product Bound across the Function Classes
 	 */
@@ -234,7 +234,7 @@ public class CarlStephaniProductBounds {
 	 *  Metric/Supremum Population Norm
 	 *  
 	 * @param iEntropyNumberIndex Entropy Number Index for either Class
-	 * @param bUseSupremumNorm TRUE/FALSE => Use the Supremum/Metric Bound as the Operator Function Class
+	 * @param bUseSupremumNorm TRUE/FALSE - Use the Supremum/Metric Bound as the Operator Function Class
 	 * 
 	 * @return The Population Supremum Carl-Stephani Entropy Number Upper Bound using either the
 	 *  Metric/Supremum Population Norm
@@ -253,7 +253,7 @@ public class CarlStephaniProductBounds {
 	 *  Metric/Supremum Population Norm
 	 *  
 	 * @param iEntropyNumberIndex Entropy Number Index for either Class
-	 * @param bUseSupremumNorm TRUE/FALSE => Use the Supremum/Metric Bound as the Operator Function Class
+	 * @param bUseSupremumNorm TRUE/FALSE - Use the Supremum/Metric Bound as the Operator Function Class
 	 * 
 	 * @return The Population Metric Carl-Stephani Entropy Number Upper Bound using either the
 	 *  Metric/Supremum Population Norm
@@ -274,7 +274,7 @@ public class CarlStephaniProductBounds {
 	 * @param gvviA The Validated Input Vector Space Instance for Class A
 	 * @param gvviB The Validated Input Vector Space Instance for Class B
 	 * @param iEntropyNumberIndex Entropy Number Index for either Class
-	 * @param bUseSupremumNorm TRUE/FALSE => Use the Supremum/Metric Bound as the Operator Function Class
+	 * @param bUseSupremumNorm TRUE/FALSE - Use the Supremum/Metric Bound as the Operator Function Class
 	 * 
 	 * @return The Sample Supremum Carl-Stephani Entropy Number Upper Bound using either the Metric/Supremum
 	 *  Population Norm
@@ -297,7 +297,7 @@ public class CarlStephaniProductBounds {
 	 * @param gvviA The Validated Input Vector Space Instance for Class A
 	 * @param gvviB The Validated Input Vector Space Instance for Class B
 	 * @param iEntropyNumberIndex Entropy Number Index for either Class
-	 * @param bUseSupremumNorm TRUE/FALSE => Use the Supremum/Metric Bound as the Operator Function Class
+	 * @param bUseSupremumNorm TRUE/FALSE - Use the Supremum/Metric Bound as the Operator Function Class
 	 * 
 	 * @return The Sample Metric Carl-Stephani Entropy Number Upper Bound using either the Metric/Supremum
 	 *  Population Norm

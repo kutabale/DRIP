@@ -331,7 +331,7 @@ public class Helper {
 	/**
 	 * Compute the DI-Style Price given the Rate
 	 * 
-	 * @param dblRate The Rate
+	 * @param dblDIRate The DI Rate
 	 * @param iStartDate The Start Date
 	 * @param iEndDate The End Date
 	 * @param strCalendar The Calendar
@@ -358,7 +358,7 @@ public class Helper {
 	/**
 	 * Compute the DI-Style Rate given the Price
 	 * 
-	 * @param dblPrice The Price
+	 * @param dblDIPrice The DI Price
 	 * @param iStartDate The Start Date
 	 * @param iEndDate The End Date
 	 * @param strCalendar The Calendar
@@ -485,6 +485,8 @@ public class Helper {
 	 * @param strTenor The Specified Tenor
 	 * 
 	 * @return The Number of Years
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final int TenorToYears (
@@ -510,6 +512,8 @@ public class Helper {
 	 * @param strTenor The Specified Tenor
 	 * 
 	 * @return The Number of Months
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final int TenorToMonths (
@@ -543,6 +547,8 @@ public class Helper {
 	 * @param strTenor The Specified Tenor
 	 * 
 	 * @return The Number of Days
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final int TenorToDays (
@@ -576,6 +582,8 @@ public class Helper {
 	 * @param strTenor The Specified Tenor
 	 * 
 	 * @return The Number of Days
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final double TenorToYearFraction (
@@ -613,6 +621,8 @@ public class Helper {
 	 * @param strTenor The Specified Tenor
 	 * 
 	 * @return The Annual Frequency
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final int TenorToFreq (
@@ -809,7 +819,7 @@ public class Helper {
 	 * 
 	 * @param adblQuotesIn Array of the input double quotes
 	 * @param dblBump Bump amount
-	 * @param bIsProportional True => Bump is proportional
+	 * @param bIsProportional True - Bump is proportional
 	 * 
 	 * @return Bumped array output
 	 */
@@ -999,7 +1009,7 @@ public class Helper {
 	 * @param strPrefix The Entry Prefix
 	 * @param mapInput The Input Map
 	 * 
-	 * @return TRUE => At least one entry appended
+	 * @return TRUE - At least one entry appended
 	 */
 
 	public static final boolean AccumulateMeasures (
@@ -1033,7 +1043,7 @@ public class Helper {
 	 * @param lslLeft Left Cash Flow Period Label
 	 * @param lslRight Right Cash Flow Period Label
 	 * 
-	 * @return TRUE => The Labels Match
+	 * @return TRUE - The Labels Match
 	 */
 
 	public static final boolean LabelMatch (

@@ -30,7 +30,7 @@ package org.drip.learning.kernel;
  */
 
 /**
- * MercerKernal exposes the Functionality behind the Eigenized Kernel that is Normed R^x X Normed R^x ->
+ * MercerKernal exposes the Functionality behind the Eigenized Kernel that is Normed R^x X Normed R^x To
  *  Supremum R^1.
  *  
  *  The References are:

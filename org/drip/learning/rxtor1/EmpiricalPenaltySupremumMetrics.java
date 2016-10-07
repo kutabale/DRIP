@@ -30,7 +30,7 @@ package org.drip.learning.rxtor1;
  */
 
 /**
- * EmpiricalPenaltySupremumMetrics computes Efron-Stein Metrics for the Penalty Supremum R^x -> R^1
+ * EmpiricalPenaltySupremumMetrics computes Efron-Stein Metrics for the Penalty Supremum R^x To R^1
  *  Functions.
  *
  * @author Lakshmi Krishnamurthy
@@ -43,7 +43,7 @@ public class EmpiricalPenaltySupremumMetrics extends org.drip.sequence.functiona
 	/**
 	 * EmpiricalPenaltySupremumMetrics Constructor
 	 * 
-	 * @param epse R^x -> R^1 The Empirical Penalty Supremum Estimator Instance
+	 * @param epse R^x To R^1 The Empirical Penalty Supremum Estimator Instance
 	 * @param aSSAM Array of the Individual Single Sequence Metrics
 	 * @param mceb The Concentration-of-Measure Loss Expectation Bound Estimator
 	 * 
@@ -109,7 +109,7 @@ public class EmpiricalPenaltySupremumMetrics extends org.drip.sequence.functiona
 
 	/**
 	 * Compute the Lugosi Data-Dependent Variance Bound from the Sample and the Classifier Class Asymptotic
-	 * 	Behavior: Source =>
+	 * 	Behavior. The Reference is:
 	 * 
 	 * 		G. Lugosi (2002): Pattern Classification and Learning Theory, in: L.Gyorfi, editor, Principles of
 	 * 			Non-parametric Learning, 5-62, Springer, Wien.
@@ -137,7 +137,7 @@ public class EmpiricalPenaltySupremumMetrics extends org.drip.sequence.functiona
 
 	/**
 	 * Compute the Lugosi Data-Dependent Variance Bound from the Sample and the Classifier Class Asymptotic
-	 * 	Behavior: Source =>
+	 * 	Behavior. The Reference is:
 	 * 
 	 * 		G. Lugosi (2002): Pattern Classification and Learning Theory, in: L.Gyorfi, editor, Principles of
 	 * 			Non-parametric Learning, 5-62, Springer, Wien.

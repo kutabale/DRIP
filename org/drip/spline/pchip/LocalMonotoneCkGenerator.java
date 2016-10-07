@@ -592,7 +592,7 @@ public class LocalMonotoneCkGenerator {
 	 * @param adblFirstDerivative Array of First Derivatives
 	 * @param adblSecondDerivative Array of Second Derivatives
 	 * 
-	 * @return TRUE => The given Quintic Polynomial is Monotone
+	 * @return TRUE - The given Quintic Polynomial is Monotone
 	 * 
 	 * @throws java.lang.Exception Thrown if the Monotonicity cannot be determined
 	 */
@@ -727,8 +727,8 @@ public class LocalMonotoneCkGenerator {
 	 * @param adblPredictorOrdinate The Predictor Ordinate Array
 	 * @param adblResponseValue The Response Value Array
 	 * @param strGeneratorType The C1 Generator Type
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return Instance of the Local Control Stretch
 	 */
@@ -766,8 +766,8 @@ public class LocalMonotoneCkGenerator {
 	 * @param aiPredictorOrdinate The Predictor Ordinate Array
 	 * @param adblResponseValue The Response Value Array
 	 * @param strGeneratorType The C1 Generator Type
-	 * @param bEliminateSpuriousExtrema TRUE => Eliminate Spurious Extrema
-	 * @param bApplyMonotoneFilter TRUE => Apply Monotone Filter
+	 * @param bEliminateSpuriousExtrema TRUE - Eliminate Spurious Extrema
+	 * @param bApplyMonotoneFilter TRUE - Apply Monotone Filter
 	 * 
 	 * @return Instance of the Local Control Stretch
 	 */

@@ -34,8 +34,8 @@ package org.drip.execution.optimizer;
  *  
  *  			U[x] = E[x] + lambda * (V[x] ^p)
  *  
- *  where p > 0. p = 1 is the Regular Mean-Variance, and p = 0.5 is VaR Minimization (L-VaR). The References
- *  are:
+ *  where p is greater than 0. p = 1 is the Regular Mean-Variance, and p = 0.5 is VaR Minimization (L-VaR).
+ *  The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 

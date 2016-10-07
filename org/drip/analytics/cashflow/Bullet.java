@@ -208,7 +208,7 @@ public class Bullet {
 	/**
 	 * Is this Cash Flow FX MTM'ed?
 	 * 
-	 * @return TRUE => FX MTM is on (i.e., FX is not driven by fixing)
+	 * @return true - FX MTM is on (i.e., FX is not driven by fixing)
 	 */
 
 	public boolean isFXMTM()

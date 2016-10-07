@@ -59,7 +59,7 @@ public class DepositComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	 * 
 	 * @param dblPV The PV
 	 * 
-	 * @return TRUE => PV successfully set
+	 * @return TRUE - PV successfully set
 	 */
 
 	public boolean setPV (
@@ -71,7 +71,7 @@ public class DepositComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	/**
 	 * Indicate if the PV Field exists
 	 * 
-	 * @return TRUE => PV Field Exists
+	 * @return TRUE - PV Field Exists
 	 */
 
 	public boolean containsPV()
@@ -98,7 +98,7 @@ public class DepositComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	 * 
 	 * @param dblForwardRate The Forward Rate
 	 * 
-	 * @return TRUE => The Forward Rate successfully set
+	 * @return TRUE - The Forward Rate successfully set
 	 */
 
 	public boolean setForwardRate (
@@ -110,7 +110,7 @@ public class DepositComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	/**
 	 * Indicate if the Forward Rate Field exists
 	 * 
-	 * @return TRUE => Forward Rate Field Exists
+	 * @return TRUE - Forward Rate Field Exists
 	 */
 
 	public boolean containsForwardRate()
@@ -137,7 +137,7 @@ public class DepositComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	 * 
 	 * @param dblRate The Rate
 	 * 
-	 * @return TRUE => The Rate successfully set
+	 * @return TRUE - The Rate successfully set
 	 */
 
 	public boolean setRate (
@@ -149,7 +149,7 @@ public class DepositComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	/**
 	 * Indicate if the Rate Field exists
 	 * 
-	 * @return TRUE => Rate Field Exists
+	 * @return TRUE - Rate Field Exists
 	 */
 
 	public boolean containsRate()

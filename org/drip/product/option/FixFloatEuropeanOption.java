@@ -46,7 +46,7 @@ public class FixFloatEuropeanOption extends org.drip.product.option.OptionCompon
 	 * @param strName Name
 	 * @param stir The Underlying STIR Future Component
 	 * @param strManifestMeasure Measure of the Underlying Component
-	 * @param bIsReceiver Is the STIR Option a Receiver/Payer? TRUE => Receiver
+	 * @param bIsReceiver Is the STIR Option a Receiver/Payer? TRUE - Receiver
 	 * @param dblStrike Strike of the Underlying Component's Measure
 	 * @param dblNotional Option Notional
 	 * @param ltds Last Trading Date Setting

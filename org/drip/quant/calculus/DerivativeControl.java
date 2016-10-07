@@ -86,6 +86,8 @@ public class DerivativeControl {
 	 * @param dblVariate Variate Input
 	 * 
 	 * @return Variate Infinitesimal
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double getVariateInfinitesimal (

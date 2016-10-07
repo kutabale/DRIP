@@ -61,7 +61,9 @@ public interface BasisEvaluator {
 	/**
 	 * Set the Inelastics that provides the enveloping Context the Basis Evaluation
 	 * 
-	 * @return TRUE => The inelastics has been set
+	 * @param ics The Inelastic Settings
+	 * 
+	 * @return TRUE - The inelastics has been set
 	 */
 
 	public abstract boolean setContainingInelastics (
@@ -70,7 +72,7 @@ public interface BasisEvaluator {
 	/**
 	 * Clone/Replicate the current Basis Evaluator Instance
 	 * 
-	 * @return TRUE => The Replicated Basis Evaluator Instance
+	 * @return TRUE - The Replicated Basis Evaluator Instance
 	 */
 
 	public abstract BasisEvaluator replicate();

@@ -54,7 +54,7 @@ public class LinearSystemSolver {
 	 * @param iInnerRow Matrix Cell Row that needs to be regularized
 	 * @param iOuter Matrix Cell Column that needs to be regularized
 	 * 
-	 * @return TRUE => Matrix has been successfully regularized
+	 * @return TRUE - Matrix has been successfully regularized
 	 */
 
 	public static final boolean RegulariseRow (
@@ -86,9 +86,9 @@ public class LinearSystemSolver {
 	 * Check to see if the matrix is diagonally dominant.
 	 * 
 	 * @param aadblA Input Matrix
-	 * @param bCheckForStrongDominance TRUE => Fail if the matrix is not strongly diagonally dominant.
+	 * @param bCheckForStrongDominance TRUE - Fail if the matrix is not strongly diagonally dominant.
 	 * 
-	 * @return TRUE => Strongly or weakly Diagonally Dominant
+	 * @return TRUE - Strongly or weakly Diagonally Dominant
 	 */
 
 	public static final boolean IsDiagonallyDominant (

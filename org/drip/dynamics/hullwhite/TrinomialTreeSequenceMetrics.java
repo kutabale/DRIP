@@ -69,7 +69,7 @@ public class TrinomialTreeSequenceMetrics {
 	 * 
 	 * @param hwtm The Path Transition Metrics Instance
 	 * 
-	 * @return TRUE => The Path Transition Metrics Instance successfully added
+	 * @return TRUE - The Path Transition Metrics Instance successfully added
 	 */
 
 	public boolean addTransitionMetrics (
@@ -163,7 +163,7 @@ public class TrinomialTreeSequenceMetrics {
 	 * @param hwnmTarget Target Node
 	 * @param dblTransitionProbability The Transition Probability
 	 * 
-	 * @return TRUE => The Transition Probability Successfully set
+	 * @return TRUE - The Transition Probability Successfully set
 	 */
 
 	public boolean setTransitionProbability (

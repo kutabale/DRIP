@@ -158,7 +158,7 @@ public class Cardinality {
 	 * 
 	 * @param cardOther The "Other" Cardinality Instance
 	 * 
-	 * @return TRUE => The Instances Match
+	 * @return TRUE - The Instances Match
 	 */
 
 	public boolean match (

@@ -45,7 +45,7 @@ public class R1MultivariateNormal extends org.drip.measure.continuousjoint.R1Mul
 	 * @param adblMean Array of the Univariate Means
 	 * @param aadblCovariance The Covariance Matrix
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Standard Normal Univariate Distribution
 	 */
 
 	public static final R1MultivariateNormal Standard (
@@ -70,7 +70,7 @@ public class R1MultivariateNormal extends org.drip.measure.continuousjoint.R1Mul
 	 * @param adblMean Array of the Univariate Means
 	 * @param aadblCovariance The Covariance Matrix
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Standard Normal Univariate Distribution
 	 */
 
 	public static final R1MultivariateNormal Standard (

@@ -59,7 +59,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblPV The PV
 	 * 
-	 * @return TRUE => PV successfully set
+	 * @return TRUE - PV successfully set
 	 */
 
 	public boolean setPV (
@@ -71,7 +71,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the PV Field exists
 	 * 
-	 * @return TRUE => PV Field Exists
+	 * @return TRUE - PV Field Exists
 	 */
 
 	public boolean containsPV()
@@ -98,7 +98,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblDerivedParBasisSpread The Derived Par Basis Spread
 	 * 
-	 * @return TRUE => The Derived Par Basis Spread successfully set
+	 * @return TRUE - The Derived Par Basis Spread successfully set
 	 */
 
 	public boolean setDerivedParBasisSpread (
@@ -110,7 +110,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the Derived Par Basis Spread Field exists
 	 * 
-	 * @return TRUE => The Derived Par Basis Spread Field Exists
+	 * @return TRUE - The Derived Par Basis Spread Field Exists
 	 */
 
 	public boolean containsDerivedParBasisSpread()
@@ -137,7 +137,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblReferenceParBasisSpread The Reference Par Basis Spread
 	 * 
-	 * @return TRUE => The Reference Par Basis Spread successfully set
+	 * @return TRUE - The Reference Par Basis Spread successfully set
 	 */
 
 	public boolean setReferenceParBasisSpread (
@@ -149,7 +149,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the Reference Par Basis Spread Field exists
 	 * 
-	 * @return TRUE => The Reference Par Basis Spread Field Exists
+	 * @return TRUE - The Reference Par Basis Spread Field Exists
 	 */
 
 	public boolean containsReferenceParBasisSpread()
@@ -176,7 +176,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblSwapRate The Swap Rate
 	 * 
-	 * @return TRUE => The Swap Rate successfully set
+	 * @return TRUE - The Swap Rate successfully set
 	 */
 
 	public boolean setSwapRate (
@@ -188,7 +188,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the Swap Rate Field exists
 	 * 
-	 * @return TRUE => The Swap Rate Field Exists
+	 * @return TRUE - The Swap Rate Field Exists
 	 */
 
 	public boolean containsSwapRate()
@@ -215,7 +215,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	 * 
 	 * @param dblRate The Rate
 	 * 
-	 * @return TRUE => The Rate successfully set
+	 * @return TRUE - The Rate successfully set
 	 */
 
 	public boolean setRate (
@@ -227,7 +227,7 @@ public class FixFloatQuoteSet extends org.drip.product.calib.ProductQuoteSet {
 	/**
 	 * Indicate if the Rate Field exists
 	 * 
-	 * @return TRUE => The Rate Field Exists
+	 * @return TRUE - The Rate Field Exists
 	 */
 
 	public boolean containsRate()

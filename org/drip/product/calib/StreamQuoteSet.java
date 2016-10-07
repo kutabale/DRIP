@@ -54,7 +54,7 @@ public class StreamQuoteSet {
 	 * 
 	 * @param dblPV The PV
 	 * 
-	 * @return TRUE => PV successfully set
+	 * @return TRUE - PV successfully set
 	 */
 
 	public boolean setPV (
@@ -70,7 +70,7 @@ public class StreamQuoteSet {
 	/**
 	 * Indicate if the PV Field exists
 	 * 
-	 * @return TRUE => PV Field Exists
+	 * @return TRUE - PV Field Exists
 	 */
 
 	public boolean containsPV()
@@ -89,7 +89,7 @@ public class StreamQuoteSet {
 	public double pv()
 		throws java.lang.Exception
 	{
-		if (!containsPV()) throw new java.lang.Exception ("StreamQuoteSet::pv => Does not contain PV");
+		if (!containsPV()) throw new java.lang.Exception ("StreamQuoteSet::pv - Does not contain PV");
 
 		return _mapQuote.get ("PV");
 	}
@@ -99,7 +99,7 @@ public class StreamQuoteSet {
 	 * 
 	 * @param dblCouponSpread The Coupon/Spread
 	 * 
-	 * @return TRUE => The Coupon/Spread successfully set
+	 * @return TRUE - The Coupon/Spread successfully set
 	 */
 
 	public boolean setCouponSpread (
@@ -115,7 +115,7 @@ public class StreamQuoteSet {
 	/**
 	 * Indicate if the Coupon/Spread Field exists
 	 * 
-	 * @return TRUE => Coupon/Spread Field Exists
+	 * @return TRUE - Coupon/Spread Field Exists
 	 */
 
 	public boolean containsCouponSpread()
@@ -135,7 +135,7 @@ public class StreamQuoteSet {
 		throws java.lang.Exception
 	{
 		if (!containsCouponSpread())
-			throw new java.lang.Exception ("StreamQuoteSet::couponSpread => Does not contain Coupon/spread");
+			throw new java.lang.Exception ("StreamQuoteSet::couponSpread - Does not contain Coupon/spread");
 
 		return _mapQuote.get ("CouponSpread");
 	}
@@ -145,7 +145,7 @@ public class StreamQuoteSet {
 	 * 
 	 * @param dblBasis The Basis
 	 * 
-	 * @return TRUE => The Basis successfully set
+	 * @return TRUE - The Basis successfully set
 	 */
 
 	public boolean setBasis (
@@ -161,7 +161,7 @@ public class StreamQuoteSet {
 	/**
 	 * Indicate if the Basis Field exists
 	 * 
-	 * @return TRUE => Basis Field Exists
+	 * @return TRUE - Basis Field Exists
 	 */
 
 	public boolean containsBasis()
@@ -181,7 +181,7 @@ public class StreamQuoteSet {
 		throws java.lang.Exception
 	{
 		if (!containsBasis())
-			throw new java.lang.Exception ("StreamQuoteSet::basis => Does not contain Basis");
+			throw new java.lang.Exception ("StreamQuoteSet::basis - Does not contain Basis");
 
 		return _mapQuote.get ("Basis");
 	}

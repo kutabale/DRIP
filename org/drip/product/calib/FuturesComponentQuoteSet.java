@@ -59,7 +59,7 @@ public class FuturesComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	 * 
 	 * @param dblPrice The Price
 	 * 
-	 * @return TRUE => Price successfully set
+	 * @return TRUE - Price successfully set
 	 */
 
 	public boolean setPrice (
@@ -71,7 +71,7 @@ public class FuturesComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	/**
 	 * Indicate if the Price Field exists
 	 * 
-	 * @return TRUE => Price Field Exists
+	 * @return TRUE - Price Field Exists
 	 */
 
 	public boolean containsPrice()
@@ -98,7 +98,7 @@ public class FuturesComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	 * 
 	 * @param dblRate The Rate
 	 * 
-	 * @return TRUE => The Rate successfully set
+	 * @return TRUE - The Rate successfully set
 	 */
 
 	public boolean setRate (
@@ -110,7 +110,7 @@ public class FuturesComponentQuoteSet extends org.drip.product.calib.ProductQuot
 	/**
 	 * Indicate if the Rate Field exists
 	 * 
-	 * @return TRUE => Rate Field Exists
+	 * @return TRUE - Rate Field Exists
 	 */
 
 	public boolean containsRate()

@@ -53,6 +53,7 @@ public class ValuationParams {
 	 * @param dtValue Valuation Date
 	 * @param iCashSettleLag Cash settle lag
 	 * @param strCalendar Calendar Set
+	 * @param iAdjustMode The Adjustment Mode Flag
 	 * 
 	 * @return Valuation Parameters instance
 	 */

@@ -40,19 +40,19 @@ package org.drip.quant.fourier;
 public class RotationCountPhaseTracker {
 
 	/**
-	 * APPLY_NONE => Do not Apply Rotation Count
+	 * APPLY_NONE - Do not Apply Rotation Count
 	 */
 
 	public static final int APPLY_NONE = 0;
 
 	/**
-	 * APPLY_BACKWARD => Decrement Rotation Count
+	 * APPLY_BACKWARD - Decrement Rotation Count
 	 */
 
 	public static final int APPLY_BACKWARD = 1;
 
 	/**
-	 * APPLY_FORWARD => Increment Rotation Count
+	 * APPLY_FORWARD - Increment Rotation Count
 	 */
 
 	public static final int APPLY_FORWARD = 2;
@@ -74,7 +74,7 @@ public class RotationCountPhaseTracker {
 	 * 
 	 * @param iRotationDirection The Rotation Direction
 	 * 
-	 * @return TRUE => Successfully set
+	 * @return TRUE - Successfully set
 	 */
 
 	public boolean setDirection (
@@ -100,7 +100,7 @@ public class RotationCountPhaseTracker {
 	 * 
 	 * @param dblPreviousPhase The Previous Phase
 	 * 
-	 * @return TRUE => Previous Phase Successfully set
+	 * @return TRUE - Previous Phase Successfully set
 	 */
 
 	public boolean setPreviousPhase (
@@ -128,7 +128,7 @@ public class RotationCountPhaseTracker {
 	 * 	phase.
 	 * 
 	 * @param dblCurrentPhase The Phase to be Updated
-	 * @param bApply TRUE => Record the Previous Phase
+	 * @param bApply TRUE - Record the Previous Phase
 	 * 
 	 * @return The Updated Phase
 	 * 

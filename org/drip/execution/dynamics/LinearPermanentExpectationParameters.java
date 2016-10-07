@@ -58,7 +58,7 @@ public class LinearPermanentExpectationParameters extends
 	 * @param dblMarketCoreVolatility The Market Core Volatility
 	 * @param dblMarketCoreSerialCorrelation The Market Core Serial Correlation
 	 * @param tflPermanentExpectation The Linear Permanent Expectation Market Impact Function
-	 * @param trfTemporaryExpectation The Temporary Expectation Market Impact Function
+	 * @param tfTemporaryExpectation The Temporary Expectation Market Impact Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

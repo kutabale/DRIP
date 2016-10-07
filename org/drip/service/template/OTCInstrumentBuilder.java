@@ -270,7 +270,7 @@ public class OTCInstrumentBuilder {
 	 * @param strCurrency Currency
 	 * @param strMaturityTenor The OIS Maturity Tenor
 	 * @param dblCoupon The Fixed Coupon Rate
-	 * @param bFund TRUE => Floater Based off of Fund
+	 * @param bFund TRUE - Floater Based off of Fund
 	 * 
 	 * @return Instance of OIS Fix Float Swap
 	 */
@@ -484,7 +484,7 @@ public class OTCInstrumentBuilder {
 	 * @param dtSpot Spot Date
 	 * @param forwardLabel The Forward Label
 	 * @param astrMaturityTenor Array of Maturity Tenors
-	 * @param dblStrike Futures Strike
+	 * @param adblFRAStrike Array of FRA Strikes
 	 * 
 	 * @return Array of Standard FRA Instances
 	 */
@@ -633,7 +633,7 @@ public class OTCInstrumentBuilder {
 	 * @param strCurrency Currency
 	 * @param astrMaturityTenor Array of OIS Maturity Tenors
 	 * @param adblCoupon OIS Fixed Rate Coupon
-	 * @param bFund TRUE => Floater Based off of Fund
+	 * @param bFund TRUE - Floater Based off of Fund
 	 * 
 	 * @return Array of Fix Float OIS Instances
 	 */
@@ -670,7 +670,7 @@ public class OTCInstrumentBuilder {
 	 * @param astrEffectiveTenor Array of Effective Tenors
 	 * @param astrMaturityTenor Array of Maturity Tenors
 	 * @param adblCoupon Array of Coupons
-	 * @param bFund TRUE => Floater Based off of Fund
+	 * @param bFund TRUE - Floater Based off of Fund
 	 * 
 	 * @return Array of OIS Fix-Float Futures
 	 */
@@ -828,7 +828,7 @@ public class OTCInstrumentBuilder {
 	 * @param forwardLabel The Forward Label
 	 * @param strMaturityTenor Cap/Floor Maturity Tenor
 	 * @param dblStrike Cap/Floor Strike
-	 * @param bIsCap TRUE => Contract is a Cap
+	 * @param bIsCap TRUE - Contract is a Cap
 	 * 
 	 * @return The Cap/Floor Instance
 	 */
@@ -888,7 +888,7 @@ public class OTCInstrumentBuilder {
 	 * @param forwardLabel The Forward Label
 	 * @param astrMaturityTenor Array of Cap/Floor Maturity Tenors
 	 * @param adblStrike Array of Cap/Floor Strikes
-	 * @param bIsCap TRUE => Contract is a Cap
+	 * @param bIsCap TRUE - Contract is a Cap
 	 * 
 	 * @return The Cap/Floor Instance
 	 */

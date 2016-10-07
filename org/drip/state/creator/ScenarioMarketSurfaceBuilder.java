@@ -183,7 +183,7 @@ public class ScenarioMarketSurfaceBuilder {
 	 * @param dtStart Start/Epoch Julian Date
 	 * @param strCurrency Currency
 	 * @param adblX Array of X Ordinates
-	 * @param adblTenor Array of Maturity Tenors
+	 * @param astrTenor Array of Maturity Tenors
 	 * @param aadblNode Double Array of the Surface Nodes
 	 * 
 	 * @return Instance of the Market Node Surface
@@ -347,7 +347,7 @@ public class ScenarioMarketSurfaceBuilder {
 	 * @param dtStart Start/Epoch Julian Date
 	 * @param strCurrency Currency
 	 * @param adblX Array of X Ordinates
-	 * @param adblTenor Array of Maturity Tenors
+	 * @param astrTenor Array of Maturity Tenors
 	 * @param aadblNode Double Array of the Surface Nodes
 	 * @param dblTension The Tension Parameter
 	 * 
@@ -498,12 +498,12 @@ public class ScenarioMarketSurfaceBuilder {
 	 * @param strCurrency Currency
 	 * @param dblRiskFreeRate Risk-Free Rate
 	 * @param dblUnderlier The Underlier
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dblInitialVolatility Initial Volatility
 	 * @param adblStrike Array of Strikes
 	 * @param astrTenor Array of Maturity Tenors
 	 * @param fphp The Heston Stochastic Volatility Generation Parameters
-	 * @param bPriceSurface TRUE => Generate the Price Surface; FALSE => Generate the Vol Surface
+	 * @param bPriceSurface TRUE - Generate the Price Surface; FALSE - Generate the Vol Surface
 	 * @param scbcWireSpan The Wire Span Segment Customizer
 	 * @param scbcSurface The Surface Segment Customizer
 	 * 

@@ -96,7 +96,7 @@ public class CreditSetting implements org.drip.product.params.Validatable {
 	/**
 	 * Flag indicating whether or nor to use the Curve Recovery
 	 * 
-	 * @return TRUE => Use the Recovery From the Credit Curve
+	 * @return TRUE - Use the Recovery From the Credit Curve
 	 */
 
 	public boolean useCurveRecovery()
@@ -118,7 +118,7 @@ public class CreditSetting implements org.drip.product.params.Validatable {
 	/**
 	 * Retrieve the Accrual On Default Flag
 	 * 
-	 * @return TRUE => Accrual On Default
+	 * @return TRUE - Accrual On Default
 	 */
 
 	public boolean accrualOnDefault()

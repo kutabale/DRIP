@@ -46,7 +46,7 @@ public class KaklisPandelisSetParams implements org.drip.spline.basis.FunctionSe
 	 * 
 	 * @param iPolynomialTensionDegree Segment Polynomial Tension Degree
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public KaklisPandelisSetParams (

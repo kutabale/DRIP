@@ -43,7 +43,7 @@ public class OvernightCurveAPI {
 	 * @param astrOvernightCurveOISTenor Array of Overnight Curve Fix Float OIS Maturity Tenors
 	 * @param adblOvernightCurveOISQuote Array of Overnight Curve OIS Rates
 	 * @param astrInTenor Array of "In" Tenors
-	 * @param strForTenor "For" Tenor
+	 * @param astrForTenor Array of "For" Tenors
 	 * @param strCurrency Overnight Currency
 	 * @param iLatentStateType Latent State Type
 	 * 
@@ -120,7 +120,7 @@ public class OvernightCurveAPI {
 	 * @param astrOvernightCurveOISTenor Array of Overnight Curve Fix Float OIS Maturity Tenors
 	 * @param aadblOvernightCurveOISQuote Array of Overnight Curve OIS Rates
 	 * @param astrInTenor Array of "In" Tenors
-	 * @param strForTenor "For" Tenor
+	 * @param astrForTenor Array of "For" Tenors
 	 * @param strCurrency Overnight Currency
 	 * @param iLatentStateType Latent State Type
 	 * 

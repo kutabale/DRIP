@@ -129,9 +129,9 @@ public class ScenarioCreditCurveBuilder {
 	 * @param strCurrency Currency
 	 * @param aiSurvivalDate Array of Dates
 	 * @param adblSurvivalProbability Array of Survival Probabilities
-	 * @param dblRecoveryRate Recovery Rate
+	 * @param dblRecovery Recovery Rate
 	 * 
-	 * @return the CreditCurve Instance
+	 * @return The CreditCurve Instance
 	 */
 
 	public static final org.drip.state.credit.ExplicitBootCreditCurve Survival (
@@ -183,9 +183,9 @@ public class ScenarioCreditCurveBuilder {
 	 * @param strCurrency Currency
 	 * @param astrSurvivalTenor Array of Survival Tenors
 	 * @param adblSurvivalProbability Array of Survival Probabilities
-	 * @param dblRecoveryRate Recovery Rate
+	 * @param dblRecovery Recovery Rate
 	 * 
-	 * @return the CreditCurve Instance
+	 * @return The CreditCurve Instance
 	 */
 
 	public static final org.drip.state.credit.ExplicitBootCreditCurve Survival (

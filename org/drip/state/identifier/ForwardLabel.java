@@ -161,7 +161,7 @@ public class ForwardLabel implements org.drip.state.identifier.LatentStateLabel 
 	/**
 	 * Indicate if the Index is an Overnight Index
 	 * 
-	 * @return TRUE => Overnight Index
+	 * @return TRUE - Overnight Index
 	 */
 
 	public boolean overnight()

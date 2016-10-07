@@ -464,7 +464,7 @@ public class MonotoneConvexHaganWest extends org.drip.function.definition.R1ToR1
 	/**
 	 * Enforce the Positivity of the Inferred Response Values
 	 * 
-	 * @return TRUE => Positivity Enforcement is successful
+	 * @return TRUE - Positivity Enforcement is successful
 	 */
 
 	public boolean enforcePositivity()
@@ -497,7 +497,7 @@ public class MonotoneConvexHaganWest extends org.drip.function.definition.R1ToR1
 	 * @param adblResponseLeftMax Response Left Ceiling
 	 * @param adblResponseRightMin Response Right Floor
 	 * @param adblResponseRightMax Response Right Ceiling
-	 * @param bEnforcePositivity TRUE => Enforce Positivity
+	 * @param bEnforcePositivity TRUE - Enforce Positivity
 	 * 
 	 * @return The Ameliorated Version of the Current Instance
 	 */

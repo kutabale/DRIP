@@ -51,7 +51,7 @@ public class NumberUtil {
 	 * 
 	 * @param dbl Input double
 	 * 
-	 * @return TRUE => Input double is Infinite or NaN
+	 * @return TRUE - Input double is Infinite or NaN
 	 */
 
 	public static final boolean IsValid (
@@ -65,7 +65,7 @@ public class NumberUtil {
 	 * 
 	 * @param adbl Input double array
 	 * 
-	 * @return TRUE => Input double contains an Infinite or an NaN
+	 * @return TRUE - Input double contains an Infinite or an NaN
 	 */
 
 	public static final boolean IsValid (
@@ -263,7 +263,7 @@ public class NumberUtil {
 	 * 
 	 * @param adbl Array of elements
 	 * 
-	 * @return TRUE => Same Sign
+	 * @return TRUE - Same Sign
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
 	 */
@@ -292,7 +292,7 @@ public class NumberUtil {
 	 * @param adblA The 1D array
 	 * @param bBailOnNaN Bail on encountering an NaN
 	 * 
-	 * @return TRUE => Print Successful
+	 * @return TRUE - Print Successful
 	 */
 
 	public static final boolean Print1DArray (
@@ -321,7 +321,7 @@ public class NumberUtil {
 	 * @param iNumDecimal Number of Decimal Places to Display
 	 * @param bBailOnNaN Bail on encountering an NaN
 	 * 
-	 * @return TRUE => Print Successful
+	 * @return TRUE - Print Successful
 	 */
 
 	public static final boolean Print1DArray (
@@ -351,7 +351,7 @@ public class NumberUtil {
 	 * @param aadblA The 2D array
 	 * @param bBailOnNaN Bail on encountering an NaN
 	 * 
-	 * @return TRUE => Print Successful
+	 * @return TRUE - Print Successful
 	 */
 
 	public static final boolean Print2DArray (
@@ -390,7 +390,7 @@ public class NumberUtil {
 	 * @param aadblRight The Right 2D array
 	 * @param bBailOnNaN Bail on encountering an NaN
 	 * 
-	 * @return TRUE => Print Successful
+	 * @return TRUE - Print Successful
 	 */
 
 	public static final boolean Print2DArrayPair (
@@ -433,7 +433,7 @@ public class NumberUtil {
 	 * @param aadblRight The Right 2D array
 	 * @param bBailOnNaN Bail on encountering an NaN
 	 * 
-	 * @return TRUE => Print Successful
+	 * @return TRUE - Print Successful
 	 */
 
 	public static final boolean Print2DArrayTriplet (

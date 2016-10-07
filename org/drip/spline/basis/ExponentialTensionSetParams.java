@@ -46,7 +46,7 @@ public class ExponentialTensionSetParams implements org.drip.spline.basis.Functi
 	 * 
 	 * @param dblTension Segment Tension
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ExponentialTensionSetParams (

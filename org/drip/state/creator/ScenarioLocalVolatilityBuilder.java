@@ -151,7 +151,7 @@ public class ScenarioLocalVolatilityBuilder {
 	 * @param strCurrency Currency
 	 * @param dblRiskFreeRate Risk Free Discounting Rate
 	 * @param adblStrike Array of Strikes
-	 * @param adblTenor Array of Maturity Tenors
+	 * @param astrTenor Array of Maturity Tenors
 	 * @param aadblNode Double Array of the Surface Nodes
 	 * 
 	 * @return Instance of the Market Node Surface

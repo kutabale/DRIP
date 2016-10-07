@@ -30,7 +30,7 @@ package org.drip.spaces.cover;
  */
 
 /**
- * L1R1CoveringBounds implements the Lower/Upper Bounds for the Class of Non-decreasing R^1 -> L1 R^1
+ * L1R1CoveringBounds implements the Lower/Upper Bounds for the Class of Non-decreasing R^1 To L1 R^1
  * 	Functions that are:
  * 	- Absolutely Bounded
  * 	- Have Bounded Variation.

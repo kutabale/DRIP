@@ -29,7 +29,7 @@ package org.drip.function.rdtor1solver;
  */
 
 /**
- * InteriorFixedPointFinder generates the Iterators for solving R^d -> R^1 Convex/Non-Convex Functions Under
+ * InteriorFixedPointFinder generates the Iterators for solving R^d To R^1 Convex/Non-Convex Functions Under
  * 	Inequality Constraints loaded using a Barrier Coefficient.
  *
  * @author Lakshmi Krishnamurthy

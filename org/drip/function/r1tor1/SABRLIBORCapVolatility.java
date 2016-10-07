@@ -49,7 +49,7 @@ public class SABRLIBORCapVolatility extends org.drip.function.definition.R1ToR1 
 	/**
 	 * SABRLIBORCapVolatility Constructor
 	 * 
-	 * @param dblEpochDate Epoch
+	 * @param dblEpoch Epoch
 	 * @param dblA A
 	 * @param dblB B
 	 * @param dblC C

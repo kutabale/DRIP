@@ -315,7 +315,7 @@ public class SingleFactorStateEvolver implements org.drip.dynamics.evolution.Poi
 	 * @param hwnm Starting Node Metrics
 	 * @param hwsm The Sequence Metrics
 	 * 
-	 * @return TRUE => The Tree Successfully Evolved
+	 * @return TRUE - The Tree Successfully Evolved
 	 */
 
 	public boolean evolveTrinomialTreeSequence (

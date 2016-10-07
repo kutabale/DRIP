@@ -45,8 +45,8 @@ public class BoundedUniformInteger extends org.drip.sequence.random.UnivariateSe
 	/**
 	 * BoundedUniformInteger Distribution Constructor
 	 * 
-	 * @param dblLowerBound The Lower Bound
-	 * @param dblUpperBound The Upper Bound
+	 * @param iStart The Lower Bound
+	 * @param iFinish The Upper Bound
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are invalid
 	 */

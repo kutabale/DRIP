@@ -61,7 +61,7 @@ public class BondMarketSnap extends org.drip.historical.attribution.PositionMark
 	 * @param dblYieldSensitivity The Position Yield Sensitivity
 	 * @param dblYieldRollDown The Position Yield Roll Down
 	 * 
-	 * @return TRUE => The Yield Level and the Position Sensitivity successfully set
+	 * @return TRUE - The Yield Level and the Position Sensitivity successfully set
 	 */
 
 	public boolean setYieldMarketFactor (

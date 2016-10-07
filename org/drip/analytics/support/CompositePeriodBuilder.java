@@ -131,7 +131,7 @@ public class CompositePeriodBuilder {
 	 * 
 	 * @param iAccrualCompoundingRule The Accrual Compounding Rule
 	 * 
-	 * @return TRUE => The Accrual Compounding Rule is valid
+	 * @return TRUE - The Accrual Compounding Rule is valid
 	 */
 
 	public static final boolean ValidateCompoundingRule (

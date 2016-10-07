@@ -86,7 +86,7 @@ public class Differential {
 	/**
 	 * Retrieve the Delta for the variate
 	 * 
-	 * @param bOFNumerator TRUE => Calculate DOF/DVariate; FALSE => Calculate DVariate/DOF
+	 * @param bOFNumerator TRUE - Calculate DOF/DVariate; FALSE - Calculate DVariate/DOF
 	 * 
 	 * @return Delta Variate
 	 */

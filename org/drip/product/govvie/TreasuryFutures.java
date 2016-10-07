@@ -101,7 +101,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param strType The Futures Type
 	 * 
-	 * @return TRUE => Futures Type Successfully Set
+	 * @return TRUE - Futures Type Successfully Set
 	 */
 
 	public boolean setType (
@@ -126,7 +126,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param dblNotionalValue The Notional Value
 	 * 
-	 * @return TRUE => The Notional Value successfully retrieved
+	 * @return TRUE - The Notional Value successfully retrieved
 	 */
 
 	public boolean setNotionalValue (
@@ -151,7 +151,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param dblReferenceCoupon The Reference Coupon Rate
 	 * 
-	 * @return TRUE => The Reference Coupon Rate successfully set
+	 * @return TRUE - The Reference Coupon Rate successfully set
 	 */
 
 	public boolean setReferenceCoupon (
@@ -176,7 +176,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param strDeliverableGradeMinimumMaturity Minimum Maturity of the Deliverable Grade
 	 * 
-	 * @return TRUE => Minimum Maturity Successfully set
+	 * @return TRUE - Minimum Maturity Successfully set
 	 */
 
 	public boolean setMinimumMaturity (
@@ -202,7 +202,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param strDeliverableGradeMaximumMaturity Maximum Maturity of the Deliverable Grade
 	 * 
-	 * @return TRUE => Maximum Maturity Successfully set
+	 * @return TRUE - Maximum Maturity Successfully set
 	 */
 
 	public boolean setMaximumMaturity (
@@ -228,7 +228,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param aiDeliveryMonth Array of Delivery Months
 	 * 
-	 * @return TRUE => Delivery Months successfully set
+	 * @return TRUE - Delivery Months successfully set
 	 */
 
 	public boolean setDeliveryMonths (
@@ -253,7 +253,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param iLastTradingDayLag The Last Trading Day Lag
 	 * 
-	 * @return TRUE => Last Trading Day Lag Successfully Set
+	 * @return TRUE - Last Trading Day Lag Successfully Set
 	 */
 
 	public boolean setLastTradingDayLag (
@@ -278,7 +278,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param dblMinimumPriceMovement The Minimum Price Movement
 	 * 
-	 * @return TRUE => The Minimum Price Movement Successfully Set
+	 * @return TRUE - The Minimum Price Movement Successfully Set
 	 */
 
 	public boolean setMinimumPriceMovement (
@@ -303,7 +303,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param dblTickValue The Tick Value
 	 * 
-	 * @return TRUE => The Tick Value Successfully Set
+	 * @return TRUE - The Tick Value Successfully Set
 	 */
 
 	public boolean setTickValue (
@@ -350,7 +350,7 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 	 * 
 	 * @param dtExpiry The Futures Expiration Date
 	 * 
-	 * @return TRUE => The Futures Expiration Date Successfully Set
+	 * @return TRUE - The Futures Expiration Date Successfully Set
 	 */
 
 	public boolean setExpiry (
@@ -833,13 +833,13 @@ public class TreasuryFutures extends org.drip.product.definition.Component {
 			if (null == pqBond || !pqBond.containsQuote ("Price") ||
 				!org.drip.quant.common.NumberUtil.IsValid (adblCleanPrice[i] = pqBond.quote ("Price").value
 					("mid")))
-				throw new java.lang.Exception ("BondFutures::pv => Invalid Inputs");
+				throw new java.lang.Exception ("BondFutures::pv - Invalid Inputs");
 		}
 
 		org.drip.product.params.CTDEntry ctdEntry = cheapestToDeliverYield (iValueDate, adblCleanPrice);
 
 		if (null == ctdEntry || null == csqc)
-			throw new java.lang.Exception ("BondFutures::pv => Invalid Inputs");
+			throw new java.lang.Exception ("BondFutures::pv - Invalid Inputs");
 
 		double dblFuturesQuote = java.lang.Double.NaN;
 

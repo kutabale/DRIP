@@ -59,7 +59,7 @@ public class TreasuryBondQuoteSet extends org.drip.product.calib.ProductQuoteSet
 	 * 
 	 * @param dblYield The Yield
 	 * 
-	 * @return TRUE => The Yield successfully set
+	 * @return TRUE - The Yield successfully set
 	 */
 
 	public boolean setYield (
@@ -71,7 +71,7 @@ public class TreasuryBondQuoteSet extends org.drip.product.calib.ProductQuoteSet
 	/**
 	 * Indicate if the Yield Field exists
 	 * 
-	 * @return TRUE => Yield Field Exists
+	 * @return TRUE - Yield Field Exists
 	 */
 
 	public boolean containsYield()

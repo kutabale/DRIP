@@ -142,6 +142,8 @@ public abstract class R1ToR1 {
 	 * @param iOrder Order of the derivative to be computed
 	 * 
 	 * @return The Derivative
+	 * 
+	 * @throws java.lang.Exception Thrown if Inputs are Invalid
 	 */
 
 	public double derivative (

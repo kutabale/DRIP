@@ -54,8 +54,8 @@ public class WolfeEvolutionVerifier extends org.drip.function.rdtor1descent.Line
 	/**
 	 * Construct the Nocedal-Wright Wolfe Evolution Verifier
 	 * 
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
-	 * @param bStrongCurvatureCriterion TRUE => Apply the Strong Curvature Criterion
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
+	 * @param bStrongCurvatureCriterion TRUE - Apply the Strong Curvature Criterion
 	 * 
 	 * @return The Nocedal-Wright Wolfe Evolution Verifier Instance
 	 */
@@ -81,9 +81,9 @@ public class WolfeEvolutionVerifier extends org.drip.function.rdtor1descent.Line
 	 * WolfeEvolutionVerifier Constructor
 	 * 
 	 * @param dblArmijoParameter The Armijo Criterion Parameter
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
 	 * @param dblCurvatureParameter The Curvature Parameter
-	 * @param bStrongCurvatureCriterion TRUE => Apply the Strong Curvature Criterion
+	 * @param bStrongCurvatureCriterion TRUE - Apply the Strong Curvature Criterion
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -117,7 +117,7 @@ public class WolfeEvolutionVerifier extends org.drip.function.rdtor1descent.Line
 	/**
 	 * Indicate if the Check is for Minimizer/Maximizer
 	 * 
-	 * @return TRUE => The Check is for Maximizer
+	 * @return TRUE - The Check is for Maximizer
 	 */
 
 	public boolean maximizerCheck()
@@ -139,7 +139,7 @@ public class WolfeEvolutionVerifier extends org.drip.function.rdtor1descent.Line
 	/**
 	 * Retrieve Whether of not the "Strong" Curvature Criterion needs to be met
 	 * 
-	 * @return TRUE => The "Strong" Curvature Criterion needs to be met
+	 * @return TRUE - The "Strong" Curvature Criterion needs to be met
 	 */
 
 	public boolean strongCriterion()

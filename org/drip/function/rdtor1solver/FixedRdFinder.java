@@ -216,7 +216,7 @@ public abstract class FixedRdFinder {
 	 * Find the Optimal Variate-Inequality Constraint Multiplier Tuple using the Iteration Parameters
 	 *  provided by the Convergence Control Instance
 	 *  
-	 * @param vicm The Starting Variate-Inequality Constraint Multiplier Tuple
+	 * @param vicmStarting The Starting Variate-Inequality Constraint Multiplier Tuple
 	 * 
 	 * @return The Optimal Variate-Inequality Constraint Multiplier Tuple
 	 */

@@ -30,9 +30,8 @@ package org.drip.learning.regularization;
  */
 
 /**
- * RegularizerBuilder constructs Custom Regularizers for the different Normed Learner Function Types.
- *  
- * The References are:
+ * RegularizerBuilder constructs Custom Regularizers for the different Normed Learner Function Types. The
+ *  References are:
  *  
  *  1) Alon, N., S. Ben-David, N. Cesa Bianchi, and D. Haussler (1997): Scale-sensitive Dimensions, Uniform
  *  	Convergence, and Learnability, Journal of Association of Computational Machinery, 44 (4) 615-631.
@@ -54,13 +53,13 @@ package org.drip.learning.regularization;
 public class RegularizerBuilder {
 
 	/**
-	 * Construct an Instance of R^1 Combinatorial -> R^1 Continuous Regularizer
+	 * Construct an Instance of R^1 Combinatorial To R^1 Continuous Regularizer
 	 * 
-	 * @param funcRegularizerR1ToR1 The R^1 -> R^1 Regularizer Function
-	 * @param funcSpaceR1ToR1 The R^1 Combinatorial -> R^1 Continuous Learner Function Space
+	 * @param funcRegularizerR1ToR1 The R^1 To R^1 Regularizer Function
+	 * @param funcSpaceR1ToR1 The R^1 Combinatorial To R^1 Continuous Learner Function Space
 	 * @param dblLambda The Regularization Lambda
 	 * 
-	 * @return The R^1 Combinatorial -> R^1 Continuous Regularizer Instance
+	 * @return The R^1 Combinatorial To R^1 Continuous Regularizer Instance
 	 */
 
 	public static final org.drip.learning.regularization.RegularizerR1ToR1 R1CombinatorialToR1Continuous (
@@ -82,13 +81,13 @@ public class RegularizerBuilder {
 	}
 
 	/**
-	 * Construct an Instance of R^1 Continuous -> R^1 Continuous Regularizer
+	 * Construct an Instance of R^1 Continuous To R^1 Continuous Regularizer
 	 * 
-	 * @param funcRegularizerR1ToR1 The R^1 -> R^1 Regularizer Function
-	 * @param funcSpaceR1ToR1 The R^1 Continuous -> R^1 Continuous Learner Function Space
+	 * @param funcRegularizerR1ToR1 The R^1 To R^1 Regularizer Function
+	 * @param funcSpaceR1ToR1 The R^1 Continuous To R^1 Continuous Learner Function Space
 	 * @param dblLambda The Regularization Lambda
 	 * 
-	 * @return The R^1 Continuous -> R^1 Continuous Regularizer Instance
+	 * @return The R^1 Continuous To R^1 Continuous Regularizer Instance
 	 */
 
 	public static final org.drip.learning.regularization.RegularizerR1ToR1 R1ContinuousToR1Continuous (
@@ -110,14 +109,14 @@ public class RegularizerBuilder {
 	}
 
 	/**
-	 * Construct an Instance of R^1 Combinatorial/Continuous -> R^1 Continuous Regularizer
+	 * Construct an Instance of R^1 Combinatorial/Continuous To R^1 Continuous Regularizer
 	 * 
-	 * @param funcRegularizerR1ToR1 The R^1 -> R^1 Regularizer Function
+	 * @param funcRegularizerR1ToR1 The R^1 To R^1 Regularizer Function
 	 * @param r1Input The R^1 Combinatorial/Continuous Input Space
 	 * @param r1ContinuousOutput The R^1 Continuous Output Space
 	 * @param dblLambda The Regularization Lambda
 	 * 
-	 * @return The R^1 Combinatorial/Continuous -> R^1 Continuous Regularizer Instance
+	 * @return The R^1 Combinatorial/Continuous To R^1 Continuous Regularizer Instance
 	 */
 
 	public static final org.drip.learning.regularization.RegularizerR1ToR1 ToR1Continuous (
@@ -145,13 +144,13 @@ public class RegularizerBuilder {
 	}
 
 	/**
-	 * Construct an Instance of R^d Combinatorial -> R^1 Continuous Regularizer
+	 * Construct an Instance of R^d Combinatorial To R^1 Continuous Regularizer
 	 * 
-	 * @param funcRegularizerRdToR1 The R^d -> R^1 Regularizer Function
-	 * @param funcSpaceRdToR1 The R^d Combinatorial -> R^1 Continuous Learner Function Space
+	 * @param funcRegularizerRdToR1 The R^d To R^1 Regularizer Function
+	 * @param funcSpaceRdToR1 The R^d Combinatorial To R^1 Continuous Learner Function Space
 	 * @param dblLambda The Regularization Lambda
 	 * 
-	 * @return The R^d Combinatorial -> R^1 Continuous Regularizer Instance
+	 * @return The R^d Combinatorial To R^1 Continuous Regularizer Instance
 	 */
 
 	public static final org.drip.learning.regularization.RegularizerRdToR1 RdCombinatorialToR1Continuous (
@@ -173,13 +172,13 @@ public class RegularizerBuilder {
 	}
 
 	/**
-	 * Construct an Instance of R^d Continuous -> R^1 Continuous Regularizer
+	 * Construct an Instance of R^d Continuous To R^1 Continuous Regularizer
 	 * 
-	 * @param funcRegularizerRdToR1 The R^d -> R^1 Regularizer Function
-	 * @param funcSpaceRdToR1 The R^d Continuous -> R^1 Continuous Learner Function Space
+	 * @param funcRegularizerRdToR1 The R^d To R^1 Regularizer Function
+	 * @param funcSpaceRdToR1 The R^d Continuous To R^1 Continuous Learner Function Space
 	 * @param dblLambda The Regularization Lambda
 	 * 
-	 * @return The R^d Continuous -> R^1 Continuous Regularizer Instance
+	 * @return The R^d Continuous To R^1 Continuous Regularizer Instance
 	 */
 
 	public static final org.drip.learning.regularization.RegularizerRdToR1 RdContinuousToR1Continuous (
@@ -201,14 +200,14 @@ public class RegularizerBuilder {
 	}
 
 	/**
-	 * Construct an Instance of R^d Combinatorial/Continuous -> R^1 Continuous Regularizer
+	 * Construct an Instance of R^d Combinatorial/Continuous To R^1 Continuous Regularizer
 	 * 
-	 * @param funcRegularizerRdToR1 The R^d -> R^1 Regularizer Function
+	 * @param funcRegularizerRdToR1 The R^d To R^1 Regularizer Function
 	 * @param rdInput The R^d Combinatorial/Continuous Input Space
 	 * @param r1ContinuousOutput The R^1 Continuous Output Space
 	 * @param dblLambda The Regularization Lambda
 	 * 
-	 * @return The R^1 Combinatorial/Continuous -> R^1 Continuous Regularizer Instance
+	 * @return The R^1 Combinatorial/Continuous To R^1 Continuous Regularizer Instance
 	 */
 
 	public static final org.drip.learning.regularization.RegularizerRdToR1 ToRdContinuous (

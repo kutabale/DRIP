@@ -35,15 +35,15 @@ package org.drip.product.params;
 /**
  * CDXRefDataParams contains the complete set of reference data that corresponds to the contract of a
  *  standard CDX. It consists of the following category and fields:
- *  - Descriptive => Index Label, Index Name, Curve Name, Index Class, Index Group Name, Index Short Group
+ *  - Descriptive - Index Label, Index Name, Curve Name, Index Class, Index Group Name, Index Short Group
  *  	Name, Index Short Name, Short Name
- *  - Issuer ID => Curve ID, Red ID, Series, Version, Curvy Curve ID, Location, Bloomberg Ticker
- *  - Quote Details => Quote As CDS
- *  - Date => Issue Date, Maturity Date
- *  - Coupon Parameters => Coupon Rate, Currency, Day Count, Full First Stub, Frequency
- *  - Component Details => Original Count, Defaulted Count
- *  - Payoff Details => Knock-out on Default, Pay Accrued Amount, Recovery on Default
- *  - Other => Index Life Span, Index Factor
+ *  - Issuer ID - Curve ID, Red ID, Series, Version, Curvy Curve ID, Location, Bloomberg Ticker
+ *  - Quote Details - Quote As CDS
+ *  - Date - Issue Date, Maturity Date
+ *  - Coupon Parameters - Coupon Rate, Currency, Day Count, Full First Stub, Frequency
+ *  - Component Details - Original Count, Defaulted Count
+ *  - Payoff Details - Knock-out on Default, Pay Accrued Amount, Recovery on Default
+ *  - Other - Index Life Span, Index Factor
  *  
  *  It also exports serialization into and de-serialization out of byte arrays.
  * 

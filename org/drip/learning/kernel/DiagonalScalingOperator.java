@@ -31,7 +31,7 @@ package org.drip.learning.kernel;
 
 /**
  * DiagonalScalingOperator implements the Scaling Operator that is used to determine the Bounds of the R^x L2
- *  -> R^x L2 Kernel Linear Integral Operator defined by:
+ *  To R^x L2 Kernel Linear Integral Operator defined by:
  * 
  * 		T_k [f(.)] := Integral Over Input Space {k (., y) * f(y) * d[Prob(y)]}
  *  

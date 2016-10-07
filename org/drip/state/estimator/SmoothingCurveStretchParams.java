@@ -89,7 +89,7 @@ public abstract class SmoothingCurveStretchParams {
 	 * @param strStretchName Name of the Stretch for which the Segment Builder Parameters need to be set
 	 * @param scbc The Segment Builder Parameters
 	 * 
-	 * @return TRUE => The Segment Builder Control Parameters have been successfully set
+	 * @return TRUE - The Segment Builder Control Parameters have been successfully set
 	 */
 
 	public boolean setStretchSegmentBuilderControl (

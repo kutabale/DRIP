@@ -53,7 +53,7 @@ public class LineStepEvolutionControl {
 	/**
 	 * Retrieve the Nocedal-Wright-Armijo Verifier Based Standard LineStepEvolutionControl Instance
 	 * 
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
 	 * 
 	 * @return The Nocedal-Wright-Armijo Verifier Based Standard LineStepEvolutionControl Instance
 	 */
@@ -113,7 +113,7 @@ public class LineStepEvolutionControl {
 	/**
 	 * Retrieve the Nocedal-Wright-Weak Wolfe Verifier Based Standard LineStepEvolutionControl Instance
 	 * 
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
 	 * 
 	 * @return The Nocedal-Wright-Weak Wolfe Verifier Based Standard LineStepEvolutionControl Instance
 	 */
@@ -135,7 +135,7 @@ public class LineStepEvolutionControl {
 	/**
 	 * Retrieve the Nocedal-Wright-Strong Wolfe Verifier Based Standard LineStepEvolutionControl Instance
 	 * 
-	 * @param bMaximizerCheck TRUE => Perform a Check for the Function Maxima
+	 * @param bMaximizerCheck TRUE - Perform a Check for the Function Maxima
 	 * 
 	 * @return The Nocedal-Wright-Strong Wolfe Verifier Based Standard LineStepEvolutionControl Instance
 	 */

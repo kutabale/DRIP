@@ -71,6 +71,8 @@ public abstract class ProductQuote {
 
 	/**
 	 * Remove the market quote
+	 * 
+	 * @return TRUE - The Market Quote has been removed
 	 */
 
 	public abstract boolean removeMarketQuote();
@@ -118,7 +120,7 @@ public abstract class ProductQuote {
 	 * 
 	 * @param strQuoteField The Quote Name
 	 * 
-	 * @return TRUE => Named Quote is present
+	 * @return TRUE - Named Quote is present
 	 */
 
 	public abstract boolean containsQuote (

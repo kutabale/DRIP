@@ -301,7 +301,7 @@ public class MultiFactorVolatility {
 	 * @param iXDate The X Date
 	 * @param iYDate The Y Date
 	 * @param iOrder The Derivative Order
-	 * @param bTerminal TRUE => Derivative off of the Y Date; FALSE => Derivative off of the X Date
+	 * @param bTerminal TRUE - Derivative off of the Y Date; FALSE - Derivative off of the X Date
 	 * 
 	 * @return The Point Volatility Modulus Derivative
 	 * 

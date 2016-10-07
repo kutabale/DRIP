@@ -47,7 +47,7 @@ package org.drip.spline.basis;
  * 
  *		where x is the normalized ordinate mapped as
  * 
- * 			x => (x - x_i-1) / (x_i - x_i-1)
+ * 			x becomes (x - x_i-1) / (x_i - x_i-1)
  * 
  * The inverse quadratic/rational spline is a typical shape controller spline used.
  * 
@@ -64,7 +64,7 @@ public class FunctionSetBuilder {
 	 * 
 	 *	where x is the normalized ordinate mapped as
 	 * 
-	 * 		x => (x - x_i-1) / (x_i - x_i-1)
+	 * 		x .gte. (x - x_i-1) / (x_i - x_i-1)
 	 * 
 	 * @param etsp Exponential Tension Basis set Builder Parameters
 	 * 
@@ -98,7 +98,7 @@ public class FunctionSetBuilder {
 	 * 
 	 *	where x is the normalized ordinate mapped as
 	 * 
-	 * 		x => (x - x_i-1) / (x_i - x_i-1)
+	 * 		x .ge. (x - x_i-1) / (x_i - x_i-1)
 	 * 
 	 * @param etsp Exponential Tension Basis set Builder Parameters
 	 * 
@@ -134,7 +134,7 @@ public class FunctionSetBuilder {
 	 * 
 	 *		where x is the normalized ordinate mapped as
 	 * 
-	 * 			x => (x - x_i-1) / (x_i - x_i-1)
+	 * 			x .gte. (x - x_i-1) / (x_i - x_i-1)
 	 * 
 	 * @param pfsp Polynomial Basis set Builder Parameters
 	 * 
@@ -171,7 +171,7 @@ public class FunctionSetBuilder {
 	 * 
 	 *		where x is the normalized ordinate mapped as
 	 * 
-	 * 			x => (x - x_i-1) / (x_i - x_i-1)
+	 * 			x .gte. (x - x_i-1) / (x_i - x_i-1)
 	 * 
 	 * 		and B^i(x) is the Bernstein basis polynomial of order i.
 	 * 

@@ -51,7 +51,7 @@ public class OvernightIndexContainer {
 	/**
 	 * Initialize the Overnight Index Container with the Overnight Indexes
 	 * 
-	 * @return TRUE => The Overnight Index Container successfully initialized with the indexes
+	 * @return TRUE - The Overnight Index Container successfully initialized with the indexes
 	 */
 
 	public static final boolean Init()

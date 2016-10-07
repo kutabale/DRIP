@@ -106,7 +106,7 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	 * 
 	 * @param mmComponentIRDeltaMeasures The Component IR Delta Double Measures Map
 	 * 
-	 * @return TRUE => The Component IR Delta Double Measures Map Successfully Set
+	 * @return TRUE - The Component IR Delta Double Measures Map Successfully Set
 	 */
 
 	public boolean setComponentIRDeltaMeasures (
@@ -138,7 +138,7 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	 * 
 	 * @param mmComponentIRGammaMeasures The Component IR Gamma Double Measures Map
 	 * 
-	 * @return TRUE => The Component IR Gamma Double Measures Map Successfully Set
+	 * @return TRUE - The Component IR Gamma Double Measures Map Successfully Set
 	 */
 
 	public boolean setComponentIRGammaMeasures (
@@ -170,7 +170,7 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	 * 
 	 * @param mmComponentCreditDeltaMeasures The Component Credit Delta Double Measures Map
 	 * 
-	 * @return TRUE => The Component Credit Delta Double Measures Map Successfully Set
+	 * @return TRUE - The Component Credit Delta Double Measures Map Successfully Set
 	 */
 
 	public boolean setComponentCreditDeltaMeasures (
@@ -203,7 +203,7 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	 * 
 	 * @param mmComponentCreditGammaMeasures The Component Credit Gamma Double Measures Map
 	 * 
-	 * @return TRUE => The Component Credit Gamma Double Measures Map Successfully Set
+	 * @return TRUE - The Component Credit Gamma Double Measures Map Successfully Set
 	 */
 
 	public boolean setComponentCreditGammaMeasures (
@@ -235,7 +235,7 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	 * 
 	 * @param mmComponentRRDeltaMeasures The RR Delta Double Measures Map
 	 * 
-	 * @return TRUE => The Component RR Delta Double Measures Map Successfully Set
+	 * @return TRUE - The Component RR Delta Double Measures Map Successfully Set
 	 */
 
 	public boolean setComponentRRDeltaMeasures (
@@ -267,7 +267,7 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	 * 
 	 * @param mmComponentRRGammaMeasures The RR Gamma Double Measures Map
 	 * 
-	 * @return TRUE => The Component RR Gamma Double Measures Map Successfully Set
+	 * @return TRUE - The Component RR Gamma Double Measures Map Successfully Set
 	 */
 
 	public boolean setComponentRRGammaMeasures (
@@ -297,9 +297,9 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	/**
 	 * Set the Component/Tenor IR Delta Triple Measures Map
 	 * 
-	 * @param mmComponentTenorIRDeltaMeasures The Component/Tenor IR Delta Triple Measures Map
+	 * @param mmmComponentTenorIRDeltaMeasures The Component/Tenor IR Delta Triple Measures Map
 	 * 
-	 * @return TRUE => The Component/Tenor IR Delta Triple Measures Map Successfully Set
+	 * @return TRUE - The Component/Tenor IR Delta Triple Measures Map Successfully Set
 	 */
 
 	public boolean setComponentTenorIRDeltaMeasures (
@@ -330,9 +330,9 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	/**
 	 * Set the Component/Tenor IR Gamma Triple Measures Map
 	 * 
-	 * @param mmComponentTenorIRGammaMeasures The Component/Tenor IR Gamma Triple Measures Map
+	 * @param mmmComponentTenorIRGammaMeasures The Component/Tenor IR Gamma Triple Measures Map
 	 * 
-	 * @return TRUE => The Component/Tenor IR Gamma Triple Measures Map Successfully Set
+	 * @return TRUE - The Component/Tenor IR Gamma Triple Measures Map Successfully Set
 	 */
 
 	public boolean setComponentTenorIRGammaMeasures (
@@ -363,9 +363,9 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	/**
 	 * Set the Component/Tenor Credit Delta Triple Measures Map
 	 * 
-	 * @param mmComponentTenorCreditDeltaMeasures The Component/Tenor Credit Delta Triple Measures Map
+	 * @param mmmComponentTenorCreditDeltaMeasures The Component/Tenor Credit Delta Triple Measures Map
 	 * 
-	 * @return TRUE => The Component/Tenor Credit Delta Triple Measures Map Successfully Set
+	 * @return TRUE - The Component/Tenor Credit Delta Triple Measures Map Successfully Set
 	 */
 
 	public boolean setComponentTenorCreditDeltaMeasures (
@@ -396,9 +396,9 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	/**
 	 * Set the Component/Tenor Credit Gamma Triple Measures Map
 	 * 
-	 * @param mmComponentTenorCreditGammaMeasures The Component/Tenor Credit Gamma Triple Measures Map
+	 * @param mmmComponentTenorCreditGammaMeasures The Component/Tenor Credit Gamma Triple Measures Map
 	 * 
-	 * @return TRUE => The Component/Tenor Credit Gamma Triple Measures Map Successfully Set
+	 * @return TRUE - The Component/Tenor Credit Gamma Triple Measures Map Successfully Set
 	 */
 
 	public boolean setComponentTenorCreditGammaMeasures (
@@ -431,7 +431,7 @@ public class BasketMeasures extends org.drip.analytics.output.ComponentMeasures 
 	 * 
 	 * @param mmComponentCustomMeasures The Component Custom Double Measures Map
 	 * 
-	 * @return TRUE => The Component Custom Double Measures Map Successfully Set
+	 * @return TRUE - The Component Custom Double Measures Map Successfully Set
 	 */
 
 	public boolean setComponentCustomMeasures (

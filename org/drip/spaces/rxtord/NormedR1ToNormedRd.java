@@ -30,7 +30,7 @@ package org.drip.spaces.rxtord;
  */
 
 /**
- * NormedR1ToNormedRd is the abstract class underlying the f : Validated Normed R^1 -> Validated Normed R^d
+ * NormedR1ToNormedRd is the abstract class underlying the f : Validated Normed R^1 To Validated Normed R^d
  *  Function Spaces.
  * 
  * The Reference we've used is:

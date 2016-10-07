@@ -56,7 +56,7 @@ public class RegressionRunDetail {
 	 * @param strKey Name of the regression detail field
 	 * @param strValue Value of the regression detail field
 	 *
-	 * @return TRUE => "set" succeeded
+	 * @return TRUE - "set" succeeded
 	 */
 
 	public boolean set (

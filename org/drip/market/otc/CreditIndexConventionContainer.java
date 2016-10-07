@@ -80,7 +80,7 @@ public class CreditIndexConventionContainer {
 	/**
 	 * Initialize the Credit Index Conventions Container with the pre-set CDX Contract Settings
 	 * 
-	 * @return TRUE => The Credit Index Conventions Container successfully initialized
+	 * @return TRUE - The Credit Index Conventions Container successfully initialized
 	 */
 
 	public static final boolean Init()

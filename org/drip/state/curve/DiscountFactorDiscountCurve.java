@@ -62,7 +62,7 @@ public class DiscountFactorDiscountCurve extends org.drip.state.discount.MergedD
 	 * @param strCurrency Currency
 	 * @param span The Span Instance
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public DiscountFactorDiscountCurve (

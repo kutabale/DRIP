@@ -47,6 +47,7 @@ public class R1PiecewiseDisplaced extends org.drip.measure.lebesgue.R1Uniform {
 	 * @param dblRightPredictorOrdinateEdge Right Predictor Ordinate Edge
 	 * @param adblPredictorOrdinate Array of Intermediate Predictor Ordinates
 	 * @param adblCumulativeProbability Array of corresponding Cumulative Probabilities
+	 * @param dblMean The Distribution Mean
 	 * 
 	 * @return The R1PiecewiseDisplacedLebesgue Instance
 	 */

@@ -74,7 +74,7 @@ public interface Curve extends org.drip.state.representation.LatentState {
 	 * 
 	 * @param ccis The Curve Construction Input Set Parameters
 	 * 
-	 * @return TRUE => Inputs successfully Set
+	 * @return TRUE - Inputs successfully Set
 	 */
 
 	public boolean setCCIS (

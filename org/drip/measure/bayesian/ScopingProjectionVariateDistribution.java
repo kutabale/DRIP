@@ -96,7 +96,7 @@ public class ScopingProjectionVariateDistribution {
 	 * @param strName The Projection Distribution Name
 	 * @param pdl The Projection Distribution Loading
 	 * 
-	 * @return TRUE => The Projection Distribution Loading successfully added
+	 * @return TRUE - The Projection Distribution Loading successfully added
 	 */
 
 	public boolean addProjectionDistributionLoading (

@@ -161,7 +161,7 @@ public class ExecutionControlParams {
 	/**
 	 * Indicate if the variate convergence check has been turned on
 	 * 
-	 * @return TRUE => Variate convergence check has been turned on
+	 * @return TRUE - Variate convergence check has been turned on
 	 */
 
 	public boolean isVariateConvergenceCheckEnabled()

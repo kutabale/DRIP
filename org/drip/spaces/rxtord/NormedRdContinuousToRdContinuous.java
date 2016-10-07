@@ -30,7 +30,7 @@ package org.drip.spaces.rxtord;
  */
 
 /**
- * NormedRdContinuousToRdContinuous implements the f : Validated R^d Continuous -> Validated R^d Continuous
+ * NormedRdContinuousToRdContinuous implements the f : Validated R^d Continuous To Validated R^d Continuous
  *  Normed Function Spaces.
  * 
  * The Reference we've used is:

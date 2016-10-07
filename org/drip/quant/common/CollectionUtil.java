@@ -111,7 +111,7 @@ public class CollectionUtil {
 	 * @param mapMain Main Map
 	 * @param mapToAdd Secondary Map to Add
 	 * 
-	 * @return True => If successfully merged with main
+	 * @return True - If successfully merged with main
 	 */
 
 	public static final boolean MergeWithMain (

@@ -223,7 +223,7 @@ public abstract class RdDecisionFunction extends org.drip.function.definition.Rd
 	 * @param dblMargin The Optimization Margin
 	 * @param dblInverseWidthNormConstraint The Inverse Width Norm Constraint
 	 * 
-	 * @return TRUE => The Hyper-plane has been successfully Optimized for Regression
+	 * @return TRUE - The Hyper-plane has been successfully Optimized for Regression
 	 */
 
 	public abstract boolean optimizeRegressionHyperplane (
@@ -239,7 +239,7 @@ public abstract class RdDecisionFunction extends org.drip.function.definition.Rd
 	 * @param dblMargin The Optimization Margin
 	 * @param dblInverseWidthNormConstraint The Inverse Width Norm Constraint
 	 * 
-	 * @return TRUE => The Hyper-plane has been successfully Optimized for Classification
+	 * @return TRUE - The Hyper-plane has been successfully Optimized for Classification
 	 */
 
 	public abstract boolean optimizeClassificationHyperplane (

@@ -46,10 +46,10 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblTimeToExpiry Option Time To Expiry
 	 * @param dblRiskFreeRate Option Risk Free Rate
 	 * @param dblUnderlier Option Underlier Value
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dblInitialVolatility Option Initial Volatility Value
-	 * @param bAsPrice TRUE => Return the Discounted Payoff
+	 * @param bAsPrice TRUE - Return the Discounted Payoff
 	 * 
 	 * @return The Expected Option Payoff
 	 * 
@@ -74,8 +74,8 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblTimeToExpiry Option Time To Expiry
 	 * @param dblRiskFreeRate Option Risk Free Rate
 	 * @param dblUnderlier Option Underlier Value
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dblInitialVolatility Option Initial Volatility Value
 	 * 
 	 * @return The Greeks Sensitivities Output
@@ -98,10 +98,10 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblStrike Option Strike
 	 * @param dcFunding The Funding Curve
 	 * @param dblUnderlier Option Underlier Value
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dblInitialVolatility Option Initial Volatility Value
-	 * @param bAsPrice TRUE => Return the Discounted Payoff
+	 * @param bAsPrice TRUE - Return the Discounted Payoff
 	 * 
 	 * @return The Expected Option Payoff
 	 * 
@@ -136,10 +136,10 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblStrike Option Strike
 	 * @param dcFunding The Funding Curve
 	 * @param dblUnderlier Option Underlier Value
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
-	 * @param funcVolatilityR1ToR1 The R^1 -> R^1 Volatility Term Structure
-	 * @param bAsPrice TRUE => Return the Discounted Payoff
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
+	 * @param funcVolatilityR1ToR1 The R^1 To R^1 Volatility Term Structure
+	 * @param bAsPrice TRUE - Return the Discounted Payoff
 	 * 
 	 * @return The Expected Option Payoff
 	 * 
@@ -191,8 +191,8 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblStrike Option Strike
 	 * @param dcFunding The Funding Curve
 	 * @param dblUnderlier Option Underlier Value
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dblIntegratedSurfaceVariance The Integrated Surface Variance
 	 * 
 	 * @return The Greeks Output generated from the Sensitivities Run
@@ -233,10 +233,9 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblStrike Option Strike
 	 * @param dcFunding The Funding Curve
 	 * @param dblUnderlier Option Underlier Value
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
-	 * @param funcVolatilityR1ToR1 The R^1 -> R^1 Volatility Term Structure
-	 * @param bCalibMode TRUE => Run on Calibration Mode
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
+	 * @param funcVolatilityR1ToR1 The R^1 To R^1 Volatility Term Structure
 	 * 
 	 * @return The Greeks Output generated from the Sensitivities Run
 	 */
@@ -291,8 +290,8 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblTimeToExpiry Time To Expiry
 	 * @param dblRiskFreeRate Risk Free Rate
 	 * @param dblUnderlier The Underlier
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dblPrice The Price
 	 * 
 	 * @return The Implied Effective Volatility
@@ -338,8 +337,8 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblStrike Option Strike
 	 * @param dcFunding The Funding Curve
 	 * @param dblUnderlier Option Underlier Value
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dblPrice The Price
 	 * 
 	 * @return The Implied Effective Volatility
@@ -385,8 +384,8 @@ public abstract class FokkerPlanckGenerator implements org.drip.param.pricer.Gen
 	 * @param dblTimeToExpiry Time To Expiry
 	 * @param dblRiskFreeRate Risk Free Rate
 	 * @param dblUnderlier The Underlier
-	 * @param bIsPut TRUE => The Option is a Put
-	 * @param bIsForward TRUE => The Underlier represents the Forward, FALSE => it represents Spot
+	 * @param bIsPut TRUE - The Option is a Put
+	 * @param bIsForward TRUE - The Underlier represents the Forward, FALSE - it represents Spot
 	 * @param dblPrice The Price
 	 * 
 	 * @return The Implied Black Scholes Effective Volatility

@@ -29,7 +29,7 @@ package org.drip.function.rdtor1;
  */
 
 /**
- * LagrangianMultivariate implements an R^d -> R^1 Multivariate Function along with the specified Set of
+ * LagrangianMultivariate implements an R^d To R^1 Multivariate Function along with the specified Set of
  * 	Equality Constraints.
  *
  * @author Lakshmi Krishnamurthy
@@ -62,9 +62,9 @@ public class LagrangianMultivariate extends org.drip.function.definition.RdToR1 
 	}
 
 	/**
-	 * Retrieve the Objective R^d -> R^1 Function Instance
+	 * Retrieve the Objective R^d To R^1 Function Instance
 	 * 
-	 * @return The Objective R^d -> R^1 Function Instance
+	 * @return The Objective R^d To R^1 Function Instance
 	 */
 
 	public org.drip.function.definition.RdToR1 objectiveFunction()
@@ -73,9 +73,9 @@ public class LagrangianMultivariate extends org.drip.function.definition.RdToR1 
 	}
 
 	/**
-	 * Retrieve the Array of the Constraint R^d -> R^1 Function Instances
+	 * Retrieve the Array of the Constraint R^d To R^1 Function Instances
 	 * 
-	 * @return The Array of Constraint R^d -> R^1 Function Instances
+	 * @return The Array of Constraint R^d To R^1 Function Instances
 	 */
 
 	public org.drip.function.definition.RdToR1[] constraintFunctions()

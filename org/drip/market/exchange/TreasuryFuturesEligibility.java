@@ -128,7 +128,7 @@ public class TreasuryFuturesEligibility {
 	 * @param dblOutstandingNotional The Outstanding Notional
 	 * @param strIssuer The Issuer
 	 * 
-	 * @return TRUE => The given bond is eligible to be delivered
+	 * @return TRUE - The given bond is eligible to be delivered
 	 */
 
 	public boolean isEligible (

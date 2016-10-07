@@ -68,6 +68,7 @@ public class BondBuilder {
 	 * @param idParams Bond Identifier Parameters
 	 * @param cpnParams Bond Coupon Parameters
 	 * @param fltParams Bond Floater Parameters
+	 * @param mktConv Bond Market Quote Convention
 	 * @param crValParams Bond Credit Valuation Parameters
 	 * @param cfteParams Bond Cash-flow Termination Event Parameters
 	 * @param periodParams Bond Period Generation Parameters

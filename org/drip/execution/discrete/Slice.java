@@ -113,7 +113,7 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 	/**
 	 * Indicate if the Slice is a Sell
 	 * 
-	 * @return TRUE => The Slice is a Sell
+	 * @return TRUE - The Slice is a Sell
 	 */
 
 	public boolean isSell()
@@ -195,7 +195,7 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 	/**
 	 * Generate the R^1 Normal Cost Increment Distribution
 	 * 
-	 * @param ape The Arithmetic Price Walk Evolution Parameters
+	 * @param apep The Arithmetic Price Walk Evolution Parameters
 	 * 
 	 * @return The R^1 Normal Cost Increment Distribution
 	 */

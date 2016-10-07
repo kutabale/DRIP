@@ -30,10 +30,10 @@ package org.drip.learning.rxtor1;
  */
 
 /**
- * LipschitzLossLearner implements the Learner Class that holds the Space of Normed R^1 -> Normed R^1
+ * LipschitzLossLearner implements the Learner Class that holds the Space of Normed R^1 To Normed R^1
  *  Learning Functions for the Family of Loss Functions that are Lipschitz, i.e.,
  * 
- * 				loss (ep) - loss (ep') <= C * |ep-ep'|
+ * 				loss (ep) - loss (ep') Less Than C * |ep-ep'|
  *  
  * The References are:
  *  
@@ -60,7 +60,7 @@ public class LipschitzLossLearner extends org.drip.learning.rxtor1.GeneralizedLe
 	/**
 	 * LipschitzLossLearner Constructor
 	 * 
-	 * @param funcClassRxToR1 R^x -> R^1 Function Class
+	 * @param funcClassRxToR1 R^x To R^1 Function Class
 	 * @param cdpb The Covering Number based Deviation Upper Probability Bound Generator
 	 * @param regularizerFunc The Regularizer Function
 	 * @param dblLipschitzSlope The Lipschitz Slope Bound
