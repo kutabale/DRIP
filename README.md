@@ -1,16 +1,14 @@
 #DRIP
 
-**v2.34**  *29 September 2016*
+**v2.35**  *6 October 2016*
 
-DRIP aims to quantitative libraries for pricing/risk managing frequently used financial products, evaluate strategies and investments, and construct holdings portfolios.
-
-Specifically it provides libraries for fixed income products, curve construction, valuation adjustments, investor view incorporation, holdings optimization, and many other functionality.
+DRIP aims to collects the models and provides libraries for fixed income valuation and adjustments, asset allocation and transaction cost analytics, and supporting libraries in numerical optimization and statistical learning.
 
 DRIP is composed of four main libraries:
- * Asset Allocation
- * Fixed Income Analytics
- * Numerical Optimzation
- * Statistical Learning
+ * [Asset Allocation] (https://github.com/lakshmiDRIP/DRIP-Asset-Allocation)
+ * [Fixed Income Analytics] (https://github.com/lakshmiDRIP/DRIP-Fixed-Income)
+ * [Numerical Optimization] (https://github.com/lakshmiDRIP/DRIP-Numerical-Optimizer)
+ * [Statistical Learning] (https://github.com/lakshmiDRIP/DRIP-Statistical-Learning)
 
 
 ##Installation
@@ -28,9 +26,9 @@ DRIP is composed of four main libraries:
 ##Documentation
 
  * The API Javadoc is available as part of the main development load.
- * Targetted Technical Specifications are in their corresponding folders
+ * DRIP Technical Specifications are in their corresponding folders
  * Dated Release Notes in the ReleaseNotes Folder
- * External Specs in the corresponding folder too
+ * External Reference Publications in the corresponding folder
  * User guide is a work in progress!
 
 
