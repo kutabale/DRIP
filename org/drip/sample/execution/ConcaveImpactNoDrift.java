@@ -144,13 +144,13 @@ public class ConcaveImpactNoDrift {
 		for (int i = 0; i <= iNumInterval; ++i) {
 			if (i == 0)
 				System.out.println (
-					"\t|" + FormatUtil.FormatDouble (adblExecutionTimeNode[i], 1, 0, 1.) + " => " +
+					"\t|" + FormatUtil.FormatDouble (adblExecutionTimeNode[i], 1, 3, 1.) + " =>" +
 					FormatUtil.FormatDouble (adblHoldings[i], 7, 1, 1.) + " | " +
 					FormatUtil.FormatDouble (0., 6, 1, 1.) + " ||"
 				);
 			else
 				System.out.println (
-					"\t|" + FormatUtil.FormatDouble (adblExecutionTimeNode[i], 1, 0, 1.) + " => " +
+					"\t|" + FormatUtil.FormatDouble (adblExecutionTimeNode[i], 1, 3, 1.) + " =>" +
 					FormatUtil.FormatDouble (adblHoldings[i], 7, 1, 1.) + " | " +
 					FormatUtil.FormatDouble (adblTradeList[i - 1], 6, 1, 1.) + " ||"
 				);
