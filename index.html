@@ -4,29 +4,40 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Drip by lakshmiDRIP</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-dark.css">
-    <script src="javascripts/scale.fix.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
   </head>
   <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/lakshmiDRIP/DRIP">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/lakshmiDRIP/DRIP/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/lakshmiDRIP/DRIP/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
     <div class="wrapper">
-      <header>
-        <h1>Drip</h1>
-        <p>DRIP</p>
-        <p class="view"><a href="https://github.com/lakshmiDRIP/DRIP">View the Project on GitHub <small>lakshmiDRIP/DRIP</small></a></p>
-        <ul>
-          <li><a href="https://github.com/lakshmiDRIP/DRIP/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/lakshmiDRIP/DRIP/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/lakshmiDRIP/DRIP">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
+
       <section>
+        <div id="title">
+          <h1>Drip</h1>
+          <p>DRIP</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/lakshmiDRIP">lakshmiDRIP</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
         <p align="center"><img src="https://github.com/lakshmiDRIP/DRIP/blob/master/DRIP_Logo.gif?raw=true" width="100"></p>
 
 <p><strong>v2.35</strong>  <em>6 October 2016</em></p>
@@ -51,19 +62,19 @@
 <a id="drip-core-technical-specifications" class="anchor" href="#drip-core-technical-specifications" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>DRIP Core Technical Specifications</h2>
 
 <ul>
-<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/AssetAllocation_v2.13.pdf">Asset Allocation Library</a></li>
-<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/FixedIncomeAnalytics_v2.13.pdf">Fixed Income Analytics</a></li>
-<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/TransactionCostAnalytics_v2.31.pdf">Transaction Cost Analytics</a></li>
+<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/AssetAllocation/AssetAllocation_v2.13.pdf">Asset Allocation Library</a></li>
+<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/FixedIncome/FixedIncomeAnalytics_v2.13.pdf">Fixed Income Analytics</a></li>
+<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/TransactionCost/TransactionCostAnalytics_v2.40.pdf">Transaction Cost Analytics</a></li>
 </ul>
 
 <h2>
 <a id="drip-supporting-technical-specifications" class="anchor" href="#drip-supporting-technical-specifications" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>DRIP Supporting Technical Specifications</h2>
 
 <ul>
-<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/SplineBuilder_v0.82.pdf">Spline Builder Library</a></li>
-<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/NumericalOptimization_v2.05.pdf">Numerical Optimization Library</a></li>
-<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/StatisticalLearningLibrary_v0.80.pdf">Statistical Learning Library</a></li>
-<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/MachineLearningLibrary_v0.92.pdf">Machine Learning Library</a></li>
+<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/SplineBuilder/SplineBuilder_v0.82.pdf">Spline Builder Library</a></li>
+<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/NumericalOptimizer/NumericalOptimization_v2.05.pdf">Numerical Optimization Library</a></li>
+<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/StatisticalLearning/StatisticalLearningLibrary_v0.80.pdf">Statistical Learning Library</a></li>
+<li><a href="https://github.com/lakshmiDRIP/DRIP/tree/master/Docs/DRIPSpecification/MachineLearning/MachineLearningLibrary_v0.92.pdf">Machine Learning Library</a></li>
 </ul>
 
 <h2>
@@ -97,11 +108,8 @@
 
 <p><a href="mailto:lakshmi@synergicdesign.com">lakshmi@synergicdesign.com</a></p>
       </section>
+
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/lakshmiDRIP">lakshmiDRIP</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
