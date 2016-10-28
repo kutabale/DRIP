@@ -51,7 +51,7 @@ public class CDXNAIGS235YReconstitutor {
 		String strCurrency = "USD";
 		String strFullCreditIndexName = "CDX.NA.IG.S23.5Y";
 		String strCreditIndexMarksLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Feeds\\CreditMarks\\" + strFullCreditIndexName + ".Formatted.csv";
-		String strFundingFixingMarksLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingFixFloatMarks\\" + strCurrency + "CreditFixingReconstitutor.csv";
+		String strFundingFixingMarksLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingStateMarks\\" + strCurrency + "CreditFixingReconstitutor.csv";
 
 		CreditCDSIndexMarksReconstitutor.RegularizeCloses (
 			strFundingFixingMarksLocation,
