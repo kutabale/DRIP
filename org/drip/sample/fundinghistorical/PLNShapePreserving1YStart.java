@@ -54,7 +54,7 @@ public class PLNShapePreserving1YStart {
 		EnvManager.InitEnv ("");
 
 		String strCurrency = "PLN";
-		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingFixFloatMarks\\" + strCurrency + "ShapePreservingReconstitutor.csv";
+		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingStateMarks\\" + strCurrency + "ShapePreservingReconstitutor.csv";
 		String[] astrInTenor = new String[] {
 			"1Y"
 		};

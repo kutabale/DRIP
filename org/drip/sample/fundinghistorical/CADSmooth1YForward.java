@@ -54,7 +54,7 @@ public class CADSmooth1YForward {
 		EnvManager.InitEnv ("");
 
 		String strCurrency = "CAD";
-		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingFixFloatMarks\\" + strCurrency + "CubicPolyReconstitutor.csv";
+		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingStateMarks\\" + strCurrency + "SmoothReconstitutor.csv";
 		String[] astrForTenor = new String[] {
 			"1Y"
 		};

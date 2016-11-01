@@ -54,7 +54,7 @@ public class CZKShapePreserving1YStart {
 		EnvManager.InitEnv ("");
 
 		String strCurrency = "CZK";
-		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingFixFloatMarks\\" + strCurrency + "ShapePreservingReconstitutor.csv";
+		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingStateMarks\\" + strCurrency + "ShapePreservingReconstitutor.csv";
 		String[] astrInTenor = new String[] {
 			"1Y"
 		};
@@ -190,13 +190,17 @@ public class CZKShapePreserving1YStart {
 			strDump = adtSpot[i].toString();
 
 			for (String strInTenor : astrInTenor) {
-				for (String strForTenor : astrForTenor)
-					strDump += "," + FormatUtil.FormatDouble (
-						fcm.nativeForwardRate (
-							strInTenor,
-							strForTenor
-						), 1, 5, 100.
-					);
+				for (String strForTenor : astrForTenor) {
+					try {
+						strDump += "," + FormatUtil.FormatDouble (
+							fcm.nativeForwardRate (
+								strInTenor,
+								strForTenor
+							), 1, 5, 100.
+						);
+					} catch (Exception e) {
+					}
+				}
 			}
 
 			System.out.println (strDump);

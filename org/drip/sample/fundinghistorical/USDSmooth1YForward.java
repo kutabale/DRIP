@@ -54,7 +54,7 @@ public class USDSmooth1YForward {
 		EnvManager.InitEnv ("");
 
 		String strCurrency = "USD";
-		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingFixFloatMarks\\USDHighTensionReconstitutor.csv";
+		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingStateMarks\\" + strCurrency + "SmoothReconstitutor.csv";
 		String[] astrForTenor = new String[] {
 			"1Y"
 		};

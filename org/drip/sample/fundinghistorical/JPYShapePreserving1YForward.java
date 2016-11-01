@@ -54,7 +54,7 @@ public class JPYShapePreserving1YForward {
 		EnvManager.InitEnv ("");
 
 		String strCurrency = "JPY";
-		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingFixFloatMarks\\" + strCurrency + "ShapePreservingReconstitutor.csv";
+		String strClosesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Transforms\\FundingStateMarks\\" + strCurrency + "ShapePreservingReconstitutor.csv";
 		String[] astrForTenor = new String[] {
 			"1Y"
 		};
