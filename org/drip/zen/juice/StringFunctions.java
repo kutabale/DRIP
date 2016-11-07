@@ -101,7 +101,7 @@ public class StringFunctions {
 
 		int secondWordSize = secondWordLetters.length;
 
-		if (firstWordSize < secondWordSize) return false;
+		// if (firstWordSize < secondWordSize) return false;
 
 		boolean secondInsideFirst = false;
 
