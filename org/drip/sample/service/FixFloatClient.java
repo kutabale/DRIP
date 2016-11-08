@@ -141,7 +141,7 @@ public class FixFloatClient {
 
 		JSONObject jsonRequest = new JSONObject();
 
-		jsonRequest.put ("API", "FIXFLOAT::CURVEMETRICS");
+		jsonRequest.put ("API", "FIXFLOAT::SECULARMETRICS");
 
 		jsonRequest.put ("Parameters", jsonParameters);
 

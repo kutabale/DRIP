@@ -48,7 +48,7 @@ public class MultivariateSequence {
 	{
 		EnvManager.InitEnv ("");
 
-		String strSeriesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Feeds\\AssetReturns\\FormattedSeries1.csv";
+		String strSeriesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Feeds\\MeanVarianceOptimizer\\FormattedSeries1.csv";
 
 		CSVGrid csvGrid = CSVParser.NamedStringGrid (strSeriesLocation);
 

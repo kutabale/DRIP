@@ -91,7 +91,8 @@ public class KeyHoleSkeleton {
 		if ("FORWARDRATEFUTURES::CURVEMETRICS".equalsIgnoreCase (strAPIName))
 			return org.drip.service.json.ForwardRateFuturesProcessor.CurveMetrics (jsonParameter);
 
-		if ("FIXFLOAT::SECULARMETRICS".equalsIgnoreCase (strAPIName)) return null;
+		if ("FIXFLOAT::SECULARMETRICS".equalsIgnoreCase (strAPIName))
+			return org.drip.service.json.FixFloatProcessor.CurveMetrics (jsonParameter);
 
 		if ("CREDITDEFAULTSWAP::SECULARMETRICS".equalsIgnoreCase (strAPIName)) return null;
 

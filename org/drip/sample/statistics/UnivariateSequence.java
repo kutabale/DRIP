@@ -48,7 +48,7 @@ public class UnivariateSequence {
 	{
 		EnvManager.InitEnv ("");
 
-		String strSeriesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Feeds\\AssetReturns\\SeriesRaw.csv";
+		String strSeriesLocation = "C:\\DRIP\\CreditAnalytics\\Daemons\\Feeds\\MeanVarianceOptimizer\\FormattedSeries1.csv";
 
 		CSVGrid csvGrid = CSVParser.NamedStringGrid (strSeriesLocation);
 
