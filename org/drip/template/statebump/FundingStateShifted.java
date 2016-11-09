@@ -58,10 +58,7 @@ public class FundingStateShifted {
 		double dblBump = 0.0001;
 		boolean bIsBumpProportional = false;
 
-		JulianDate dtSpot = DateUtil.Today().addBusDays (
-			0,
-			strCurrency
-		);
+		JulianDate dtSpot = DateUtil.Today();
 
 		String[] astrDepositMaturityTenor = new String[] {
 			"01D",

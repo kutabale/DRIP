@@ -52,10 +52,7 @@ public class OvernightState {
 
 		String strCurrency = "EUR";
 
-		JulianDate dtSpot = DateUtil.Today().addBusDays (
-			2,
-			strCurrency
-		);
+		JulianDate dtSpot = DateUtil.Today();
 
 		String[] astrDepositMaturityTenor = new String[] {
 			"1D",

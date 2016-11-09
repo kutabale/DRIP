@@ -175,10 +175,12 @@ public class SurvivalRecoveryState {
 
 		String strCurrency = "EUR";
 
-		JulianDate dtSpot = DateUtil.Today().addBusDays (
+		JulianDate dtSpot = DateUtil.Today();
+
+		/* JulianDate dtSpot = DateUtil.Today().addBusDays (
 			2,
 			strCurrency
-		);
+		); */
 
 		MergedDiscountForwardCurve dcOvernight = OvernightCurve (
 			dtSpot,

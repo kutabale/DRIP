@@ -130,8 +130,8 @@ public class ForwardVolatilityState {
 			0.0234, //  "3Y",
 			0.0343, //  "4Y",
 			0.0471, //  "5Y",
-			0.0678, //  "7Y"
-			0.0825  // "10Y"
+			0.0728, //  "7Y"
+			0.1075  // "10Y"
 		};
 
 		VolatilityCurve vcForward = LatentMarketStateBuilder.ForwardRateVolatilityCurve (

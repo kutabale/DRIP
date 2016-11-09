@@ -181,10 +181,7 @@ public class ReferenceForwardStateShifted {
 		double dblBump = 0.0001;
 		boolean bIsProportional = false;
 
-		JulianDate dtSpot = DateUtil.Today().addBusDays (
-			2,
-			strCurrency
-		);
+		JulianDate dtSpot = DateUtil.Today();
 
 		MergedDiscountForwardCurve dcOvernight = OvernightCurve (
 			dtSpot,

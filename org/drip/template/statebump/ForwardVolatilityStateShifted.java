@@ -64,10 +64,7 @@ public class ForwardVolatilityStateShifted {
 		double dblBump = 0.0000001;
 		boolean bIsBumpProportional = false;
 
-		JulianDate dtSpot = DateUtil.Today().addBusDays (
-			0,
-			strCurrency
-		);
+		JulianDate dtSpot = DateUtil.Today();
 
 		ForwardLabel forwardLabel = ForwardLabel.Create (
 			strCurrency,
