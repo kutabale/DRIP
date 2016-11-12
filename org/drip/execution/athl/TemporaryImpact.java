@@ -49,7 +49,7 @@ package org.drip.execution.athl;
  */
 
 public class TemporaryImpact extends org.drip.execution.impact.TransactionFunctionPower {
-	private org.drip.execution.parameters.AssetFlowParameters _afp = null;
+	private org.drip.execution.parameters.AssetFlowSettings _afp = null;
 
 	/**
 	 * TemporaryImpact Constructor
@@ -60,7 +60,7 @@ public class TemporaryImpact extends org.drip.execution.impact.TransactionFuncti
 	 */
 
 	public TemporaryImpact (
-		final org.drip.execution.parameters.AssetFlowParameters afp)
+		final org.drip.execution.parameters.AssetFlowSettings afp)
 		throws java.lang.Exception
 	{
 		if (null == (_afp = afp))
@@ -73,7 +73,7 @@ public class TemporaryImpact extends org.drip.execution.impact.TransactionFuncti
 	 * @return The Asset Flow Parameters
 	 */
 
-	public org.drip.execution.parameters.AssetFlowParameters assetFlowParameters()
+	public org.drip.execution.parameters.AssetFlowSettings assetFlowParameters()
 	{
 		return _afp;
 	}

@@ -5,7 +5,7 @@ import org.drip.execution.athl.DynamicsParameters;
 import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
-import org.drip.execution.parameters.AssetFlowParameters;
+import org.drip.execution.parameters.AssetFlowSettings;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -75,7 +75,7 @@ public class OptimalTrajectoryDRI {
 
 		double dblRiskAversion = 1.e-02;
 
-		AssetFlowParameters afp = new AssetFlowParameters (
+		AssetFlowSettings afp = new AssetFlowSettings (
 			strAssetName,
 			dblAverageDailyVolume,
 			dblSharesOutstanding,

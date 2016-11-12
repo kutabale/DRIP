@@ -4,7 +4,7 @@ package org.drip.sample.athl;
 import org.drip.execution.athl.DynamicsParameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
-import org.drip.execution.parameters.AssetFlowParameters;
+import org.drip.execution.parameters.AssetFlowSettings;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -79,7 +79,7 @@ public class OptimalTrajectoryIBM {
 			dblTradeTime,
 			iNumInterval,
 			new DynamicsParameters (
-				new AssetFlowParameters (
+				new AssetFlowSettings (
 					strAssetName,
 					dblAverageDailyVolume,
 					dblSharesOutstanding,

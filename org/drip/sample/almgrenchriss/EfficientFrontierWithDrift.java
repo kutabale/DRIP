@@ -109,11 +109,11 @@ public class EfficientFrontierWithDrift {
 			dblAlpha,
 			dblSigma,
 			0.,
-			new TradeRateLinear (
+			new ParticipationRateLinear (
 				0.,
 				dblGamma
 			),
-			new TradeRateLinear (
+			new ParticipationRateLinear (
 				dblEpsilon,
 				dblEta
 			)

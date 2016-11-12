@@ -96,10 +96,12 @@ public class ContinuousTrajectoryConvexImpact {
 			{4.64,   1., 141.}
 		};
 
-		ArithmeticPowerMarketImpact apim = new ArithmeticPowerMarketImpact (
-			dblS0,
-			dblDailyVolume,
-			dblBidAskSpread,
+		ArithmeticPowerImpact apim = new ArithmeticPowerImpact (
+			new AssetTransactionSettings (
+				dblS0,
+				dblDailyVolume,
+				dblBidAskSpread
+			),
 			dblPermanentImpactFactor,
 			dblTemporaryImpactFactor,
 			dblDailyVolumeExecutionFactor,
@@ -110,11 +112,11 @@ public class ContinuousTrajectoryConvexImpact {
 			dblDrift,
 			dblVolatility,
 			dblSerialCorrelation,
-			new TradeRateLinear (
+			new ParticipationRateLinear (
 				0.,
 				dblGamma
 			),
-			new TradeRatePower (
+			new ParticipationRatePower (
 				apim.temporaryImpactConstant(),
 				dblK
 			)

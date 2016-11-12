@@ -29,8 +29,8 @@ package org.drip.execution.impact;
  */
 
 /**
- * TradeRatePower implements a Power-Law Based Temporary/Permanent Market Impact Function where the Price
- *  Change scales as a Power of the Trade Rate. The References are:
+ * ParticipationRatePower implements a Power-Law Based Temporary/Permanent Market Impact Function where the
+ *  Price Change scales as a Power of the Trade Rate. The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -48,12 +48,12 @@ package org.drip.execution.impact;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeRatePower extends org.drip.execution.impact.TransactionFunctionPower {
+public class ParticipationRatePower extends org.drip.execution.impact.TransactionFunctionPower {
 	private double _dblConstant = java.lang.Double.NaN;
 	private double _dblExponent = java.lang.Double.NaN;
 
 	/**
-	 * TradeRatePower Constructor
+	 * ParticipationRatePower Constructor
 	 * 
 	 * @param dblConstant The Market Impact Constant Parameter
 	 * @param dblExponent The Market Impact Power Law Exponent
@@ -61,14 +61,14 @@ public class TradeRatePower extends org.drip.execution.impact.TransactionFunctio
 	 * @throws java.lang.Exception Propagated up from R1ToR1
 	 */
 
-	public TradeRatePower (
+	public ParticipationRatePower (
 		final double dblConstant,
 		final double dblExponent)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblConstant = dblConstant) || 0. > _dblConstant ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblExponent = dblExponent) || 0. > _dblExponent)
-			throw new java.lang.Exception ("TradeRatePower Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("ParticipationRatePower Constructor => Invalid Inputs");
 	}
 
 	@Override public double constant()
@@ -86,7 +86,7 @@ public class TradeRatePower extends org.drip.execution.impact.TransactionFunctio
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblTradeInterval) || 0 >= dblTradeInterval)
-			throw new java.lang.Exception ("TradeRatePower::regularize => Invalid Inputs");
+			throw new java.lang.Exception ("ParticipationRatePower::regularize => Invalid Inputs");
 
 		return 1. / dblTradeInterval;
 	}
@@ -103,7 +103,7 @@ public class TradeRatePower extends org.drip.execution.impact.TransactionFunctio
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblTradeRate))
-			throw new java.lang.Exception ("TradeRatePower::evaluate => Invalid Inputs");
+			throw new java.lang.Exception ("ParticipationRatePower::evaluate => Invalid Inputs");
 
 		return (dblTradeRate < 0. ? -1. : 1.) * _dblConstant * java.lang.Math.pow (java.lang.Math.abs
 			(dblTradeRate), _dblExponent);
@@ -115,7 +115,7 @@ public class TradeRatePower extends org.drip.execution.impact.TransactionFunctio
 		throws java.lang.Exception
 	{
 		if (0 >= iOrder || !org.drip.quant.common.NumberUtil.IsValid (dblTradeRate))
-			throw new java.lang.Exception ("TradeRatePower::derivative => Invalid Inputs");
+			throw new java.lang.Exception ("ParticipationRatePower::derivative => Invalid Inputs");
 
 		double dblCoefficient = 1.;
 

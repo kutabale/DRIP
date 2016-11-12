@@ -29,8 +29,9 @@ package org.drip.execution.parameters;
  */
 
 /**
- * ArithmeticMarketCore contains the Core Arithmetic Market Evolution Parameters used in the Almgren and
- *  Chriss (2000) Optimal Trajectory Generation Scheme. The References are:
+ * ArithmeticLinearMarketImpact contains the Arithmetic Linear Market Impact Inputs used in the Construction
+ *  of the Impact Parameters for the Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The
+ *  References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -49,37 +50,32 @@ package org.drip.execution.parameters;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ArithmeticLinearMarketCore {
+public class AssetTransactionSettings {
 	private double _dblPrice = java.lang.Double.NaN;
-	private double _dblAnnualReturns = java.lang.Double.NaN;
-	private double _dblAnnualVolatility = java.lang.Double.NaN;
-	private double _dblSerialCorrelation = java.lang.Double.NaN;
+	private double _dblBidAskSpread = java.lang.Double.NaN;
+	private double _dblParticipationVolume = java.lang.Double.NaN;
 
 	/**
-	 * ArithmeticLinearMarketCore Constructor
+	 * AssetTransactionSettings Constructor
 	 * 
 	 * @param dblPrice The Asset Price
-	 * @param dblAnnualReturns The Asset Annual Returns
-	 * @param dblAnnualVolatility The Asset Annual Volatility
-	 * @param dblSerialCorrelation The Asset Serial Correlation
-	 * 
+	 * @param dblParticipationVolume The Participation Volume
+	 * @param dblBidAskSpread The Bid-Ask Spread
+	 *  
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ArithmeticLinearMarketCore (
+	public AssetTransactionSettings (
 		final double dblPrice,
-		final double dblAnnualReturns,
-		final double dblAnnualVolatility,
-		final double dblSerialCorrelation)
+		final double dblParticipationVolume,
+		final double dblBidAskSpread)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblPrice = dblPrice) || 0. >= _dblPrice ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblAnnualReturns = dblAnnualReturns) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblAnnualVolatility = dblAnnualVolatility) || 0.
-					>= _dblAnnualVolatility || !org.drip.quant.common.NumberUtil.IsValid
-						(_dblSerialCorrelation = dblSerialCorrelation) || 1. < _dblSerialCorrelation || -1. >
-							_dblSerialCorrelation)
-			throw new java.lang.Exception ("ArithmeticLinearMarketCore Constructor => Invalid Inputs!");
+			!org.drip.quant.common.NumberUtil.IsValid (_dblParticipationVolume = dblParticipationVolume) ||
+				0. >= _dblParticipationVolume || !org.drip.quant.common.NumberUtil.IsValid (_dblBidAskSpread
+					= dblBidAskSpread))
+			throw new java.lang.Exception ("AssetTransactionSettings Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -94,57 +90,24 @@ public class ArithmeticLinearMarketCore {
 	}
 
 	/**
-	 * Retrieve the Asset Serial Correlation
-	 *  
-	 * @return The Asset Serial Correlation
+	 * Retrieve the Bid-Ask Spread
+	 * 
+	 * @return The Bid-Ask Spread
 	 */
 
-	public double serialCorrelation()
+	public double bidAskSpread()
 	{
-		return _dblSerialCorrelation;
+		return _dblBidAskSpread;
 	}
 
 	/**
-	 * Retrieve the Asset Annual Returns
-	 *  
-	 * @return The Asset Annual Returns
+	 * Retrieve the Participation Volume
+	 * 
+	 * @return The Participation Volume
 	 */
 
-	public double annualReturns()
+	public double participationVolume()
 	{
-		return _dblAnnualReturns;
-	}
-
-	/**
-	 * Retrieve the Asset Annual Volatility
-	 *  
-	 * @return The Asset Annual Volatility
-	 */
-
-	public double annualVolatility()
-	{
-		return _dblAnnualVolatility;
-	}
-
-	/**
-	 * Retrieve the Asset Daily Drift
-	 *  
-	 * @return The Asset Daily Drift
-	 */
-
-	public double dailyDrift()
-	{
-		return _dblPrice * _dblAnnualReturns / 250.;
-	}
-
-	/**
-	 * Retrieve the Asset Daily Volatility
-	 *  
-	 * @return The Asset Daily Volatility
-	 */
-
-	public double dailyVolatility()
-	{
-		return _dblPrice * _dblAnnualVolatility / java.lang.Math.sqrt (250.);
+		return _dblParticipationVolume;
 	}
 }

@@ -2,7 +2,7 @@
 package org.drip.sample.athl;
 
 import org.drip.execution.athl.*;
-import org.drip.execution.parameters.AssetFlowParameters;
+import org.drip.execution.parameters.AssetFlowSettings;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -128,7 +128,7 @@ public class EquityMarketImpactDRI {
 			23
 		};
 
-		AssetFlowParameters afp = new AssetFlowParameters (
+		AssetFlowSettings afp = new AssetFlowSettings (
 			strAssetName,
 			dblAverageDailyVolume,
 			dblSharesOutstanding,

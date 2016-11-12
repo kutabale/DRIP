@@ -49,7 +49,7 @@ package org.drip.execution.athl;
  */
 
 public class DynamicsParameters {
-	private org.drip.execution.parameters.AssetFlowParameters _afp = null;
+	private org.drip.execution.parameters.AssetFlowSettings _afp = null;
 
 	/**
 	 * DynamicsParameters Constructor
@@ -60,7 +60,7 @@ public class DynamicsParameters {
 	 */
 
 	public DynamicsParameters (
-		final org.drip.execution.parameters.AssetFlowParameters afp)
+		final org.drip.execution.parameters.AssetFlowSettings afp)
 		throws java.lang.Exception
 	{
 		if (null == (_afp = afp))
@@ -73,7 +73,7 @@ public class DynamicsParameters {
 	 * @return The Asset Flow Parameters Instance
 	 */
 
-	public org.drip.execution.parameters.AssetFlowParameters assetFlowParameters()
+	public org.drip.execution.parameters.AssetFlowSettings assetFlowParameters()
 	{
 		return _afp;
 	}

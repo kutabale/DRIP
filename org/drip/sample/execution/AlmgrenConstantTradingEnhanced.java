@@ -4,7 +4,7 @@ package org.drip.sample.execution;
 import org.drip.execution.capture.TrajectoryShortfallEstimator;
 import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.*;
-import org.drip.execution.impact.TradeRateLinear;
+import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.execution.optimizer.MeanVarianceObjectiveUtility;
 import org.drip.execution.optimum.*;
 import org.drip.execution.strategy.*;
@@ -87,10 +87,10 @@ public class AlmgrenConstantTradingEnhanced {
 
 		TradingEnhancedVolatilityParameters tevp = new TradingEnhancedVolatilityParameters (
 			dblSigma,
-			TradeRateLinear.SlopeOnly (
+			ParticipationRateLinear.SlopeOnly (
 				dblEta
 			),
-			new TradeRateLinear (
+			new ParticipationRateLinear (
 				dblAlpha,
 				0.
 			)

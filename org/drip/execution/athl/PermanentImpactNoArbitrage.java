@@ -51,7 +51,7 @@ package org.drip.execution.athl;
 
 public class PermanentImpactNoArbitrage extends org.drip.execution.impact.TransactionFunctionLinear {
 	private double _dblLiquidityFactor = java.lang.Double.NaN;
-	private org.drip.execution.parameters.AssetFlowParameters _afp = null;
+	private org.drip.execution.parameters.AssetFlowSettings _afp = null;
 
 	/**
 	 * PermanentImpactNoArbitrage Constructor
@@ -62,7 +62,7 @@ public class PermanentImpactNoArbitrage extends org.drip.execution.impact.Transa
 	 */
 
 	public PermanentImpactNoArbitrage (
-		final org.drip.execution.parameters.AssetFlowParameters afp)
+		final org.drip.execution.parameters.AssetFlowSettings afp)
 		throws java.lang.Exception
 	{
 		if (null == (_afp = afp))
@@ -89,7 +89,7 @@ public class PermanentImpactNoArbitrage extends org.drip.execution.impact.Transa
 	 * @return The Asset Flow Parameters
 	 */
 
-	public org.drip.execution.parameters.AssetFlowParameters assetFlowParameters()
+	public org.drip.execution.parameters.AssetFlowSettings assetFlowParameters()
 	{
 		return _afp;
 	}

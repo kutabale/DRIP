@@ -5,7 +5,7 @@ import org.drip.execution.athl.DynamicsParameters;
 import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
-import org.drip.execution.parameters.AssetFlowParameters;
+import org.drip.execution.parameters.AssetFlowSettings;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -72,7 +72,7 @@ public class OptimalTrajectoryVolatilityAnalysis {
 		double dblRiskAversion = 1.e-02;
 
 		Almgren2003Parameters a2003p = new DynamicsParameters (
-			new AssetFlowParameters (
+			new AssetFlowSettings (
 				strAssetName,
 				dblAverageDailyVolume,
 				dblSharesOutstanding,

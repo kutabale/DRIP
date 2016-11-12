@@ -29,7 +29,7 @@ package org.drip.execution.parameters;
  */
 
 /**
- * AssetFlowParameters contains the Asset's Market Flow Parameters that are determined empirically from
+ * AssetFlowSettings contains the Asset's Market Flow Parameters that are determined empirically from
  * 	Almgren, Thum, Hauptmann, and Li (2005), using the Parameterization of Almgren (2003). The References
  *  are:
  * 
@@ -48,14 +48,14 @@ package org.drip.execution.parameters;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AssetFlowParameters {
+public class AssetFlowSettings {
 	private java.lang.String _strAssetID = "";
 	private double _dblDailyVolatility = java.lang.Double.NaN;
 	private double _dblNumberOutstanding = java.lang.Double.NaN;
 	private double _dblAverageDailyVolume = java.lang.Double.NaN;
 
 	/**
-	 * AssetFlowParameters Constructor
+	 * AssetFlowSettings Constructor
 	 * 
 	 * @param strAssetID The Asset ID
 	 * @param dblAverageDailyVolume The Asset Average Daily Volume
@@ -65,7 +65,7 @@ public class AssetFlowParameters {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public AssetFlowParameters (
+	public AssetFlowSettings (
 		final java.lang.String strAssetID,
 		final double dblAverageDailyVolume,
 		final double dblNumberOutstanding,
@@ -77,7 +77,7 @@ public class AssetFlowParameters {
 				!org.drip.quant.common.NumberUtil.IsValid (_dblNumberOutstanding = dblNumberOutstanding) ||
 					!org.drip.quant.common.NumberUtil.IsValid (_dblDailyVolatility = dblDailyVolatility) ||
 						0. >= _dblNumberOutstanding || 0. >= _dblDailyVolatility)
-			throw new java.lang.Exception ("AssetFlowParameters Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AssetFlowSettings Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class AssetFlowParameters {
 	 * @return The Outstanding Number of the Traded Units
 	 */
 
-	public double OutstandingUnits()
+	public double outstandingUnits()
 	{
 		return _dblNumberOutstanding;
 	}
@@ -164,7 +164,7 @@ public class AssetFlowParameters {
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblRawTradeSize) ||
 			!org.drip.quant.common.NumberUtil.IsValid (dblTime))
-			throw new java.lang.Exception ("AssetFlowParameters::normalizeTradeSize => Invalid Inputs");
+			throw new java.lang.Exception ("AssetFlowSettings::normalizeTradeSize => Invalid Inputs");
 
 		return dblRawTradeSize / (_dblAverageDailyVolume * dblTime);
 	}
@@ -184,7 +184,7 @@ public class AssetFlowParameters {
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblNormalizedImpact))
-			throw new java.lang.Exception ("AssetFlowParameters::denormalizeImpact => Invalid Inputs");
+			throw new java.lang.Exception ("AssetFlowSettings::denormalizeImpact => Invalid Inputs");
 
 		return dblNormalizedImpact * _dblDailyVolatility;
 	}

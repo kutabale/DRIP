@@ -29,9 +29,9 @@ package org.drip.execution.parameters;
  */
 
 /**
- * ArithmeticLinearMarketImpact contains the Arithmetic Linear Market Impact Inputs used in the Construction
- *  of the Impact Parameters for the Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The
- *  References are:
+ * ArithmeticLinearImpact contains the Arithmetic Linear Market Impact Inputs used in the Construction of the
+ *  Impact Parameters for the Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The References
+ *  are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -50,30 +50,29 @@ package org.drip.execution.parameters;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ArithmeticMarketImpact {
-	private double _dblPrice = java.lang.Double.NaN;
-	private double _dblDailyVolume = java.lang.Double.NaN;
-	private double _dblBidAskSpread = java.lang.Double.NaN;
+public class ArithmeticLinearImpact {
 	private double _dblPermanentImpactFactor = java.lang.Double.NaN;
 	private double _dblTemporaryImpactFactor = java.lang.Double.NaN;
+	private org.drip.execution.parameters.AssetTransactionSettings _ats = null;
 
 	/**
-	 * Construct a Standard ArithmeticLinearMarketImpact Instance using Almgren-Chriss Market Impact Factors
+	 * Construct a Standard ArithmeticLinearImpact Instance
 	 * 
 	 * @param dblPrice The Asset Price
 	 * @param dblDailyVolume The Daily Volume
 	 * @param dblBidAskSpread The Bid-Ask Spread
 	 *  
-	 * @return The Standard ArithmeticLinearMarketImpact Instance
+	 * @return The Standard ArithmeticLinearImpact Instance
 	 */
 
-	public static final ArithmeticMarketImpact AlmgrenChriss (
+	public static final ArithmeticLinearImpact AlmgrenChriss (
 		final double dblPrice,
 		final double dblDailyVolume,
 		final double dblBidAskSpread)
 	{
 		try {
-			return new ArithmeticMarketImpact (dblPrice, dblDailyVolume, dblBidAskSpread, 0.1, 0.01);
+			return new ArithmeticLinearImpact (new org.drip.execution.parameters.AssetTransactionSettings
+				(dblPrice, dblDailyVolume, dblBidAskSpread), 0.1, 0.01);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -82,11 +81,9 @@ public class ArithmeticMarketImpact {
 	}
 
 	/**
-	 * ArithmeticLinearMarketImpact Constructor
+	 * ArithmeticLinearImpact Constructor
 	 * 
-	 * @param dblPrice The Asset Price
-	 * @param dblDailyVolume The Daily Volume
-	 * @param dblBidAskSpread The Bid-Ask Spread
+	 * @param ats The Asset Transaction Settings Instance
 	 * @param dblPermanentImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
 	 *  Permanent Impact Cost
 	 * @param dblTemporaryImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
@@ -95,55 +92,28 @@ public class ArithmeticMarketImpact {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ArithmeticMarketImpact (
-		final double dblPrice,
-		final double dblDailyVolume,
-		final double dblBidAskSpread,
+	public ArithmeticLinearImpact (
+		final org.drip.execution.parameters.AssetTransactionSettings ats,
 		final double dblPermanentImpactFactor,
 		final double dblTemporaryImpactFactor)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblPrice = dblPrice) || 0. >= _dblPrice ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblDailyVolume = dblDailyVolume) || 0. >=
-				_dblDailyVolume || !org.drip.quant.common.NumberUtil.IsValid (_dblBidAskSpread =
-					dblBidAskSpread) || !org.drip.quant.common.NumberUtil.IsValid (_dblPermanentImpactFactor
-						= dblPermanentImpactFactor) || 0. >= _dblPermanentImpactFactor ||
-							!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactFactor =
-								dblTemporaryImpactFactor) || 0. >= _dblTemporaryImpactFactor)
-			throw new java.lang.Exception ("ArithmeticMarketImpact Constructor => Invalid Inputs");
+		if (null == (_ats = ats) || !org.drip.quant.common.NumberUtil.IsValid (_dblPermanentImpactFactor =
+			dblPermanentImpactFactor) || 0. >= _dblPermanentImpactFactor ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactFactor =
+					dblTemporaryImpactFactor) || 0. >= _dblTemporaryImpactFactor)
+			throw new java.lang.Exception ("ArithmeticLinearImpact Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asset Price
-	 *  
-	 * @return The Asset Price
-	 */
-
-	public double price()
-	{
-		return _dblPrice;
-	}
-
-	/**
-	 * Retrieve the Bid-Ask Spread
+	 * Retrieve the AssetTransactionSettings Instance
 	 * 
-	 * @return The Bid-Ask Spread
+	 * @return The AssetTransactionSettings Instance
 	 */
 
-	public double bidAskSpread()
+	public org.drip.execution.parameters.AssetTransactionSettings ats()
 	{
-		return _dblBidAskSpread;
-	}
-
-	/**
-	 * Retrieve the Daily Volume
-	 * 
-	 * @return The Daily Volume
-	 */
-
-	public double dailyVolume()
-	{
-		return _dblDailyVolume;
+		return _ats;
 	}
 
 	/**
@@ -176,7 +146,9 @@ public class ArithmeticMarketImpact {
 
 	public double permanentSlope()
 	{
-		return _dblBidAskSpread / (_dblPermanentImpactFactor * _dblDailyVolume);
+		org.drip.execution.parameters.AssetTransactionSettings ats = ats();
+
+		return ats.bidAskSpread() / (_dblPermanentImpactFactor * ats.participationVolume());
 	}
 
 	/**
@@ -187,7 +159,7 @@ public class ArithmeticMarketImpact {
 
 	public double temporaryOffset()
 	{
-		return 0.5 * _dblBidAskSpread;
+		return 0.5 * ats().bidAskSpread();
 	}
 
 	/**
@@ -198,6 +170,8 @@ public class ArithmeticMarketImpact {
 
 	public double temporarySlope()
 	{
-		return _dblBidAskSpread / (_dblTemporaryImpactFactor * _dblDailyVolume);
+		org.drip.execution.parameters.AssetTransactionSettings ats = ats();
+
+		return ats.bidAskSpread() / (_dblTemporaryImpactFactor * ats.participationVolume());
 	}
 }

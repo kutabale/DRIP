@@ -80,21 +80,22 @@ public class OptimalTrajectoryWithDrift {
 		double dblDailyVolumeTemporaryImpact = 0.01;
 		double dblLambdaU = 1.e-06;
 
-		ArithmeticLinearMarketCore amc = new ArithmeticLinearMarketCore (
-			dblS0,
+		AssetReturnsSettings amc = new AssetReturnsSettings (
 			dblAnnualReturns,
 			dblAnnualVolatility,
 			0.
 		);
 
-		double dblAlpha = amc.dailyDrift();
+		double dblAlpha = amc.dailyArithmeticDrift (dblS0);
 
-		double dblSigma = amc.dailyVolatility();
+		double dblSigma = amc.dailyArithmeticVolatility (dblS0);
 
-		ArithmeticMarketImpact ami = new ArithmeticMarketImpact (
-			dblS0,
-			dblDailyVolume,
-			dblBidAsk,
+		ArithmeticLinearImpact ami = new ArithmeticLinearImpact (
+			new AssetTransactionSettings (
+				dblS0,
+				dblDailyVolume,
+				dblBidAsk
+			),
 			dblDailyVolumePermanentImpact,
 			dblDailyVolumeTemporaryImpact
 		);
@@ -109,11 +110,11 @@ public class OptimalTrajectoryWithDrift {
 			dblAlpha,
 			dblSigma,
 			0.,
-			new TradeRateLinear (
+			new ParticipationRateLinear (
 				0.,
 				dblGamma
 			),
-			new TradeRateLinear (
+			new ParticipationRateLinear (
 				dblEpsilon,
 				dblEta
 			)

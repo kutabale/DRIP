@@ -29,8 +29,8 @@ package org.drip.execution.impact;
  */
 
 /**
- * TradeRateLinear implements a Linear Temporary/Permanent Market Impact Function where the Price Change
- *  scales linearly with the Trade Rate, along with an Offset. The References are:
+ * ParticipationRateLinear implements a Linear Temporary/Permanent Market Impact Function where the Price
+ *  Change scales linearly with the Trade Rate, along with an Offset. The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -49,20 +49,20 @@ package org.drip.execution.impact;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeRateLinear extends org.drip.execution.impact.TransactionFunctionLinear {
+public class ParticipationRateLinear extends org.drip.execution.impact.TransactionFunctionLinear {
 	private double _dblSlope = java.lang.Double.NaN;
 	private double _dblOffset = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Vanilla Zero-Impact TradeRateLinear Instance
+	 * Construct a Vanilla Zero-Impact ParticipationRateLinear Instance
 	 * 
-	 * @return The Vanilla Zero-Impact TradeRateLinear Instance
+	 * @return The Vanilla Zero-Impact ParticipationRateLinear Instance
 	 */
 
-	public static final TradeRateLinear NoImpact()
+	public static final ParticipationRateLinear NoImpact()
 	{
 		try {
-			return new TradeRateLinear (0., 0.);
+			return new ParticipationRateLinear (0., 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -71,18 +71,18 @@ public class TradeRateLinear extends org.drip.execution.impact.TransactionFuncti
 	}
 
 	/**
-	 * Construct a Vanilla Slope-Only TradeRateLinear Instance
+	 * Construct a Vanilla Slope-Only ParticipationRateLinear Instance
 	 * 
 	 * @param dblSlope The Slope
 	 *  
-	 * @return The Vanilla Slope-Only TradeRateLinear Instance
+	 * @return The Vanilla Slope-Only ParticipationRateLinear Instance
 	 */
 
-	public static final TradeRateLinear SlopeOnly (
+	public static final ParticipationRateLinear SlopeOnly (
 		final double dblSlope)
 	{
 		try {
-			return new TradeRateLinear (0., dblSlope);
+			return new ParticipationRateLinear (0., dblSlope);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -91,7 +91,7 @@ public class TradeRateLinear extends org.drip.execution.impact.TransactionFuncti
 	}
 
 	/**
-	 * TradeRateLinear Constructor
+	 * ParticipationRateLinear Constructor
 	 * 
 	 * @param dblOffset The Offset Market Impact Parameter
 	 * @param dblSlope The Linear Market Impact Slope Parameter
@@ -99,14 +99,14 @@ public class TradeRateLinear extends org.drip.execution.impact.TransactionFuncti
 	 * @throws java.lang.Exception Propagated up from R1ToR1
 	 */
 
-	public TradeRateLinear (
+	public ParticipationRateLinear (
 		final double dblOffset,
 		final double dblSlope)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblOffset = dblOffset) || 0. > _dblOffset ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblSlope = dblSlope) || 0. > _dblSlope)
-			throw new java.lang.Exception ("TradeRateLinear Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("ParticipationRateLinear Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class TradeRateLinear extends org.drip.execution.impact.TransactionFuncti
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblTradeInterval) || 0 >= dblTradeInterval)
-			throw new java.lang.Exception ("TradeRateLinear::regularize => Invalid Inputs");
+			throw new java.lang.Exception ("ParticipationRateLinear::regularize => Invalid Inputs");
 
 		return 1. / dblTradeInterval;
 	}
@@ -153,7 +153,7 @@ public class TradeRateLinear extends org.drip.execution.impact.TransactionFuncti
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblTradeRate))
-			throw new java.lang.Exception ("TradeRateLinear::evaluate => Invalid Inputs");
+			throw new java.lang.Exception ("ParticipationRateLinear::evaluate => Invalid Inputs");
 
 		return (dblTradeRate < 0. ? -1. : 1.) * _dblOffset + _dblSlope * dblTradeRate;
 	}
@@ -163,7 +163,8 @@ public class TradeRateLinear extends org.drip.execution.impact.TransactionFuncti
 		final int iOrder)
 		throws java.lang.Exception
 	{
-		if (0 >= iOrder) throw new java.lang.Exception ("TradeRateLinear::derivative => Invalid Inputs");
+		if (0 >= iOrder)
+			throw new java.lang.Exception ("ParticipationRateLinear::derivative => Invalid Inputs");
 
 		return 1 == iOrder ? _dblSlope : 0.;
 	}

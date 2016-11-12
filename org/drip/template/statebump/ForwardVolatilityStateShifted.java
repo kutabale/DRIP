@@ -131,13 +131,13 @@ public class ForwardVolatilityStateShifted {
 		};
 
 		double[] adblPrice = new double[] {
-			0.0037, //  "1Y",
-			0.0062, // 	"2Y",
-			0.0124, //  "3Y",
-			0.0203, //  "4Y",
-			0.0301, //  "5Y",
-			0.0528, //  "7Y"
-			0.0855  // "10Y"
+			0.0017, //  "1Y",
+			0.0132, // 	"2Y",
+			0.0234, //  "3Y",
+			0.0343, //  "4Y",
+			0.0471, //  "5Y",
+			0.0778, //  "7Y"
+			0.1125  // "10Y"
 		};
 
 		ForwardCurve fc = dcFunding.nativeForwardCurve (strFRATenor);

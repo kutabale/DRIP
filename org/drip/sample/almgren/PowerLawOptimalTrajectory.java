@@ -113,11 +113,11 @@ public class PowerLawOptimalTrajectory {
 				dblDrift,
 				dblVolatility,
 				dblSerialCorrelation,
-				new TradeRateLinear (
+				new ParticipationRateLinear (
 					0.,
 					dblGamma
 				),
-				new TradeRatePower (
+				new ParticipationRatePower (
 					dblEta,
 					adblK[i]
 				)

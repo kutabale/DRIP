@@ -73,8 +73,8 @@ public class LinearPermanentExpectationParameters extends
 	{
 		super (dblMarketCoreDrift, dblMarketCoreVolatility, dblMarketCoreSerialCorrelation,
 			tflPermanentExpectation, tfTemporaryExpectation,
-				org.drip.execution.impact.TradeRateLinear.NoImpact(),
-					org.drip.execution.impact.TradeRateLinear.NoImpact());
+				org.drip.execution.impact.ParticipationRateLinear.NoImpact(),
+					org.drip.execution.impact.ParticipationRateLinear.NoImpact());
 	}
 
 	/**

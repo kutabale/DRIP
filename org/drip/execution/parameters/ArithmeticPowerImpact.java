@@ -29,9 +29,9 @@ package org.drip.execution.parameters;
  */
 
 /**
- * ArithmeticPowerMarketImpact contains the Arithmetic Power Market Impact Inputs used in the Construction of
- *  the Impact Parameters for the Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The
- *  References are:
+ * ArithmeticPowerImpact contains the Arithmetic Power Market Impact Inputs used in the Construction of the
+ *  Impact Parameters for the Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The References
+ *  are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -49,16 +49,14 @@ package org.drip.execution.parameters;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ArithmeticPowerMarketImpact extends org.drip.execution.parameters.ArithmeticMarketImpact {
+public class ArithmeticPowerImpact extends org.drip.execution.parameters.ArithmeticLinearImpact {
 	private double _dblTemporaryImpactExponent = java.lang.Double.NaN;
 	private double _dblDailyVolumeExecutionFactor = java.lang.Double.NaN;
 
 	/**
-	 * ArithmeticPowerMarketImpact Constructor
+	 * ArithmeticPowerImpact Constructor
 	 * 
-	 * @param dblPrice The Asset Price
-	 * @param dblDailyVolume The Daily Volume
-	 * @param dblBidAskSpread The Bid-Ask Spread
+	 * @param ats The Asset Transaction Settings Instance
 	 * @param dblPermanentImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
 	 *  Permanent Impact Cost
 	 * @param dblTemporaryImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
@@ -70,24 +68,21 @@ public class ArithmeticPowerMarketImpact extends org.drip.execution.parameters.A
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ArithmeticPowerMarketImpact (
-		final double dblPrice,
-		final double dblDailyVolume,
-		final double dblBidAskSpread,
+	public ArithmeticPowerImpact (
+		final org.drip.execution.parameters.AssetTransactionSettings ats,
 		final double dblPermanentImpactFactor,
 		final double dblTemporaryImpactFactor,
 		final double dblDailyVolumeExecutionFactor,
 		final double dblTemporaryImpactExponent)
 		throws java.lang.Exception
 	{
-		super (dblPrice, dblDailyVolume, dblBidAskSpread, dblPermanentImpactFactor,
-			dblTemporaryImpactFactor);
+		super (ats, dblPermanentImpactFactor, dblTemporaryImpactFactor);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDailyVolumeExecutionFactor =
 			dblDailyVolumeExecutionFactor) || 0. >= _dblDailyVolumeExecutionFactor ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactExponent =
 					dblTemporaryImpactExponent) || 0. >= _dblTemporaryImpactExponent)
-			throw new java.lang.Exception ("ArithmeticPowerMarketImpact Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("ArithmeticPowerImpact Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -109,7 +104,9 @@ public class ArithmeticPowerMarketImpact extends org.drip.execution.parameters.A
 
 	public double temporaryImpactConstant()
 	{
-		return price() * temporaryImpactFactor() / java.lang.Math.pow (dailyVolume() *
+		org.drip.execution.parameters.AssetTransactionSettings ats = ats();
+
+		return ats.price() * temporaryImpactFactor() / java.lang.Math.pow (ats.participationVolume() *
 			_dblDailyVolumeExecutionFactor, _dblTemporaryImpactExponent);
 	}
 

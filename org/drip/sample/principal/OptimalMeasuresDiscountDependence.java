@@ -5,7 +5,8 @@ import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
-import org.drip.execution.parameters.ArithmeticPowerMarketImpact;
+import org.drip.execution.parameters.ArithmeticPowerImpact;
+import org.drip.execution.parameters.AssetTransactionSettings;
 import org.drip.execution.principal.Almgren2003Estimator;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -103,10 +104,12 @@ public class OptimalMeasuresDiscountDependence {
 			0.98
 		};
 
-		ArithmeticPowerMarketImpact apim = new ArithmeticPowerMarketImpact (
-			dblS0,
-			dblDailyVolume,
-			0.,
+		ArithmeticPowerImpact apim = new ArithmeticPowerImpact (
+			new AssetTransactionSettings (
+				dblS0,
+				dblDailyVolume,
+				0.
+			),
 			dblPermanentImpactFactor,
 			dblTemporaryImpactFactor,
 			dblDailyVolumeExecutionFactor,
@@ -117,11 +120,11 @@ public class OptimalMeasuresDiscountDependence {
 			0.,
 			dblVolatility,
 			0.,
-			new TradeRateLinear (
+			new ParticipationRateLinear (
 				0.,
 				0.
 			),
-			new TradeRatePower (
+			new ParticipationRatePower (
 				apim.temporaryImpactConstant(),
 				dblK
 			)

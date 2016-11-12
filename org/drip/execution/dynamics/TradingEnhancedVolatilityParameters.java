@@ -67,8 +67,8 @@ public class TradingEnhancedVolatilityParameters extends
 		final org.drip.execution.impact.TransactionFunctionLinear tflTemporaryVolatility)
 		throws java.lang.Exception
 	{
-		super (0., dblMarketCoreVolatility, 0., org.drip.execution.impact.TradeRateLinear.NoImpact(),
-			tflTemporaryExpectation, org.drip.execution.impact.TradeRateLinear.NoImpact(),
+		super (0., dblMarketCoreVolatility, 0., org.drip.execution.impact.ParticipationRateLinear.NoImpact(),
+			tflTemporaryExpectation, org.drip.execution.impact.ParticipationRateLinear.NoImpact(),
 				tflTemporaryVolatility);
 	}
 

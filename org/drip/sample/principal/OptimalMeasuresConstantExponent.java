@@ -5,7 +5,8 @@ import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
-import org.drip.execution.parameters.ArithmeticPowerMarketImpact;
+import org.drip.execution.parameters.ArithmeticPowerImpact;
+import org.drip.execution.parameters.AssetTransactionSettings;
 import org.drip.execution.principal.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -111,10 +112,12 @@ public class OptimalMeasuresConstantExponent {
 		System.out.println ("\t|-----------------------------------------------------||");
 
 		for (double dblK : adblK) {
-			ArithmeticPowerMarketImpact apim = new ArithmeticPowerMarketImpact (
-				dblS0,
-				dblDailyVolume,
-				dblBidAskSpread,
+			ArithmeticPowerImpact apim = new ArithmeticPowerImpact (
+				new AssetTransactionSettings (
+					dblS0,
+					dblDailyVolume,
+					dblBidAskSpread
+				),
 				dblPermanentImpactFactor,
 				dblTemporaryImpactFactor,
 				dblDailyVolumeExecutionFactor,
@@ -125,11 +128,11 @@ public class OptimalMeasuresConstantExponent {
 				dblDrift,
 				dblVolatility,
 				dblSerialCorrelation,
-				new TradeRateLinear (
+				new ParticipationRateLinear (
 					0.,
 					dblGamma
 				),
-				new TradeRatePower (
+				new ParticipationRatePower (
 					apim.temporaryImpactConstant(),
 					dblK
 				)
