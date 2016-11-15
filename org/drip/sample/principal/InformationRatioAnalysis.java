@@ -69,6 +69,7 @@ public class InformationRatioAnalysis {
 		double dblVolatility = 1.;
 		double dblDailyVolume = 1000000.;
 		double dblDailyVolumeExecutionFactor = 0.1;
+		double dblPermanentImpactFactor = 0.;
 		double dblTemporaryImpactFactor = 0.01;
 		double dblT = 5.;
 		int iNumInterval = 20;
@@ -111,12 +112,13 @@ public class InformationRatioAnalysis {
 			1.44
 		};
 
-		ArithmeticPowerImpact apim = new ArithmeticPowerImpact (
+		PriceMarketImpactPower apim = new PriceMarketImpactPower (
 			new AssetTransactionSettings (
 				dblS0,
 				dblDailyVolume,
 				0.
 			),
+			dblPermanentImpactFactor,
 			dblTemporaryImpactFactor,
 			dblDailyVolumeExecutionFactor,
 			dblK

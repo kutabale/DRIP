@@ -68,6 +68,7 @@ public class OptimalMeasuresConstantExponent {
 		double dblS0 = 50.;
 		double dblDailyVolume = 1000000.;
 		double dblBidAskSpread = 0.;
+		double dblPermanentImpactFactor = 0.;
 		double dblTemporaryImpactFactor = 0.01;
 		double dblDailyVolumeExecutionFactor = 0.1;
 		double dblDrift = 0.;
@@ -109,12 +110,13 @@ public class OptimalMeasuresConstantExponent {
 		System.out.println ("\t|-----------------------------------------------------||");
 
 		for (double dblK : adblK) {
-			ArithmeticPowerImpact apim = new ArithmeticPowerImpact (
+			PriceMarketImpactPower apim = new PriceMarketImpactPower (
 				new AssetTransactionSettings (
 					dblS0,
 					dblDailyVolume,
 					dblBidAskSpread
 				),
+				dblPermanentImpactFactor,
 				dblTemporaryImpactFactor,
 				dblDailyVolumeExecutionFactor,
 				dblK

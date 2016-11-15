@@ -29,7 +29,7 @@ package org.drip.execution.parameters;
  */
 
 /**
- * ArithmeticLinearImpact contains the Arithmetic Linear Market Impact Inputs used in the Construction of the
+ * PriceMarketImpactLinear contains the Linear Price Market Impact Inputs used in the Construction of the
  *  Impact Parameters for the Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The References
  *  are:
  * 
@@ -50,28 +50,25 @@ package org.drip.execution.parameters;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ArithmeticLinearImpact {
-	private double _dblPermanentImpactFactor = java.lang.Double.NaN;
-	private double _dblTemporaryImpactFactor = java.lang.Double.NaN;
-	private org.drip.execution.parameters.AssetTransactionSettings _ats = null;
+public class PriceMarketImpactLinear extends org.drip.execution.parameters.PriceMarketImpact {
 
 	/**
-	 * Construct a Standard ArithmeticLinearImpact Instance
+	 * Construct a Standard PriceMarketImpactLinear Instance
 	 * 
 	 * @param dblPrice The Asset Price
 	 * @param dblDailyVolume The Daily Volume
 	 * @param dblBidAskSpread The Bid-Ask Spread
 	 *  
-	 * @return The Standard ArithmeticLinearImpact Instance
+	 * @return The Standard PriceMarketImpactLinear Instance
 	 */
 
-	public static final ArithmeticLinearImpact AlmgrenChriss (
+	public static final PriceMarketImpactLinear AlmgrenChriss (
 		final double dblPrice,
 		final double dblDailyVolume,
 		final double dblBidAskSpread)
 	{
 		try {
-			return new ArithmeticLinearImpact (new org.drip.execution.parameters.AssetTransactionSettings
+			return new PriceMarketImpactLinear (new org.drip.execution.parameters.AssetTransactionSettings
 				(dblPrice, dblDailyVolume, dblBidAskSpread), 0.1, 0.01);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -81,7 +78,7 @@ public class ArithmeticLinearImpact {
 	}
 
 	/**
-	 * ArithmeticLinearImpact Constructor
+	 * PriceMarketImpactLinear Constructor
 	 * 
 	 * @param ats The Asset Transaction Settings Instance
 	 * @param dblPermanentImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
@@ -92,50 +89,13 @@ public class ArithmeticLinearImpact {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ArithmeticLinearImpact (
+	public PriceMarketImpactLinear (
 		final org.drip.execution.parameters.AssetTransactionSettings ats,
 		final double dblPermanentImpactFactor,
 		final double dblTemporaryImpactFactor)
 		throws java.lang.Exception
 	{
-		if (null == (_ats = ats) || !org.drip.quant.common.NumberUtil.IsValid (_dblPermanentImpactFactor =
-			dblPermanentImpactFactor) || 0. >= _dblPermanentImpactFactor ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactFactor =
-					dblTemporaryImpactFactor) || 0. >= _dblTemporaryImpactFactor)
-			throw new java.lang.Exception ("ArithmeticLinearImpact Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the AssetTransactionSettings Instance
-	 * 
-	 * @return The AssetTransactionSettings Instance
-	 */
-
-	public org.drip.execution.parameters.AssetTransactionSettings ats()
-	{
-		return _ats;
-	}
-
-	/**
-	 * Retrieve the Fraction of the Daily Volume that triggers One Bid-Ask of Permanent Impact Cost
-	 * 
-	 * @return The Fraction of the Daily Volume that triggers One Bid-Ask of Permanent Impact Cost
-	 */
-
-	public double permanentImpactFactor()
-	{
-		return _dblPermanentImpactFactor;
-	}
-
-	/**
-	 * Retrieve the Fraction of the Daily Volume that triggers One Bid-Ask of Temporary Impact Cost
-	 * 
-	 * @return The Fraction of the Daily Volume that triggers One Bid-Ask of Temporary Impact Cost
-	 */
-
-	public double temporaryImpactFactor()
-	{
-		return _dblTemporaryImpactFactor;
+		super (ats, dblPermanentImpactFactor, dblTemporaryImpactFactor);
 	}
 
 	/**
@@ -150,7 +110,7 @@ public class ArithmeticLinearImpact {
 
 		try {
 			return new org.drip.execution.impact.ParticipationRateLinear (0., ats.bidAskSpread() /
-				(_dblPermanentImpactFactor * ats.backgroundVolume()));
+				(permanentImpactFactor() * ats.backgroundVolume()));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -172,7 +132,7 @@ public class ArithmeticLinearImpact {
 
 		try {
 			return new org.drip.execution.impact.ParticipationRateLinear (0.5 * dblBidAskSpread,
-				dblBidAskSpread / (_dblTemporaryImpactFactor * ats.backgroundVolume()));
+				dblBidAskSpread / (temporaryImpactFactor() * ats.backgroundVolume()));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

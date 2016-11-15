@@ -81,17 +81,18 @@ public class OptimalSerialCorrelationImpact {
 		double dblLambdaU = 1.e-06;
 		double dblSerialCorrelation = 0.1;
 
-		AssetReturnsSettings amc = new AssetReturnsSettings (
+		AssetDynamicsSettings amc = AssetDynamicsSettings.FromAnnualReturnsSettings (
 			dblAnnualReturns,
 			dblAnnualVolatility,
-			0.
+			0.,
+			dblS0
 		);
 
-		double dblAlpha = amc.dailyArithmeticDrift (dblS0);
+		double dblAlpha = amc.drift();
 
-		double dblSigma = amc.dailyArithmeticVolatility (dblS0);
+		double dblSigma = amc.volatility();
 
-		ArithmeticLinearImpact ami = new ArithmeticLinearImpact (
+		PriceMarketImpactLinear ami = new PriceMarketImpactLinear (
 			new AssetTransactionSettings (
 				dblS0,
 				dblDailyVolume,

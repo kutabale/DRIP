@@ -29,9 +29,9 @@ package org.drip.execution.parameters;
  */
 
 /**
- * ArithmeticPowerImpact contains the Arithmetic Power Market Impact Inputs used in the Construction of the
- *  Impact Parameters for the Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The References
- *  are:
+ * PriceMarketImpactPower contains the Power Law based Price Market Impact Inputs used in the Construction of
+ *  the Impact Parameters for the Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The
+ *  References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -49,16 +49,16 @@ package org.drip.execution.parameters;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ArithmeticPowerImpact {
-	private double _dblTemporaryImpactFactor = java.lang.Double.NaN;
+public class PriceMarketImpactPower extends org.drip.execution.parameters.PriceMarketImpact {
 	private double _dblTemporaryImpactExponent = java.lang.Double.NaN;
 	private double _dblDailyVolumeExecutionFactor = java.lang.Double.NaN;
-	private org.drip.execution.parameters.AssetTransactionSettings _ats = null;
 
 	/**
-	 * ArithmeticPowerImpact Constructor
+	 * PriceMarketImpactPower Constructor
 	 * 
 	 * @param ats The Asset Transaction Settings Instance
+	 * @param dblPermanentImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
+	 *  Permanent Impact Cost
 	 * @param dblTemporaryImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
 	 *  Temporary Impact Cost
 	 * @param dblDailyVolumeExecutionFactor The Daily Reference Execution Rate as a Proportion of the Daily
@@ -68,42 +68,21 @@ public class ArithmeticPowerImpact {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ArithmeticPowerImpact (
+	public PriceMarketImpactPower (
 		final org.drip.execution.parameters.AssetTransactionSettings ats,
+		final double dblPermanentImpactFactor,
 		final double dblTemporaryImpactFactor,
 		final double dblDailyVolumeExecutionFactor,
 		final double dblTemporaryImpactExponent)
 		throws java.lang.Exception
 	{
-		if (null == (_ats = ats) || !org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactFactor =
-			dblTemporaryImpactFactor) || 0. >= _dblTemporaryImpactFactor ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblDailyVolumeExecutionFactor =
-					dblDailyVolumeExecutionFactor) || 0. >= _dblDailyVolumeExecutionFactor ||
-						!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactExponent =
-							dblTemporaryImpactExponent))
-			throw new java.lang.Exception ("ArithmeticPowerImpact Constructor => Invalid Inputs");
-	}
+		super (ats, dblPermanentImpactFactor, dblTemporaryImpactFactor);
 
-	/**
-	 * Retrieve the AssetTransactionSettings Instance
-	 * 
-	 * @return The AssetTransactionSettings Instance
-	 */
-
-	public org.drip.execution.parameters.AssetTransactionSettings ats()
-	{
-		return _ats;
-	}
-
-	/**
-	 * Retrieve the Fraction of the Daily Volume that triggers One Bid-Ask of Temporary Impact Cost
-	 * 
-	 * @return The Fraction of the Daily Volume that triggers One Bid-Ask of Temporary Impact Cost
-	 */
-
-	public double temporaryImpactFactor()
-	{
-		return _dblTemporaryImpactFactor;
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDailyVolumeExecutionFactor =
+			dblDailyVolumeExecutionFactor) || 0. >= _dblDailyVolumeExecutionFactor ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactExponent =
+					dblTemporaryImpactExponent))
+			throw new java.lang.Exception ("PriceMarketImpactPower Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -142,9 +121,11 @@ public class ArithmeticPowerImpact {
 
 	public org.drip.execution.impact.TransactionFunction temporaryTransactionFunction()
 	{
+		org.drip.execution.parameters.AssetTransactionSettings ats = ats();
+
 		try {
-			return new org.drip.execution.impact.ParticipationRatePower (_ats.price() *
-				_dblTemporaryImpactFactor / java.lang.Math.pow (_ats.backgroundVolume() *
+			return new org.drip.execution.impact.ParticipationRatePower (ats.price() *
+				temporaryImpactFactor() / java.lang.Math.pow (ats.backgroundVolume() *
 					_dblDailyVolumeExecutionFactor, _dblTemporaryImpactExponent),
 						_dblTemporaryImpactExponent);
 		} catch (java.lang.Exception e) {

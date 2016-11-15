@@ -68,6 +68,7 @@ public class ContinuousTrajectoryLinearImpact {
 		double dblS0 = 50.;
 		double dblDailyVolume = 1000000.;
 		double dblBidAskSpread = 0.;
+		double dblPermanentImpactFactor = 0.;
 		double dblTemporaryImpactFactor = 0.01;
 		double dblK = 1.0;
 		double dblGamma = 0.;
@@ -95,12 +96,13 @@ public class ContinuousTrajectoryLinearImpact {
 			{7.07,   4., 188.}
 		};
 
-		ArithmeticPowerImpact apim = new ArithmeticPowerImpact (
+		PriceMarketImpactPower apim = new PriceMarketImpactPower (
 			new AssetTransactionSettings (
 				dblS0,
 				dblDailyVolume,
 				dblBidAskSpread
 			),
+			dblPermanentImpactFactor,
 			dblTemporaryImpactFactor,
 			dblDailyVolumeExecutionFactor,
 			dblK
