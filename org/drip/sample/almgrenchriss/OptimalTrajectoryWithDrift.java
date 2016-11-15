@@ -100,24 +100,16 @@ public class OptimalTrajectoryWithDrift {
 			dblDailyVolumeTemporaryImpact
 		);
 
-		double dblEta = ami.temporarySlope();
+		ParticipationRateLinear prlPermanent = (ParticipationRateLinear) ami.permanentTransactionFunction();
 
-		double dblGamma = ami.permanentSlope();
-
-		double dblEpsilon = ami.temporaryOffset();
+		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) ami.temporaryTransactionFunction();
 
 		LinearExpectationParameters lipe = new LinearExpectationParameters (
 			dblAlpha,
 			dblSigma,
 			0.,
-			new ParticipationRateLinear (
-				0.,
-				dblGamma
-			),
-			new ParticipationRateLinear (
-				dblEpsilon,
-				dblEta
-			)
+			prlPermanent,
+			prlTemporary
 		);
 
 		AC2000TrajectorySchemeWithDrift acts = AC2000TrajectorySchemeWithDrift.Standard (
@@ -188,7 +180,7 @@ public class OptimalTrajectoryWithDrift {
 
 		System.out.println ("\t| Daily Volume Permanent Impact : " + dblDailyVolumePermanentImpact);
 
-		System.out.println ("\t| Daily Volume 5 million Shares : " + dblGamma);
+		System.out.println ("\t| Daily Volume 5 million Shares : " + prlPermanent.slope());
 
 		System.out.println ("\t| Static Holdings 11,000 Shares : " + dblLambdaU);
 
@@ -204,11 +196,11 @@ public class OptimalTrajectoryWithDrift {
 			FormatUtil.FormatDouble (dblAlpha, 1, 4, 1.)
 		);
 
-		System.out.println ("\t| Temporary Impact Fixed Offset :  " + dblEpsilon);
+		System.out.println ("\t| Temporary Impact Fixed Offset :  " + prlTemporary.offset());
 
-		System.out.println ("\t| Eta                           :  " + dblEta);
+		System.out.println ("\t| Eta                           :  " + prlTemporary.slope());
 
-		System.out.println ("\t| Gamma                         :  " + dblGamma);
+		System.out.println ("\t| Gamma                         :  " + prlPermanent.slope());
 
 		System.out.println ("\t|---------------------------------------------||");
 

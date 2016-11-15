@@ -68,7 +68,6 @@ public class ContinuousTrajectoryConvexImpact {
 		double dblS0 = 50.;
 		double dblDailyVolume = 1000000.;
 		double dblBidAskSpread = 0.;
-		double dblPermanentImpactFactor = 0.1;
 		double dblTemporaryImpactFactor = 0.01;
 		double dblK = 2.0;
 		double dblGamma = 0.;
@@ -102,7 +101,6 @@ public class ContinuousTrajectoryConvexImpact {
 				dblDailyVolume,
 				dblBidAskSpread
 			),
-			dblPermanentImpactFactor,
 			dblTemporaryImpactFactor,
 			dblDailyVolumeExecutionFactor,
 			dblK
@@ -116,10 +114,7 @@ public class ContinuousTrajectoryConvexImpact {
 				0.,
 				dblGamma
 			),
-			new ParticipationRatePower (
-				apim.temporaryImpactConstant(),
-				dblK
-			)
+			(ParticipationRatePower) apim.temporaryTransactionFunction()
 		);
 
 		System.out.println ("\n\t|-------------------------------------------||");

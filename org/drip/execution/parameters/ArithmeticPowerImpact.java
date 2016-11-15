@@ -49,16 +49,16 @@ package org.drip.execution.parameters;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ArithmeticPowerImpact extends org.drip.execution.parameters.ArithmeticLinearImpact {
+public class ArithmeticPowerImpact {
+	private double _dblTemporaryImpactFactor = java.lang.Double.NaN;
 	private double _dblTemporaryImpactExponent = java.lang.Double.NaN;
 	private double _dblDailyVolumeExecutionFactor = java.lang.Double.NaN;
+	private org.drip.execution.parameters.AssetTransactionSettings _ats = null;
 
 	/**
 	 * ArithmeticPowerImpact Constructor
 	 * 
 	 * @param ats The Asset Transaction Settings Instance
-	 * @param dblPermanentImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
-	 *  Permanent Impact Cost
 	 * @param dblTemporaryImpactFactor The Fraction of the Daily Volume that triggers One Bid-Ask of
 	 *  Temporary Impact Cost
 	 * @param dblDailyVolumeExecutionFactor The Daily Reference Execution Rate as a Proportion of the Daily
@@ -70,19 +70,40 @@ public class ArithmeticPowerImpact extends org.drip.execution.parameters.Arithme
 
 	public ArithmeticPowerImpact (
 		final org.drip.execution.parameters.AssetTransactionSettings ats,
-		final double dblPermanentImpactFactor,
 		final double dblTemporaryImpactFactor,
 		final double dblDailyVolumeExecutionFactor,
 		final double dblTemporaryImpactExponent)
 		throws java.lang.Exception
 	{
-		super (ats, dblPermanentImpactFactor, dblTemporaryImpactFactor);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDailyVolumeExecutionFactor =
-			dblDailyVolumeExecutionFactor) || 0. >= _dblDailyVolumeExecutionFactor ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactExponent =
-					dblTemporaryImpactExponent) || 0. >= _dblTemporaryImpactExponent)
+		if (null == (_ats = ats) || !org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactFactor =
+			dblTemporaryImpactFactor) || 0. >= _dblTemporaryImpactFactor ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblDailyVolumeExecutionFactor =
+					dblDailyVolumeExecutionFactor) || 0. >= _dblDailyVolumeExecutionFactor ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpactExponent =
+							dblTemporaryImpactExponent))
 			throw new java.lang.Exception ("ArithmeticPowerImpact Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the AssetTransactionSettings Instance
+	 * 
+	 * @return The AssetTransactionSettings Instance
+	 */
+
+	public org.drip.execution.parameters.AssetTransactionSettings ats()
+	{
+		return _ats;
+	}
+
+	/**
+	 * Retrieve the Fraction of the Daily Volume that triggers One Bid-Ask of Temporary Impact Cost
+	 * 
+	 * @return The Fraction of the Daily Volume that triggers One Bid-Ask of Temporary Impact Cost
+	 */
+
+	public double temporaryImpactFactor()
+	{
+		return _dblTemporaryImpactFactor;
 	}
 
 	/**
@@ -97,27 +118,39 @@ public class ArithmeticPowerImpact extends org.drip.execution.parameters.Arithme
 	}
 
 	/**
-	 * Retrieve the Temporary Impact Constant
+	 * Generate the Permanent Impact Transaction Function
 	 * 
-	 * @return The Temporary Impact Constant
+	 * @return The Permanent Impact Transaction Function
 	 */
 
-	public double temporaryImpactConstant()
+	public org.drip.execution.impact.TransactionFunction permanentTransactionFunction()
 	{
-		org.drip.execution.parameters.AssetTransactionSettings ats = ats();
+		try {
+			return new org.drip.execution.impact.ParticipationRateLinear (0., 0.);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
 
-		return ats.price() * temporaryImpactFactor() / java.lang.Math.pow (ats.participationVolume() *
-			_dblDailyVolumeExecutionFactor, _dblTemporaryImpactExponent);
+		return null;
 	}
 
 	/**
-	 * Retrieve the Temporary Impact Power Exponent
+	 * Generate the Temporary Impact Transaction Function
 	 * 
-	 * @return The Temporary Impact Power Exponent
+	 * @return The Temporary Impact Transaction Function
 	 */
 
-	public double temporaryImpactExponent()
+	public org.drip.execution.impact.TransactionFunction temporaryTransactionFunction()
 	{
-		return _dblTemporaryImpactExponent;
+		try {
+			return new org.drip.execution.impact.ParticipationRatePower (_ats.price() *
+				_dblTemporaryImpactFactor / java.lang.Math.pow (_ats.backgroundVolume() *
+					_dblDailyVolumeExecutionFactor, _dblTemporaryImpactExponent),
+						_dblTemporaryImpactExponent);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

@@ -139,39 +139,44 @@ public class ArithmeticLinearImpact {
 	}
 
 	/**
-	 * Retrieve the Permanent Impact Market Parameter Slope
+	 * Generate the Permanent Impact Transaction Function
 	 * 
-	 * @return The Permanent Impact Market Parameter Slope
+	 * @return The Permanent Impact Transaction Function
 	 */
 
-	public double permanentSlope()
+	public org.drip.execution.impact.TransactionFunction permanentTransactionFunction()
 	{
 		org.drip.execution.parameters.AssetTransactionSettings ats = ats();
 
-		return ats.bidAskSpread() / (_dblPermanentImpactFactor * ats.participationVolume());
+		try {
+			return new org.drip.execution.impact.ParticipationRateLinear (0., ats.bidAskSpread() /
+				(_dblPermanentImpactFactor * ats.backgroundVolume()));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**
-	 * Retrieve the Temporary Impact Market Parameter Offset
+	 * Generate the Temporary Impact Transaction Function
 	 * 
-	 * @return The Temporary Impact Market Parameter Offset
+	 * @return The Temporary Impact Transaction Function
 	 */
 
-	public double temporaryOffset()
-	{
-		return 0.5 * ats().bidAskSpread();
-	}
-
-	/**
-	 * Retrieve the Temporary Impact Market Parameter Slope
-	 * 
-	 * @return The Temporary Impact Market Parameter Slope
-	 */
-
-	public double temporarySlope()
+	public org.drip.execution.impact.TransactionFunction temporaryTransactionFunction()
 	{
 		org.drip.execution.parameters.AssetTransactionSettings ats = ats();
 
-		return ats.bidAskSpread() / (_dblTemporaryImpactFactor * ats.participationVolume());
+		double dblBidAskSpread = ats.bidAskSpread();
+
+		try {
+			return new org.drip.execution.impact.ParticipationRateLinear (0.5 * dblBidAskSpread,
+				dblBidAskSpread / (_dblTemporaryImpactFactor * ats.backgroundVolume()));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

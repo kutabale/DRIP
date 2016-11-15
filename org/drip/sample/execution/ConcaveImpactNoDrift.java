@@ -70,7 +70,6 @@ public class ConcaveImpactNoDrift {
 		double dblS0 = 50.;
 		double dblDailyVolume = 1000000.;
 		double dblBidAskSpread = 0.;
-		double dblPermanentImpactFactor = 0.1;
 		double dblTemporaryImpactFactor = 0.01;
 		double dblK = 0.5;
 		double dblDailyVolumeExecutionFactor = 0.1;
@@ -87,7 +86,6 @@ public class ConcaveImpactNoDrift {
 				dblDailyVolume,
 				dblBidAskSpread
 			),
-			dblPermanentImpactFactor,
 			dblTemporaryImpactFactor,
 			dblDailyVolumeExecutionFactor,
 			dblK
@@ -101,10 +99,7 @@ public class ConcaveImpactNoDrift {
 				0.,
 				0.
 			),
-			new ParticipationRatePower (
-				apim.temporaryImpactConstant(),
-				dblK
-			)
+			(ParticipationRatePower) apim.temporaryTransactionFunction()
 		);
 
 		TradingTrajectoryControl ttc = TradingTrajectoryControl.FixedInterval (

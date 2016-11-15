@@ -53,13 +53,13 @@ package org.drip.execution.parameters;
 public class AssetTransactionSettings {
 	private double _dblPrice = java.lang.Double.NaN;
 	private double _dblBidAskSpread = java.lang.Double.NaN;
-	private double _dblParticipationVolume = java.lang.Double.NaN;
+	private double _dblBackgroundVolume = java.lang.Double.NaN;
 
 	/**
 	 * AssetTransactionSettings Constructor
 	 * 
 	 * @param dblPrice The Asset Price
-	 * @param dblParticipationVolume The Participation Volume
+	 * @param dblBackgroundVolume The Background Volume
 	 * @param dblBidAskSpread The Bid-Ask Spread
 	 *  
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -67,14 +67,14 @@ public class AssetTransactionSettings {
 
 	public AssetTransactionSettings (
 		final double dblPrice,
-		final double dblParticipationVolume,
+		final double dblBackgroundVolume,
 		final double dblBidAskSpread)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblPrice = dblPrice) || 0. >= _dblPrice ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblParticipationVolume = dblParticipationVolume) ||
-				0. >= _dblParticipationVolume || !org.drip.quant.common.NumberUtil.IsValid (_dblBidAskSpread
-					= dblBidAskSpread))
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBackgroundVolume = dblBackgroundVolume) || 0. >=
+				_dblBackgroundVolume || !org.drip.quant.common.NumberUtil.IsValid (_dblBidAskSpread =
+					dblBidAskSpread))
 			throw new java.lang.Exception ("AssetTransactionSettings Constructor => Invalid Inputs");
 	}
 
@@ -101,13 +101,13 @@ public class AssetTransactionSettings {
 	}
 
 	/**
-	 * Retrieve the Participation Volume
+	 * Retrieve the Background Volume
 	 * 
-	 * @return The Participation Volume
+	 * @return The Background Volume
 	 */
 
-	public double participationVolume()
+	public double backgroundVolume()
 	{
-		return _dblParticipationVolume;
+		return _dblBackgroundVolume;
 	}
 }

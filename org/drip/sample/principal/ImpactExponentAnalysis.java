@@ -3,11 +3,9 @@ package org.drip.sample.principal;
 
 import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
-import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.execution.impact.ParticipationRatePower;
+import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
-import org.drip.execution.parameters.ArithmeticPowerImpact;
-import org.drip.execution.parameters.AssetTransactionSettings;
+import org.drip.execution.parameters.*;
 import org.drip.execution.principal.Almgren2003Estimator;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -71,7 +69,6 @@ public class ImpactExponentAnalysis {
 		double dblVolatility = 1.;
 		double dblDailyVolume = 1000000.;
 		double dblDailyVolumeExecutionFactor = 0.1;
-		double dblPermanentImpactFactor = 0.1;
 		double dblTemporaryImpactFactor = 0.01;
 		double dblT = 5.;
 		int iNumInterval = 20;
@@ -139,7 +136,6 @@ public class ImpactExponentAnalysis {
 					dblDailyVolume,
 					0.
 				),
-				dblPermanentImpactFactor,
 				dblTemporaryImpactFactor,
 				dblDailyVolumeExecutionFactor,
 				dblK
@@ -149,14 +145,8 @@ public class ImpactExponentAnalysis {
 				0.,
 				dblVolatility,
 				0.,
-				new ParticipationRateLinear (
-					0.,
-					0.
-				),
-				new ParticipationRatePower (
-					apim.temporaryImpactConstant(),
-					dblK
-				)
+				(ParticipationRateLinear) apim.permanentTransactionFunction(),
+				(ParticipationRatePower) apim.temporaryTransactionFunction()
 			);
 
 			Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
