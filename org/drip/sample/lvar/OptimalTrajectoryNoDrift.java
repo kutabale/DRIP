@@ -7,6 +7,7 @@ import org.drip.execution.generator.OptimalTrajectoryScheme;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimizer.PowerVarianceObjectiveUtility;
 import org.drip.execution.optimum.EfficientTradingTrajectory;
+import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.execution.strategy.*;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
@@ -92,9 +93,11 @@ public class OptimalTrajectoryNoDrift {
 		);
 
 		LinearExpectationParameters lipe = new LinearExpectationParameters (
-			0.00,
-			dblSigma,
-			0.,
+			new ArithmeticPriceDynamicsSettings (
+				0.,
+				dblSigma,
+				0.
+			),
 			new ParticipationRateLinear (
 				0.,
 				dblGamma

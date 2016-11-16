@@ -82,7 +82,7 @@ public class LinearImpactNoDrift {
 		double dblDailyVolumeTemporaryImpact = 0.01;
 		double dblLambdaU = 1.e-06;
 
-		AssetDynamicsSettings amc = AssetDynamicsSettings.FromAnnualReturnsSettings (
+		ArithmeticPriceDynamicsSettings amc = ArithmeticPriceDynamicsSettings.FromAnnualReturnsSettings (
 			dblAnnualReturns,
 			dblAnnualVolatility,
 			0.,
@@ -116,9 +116,11 @@ public class LinearImpactNoDrift {
 		);
 
 		LinearExpectationParameters lipe = new LinearExpectationParameters (
-			0.00,
-			dblSigma,
-			0.,
+			new ArithmeticPriceDynamicsSettings (
+				dblAlpha,
+				dblSigma,
+				0.
+			),
 			prlPermanent,
 			prlTemporary
 		);

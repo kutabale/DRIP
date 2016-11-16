@@ -119,9 +119,11 @@ public class OptimalMeasuresReconciler {
 			);
 
 			Almgren2003Parameters a2003p = new Almgren2003Parameters (
-				dblDrift,
-				dblVolatility,
-				dblSerialCorrelation,
+				new ArithmeticPriceDynamicsSettings (
+					dblDrift,
+					dblVolatility,
+					dblSerialCorrelation
+				),
 				(ParticipationRateLinear) apim.permanentTransactionFunction(),
 				(ParticipationRatePower) apim.temporaryTransactionFunction()
 			);
@@ -189,9 +191,11 @@ public class OptimalMeasuresReconciler {
 			);
 
 			Almgren2003Parameters a2003p = new Almgren2003Parameters (
-				dblDrift,
-				dblVolatility,
-				dblSerialCorrelation,
+				new ArithmeticPriceDynamicsSettings (
+					dblDrift,
+					dblVolatility,
+					dblSerialCorrelation
+				),
 				(ParticipationRateLinear) apim.permanentTransactionFunction(),
 				(ParticipationRatePower) apim.temporaryTransactionFunction()
 			);

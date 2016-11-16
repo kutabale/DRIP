@@ -5,6 +5,7 @@ import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
+import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -110,9 +111,11 @@ public class PowerLawOptimalTrajectory {
 			double dblEta = dblHRef / java.lang.Math.pow (dblVRef, adblK[i]);
 
 			Almgren2003Parameters a2003pe = new Almgren2003Parameters (
-				dblDrift,
-				dblVolatility,
-				dblSerialCorrelation,
+				new ArithmeticPriceDynamicsSettings (
+					dblDrift,
+					dblVolatility,
+					dblSerialCorrelation
+				),
 				new ParticipationRateLinear (
 					0.,
 					dblGamma

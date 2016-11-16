@@ -51,9 +51,7 @@ package org.drip.execution.dynamics;
  */
 
 public class ArithmeticPriceEvolutionParameters {
-	private double _dblMarketCoreDrift = java.lang.Double.NaN;
-	private double _dblMarketCoreVolatility = java.lang.Double.NaN;
-	private double _dblMarketCoreSerialCorrelation = java.lang.Double.NaN;
+	private org.drip.execution.parameters.ArithmeticPriceDynamicsSettings _apds = null;
 	private org.drip.execution.impact.TransactionFunction _tfPermanentVolatility = null;
 	private org.drip.execution.impact.TransactionFunction _tfTemporaryVolatility = null;
 	private org.drip.execution.impact.TransactionFunction _tfPermanentExpectation = null;
@@ -62,9 +60,7 @@ public class ArithmeticPriceEvolutionParameters {
 	/**
 	 * ArithmeticPriceEvolutionParameters Constructor
 	 * 
-	 * @param dblMarketCoreDrift The Market Core Drift
-	 * @param dblMarketCoreVolatility The Market Core Volatility
-	 * @param dblMarketCoreSerialCorrelation The Market Core Serial Correlation
+	 * @param apds The Asset Price Dynamics Settings
 	 * @param tfPermanentExpectation The Permanent Market Impact Expectation Function
 	 * @param tfTemporaryExpectation The Temporary Market Impact Expectation Function
 	 * @param tfPermanentVolatility The Permanent Market Impact Volatility Function
@@ -74,59 +70,29 @@ public class ArithmeticPriceEvolutionParameters {
 	 */
 
 	public ArithmeticPriceEvolutionParameters (
-		final double dblMarketCoreDrift,
-		final double dblMarketCoreVolatility,
-		final double dblMarketCoreSerialCorrelation,
+		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
 		final org.drip.execution.impact.TransactionFunction tfPermanentExpectation,
 		final org.drip.execution.impact.TransactionFunction tfTemporaryExpectation,
 		final org.drip.execution.impact.TransactionFunction tfPermanentVolatility,
 		final org.drip.execution.impact.TransactionFunction tfTemporaryVolatility)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMarketCoreDrift = dblMarketCoreDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblMarketCoreVolatility = dblMarketCoreVolatility) ||
-				0. >= _dblMarketCoreVolatility || !org.drip.quant.common.NumberUtil.IsValid
-					(_dblMarketCoreSerialCorrelation = dblMarketCoreSerialCorrelation) || 1. <
-						_dblMarketCoreSerialCorrelation || -1. > _dblMarketCoreSerialCorrelation || null ==
-							(_tfPermanentExpectation = tfPermanentExpectation) || null ==
-								(_tfTemporaryExpectation = tfTemporaryExpectation) || null ==
-									(_tfPermanentVolatility = tfPermanentVolatility) || null ==
-										(_tfTemporaryVolatility = tfTemporaryVolatility))
+		if (null == (_apds = apds) || null == (_tfPermanentExpectation = tfPermanentExpectation) || null ==
+			(_tfTemporaryExpectation = tfTemporaryExpectation) || null == (_tfPermanentVolatility =
+				tfPermanentVolatility) || null == (_tfTemporaryVolatility = tfTemporaryVolatility))
 			throw new java.lang.Exception
 				("ArithmeticPriceEvolutionParameters Constructor => Invalid Inputs!");
 	}
 
 	/**
-	 * Retrieve the Market Core Drift of the Arithmetic Dynamics
+	 * Retrieve the Arithmetic Price Dynamics Settings Instance
 	 * 
-	 * @return The Market Core Drift of the Arithmetic Dynamics
+	 * @return The Arithmetic Price Dynamics Settings Instance
 	 */
 
-	public double marketCoreDrift()
+	public org.drip.execution.parameters.ArithmeticPriceDynamicsSettings arithmeticPriceDynamicsSettings()
 	{
-		return _dblMarketCoreDrift;
-	}
-
-	/**
-	 * Retrieve the Market Core Volatility of the Arithmetic Dynamics
-	 * 
-	 * @return The Market Core Volatility of the Arithmetic Dynamics
-	 */
-
-	public double marketCoreVolatility()
-	{
-		return _dblMarketCoreVolatility;
-	}
-
-	/**
-	 * Retrieve the Market Core Serial Correlation
-	 *  
-	 * @return The Market Core Serial Correlation
-	 */
-
-	public double marketCoreSerialCorrelation()
-	{
-		return _dblMarketCoreSerialCorrelation;
+		return _apds;
 	}
 
 	/**

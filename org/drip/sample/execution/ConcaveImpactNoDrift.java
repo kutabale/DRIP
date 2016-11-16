@@ -94,9 +94,11 @@ public class ConcaveImpactNoDrift {
 		);
 
 		Almgren2003Parameters a2003pe = new Almgren2003Parameters (
-			dblDrift,
-			dblVolatility,
-			0.,
+			new ArithmeticPriceDynamicsSettings (
+				dblDrift,
+				dblVolatility,
+				0.
+			),
 			(ParticipationRateLinear) apim.permanentTransactionFunction(),
 			(ParticipationRatePower) apim.temporaryTransactionFunction()
 		);

@@ -97,25 +97,25 @@ public interface ControlNodesGreekGenerator {
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep);
 
 	/**
-	 * Generate the Market Core Expectation Contribution
+	 * Generate the Market Dynamics Expectation Contribution
 	 * 
 	 * @param apep The Arithmetic Price Walk Evolution Parameters
 	 * 
-	 * @return The Market Core Expectation Contribution
+	 * @return The Market Dynamics Expectation Contribution
 	 */
 
-	public abstract org.drip.execution.sensitivity.ControlNodesGreek marketCoreExpectation (
+	public abstract org.drip.execution.sensitivity.ControlNodesGreek marketDynamicsExpectation (
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep);
 
 	/**
-	 * Generate the Market Core Variance Contribution
+	 * Generate the Market Dynamics Variance Contribution
 	 * 
 	 * @param apep The Arithmetic Price Walk Evolution Parameters
 	 * 
-	 * @return The Market Core Variance Contribution
+	 * @return The Market Dynamics Variance Contribution
 	 */
 
-	public abstract org.drip.execution.sensitivity.ControlNodesGreek marketCoreVariance (
+	public abstract org.drip.execution.sensitivity.ControlNodesGreek marketDynamicsVariance (
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep);
 
 	/**

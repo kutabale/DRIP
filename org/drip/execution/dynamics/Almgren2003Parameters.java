@@ -53,9 +53,7 @@ public class Almgren2003Parameters extends org.drip.execution.dynamics.LinearPer
 	/**
 	 * Almgren2003Parameters Constructor
 	 * 
-	 * @param dblMarketCoreDrift The Market Core Drift
-	 * @param dblMarketCoreVolatility The Market Core Volatility
-	 * @param dblMarketCoreSerialCorrelation The Market Core Serial Correlation
+	 * @param apds The Asset Price Dynamics Settings
 	 * @param tflPermanent The Linear Permanent Market Impact Expectation Function
 	 * @param tfpTemporary The Power Temporary Market Impact Expectation Function
 	 * 
@@ -63,15 +61,12 @@ public class Almgren2003Parameters extends org.drip.execution.dynamics.LinearPer
 	 */
 
 	public Almgren2003Parameters (
-		final double dblMarketCoreDrift,
-		final double dblMarketCoreVolatility,
-		final double dblMarketCoreSerialCorrelation,
+		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
 		final org.drip.execution.impact.TransactionFunctionLinear tflPermanent,
 		final org.drip.execution.impact.TransactionFunctionPower tfpTemporary)
 		throws java.lang.Exception
 	{
-		super (dblMarketCoreDrift, dblMarketCoreVolatility, dblMarketCoreSerialCorrelation, tflPermanent,
-			tfpTemporary);
+		super (apds, tflPermanent, tfpTemporary);
 	}
 
 	/**

@@ -108,7 +108,7 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 
 		final double dblX = ttc.startHoldings();
 
-		double dblSigma = tevp.marketCoreVolatility();
+		double dblSigma = tevp.arithmeticPriceDynamicsSettings().volatility();
 
 		final double dblTStar = java.lang.Math.sqrt ((dblEta + dblLambda * dblAlpha * dblAlpha) / (dblLambda
 			* dblSigma * dblSigma));

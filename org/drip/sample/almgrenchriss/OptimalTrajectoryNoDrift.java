@@ -80,7 +80,7 @@ public class OptimalTrajectoryNoDrift {
 		double dblDailyVolumeTemporaryImpact = 0.01;
 		double dblLambdaU = 1.e-06;
 
-		AssetDynamicsSettings amc = AssetDynamicsSettings.FromAnnualReturnsSettings (
+		ArithmeticPriceDynamicsSettings amc = ArithmeticPriceDynamicsSettings.FromAnnualReturnsSettings (
 			dblAnnualReturns,
 			dblAnnualVolatility,
 			0.,
@@ -106,9 +106,11 @@ public class OptimalTrajectoryNoDrift {
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) ami.temporaryTransactionFunction();
 
 		LinearExpectationParameters lipe = new LinearExpectationParameters (
-			0.,
-			dblSigma,
-			0.,
+			new ArithmeticPriceDynamicsSettings (
+				0.,
+				dblSigma,
+				0.
+			),
 			prlPermanent,
 			prlTemporary
 		);

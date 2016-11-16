@@ -54,9 +54,7 @@ public class LinearPermanentExpectationParameters extends
 	/**
 	 * LinearPermanentExpectationParameters Constructor
 	 * 
-	 * @param dblMarketCoreDrift The Market Core Drift
-	 * @param dblMarketCoreVolatility The Market Core Volatility
-	 * @param dblMarketCoreSerialCorrelation The Market Core Serial Correlation
+	 * @param apds The Asset Price Dynamics Settings
 	 * @param tflPermanentExpectation The Linear Permanent Expectation Market Impact Function
 	 * @param tfTemporaryExpectation The Temporary Expectation Market Impact Function
 	 * 
@@ -64,17 +62,14 @@ public class LinearPermanentExpectationParameters extends
 	 */
 
 	public LinearPermanentExpectationParameters (
-		final double dblMarketCoreDrift,
-		final double dblMarketCoreVolatility,
-		final double dblMarketCoreSerialCorrelation,
+		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
 		final org.drip.execution.impact.TransactionFunctionLinear tflPermanentExpectation,
 		final org.drip.execution.impact.TransactionFunction tfTemporaryExpectation)
 		throws java.lang.Exception
 	{
-		super (dblMarketCoreDrift, dblMarketCoreVolatility, dblMarketCoreSerialCorrelation,
-			tflPermanentExpectation, tfTemporaryExpectation,
-				org.drip.execution.impact.ParticipationRateLinear.NoImpact(),
-					org.drip.execution.impact.ParticipationRateLinear.NoImpact());
+		super (apds, tflPermanentExpectation, tfTemporaryExpectation,
+			org.drip.execution.impact.ParticipationRateLinear.NoImpact(),
+				org.drip.execution.impact.ParticipationRateLinear.NoImpact());
 	}
 
 	/**

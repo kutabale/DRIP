@@ -50,16 +50,16 @@ package org.drip.execution.evolution;
  */
 
 public class MarketImpactComponent {
+	private double _dblCurrentStep = java.lang.Double.NaN;
+	private double _dblPreviousStep = java.lang.Double.NaN;
 	private double _dblPermanentImpact = java.lang.Double.NaN;
 	private double _dblTemporaryImpact = java.lang.Double.NaN;
-	private double _dblCurrentStepMarketCore = java.lang.Double.NaN;
-	private double _dblPreviousStepMarketCore = java.lang.Double.NaN;
 
 	/**
 	 * MarketImpactComponent Constructor
 	 * 
-	 * @param dblCurrentStepMarketCore The Current Step Core Market Volatility Component Contribution
-	 * @param dblPreviousStepMarketCore The Previous Step Core Market Volatility Component Contribution
+	 * @param dblCurrentStep The Current Step Volatility Component Contribution
+	 * @param dblPreviousStep The Previous Step Volatility Component Contribution
 	 * @param dblPermanentImpact The Permanent Market Impact Contribution
 	 * @param dblTemporaryImpact The Temporary Market Impact Contribution
 	 * 
@@ -67,40 +67,39 @@ public class MarketImpactComponent {
 	 */
 
 	public MarketImpactComponent (
-		final double dblCurrentStepMarketCore,
-		final double dblPreviousStepMarketCore,
+		final double dblCurrentStep,
+		final double dblPreviousStep,
 		final double dblPermanentImpact,
 		final double dblTemporaryImpact)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCurrentStepMarketCore = dblCurrentStepMarketCore)
-			|| !org.drip.quant.common.NumberUtil.IsValid (_dblPreviousStepMarketCore =
-				dblPreviousStepMarketCore) || !org.drip.quant.common.NumberUtil.IsValid (_dblPermanentImpact
-					= dblPermanentImpact) || !org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpact =
-						dblTemporaryImpact))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCurrentStep = dblCurrentStep) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblPreviousStep = dblPreviousStep) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblPermanentImpact = dblPermanentImpact) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpact = dblTemporaryImpact))
 			throw new java.lang.Exception ("MarketImpactComponent Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Previous Step Market Core Contribution
+	 * Retrieve the Previous Step Contribution
 	 * 
-	 * @return The Previous Step Market Core Contribution
+	 * @return The Previous Step Contribution
 	 */
 
-	public double previousStepMarketCore()
+	public double previousStep()
 	{
-		return _dblPreviousStepMarketCore;
+		return _dblPreviousStep;
 	}
 
 	/**
-	 * Retrieve the Current Step Market Core Contribution
+	 * Retrieve the Current Step Contribution
 	 * 
-	 * @return The Current Step Market Core Contribution
+	 * @return The Current Step Contribution
 	 */
 
-	public double currentStepMarketCore()
+	public double currentStep()
 	{
-		return _dblCurrentStepMarketCore;
+		return _dblCurrentStep;
 	}
 
 	/**
@@ -133,6 +132,6 @@ public class MarketImpactComponent {
 
 	public double total()
 	{
-		return previousStepMarketCore() + currentStepMarketCore() + permanentImpact() + temporaryImpact();
+		return previousStep() + currentStep() + permanentImpact() + temporaryImpact();
 	}
 }

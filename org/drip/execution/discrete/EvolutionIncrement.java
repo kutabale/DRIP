@@ -70,29 +70,29 @@ public class EvolutionIncrement extends org.drip.execution.evolution.MarketImpac
 	}
 
 	/**
-	 * Retrieve the Change induced by Deterministic Asset Price Market Core Drivers
+	 * Retrieve the Change induced by Deterministic Asset Price Market Dynamic Drivers
 	 * 
-	 * @return The Change induced by Deterministic Asset Price Market Core Drivers
+	 * @return The Change induced by Deterministic Asset Price Market Dynamic Drivers
 	 */
 
-	public double marketCoreDrift()
+	public double marketDynamicDrift()
 	{
 		org.drip.execution.evolution.MarketImpactComponent micDeterministic = deterministic();
 
-		return micDeterministic.previousStepMarketCore() + micDeterministic.currentStepMarketCore();
+		return micDeterministic.previousStep() + micDeterministic.currentStep();
 	}
 
 	/**
-	 * Retrieve the Change induced by Stochastic Asset Price Market Core Drivers
+	 * Retrieve the Change induced by Stochastic Asset Price Market Dynamic Drivers
 	 * 
-	 * @return The Change induced by Stochastic Asset Price Market Core Drivers
+	 * @return The Change induced by Stochastic Asset Price Market Dynamic Drivers
 	 */
 
-	public double marketCoreWander()
+	public double marketDynamicWander()
 	{
 		org.drip.execution.evolution.MarketImpactComponent micStochastic = stochastic();
 
-		return micStochastic.previousStepMarketCore() + micStochastic.currentStepMarketCore();
+		return micStochastic.previousStep() + micStochastic.currentStep();
 	}
 
 	/**

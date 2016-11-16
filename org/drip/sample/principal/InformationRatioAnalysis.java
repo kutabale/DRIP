@@ -125,9 +125,11 @@ public class InformationRatioAnalysis {
 		);
 
 		Almgren2003Parameters a2003p = new Almgren2003Parameters (
-			0.,
-			dblVolatility,
-			0.,
+			new ArithmeticPriceDynamicsSettings (
+				0.,
+				dblVolatility,
+				0.
+			),
 			(ParticipationRateLinear) apim.permanentTransactionFunction(),
 			(ParticipationRatePower) apim.temporaryTransactionFunction()
 		);

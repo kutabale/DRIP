@@ -88,9 +88,12 @@ public class LinearImpactTrajectoryEstimator extends org.drip.execution.capture.
 
 		double[] adblExecutionTimeNode = tt.executionTimeNode();
 
-		double dblMarketCoreVolatility = lep.marketCoreVolatility();
+		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
+			lep.arithmeticPriceDynamicsSettings();
 
-		double dblMarketCoreDrift = lep.marketCoreDrift();
+		double dblMarketCoreVolatility = apds.volatility();
+
+		double dblMarketCoreDrift = apds.drift();
 
 		double[] adblHoldings = tt.holdings();
 

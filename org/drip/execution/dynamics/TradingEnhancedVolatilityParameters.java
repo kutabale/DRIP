@@ -54,7 +54,7 @@ public class TradingEnhancedVolatilityParameters extends
 	/**
 	 * TradingEnhancedVolatilityParameters Constructor
 	 * 
-	 * @param dblMarketCoreVolatility Market Core Volatility Parameter
+	 * @param dblPriceVolatility The Daily Price Volatility Parameter
 	 * @param tflTemporaryExpectation The Linear Temporary Market Impact Expectation Function
 	 * @param tflTemporaryVolatility The Linear Temporary Market Impact Volatility Function
 	 * 
@@ -62,14 +62,14 @@ public class TradingEnhancedVolatilityParameters extends
 	 */
 
 	public TradingEnhancedVolatilityParameters (
-		final double dblMarketCoreVolatility,
+		final double dblPriceVolatility,
 		final org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation,
 		final org.drip.execution.impact.TransactionFunctionLinear tflTemporaryVolatility)
 		throws java.lang.Exception
 	{
-		super (0., dblMarketCoreVolatility, 0., org.drip.execution.impact.ParticipationRateLinear.NoImpact(),
-			tflTemporaryExpectation, org.drip.execution.impact.ParticipationRateLinear.NoImpact(),
-				tflTemporaryVolatility);
+		super (new org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., dblPriceVolatility,
+			0.), org.drip.execution.impact.ParticipationRateLinear.NoImpact(), tflTemporaryExpectation,
+				org.drip.execution.impact.ParticipationRateLinear.NoImpact(), tflTemporaryVolatility);
 	}
 
 	/**

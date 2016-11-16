@@ -109,9 +109,11 @@ public class ContinuousTrajectoryConcaveImpact {
 		);
 
 		Almgren2003Parameters a2003pe = new Almgren2003Parameters (
-			dblDrift,
-			dblVolatility,
-			dblSerialCorrelation,
+			new ArithmeticPriceDynamicsSettings (
+				dblDrift,
+				dblVolatility,
+				dblSerialCorrelation
+			),
 			new ParticipationRateLinear (
 				0.,
 				dblGamma

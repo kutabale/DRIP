@@ -91,7 +91,7 @@ public class LinearImpactUniformTrajectoryEstimator extends
 
 		double dblBlockSizeSquared = dblBlockSize * dblBlockSize;
 
-		double dblMarketCoreVolatility = lep.marketCoreVolatility();
+		double dblMarketCoreVolatility = apep.arithmeticPriceDynamicsSettings().volatility();
 
 		try {
 			return new org.drip.measure.gaussian.R1UnivariateNormal (0.5 * dblPermanentLinearImpactParameter

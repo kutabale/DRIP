@@ -87,9 +87,10 @@ public class DynamicsParameters {
 	public org.drip.execution.dynamics.Almgren2003Parameters almgren2003()
 	{
 		try {
-			return new org.drip.execution.dynamics.Almgren2003Parameters (0., _afp.dailyVolatility(), 0., new
-				org.drip.execution.athl.PermanentImpactNoArbitrage (_afp), new
-					org.drip.execution.athl.TemporaryImpact (_afp));
+			return new org.drip.execution.dynamics.Almgren2003Parameters (new
+				org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., _afp.dailyVolatility(),
+					0.), new org.drip.execution.athl.PermanentImpactNoArbitrage (_afp), new
+						org.drip.execution.athl.TemporaryImpact (_afp));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

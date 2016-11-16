@@ -78,16 +78,20 @@ public class ShortfallIncrement extends org.drip.execution.discrete.EvolutionInc
 		double dblCurrentHoldings = dblPreviousHoldings + dblHoldingsIncrement;
 
 		try {
+			org.drip.execution.evolution.MarketImpactComponent micStochastic = pi.stochastic();
+
+			org.drip.execution.evolution.MarketImpactComponent micDeterministic = pi.deterministic();
+
 			return new ShortfallIncrement (
 				new org.drip.execution.evolution.MarketImpactComponent (
-					pi.deterministic().currentStepMarketCore() * dblCurrentHoldings,
-					pi.deterministic().previousStepMarketCore() * dblCurrentHoldings,
+					micDeterministic.currentStep() * dblCurrentHoldings,
+					micDeterministic.previousStep() * dblCurrentHoldings,
 					pi.permanentImpactDrift() * dblCurrentHoldings,
 					pi.temporaryImpactDrift() * dblHoldingsIncrement
 				),
 				new org.drip.execution.evolution.MarketImpactComponent (
-					pi.stochastic().currentStepMarketCore() * dblCurrentHoldings,
-					pi.stochastic().previousStepMarketCore() * dblCurrentHoldings,
+					micStochastic.currentStep() * dblCurrentHoldings,
+					micStochastic.previousStep() * dblCurrentHoldings,
 					pi.permanentImpactWander() * dblCurrentHoldings,
 					pi.temporaryImpactWander() * dblHoldingsIncrement
 				),

@@ -1,5 +1,5 @@
 
-package org.drip.execution.discrete;
+package org.drip.execution.dynamics;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -50,16 +50,16 @@ package org.drip.execution.discrete;
  */
 
 public class WalkSuite {
+	private double _dblCurrent = java.lang.Double.NaN;
+	private double _dblPrevious = java.lang.Double.NaN;
 	private double _dblPermanentImpact = java.lang.Double.NaN;
 	private double _dblTemporaryImpact = java.lang.Double.NaN;
-	private double _dblMarketCoreCurrent = java.lang.Double.NaN;
-	private double _dblMarketCorePrevious = java.lang.Double.NaN;
 
 	/**
 	 * WalkSuite Constructor
 	 * 
-	 * @param dblMarketCorePrevious The Previous Market Core Walk Realization
-	 * @param dblMarketCoreCurrent The Current Market Core Walk Realization
+	 * @param dblPrevious The Previous Walk Realization
+	 * @param dblCurrent The Current Walk Realization
 	 * @param dblPermanentImpact The Permanent Impact Walk Realization
 	 * @param dblTemporaryImpact The Temporary Impact Walk Realization
 	 * 
@@ -67,39 +67,39 @@ public class WalkSuite {
 	 */
 
 	public WalkSuite (
-		final double dblMarketCorePrevious,
-		final double dblMarketCoreCurrent,
+		final double dblPrevious,
+		final double dblCurrent,
 		final double dblPermanentImpact,
 		final double dblTemporaryImpact)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMarketCorePrevious = dblMarketCorePrevious) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblMarketCoreCurrent = dblMarketCoreCurrent) ||
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblPrevious = dblPrevious) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCurrent = dblCurrent) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblPermanentImpact = dblPermanentImpact) ||
 					!org.drip.quant.common.NumberUtil.IsValid (_dblTemporaryImpact = dblTemporaryImpact))
 			throw new java.lang.Exception ("WalkSuite Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Previous Instance of the Market Core Walk Wanderer
+	 * Retrieve the Previous Instance of the Walk Wanderer
 	 * 
-	 * @return The Previous Instance of the Market Core Walk Wanderer
+	 * @return The Previous Instance of the Walk Wanderer
 	 */
 
-	public double marketCorePreviousWanderer()
+	public double previousWanderer()
 	{
-		return _dblMarketCorePrevious;
+		return _dblPrevious;
 	}
 
 	/**
-	 * Retrieve the Current Instance of the Market Core Walk Wanderer
+	 * Retrieve the Current Instance of the Walk Wanderer
 	 * 
 	 * @return The Current Instance of the Market Core Walk Wanderer
 	 */
 
-	public double marketCoreCurrentWanderer()
+	public double currentWanderer()
 	{
-		return _dblMarketCoreCurrent;
+		return _dblCurrent;
 	}
 
 	/**

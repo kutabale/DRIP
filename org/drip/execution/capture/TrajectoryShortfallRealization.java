@@ -103,7 +103,7 @@ public class TrajectoryShortfallRealization {
 		double[] adblIncrementalMarketCoreDrift = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblIncrementalMarketCoreDrift[i] = _lsSI.get (i).marketCoreDrift();
+			adblIncrementalMarketCoreDrift[i] = _lsSI.get (i).marketDynamicDrift();
 
 		return adblIncrementalMarketCoreDrift;
 	}
@@ -121,8 +121,8 @@ public class TrajectoryShortfallRealization {
 		double[] adblCumulativeMarketCoreDrift = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblCumulativeMarketCoreDrift[i] = 0 == i ? _lsSI.get (i).marketCoreDrift() : _lsSI.get
-				(i).marketCoreDrift() + adblCumulativeMarketCoreDrift[i - 1];
+			adblCumulativeMarketCoreDrift[i] = 0 == i ? _lsSI.get (i).marketDynamicDrift() : _lsSI.get
+				(i).marketDynamicDrift() + adblCumulativeMarketCoreDrift[i - 1];
 
 		return adblCumulativeMarketCoreDrift;
 	}
@@ -140,7 +140,7 @@ public class TrajectoryShortfallRealization {
 		double dblTotalMarketCoreDrift = 0.;
 
 		for (int i = 0; i < iNumInterval; ++i)
-			dblTotalMarketCoreDrift = dblTotalMarketCoreDrift + _lsSI.get (i).marketCoreDrift();
+			dblTotalMarketCoreDrift = dblTotalMarketCoreDrift + _lsSI.get (i).marketDynamicDrift();
 
 		return dblTotalMarketCoreDrift;
 	}
@@ -158,7 +158,7 @@ public class TrajectoryShortfallRealization {
 		double[] adblIncrementalMarketCoreWander = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblIncrementalMarketCoreWander[i] = _lsSI.get (i).marketCoreWander();
+			adblIncrementalMarketCoreWander[i] = _lsSI.get (i).marketDynamicWander();
 
 		return adblIncrementalMarketCoreWander;
 	}
@@ -176,8 +176,8 @@ public class TrajectoryShortfallRealization {
 		double[] adblCumulativeMarketCoreWander = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblCumulativeMarketCoreWander[i] = 0 == i ? _lsSI.get (i).marketCoreWander() : _lsSI.get
-				(i).marketCoreWander() + adblCumulativeMarketCoreWander[i - 1];
+			adblCumulativeMarketCoreWander[i] = 0 == i ? _lsSI.get (i).marketDynamicWander() : _lsSI.get
+				(i).marketDynamicWander() + adblCumulativeMarketCoreWander[i - 1];
 
 		return adblCumulativeMarketCoreWander;
 	}
@@ -195,7 +195,7 @@ public class TrajectoryShortfallRealization {
 		double dblTotalMarketCoreWander = 0.;
 
 		for (int i = 0; i < iNumInterval; ++i)
-			dblTotalMarketCoreWander = dblTotalMarketCoreWander + _lsSI.get (i).marketCoreWander();
+			dblTotalMarketCoreWander = dblTotalMarketCoreWander + _lsSI.get (i).marketDynamicWander();
 
 		return dblTotalMarketCoreWander;
 	}

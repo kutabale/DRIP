@@ -81,7 +81,7 @@ public class OptimalSerialCorrelationImpact {
 		double dblLambdaU = 1.e-06;
 		double dblSerialCorrelation = 0.1;
 
-		AssetDynamicsSettings amc = AssetDynamicsSettings.FromAnnualReturnsSettings (
+		ArithmeticPriceDynamicsSettings amc = ArithmeticPriceDynamicsSettings.FromAnnualReturnsSettings (
 			dblAnnualReturns,
 			dblAnnualVolatility,
 			0.,
@@ -107,9 +107,11 @@ public class OptimalSerialCorrelationImpact {
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) ami.temporaryTransactionFunction();
 
 		LinearExpectationParameters lipe = new LinearExpectationParameters (
-			0.,
-			dblSigma,
-			dblSerialCorrelation,
+			new ArithmeticPriceDynamicsSettings (
+				0.,
+				dblSigma,
+				dblSerialCorrelation
+			),
 			prlPermanent,
 			prlTemporary
 		);

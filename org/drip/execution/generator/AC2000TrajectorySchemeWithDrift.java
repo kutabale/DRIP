@@ -117,9 +117,12 @@ public class AC2000TrajectorySchemeWithDrift extends org.drip.execution.generato
 
 		double dblX = ttc.startHoldings();
 
-		double dblAlpha = lep.marketCoreDrift();
+		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
+			lep.arithmeticPriceDynamicsSettings();
 
-		double dblSigma = lep.marketCoreVolatility();
+		double dblAlpha = apds.drift();
+
+		double dblSigma = apds.volatility();
 
 		double dblEta = tflTemporaryExpectation.slope();
 

@@ -203,7 +203,7 @@ public class TrajectoryShortfallAggregate {
 		double[] adblIncrementalMarketCoreExpectationSequence = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblIncrementalMarketCoreExpectationSequence[i] = _lsSID.get (i).marketCoreExpectation();
+			adblIncrementalMarketCoreExpectationSequence[i] = _lsSID.get (i).marketDynamicExpectation();
 
 		return adblIncrementalMarketCoreExpectationSequence;
 	}
@@ -221,9 +221,9 @@ public class TrajectoryShortfallAggregate {
 		double[] adblCumulativeMarketCoreExpectationSequence = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblCumulativeMarketCoreExpectationSequence[i] = 0 == i ? _lsSID.get (i).marketCoreExpectation()
-				: adblCumulativeMarketCoreExpectationSequence[i - 1] + _lsSID.get
-					(i).marketCoreExpectation();
+			adblCumulativeMarketCoreExpectationSequence[i] = 0 == i ? _lsSID.get
+				(i).marketDynamicExpectation() : adblCumulativeMarketCoreExpectationSequence[i - 1] +
+					_lsSID.get (i).marketDynamicExpectation();
 
 		return adblCumulativeMarketCoreExpectationSequence;
 	}

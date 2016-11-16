@@ -29,8 +29,8 @@ package org.drip.execution.parameters;
  */
 
 /**
- * AssetDynamicsSettings contains the Arithmetic Market Evolution Dynamics Parameters used in the Almgren and
- *  Chriss (2000) Optimal Trajectory Generation Scheme. The References are:
+ * ArithmeticPriceDynamicsSettings contains the Arithmetic Price Evolution Dynamics Parameters used in the
+ *  Almgren and Chriss (2000) Optimal Trajectory Generation Scheme. The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -49,7 +49,7 @@ package org.drip.execution.parameters;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AssetDynamicsSettings {
+public class ArithmeticPriceDynamicsSettings {
 	private double _dblDrift = java.lang.Double.NaN;
 	private double _dblVolatility = java.lang.Double.NaN;
 	private double _dblSerialCorrelation = java.lang.Double.NaN;
@@ -65,7 +65,7 @@ public class AssetDynamicsSettings {
 	 * @return The Asset Dynamics Settings from the Annual Returns Parameters
 	 */
 
-	public static final AssetDynamicsSettings FromAnnualReturnsSettings (
+	public static final ArithmeticPriceDynamicsSettings FromAnnualReturnsSettings (
 		final double dblAnnualReturnsExpectation,
 		final double dblAnnualReturnsVolatility,
 		final double dblSerialCorrelation,
@@ -77,8 +77,8 @@ public class AssetDynamicsSettings {
 			return null;
 
 		try {
-			return new AssetDynamicsSettings (dblPrice * dblAnnualReturnsExpectation / 250., dblPrice *
-				dblAnnualReturnsVolatility / java.lang.Math.sqrt (250.), dblSerialCorrelation);
+			return new ArithmeticPriceDynamicsSettings (dblPrice * dblAnnualReturnsExpectation / 250.,
+				dblPrice * dblAnnualReturnsVolatility / java.lang.Math.sqrt (250.), dblSerialCorrelation);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -87,7 +87,7 @@ public class AssetDynamicsSettings {
 	}
 
 	/**
-	 * AssetDynamicsSettings Constructor
+	 * ArithmeticPriceDynamicsSettings Constructor
 	 * 
 	 * @param dblDrift The Asset Daily Arithmetic Drift
 	 * @param dblVolatility The Asset Daily Normal Volatility
@@ -96,7 +96,7 @@ public class AssetDynamicsSettings {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	protected AssetDynamicsSettings (
+	public ArithmeticPriceDynamicsSettings (
 		final double dblDrift,
 		final double dblVolatility,
 		final double dblSerialCorrelation)
@@ -106,7 +106,7 @@ public class AssetDynamicsSettings {
 			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility) || 0. >=
 				_dblVolatility || !org.drip.quant.common.NumberUtil.IsValid (_dblSerialCorrelation =
 					dblSerialCorrelation) || 1. < _dblSerialCorrelation || -1. > _dblSerialCorrelation)
-			throw new java.lang.Exception ("AssetDynamicsSettings Constructor => Invalid Inputs!");
+			throw new java.lang.Exception ("ArithmeticPriceDynamicsSettings Constructor => Invalid Inputs!");
 	}
 
 	/**

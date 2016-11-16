@@ -119,7 +119,7 @@ public class AC2000TrajectoryScheme extends org.drip.execution.generator.Optimal
 
 		double dblEta = tflTemporaryExpectation.slope();
 
-		double dblSigma = lep.marketCoreVolatility();
+		double dblSigma = lep.arithmeticPriceDynamicsSettings().volatility();
 
 		double dblX = ttc.startHoldings();
 

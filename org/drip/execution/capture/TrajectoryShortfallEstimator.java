@@ -92,7 +92,7 @@ public class TrajectoryShortfallEstimator implements
 
 	public org.drip.execution.capture.TrajectoryShortfallRealization totalCostRealizationDetail (
 		final double dblStartingEquilibriumPrice,
-		final org.drip.execution.discrete.WalkSuite[] aWS,
+		final org.drip.execution.dynamics.WalkSuite[] aWS,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblStartingEquilibriumPrice) || null == aWS)
@@ -431,7 +431,7 @@ public class TrajectoryShortfallEstimator implements
 		return null;
 	}
 
-	@Override public org.drip.execution.sensitivity.ControlNodesGreek marketCoreExpectation (
+	@Override public org.drip.execution.sensitivity.ControlNodesGreek marketDynamicsExpectation (
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
 		double[] adblExecutionTimeNode = _tt.executionTimeNode();
@@ -458,7 +458,7 @@ public class TrajectoryShortfallEstimator implements
 				return null;
 			}
 
-			org.drip.execution.sensitivity.ControlNodesGreek cng = s.marketCoreExpectation (apep);
+			org.drip.execution.sensitivity.ControlNodesGreek cng = s.marketDynamicsExpectation (apep);
 
 			if (null == cng) return null;
 
@@ -489,7 +489,7 @@ public class TrajectoryShortfallEstimator implements
 		return null;
 	}
 
-	@Override public org.drip.execution.sensitivity.ControlNodesGreek marketCoreVariance (
+	@Override public org.drip.execution.sensitivity.ControlNodesGreek marketDynamicsVariance (
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
 		double[] adblExecutionTimeNode = _tt.executionTimeNode();
@@ -516,7 +516,7 @@ public class TrajectoryShortfallEstimator implements
 				return null;
 			}
 
-			org.drip.execution.sensitivity.ControlNodesGreek cng = s.marketCoreVariance (apep);
+			org.drip.execution.sensitivity.ControlNodesGreek cng = s.marketDynamicsVariance (apep);
 
 			if (null == cng) return null;
 

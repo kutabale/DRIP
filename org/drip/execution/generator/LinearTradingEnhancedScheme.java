@@ -103,7 +103,7 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 
 		double dblEta = tevp.linearTemporaryExpectation().slope();
 
-		double dblSigma = tevp.marketCoreVolatility();
+		double dblSigma = tevp.arithmeticPriceDynamicsSettings().volatility();
 
 		double dblTStar = java.lang.Math.sqrt (dblEta / (dblLambda * dblSigma * dblSigma));
 

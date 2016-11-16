@@ -95,7 +95,7 @@ public class PriceIncrement extends org.drip.execution.discrete.EvolutionIncreme
 
 	public double newEquilibriumPrice()
 	{
-		return _dblPreviousEquilibriumPrice + marketCoreWander() + marketCoreDrift() +
+		return _dblPreviousEquilibriumPrice + marketDynamicWander() + marketDynamicDrift() +
 			permanentImpactWander() + permanentImpactDrift();
 	}
 

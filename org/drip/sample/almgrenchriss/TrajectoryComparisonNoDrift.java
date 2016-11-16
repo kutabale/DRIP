@@ -112,7 +112,7 @@ public class TrajectoryComparisonNoDrift {
 			4.000e-06
 		};
 
-		AssetDynamicsSettings amc = AssetDynamicsSettings.FromAnnualReturnsSettings (
+		ArithmeticPriceDynamicsSettings amc = ArithmeticPriceDynamicsSettings.FromAnnualReturnsSettings (
 			dblAnnualReturns,
 			dblAnnualVolatility,
 			0.,
@@ -138,9 +138,11 @@ public class TrajectoryComparisonNoDrift {
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) ami.temporaryTransactionFunction();
 
 		LinearExpectationParameters lipe = new LinearExpectationParameters (
-			dblAlpha,
-			dblSigma,
-			0.,
+			new ArithmeticPriceDynamicsSettings (
+				dblAlpha,
+				dblSigma,
+				0.
+			),
 			prlPermanent,
 			prlTemporary
 		);

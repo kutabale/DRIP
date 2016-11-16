@@ -110,7 +110,7 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
-		double dblSigma = a2003p.marketCoreVolatility();
+		double dblSigma = a2003p.arithmeticPriceDynamicsSettings().volatility();
 
 		final double dblX = ttc.startHoldings();
 

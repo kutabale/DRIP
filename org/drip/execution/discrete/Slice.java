@@ -133,32 +133,35 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 
 	public org.drip.execution.discrete.PriceIncrement priceIncrementRealization (
 		final double dblPreviousEquilibriumPrice,
-		final org.drip.execution.discrete.WalkSuite ws,
+		final org.drip.execution.dynamics.WalkSuite ws,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
-		if (null == ws) return null;
+		if (null == ws || null == apep) return null;
 
-		double dblSerialCorrelation = apep.marketCoreSerialCorrelation();
+		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
+			apep.arithmeticPriceDynamicsSettings();
+
+		double dblSerialCorrelation = apds.serialCorrelation();
 
 		double dblTimeUnitSQRT = java.lang.Math.sqrt (_dblTimeInterval);
 
 		double dblExecutionRate = (_dblRightHoldings - _dblLeftHoldings) / _dblTimeInterval;
 
-		double dblMarketCoreJumpUnit = apep.marketCoreVolatility() * dblTimeUnitSQRT;
+		double dblMarketCoreJumpUnit = apds.volatility() * dblTimeUnitSQRT;
 
 		try {
 			return new org.drip.execution.discrete.PriceIncrement (
 				dblPreviousEquilibriumPrice,
 				new org.drip.execution.evolution.MarketImpactComponent (
-					_dblTimeInterval * apep.marketCoreDrift(),
+					_dblTimeInterval * apds.drift(),
 					0.,
 					_dblTimeInterval * apep.permanentExpectation().evaluate (dblExecutionRate),
 					apep.temporaryExpectation().evaluate (dblExecutionRate)
 				),
 				new org.drip.execution.evolution.MarketImpactComponent (
 					dblMarketCoreJumpUnit * java.lang.Math.sqrt (1. + dblSerialCorrelation * dblSerialCorrelation) *
-						ws.marketCoreCurrentWanderer(),
-					dblMarketCoreJumpUnit * dblSerialCorrelation * ws.marketCorePreviousWanderer(),
+						ws.currentWanderer(),
+					dblMarketCoreJumpUnit * dblSerialCorrelation * ws.previousWanderer(),
 					dblTimeUnitSQRT * apep.permanentVolatility().evaluate (dblExecutionRate) * ws.permanentImpactWanderer(),
 					dblTimeUnitSQRT * apep.temporaryVolatility().evaluate (dblExecutionRate) * ws.temporaryImpactWanderer()
 				)
@@ -182,7 +185,7 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 
 	public org.drip.execution.discrete.ShortfallIncrement costIncrementRealization (
 		final double dblPreviousEquilibriumPrice,
-		final org.drip.execution.discrete.WalkSuite ws,
+		final org.drip.execution.dynamics.WalkSuite ws,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
 		return org.drip.execution.discrete.ShortfallIncrement.Standard (
@@ -207,7 +210,10 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 			_dblLeftHoldings - _dblRightHoldings;
 		double dblExecutionRate = dblTradeAmount / _dblTimeInterval;
 
-		double dblMarketCoreVolatility = apep.marketCoreVolatility();
+		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
+			apep.arithmeticPriceDynamicsSettings();
+
+		double dblMarketCoreVolatility = apds.volatility();
 
 		try {
 			double dblTemporaryVolatility = apep.temporaryVolatility().evaluate (dblTradeAmount,
@@ -217,7 +223,7 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 				_dblTimeInterval * _dblRightHoldings * apep.permanentExpectation().evaluate
 					(dblExecutionRate),
 				dblTradeAmount * apep.temporaryExpectation().evaluate (dblExecutionRate),
-				-1. * _dblRightHoldings * apep.marketCoreDrift() * _dblTimeInterval,
+				-1. * _dblRightHoldings * apds.drift() * _dblTimeInterval,
 				0.,
 				dblExecutionRate * dblExecutionRate * dblTemporaryVolatility * dblTemporaryVolatility *
 					_dblTimeInterval,
@@ -436,12 +442,12 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 		return null;
 	}
 
-	@Override public org.drip.execution.sensitivity.ControlNodesGreek marketCoreExpectation (
+	@Override public org.drip.execution.sensitivity.ControlNodesGreek marketDynamicsExpectation (
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
 		if (null == apep) return null;
 
-		double dblDrift = apep.marketCoreDrift();
+		double dblDrift = apep.arithmeticPriceDynamicsSettings().drift();
 
 		try {
 			return new org.drip.execution.sensitivity.ControlNodesGreek (
@@ -462,12 +468,12 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 		return null;
 	}
 
-	@Override public org.drip.execution.sensitivity.ControlNodesGreek marketCoreVariance (
+	@Override public org.drip.execution.sensitivity.ControlNodesGreek marketDynamicsVariance (
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
 		if (null == apep) return null;
 
-		double dblVolatility = apep.marketCoreVolatility();
+		double dblVolatility = apep.arithmeticPriceDynamicsSettings().volatility();
 
 		try {
 			return new org.drip.execution.sensitivity.ControlNodesGreek (
@@ -500,7 +506,7 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 
 		if (null == cngTemporaryImpact) return null;
 
-		org.drip.execution.sensitivity.ControlNodesGreek cngMarketCore = marketCoreExpectation (apep);
+		org.drip.execution.sensitivity.ControlNodesGreek cngMarketCore = marketDynamicsExpectation (apep);
 
 		if (null == cngMarketCore) return null;
 
@@ -550,7 +556,7 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 
 		if (null == cngTemporaryImpact) return null;
 
-		org.drip.execution.sensitivity.ControlNodesGreek cngMarketCore = marketCoreVariance (apep);
+		org.drip.execution.sensitivity.ControlNodesGreek cngMarketCore = marketDynamicsVariance (apep);
 
 		if (null == cngMarketCore) return null;
 
@@ -602,7 +608,10 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 	{
 		if (null == apep) return null;
 
-		double dblRhoSigma = apep.marketCoreSerialCorrelation() * apep.marketCoreVolatility();
+		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
+			apep.arithmeticPriceDynamicsSettings();
+
+		double dblRhoSigma = apds.serialCorrelation() * apds.volatility();
 
 		double dblTradeRate = (_dblRightHoldings - _dblLeftHoldings) / _dblTimeInterval;
 

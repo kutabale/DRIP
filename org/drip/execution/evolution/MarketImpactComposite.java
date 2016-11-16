@@ -82,10 +82,10 @@ public class MarketImpactComposite extends org.drip.execution.evolution.MarketIm
 		final org.drip.execution.evolution.MarketImpactComponent micStochastic)
 		throws java.lang.Exception
 	{
-		super (micDeterministic.currentStepMarketCore() + micStochastic.currentStepMarketCore(),
-			micDeterministic.previousStepMarketCore() + micStochastic.previousStepMarketCore(),
-				micDeterministic.permanentImpact() + micStochastic.permanentImpact(),
-					micDeterministic.temporaryImpact() + micStochastic.temporaryImpact());
+		super (micDeterministic.currentStep() + micStochastic.currentStep(), micDeterministic.previousStep()
+			+ micStochastic.previousStep(), micDeterministic.permanentImpact() +
+				micStochastic.permanentImpact(), micDeterministic.temporaryImpact() +
+					micStochastic.temporaryImpact());
 	}
 
 	/**

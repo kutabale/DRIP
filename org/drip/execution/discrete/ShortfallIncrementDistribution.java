@@ -53,10 +53,10 @@ package org.drip.execution.discrete;
  */
 
 public class ShortfallIncrementDistribution extends org.drip.measure.gaussian.R1UnivariateNormal {
-	public double _dblMarketCoreVariance = java.lang.Double.NaN;
-	public double _dblMarketCoreExpectation = java.lang.Double.NaN;
+	public double _dblMarketDynamicVariance = java.lang.Double.NaN;
 	public double _dblPermanentImpactVariance = java.lang.Double.NaN;
 	public double _dblTemporaryImpactVariance = java.lang.Double.NaN;
+	public double _dblMarketDynamicExpectation = java.lang.Double.NaN;
 	public double _dblPermanentImpactExpectation = java.lang.Double.NaN;
 	public double _dblTemporaryImpactExpectation = java.lang.Double.NaN;
 
@@ -65,10 +65,10 @@ public class ShortfallIncrementDistribution extends org.drip.measure.gaussian.R1
 	 * 
 	 * @param dblPermanentImpactExpectation The Permanent Market Impact Expectation Component
 	 * @param dblTemporaryImpactExpectation The Temporary Market Impact Expectation Component
-	 * @param dblMarketCoreExpectation The Market Core Expectation Component
+	 * @param dblMarketDynamicExpectation The Market Dynamics Expectation Component
 	 * @param dblPermanentImpactVariance The Permanent Market Impact Variance Component
 	 * @param dblTemporaryImpactVariance The Temporary Market Impact Variance Component
-	 * @param dblMarketCoreVariance The Market Core Variance Component
+	 * @param dblMarketCoreVariance The Market Dynamics Variance Component
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -76,22 +76,22 @@ public class ShortfallIncrementDistribution extends org.drip.measure.gaussian.R1
 	public ShortfallIncrementDistribution (
 		final double dblPermanentImpactExpectation,
 		final double dblTemporaryImpactExpectation,
-		final double dblMarketCoreExpectation,
+		final double dblMarketDynamicExpectation,
 		final double dblPermanentImpactVariance,
 		final double dblTemporaryImpactVariance,
-		final double dblMarketCoreVariance)
+		final double dblMarketDynamicVariance)
 		throws java.lang.Exception
 	{
-		super (dblPermanentImpactExpectation + dblTemporaryImpactExpectation + dblMarketCoreExpectation,
+		super (dblPermanentImpactExpectation + dblTemporaryImpactExpectation + dblMarketDynamicExpectation,
 			java.lang.Math.sqrt (dblPermanentImpactVariance + dblTemporaryImpactVariance +
-				dblMarketCoreVariance));
+				dblMarketDynamicVariance));
 
 		_dblPermanentImpactExpectation = dblPermanentImpactExpectation;
 		_dblTemporaryImpactExpectation = dblTemporaryImpactExpectation;
-		_dblMarketCoreExpectation = dblMarketCoreExpectation;
+		_dblMarketDynamicExpectation = dblMarketDynamicExpectation;
 		_dblPermanentImpactVariance = dblPermanentImpactVariance;
 		_dblTemporaryImpactVariance = dblTemporaryImpactVariance;
-		_dblMarketCoreVariance = dblMarketCoreVariance;
+		_dblMarketDynamicVariance = dblMarketDynamicVariance;
 	}
 
 	/**
@@ -106,25 +106,25 @@ public class ShortfallIncrementDistribution extends org.drip.measure.gaussian.R1
 	}
 
 	/**
-	 * Retrieve the Market Core Expectation Component
+	 * Retrieve the Market Dynamic Expectation Component
 	 * 
-	 * @return The Market Core Expectation Component
+	 * @return The Market Dynamic Expectation Component
 	 */
 
-	public double marketCoreExpectation()
+	public double marketDynamicExpectation()
 	{
-		return _dblMarketCoreExpectation;
+		return _dblMarketDynamicExpectation;
 	}
 
 	/**
-	 * Retrieve the Market Core Variance Component
+	 * Retrieve the Market Dynamic Variance Component
 	 * 
-	 * @return The Market Core Variance Component
+	 * @return The Market Dynamic Variance Component
 	 */
 
-	public double marketCoreVariance()
+	public double marketDynamicVariance()
 	{
-		return _dblMarketCoreVariance;
+		return _dblMarketDynamicVariance;
 	}
 
 	/**

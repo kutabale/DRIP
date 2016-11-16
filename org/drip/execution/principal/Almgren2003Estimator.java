@@ -129,7 +129,7 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
-		double dblSigma = _a2003p.marketCoreVolatility();
+		double dblSigma = _a2003p.arithmeticPriceDynamicsSettings().volatility();
 
 		double dblK = tfpTemporaryExpectation.exponent();
 
@@ -167,7 +167,7 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
-		double dblSigma = _a2003p.marketCoreVolatility();
+		double dblSigma = _a2003p.arithmeticPriceDynamicsSettings().volatility();
 
 		double dblK = tfpTemporaryExpectation.exponent();
 

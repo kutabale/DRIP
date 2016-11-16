@@ -56,9 +56,7 @@ public class LinearExpectationParameters extends
 	/**
 	 * LinearExpectationParameters Constructor
 	 * 
-	 * @param dblMarketCoreDrift The Asset Drift
-	 * @param dblMarketCoreVolatility The Asset Volatility
-	 * @param dblMarketCoreSerialCorrelation The Serial Correlation
+	 * @param apds The Asset Price Dynamics Settings
 	 * @param tflPermanentExpectation The Linear Permanent Market Impact Expectation Function
 	 * @param tflTemporaryExpectation The Linear Temporary Market Impact Expectation Function
 	 * 
@@ -66,15 +64,12 @@ public class LinearExpectationParameters extends
 	 */
 
 	public LinearExpectationParameters (
-		final double dblMarketCoreDrift,
-		final double dblMarketCoreVolatility,
-		final double dblMarketCoreSerialCorrelation,
+		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
 		final org.drip.execution.impact.TransactionFunctionLinear tflPermanentExpectation,
 		final org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation)
 		throws java.lang.Exception
 	{
-		super (dblMarketCoreDrift, dblMarketCoreVolatility, dblMarketCoreSerialCorrelation,
-			tflPermanentExpectation, tflTemporaryExpectation);
+		super (apds, tflPermanentExpectation, tflTemporaryExpectation);
 	}
 
 	/**

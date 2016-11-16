@@ -5,6 +5,7 @@ import org.drip.execution.dynamics.LinearExpectationParameters;
 import org.drip.execution.generator.AC2000TrajectoryScheme;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.AC2000TradingTrajectory;
+import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -106,9 +107,11 @@ public class EfficientFrontierNoDrift {
 		};
 
 		LinearExpectationParameters lipe = new LinearExpectationParameters (
-			dblAlpha,
-			dblSigma,
-			0.,
+			new ArithmeticPriceDynamicsSettings (
+				dblAlpha,
+				dblSigma,
+				0.
+			),
 			new ParticipationRateLinear (
 				0.,
 				dblGamma
