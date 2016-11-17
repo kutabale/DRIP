@@ -91,113 +91,113 @@ public class TrajectoryShortfallRealization {
 	}
 
 	/**
-	 * Generate the Array of Incremental Market Core Cost Drift
+	 * Generate the Array of Incremental Market Dynamic Cost Drift
 	 * 
-	 * @return The Array of Incremental Market Core Cost Drift
+	 * @return The Array of Incremental Market Dynamic Cost Drift
 	 */
 
-	public double[] incrementalMarketCoreDrift()
+	public double[] incrementalMarketDynamicDrift()
 	{
 		int iNumInterval = _lsSI.size();
 
-		double[] adblIncrementalMarketCoreDrift = new double[iNumInterval];
+		double[] adblIncrementalMarketDynamicDrift = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblIncrementalMarketCoreDrift[i] = _lsSI.get (i).marketDynamicDrift();
+			adblIncrementalMarketDynamicDrift[i] = _lsSI.get (i).marketDynamicDrift();
 
-		return adblIncrementalMarketCoreDrift;
+		return adblIncrementalMarketDynamicDrift;
 	}
 
 	/**
-	 * Generate the Array of Cumulative Market Core Cost Drift
+	 * Generate the Array of Cumulative Market Dynamic Cost Drift
 	 * 
-	 * @return The Array of Cumulative Market Core Cost Drift
+	 * @return The Array of Cumulative Market Dynamic Cost Drift
 	 */
 
-	public double[] cumulativeMarketCoreDrift()
+	public double[] cumulativeMarketDynamicDrift()
 	{
 		int iNumInterval = _lsSI.size();
 
-		double[] adblCumulativeMarketCoreDrift = new double[iNumInterval];
+		double[] adblCumulativeMarketDynamicDrift = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblCumulativeMarketCoreDrift[i] = 0 == i ? _lsSI.get (i).marketDynamicDrift() : _lsSI.get
-				(i).marketDynamicDrift() + adblCumulativeMarketCoreDrift[i - 1];
+			adblCumulativeMarketDynamicDrift[i] = 0 == i ? _lsSI.get (i).marketDynamicDrift() : _lsSI.get
+				(i).marketDynamicDrift() + adblCumulativeMarketDynamicDrift[i - 1];
 
-		return adblCumulativeMarketCoreDrift;
+		return adblCumulativeMarketDynamicDrift;
 	}
 
 	/**
-	 * Generate the Total Market Core Cost Drift
+	 * Generate the Total Market Dynamic Cost Drift
 	 * 
-	 * @return The Total Market Core Cost Drift
+	 * @return The Total Market Dynamic Cost Drift
 	 */
 
-	public double totalMarketCoreDrift()
+	public double totalMarketDynamicDrift()
 	{
 		int iNumInterval = _lsSI.size();
 
-		double dblTotalMarketCoreDrift = 0.;
+		double dblTotalMarketDynamicDrift = 0.;
 
 		for (int i = 0; i < iNumInterval; ++i)
-			dblTotalMarketCoreDrift = dblTotalMarketCoreDrift + _lsSI.get (i).marketDynamicDrift();
+			dblTotalMarketDynamicDrift = dblTotalMarketDynamicDrift + _lsSI.get (i).marketDynamicDrift();
 
-		return dblTotalMarketCoreDrift;
+		return dblTotalMarketDynamicDrift;
 	}
 
 	/**
-	 * Generate the Array of Incremental Market Core Cost Wander
+	 * Generate the Array of Incremental Market Dynamic Cost Wander
 	 * 
-	 * @return The Array of Incremental Market Core Cost Wander
+	 * @return The Array of Incremental Market Dynamic Cost Wander
 	 */
 
-	public double[] incrementalMarketCoreWander()
+	public double[] incrementalMarketDynamicWander()
 	{
 		int iNumInterval = _lsSI.size();
 
-		double[] adblIncrementalMarketCoreWander = new double[iNumInterval];
+		double[] adblIncrementalMarketDynamicWander = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblIncrementalMarketCoreWander[i] = _lsSI.get (i).marketDynamicWander();
+			adblIncrementalMarketDynamicWander[i] = _lsSI.get (i).marketDynamicWander();
 
-		return adblIncrementalMarketCoreWander;
+		return adblIncrementalMarketDynamicWander;
 	}
 
 	/**
-	 * Generate the Array of Cumulative Market Core Cost Wander
+	 * Generate the Array of Cumulative Market Dynamic Cost Wander
 	 * 
-	 * @return The Array of Cumulative Market Core Cost Wander
+	 * @return The Array of Cumulative Market Dynamic Cost Wander
 	 */
 
-	public double[] cumulativeMarketCoreWander()
+	public double[] cumulativeMarketDynamicWander()
 	{
 		int iNumInterval = _lsSI.size();
 
-		double[] adblCumulativeMarketCoreWander = new double[iNumInterval];
+		double[] adblCumulativeMarketDynamicWander = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblCumulativeMarketCoreWander[i] = 0 == i ? _lsSI.get (i).marketDynamicWander() : _lsSI.get
-				(i).marketDynamicWander() + adblCumulativeMarketCoreWander[i - 1];
+			adblCumulativeMarketDynamicWander[i] = 0 == i ? _lsSI.get (i).marketDynamicWander() : _lsSI.get
+				(i).marketDynamicWander() + adblCumulativeMarketDynamicWander[i - 1];
 
-		return adblCumulativeMarketCoreWander;
+		return adblCumulativeMarketDynamicWander;
 	}
 
 	/**
-	 * Generate the Total Market Core Cost Wander
+	 * Generate the Total Market Dynamic Cost Wander
 	 * 
-	 * @return The Total Market Core Cost Wander
+	 * @return The Total Market Dynamic Cost Wander
 	 */
 
-	public double totalMarketCoreWander()
+	public double totalMarketDynamicWander()
 	{
 		int iNumInterval = _lsSI.size();
 
-		double dblTotalMarketCoreWander = 0.;
+		double dblTotalMarketDynamicWander = 0.;
 
 		for (int i = 0; i < iNumInterval; ++i)
-			dblTotalMarketCoreWander = dblTotalMarketCoreWander + _lsSI.get (i).marketDynamicWander();
+			dblTotalMarketDynamicWander = dblTotalMarketDynamicWander + _lsSI.get (i).marketDynamicWander();
 
-		return dblTotalMarketCoreWander;
+		return dblTotalMarketDynamicWander;
 	}
 
 	/**

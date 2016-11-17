@@ -81,7 +81,7 @@ public class ConcaveImpactNoDrift {
 		int iNumInterval = 2;
 		double dblLambdaU = 3.e-03;
 
-		PriceMarketImpactPower apim = new PriceMarketImpactPower (
+		PriceMarketImpactPower pmip = new PriceMarketImpactPower (
 			new AssetTransactionSettings (
 				dblS0,
 				dblDailyVolume,
@@ -99,8 +99,8 @@ public class ConcaveImpactNoDrift {
 				dblVolatility,
 				0.
 			),
-			(ParticipationRateLinear) apim.permanentTransactionFunction(),
-			(ParticipationRatePower) apim.temporaryTransactionFunction()
+			(ParticipationRateLinear) pmip.permanentTransactionFunction(),
+			(ParticipationRatePower) pmip.temporaryTransactionFunction()
 		);
 
 		TradingTrajectoryControl ttc = TradingTrajectoryControl.FixedInterval (

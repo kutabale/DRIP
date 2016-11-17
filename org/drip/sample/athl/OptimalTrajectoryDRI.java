@@ -75,14 +75,14 @@ public class OptimalTrajectoryDRI {
 
 		double dblRiskAversion = 1.e-02;
 
-		AssetFlowSettings afp = new AssetFlowSettings (
+		AssetFlowSettings afs = new AssetFlowSettings (
 			strAssetName,
 			dblAverageDailyVolume,
 			dblSharesOutstanding,
 			dblDailyVolatility
 		);
 
-		Almgren2003Parameters a2003p = new DynamicsParameters (afp).almgren2003();
+		Almgren2003Parameters a2003p = new DynamicsParameters (afs).almgren2003();
 
 		Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
 			dblTradeSize,

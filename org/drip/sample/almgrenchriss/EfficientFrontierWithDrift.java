@@ -106,7 +106,7 @@ public class EfficientFrontierWithDrift {
 			4.000e-06
 		};
 
-		LinearExpectationParameters lipe = new LinearExpectationParameters (
+		LinearExpectationParameters lep = new LinearExpectationParameters (
 			new ArithmeticPriceDynamicsSettings (
 				dblAlpha,
 				dblSigma,
@@ -163,7 +163,7 @@ public class EfficientFrontierWithDrift {
 				dblX,
 				dblT,
 				iN,
-				lipe,
+				lep,
 				dblLambda
 			).generate();
 	
@@ -203,7 +203,7 @@ public class EfficientFrontierWithDrift {
 				dblX,
 				dblT,
 				iN,
-				lipe,
+				lep,
 				dblLambda
 			).generate();
 	

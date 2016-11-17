@@ -107,19 +107,23 @@ public class PowerLawOptimalTrajectory {
 
 		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------||");
 
+		ArithmeticPriceDynamicsSettings apds = new ArithmeticPriceDynamicsSettings (
+			dblDrift,
+			dblVolatility,
+			dblSerialCorrelation
+		);
+
+		ParticipationRateLinear prlPermanent = new ParticipationRateLinear (
+			0.,
+			dblGamma
+		);
+
 		for (int i = 0; i < adblK.length; ++i) {
 			double dblEta = dblHRef / java.lang.Math.pow (dblVRef, adblK[i]);
 
 			Almgren2003Parameters a2003pe = new Almgren2003Parameters (
-				new ArithmeticPriceDynamicsSettings (
-					dblDrift,
-					dblVolatility,
-					dblSerialCorrelation
-				),
-				new ParticipationRateLinear (
-					0.,
-					dblGamma
-				),
+				apds,
+				prlPermanent,
 				new ParticipationRatePower (
 					dblEta,
 					adblK[i]

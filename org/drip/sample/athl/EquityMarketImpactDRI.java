@@ -128,21 +128,21 @@ public class EquityMarketImpactDRI {
 			23
 		};
 
-		AssetFlowSettings afp = new AssetFlowSettings (
+		AssetFlowSettings afs = new AssetFlowSettings (
 			strAssetName,
 			dblAverageDailyVolume,
 			dblSharesOutstanding,
 			dblDailyVolatility
 		);
 
-		TemporaryImpact athlTemporary = new TemporaryImpact (afp);
+		TemporaryImpact ti = new TemporaryImpact (afs);
 
-		PermanentImpactNoArbitrage athlPermanent = new PermanentImpactNoArbitrage (afp);
+		PermanentImpactNoArbitrage pina = new PermanentImpactNoArbitrage (afs);
 
-		double dblDenormalizedPermanentImpact = athlPermanent.evaluate (dblTradeSize, dblTradeTime);
+		double dblDenormalizedPermanentImpact = pina.evaluate (dblTradeSize, dblTradeTime);
 
-		double dblNormalizedPermanentImpact = athlPermanent.evaluate (
-			dblTradeSize / (afp.averageDailyVolume() * dblTradeTime)
+		double dblNormalizedPermanentImpact = pina.evaluate (
+			dblTradeSize / (afs.averageDailyVolume() * dblTradeTime)
 		);
 
 		System.out.println();
@@ -169,13 +169,13 @@ public class EquityMarketImpactDRI {
 
 		System.out.println (
 			"\t|  Inverse Turn-over              => " +
-			FormatUtil.FormatDouble (afp.inverseTurnover(), 2, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (afs.inverseTurnover(), 2, 3, 1.) + " | " +
 			FormatUtil.FormatDouble (dblInverseTurnoverReconciler, 2, 3, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t|  Normalized Trade Size          => " +
-			FormatUtil.FormatDouble (afp.normalizeTradeSize (dblTradeSize, dblTradeTime), 2, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (afs.normalizeTradeSize (dblTradeSize, dblTradeTime), 2, 3, 1.) + " | " +
 			FormatUtil.FormatDouble (dblNormalizedTradeSizeReconciler, 2, 3, 1.) + " ||"
 		);
 
@@ -219,7 +219,7 @@ public class EquityMarketImpactDRI {
 
 		for (int i = 0; i < adblTime.length; ++i)
 			TemporaryImpactReconciler (
-				athlTemporary,
+				ti,
 				dblTradeSize,
 				adblTime[i],
 				adblNormalizedTemporaryImpactReconciler[i],

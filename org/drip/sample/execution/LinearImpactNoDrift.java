@@ -82,18 +82,18 @@ public class LinearImpactNoDrift {
 		double dblDailyVolumeTemporaryImpact = 0.01;
 		double dblLambdaU = 1.e-06;
 
-		ArithmeticPriceDynamicsSettings amc = ArithmeticPriceDynamicsSettings.FromAnnualReturnsSettings (
+		ArithmeticPriceDynamicsSettings apds = ArithmeticPriceDynamicsSettings.FromAnnualReturnsSettings (
 			dblAnnualReturns,
 			dblAnnualVolatility,
 			0.,
 			dblS0
 		);
 
-		double dblAlpha = amc.drift();
+		double dblAlpha = apds.drift();
 
-		double dblSigma = amc.volatility();
+		double dblSigma = apds.volatility();
 
-		PriceMarketImpactLinear ami = new PriceMarketImpactLinear (
+		PriceMarketImpactLinear pmil = new PriceMarketImpactLinear (
 			new AssetTransactionSettings (
 				dblS0,
 				dblDailyVolume,
@@ -103,9 +103,9 @@ public class LinearImpactNoDrift {
 			dblDailyVolumeTemporaryImpact
 		);
 
-		ParticipationRateLinear prlPermanent = (ParticipationRateLinear) ami.permanentTransactionFunction();
+		ParticipationRateLinear prlPermanent = (ParticipationRateLinear) pmil.permanentTransactionFunction();
 
-		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) ami.temporaryTransactionFunction();
+		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
 		TradingTrajectoryControl ttc = TradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
@@ -115,9 +115,9 @@ public class LinearImpactNoDrift {
 			iN
 		);
 
-		LinearExpectationParameters lipe = new LinearExpectationParameters (
+		LinearExpectationParameters lpe = new LinearExpectationParameters (
 			new ArithmeticPriceDynamicsSettings (
-				dblAlpha,
+				0.,
 				dblSigma,
 				0.
 			),
@@ -127,7 +127,7 @@ public class LinearImpactNoDrift {
 
 		EfficientTradingTrajectory ett = new OptimalTrajectoryScheme (
 			ttc,
-			lipe,
+			lpe,
 			new MeanVarianceObjectiveUtility (dblLambdaU)
 		).generate();
 
@@ -139,7 +139,7 @@ public class LinearImpactNoDrift {
 
 		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ett);
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lipe);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lpe);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 

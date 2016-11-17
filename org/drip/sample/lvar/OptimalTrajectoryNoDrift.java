@@ -92,7 +92,7 @@ public class OptimalTrajectoryNoDrift {
 			iN
 		);
 
-		LinearExpectationParameters lipe = new LinearExpectationParameters (
+		LinearExpectationParameters lpe = new LinearExpectationParameters (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
 				dblSigma,
@@ -110,7 +110,7 @@ public class OptimalTrajectoryNoDrift {
 
 		EfficientTradingTrajectory ett = new OptimalTrajectoryScheme (
 			ttc,
-			lipe,
+			lpe,
 			PowerVarianceObjectiveUtility.LiquidityVaR (dblLambdaV)
 		).generate();
 
@@ -122,7 +122,7 @@ public class OptimalTrajectoryNoDrift {
 
 		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ett);
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lipe);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lpe);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 

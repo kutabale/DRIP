@@ -80,18 +80,18 @@ public class OptimalTrajectoryWithDrift {
 		double dblDailyVolumeTemporaryImpact = 0.01;
 		double dblLambdaU = 1.e-06;
 
-		ArithmeticPriceDynamicsSettings amc = ArithmeticPriceDynamicsSettings.FromAnnualReturnsSettings (
+		ArithmeticPriceDynamicsSettings apds = ArithmeticPriceDynamicsSettings.FromAnnualReturnsSettings (
 			dblAnnualReturns,
 			dblAnnualVolatility,
 			0.,
 			dblS0
 		);
 
-		double dblAlpha = amc.drift();
+		double dblAlpha = apds.drift();
 
-		double dblSigma = amc.volatility();
+		double dblSigma = apds.volatility();
 
-		PriceMarketImpactLinear ami = new PriceMarketImpactLinear (
+		PriceMarketImpactLinear pmil = new PriceMarketImpactLinear (
 			new AssetTransactionSettings (
 				dblS0,
 				dblDailyVolume,
@@ -101,11 +101,11 @@ public class OptimalTrajectoryWithDrift {
 			dblDailyVolumeTemporaryImpact
 		);
 
-		ParticipationRateLinear prlPermanent = (ParticipationRateLinear) ami.permanentTransactionFunction();
+		ParticipationRateLinear prlPermanent = (ParticipationRateLinear) pmil.permanentTransactionFunction();
 
-		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) ami.temporaryTransactionFunction();
+		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
-		LinearExpectationParameters lipe = new LinearExpectationParameters (
+		LinearExpectationParameters lep = new LinearExpectationParameters (
 			new ArithmeticPriceDynamicsSettings (
 				dblAlpha,
 				dblSigma,
@@ -119,7 +119,7 @@ public class OptimalTrajectoryWithDrift {
 			dblX,
 			dblT,
 			iN,
-			lipe,
+			lep,
 			dblLambdaU
 		);
 
@@ -137,7 +137,7 @@ public class OptimalTrajectoryWithDrift {
 
 		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (tt);
 
-		TrajectoryShortfallAggregate tsa = lite.totalCostDistributionDetail (lipe);
+		TrajectoryShortfallAggregate tsa = lite.totalCostDistributionDetail (lep);
 
 		double[] adblIncrementalPermanentImpact = tsa.incrementalPermanentImpactExpectation();
 
@@ -155,7 +155,7 @@ public class OptimalTrajectoryWithDrift {
 
 		double[] adblCumulativeShortfallMean = tsa.cumulativeExpectation();
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lipe);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lep);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 

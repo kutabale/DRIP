@@ -191,41 +191,41 @@ public class TrajectoryShortfallAggregate {
 	}
 
 	/**
-	 * Generate the Array of Incremental Market Core Expectation Sequence
+	 * Generate the Array of Incremental Market Dynamic Expectation Sequence
 	 * 
-	 * @return The Array of Incremental Market Core Expectation Sequence
+	 * @return The Array of Incremental Market Dynamic Expectation Sequence
 	 */
 
-	public double[] incrementalMarketCoreExpectation()
+	public double[] incrementalMarketDynamicExpectation()
 	{
 		int iNumInterval = _lsSID.size();
 
-		double[] adblIncrementalMarketCoreExpectationSequence = new double[iNumInterval];
+		double[] adblIncrementalMarketDynamicExpectationSequence = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblIncrementalMarketCoreExpectationSequence[i] = _lsSID.get (i).marketDynamicExpectation();
+			adblIncrementalMarketDynamicExpectationSequence[i] = _lsSID.get (i).marketDynamicExpectation();
 
-		return adblIncrementalMarketCoreExpectationSequence;
+		return adblIncrementalMarketDynamicExpectationSequence;
 	}
 
 	/**
-	 * Generate the Array of Cumulative Market Core Expectation Sequence
+	 * Generate the Array of Cumulative Market Dynamic Expectation Sequence
 	 * 
-	 * @return The Array of Cumulative Market Core Expectation Sequence
+	 * @return The Array of Cumulative Market Dynamic Expectation Sequence
 	 */
 
-	public double[] cumulativeMarketCoreExpectation()
+	public double[] cumulativeMarketDynamicExpectation()
 	{
 		int iNumInterval = _lsSID.size();
 
-		double[] adblCumulativeMarketCoreExpectationSequence = new double[iNumInterval];
+		double[] adblCumulativeMarketDynamicExpectationSequence = new double[iNumInterval];
 
 		for (int i = 0; i < iNumInterval; ++i)
-			adblCumulativeMarketCoreExpectationSequence[i] = 0 == i ? _lsSID.get
-				(i).marketDynamicExpectation() : adblCumulativeMarketCoreExpectationSequence[i - 1] +
+			adblCumulativeMarketDynamicExpectationSequence[i] = 0 == i ? _lsSID.get
+				(i).marketDynamicExpectation() : adblCumulativeMarketDynamicExpectationSequence[i - 1] +
 					_lsSID.get (i).marketDynamicExpectation();
 
-		return adblCumulativeMarketCoreExpectationSequence;
+		return adblCumulativeMarketDynamicExpectationSequence;
 	}
 
 	/**

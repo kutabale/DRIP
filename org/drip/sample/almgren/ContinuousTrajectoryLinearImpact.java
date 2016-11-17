@@ -96,7 +96,7 @@ public class ContinuousTrajectoryLinearImpact {
 			{7.07,   4., 188.}
 		};
 
-		PriceMarketImpactPower apim = new PriceMarketImpactPower (
+		PriceMarketImpactPower pmip = new PriceMarketImpactPower (
 			new AssetTransactionSettings (
 				dblS0,
 				dblDailyVolume,
@@ -118,7 +118,7 @@ public class ContinuousTrajectoryLinearImpact {
 				0.,
 				dblGamma
 			),
-			(ParticipationRatePower) apim.temporaryTransactionFunction()
+			(ParticipationRatePower) pmip.temporaryTransactionFunction()
 		);
 
 		System.out.println ("\n\t|-------------------------------------------||");
