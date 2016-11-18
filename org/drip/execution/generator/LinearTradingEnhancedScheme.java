@@ -71,9 +71,9 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 	{
 		try {
 			return new LinearTradingEnhancedScheme
-				(org.drip.execution.strategy.TradingTrajectoryControl.FixedInterval (new
+				(org.drip.execution.strategy.DiscreteTradingTrajectoryControl.FixedInterval (new
 					org.drip.execution.strategy.OrderSpecification (dblStartHoldings, dblFinishTime),
-						iNumInterval), tevp, new org.drip.execution.optimizer.MeanVarianceObjectiveUtility
+						iNumInterval), tevp, new org.drip.execution.risk.MeanVarianceObjectiveUtility
 							(dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -83,20 +83,20 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 	}
 
 	private LinearTradingEnhancedScheme (
-		final org.drip.execution.strategy.TradingTrajectoryControl ttc,
+		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
 		final org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp,
-		final org.drip.execution.optimizer.MeanVarianceObjectiveUtility mvou)
+		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
 		super (ttc, tevp, mvou);
 	}
 
-	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
+	@Override public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
 	{
 		org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp =
 			(org.drip.execution.dynamics.TradingEnhancedVolatilityParameters) priceWalkParameters();
 
-		double dblLambda = ((org.drip.execution.optimizer.MeanVarianceObjectiveUtility)
+		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
 
 		double dblBeta = tevp.linearTemporaryVolatility().slope();

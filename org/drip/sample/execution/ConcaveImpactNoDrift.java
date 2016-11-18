@@ -4,9 +4,9 @@ package org.drip.sample.execution;
 import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.OptimalTrajectoryScheme;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimizer.MeanVarianceObjectiveUtility;
-import org.drip.execution.optimum.EfficientTradingTrajectory;
+import org.drip.execution.optimum.EfficientDiscreteTradingTrajectory;
 import org.drip.execution.parameters.*;
+import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -103,7 +103,7 @@ public class ConcaveImpactNoDrift {
 			(ParticipationRatePower) pmip.temporaryTransactionFunction()
 		);
 
-		TradingTrajectoryControl ttc = TradingTrajectoryControl.FixedInterval (
+		DiscreteTradingTrajectoryControl ttc = DiscreteTradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
 				dblX,
 				dblFinishTime
@@ -111,7 +111,7 @@ public class ConcaveImpactNoDrift {
 			iNumInterval
 		);
 
-		EfficientTradingTrajectory ett = new OptimalTrajectoryScheme (
+		EfficientDiscreteTradingTrajectory ett = new OptimalTrajectoryScheme (
 			ttc,
 			a2003pe,
 			new MeanVarianceObjectiveUtility (dblLambdaU)

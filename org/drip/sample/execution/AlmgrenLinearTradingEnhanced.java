@@ -5,8 +5,8 @@ import org.drip.execution.capture.TrajectoryShortfallEstimator;
 import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.*;
 import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.execution.optimizer.MeanVarianceObjectiveUtility;
 import org.drip.execution.optimum.*;
+import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
@@ -77,7 +77,7 @@ public class AlmgrenLinearTradingEnhanced {
 		double dblT = 5.;
 		int iNumInterval = 20;
 
-		TradingTrajectoryControl ttc = TradingTrajectoryControl.FixedInterval (
+		DiscreteTradingTrajectoryControl ttc = DiscreteTradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
 				dblX,
 				dblT
@@ -96,7 +96,7 @@ public class AlmgrenLinearTradingEnhanced {
 			)
 		);
 
-		EfficientTradingTrajectory ett = new OptimalTrajectoryScheme (
+		EfficientDiscreteTradingTrajectory ett = new OptimalTrajectoryScheme (
 			ttc,
 			tevp,
 			new MeanVarianceObjectiveUtility (dblLambda)

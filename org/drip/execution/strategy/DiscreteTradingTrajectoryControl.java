@@ -29,8 +29,8 @@ package org.drip.execution.strategy;
  */
 
 /**
- * TradingTrajectoryControl holds the Time Trajectory Control Settings of a Trading Block that is to be
- *  executed over Time. The References are:
+ * DiscreteTradingTrajectoryControl holds the Time Trajectory Control Settings of a Trading Block that is to
+ *  be executed over a Discrete Time Sequence. The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -49,26 +49,26 @@ package org.drip.execution.strategy;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradingTrajectoryControl {
+public class DiscreteTradingTrajectoryControl {
 	private double[] _adblExecutionTimeNode = null;
 	private double _dblStartHoldings = java.lang.Double.NaN;
 
 	/**
-	 * Create a TradingTrajectoryControl from Fixed Intervals
+	 * Create a DiscreteTradingTrajectoryControl from Fixed Intervals
 	 * 
 	 * @param os The Order Specification
 	 * @param iNumInterval The Number of Fixed Intervals
 	 * 
-	 * @return The TradingTrajectoryControl from Fixed Intervals
+	 * @return The DiscreteTradingTrajectoryControl from Fixed Intervals
 	 */
 
-	public static final TradingTrajectoryControl FixedInterval (
+	public static final DiscreteTradingTrajectoryControl FixedInterval (
 		final org.drip.execution.strategy.OrderSpecification os,
 		final int iNumInterval)
 	{
 		if (null == os || 0 >= iNumInterval) return null;
 
-		double dblFinishTime = os.executionTime();
+		double dblFinishTime = os.maxExecutionTime();
 
 		double dblTimeInterval = dblFinishTime / iNumInterval;
 		double[] adblExecutionTimeNode = new double[iNumInterval + 1];
@@ -79,7 +79,7 @@ public class TradingTrajectoryControl {
 			adblExecutionTimeNode[i] = i * dblTimeInterval;
 
 		try {
-			return new TradingTrajectoryControl (os.size(), adblExecutionTimeNode);
+			return new DiscreteTradingTrajectoryControl (os.size(), adblExecutionTimeNode);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -88,21 +88,21 @@ public class TradingTrajectoryControl {
 	}
 
 	/**
-	 * Create a Single Interval TradingTrajectoryControl Instance from the Order Specification
+	 * Create a Single Interval DiscreteTradingTrajectoryControl Instance from the Order Specification
 	 * 
 	 * @param os The Order Specification
 	 * 
-	 * @return The Single Interval TradingTrajectoryControl Instance from the Order Specification
+	 * @return The Single Interval DiscreteTradingTrajectoryControl Instance from the Order Specification
 	 */
 
-	public static final TradingTrajectoryControl SingleInterval (
+	public static final DiscreteTradingTrajectoryControl SingleInterval (
 		final org.drip.execution.strategy.OrderSpecification os)
 	{
 		return FixedInterval (os, 1);
 	}
 
 	/**
-	 * TradingTrajectoryControl Constructor
+	 * DiscreteTradingTrajectoryControl Constructor
 	 * 
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param adblExecutionTimeNode Array of the Trajectory Time Snapshots
@@ -110,25 +110,28 @@ public class TradingTrajectoryControl {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradingTrajectoryControl (
+	public DiscreteTradingTrajectoryControl (
 		final double dblStartHoldings,
 		final double[] adblExecutionTimeNode)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblStartHoldings = dblStartHoldings) || null ==
 			(_adblExecutionTimeNode = adblExecutionTimeNode))
-			throw new java.lang.Exception ("TradingTrajectoryControl Constructor => Invalid Inputs!");
+			throw new java.lang.Exception
+				("DiscreteTradingTrajectoryControl Constructor => Invalid Inputs!");
 
 		int iNumExecutionTimeNode = _adblExecutionTimeNode.length;
 
 		if (1 >= iNumExecutionTimeNode || !org.drip.quant.common.NumberUtil.IsValid
 			(_adblExecutionTimeNode[0]))
-			throw new java.lang.Exception ("TradingTrajectoryControl Constructor => Invalid Inputs!");
+			throw new java.lang.Exception
+				("DiscreteTradingTrajectoryControl Constructor => Invalid Inputs!");
 
 		for (int i = 1; i < iNumExecutionTimeNode; ++i) {
 			if (!org.drip.quant.common.NumberUtil.IsValid (_adblExecutionTimeNode[i]) ||
 				_adblExecutionTimeNode[i - 1] >= _adblExecutionTimeNode[i])
-				throw new java.lang.Exception ("TradingTrajectoryControl Constructor => Invalid Inputs!");
+				throw new java.lang.Exception
+					("DiscreteTradingTrajectoryControl Constructor => Invalid Inputs!");
 		}
 	}
 

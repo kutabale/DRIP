@@ -48,7 +48,7 @@ package org.drip.execution.principal;
  */
 
 public class GrossProfitEstimator {
-	private org.drip.execution.optimum.EfficientTradingTrajectory _ett = null;
+	private org.drip.execution.optimum.EfficientDiscreteTradingTrajectory _ett = null;
 
 	/**
 	 * GrossProfitEstimator Constructor
@@ -59,7 +59,7 @@ public class GrossProfitEstimator {
 	 */
 
 	public GrossProfitEstimator (
-		final org.drip.execution.optimum.EfficientTradingTrajectory ett)
+		final org.drip.execution.optimum.EfficientDiscreteTradingTrajectory ett)
 		throws java.lang.Exception
 	{
 		if (null == (_ett = ett))
@@ -72,7 +72,7 @@ public class GrossProfitEstimator {
 	 * @return The Optimal "Efficient" Trajectory
 	 */
 
-	public org.drip.execution.optimum.EfficientTradingTrajectory efficientTrajectory()
+	public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory efficientTrajectory()
 	{
 		return _ett;
 	}

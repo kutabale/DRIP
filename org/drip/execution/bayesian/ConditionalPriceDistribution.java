@@ -52,6 +52,7 @@ package org.drip.execution.bayesian;
 public class ConditionalPriceDistribution extends org.drip.measure.gaussian.R1UnivariateNormal {
 	private double _dblTime = java.lang.Double.NaN;
 	private double _dblPriceVolatility = java.lang.Double.NaN;
+	private double _dblConditionalDrift = java.lang.Double.NaN;
 
 	/**
 	 * ConditionalPriceDistribution Constructor
@@ -70,6 +71,11 @@ public class ConditionalPriceDistribution extends org.drip.measure.gaussian.R1Un
 		throws java.lang.Exception
 	{
 		super (dblConditionalDrift * dblTime, dblPriceVolatility * java.lang.Math.sqrt (dblTime));
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || 0. >= _dblTime ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblConditionalDrift = dblConditionalDrift) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblPriceVolatility = dblPriceVolatility))
+			throw new java.lang.Exception ("ConditionalPriceDistribution Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -92,5 +98,16 @@ public class ConditionalPriceDistribution extends org.drip.measure.gaussian.R1Un
 	public double priceVolatility()
 	{
 		return _dblPriceVolatility;
+	}
+
+	/**
+	 * Retrieve the Distribution Conditional Drift
+	 * 
+	 * @return The Distribution Conditional Drift
+	 */
+
+	public double conditionalDrift()
+	{
+		return _dblConditionalDrift;
 	}
 }

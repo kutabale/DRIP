@@ -61,7 +61,7 @@ public class LinearImpactTrajectoryEstimator extends org.drip.execution.capture.
 	 */
 
 	public LinearImpactTrajectoryEstimator (
-		final org.drip.execution.strategy.TradingTrajectory tt)
+		final org.drip.execution.strategy.DiscreteTradingTrajectory tt)
 		throws java.lang.Exception
 	{
 		super (tt);
@@ -84,7 +84,7 @@ public class LinearImpactTrajectoryEstimator extends org.drip.execution.capture.
 
 		double dblTemporaryOffsetImpactParameter = tflTemporaryExpectation.offset();
 
-		org.drip.execution.strategy.TradingTrajectory tt = trajectory();
+		org.drip.execution.strategy.DiscreteTradingTrajectory tt = trajectory();
 
 		double[] adblExecutionTimeNode = tt.executionTimeNode();
 

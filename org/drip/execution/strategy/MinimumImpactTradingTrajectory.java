@@ -49,7 +49,7 @@ package org.drip.execution.strategy;
  * @author Lakshmi Krishnamurthy
  */
 
-public class MinimumImpactTradingTrajectory extends org.drip.execution.strategy.TradingTrajectory {
+public class MinimumImpactTradingTrajectory extends org.drip.execution.strategy.DiscreteTradingTrajectory {
 
 	/**
 	 * Create a MinimumImpactTradingTrajectory Instance from Equal Intervals

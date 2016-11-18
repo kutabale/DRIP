@@ -71,9 +71,9 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 	{
 		try {
 			return new Almgren2003TrajectoryScheme
-				(org.drip.execution.strategy.TradingTrajectoryControl.FixedInterval (new
+				(org.drip.execution.strategy.DiscreteTradingTrajectoryControl.FixedInterval (new
 					org.drip.execution.strategy.OrderSpecification (dblStartHoldings, dblFinishTime),
-						iNumInterval), a2003p, new org.drip.execution.optimizer.MeanVarianceObjectiveUtility
+						iNumInterval), a2003p, new org.drip.execution.risk.MeanVarianceObjectiveUtility
 							(dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -83,15 +83,15 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 	}
 
 	private Almgren2003TrajectoryScheme (
-		final org.drip.execution.strategy.TradingTrajectoryControl ttc,
+		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
 		final org.drip.execution.dynamics.Almgren2003Parameters a2003p,
-		final org.drip.execution.optimizer.MeanVarianceObjectiveUtility mvou)
+		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
 		super (ttc, a2003p, mvou);
 	}
 
-	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
+	@Override public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
 	{
 		org.drip.execution.dynamics.Almgren2003Parameters a2003p =
 			(org.drip.execution.dynamics.Almgren2003Parameters) priceWalkParameters();
@@ -99,10 +99,10 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 		org.drip.execution.impact.TransactionFunctionPower tfpTemporaryExpectation =
 			a2003p.powerTemporaryExpectation();
 
-		double dblLambda = ((org.drip.execution.optimizer.MeanVarianceObjectiveUtility)
+		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
 
-		org.drip.execution.strategy.TradingTrajectoryControl ttc = control();
+		org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc = control();
 
 		double dblGamma = a2003p.linearPermanentExpectation().slope();
 

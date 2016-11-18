@@ -1,5 +1,5 @@
 
-package org.drip.execution.optimizer;
+package org.drip.execution.risk;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -49,7 +49,7 @@ package org.drip.execution.optimizer;
  * @author Lakshmi Krishnamurthy
  */
 
-public class MeanVarianceObjectiveUtility implements org.drip.execution.optimizer.ObjectiveUtility {
+public class MeanVarianceObjectiveUtility implements org.drip.execution.risk.ObjectiveUtility {
 	private double _dblRiskAversion = java.lang.Double.NaN;
 
 	/**

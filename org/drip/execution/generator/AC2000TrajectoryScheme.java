@@ -83,9 +83,9 @@ public class AC2000TrajectoryScheme extends org.drip.execution.generator.Optimal
 	{
 		try {
 			return new AC2000TrajectoryScheme
-				(org.drip.execution.strategy.TradingTrajectoryControl.FixedInterval (new
+				(org.drip.execution.strategy.DiscreteTradingTrajectoryControl.FixedInterval (new
 					org.drip.execution.strategy.OrderSpecification (dblStartHoldings, dblFinishTime),
-						iNumInterval), lep, new org.drip.execution.optimizer.MeanVarianceObjectiveUtility
+						iNumInterval), lep, new org.drip.execution.risk.MeanVarianceObjectiveUtility
 							(dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -95,17 +95,17 @@ public class AC2000TrajectoryScheme extends org.drip.execution.generator.Optimal
 	}
 
 	private AC2000TrajectoryScheme (
-		final org.drip.execution.strategy.TradingTrajectoryControl ttc,
+		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
 		final org.drip.execution.dynamics.LinearExpectationParameters lpe,
-		final org.drip.execution.optimizer.MeanVarianceObjectiveUtility mvou)
+		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
 		super (ttc, lpe, mvou);
 	}
 
-	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
+	@Override public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
 	{
-		org.drip.execution.strategy.TradingTrajectoryControl ttc = control();
+		org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc = control();
 
 		double[] adblTNode = ttc.executionTimeNodes();
 
@@ -132,7 +132,7 @@ public class AC2000TrajectoryScheme extends org.drip.execution.generator.Optimal
 		double dblT = adblTNode[iNumNode - 1] - adblTNode[0];
 		double dblEtaTilda = dblEta - 0.5 * dblGamma * dblTau;
 
-		double dblKappaTildaSquared = ((org.drip.execution.optimizer.MeanVarianceObjectiveUtility)
+		double dblKappaTildaSquared = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion() * dblSigmaSquared / dblEtaTilda;
 
 		double dblKappaTau = KappaTau (dblKappaTildaSquared, dblTau);

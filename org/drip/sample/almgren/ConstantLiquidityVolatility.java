@@ -4,7 +4,7 @@ package org.drip.sample.almgren;
 import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.ConstantTradingEnhancedScheme;
 import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.execution.optimum.ContinuousTradingTrajectory;
+import org.drip.execution.optimum.EfficientContinuousTradingTrajectory;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -87,7 +87,7 @@ public class ConstantLiquidityVolatility {
 			dblLambda
 		);
 
-		ContinuousTradingTrajectory ctt = (ContinuousTradingTrajectory) ctes.generate();
+		EfficientContinuousTradingTrajectory ctt = (EfficientContinuousTradingTrajectory) ctes.generate();
 
 		double[] adblExecutionTimeNode = ctt.executionTimeNode();
 

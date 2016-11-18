@@ -50,8 +50,8 @@ package org.drip.execution.generator;
  */
 
 public class OptimalTrajectoryScheme {
-	private org.drip.execution.optimizer.ObjectiveUtility _ou = null;
-	private org.drip.execution.strategy.TradingTrajectoryControl _ttc = null;
+	private org.drip.execution.risk.ObjectiveUtility _ou = null;
+	private org.drip.execution.strategy.DiscreteTradingTrajectoryControl _ttc = null;
 	private org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters _apep = null;
 
 	private double[] completeHoldings (
@@ -81,7 +81,7 @@ public class OptimalTrajectoryScheme {
 
 		try {
 			tse = new org.drip.execution.capture.TrajectoryShortfallEstimator
-				(org.drip.execution.strategy.TradingTrajectory.Standard (_ttc.executionTimeNodes(),
+				(org.drip.execution.strategy.DiscreteTradingTrajectory.Standard (_ttc.executionTimeNodes(),
 					completeHoldings (adblInnerHoldings)));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -153,9 +153,9 @@ public class OptimalTrajectoryScheme {
 	 */
 
 	public OptimalTrajectoryScheme (
-		final org.drip.execution.strategy.TradingTrajectoryControl ttc,
+		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
-		final org.drip.execution.optimizer.ObjectiveUtility ou)
+		final org.drip.execution.risk.ObjectiveUtility ou)
 		throws java.lang.Exception
 	{
 		if (null == (_ttc = ttc) || null == (_apep = apep) || null == (_ou = ou))
@@ -168,7 +168,7 @@ public class OptimalTrajectoryScheme {
 	 * @return The Optimizer Objective Utility Function
 	 */
 
-	public org.drip.execution.optimizer.ObjectiveUtility objectiveUtility()
+	public org.drip.execution.risk.ObjectiveUtility objectiveUtility()
 	{
 		return _ou;
 	}
@@ -179,7 +179,7 @@ public class OptimalTrajectoryScheme {
 	 * @return The Discrete Trajectory Control Settings
 	 */
 
-	public org.drip.execution.strategy.TradingTrajectoryControl control()
+	public org.drip.execution.strategy.DiscreteTradingTrajectoryControl control()
 	{
 		return _ttc;
 	}
@@ -201,12 +201,12 @@ public class OptimalTrajectoryScheme {
 	 * @return The Optimal Trading Trajectory Instance
 	 */
 
-	public org.drip.execution.optimum.EfficientTradingTrajectory generate()
+	public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
 	{
 		double[] adblExecutionTimeNode = _ttc.executionTimeNodes();
 
-		org.drip.execution.strategy.TradingTrajectory tt =
-			org.drip.execution.strategy.TradingTrajectory.Linear (adblExecutionTimeNode,
+		org.drip.execution.strategy.DiscreteTradingTrajectory tt =
+			org.drip.execution.strategy.DiscreteTradingTrajectory.Linear (adblExecutionTimeNode,
 				_ttc.startHoldings(), 0.);
 
 		if (null == tt) return null;
@@ -225,7 +225,7 @@ public class OptimalTrajectoryScheme {
 			return null;
 		}
 
-		return org.drip.execution.optimum.EfficientTradingTrajectory.Standard (adblExecutionTimeNode,
+		return org.drip.execution.optimum.EfficientDiscreteTradingTrajectory.Standard (adblExecutionTimeNode,
 			completeHoldings (vicm.variates()), _apep);
 	}
 }

@@ -72,9 +72,9 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 	{
 		try {
 			return new ConstantTradingEnhancedScheme
-				(org.drip.execution.strategy.TradingTrajectoryControl.FixedInterval (new
+				(org.drip.execution.strategy.DiscreteTradingTrajectoryControl.FixedInterval (new
 					org.drip.execution.strategy.OrderSpecification (dblStartHoldings, dblFinishTime),
-						iNumInterval), tevp, new org.drip.execution.optimizer.MeanVarianceObjectiveUtility
+						iNumInterval), tevp, new org.drip.execution.risk.MeanVarianceObjectiveUtility
 							(dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -84,27 +84,27 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 	}
 
 	private ConstantTradingEnhancedScheme (
-		final org.drip.execution.strategy.TradingTrajectoryControl ttc,
+		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
 		final org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp,
-		final org.drip.execution.optimizer.MeanVarianceObjectiveUtility mvou)
+		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
 		super (ttc, tevp, mvou);
 	}
 
-	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
+	@Override public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
 	{
 		org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp =
 			(org.drip.execution.dynamics.TradingEnhancedVolatilityParameters) priceWalkParameters();
 
-		double dblLambda = ((org.drip.execution.optimizer.MeanVarianceObjectiveUtility)
+		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
 
 		double dblEta = tevp.linearTemporaryExpectation().slope();
 
 		double dblAlpha = tevp.linearTemporaryVolatility().offset();
 
-		org.drip.execution.strategy.TradingTrajectoryControl ttc = control();
+		org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc = control();
 
 		final double dblX = ttc.startHoldings();
 
@@ -132,7 +132,7 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 		};
 
 		try {
-			return org.drip.execution.optimum.ContinuousTradingTrajectory.Standard (ttc.executionTimeNodes(),
+			return org.drip.execution.optimum.EfficientContinuousTradingTrajectory.Standard (ttc.executionTimeNodes(),
 				dblE, dblV, dblTStar, holdingsR1ToR1);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

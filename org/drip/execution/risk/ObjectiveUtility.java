@@ -1,5 +1,5 @@
 
-package org.drip.execution.optimizer;
+package org.drip.execution.risk;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-

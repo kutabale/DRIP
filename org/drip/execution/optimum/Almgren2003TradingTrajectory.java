@@ -48,7 +48,7 @@ package org.drip.execution.optimum;
  * @author Lakshmi Krishnamurthy
  */
 
-public class Almgren2003TradingTrajectory extends org.drip.execution.optimum.ContinuousTradingTrajectory {
+public class Almgren2003TradingTrajectory extends org.drip.execution.optimum.EfficientContinuousTradingTrajectory {
 	private double _dblMaxExecutionTime = java.lang.Double.NaN;
 	private double _dblHyperboloidBoundaryValue = java.lang.Double.NaN;
 

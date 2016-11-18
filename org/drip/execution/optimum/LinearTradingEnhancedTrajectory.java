@@ -49,7 +49,7 @@ package org.drip.execution.optimum;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LinearTradingEnhancedTrajectory extends org.drip.execution.optimum.EfficientTradingTrajectory {
+public class LinearTradingEnhancedTrajectory extends org.drip.execution.optimum.EfficientDiscreteTradingTrajectory {
 	private double _dblCharacteristicSize = java.lang.Double.NaN;
 	private double _dblCharacteristicTime = java.lang.Double.NaN;
 
@@ -65,7 +65,7 @@ public class LinearTradingEnhancedTrajectory extends org.drip.execution.optimum.
 	 */
 
 	public static LinearTradingEnhancedTrajectory Standard (
-		final org.drip.execution.strategy.TradingTrajectory tt,
+		final org.drip.execution.strategy.DiscreteTradingTrajectory tt,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
 		final double dblCharacteristicTime,
 		final double dblCharacteristicSize)

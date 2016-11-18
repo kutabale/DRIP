@@ -5,9 +5,9 @@ import org.drip.execution.capture.LinearImpactTrajectoryEstimator;
 import org.drip.execution.dynamics.LinearExpectationParameters;
 import org.drip.execution.generator.OptimalTrajectoryScheme;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimizer.MeanVarianceObjectiveUtility;
-import org.drip.execution.optimum.EfficientTradingTrajectory;
+import org.drip.execution.optimum.EfficientDiscreteTradingTrajectory;
 import org.drip.execution.parameters.*;
+import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
@@ -107,7 +107,7 @@ public class LinearImpactWithDrift {
 
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
-		TradingTrajectoryControl ttc = TradingTrajectoryControl.FixedInterval (
+		DiscreteTradingTrajectoryControl ttc = DiscreteTradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
 				dblX,
 				dblT
@@ -125,7 +125,7 @@ public class LinearImpactWithDrift {
 			prlTemporary
 		);
 
-		EfficientTradingTrajectory ett = new OptimalTrajectoryScheme (
+		EfficientDiscreteTradingTrajectory ett = new OptimalTrajectoryScheme (
 			ttc,
 			lpe,
 			new MeanVarianceObjectiveUtility (dblLambdaU)

@@ -51,7 +51,7 @@ package org.drip.execution.capture;
 
 public class TrajectoryShortfallEstimator implements
 	org.drip.execution.sensitivity.ControlNodesGreekGenerator {
-	private org.drip.execution.strategy.TradingTrajectory _tt = null;
+	private org.drip.execution.strategy.DiscreteTradingTrajectory _tt = null;
 
 	/**
 	 * TrajectoryShortfallEstimator Constructor
@@ -62,7 +62,7 @@ public class TrajectoryShortfallEstimator implements
 	 */
 
 	public TrajectoryShortfallEstimator (
-		final org.drip.execution.strategy.TradingTrajectory tt)
+		final org.drip.execution.strategy.DiscreteTradingTrajectory tt)
 		throws java.lang.Exception
 	{
 		if (null == (_tt = tt))
@@ -75,7 +75,7 @@ public class TrajectoryShortfallEstimator implements
 	 * @return The Underlying Trading Trajectory Instance
 	 */
 
-	public org.drip.execution.strategy.TradingTrajectory trajectory()
+	public org.drip.execution.strategy.DiscreteTradingTrajectory trajectory()
 	{
 		return _tt;
 	}

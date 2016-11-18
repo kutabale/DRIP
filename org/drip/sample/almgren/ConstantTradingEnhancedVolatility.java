@@ -5,7 +5,7 @@ import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.ConstantTradingEnhancedScheme;
 import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.execution.optimum.ContinuousTradingTrajectory;
+import org.drip.execution.optimum.EfficientContinuousTradingTrajectory;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -92,7 +92,7 @@ public class ConstantTradingEnhancedVolatility {
 			dblLambda
 		);
 
-		ContinuousTradingTrajectory ctt = (ContinuousTradingTrajectory) ctes.generate();
+		EfficientContinuousTradingTrajectory ctt = (EfficientContinuousTradingTrajectory) ctes.generate();
 
 		double[] adblExecutionTimeNode = ctt.executionTimeNode();
 

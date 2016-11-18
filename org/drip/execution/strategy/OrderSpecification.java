@@ -49,37 +49,37 @@ package org.drip.execution.strategy;
 
 public class OrderSpecification {
 	private double _dblSize = java.lang.Double.NaN;
-	private double _dblExecutionTime = java.lang.Double.NaN;
+	private double _dblMaxExecutionTime = java.lang.Double.NaN;
 
 	/**
 	 * OrderSpecification Constructor
 	 * 
 	 * @param dblSize The Size of the Order
-	 * @param dblExecutionTime The Execution Time of the Order
+	 * @param dblMaxExecutionTime The Maximum Allowed Execution Time of the Order
 	 * 
 	 * @throws java.lang.Exception Thrown if the inputs are Invalid
 	 */
 
 	public OrderSpecification (
 		final double dblSize,
-		final double dblExecutionTime)
+		final double dblMaxExecutionTime)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSize = dblSize) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblExecutionTime = dblExecutionTime) || 0. >=
-				_dblExecutionTime)
+			!org.drip.quant.common.NumberUtil.IsValid (_dblMaxExecutionTime = dblMaxExecutionTime) || 0. >=
+				_dblMaxExecutionTime)
 			throw new java.lang.Exception ("OrderSpecification Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Execution Time
+	 * Retrieve the Maximum Allowed Execution Time
 	 * 
-	 * @return The Execution Time
+	 * @return The Maximum Allowed Execution Time
 	 */
 
-	public double executionTime()
+	public double maxExecutionTime()
 	{
-		return _dblExecutionTime;
+		return _dblMaxExecutionTime;
 	}
 
 	/**
