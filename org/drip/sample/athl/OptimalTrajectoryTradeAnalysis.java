@@ -6,6 +6,7 @@ import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
 import org.drip.execution.parameters.AssetFlowSettings;
+import org.drip.function.definition.R1ToR1;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -79,7 +80,16 @@ public class OptimalTrajectoryTradeAnalysis {
 
 		Almgren2003TradingTrajectory a2003tt = (Almgren2003TradingTrajectory) a2003ts.generate();
 
-		double[] adblHoldings = a2003tt.holdings();
+		R1ToR1 r1ToR1Holdings = a2003tt.holdings();
+
+		double[] adblHoldings = new double[iNumInterval];
+		double[] adblExecutionTime = new double[iNumInterval];
+
+		for (int i = 1; i <= iNumInterval; ++i) {
+			adblExecutionTime[i - 1] = dblTradeTime * i / iNumInterval;
+
+			adblHoldings[i - 1] = r1ToR1Holdings.evaluate (adblExecutionTime[i - 1]);
+		}
 
 		String strDump = "";
 

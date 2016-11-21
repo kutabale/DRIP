@@ -50,6 +50,7 @@ package org.drip.execution.optimum;
  */
 
 public class EfficientDiscreteTradingTrajectory extends org.drip.execution.strategy.DiscreteTradingTrajectory
+	implements org.drip.execution.optimum.EfficientTradingTrajectory
 {
 	private double _dblTransactionCostVariance = java.lang.Double.NaN;
 	private double _dblTransactionCostExpectation = java.lang.Double.NaN;
@@ -118,24 +119,12 @@ public class EfficientDiscreteTradingTrajectory extends org.drip.execution.strat
 				("EfficientDiscreteTradingTrajectory Constructor => Invalid Inputs");
 	}
 
-	/**
-	 * Retrieve the Expected Transaction Cost
-	 * 
-	 * @return The Expected Transaction Cost
-	 */
-
-	public double transactionCostExpectation()
+	@Override public double transactionCostExpectation()
 	{
 		return _dblTransactionCostExpectation;
 	}
 
-	/**
-	 * Retrieve the Variance of the Expected Transaction Cost
-	 * 
-	 * @return The Variance of the Expected Transaction Cost
-	 */
-
-	public double transactionCostVariance()
+	@Override public double transactionCostVariance()
 	{
 		return _dblTransactionCostVariance;
 	}

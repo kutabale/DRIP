@@ -92,7 +92,7 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 		super (ttc, tevp, mvou);
 	}
 
-	@Override public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
+	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
 		org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp =
 			(org.drip.execution.dynamics.TradingEnhancedVolatilityParameters) priceWalkParameters();
@@ -132,8 +132,8 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 		};
 
 		try {
-			return org.drip.execution.optimum.EfficientContinuousTradingTrajectory.Standard (ttc.executionTimeNodes(),
-				dblE, dblV, dblTStar, holdingsR1ToR1);
+			return org.drip.execution.optimum.EfficientContinuousTradingTrajectory.Standard
+				(ttc.executionTimeNodes()[0], dblE, dblV, dblTStar, holdingsR1ToR1);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

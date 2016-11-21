@@ -7,6 +7,7 @@ import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.Almgren2003Estimator;
+import org.drip.function.definition.R1ToR1;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -111,11 +112,16 @@ public class OptimalTrajectoryMeasures {
 
 		Almgren2003TradingTrajectory a2003tt = (Almgren2003TradingTrajectory) a2003ts.generate();
 
-		double[] adblExecutionTimeNode = a2003tt.executionTimeNode();
+		R1ToR1 r1ToR1Holdings = a2003tt.holdings();
 
-		double[] adblTradeList = a2003tt.tradeList();
+		double[] adblHoldings = new double[iNumInterval];
+		double[] adblExecutionTime = new double[iNumInterval];
 
-		double[] adblHoldings = a2003tt.holdings();
+		for (int i = 1; i <= iNumInterval; ++i) {
+			adblExecutionTime[i - 1] = dblT * i / iNumInterval;
+
+			adblHoldings[i - 1] = r1ToR1Holdings.evaluate (adblExecutionTime[i - 1]);
+		}
 
 		Almgren2003Estimator a2003e = new Almgren2003Estimator (
 			a2003tt,
@@ -142,12 +148,12 @@ public class OptimalTrajectoryMeasures {
 
 		System.out.println ("\t|----------------------------------||");
 
-		for (int i = 1; i < adblExecutionTimeNode.length; ++i)
+		for (int i = 1; i < adblExecutionTime.length; ++i)
 			System.out.println (
 				"\t| " +
-				FormatUtil.FormatDouble (adblExecutionTimeNode[i], 1, 2, 1.) + " | " +
+				FormatUtil.FormatDouble (adblExecutionTime[i], 1, 2, 1.) + " | " +
 				FormatUtil.FormatDouble (adblHoldings[i], 5, 0, 1.) + " | " + 
-				FormatUtil.FormatDouble (adblTradeList[i - 1], 5, 0, 1.) + " | " + 
+				FormatUtil.FormatDouble (adblHoldings[i] - adblHoldings[i - 1], 5, 0, 1.) + " | " + 
 				FormatUtil.FormatDouble (adblHoldings[i] / dblX, 2, 1, 100.) + "% ||"
 			);
 

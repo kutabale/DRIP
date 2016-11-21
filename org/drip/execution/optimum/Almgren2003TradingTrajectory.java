@@ -48,57 +48,50 @@ package org.drip.execution.optimum;
  * @author Lakshmi Krishnamurthy
  */
 
-public class Almgren2003TradingTrajectory extends org.drip.execution.optimum.EfficientContinuousTradingTrajectory {
-	private double _dblMaxExecutionTime = java.lang.Double.NaN;
+public class Almgren2003TradingTrajectory extends
+	org.drip.execution.optimum.EfficientContinuousTradingTrajectory {
+	private double _dblExecutionTimeUpperBound = java.lang.Double.NaN;
 	private double _dblHyperboloidBoundaryValue = java.lang.Double.NaN;
 
 	/**
 	 * Construct the Standard Almgren2003TradingTrajectory Instance
 	 * 
-	 * @param adblExecutionTimeNode Array containing the Trajectory Time Nodes
+	 * @param dblExecutionTime The Execution Time
 	 * @param dblTransactionCostExpectation The Expected Transaction Cost
 	 * @param dblTransactionCostVariance The Variance of the Transaction Cost
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
-	 * @param dblMaxExecutionTime The Optimal Trajectory's Maximal Execution Time (if it exists)
+	 * @param dblExecutionTimeUpperBound The Optimal Trajectory's Execution Time Upper Bound (if it exists)
 	 * @param dblHyperboloidBoundaryValue The Hyperboloid Boundary Value
-	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 To R^1 Holdings Function
+	 * @param r1ToR1Holdings The Optimal Trajectory R^1 To R^1 Holdings Function
 	 * 
 	 * @return The Standard Almgren2003TradingTrajectory Instance
 	 */
 
 	public static Almgren2003TradingTrajectory Standard (
-		final double[] adblExecutionTimeNode,
+		final double dblExecutionTime,
 		final double dblTransactionCostExpectation,
 		final double dblTransactionCostVariance,
 		final double dblCharacteristicTime,
-		final double dblMaxExecutionTime,
+		final double dblExecutionTimeUpperBound,
 		final double dblHyperboloidBoundaryValue,
-		final org.drip.function.definition.R1ToR1 holdingsR1ToR1)
+		final org.drip.function.definition.R1ToR1 r1ToR1Holdings)
 	{
-		if (null == adblExecutionTimeNode || null == holdingsR1ToR1) return null;
-
-		int iNumTimeNode = adblExecutionTimeNode.length;
-		double[] adblHoldings = new double[iNumTimeNode];
-		double[] adblTradeList = new double[iNumTimeNode - 1];
-
-		if (2 >= iNumTimeNode) return null;
-
-		for (int i = 0; i < iNumTimeNode; ++i) {
-			try {
-				adblHoldings[i] = holdingsR1ToR1.evaluate (adblExecutionTimeNode[i]);
-			} catch (java.lang.Exception e) {
-				e.printStackTrace();
-
-				return null;
-			}
-
-			if (0 != i) adblTradeList[i - 1] = adblHoldings[i] - adblHoldings[i - 1];
-		}
+		if (null == r1ToR1Holdings) return null;
 
 		try {
-			return new Almgren2003TradingTrajectory (adblExecutionTimeNode, adblHoldings, adblTradeList,
-				dblTransactionCostExpectation, dblTransactionCostVariance, dblCharacteristicTime,
-					dblMaxExecutionTime, dblHyperboloidBoundaryValue, holdingsR1ToR1);
+			org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1
+				(null) {
+				@Override public double evaluate (
+					final double dblVariate)
+					throws java.lang.Exception
+				{
+					return r1ToR1Holdings.derivative (dblVariate, 1);
+				}
+			};
+
+			return new Almgren2003TradingTrajectory (dblExecutionTime, dblTransactionCostExpectation,
+				dblTransactionCostVariance, dblCharacteristicTime, dblExecutionTimeUpperBound,
+					dblHyperboloidBoundaryValue, r1ToR1Holdings, r1ToR1TradeRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -109,39 +102,48 @@ public class Almgren2003TradingTrajectory extends org.drip.execution.optimum.Eff
 	/**
 	 * Almgren2003TradingTrajectory Constructor
 	 * 
-	 * @param adblExecutionTimeNode Array containing the Trajectory Time Nodes
-	 * @param adblHoldings Array containing the Holdings
-	 * @param adblTradeList Array containing the Trade List
+	 * @param dblExecutionTime The Execution Time
 	 * @param dblTransactionCostExpectation The Expected Transaction Cost
 	 * @param dblTransactionCostVariance The Variance of the Transaction Cost
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
-	 * @param dblMaxExecutionTime The Optimal Trajectory's Maximal Execution Time (if it exists)
+	 * @param dblExecutionTimeUpperBound The Optimal Trajectory's Execution Time Upper Bound (if it exists)
 	 * @param dblHyperboloidBoundaryValue The Hyperboloid Boundary Value
-	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 To R^1 Holdings Function
+	 * @param r1ToR1Holdings The Optimal Trajectory R^1 To R^1 Holdings Function
+	 * @param r1ToR1TradeRate The Optimal Trajectory R^1 To R^1 Trade Rate Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public Almgren2003TradingTrajectory (
-		final double[] adblExecutionTimeNode,
-		final double[] adblHoldings,
-		final double[] adblTradeList,
+		final double dblExecutionTime,
 		final double dblTransactionCostExpectation,
 		final double dblTransactionCostVariance,
 		final double dblCharacteristicTime,
-		final double dblMaxExecutionTime,
+		final double dblExecutionTimeUpperBound,
 		final double dblHyperboloidBoundaryValue,
-		final org.drip.function.definition.R1ToR1 holdingsR1ToR1)
+		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
+		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate)
 		throws java.lang.Exception
 	{
-		super (adblExecutionTimeNode, adblHoldings, adblTradeList, dblTransactionCostExpectation,
-			dblTransactionCostVariance, dblCharacteristicTime, holdingsR1ToR1);
+		super (dblExecutionTime, dblTransactionCostExpectation, dblTransactionCostVariance,
+			dblCharacteristicTime, r1ToR1Holdings, r1ToR1TradeRate);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHyperboloidBoundaryValue =
 			dblHyperboloidBoundaryValue))
 			throw new java.lang.Exception ("Almgren2003TradingTrajectory Constructor => Invalid Inputs");
 
-		_dblMaxExecutionTime = dblMaxExecutionTime;
+		_dblExecutionTimeUpperBound = dblExecutionTimeUpperBound;
+	}
+
+	/**
+	 * Retrieve the Optimal Trajectory Execution Time Upper Bound (if it exists)
+	 * 
+	 * @return The Optimal Trajectory Execution Time Upper Bound (if it exists)
+	 */
+
+	public double executionTimeUpperBound()
+	{
+		return _dblExecutionTimeUpperBound;
 	}
 
 	/**
@@ -153,16 +155,5 @@ public class Almgren2003TradingTrajectory extends org.drip.execution.optimum.Eff
 	public double hyperboloidBoundaryValue()
 	{
 		return _dblHyperboloidBoundaryValue;
-	}
-
-	/**
-	 * Retrieve the Optimal Trajectory Maximum Execution Time (if it exists)
-	 * 
-	 * @return The Optimal Trajectory Maximum Execution Time (if it exists)
-	 */
-
-	public double maxExecutionTime()
-	{
-		return _dblMaxExecutionTime;
 	}
 }

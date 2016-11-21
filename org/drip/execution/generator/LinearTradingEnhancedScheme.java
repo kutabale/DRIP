@@ -91,7 +91,7 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 		super (ttc, tevp, mvou);
 	}
 
-	@Override public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
+	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
 		org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp =
 			(org.drip.execution.dynamics.TradingEnhancedVolatilityParameters) priceWalkParameters();
@@ -110,7 +110,7 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 		double dblXStar = dblSigma * dblTStar * dblTStar / (dblBeta * java.lang.Math.sqrt (3.));
 
 		return org.drip.execution.optimum.LinearTradingEnhancedTrajectory.Standard (
-			super.generate(),
+			(org.drip.execution.strategy.DiscreteTradingTrajectory) super.generate(),
 			tevp,
 			dblTStar,
 			dblXStar

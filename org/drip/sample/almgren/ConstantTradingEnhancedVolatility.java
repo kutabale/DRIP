@@ -6,6 +6,8 @@ import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.ConstantTradingEnhancedScheme;
 import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.execution.optimum.EfficientContinuousTradingTrajectory;
+import org.drip.execution.strategy.DiscreteTradingTrajectory;
+import org.drip.function.definition.R1ToR1;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -92,21 +94,33 @@ public class ConstantTradingEnhancedVolatility {
 			dblLambda
 		);
 
-		EfficientContinuousTradingTrajectory ctt = (EfficientContinuousTradingTrajectory) ctes.generate();
+		EfficientContinuousTradingTrajectory ectt = (EfficientContinuousTradingTrajectory) ctes.generate();
 
-		double[] adblExecutionTimeNode = ctt.executionTimeNode();
+		R1ToR1 r1ToR1Holdings = ectt.holdings();
 
-		double[] adblTradeList = ctt.tradeList();
+		double[] adblHoldings = new double[iNumInterval];
+		double[] adblExecutionTime = new double[iNumInterval];
 
-		double[] adblHoldings = ctt.holdings();
+		for (int i = 1; i <= iNumInterval; ++i) {
+			adblExecutionTime[i - 1] = dblT * i / iNumInterval;
 
-		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (ctt);
+			adblHoldings[i - 1] = r1ToR1Holdings.evaluate (adblExecutionTime[i - 1]);
+		}
+
+		DiscreteTradingTrajectory dtt = DiscreteTradingTrajectory.Standard (
+			adblExecutionTime,
+			adblHoldings
+		);
+
+		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (dtt);
 
 		R1UnivariateNormal r1un = tse.totalCostDistributionSynopsis (tevp);
 
-		for (int i = 1; i < adblExecutionTimeNode.length; ++i) {
+		double[] adblTradeList = dtt.tradeList();
+
+		for (int i = 1; i < adblExecutionTime.length; ++i) {
 			System.out.println ("\t| " +
-				FormatUtil.FormatDouble (adblExecutionTimeNode[i], 1, 4, 1.) + " => " +
+				FormatUtil.FormatDouble (adblExecutionTime[i], 1, 4, 1.) + " => " +
 				FormatUtil.FormatDouble (adblHoldings[i] / dblX, 2, 4, 100.) + "% | " +
 				FormatUtil.FormatDouble (adblTradeList[i - 1] / dblX, 1, 4, 100.) + "% ||"
 			);
@@ -123,13 +137,13 @@ public class ConstantTradingEnhancedVolatility {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ctt.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ectt.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ctt.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ectt.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------||");

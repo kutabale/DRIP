@@ -5,6 +5,7 @@ import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.ConstantTradingEnhancedScheme;
 import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.execution.optimum.EfficientContinuousTradingTrajectory;
+import org.drip.function.definition.R1ToR1;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -87,22 +88,29 @@ public class ConstantLiquidityVolatility {
 			dblLambda
 		);
 
-		EfficientContinuousTradingTrajectory ctt = (EfficientContinuousTradingTrajectory) ctes.generate();
+		EfficientContinuousTradingTrajectory ectt = (EfficientContinuousTradingTrajectory) ctes.generate();
 
-		double[] adblExecutionTimeNode = ctt.executionTimeNode();
+		R1ToR1 r1ToR1Holdings = ectt.holdings();
 
-		double[] adblHoldings = ctt.holdings();
+		double[] adblHoldings = new double[iNumInterval];
+		double[] adblExecutionTime = new double[iNumInterval];
+
+		for (int i = 1; i <= iNumInterval; ++i) {
+			adblExecutionTime[i - 1] = dblT * i / iNumInterval;
+
+			adblHoldings[i - 1] = r1ToR1Holdings.evaluate (adblExecutionTime[i - 1]);
+		}
 
 		String strDump = "\t|" + FormatUtil.FormatDouble (dblAlpha, 1, 1, 1.) + " =>";
 
-		for (int i = 0; i < adblExecutionTimeNode.length; ++i)
+		for (int i = 0; i < adblExecutionTime.length; ++i)
 			strDump = strDump + FormatUtil.FormatDouble (adblHoldings[i] / dblX, 2, 1, 100.) + "% ";
 
-		strDump = strDump + FormatUtil.FormatDouble (ctt.transactionCostExpectation(), 5, 0, 1.) + " | ";
+		strDump = strDump + FormatUtil.FormatDouble (ectt.transactionCostExpectation(), 5, 0, 1.) + " | ";
 
-		strDump = strDump + FormatUtil.FormatDouble (ctt.transactionCostVariance(), 5, 0, 1.e-06) + " | ";
+		strDump = strDump + FormatUtil.FormatDouble (ectt.transactionCostVariance(), 5, 0, 1.e-06) + " | ";
 
-		strDump = strDump + FormatUtil.FormatDouble (ctt.characteristicTime(), 1, 3, 1.) + " ||";
+		strDump = strDump + FormatUtil.FormatDouble (ectt.characteristicTime(), 1, 3, 1.) + " ||";
 
 		System.out.println (strDump);
 	}

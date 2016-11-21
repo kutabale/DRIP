@@ -49,53 +49,46 @@ package org.drip.execution.optimum;
  */
 
 public class EfficientContinuousTradingTrajectory extends
-	org.drip.execution.optimum.EfficientDiscreteTradingTrajectory {
+	org.drip.execution.strategy.ContinuousTradingTrajectory implements
+		org.drip.execution.optimum.EfficientTradingTrajectory {
 	private double _dblCharacteristicTime = java.lang.Double.NaN;
-	private org.drip.function.definition.R1ToR1 _holdingsR1ToR1 = null;
+	private double _dblTransactionCostVariance = java.lang.Double.NaN;
+	private double _dblTransactionCostExpectation = java.lang.Double.NaN;
 
 	/**
 	 * Construct the Standard EfficientContinuousTradingTrajectory Instance
 	 * 
-	 * @param adblExecutionTimeNode Array containing the Trajectory Time Nodes
+	 * @param dblExecutionTime The Execution Time
 	 * @param dblTransactionCostExpectation The Expected Transaction Cost
 	 * @param dblTransactionCostVariance The Variance of the Transaction Cost
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
-	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 To R^1 Holdings Function
+	 * @param r1ToR1Holdings The Optimal Trajectory R^1 To R^1 Holdings Function
 	 * 
 	 * @return The Standard EfficientContinuousTradingTrajectory Instance
 	 */
 
 	public static EfficientContinuousTradingTrajectory Standard (
-		final double[] adblExecutionTimeNode,
+		final double dblExecutionTime,
 		final double dblTransactionCostExpectation,
 		final double dblTransactionCostVariance,
 		final double dblCharacteristicTime,
-		final org.drip.function.definition.R1ToR1 holdingsR1ToR1)
+		final org.drip.function.definition.R1ToR1 r1ToR1Holdings)
 	{
-		if (null == adblExecutionTimeNode || null == holdingsR1ToR1) return null;
-
-		int iNumTimeNode = adblExecutionTimeNode.length;
-		double[] adblHoldings = new double[iNumTimeNode];
-		double[] adblTradeList = new double[iNumTimeNode - 1];
-
-		if (2 >= iNumTimeNode) return null;
-
-		for (int i = 0; i < iNumTimeNode; ++i) {
-			try {
-				adblHoldings[i] = holdingsR1ToR1.evaluate (adblExecutionTimeNode[i]);
-			} catch (java.lang.Exception e) {
-				e.printStackTrace();
-
-				return null;
-			}
-
-			if (0 != i) adblTradeList[i - 1] = adblHoldings[i] - adblHoldings[i - 1];
-		}
+		if (null == r1ToR1Holdings) return null;
 
 		try {
-			return new EfficientContinuousTradingTrajectory (adblExecutionTimeNode, adblHoldings,
-				adblTradeList, dblTransactionCostExpectation, dblTransactionCostVariance,
-					dblCharacteristicTime, holdingsR1ToR1);
+			org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1
+				(null) {
+				@Override public double evaluate (
+					final double dblVariate)
+					throws java.lang.Exception
+				{
+					return r1ToR1Holdings.derivative (dblVariate, 1);
+				}
+			};
+
+			return new EfficientContinuousTradingTrajectory (dblExecutionTime, dblTransactionCostExpectation,
+				dblTransactionCostVariance, dblCharacteristicTime, r1ToR1Holdings, r1ToR1TradeRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -106,34 +99,44 @@ public class EfficientContinuousTradingTrajectory extends
 	/**
 	 * EfficientContinuousTradingTrajectory Constructor
 	 * 
-	 * @param adblExecutionTimeNode Array containing the Trajectory Time Nodes
-	 * @param adblHoldings Array containing the Holdings
-	 * @param adblTradeList Array containing the Trade List
+	 * @param dblExecutionTime The Execution Time
 	 * @param dblTransactionCostExpectation The Expected Transaction Cost
 	 * @param dblTransactionCostVariance The Variance of the Transaction Cost
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
-	 * @param holdingsR1ToR1 The Optimal Trajectory R^1 To R^1 Holdings Function
+	 * @param r1ToR1Holdings The Optimal Trajectory R^1 To R^1 Holdings Function
+	 * @param r1ToR1TradeRate The Optimal Trajectory R^1 To R^1 Trade Rate Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public EfficientContinuousTradingTrajectory (
-		final double[] adblExecutionTimeNode,
-		final double[] adblHoldings,
-		final double[] adblTradeList,
+		final double dblExecutionTime,
 		final double dblTransactionCostExpectation,
 		final double dblTransactionCostVariance,
 		final double dblCharacteristicTime,
-		final org.drip.function.definition.R1ToR1 holdingsR1ToR1)
+		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
+		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate)
 		throws java.lang.Exception
 	{
-		super (adblExecutionTimeNode, adblHoldings, adblTradeList, dblTransactionCostExpectation,
-			dblTransactionCostVariance);
+		super (dblExecutionTime, r1ToR1Holdings, r1ToR1TradeRate);
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCharacteristicTime = dblCharacteristicTime) ||
-			null == (_holdingsR1ToR1 = holdingsR1ToR1))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTransactionCostExpectation =
+			dblTransactionCostExpectation) || !org.drip.quant.common.NumberUtil.IsValid
+				(_dblTransactionCostVariance = dblTransactionCostVariance) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblCharacteristicTime =
+						dblCharacteristicTime))
 			throw new java.lang.Exception
 				("EfficientContinuousTradingTrajectory Constructor => Invalid Inputs");
+	}
+
+	@Override public double transactionCostExpectation()
+	{
+		return _dblTransactionCostExpectation;
+	}
+
+	@Override public double transactionCostVariance()
+	{
+		return _dblTransactionCostVariance;
 	}
 
 	/**
@@ -145,16 +148,5 @@ public class EfficientContinuousTradingTrajectory extends
 	public double characteristicTime()
 	{
 		return _dblCharacteristicTime;
-	}
-
-	/**
-	 * Retrieve the Optimal Trajectory Holdings Function
-	 * 
-	 * @return The Optimal Trajectory Holdings Function
-	 */
-
-	public org.drip.function.definition.R1ToR1 holdingsFunction()
-	{
-		return _holdingsR1ToR1;
 	}
 }

@@ -91,7 +91,7 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 		super (ttc, a2003p, mvou);
 	}
 
-	@Override public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
+	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
 		org.drip.execution.dynamics.Almgren2003Parameters a2003p =
 			(org.drip.execution.dynamics.Almgren2003Parameters) priceWalkParameters();
@@ -149,7 +149,7 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 			}
 		};
 
-		return org.drip.execution.optimum.Almgren2003TradingTrajectory.Standard (ttc.executionTimeNodes(),
-			dblE, dblV, dblTStar, dblTMax, dblHyperboloidBoundaryValue, holdingsR1ToR1);
+		return org.drip.execution.optimum.Almgren2003TradingTrajectory.Standard (ttc.finishTime(), dblE,
+			dblV, dblTStar, dblTMax, dblHyperboloidBoundaryValue, holdingsR1ToR1);
 	}
 }

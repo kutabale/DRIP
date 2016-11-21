@@ -107,7 +107,7 @@ public class LinearImpactNoDrift {
 
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
-		DiscreteTradingTrajectoryControl ttc = DiscreteTradingTrajectoryControl.FixedInterval (
+		DiscreteTradingTrajectoryControl dttc = DiscreteTradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
 				dblX,
 				dblT
@@ -115,7 +115,7 @@ public class LinearImpactNoDrift {
 			iN
 		);
 
-		LinearExpectationParameters lpe = new LinearExpectationParameters (
+		LinearExpectationParameters lep = new LinearExpectationParameters (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
 				dblSigma,
@@ -125,21 +125,21 @@ public class LinearImpactNoDrift {
 			prlTemporary
 		);
 
-		EfficientDiscreteTradingTrajectory ett = new OptimalTrajectoryScheme (
-			ttc,
-			lpe,
+		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalTrajectoryScheme (
+			dttc,
+			lep,
 			new MeanVarianceObjectiveUtility (dblLambdaU)
 		).generate();
 
-		double[] adblExecutionTimeNode = ett.executionTimeNode();
+		double[] adblExecutionTimeNode = edtt.executionTimeNode();
 
-		double[] adblTradeList = ett.tradeList();
+		double[] adblTradeList = edtt.tradeList();
 
-		double[] adblHoldings = ett.holdings();
+		double[] adblHoldings = edtt.holdings();
 
-		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ett);
+		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (edtt);
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lpe);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lep);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 
@@ -233,13 +233,13 @@ public class LinearImpactNoDrift {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ett.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (edtt.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ett.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (edtt.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------||");

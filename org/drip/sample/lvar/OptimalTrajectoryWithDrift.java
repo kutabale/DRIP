@@ -108,7 +108,7 @@ public class OptimalTrajectoryWithDrift {
 			)
 		);
 
-		EfficientDiscreteTradingTrajectory ett = new OptimalTrajectoryScheme (
+		EfficientDiscreteTradingTrajectory ett = (EfficientDiscreteTradingTrajectory) new OptimalTrajectoryScheme (
 			ttc,
 			lpe,
 			PowerVarianceObjectiveUtility.LiquidityVaR (dblLambdaV)

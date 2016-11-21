@@ -103,7 +103,7 @@ public class ConcaveImpactNoDrift {
 			(ParticipationRatePower) pmip.temporaryTransactionFunction()
 		);
 
-		DiscreteTradingTrajectoryControl ttc = DiscreteTradingTrajectoryControl.FixedInterval (
+		DiscreteTradingTrajectoryControl dttc = DiscreteTradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
 				dblX,
 				dblFinishTime
@@ -111,17 +111,17 @@ public class ConcaveImpactNoDrift {
 			iNumInterval
 		);
 
-		EfficientDiscreteTradingTrajectory ett = new OptimalTrajectoryScheme (
-			ttc,
+		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalTrajectoryScheme (
+			dttc,
 			a2003pe,
 			new MeanVarianceObjectiveUtility (dblLambdaU)
 		).generate();
 
-		double[] adblExecutionTimeNode = ett.executionTimeNode();
+		double[] adblExecutionTimeNode = edtt.executionTimeNode();
 
-		double[] adblTradeList = ett.tradeList();
+		double[] adblTradeList = edtt.tradeList();
 
-		double[] adblHoldings = ett.holdings();
+		double[] adblHoldings = edtt.holdings();
 
 		System.out.println ("\n\t|-----------------------------||");
 

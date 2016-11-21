@@ -55,6 +55,40 @@ public class ContinuousTradingTrajectory implements org.drip.execution.strategy.
 	private org.drip.function.definition.R1ToR1 _r1ToR1TradeRate = null;
 
 	/**
+	 * Construct a Standard Instance of ContinuousTradingTrajectory
+	 * 
+	 * @param dblExecutionTime The Execution Time
+	 * @param r1ToR1Holdings The Holdings Function
+	 * 
+	 * @return Standard Instance of ContinuousTradingTrajectory
+	 */
+
+	public static final ContinuousTradingTrajectory Standard (
+		final double dblExecutionTime,
+		final org.drip.function.definition.R1ToR1 r1ToR1Holdings)
+	{
+		if (null == r1ToR1Holdings) return null;
+
+		try {
+			org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1
+				(null) {
+				@Override public double evaluate (
+					final double dblVariate)
+					throws java.lang.Exception
+				{
+					return r1ToR1Holdings.derivative (dblVariate, 1);
+				}
+			};
+
+			return new ContinuousTradingTrajectory (dblExecutionTime, r1ToR1Holdings, r1ToR1TradeRate);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * ContinuousTradingTrajectory Constructor
 	 * 
 	 * @param dblExecutionTime The Execution Time

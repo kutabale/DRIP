@@ -77,7 +77,7 @@ public class AlmgrenLinearTradingEnhanced {
 		double dblT = 5.;
 		int iNumInterval = 20;
 
-		DiscreteTradingTrajectoryControl ttc = DiscreteTradingTrajectoryControl.FixedInterval (
+		DiscreteTradingTrajectoryControl dttc = DiscreteTradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
 				dblX,
 				dblT
@@ -96,17 +96,17 @@ public class AlmgrenLinearTradingEnhanced {
 			)
 		);
 
-		EfficientDiscreteTradingTrajectory ett = new OptimalTrajectoryScheme (
-			ttc,
+		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalTrajectoryScheme (
+			dttc,
 			tevp,
 			new MeanVarianceObjectiveUtility (dblLambda)
 		).generate();
 
-		double[] adblExecutionTimeNode = ett.executionTimeNode();
+		double[] adblExecutionTimeNode = edtt.executionTimeNode();
 
-		double[] adblTradeList = ett.tradeList();
+		double[] adblTradeList = edtt.tradeList();
 
-		double[] adblHoldings = ett.holdings();
+		double[] adblHoldings = edtt.holdings();
 
 		LinearTradingEnhancedScheme ltes = LinearTradingEnhancedScheme.Standard (
 			dblX,
@@ -122,7 +122,7 @@ public class AlmgrenLinearTradingEnhanced {
 
 		double[] adblHoldingsCF = ltet.holdings();
 
-		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (ett);
+		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (edtt);
 
 		R1UnivariateNormal r1un = tse.totalCostDistributionSynopsis (tevp);
 
@@ -167,14 +167,14 @@ public class AlmgrenLinearTradingEnhanced {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ett.transactionCostExpectation(), 6, 1, 1.) + " | " +
+			FormatUtil.FormatDouble (edtt.transactionCostExpectation(), 6, 1, 1.) + " | " +
 			FormatUtil.FormatDouble (ltet.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ett.transactionCostVariance(), 6, 1, 1.e-06) + " | " +
+			FormatUtil.FormatDouble (edtt.transactionCostVariance(), 6, 1, 1.e-06) + " | " +
 			FormatUtil.FormatDouble (ltet.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 

@@ -6,6 +6,7 @@ import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003TradingTrajectory;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
+import org.drip.function.definition.R1ToR1;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -118,6 +119,11 @@ public class PowerLawOptimalTrajectory {
 			dblGamma
 		);
 
+		double[] adblExecutionTime = new double[iNumInterval];
+
+		for (int i = 1; i <= iNumInterval; ++i)
+			adblExecutionTime[i - 1] = ((double) i) / ((double) iNumInterval);
+
 		for (int i = 0; i < adblK.length; ++i) {
 			double dblEta = dblHRef / java.lang.Math.pow (dblVRef, adblK[i]);
 
@@ -140,8 +146,6 @@ public class PowerLawOptimalTrajectory {
 
 			Almgren2003TradingTrajectory a2003tt = (Almgren2003TradingTrajectory) a2003ts.generate();
 
-			double[] adblExecutionTime = a2003tt.executionTimeNode();
-
 			if (0 == i) {
 				String strExecutionTime = "\t|          |  ";
 
@@ -153,19 +157,19 @@ public class PowerLawOptimalTrajectory {
 				System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------||");
 			}
 
-			double[] adblHoldings = a2003tt.holdings();
+			R1ToR1 r1ToR1Holdings = a2003tt.holdings();
 
 			String strHoldings = "\t| k =" + FormatUtil.FormatDouble (adblK[i], 1, 2, 1.) + " | ";
 
-			for (int j = 0; j < adblHoldings.length; ++j)
-				strHoldings = strHoldings + "  " + FormatUtil.FormatDouble (adblHoldings[j] / dblX, 2, 2, 100.);
+			for (int j = 0; j < iNumInterval; ++j)
+				strHoldings = strHoldings + "  " + FormatUtil.FormatDouble (r1ToR1Holdings.evaluate (adblExecutionTime[j]) / dblX, 2, 2, 100.);
 
-			double dblMaxExecutionTime = a2003tt.maxExecutionTime();
+			double dblExecutionTimeUpperBound = a2003tt.executionTimeUpperBound();
 
 			System.out.println (
 				strHoldings + " | " +
 				FormatUtil.FormatDouble (a2003tt.characteristicTime(), 2, 1, 1.) + " | " +
-				FormatUtil.FormatDouble (Double.isNaN (dblMaxExecutionTime) ? 0. : dblMaxExecutionTime, 2, 1, 1.) + " | " +
+				FormatUtil.FormatDouble (Double.isNaN (dblExecutionTimeUpperBound) ? 0. : dblExecutionTimeUpperBound, 2, 1, 1.) + " | " +
 				FormatUtil.FormatDouble (a2003tt.transactionCostExpectation(), 3, 0, 1.e-03) + " | " +
 				FormatUtil.FormatDouble (Math.sqrt (a2003tt.transactionCostVariance()), 3, 0, 1.e-03) + " ||"
 			);

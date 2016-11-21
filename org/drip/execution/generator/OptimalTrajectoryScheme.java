@@ -201,7 +201,7 @@ public class OptimalTrajectoryScheme {
 	 * @return The Optimal Trading Trajectory Instance
 	 */
 
-	public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
+	public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
 		double[] adblExecutionTimeNode = _ttc.executionTimeNodes();
 
