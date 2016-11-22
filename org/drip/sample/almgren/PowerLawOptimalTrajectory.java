@@ -127,7 +127,7 @@ public class PowerLawOptimalTrajectory {
 		for (int i = 0; i < adblK.length; ++i) {
 			double dblEta = dblHRef / java.lang.Math.pow (dblVRef, adblK[i]);
 
-			Almgren2003Parameters a2003pe = new Almgren2003Parameters (
+			Almgren2003Parameters a2003p = new Almgren2003Parameters (
 				apds,
 				prlPermanent,
 				new ParticipationRatePower (
@@ -139,8 +139,7 @@ public class PowerLawOptimalTrajectory {
 			Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
 				dblX,
 				dblFinishTime,
-				iNumInterval,
-				a2003pe,
+				a2003p,
 				dblLambda
 			);
 

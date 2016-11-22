@@ -70,19 +70,19 @@ public class EfficientDiscreteTradingTrajectory extends org.drip.execution.strat
 		final double[] adblHoldings,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
-		org.drip.execution.strategy.DiscreteTradingTrajectory tt =
+		org.drip.execution.strategy.DiscreteTradingTrajectory dtt =
 			org.drip.execution.strategy.DiscreteTradingTrajectory.Standard (adblExecutionTimeNode,
 				adblHoldings);
 
-		if (null == tt) return null;
+		if (null == dtt) return null;
 
 		try {
 			org.drip.measure.gaussian.R1UnivariateNormal r1un = (new
-				org.drip.execution.capture.TrajectoryShortfallEstimator (tt)).totalCostDistributionSynopsis
+				org.drip.execution.capture.TrajectoryShortfallEstimator (dtt)).totalCostDistributionSynopsis
 					(apep);
 
 			return null == r1un ? null : new EfficientDiscreteTradingTrajectory (adblExecutionTimeNode,
-				adblHoldings, tt.tradeList(), r1un.mean(), r1un.variance());
+				adblHoldings, dtt.tradeList(), r1un.mean(), r1un.variance());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

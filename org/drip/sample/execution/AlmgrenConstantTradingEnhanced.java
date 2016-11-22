@@ -97,7 +97,7 @@ public class AlmgrenConstantTradingEnhanced {
 			)
 		);
 
-		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalTrajectoryScheme (
+		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalDiscreteTrajectoryScheme (
 			dttc,
 			tevp,
 			new MeanVarianceObjectiveUtility (dblLambda)
@@ -112,7 +112,6 @@ public class AlmgrenConstantTradingEnhanced {
 		ConstantTradingEnhancedScheme ctes = ConstantTradingEnhancedScheme.Standard (
 			dblX,
 			dblT,
-			iNumInterval,
 			tevp,
 			dblLambda
 		);

@@ -73,7 +73,6 @@ public class OptimalTrajectoryTradeAnalysis {
 		Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
 			dblTradeSize,
 			dblTradeTime,
-			iNumInterval,
 			a2003p,
 			dblRiskAversion
 		);

@@ -3,7 +3,7 @@ package org.drip.sample.lvar;
 
 import org.drip.execution.capture.LinearImpactTrajectoryEstimator;
 import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.OptimalTrajectoryScheme;
+import org.drip.execution.generator.OptimalDiscreteTrajectoryScheme;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.EfficientDiscreteTradingTrajectory;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
@@ -84,7 +84,7 @@ public class OptimalTrajectoryWithDrift {
 
 		double dblLambdaV = R1UnivariateNormal.Standard().confidenceInterval (dblConfidenceLevel);
 
-		DiscreteTradingTrajectoryControl ttc = DiscreteTradingTrajectoryControl.FixedInterval (
+		DiscreteTradingTrajectoryControl dttc = DiscreteTradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
 				dblX,
 				dblT
@@ -92,7 +92,7 @@ public class OptimalTrajectoryWithDrift {
 			iN
 		);
 
-		LinearExpectationParameters lpe = new LinearExpectationParameters (
+		LinearExpectationParameters lep = new LinearExpectationParameters (
 			new ArithmeticPriceDynamicsSettings (
 				dblAlpha,
 				dblSigma,
@@ -108,21 +108,21 @@ public class OptimalTrajectoryWithDrift {
 			)
 		);
 
-		EfficientDiscreteTradingTrajectory ett = (EfficientDiscreteTradingTrajectory) new OptimalTrajectoryScheme (
-			ttc,
-			lpe,
+		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalDiscreteTrajectoryScheme (
+			dttc,
+			lep,
 			PowerVarianceObjectiveUtility.LiquidityVaR (dblLambdaV)
 		).generate();
 
-		double[] adblExecutionTimeNode = ett.executionTimeNode();
+		double[] adblExecutionTimeNode = edtt.executionTimeNode();
 
-		double[] adblTradeList = ett.tradeList();
+		double[] adblTradeList = edtt.tradeList();
 
-		double[] adblHoldings = ett.holdings();
+		double[] adblHoldings = edtt.holdings();
 
-		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ett);
+		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (edtt);
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lpe);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lep);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 
@@ -206,13 +206,13 @@ public class OptimalTrajectoryWithDrift {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 7, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ett.transactionCostExpectation(), 7, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (edtt.transactionCostExpectation(), 7, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 7, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ett.transactionCostVariance(), 7, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (edtt.transactionCostVariance(), 7, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|----------------------------------------------------------------||");

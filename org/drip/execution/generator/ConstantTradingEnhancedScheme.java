@@ -49,14 +49,14 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.OptimalTrajectoryScheme {
+public class ConstantTradingEnhancedScheme extends
+	org.drip.execution.generator.OptimalContinuousTrajectoryScheme {
 
 	/**
 	 * Create the Standard ConstantTradingEnhancedScheme Instance
 	 * 
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
-	 * @param iNumInterval The Number of Fixed Intervals
 	 * @param tevp Almgren 2003 Impact Price Walk Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
@@ -66,16 +66,13 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 	public static final ConstantTradingEnhancedScheme Standard (
 		final double dblStartHoldings,
 		final double dblFinishTime,
-		final int iNumInterval,
 		final org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp,
 		final double dblRiskAversion)
 	{
 		try {
-			return new ConstantTradingEnhancedScheme
-				(org.drip.execution.strategy.DiscreteTradingTrajectoryControl.FixedInterval (new
-					org.drip.execution.strategy.OrderSpecification (dblStartHoldings, dblFinishTime),
-						iNumInterval), tevp, new org.drip.execution.risk.MeanVarianceObjectiveUtility
-							(dblRiskAversion));
+			return new ConstantTradingEnhancedScheme (new org.drip.execution.strategy.OrderSpecification
+				(dblStartHoldings, dblFinishTime), tevp, new
+					org.drip.execution.risk.MeanVarianceObjectiveUtility (dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -84,12 +81,12 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 	}
 
 	private ConstantTradingEnhancedScheme (
-		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
+		final org.drip.execution.strategy.OrderSpecification os,
 		final org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (ttc, tevp, mvou);
+		super (os, tevp, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
@@ -104,9 +101,9 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 
 		double dblAlpha = tevp.linearTemporaryVolatility().offset();
 
-		org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc = control();
+		org.drip.execution.strategy.OrderSpecification os = orderSpecification();
 
-		final double dblX = ttc.startHoldings();
+		final double dblX = os.size();
 
 		double dblSigma = tevp.arithmeticPriceDynamicsSettings().volatility();
 
@@ -133,7 +130,7 @@ public class ConstantTradingEnhancedScheme extends org.drip.execution.generator.
 
 		try {
 			return org.drip.execution.optimum.EfficientContinuousTradingTrajectory.Standard
-				(ttc.executionTimeNodes()[0], dblE, dblV, dblTStar, holdingsR1ToR1);
+				(os.maxExecutionTime(), dblE, dblV, dblTStar, holdingsR1ToR1);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

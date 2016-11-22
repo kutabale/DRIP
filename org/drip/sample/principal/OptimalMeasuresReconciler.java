@@ -76,7 +76,6 @@ public class OptimalMeasuresReconciler {
 		double dblSerialCorrelation = 0.;
 		double dblX = 100000.;
 		double dblFinishTime = 1.;
-		int iNumInterval = 13;
 		double dblLambda = 5.e-06;
 
 		double[] adblK = new double[] {
@@ -106,7 +105,7 @@ public class OptimalMeasuresReconciler {
 		System.out.println ("\t|-----------------------------------------------------||");
 
 		for (double dblK : adblK) {
-			PriceMarketImpactPower apim = new PriceMarketImpactPower (
+			PriceMarketImpactPower pmip = new PriceMarketImpactPower (
 				new AssetTransactionSettings (
 					dblS0,
 					dblDailyVolume,
@@ -124,15 +123,14 @@ public class OptimalMeasuresReconciler {
 					dblVolatility,
 					dblSerialCorrelation
 				),
-				(ParticipationRateLinear) apim.permanentTransactionFunction(),
-				(ParticipationRatePower) apim.temporaryTransactionFunction()
+				(ParticipationRateLinear) pmip.permanentTransactionFunction(),
+				(ParticipationRatePower) pmip.temporaryTransactionFunction()
 			);
 
 			Almgren2003Estimator a2003e = new Almgren2003Estimator (
 				(Almgren2003TradingTrajectory) Almgren2003TrajectoryScheme.Standard (
 					dblX,
 					dblFinishTime,
-					iNumInterval,
 					a2003p,
 					dblLambda
 				).generate(),
@@ -178,7 +176,7 @@ public class OptimalMeasuresReconciler {
 		System.out.println ("\t|-----------------------------------------------------||");
 
 		for (double dblK : adblK) {
-			PriceMarketImpactPower apim = new PriceMarketImpactPower (
+			PriceMarketImpactPower pmip = new PriceMarketImpactPower (
 				new AssetTransactionSettings (
 					dblS0,
 					dblDailyVolume,
@@ -196,15 +194,14 @@ public class OptimalMeasuresReconciler {
 					dblVolatility,
 					dblSerialCorrelation
 				),
-				(ParticipationRateLinear) apim.permanentTransactionFunction(),
-				(ParticipationRatePower) apim.temporaryTransactionFunction()
+				(ParticipationRateLinear) pmip.permanentTransactionFunction(),
+				(ParticipationRatePower) pmip.temporaryTransactionFunction()
 			);
 
 			Almgren2003Estimator a2003e = new Almgren2003Estimator (
 				(Almgren2003TradingTrajectory) Almgren2003TrajectoryScheme.Standard (
 					dblX,
 					dblFinishTime,
-					iNumInterval,
 					a2003p,
 					dblLambda
 				).generate(),

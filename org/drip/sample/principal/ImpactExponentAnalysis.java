@@ -72,7 +72,6 @@ public class ImpactExponentAnalysis {
 		double dblPermanentImpactFactor = 0.;
 		double dblTemporaryImpactFactor = 0.01;
 		double dblT = 5.;
-		int iNumInterval = 20;
 		double dblLambda = 1.e-06;
 		double dblPrincipalDiscount = 0.15;
 
@@ -131,7 +130,7 @@ public class ImpactExponentAnalysis {
 		System.out.println ("\t|---------------------------------------------------------------------------||");
 
 		for (double dblK : adblK) {
-			PriceMarketImpactPower apim = new PriceMarketImpactPower (
+			PriceMarketImpactPower pmip = new PriceMarketImpactPower (
 				new AssetTransactionSettings (
 					dblS0,
 					dblDailyVolume,
@@ -149,14 +148,13 @@ public class ImpactExponentAnalysis {
 					dblVolatility,
 					0.
 				),
-				(ParticipationRateLinear) apim.permanentTransactionFunction(),
-				(ParticipationRatePower) apim.temporaryTransactionFunction()
+				(ParticipationRateLinear) pmip.permanentTransactionFunction(),
+				(ParticipationRatePower) pmip.temporaryTransactionFunction()
 			);
 
 			Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
 				dblX,
 				dblT,
-				iNumInterval,
 				a2003p,
 				dblLambda
 			);

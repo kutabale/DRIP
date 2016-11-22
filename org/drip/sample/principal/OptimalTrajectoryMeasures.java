@@ -80,7 +80,7 @@ public class OptimalTrajectoryMeasures {
 		double dblK = 1.;
 		double dblPrincipalDiscount = 0.15;
 
-		PriceMarketImpactPower apim = new PriceMarketImpactPower (
+		PriceMarketImpactPower pmip = new PriceMarketImpactPower (
 			new AssetTransactionSettings (
 				dblS0,
 				dblDailyVolume,
@@ -98,14 +98,13 @@ public class OptimalTrajectoryMeasures {
 				dblVolatility,
 				0.
 			),
-			(ParticipationRateLinear) apim.permanentTransactionFunction(),
-			(ParticipationRatePower) apim.temporaryTransactionFunction()
+			(ParticipationRateLinear) pmip.permanentTransactionFunction(),
+			(ParticipationRatePower) pmip.temporaryTransactionFunction()
 		);
 
 		Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
 			dblX,
 			dblT,
-			iNumInterval,
 			a2003p,
 			dblLambda
 		);

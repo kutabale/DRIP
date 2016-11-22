@@ -96,7 +96,7 @@ public class AlmgrenLinearTradingEnhanced {
 			)
 		);
 
-		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalTrajectoryScheme (
+		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalDiscreteTrajectoryScheme (
 			dttc,
 			tevp,
 			new MeanVarianceObjectiveUtility (dblLambda)

@@ -50,7 +50,7 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AC2000TrajectoryScheme extends org.drip.execution.generator.OptimalTrajectoryScheme {
+public class AC2000TrajectoryScheme extends org.drip.execution.generator.OptimalDiscreteTrajectoryScheme {
 
 	private double KappaTau (
 		final double dblKappaTildaSquared,
@@ -95,19 +95,19 @@ public class AC2000TrajectoryScheme extends org.drip.execution.generator.Optimal
 	}
 
 	private AC2000TrajectoryScheme (
-		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
-		final org.drip.execution.dynamics.LinearExpectationParameters lpe,
+		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl dttc,
+		final org.drip.execution.dynamics.LinearExpectationParameters lep,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (ttc, lpe, mvou);
+		super (dttc, lep, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientDiscreteTradingTrajectory generate()
 	{
-		org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc = control();
+		org.drip.execution.strategy.DiscreteTradingTrajectoryControl dttc = control();
 
-		double[] adblTNode = ttc.executionTimeNodes();
+		double[] adblTNode = dttc.executionTimeNodes();
 
 		org.drip.execution.dynamics.LinearExpectationParameters lep =
 			(org.drip.execution.dynamics.LinearExpectationParameters) priceWalkParameters();
@@ -115,20 +115,20 @@ public class AC2000TrajectoryScheme extends org.drip.execution.generator.Optimal
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
 			lep.linearTemporaryExpectation();
 
+		double dblSigma = lep.arithmeticPriceDynamicsSettings().volatility();
+
 		double dblGamma = lep.linearPermanentExpectation().slope();
 
 		double dblEta = tflTemporaryExpectation.slope();
 
-		double dblSigma = lep.arithmeticPriceDynamicsSettings().volatility();
-
-		double dblX = ttc.startHoldings();
+		double dblX = dttc.startHoldings();
 
 		int iNumNode = adblTNode.length;
 		double dblXSquared = dblX * dblX;
+		double dblTau = adblTNode[1] - adblTNode[0];
 		double dblSigmaSquared = dblSigma * dblSigma;
 		double[] adblHoldings = new double[iNumNode];
 		double[] adblTradeList = new double[iNumNode - 1];
-		double dblTau = adblTNode[1] - adblTNode[0];
 		double dblT = adblTNode[iNumNode - 1] - adblTNode[0];
 		double dblEtaTilda = dblEta - 0.5 * dblGamma * dblTau;
 

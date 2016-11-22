@@ -83,7 +83,6 @@ public class ConstantLiquidityVolatility {
 		ConstantTradingEnhancedScheme ctes = ConstantTradingEnhancedScheme.Standard (
 			dblX,
 			dblT,
-			iNumInterval,
 			tevp,
 			dblLambda
 		);

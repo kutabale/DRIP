@@ -48,7 +48,7 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LinearTradingEnhancedScheme extends org.drip.execution.generator.OptimalTrajectoryScheme {
+public class LinearTradingEnhancedScheme extends org.drip.execution.generator.OptimalDiscreteTrajectoryScheme {
 
 	/**
 	 * Create the Standard LinearTradingEnhancedScheme Instance
@@ -83,12 +83,12 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 	}
 
 	private LinearTradingEnhancedScheme (
-		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
+		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl dttc,
 		final org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (ttc, tevp, mvou);
+		super (dttc, tevp, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
@@ -99,21 +99,14 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
 
-		double dblBeta = tevp.linearTemporaryVolatility().slope();
-
-		double dblEta = tevp.linearTemporaryExpectation().slope();
-
 		double dblSigma = tevp.arithmeticPriceDynamicsSettings().volatility();
 
-		double dblTStar = java.lang.Math.sqrt (dblEta / (dblLambda * dblSigma * dblSigma));
+		double dblTStar = java.lang.Math.sqrt (tevp.linearTemporaryExpectation().slope() / (dblLambda *
+			dblSigma * dblSigma));
 
-		double dblXStar = dblSigma * dblTStar * dblTStar / (dblBeta * java.lang.Math.sqrt (3.));
-
-		return org.drip.execution.optimum.LinearTradingEnhancedTrajectory.Standard (
-			(org.drip.execution.strategy.DiscreteTradingTrajectory) super.generate(),
-			tevp,
-			dblTStar,
-			dblXStar
-		);
+		return org.drip.execution.optimum.LinearTradingEnhancedTrajectory.Standard
+			((org.drip.execution.strategy.DiscreteTradingTrajectory) super.generate(), tevp, dblTStar,
+				dblSigma * dblTStar * dblTStar / (tevp.linearTemporaryVolatility().slope() *
+					java.lang.Math.sqrt (3.)));
 	}
 }

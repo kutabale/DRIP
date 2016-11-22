@@ -3,7 +3,7 @@ package org.drip.sample.lvar;
 
 import org.drip.execution.capture.LinearImpactTrajectoryEstimator;
 import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.OptimalTrajectoryScheme;
+import org.drip.execution.generator.OptimalDiscreteTrajectoryScheme;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.EfficientDiscreteTradingTrajectory;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
@@ -84,7 +84,7 @@ public class OptimalTrajectoryNoDrift {
 
 		double dblLambdaV = R1UnivariateNormal.Standard().confidenceInterval (dblConfidenceLevel);
 
-		DiscreteTradingTrajectoryControl ttc = DiscreteTradingTrajectoryControl.FixedInterval (
+		DiscreteTradingTrajectoryControl dttc = DiscreteTradingTrajectoryControl.FixedInterval (
 			new OrderSpecification (
 				dblX,
 				dblT
@@ -92,7 +92,7 @@ public class OptimalTrajectoryNoDrift {
 			iN
 		);
 
-		LinearExpectationParameters lpe = new LinearExpectationParameters (
+		LinearExpectationParameters lep = new LinearExpectationParameters (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
 				dblSigma,
@@ -108,9 +108,9 @@ public class OptimalTrajectoryNoDrift {
 			)
 		);
 
-		EfficientDiscreteTradingTrajectory ett = (EfficientDiscreteTradingTrajectory) new OptimalTrajectoryScheme (
-			ttc,
-			lpe,
+		EfficientDiscreteTradingTrajectory ett = (EfficientDiscreteTradingTrajectory) new OptimalDiscreteTrajectoryScheme (
+			dttc,
+			lep,
 			PowerVarianceObjectiveUtility.LiquidityVaR (dblLambdaV)
 		).generate();
 
@@ -122,7 +122,7 @@ public class OptimalTrajectoryNoDrift {
 
 		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ett);
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lpe);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lep);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 

@@ -29,9 +29,9 @@ package org.drip.execution.generator;
  */
 
 /**
- * OptimalTrajectoryScheme generates the Trade/Holdings List of Optimal Execution Schedule based on the
- *  Discrete/Continuous Trade Trajectory Control, the Price Walk Parameters, and the Objective Utility
- *  Function. The References are:
+ * OptimalContinuousTrajectoryScheme generates the Trade/Holdings List of Optimal Execution Schedule based on
+ *  the Continuous Trade Trajectory Control, the Price Walk Parameters, and the Objective Utility Function.
+ *  The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -50,46 +50,41 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class OptimalTrajectoryScheme {
-	private org.drip.execution.risk.ObjectiveUtility _ou = null;
-	private org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters _apep = null;
+public abstract class OptimalContinuousTrajectoryScheme extends
+	org.drip.execution.generator.OptimalTrajectoryScheme {
+	private org.drip.execution.strategy.OrderSpecification _os = null;
 
-	protected OptimalTrajectoryScheme (
+	/**
+	 * OptimalContinuousTrajectoryScheme Constructor
+	 * 
+	 * @param os The Order Specification
+	 * @param apep The Arithmetic Price Walk Parameters
+	 * @param ou The Optimizer Objective Utility Function
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are not valid
+	 */
+
+	public OptimalContinuousTrajectoryScheme (
+		final org.drip.execution.strategy.OrderSpecification os,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
 		final org.drip.execution.risk.ObjectiveUtility ou)
 		throws java.lang.Exception
 	{
-		if (null == (_apep = apep) || null == (_ou = ou))
-			throw new java.lang.Exception ("OptimalTrajectoryScheme Constructor => Invalid Inputs");
+		super (apep, ou);
+
+		if (null == (_os = os))
+			throw new java.lang.Exception
+				("OptimalContinuousTrajectoryScheme Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Optimizer Objective Utility Function
+	 * Retrieve the Order Specification
 	 * 
-	 * @return The Optimizer Objective Utility Function
+	 * @return The Order Specification
 	 */
 
-	public org.drip.execution.risk.ObjectiveUtility objectiveUtility()
+	public org.drip.execution.strategy.OrderSpecification orderSpecification()
 	{
-		return _ou;
+		return _os;
 	}
-
-	/**
-	 * Retrieve the Asset Arithmetic Price Walk Evolution Parameters
-	 * 
-	 * @return The Asset Arithmetic Price Walk Evolution Parameters
-	 */
-
-	public org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters priceWalkParameters()
-	{
-		return _apep;
-	}
-
-	/**
-	 * Invoke the Optimizer, and generate/return the Optimal Trading Trajectory Instance
-	 * 
-	 * @return The Optimal Trading Trajectory Instance
-	 */
-
-	abstract public org.drip.execution.optimum.EfficientTradingTrajectory generate();
 }

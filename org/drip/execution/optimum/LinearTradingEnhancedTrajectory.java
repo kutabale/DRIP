@@ -57,7 +57,7 @@ public class LinearTradingEnhancedTrajectory extends
 	/**
 	 * Construct a Standard LinearTradingEnhancedTrajectory Instance
 	 * 
-	 * @param tt The Trading Trajectory
+	 * @param dtt The Trading Trajectory
 	 * @param apep The Arithmetic Price Walk Evolution Parameters
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
 	 * @param dblCharacteristicSize The Optimal Trajectory's "Characteristic" Size
@@ -66,20 +66,20 @@ public class LinearTradingEnhancedTrajectory extends
 	 */
 
 	public static LinearTradingEnhancedTrajectory Standard (
-		final org.drip.execution.strategy.DiscreteTradingTrajectory tt,
+		final org.drip.execution.strategy.DiscreteTradingTrajectory dtt,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
 		final double dblCharacteristicTime,
 		final double dblCharacteristicSize)
 	{
-		if (null == tt) return null;
+		if (null == dtt) return null;
 
 		try {
 			org.drip.measure.gaussian.R1UnivariateNormal r1un = (new
-				org.drip.execution.capture.TrajectoryShortfallEstimator (tt)).totalCostDistributionSynopsis
+				org.drip.execution.capture.TrajectoryShortfallEstimator (dtt)).totalCostDistributionSynopsis
 					(apep);
 
-			return null == r1un ? null : new LinearTradingEnhancedTrajectory (tt.executionTimeNode(),
-				tt.holdings(), tt.tradeList(), r1un.mean(), r1un.variance(), dblCharacteristicTime,
+			return null == r1un ? null : new LinearTradingEnhancedTrajectory (dtt.executionTimeNode(),
+				dtt.holdings(), dtt.tradeList(), r1un.mean(), r1un.variance(), dblCharacteristicTime,
 					dblCharacteristicSize);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

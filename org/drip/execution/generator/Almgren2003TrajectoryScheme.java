@@ -48,14 +48,14 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.OptimalTrajectoryScheme {
+public class Almgren2003TrajectoryScheme extends
+	org.drip.execution.generator.OptimalContinuousTrajectoryScheme {
 
 	/**
 	 * Create the Standard Almgren2003TrajectoryScheme Instance
 	 * 
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
-	 * @param iNumInterval The Number of Fixed Intervals
 	 * @param a2003p Almgren 2003 Impact Price Walk Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
@@ -65,16 +65,13 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 	public static final Almgren2003TrajectoryScheme Standard (
 		final double dblStartHoldings,
 		final double dblFinishTime,
-		final int iNumInterval,
 		final org.drip.execution.dynamics.Almgren2003Parameters a2003p,
 		final double dblRiskAversion)
 	{
 		try {
-			return new Almgren2003TrajectoryScheme
-				(org.drip.execution.strategy.DiscreteTradingTrajectoryControl.FixedInterval (new
-					org.drip.execution.strategy.OrderSpecification (dblStartHoldings, dblFinishTime),
-						iNumInterval), a2003p, new org.drip.execution.risk.MeanVarianceObjectiveUtility
-							(dblRiskAversion));
+			return new Almgren2003TrajectoryScheme (new org.drip.execution.strategy.OrderSpecification
+				(dblStartHoldings, dblFinishTime), a2003p, new
+					org.drip.execution.risk.MeanVarianceObjectiveUtility (dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -83,12 +80,12 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 	}
 
 	private Almgren2003TrajectoryScheme (
-		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc,
+		final org.drip.execution.strategy.OrderSpecification os,
 		final org.drip.execution.dynamics.Almgren2003Parameters a2003p,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (ttc, a2003p, mvou);
+		super (os, a2003p, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
@@ -102,7 +99,7 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
 
-		org.drip.execution.strategy.DiscreteTradingTrajectoryControl ttc = control();
+		org.drip.execution.strategy.OrderSpecification os = orderSpecification();
 
 		double dblGamma = a2003p.linearPermanentExpectation().slope();
 
@@ -112,7 +109,7 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 
 		double dblSigma = a2003p.arithmeticPriceDynamicsSettings().volatility();
 
-		final double dblX = ttc.startHoldings();
+		final double dblX = os.size();
 
 		final double dblTStar = java.lang.Math.pow (dblK * dblEta * java.lang.Math.pow (dblX, dblK - 1.) /
 			(dblLambda * dblSigma * dblSigma), 1. / (dblK + 1.));
@@ -149,7 +146,7 @@ public class Almgren2003TrajectoryScheme extends org.drip.execution.generator.Op
 			}
 		};
 
-		return org.drip.execution.optimum.Almgren2003TradingTrajectory.Standard (ttc.finishTime(), dblE,
+		return org.drip.execution.optimum.Almgren2003TradingTrajectory.Standard (os.maxExecutionTime(), dblE,
 			dblV, dblTStar, dblTMax, dblHyperboloidBoundaryValue, holdingsR1ToR1);
 	}
 }

@@ -78,7 +78,6 @@ public class ContinuousTrajectoryLinearImpact {
 		double dblSerialCorrelation = 0.;
 		double dblX = 100000.;
 		double dblFinishTime = 1.;
-		int iNumInterval = 13;
 
 		double[] adblLambda = new double[] {
 			1.e-03,
@@ -108,7 +107,7 @@ public class ContinuousTrajectoryLinearImpact {
 			dblK
 		);
 
-		Almgren2003Parameters a2003pe = new Almgren2003Parameters (
+		Almgren2003Parameters a2003p = new Almgren2003Parameters (
 			new ArithmeticPriceDynamicsSettings (
 				dblDrift,
 				dblVolatility,
@@ -135,8 +134,7 @@ public class ContinuousTrajectoryLinearImpact {
 			Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
 				dblX,
 				dblFinishTime,
-				iNumInterval,
-				a2003pe,
+				a2003p,
 				adblLambda[i]
 			);
 

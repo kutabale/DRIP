@@ -79,7 +79,6 @@ public class OptimalTrajectoryIBM {
 		Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
 			dblTradeSize,
 			dblTradeTime,
-			iNumInterval,
 			new DynamicsParameters (
 				new AssetFlowSettings (
 					strAssetName,

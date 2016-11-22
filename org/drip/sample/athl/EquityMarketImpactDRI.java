@@ -56,7 +56,7 @@ import org.drip.service.env.EnvManager;
 public class EquityMarketImpactDRI {
 
 	private static final void TemporaryImpactReconciler (
-		final TemporaryImpact athlTemporary,
+		final TemporaryImpact ti,
 		final double dblTradeSize,
 		final double dblTime,
 		final double dblNormalizedTemporaryImpactReconciler,
@@ -65,11 +65,11 @@ public class EquityMarketImpactDRI {
 		final double dblRealizedImpactReconciler)
 		throws Exception
 	{
-		double dblNormalizedTemporaryImpact = athlTemporary.evaluate (
-			dblTradeSize / (athlTemporary.assetFlowParameters().averageDailyVolume() * dblTime)
+		double dblNormalizedTemporaryImpact = ti.evaluate (
+			dblTradeSize / (ti.assetFlowParameters().averageDailyVolume() * dblTime)
 		);
 
-		double dblDenormalizedTemporaryImpact = athlTemporary.evaluate (
+		double dblDenormalizedTemporaryImpact = ti.evaluate (
 			dblTradeSize,
 			dblTime
 		);
