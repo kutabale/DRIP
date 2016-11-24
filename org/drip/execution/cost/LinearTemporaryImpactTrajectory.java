@@ -29,8 +29,9 @@ package org.drip.execution.cost;
  */
 
 /**
- * LinearTemporaryUnconstrainedTrajectory computes and holds the Unconstrained Optimal Trajectory using
- *  Linear Temporary Impact Function for the given set of Inputs. The References are:
+ * LinearTemporaryImpactTrajectory computes and holds the Optimal Trajectory using the Linear Temporary
+ *  Impact Function for the given set of Inputs. It provides a Default Unconstrained Trajectory
+ *  Implementation. The References are:
  * 
  * 	- Bertsimas, D., and A. W. Lo (1998): Optimal Control of Execution Costs, Journal of Financial Markets 1
  * 		1-50.
@@ -58,6 +59,18 @@ public class LinearTemporaryImpactTrajectory {
 	private org.drip.function.definition.R1ToR1 _r1ToR1Holdings = null;
 	private org.drip.execution.impact.TransactionFunctionLinear _tflTemporary = null;
 
+	/**
+	 * Generate an Unconstrained LinearTemporaryImpactTrajectory Instance
+	 * 
+	 * @param dblSpotTime Spot Time
+	 * @param dblFinishTime Finish Time
+	 * @param dblSpotHoldings Spot Holdings
+	 * @param dblDriftEstimate Drift Estimate
+	 * @param tflTemporary The Temporary Linear Impact Function
+	 * 
+	 * @return The Unconstrained LinearTemporaryImpactTrajectory Instance
+	 */
+
 	public static final LinearTemporaryImpactTrajectory Unconstrained (
 		final double dblSpotTime,
 		final double dblFinishTime,
@@ -82,7 +95,7 @@ public class LinearTemporaryImpactTrajectory {
 			{
 				if (!org.drip.quant.common.NumberUtil.IsValid (dblTau))
 					throw new java.lang.Exception
-						("LinearTemporaryUnconstrainedTrajectory::Holdings::evaluate => Invalid Inputs");
+						("LinearTemporaryImpactTrajectory::Holdings::evaluate => Invalid Inputs");
 
 				if (dblTau <= dblSpotTime) return dblSpotHoldings;
 
@@ -114,13 +127,8 @@ public class LinearTemporaryImpactTrajectory {
 		final double dblInstantaneousTradeRate)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSpotTime = dblSpotTime) || 0. > _dblSpotTime ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblFinishTime = dblFinishTime) || _dblFinishTime <=
-				_dblSpotTime || !org.drip.quant.common.NumberUtil.IsValid (_dblSpotHoldings =
-					dblSpotHoldings) || !org.drip.quant.common.NumberUtil.IsValid (_dblDriftEstimate =
-						dblDriftEstimate) || null == (_tflTemporary = tflTemporary) || null ==
-							(_r1ToR1Holdings = r1ToR1Holdings) || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblInstantaneousTradeRate = dblInstantaneousTradeRate))
+		if (null == (_r1ToR1Holdings = r1ToR1Holdings) || !org.drip.quant.common.NumberUtil.IsValid
+			(_dblInstantaneousTradeRate = dblInstantaneousTradeRate))
 			throw new java.lang.Exception ("LinearTemporaryImpactTrajectory Constructor => Invalid Inputs");
 	}
 

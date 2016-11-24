@@ -89,4 +89,37 @@ public class PriorDriftDistribution extends org.drip.measure.gaussian.R1Univaria
 	{
 		return java.lang.Math.sqrt (variance());
 	}
+
+	/**
+	 * Generate the given Number of Bayesian Drift Realizations
+	 * 
+	 * @param iNumRealization The Number of Realizations to be generated
+	 * 
+	 * @return Array of the Drift Realizations
+	 */
+
+	public double[] realizedDrift (
+		final int iNumRealization)
+	{
+		if (0 >= iNumRealization) return null;
+
+		double[] adblRealizedDrift = new double[iNumRealization];
+
+		double dblConfidence = confidence();
+
+		double dblExpectation = mean();
+
+		for (int i = 0; i < iNumRealization; ++i) {
+			try {
+				adblRealizedDrift[i] = dblExpectation + dblConfidence *
+					org.drip.measure.gaussian.NormalQuadrature.InverseCDF (java.lang.Math.random());
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return adblRealizedDrift;
+	}
 }

@@ -110,4 +110,47 @@ public class ConditionalPriceDistribution extends org.drip.measure.gaussian.R1Un
 	{
 		return _dblConditionalDrift;
 	}
+
+	/**
+	 * Generate s Single Price Volatility Swings
+	 * 
+	 * @return The Price Volatility Swings
+	 * 
+	 * @throws java.lang.Exception Thrown if the Swing cannot be generated
+	 */
+
+	public double priceVolatilitySwing()
+		throws java.lang.Exception
+	{
+		return _dblPriceVolatility * org.drip.measure.gaussian.NormalQuadrature.InverseCDF
+			(java.lang.Math.random());
+	}
+
+	/**
+	 * Generate the given Number of Price Volatility Swings
+	 * 
+	 * @param iNumRealization The Number of Swings to be generated
+	 * 
+	 * @return Array of the Price Volatility Swings
+	 */
+
+	public double[] priceVolatilitySwings (
+		final int iNumRealization)
+	{
+		if (0 >= iNumRealization) return null;
+
+		double[] adblVolatilitySwings = new double[iNumRealization];
+
+		for (int i = 0; i < iNumRealization; ++i) {
+			try {
+				adblVolatilitySwings[i] = priceVolatilitySwing();
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return adblVolatilitySwings;
+	}
 }
