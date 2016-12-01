@@ -69,17 +69,17 @@ public class ContinuousTradingTrajectory implements org.drip.execution.strategy.
 	{
 		if (null == r1ToR1Holdings) return null;
 
-		try {
-			org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1
-				(null) {
-				@Override public double evaluate (
-					final double dblVariate)
-					throws java.lang.Exception
-				{
-					return r1ToR1Holdings.derivative (dblVariate, 1);
-				}
-			};
+		org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1 (null)
+		{
+			@Override public double evaluate (
+				final double dblVariate)
+				throws java.lang.Exception
+			{
+				return r1ToR1Holdings.derivative (dblVariate, 1);
+			}
+		};
 
+		try {
 			return new ContinuousTradingTrajectory (dblExecutionTime, r1ToR1Holdings, r1ToR1TradeRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

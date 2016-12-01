@@ -62,9 +62,10 @@ public class BayesianPriceProcess {
 	{
 		EnvManager.InitEnv ("");
 
-		int iN = 10;
+		int iN = 25;
 		double dblT = 1.0;
 		double dblNu = 1.0;
+		double dblS0 = 100.;
 		double dblSigma = 1.5;
 		double dblAlphaBar = 0.7;
 
@@ -77,21 +78,25 @@ public class BayesianPriceProcess {
 
 		System.out.println();
 
-		System.out.println ("\t|-----------------------------------------||");
+		System.out.println ("\t|--------------------------------------------------||");
 
-		System.out.println ("\t|  L -> R                                 ||");
+		System.out.println ("\t|  L -> R                                          ||");
 
-		System.out.println ("\t|-----------------------------------------||");
+		System.out.println ("\t|--------------------------------------------------||");
 
-		System.out.println ("\t|    Time                                 ||");
+		System.out.println ("\t|    - Time                                        ||");
 
-		System.out.println ("\t|    Realized Drift                       ||");
+		System.out.println ("\t|    - Realized Drift                              ||");
 
-		System.out.println ("\t|    Realized Price Volatility Swing      ||");
+		System.out.println ("\t|    - Realized Price Volatility Swing             ||");
 
-		System.out.println ("\t|    Realized Price                       ||");
+		System.out.println ("\t|    - Realized Price                              ||");
 
-		System.out.println ("\t|-----------------------------------------||");
+		System.out.println ("\t|    - MAP Drift Estimate                          ||");
+
+		System.out.println ("\t|    - Posterior Drift Volatility                  ||");
+
+		System.out.println ("\t|--------------------------------------------------||");
 
 		for (int i = 0; i < iN; ++i) {
 			double dblTime = dblT * (i + 1) / iN;
@@ -114,15 +119,15 @@ public class BayesianPriceProcess {
 			R1UnivariateNormal r1unPosterior = pdc.posteriorDriftDistribution (dblRealizedPriceChange);
 
 			System.out.println (
-				"\t| " + i + " =>" +
-				FormatUtil.FormatDouble (dblTime, 1, 2, 1.) + " | " +
-				FormatUtil.FormatDouble (adblAlpha[i], 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (dblPriceSwing, 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (dblRealizedPriceChange, 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (r1unPosterior.mean(), 1, 4, 1.) + " ||"
+				"\t| " + FormatUtil.FormatDouble (dblTime, 1, 2, 1.) + " => " +
+				FormatUtil.FormatDouble (adblAlpha[i], 1, 2, 1.) + " | " +
+				FormatUtil.FormatDouble (dblPriceSwing, 1, 2, 1.) + " | " +
+				FormatUtil.FormatDouble (dblS0 + dblRealizedPriceChange, 3, 2, 1.) + " | " +
+				FormatUtil.FormatDouble (r1unPosterior.mean(), 1, 2, 1.) + " | " +
+				FormatUtil.FormatDouble (Math.sqrt (r1unPosterior.variance()), 1, 2, 1.) + " ||"
 			);
 		}
 
-		System.out.println ("\t|-----------------------------------------||");
+		System.out.println ("\t|--------------------------------------------------||");
 	}
 }

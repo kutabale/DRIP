@@ -84,7 +84,7 @@ public class LinearTemporaryImpactTrajectory {
 					!org.drip.quant.common.NumberUtil.IsValid (dblDriftEstimate) || null == tflTemporary)
 			return null;
 
-		double dblHorizon = dblFinishTime - dblSpotTime;
+		final double dblHorizon = dblFinishTime - dblSpotTime;
 
 		final double dblScaledDrift = 0.25 * dblDriftEstimate / tflTemporary.slope();
 
@@ -93,6 +93,8 @@ public class LinearTemporaryImpactTrajectory {
 				final double dblTau)
 				throws java.lang.Exception
 			{
+				if (0. >= dblHorizon) return 0.;
+
 				if (!org.drip.quant.common.NumberUtil.IsValid (dblTau))
 					throw new java.lang.Exception
 						("LinearTemporaryImpactTrajectory::Holdings::evaluate => Invalid Inputs");
@@ -108,8 +110,8 @@ public class LinearTemporaryImpactTrajectory {
 
 		try {
 			return new LinearTemporaryImpactTrajectory (dblSpotTime, dblFinishTime, dblSpotHoldings,
-				dblDriftEstimate, tflTemporary, r1ToR1Holdings, dblSpotHoldings / dblHorizon + dblScaledDrift
-					* dblHorizon);
+				dblDriftEstimate, tflTemporary, r1ToR1Holdings, 0 >= dblHorizon ? 0. : dblSpotHoldings /
+					dblHorizon + dblScaledDrift * dblHorizon);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
