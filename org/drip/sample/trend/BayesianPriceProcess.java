@@ -69,6 +69,10 @@ public class BayesianPriceProcess {
 		double dblSigma = 1.5;
 		double dblAlphaBar = 0.7;
 
+		double dblTime = 0.;
+		double dblPrice = dblS0;
+		double dblTimeWidth = dblT / iN;
+
 		PriorDriftDistribution pdd = new PriorDriftDistribution (
 			dblAlphaBar,
 			dblNu
@@ -99,7 +103,7 @@ public class BayesianPriceProcess {
 		System.out.println ("\t|--------------------------------------------------||");
 
 		for (int i = 0; i < iN; ++i) {
-			double dblTime = dblT * (i + 1) / iN;
+			dblTime = dblTime + dblTimeWidth;
 
 			ConditionalPriceDistribution cpd = new ConditionalPriceDistribution (
 				adblAlpha[i],
@@ -109,20 +113,21 @@ public class BayesianPriceProcess {
 
 			double dblPriceSwing = cpd.priceVolatilitySwing();
 
-			double dblRealizedPriceChange = adblAlpha[i] + dblPriceSwing;
+			double dblRealizedPriceChange = adblAlpha[i] * dblTimeWidth + dblPriceSwing;
+			dblPrice = dblPrice + dblRealizedPriceChange;
 
-			PriorConditionalCombiner pdc = new PriorConditionalCombiner (
+			PriorConditionalCombiner pcc = new PriorConditionalCombiner (
 				pdd,
 				cpd
 			);
 
-			R1UnivariateNormal r1unPosterior = pdc.posteriorDriftDistribution (dblRealizedPriceChange);
+			R1UnivariateNormal r1unPosterior = pcc.posteriorDriftDistribution (dblRealizedPriceChange);
 
 			System.out.println (
 				"\t| " + FormatUtil.FormatDouble (dblTime, 1, 2, 1.) + " => " +
 				FormatUtil.FormatDouble (adblAlpha[i], 1, 2, 1.) + " | " +
 				FormatUtil.FormatDouble (dblPriceSwing, 1, 2, 1.) + " | " +
-				FormatUtil.FormatDouble (dblS0 + dblRealizedPriceChange, 3, 2, 1.) + " | " +
+				FormatUtil.FormatDouble (dblPrice, 3, 2, 1.) + " | " +
 				FormatUtil.FormatDouble (r1unPosterior.mean(), 1, 2, 1.) + " | " +
 				FormatUtil.FormatDouble (Math.sqrt (r1unPosterior.variance()), 1, 2, 1.) + " ||"
 			);

@@ -35,8 +35,9 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * FixedDriftTrajectoryComparator demonstrates the Optimal Trajectory for a Price Process with Bayes' Drift,
- *  Arithmetic Volatility, and Linear Temporary Market Impact. The References are:
+ * BayesianGain demonstrates the Gains achieved from using an Optimal Trajectory for a Price Process with
+ *  Bayesian Drift, Arithmetic Volatility, and Linear Temporary Market Impact across a Set of Drifts. The
+ *  References are:
  * 
  * 	- Bertsimas, D., and A. W. Lo (1998): Optimal Control of Execution Costs, Journal of Financial Markets 1
  * 		1-50.
@@ -55,7 +56,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class FixedDriftTrajectoryComparator {
+public class BayesianGain {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -72,7 +73,6 @@ public class FixedDriftTrajectoryComparator {
 		double dblAlphaBar = 0.7;
 
 		double dblTime = 0.;
-		double dblXConstrained = dblX0;
 		double dblTimeWidth = dblT / iN;
 		double dblXUnconstrained = dblX0;
 
@@ -95,19 +95,19 @@ public class FixedDriftTrajectoryComparator {
 
 		System.out.println ("\t|    - Time                                                             ||");
 
-		System.out.println ("\t|    - Trade Start Time                                                 ||");
+		System.out.println ("\t|    - Realized Drift                                                   ||");
 
-		System.out.println ("\t|    - Trade Finish Time                                                ||");
+		System.out.println ("\t|    - Realized Price Change                                            ||");
 
-		System.out.println ("\t|    - Critical Trade Rate                                              ||");
-
-		System.out.println ("\t|    - Constrained Trade Rate                                           ||");
+		System.out.println ("\t|    - Estimated Drift                                                  ||");
 
 		System.out.println ("\t|    - Unconstrained Trade Rate                                         ||");
 
-		System.out.println ("\t|    - Constrained Holdings                                             ||");
-
 		System.out.println ("\t|    - Unconstrained Holdings                                           ||");
+
+		System.out.println ("\t|    - Transaction Cost                                                 ||");
+
+		System.out.println ("\t|    - Transaction Cost Gain                                            ||");
 
 		System.out.println ("\t|-----------------------------------------------------------------------||");
 
@@ -129,21 +129,6 @@ public class FixedDriftTrajectoryComparator {
 				cpd
 			);
 
-			ConstrainedLinearTemporaryImpact dcli = ConstrainedLinearTemporaryImpact.Standard (
-				0.,
-				dblT,
-				dblXConstrained,
-				pcc,
-				dblRealizedPriceChange,
-				prlTemporary
-			);
-
-			double dblConstrainedInstantaneousTradeRate = dcli.instantaneousTradeRate();
-
-			dblXConstrained = dblXConstrained - dblConstrainedInstantaneousTradeRate * dblTimeWidth;
-
-			if (0 > dblXConstrained) dblXConstrained = 0.;
-
 			LinearTemporaryImpact lti = LinearTemporaryImpact.Unconstrained (
 				dblTime,
 				dblT,
@@ -159,13 +144,13 @@ public class FixedDriftTrajectoryComparator {
 
 			System.out.println (
 				"\t| " + FormatUtil.FormatDouble (dblTime, 1, 2, 1.) + " => " +
-				FormatUtil.FormatDouble (dcli.tradeStartTime(), 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dcli.tradeFinishTime(), 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dcli.criticalDrift(), 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dblConstrainedInstantaneousTradeRate, 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (adblAlpha[i], 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (dblRealizedPriceChange, 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (lti.driftEstimate(), 1, 3, 1.) + " | " +
 				FormatUtil.FormatDouble (dblUnconstrainedInstantaneousTradeRate, 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dblXConstrained, 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dblXUnconstrained, 1, 3, 1.) + " ||"
+				FormatUtil.FormatDouble (dblXUnconstrained, 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (lti.transactionCost(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (lti.transactionCostGain (pcc), 1, 3, 1.) + " ||"
 			);
 		}
 

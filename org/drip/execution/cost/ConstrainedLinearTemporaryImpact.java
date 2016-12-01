@@ -29,7 +29,7 @@ package org.drip.execution.cost;
  */
 
 /**
- * DirectionConstrainedLinearImpact computes and holds the Optimal Trajectory under Trading Rate Sign
+ * ConstrainedLinearTemporaryImpact computes and holds the Optimal Trajectory under Trading Rate Sign
  *  Constraints using Linear Temporary Impact Function for the given set of Inputs. The References are:
  * 
  * 	- Bertsimas, D., and A. W. Lo (1998): Optimal Control of Execution Costs, Journal of Financial Markets 1
@@ -49,38 +49,46 @@ package org.drip.execution.cost;
  * @author Lakshmi Krishnamurthy
  */
 
-public class DirectionConstrainedLinearImpact extends org.drip.execution.cost.LinearTemporaryImpactTrajectory
-{
+public class ConstrainedLinearTemporaryImpact extends org.drip.execution.cost.LinearTemporaryImpact {
 	private double _dblCriticalDrift = java.lang.Double.NaN;
 	private double _dblTradeStartTime = java.lang.Double.NaN;
 	private double _dblTradeFinishTime = java.lang.Double.NaN;
 
 	/**
-	 * Generate an DirectionConstrainedLinearImpact Instance
+	 * Generate a ConstrainedLinearTemporaryImpact Instance
 	 * 
 	 * @param dblSpotTime Spot Time
 	 * @param dblFinishTime Finish Time
 	 * @param dblSpotHoldings Spot Holdings
-	 * @param dblDriftEstimate Drift Estimate
+	 * @param pcc The Prior/Conditional Combiner
+	 * @param dblGrossPriceChange The Gross Price Change
 	 * @param tflTemporary The Temporary Linear Impact Function
 	 * 
-	 * @return The DirectionConstrainedLinearImpact Instance
+	 * @return The ConstrainedLinearTemporaryImpact Instance
 	 */
 
-	public static final DirectionConstrainedLinearImpact Standard (
+	public static final ConstrainedLinearTemporaryImpact Standard (
 		final double dblSpotTime,
 		final double dblFinishTime,
 		final double dblSpotHoldings,
-		final double dblDriftEstimate,
+		final org.drip.execution.bayesian.PriorConditionalCombiner pcc,
+		final double dblGrossPriceChange,
 		final org.drip.execution.impact.TransactionFunctionLinear tflTemporary)
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblSpotTime) ||
 			!org.drip.quant.common.NumberUtil.IsValid (dblFinishTime) ||
-				!org.drip.quant.common.NumberUtil.IsValid (dblSpotHoldings) ||
-					!org.drip.quant.common.NumberUtil.IsValid (dblDriftEstimate) || null == tflTemporary)
+				!org.drip.quant.common.NumberUtil.IsValid (dblSpotHoldings) || null == pcc || null ==
+					tflTemporary)
 			return null;
 
 		final double dblLiquidityCoefficient = tflTemporary.slope();
+
+		org.drip.measure.gaussian.R1UnivariateNormal r1unPosterior = pcc.posteriorDriftDistribution
+			(dblGrossPriceChange);
+
+		if (null == r1unPosterior) return null;
+
+		final double dblDriftEstimate = r1unPosterior.mean();
 
 		double dblTradeStartTime = dblSpotTime;
 		double dblTradeFinishTime = dblFinishTime;
@@ -116,7 +124,7 @@ public class DirectionConstrainedLinearImpact extends org.drip.execution.cost.Li
 			{
 				if (!org.drip.quant.common.NumberUtil.IsValid (dblTau))
 					throw new java.lang.Exception
-						("DirectionConstrainedLinearImpact::Holdings::evaluate => Invalid Inputs");
+						("ConstrainedLinearTemporaryImpact::Holdings::evaluate => Invalid Inputs");
 
 				if (dblTau <= dblt) return dblSpotHoldings;
 
@@ -128,9 +136,9 @@ public class DirectionConstrainedLinearImpact extends org.drip.execution.cost.Li
 		};
 
 		try {
-			return new DirectionConstrainedLinearImpact (dblSpotTime, dblFinishTime, dblSpotHoldings,
-				dblDriftEstimate, tflTemporary, r1ToR1Holdings, dblInstantaneousTradeRate, dblCriticalDrift,
-					dblTradeStartTime, dblTradeFinishTime);
+			return new ConstrainedLinearTemporaryImpact (dblSpotTime, dblFinishTime, dblSpotHoldings, pcc,
+				dblGrossPriceChange, tflTemporary, r1ToR1Holdings, dblInstantaneousTradeRate,
+					dblCriticalDrift, dblTradeStartTime, dblTradeFinishTime);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -138,11 +146,12 @@ public class DirectionConstrainedLinearImpact extends org.drip.execution.cost.Li
 		return null;
 	}
 
-	protected DirectionConstrainedLinearImpact (
+	protected ConstrainedLinearTemporaryImpact (
 		final double dblSpotTime,
 		final double dblFinishTime,
 		final double dblSpotHoldings,
-		final double dblDriftEstimate,
+		final org.drip.execution.bayesian.PriorConditionalCombiner pcc,
+		final double dblGrossPriceChange,
 		final org.drip.execution.impact.TransactionFunctionLinear tflTemporary,
 		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
 		final double dblInstantaneousTradeRate,
@@ -151,13 +160,13 @@ public class DirectionConstrainedLinearImpact extends org.drip.execution.cost.Li
 		final double dblTradeFinishTime)
 		throws java.lang.Exception
 	{
-		super (dblSpotTime, dblFinishTime, dblSpotHoldings, dblDriftEstimate, tflTemporary, r1ToR1Holdings,
-			dblInstantaneousTradeRate);
+		super (dblSpotTime, dblFinishTime, dblSpotHoldings, pcc, dblGrossPriceChange, tflTemporary,
+			r1ToR1Holdings, dblInstantaneousTradeRate);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCriticalDrift = dblCriticalDrift) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeStartTime = dblTradeStartTime) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeFinishTime = dblTradeFinishTime))
-			throw new java.lang.Exception ("DirectionConstrainedLinearImpact Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("ConstrainedLinearTemporaryImpact Constructor => Invalid Inputs");
 	}
 
 	/**

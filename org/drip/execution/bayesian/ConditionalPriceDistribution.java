@@ -123,7 +123,7 @@ public class ConditionalPriceDistribution extends org.drip.measure.gaussian.R1Un
 		throws java.lang.Exception
 	{
 		return _dblPriceVolatility * org.drip.measure.gaussian.NormalQuadrature.InverseCDF
-			(java.lang.Math.random());
+			(java.lang.Math.random()) * java.lang.Math.sqrt (_dblTime);
 	}
 
 	/**
@@ -141,9 +141,12 @@ public class ConditionalPriceDistribution extends org.drip.measure.gaussian.R1Un
 
 		double[] adblVolatilitySwings = new double[iNumRealization];
 
+		double dblVolatilityTimeSQRT = _dblPriceVolatility * java.lang.Math.sqrt (_dblTime);
+
 		for (int i = 0; i < iNumRealization; ++i) {
 			try {
-				adblVolatilitySwings[i] = priceVolatilitySwing();
+				adblVolatilitySwings[i] = org.drip.measure.gaussian.NormalQuadrature.InverseCDF
+					(java.lang.Math.random()) * dblVolatilityTimeSQRT;
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 

@@ -160,32 +160,32 @@ public class VariableDriftTrajectoryComparator {
 
 			double dblPriceSwingHigh = cpdHigh.priceVolatilitySwing();
 
-			double dblRealizedPriceChangeLow = adblAlphaLow[i] + dblPriceSwingLow;
+			double dblRealizedPriceChangeLow = adblAlphaLow[i] * dblTimeWidth + dblPriceSwingLow;
 
-			double dblRealizedPriceChangeMid = adblAlphaMid[i] + dblPriceSwingMid;
+			double dblRealizedPriceChangeMid = adblAlphaMid[i] * dblTimeWidth + dblPriceSwingMid;
 
-			double dblRealizedPriceChangeHigh = adblAlphaHigh[i] + dblPriceSwingHigh;
+			double dblRealizedPriceChangeHigh = adblAlphaHigh[i] * dblTimeWidth + dblPriceSwingHigh;
 
-			PriorConditionalCombiner pdcLow = new PriorConditionalCombiner (
+			PriorConditionalCombiner pccLow = new PriorConditionalCombiner (
 				pddLow,
 				cpdLow
 			);
 
-			PriorConditionalCombiner pdcMid = new PriorConditionalCombiner (
+			PriorConditionalCombiner pccMid = new PriorConditionalCombiner (
 				pddMid,
 				cpdMid
 			);
 
-			PriorConditionalCombiner pdcHigh = new PriorConditionalCombiner (
+			PriorConditionalCombiner pccHigh = new PriorConditionalCombiner (
 				pddHigh,
 				cpdHigh
 			);
 
-			R1UnivariateNormal r1unPosteriorLow = pdcLow.posteriorDriftDistribution (dblRealizedPriceChangeLow);
+			R1UnivariateNormal r1unPosteriorLow = pccLow.posteriorDriftDistribution (dblRealizedPriceChangeLow);
 
-			R1UnivariateNormal r1unPosteriorMid = pdcMid.posteriorDriftDistribution (dblRealizedPriceChangeMid);
+			R1UnivariateNormal r1unPosteriorMid = pccMid.posteriorDriftDistribution (dblRealizedPriceChangeMid);
 
-			R1UnivariateNormal r1unPosteriorHigh = pdcHigh.posteriorDriftDistribution (dblRealizedPriceChangeHigh);
+			R1UnivariateNormal r1unPosteriorHigh = pccHigh.posteriorDriftDistribution (dblRealizedPriceChangeHigh);
 
 			double dblDriftEstimateLow = r1unPosteriorLow.mean();
 
@@ -193,7 +193,7 @@ public class VariableDriftTrajectoryComparator {
 
 			double dblDriftEstimateHigh = r1unPosteriorHigh.mean();
 
-			DirectionConstrainedLinearImpact dcliLow = DirectionConstrainedLinearImpact.Standard (
+			ConstrainedLinearTemporaryImpact dcliLow = ConstrainedLinearTemporaryImpact.Standard (
 				0.,
 				dblT,
 				dblXConstrainedLow,
@@ -201,7 +201,7 @@ public class VariableDriftTrajectoryComparator {
 				prlTemporary
 			);
 
-			DirectionConstrainedLinearImpact dcliMid = DirectionConstrainedLinearImpact.Standard (
+			ConstrainedLinearTemporaryImpact dcliMid = ConstrainedLinearTemporaryImpact.Standard (
 				0.,
 				dblT,
 				dblXConstrainedMid,
@@ -209,7 +209,7 @@ public class VariableDriftTrajectoryComparator {
 				prlTemporary
 			);
 
-			DirectionConstrainedLinearImpact dcliHigh = DirectionConstrainedLinearImpact.Standard (
+			ConstrainedLinearTemporaryImpact dcliHigh = ConstrainedLinearTemporaryImpact.Standard (
 				0.,
 				dblT,
 				dblXConstrainedHigh,
@@ -235,7 +235,7 @@ public class VariableDriftTrajectoryComparator {
 
 			if (0 > dblXConstrainedHigh) dblXConstrainedHigh = 0.;
 
-			LinearTemporaryImpactTrajectory ltit = LinearTemporaryImpactTrajectory.Unconstrained (
+			LinearTemporaryImpact lti = LinearTemporaryImpact.Unconstrained (
 				dblTime,
 				dblT,
 				dblXUnconstrained,
@@ -243,7 +243,7 @@ public class VariableDriftTrajectoryComparator {
 				prlTemporary
 			);
 
-			double dblUnconstrainedInstantaneousTradeRate = ltit.instantaneousTradeRate();
+			double dblUnconstrainedInstantaneousTradeRate = lti.instantaneousTradeRate();
 
 			dblXUnconstrained = dblXUnconstrained - dblUnconstrainedInstantaneousTradeRate * dblTimeWidth;
 
