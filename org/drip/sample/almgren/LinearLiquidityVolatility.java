@@ -4,7 +4,7 @@ package org.drip.sample.almgren;
 import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.LinearTradingEnhancedScheme;
 import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.execution.optimum.LinearTradingEnhancedTrajectory;
+import org.drip.execution.optimum.Almgren2003TradingEnhancedDiscrete;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -87,7 +87,7 @@ public class LinearLiquidityVolatility {
 			dblLambda
 		);
 
-		LinearTradingEnhancedTrajectory ltet = (LinearTradingEnhancedTrajectory) ltes.generate();
+		Almgren2003TradingEnhancedDiscrete ltet = (Almgren2003TradingEnhancedDiscrete) ltes.generate();
 
 		double[] adblExecutionTimeNode = ltet.executionTimeNode();
 

@@ -146,7 +146,7 @@ public class Almgren2003TrajectoryScheme extends
 			}
 		};
 
-		return org.drip.execution.optimum.Almgren2003TradingTrajectory.Standard (os.maxExecutionTime(), dblE,
+		return org.drip.execution.optimum.Almgren2003PowerImpactContinuous.Standard (os.maxExecutionTime(), dblE,
 			dblV, dblTStar, dblTMax, dblHyperboloidBoundaryValue, holdingsR1ToR1);
 	}
 }

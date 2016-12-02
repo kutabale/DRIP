@@ -161,7 +161,7 @@ public class ConstrainedLinearTemporaryImpact extends org.drip.execution.cost.Li
 		throws java.lang.Exception
 	{
 		super (dblSpotTime, dblFinishTime, dblSpotHoldings, pcc, dblGrossPriceChange, tflTemporary,
-			r1ToR1Holdings, dblInstantaneousTradeRate);
+			dblTradeFinishTime - dblTradeStartTime, r1ToR1Holdings, dblInstantaneousTradeRate);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCriticalDrift = dblCriticalDrift) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeStartTime = dblTradeStartTime) ||

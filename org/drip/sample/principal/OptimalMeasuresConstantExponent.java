@@ -4,7 +4,7 @@ package org.drip.sample.principal;
 import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.Almgren2003TradingTrajectory;
+import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.*;
 import org.drip.quant.common.FormatUtil;
@@ -132,7 +132,7 @@ public class OptimalMeasuresConstantExponent {
 			);
 
 			Almgren2003Estimator a2003e = new Almgren2003Estimator (
-				(Almgren2003TradingTrajectory) Almgren2003TrajectoryScheme.Standard (
+				(Almgren2003PowerImpactContinuous) Almgren2003TrajectoryScheme.Standard (
 					dblX,
 					dblFinishTime,
 					a2003p,

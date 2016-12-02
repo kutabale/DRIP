@@ -4,7 +4,7 @@ package org.drip.sample.almgren;
 import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.Almgren2003TradingTrajectory;
+import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.function.definition.R1ToR1;
 import org.drip.quant.common.FormatUtil;
@@ -143,7 +143,7 @@ public class PowerLawOptimalTrajectory {
 				dblLambda
 			);
 
-			Almgren2003TradingTrajectory a2003tt = (Almgren2003TradingTrajectory) a2003ts.generate();
+			Almgren2003PowerImpactContinuous a2003tt = (Almgren2003PowerImpactContinuous) a2003ts.generate();
 
 			if (0 == i) {
 				String strExecutionTime = "\t|          |  ";

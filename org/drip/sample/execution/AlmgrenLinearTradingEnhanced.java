@@ -116,7 +116,7 @@ public class AlmgrenLinearTradingEnhanced {
 			dblLambda
 		);
 
-		LinearTradingEnhancedTrajectory ltet = (LinearTradingEnhancedTrajectory) ltes.generate();
+		Almgren2003TradingEnhancedDiscrete ltet = (Almgren2003TradingEnhancedDiscrete) ltes.generate();
 
 		double[] adblTradeListCF = ltet.tradeList();
 

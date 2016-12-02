@@ -146,11 +146,11 @@ public class BayesianGain {
 				"\t| " + FormatUtil.FormatDouble (dblTime, 1, 2, 1.) + " => " +
 				FormatUtil.FormatDouble (adblAlpha[i], 1, 3, 1.) + " | " +
 				FormatUtil.FormatDouble (dblRealizedPriceChange, 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (lti.driftEstimate(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (lti.driftExpectationEstimate(), 1, 3, 1.) + " | " +
 				FormatUtil.FormatDouble (dblUnconstrainedInstantaneousTradeRate, 1, 3, 1.) + " | " +
 				FormatUtil.FormatDouble (dblXUnconstrained, 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (lti.transactionCost(), 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (lti.transactionCostGain (pcc), 1, 3, 1.) + " ||"
+				FormatUtil.FormatDouble (lti.staticTransactionCost(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (lti.transactionCostGain(), 1, 3, 1.) + " ||"
 			);
 		}
 

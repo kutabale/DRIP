@@ -5,7 +5,7 @@ import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.LinearExpectationParameters;
 import org.drip.execution.generator.AC2000TrajectoryScheme;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.AC2000TradingTrajectory;
+import org.drip.execution.optimum.AlmgrenChriss2000Discrete;
 import org.drip.execution.parameters.*;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
@@ -123,7 +123,7 @@ public class OptimalTrajectoryNoDrift {
 			dblLambdaU
 		);
 
-		AC2000TradingTrajectory tt = (AC2000TradingTrajectory) acts.generate();
+		AlmgrenChriss2000Discrete tt = (AlmgrenChriss2000Discrete) acts.generate();
 
 		double[] adblExecutionTimeNode = tt.executionTimeNode();
 

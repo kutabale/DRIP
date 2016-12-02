@@ -4,7 +4,6 @@ package org.drip.sample.trend;
 import org.drip.execution.bayesian.*;
 import org.drip.execution.cost.*;
 import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -181,23 +180,12 @@ public class VariableDriftTrajectoryComparator {
 				cpdHigh
 			);
 
-			R1UnivariateNormal r1unPosteriorLow = pccLow.posteriorDriftDistribution (dblRealizedPriceChangeLow);
-
-			R1UnivariateNormal r1unPosteriorMid = pccMid.posteriorDriftDistribution (dblRealizedPriceChangeMid);
-
-			R1UnivariateNormal r1unPosteriorHigh = pccHigh.posteriorDriftDistribution (dblRealizedPriceChangeHigh);
-
-			double dblDriftEstimateLow = r1unPosteriorLow.mean();
-
-			double dblDriftEstimateMid = r1unPosteriorMid.mean();
-
-			double dblDriftEstimateHigh = r1unPosteriorHigh.mean();
-
 			ConstrainedLinearTemporaryImpact dcliLow = ConstrainedLinearTemporaryImpact.Standard (
 				0.,
 				dblT,
 				dblXConstrainedLow,
-				dblDriftEstimateLow,
+				pccLow,
+				dblRealizedPriceChangeLow,
 				prlTemporary
 			);
 
@@ -205,7 +193,8 @@ public class VariableDriftTrajectoryComparator {
 				0.,
 				dblT,
 				dblXConstrainedMid,
-				dblDriftEstimateMid,
+				pccMid,
+				dblRealizedPriceChangeMid,
 				prlTemporary
 			);
 
@@ -213,7 +202,8 @@ public class VariableDriftTrajectoryComparator {
 				0.,
 				dblT,
 				dblXConstrainedHigh,
-				dblDriftEstimateHigh,
+				pccHigh,
+				dblRealizedPriceChangeHigh,
 				prlTemporary
 			);
 
@@ -239,7 +229,8 @@ public class VariableDriftTrajectoryComparator {
 				dblTime,
 				dblT,
 				dblXUnconstrained,
-				dblDriftEstimateMid,
+				pccMid,
+				dblRealizedPriceChangeMid,
 				prlTemporary
 			);
 

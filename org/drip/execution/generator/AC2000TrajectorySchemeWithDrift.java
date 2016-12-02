@@ -184,7 +184,7 @@ public class AC2000TrajectorySchemeWithDrift extends org.drip.execution.generato
 					org.drip.execution.strategy.DiscreteTradingTrajectory (adblTNode, adblHoldings,
 						adblTradeList))).totalCostDistributionSynopsis (lep);
 
-			return null == r1un ? null : new org.drip.execution.optimum.AC2000TradingTrajectoryWithDrift
+			return null == r1un ? null : new org.drip.execution.optimum.AlmgrenChriss2000DiscreteWithDrift
 				(adblTNode, adblHoldings, adblTradeList, adblHoldingsDriftAdjustment,
 					adblTradeListDriftAdjustment, java.lang.Math.sqrt (dblKappaTildaSquared), dblKappa,
 						dblResidualHolding, dblAlpha * dblResidualHolding * dblT * (1. - (dblTau *

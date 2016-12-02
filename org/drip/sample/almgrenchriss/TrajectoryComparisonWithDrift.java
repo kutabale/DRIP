@@ -4,7 +4,7 @@ package org.drip.sample.almgrenchriss;
 import org.drip.execution.dynamics.LinearExpectationParameters;
 import org.drip.execution.generator.AC2000TrajectorySchemeWithDrift;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.AC2000TradingTrajectoryWithDrift;
+import org.drip.execution.optimum.AlmgrenChriss2000DiscreteWithDrift;
 import org.drip.execution.parameters.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -61,7 +61,7 @@ import org.drip.service.env.EnvManager;
 public class TrajectoryComparisonWithDrift {
 
 	private static final void DisplayTrajectory (
-		final AC2000TradingTrajectoryWithDrift tt,
+		final AlmgrenChriss2000DiscreteWithDrift tt,
 		final double dblLambda,
 		final double dblX)
 		throws Exception
@@ -203,7 +203,7 @@ public class TrajectoryComparisonWithDrift {
 
 		for (double dblLambdaU : adblLambdaU)
 			DisplayTrajectory (
-				(AC2000TradingTrajectoryWithDrift) AC2000TrajectorySchemeWithDrift.Standard (
+				(AlmgrenChriss2000DiscreteWithDrift) AC2000TrajectorySchemeWithDrift.Standard (
 					dblX,
 					dblT,
 					iN,

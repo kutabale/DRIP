@@ -104,7 +104,7 @@ public class LinearTradingEnhancedScheme extends org.drip.execution.generator.Op
 		double dblTStar = java.lang.Math.sqrt (tevp.linearTemporaryExpectation().slope() / (dblLambda *
 			dblSigma * dblSigma));
 
-		return org.drip.execution.optimum.LinearTradingEnhancedTrajectory.Standard
+		return org.drip.execution.optimum.Almgren2003TradingEnhancedDiscrete.Standard
 			((org.drip.execution.strategy.DiscreteTradingTrajectory) super.generate(), tevp, dblTStar,
 				dblSigma * dblTStar * dblTStar / (tevp.linearTemporaryVolatility().slope() *
 					java.lang.Math.sqrt (3.)));

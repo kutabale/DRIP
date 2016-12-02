@@ -4,7 +4,7 @@ package org.drip.sample.principal;
 import org.drip.execution.dynamics.Almgren2003Parameters;
 import org.drip.execution.generator.Almgren2003TrajectoryScheme;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.Almgren2003TradingTrajectory;
+import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.Almgren2003Estimator;
 import org.drip.function.definition.R1ToR1;
@@ -109,7 +109,7 @@ public class OptimalTrajectoryMeasures {
 			dblLambda
 		);
 
-		Almgren2003TradingTrajectory a2003tt = (Almgren2003TradingTrajectory) a2003ts.generate();
+		Almgren2003PowerImpactContinuous a2003tt = (Almgren2003PowerImpactContinuous) a2003ts.generate();
 
 		R1ToR1 r1ToR1Holdings = a2003tt.holdings();
 

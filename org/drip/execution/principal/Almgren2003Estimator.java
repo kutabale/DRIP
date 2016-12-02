@@ -61,7 +61,7 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 	 */
 
 	public Almgren2003Estimator (
-		final org.drip.execution.optimum.Almgren2003TradingTrajectory a2003tt,
+		final org.drip.execution.optimum.Almgren2003PowerImpactContinuous a2003tt,
 		final org.drip.execution.dynamics.Almgren2003Parameters a2003p)
 		throws java.lang.Exception
 	{

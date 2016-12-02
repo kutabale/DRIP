@@ -162,7 +162,7 @@ public class AC2000TrajectoryScheme extends org.drip.execution.generator.Optimal
 		}
 
 		try {
-			return new org.drip.execution.optimum.AC2000TradingTrajectory (adblTNode, adblHoldings,
+			return new org.drip.execution.optimum.AlmgrenChriss2000Discrete (adblTNode, adblHoldings,
 				adblTradeList, java.lang.Math.sqrt (dblKappaTildaSquared), dblKappa, 0.5 * dblGamma *
 					dblXSquared + tflTemporaryExpectation.offset() * dblX + dblEtaTilda * dblXSquared *
 						dblReciprocalSinhKappaTSquared * java.lang.Math.tanh (dblHalfKappaTau) * (dblTau *

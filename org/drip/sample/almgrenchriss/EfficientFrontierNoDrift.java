@@ -4,7 +4,7 @@ package org.drip.sample.almgrenchriss;
 import org.drip.execution.dynamics.LinearExpectationParameters;
 import org.drip.execution.generator.AC2000TrajectoryScheme;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.AC2000TradingTrajectory;
+import org.drip.execution.optimum.AlmgrenChriss2000Discrete;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -159,7 +159,7 @@ public class EfficientFrontierNoDrift {
 		System.out.println ("\t|------------------------------------------------------------||");
 
 		for (double dblLambda : adblLambdaShortEndU) {
-			AC2000TradingTrajectory tt = (AC2000TradingTrajectory) AC2000TrajectoryScheme.Standard (
+			AlmgrenChriss2000Discrete tt = (AlmgrenChriss2000Discrete) AC2000TrajectoryScheme.Standard (
 				dblX,
 				dblT,
 				iN,
@@ -199,7 +199,7 @@ public class EfficientFrontierNoDrift {
 		System.out.println ("\t|------------------------------------------------------------||");
 
 		for (double dblLambda : adblLambdaLongEndU) {
-			AC2000TradingTrajectory tt = (AC2000TradingTrajectory) AC2000TrajectoryScheme.Standard (
+			AlmgrenChriss2000Discrete tt = (AlmgrenChriss2000Discrete) AC2000TrajectoryScheme.Standard (
 				dblX,
 				dblT,
 				iN,

@@ -55,10 +55,12 @@ public class LinearTemporaryImpact {
 	private double _dblFinishTime = java.lang.Double.NaN;
 	private double _dblSpotHoldings = java.lang.Double.NaN;
 	private double _dblGrossPriceChange = java.lang.Double.NaN;
+	private double _dblTransactionCostGain = java.lang.Double.NaN;
+	private double _dblStaticTransactionCost = java.lang.Double.NaN;
 	private double _dblInstantaneousTradeRate = java.lang.Double.NaN;
 	private org.drip.execution.bayesian.PriorConditionalCombiner _pcc = null;
-	private org.drip.execution.strategy.ContinuousTradingTrajectory _ctt = null;
 	private org.drip.execution.impact.TransactionFunctionLinear _tflTemporary = null;
+	private org.drip.execution.optimum.EfficientContinuousTradingTrajectory _ectt = null;
 
 	/**
 	 * Generate an Unconstrained LinearTemporaryImpact Instance
@@ -118,8 +120,8 @@ public class LinearTemporaryImpact {
 
 		try {
 			return new LinearTemporaryImpact (dblSpotTime, dblFinishTime, dblSpotHoldings, pcc,
-				dblGrossPriceChange, tflTemporary, r1ToR1Holdings, 0 >= dblHorizon ? 0. : dblSpotHoldings /
-					dblHorizon + dblScaledDrift * dblHorizon);
+				dblGrossPriceChange, tflTemporary, dblFinishTime - dblSpotTime, r1ToR1Holdings, 0 >=
+					dblHorizon ? 0. : dblSpotHoldings / dblHorizon + dblScaledDrift * dblHorizon);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -134,17 +136,73 @@ public class LinearTemporaryImpact {
 		final org.drip.execution.bayesian.PriorConditionalCombiner pcc,
 		final double dblGrossPriceChange,
 		final org.drip.execution.impact.TransactionFunctionLinear tflTemporary,
+		final double dblCharacteristicTime,
 		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
 		final double dblInstantaneousTradeRate)
 		throws java.lang.Exception
 	{
-		if (null == (_ctt = org.drip.execution.strategy.ContinuousTradingTrajectory.Standard ((_dblFinishTime
-			= dblFinishTime) - (_dblSpotTime = dblSpotTime), r1ToR1Holdings)) ||
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSpotTime = dblSpotTime) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblFinishTime = dblFinishTime) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblSpotHoldings = dblSpotHoldings) || null ==
 					(_pcc = pcc) || !org.drip.quant.common.NumberUtil.IsValid (_dblGrossPriceChange =
-						dblGrossPriceChange) || null == (_tflTemporary = tflTemporary) ||
-							!org.drip.quant.common.NumberUtil.IsValid (_dblInstantaneousTradeRate =
-								dblInstantaneousTradeRate))
+						dblGrossPriceChange) || null == (_tflTemporary = tflTemporary) || null ==
+							r1ToR1Holdings || !org.drip.quant.common.NumberUtil.IsValid
+								(_dblInstantaneousTradeRate = dblInstantaneousTradeRate))
+			throw new java.lang.Exception ("LinearTemporaryImpact Constructor => Invalid Inputs");
+
+		double dblLiquidityCoefficient = _tflTemporary.slope();
+
+		double dblDriftEstimate = _pcc.posteriorDriftDistribution (_dblGrossPriceChange).mean();
+
+		double dblExecutionTime = _dblFinishTime - _dblSpotTime;
+		_dblStaticTransactionCost = _dblSpotHoldings * _dblSpotHoldings * dblLiquidityCoefficient /
+			dblExecutionTime + 0.5 * _dblSpotHoldings * dblDriftEstimate * dblExecutionTime -
+				dblExecutionTime * dblExecutionTime * dblExecutionTime * dblDriftEstimate * dblDriftEstimate
+					/ (48. * dblLiquidityCoefficient);
+
+		double dblDriftConfidence = _pcc.prior().confidence();
+
+		final double dblPriceVolatility = _pcc.conditional().priceVolatility();
+
+		org.drip.function.definition.R1ToR1 r1ToR1HoldingsSquared = new org.drip.function.definition.R1ToR1
+			(null) {
+			@Override public double evaluate (
+				final double dblTime)
+				throws java.lang.Exception
+			{
+				double dblHoldings = r1ToR1Holdings.evaluate (dblTime);
+
+				return dblHoldings * dblHoldings;
+			}
+		};
+
+		final double dblRho = dblPriceVolatility * dblPriceVolatility / (dblDriftConfidence *
+			dblDriftConfidence * dblExecutionTime);
+
+		org.drip.function.definition.R1ToR1 r1ToR1Quadrature = new org.drip.function.definition.R1ToR1 (null)
+		{
+			@Override public double evaluate (
+				final double dblDelta)
+				throws java.lang.Exception
+			{
+				if (!org.drip.quant.common.NumberUtil.IsValid (dblDelta))
+					throw new java.lang.Exception
+						("LinearTemporaryImpact::r1ToR1Quadrature::evaluate => Invalid Inputs");
+
+				double dblRemainingTime = 1. - dblDelta;
+				double dblDimensionlessTime = dblDelta + dblRho;
+				return dblRemainingTime * dblRemainingTime * dblRemainingTime / (dblDimensionlessTime *
+					dblDimensionlessTime);
+			}
+		};
+
+		_dblTransactionCostGain = dblPriceVolatility * dblPriceVolatility * dblExecutionTime *
+			dblExecutionTime / (48. * linearTemporaryImpact().slope()) * r1ToR1Quadrature.integrate (0., 1.);
+
+		if (null == (_ectt = org.drip.execution.optimum.EfficientContinuousTradingTrajectory.Standard
+			(dblExecutionTime, _dblStaticTransactionCost + _dblTransactionCostGain, dblPriceVolatility *
+				dblPriceVolatility * r1ToR1HoldingsSquared.integrate (_dblSpotTime, _dblFinishTime),
+					dblCharacteristicTime, r1ToR1Holdings)))
 			throw new java.lang.Exception ("LinearTemporaryImpact Constructor => Invalid Inputs");
 	}
 
@@ -204,14 +262,25 @@ public class LinearTemporaryImpact {
 	}
 
 	/**
-	 * Retrieve the Drift Estimate
+	 * Retrieve the Drift Expectation Estimate
 	 * 
-	 * @return The Drift Estimate
+	 * @return The Drift Expectation Estimate
 	 */
 
-	public double driftEstimate()
+	public double driftExpectationEstimate()
 	{
 		return _pcc.posteriorDriftDistribution (_dblGrossPriceChange).mean();
+	}
+
+	/**
+	 * Retrieve the Drift Volatility Estimate
+	 * 
+	 * @return The Drift Volatility Estimate
+	 */
+
+	public double driftVolatilityEstimate()
+	{
+		return java.lang.Math.sqrt (_pcc.posteriorDriftDistribution (_dblGrossPriceChange).variance());
 	}
 
 	/**
@@ -231,9 +300,9 @@ public class LinearTemporaryImpact {
 	 * @return The Holdings Trajectory
 	 */
 
-	public org.drip.execution.strategy.ContinuousTradingTrajectory trajectory()
+	public org.drip.execution.optimum.EfficientContinuousTradingTrajectory trajectory()
 	{
-		return _ctt;
+		return _ectt;
 	}
 
 	/**
@@ -248,69 +317,24 @@ public class LinearTemporaryImpact {
 	}
 
 	/**
-	 * Estimate of the Transaction Cost
+	 * Estimate of the Static Transaction Cost
 	 * 
-	 * @return The Transaction Cost Estimate
+	 * @return The Static Transaction Cost Estimate
 	 */
 
-	public double transactionCost()
+	public double staticTransactionCost()
 	{
-		double dblLiquidityCoefficient = _tflTemporary.slope();
-
-		double dblDriftEstimate = _pcc.posteriorDriftDistribution (_dblGrossPriceChange).mean();
-
-		double dblExecutionTime = _dblFinishTime - _dblSpotTime;
-		return _dblSpotHoldings * _dblSpotHoldings * dblLiquidityCoefficient / dblExecutionTime + 0.5 *
-			_dblSpotHoldings * dblDriftEstimate * dblExecutionTime - dblExecutionTime * dblExecutionTime *
-				dblExecutionTime * dblDriftEstimate * dblDriftEstimate / (48. * dblLiquidityCoefficient);
+		return _dblStaticTransactionCost;
 	}
 
 	/**
-	 * Estimate the Gain available from the Bayesian Drift
+	 * Estimate the Transaction Cost Gain available from the Bayesian Drift
 	 * 
-	 * @param pcc The Prior Conditional Combiner Instance
-	 * 
-	 * @return The Gain available from the Bayesian Drift
-	 * 
-	 * @throws java.lang.Exception Thrown if the Gain cannot be estimated
+	 * @return The Transaction Cost Gain available from the Bayesian Drift
 	 */
 
-	public double transactionCostGain (
-		final org.drip.execution.bayesian.PriorConditionalCombiner pcc)
-		throws java.lang.Exception
+	public double transactionCostGain()
 	{
-		if (null == pcc)
-			throw new java.lang.Exception
-				("ConstrainedLinearTemporaryImpact::transactionCostGain => Invalid Inputs");
-
-		double dblHorizon = finishTime() - spotTime();
-
-		double dblDriftConfidence = pcc.prior().confidence();
-
-		double dblPriceVolatility = pcc.conditional().priceVolatility();
-
-		final double dblRho = dblPriceVolatility * dblPriceVolatility / (dblDriftConfidence *
-			dblDriftConfidence * dblHorizon);
-
-		org.drip.function.definition.R1ToR1 r1ToR1Quadrature = new org.drip.function.definition.R1ToR1 (null)
-		{
-			@Override public double evaluate (
-				final double dblDelta)
-				throws java.lang.Exception
-			{
-				if (!org.drip.quant.common.NumberUtil.IsValid (dblDelta))
-					throw new java.lang.Exception
-						("ConstrainedLinearTemporaryImpact::transactionCostGain::r1ToR1Quadrature::evaluate => Invalid Inputs");
-
-				double dblRemainingTime = 1. - dblDelta;
-				double dblDimensionlessTime = dblDelta + dblRho;
-				return dblRemainingTime * dblRemainingTime * dblRemainingTime / (dblDimensionlessTime *
-					dblDimensionlessTime);
-			}
-		};
-
-		return dblPriceVolatility * dblPriceVolatility * dblHorizon * dblHorizon / (48. *
-			linearTemporaryImpact().slope()) * org.drip.quant.calculus.R1ToR1Integrator.LinearQuadrature
-				(r1ToR1Quadrature, 0., 1.);
+		return _dblTransactionCostGain;
 	}
 }

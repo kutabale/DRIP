@@ -5,7 +5,7 @@ import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.LinearExpectationParameters;
 import org.drip.execution.generator.AC2000TrajectorySchemeWithDrift;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.AC2000TradingTrajectoryWithDrift;
+import org.drip.execution.optimum.AlmgrenChriss2000DiscreteWithDrift;
 import org.drip.execution.parameters.*;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
@@ -123,7 +123,7 @@ public class OptimalTrajectoryWithDrift {
 			dblLambdaU
 		);
 
-		AC2000TradingTrajectoryWithDrift tt = (AC2000TradingTrajectoryWithDrift) acts.generate();
+		AlmgrenChriss2000DiscreteWithDrift tt = (AlmgrenChriss2000DiscreteWithDrift) acts.generate();
 
 		double[] adblTradeListDriftAdjustment = tt.tradeListDriftAdjustment();
 
