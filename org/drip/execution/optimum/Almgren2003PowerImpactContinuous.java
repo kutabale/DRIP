@@ -49,7 +49,7 @@ package org.drip.execution.optimum;
  */
 
 public class Almgren2003PowerImpactContinuous extends
-	org.drip.execution.optimum.EfficientContinuousTradingTrajectory {
+	org.drip.execution.optimum.EfficientTradingTrajectoryContinuous {
 	private double _dblExecutionTimeUpperBound = java.lang.Double.NaN;
 	private double _dblHyperboloidBoundaryValue = java.lang.Double.NaN;
 
@@ -63,6 +63,8 @@ public class Almgren2003PowerImpactContinuous extends
 	 * @param dblExecutionTimeUpperBound The Optimal Trajectory's Execution Time Upper Bound (if it exists)
 	 * @param dblHyperboloidBoundaryValue The Hyperboloid Boundary Value
 	 * @param r1ToR1Holdings The Optimal Trajectory R^1 To R^1 Holdings Function
+	 * @param r1ToR1TransactionCostExpectation The Transaction Cost Expectation Function
+	 * @param r1ToR1TransactionCostVariance The Transaction Cost Variance Function
 	 * 
 	 * @return The Standard Almgren2003PowerImpactContinuous Instance
 	 */
@@ -74,7 +76,9 @@ public class Almgren2003PowerImpactContinuous extends
 		final double dblCharacteristicTime,
 		final double dblExecutionTimeUpperBound,
 		final double dblHyperboloidBoundaryValue,
-		final org.drip.function.definition.R1ToR1 r1ToR1Holdings)
+		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostExpectation,
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostVariance)
 	{
 		if (null == r1ToR1Holdings) return null;
 
@@ -91,7 +95,8 @@ public class Almgren2003PowerImpactContinuous extends
 
 			return new Almgren2003PowerImpactContinuous (dblExecutionTime, dblTransactionCostExpectation,
 				dblTransactionCostVariance, dblCharacteristicTime, dblExecutionTimeUpperBound,
-					dblHyperboloidBoundaryValue, r1ToR1Holdings, r1ToR1TradeRate);
+					dblHyperboloidBoundaryValue, r1ToR1Holdings, r1ToR1TradeRate,
+						r1ToR1TransactionCostExpectation, r1ToR1TransactionCostVariance);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -110,6 +115,8 @@ public class Almgren2003PowerImpactContinuous extends
 	 * @param dblHyperboloidBoundaryValue The Hyperboloid Boundary Value
 	 * @param r1ToR1Holdings The Optimal Trajectory R^1 To R^1 Holdings Function
 	 * @param r1ToR1TradeRate The Optimal Trajectory R^1 To R^1 Trade Rate Function
+	 * @param r1ToR1TransactionCostExpectation The Transaction Cost Expectation Function
+	 * @param r1ToR1TransactionCostVariance The Transaction Cost Variance Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -122,11 +129,14 @@ public class Almgren2003PowerImpactContinuous extends
 		final double dblExecutionTimeUpperBound,
 		final double dblHyperboloidBoundaryValue,
 		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
-		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate)
+		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate,
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostExpectation,
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostVariance)
 		throws java.lang.Exception
 	{
 		super (dblExecutionTime, dblTransactionCostExpectation, dblTransactionCostVariance,
-			dblCharacteristicTime, r1ToR1Holdings, r1ToR1TradeRate);
+			dblCharacteristicTime, r1ToR1Holdings, r1ToR1TradeRate, r1ToR1TransactionCostExpectation,
+				r1ToR1TransactionCostVariance);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHyperboloidBoundaryValue =
 			dblHyperboloidBoundaryValue))

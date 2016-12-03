@@ -3,9 +3,9 @@ package org.drip.sample.execution;
 
 import org.drip.execution.capture.LinearImpactTrajectoryEstimator;
 import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.OptimalDiscreteTrajectoryScheme;
+import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.EfficientDiscreteTradingTrajectory;
+import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
@@ -125,7 +125,7 @@ public class LinearImpactWithDrift {
 			prlTemporary
 		);
 
-		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalDiscreteTrajectoryScheme (
+		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
 			dttc,
 			lep,
 			new MeanVarianceObjectiveUtility (dblLambdaU)

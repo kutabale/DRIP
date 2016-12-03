@@ -96,7 +96,7 @@ public class AlmgrenLinearTradingEnhanced {
 			)
 		);
 
-		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalDiscreteTrajectoryScheme (
+		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
 			dttc,
 			tevp,
 			new MeanVarianceObjectiveUtility (dblLambda)
@@ -108,7 +108,7 @@ public class AlmgrenLinearTradingEnhanced {
 
 		double[] adblHoldings = edtt.holdings();
 
-		LinearTradingEnhancedScheme ltes = LinearTradingEnhancedScheme.Standard (
+		Almgren2003LinearTradingEnhanced ltes = Almgren2003LinearTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			iNumInterval,

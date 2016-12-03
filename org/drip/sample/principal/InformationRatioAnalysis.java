@@ -2,7 +2,7 @@
 package org.drip.sample.principal;
 
 import org.drip.execution.dynamics.Almgren2003Parameters;
-import org.drip.execution.generator.Almgren2003TrajectoryScheme;
+import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
@@ -133,7 +133,7 @@ public class InformationRatioAnalysis {
 			(ParticipationRatePower) pmip.temporaryTransactionFunction()
 		);
 
-		Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
+		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
 			dblX,
 			dblT,
 			a2003p,

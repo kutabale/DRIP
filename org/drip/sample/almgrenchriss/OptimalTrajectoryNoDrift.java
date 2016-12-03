@@ -3,7 +3,7 @@ package org.drip.sample.almgrenchriss;
 
 import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.AC2000TrajectoryScheme;
+import org.drip.execution.generator.AlmgrenChriss2000;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.AlmgrenChriss2000Discrete;
 import org.drip.execution.parameters.*;
@@ -115,7 +115,7 @@ public class OptimalTrajectoryNoDrift {
 			prlTemporary
 		);
 
-		AC2000TrajectoryScheme acts = AC2000TrajectoryScheme.Standard (
+		AlmgrenChriss2000 acts = AlmgrenChriss2000.Standard (
 			dblX,
 			dblT,
 			iN,

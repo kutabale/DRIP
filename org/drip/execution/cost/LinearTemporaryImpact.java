@@ -60,7 +60,7 @@ public class LinearTemporaryImpact {
 	private double _dblInstantaneousTradeRate = java.lang.Double.NaN;
 	private org.drip.execution.bayesian.PriorConditionalCombiner _pcc = null;
 	private org.drip.execution.impact.TransactionFunctionLinear _tflTemporary = null;
-	private org.drip.execution.optimum.EfficientContinuousTradingTrajectory _ectt = null;
+	private org.drip.execution.optimum.EfficientTradingTrajectoryContinuous _ectt = null;
 
 	/**
 	 * Generate an Unconstrained LinearTemporaryImpact Instance
@@ -150,11 +150,11 @@ public class LinearTemporaryImpact {
 								(_dblInstantaneousTradeRate = dblInstantaneousTradeRate))
 			throw new java.lang.Exception ("LinearTemporaryImpact Constructor => Invalid Inputs");
 
-		double dblLiquidityCoefficient = _tflTemporary.slope();
+		final double dblLiquidityCoefficient = _tflTemporary.slope();
 
 		double dblDriftEstimate = _pcc.posteriorDriftDistribution (_dblGrossPriceChange).mean();
 
-		double dblExecutionTime = _dblFinishTime - _dblSpotTime;
+		final double dblExecutionTime = _dblFinishTime - _dblSpotTime;
 		_dblStaticTransactionCost = _dblSpotHoldings * _dblSpotHoldings * dblLiquidityCoefficient /
 			dblExecutionTime + 0.5 * _dblSpotHoldings * dblDriftEstimate * dblExecutionTime -
 				dblExecutionTime * dblExecutionTime * dblExecutionTime * dblDriftEstimate * dblDriftEstimate
@@ -199,11 +199,65 @@ public class LinearTemporaryImpact {
 		_dblTransactionCostGain = dblPriceVolatility * dblPriceVolatility * dblExecutionTime *
 			dblExecutionTime / (48. * linearTemporaryImpact().slope()) * r1ToR1Quadrature.integrate (0., 1.);
 
-		if (null == (_ectt = org.drip.execution.optimum.EfficientContinuousTradingTrajectory.Standard
-			(dblExecutionTime, _dblStaticTransactionCost + _dblTransactionCostGain, dblPriceVolatility *
-				dblPriceVolatility * r1ToR1HoldingsSquared.integrate (_dblSpotTime, _dblFinishTime),
-					dblCharacteristicTime, r1ToR1Holdings)))
-			throw new java.lang.Exception ("LinearTemporaryImpact Constructor => Invalid Inputs");
+		org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1 (null)
+		{
+			@Override public double evaluate (
+				final double dblS)
+				throws java.lang.Exception
+			{
+				return r1ToR1Holdings.derivative (dblS, 1);
+			}
+		};
+
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostExpectationRate = new
+			org.drip.function.definition.R1ToR1 (null) {
+			@Override public double evaluate (
+				final double dblTime)
+				throws java.lang.Exception
+			{
+				double dblTradeRate = r1ToR1Holdings.derivative (dblTime, 1);
+
+				return dblLiquidityCoefficient * dblLiquidityCoefficient * dblTradeRate * dblTradeRate;
+			}
+		};
+
+		org.drip.function.definition.R1ToR1 r1ToR1TransactionCostExpectation = new
+			org.drip.function.definition.R1ToR1 (null) {
+			@Override public double evaluate (
+				final double dblTime)
+				throws java.lang.Exception
+			{
+				return r1ToR1TransactionCostExpectationRate.integrate (dblTime, dblExecutionTime);
+			}
+		};
+
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostVarianceRate = new
+			org.drip.function.definition.R1ToR1 (null) {
+			@Override public double evaluate (
+				final double dblTime)
+				throws java.lang.Exception
+			{
+				double dblHoldings = r1ToR1Holdings.evaluate (dblTime);
+
+				return dblPriceVolatility * dblPriceVolatility * dblHoldings * dblHoldings;
+			}
+		};
+
+		org.drip.function.definition.R1ToR1 r1ToR1TransactionCostVariance = new
+			org.drip.function.definition.R1ToR1 (null) {
+			@Override public double evaluate (
+				final double dblTime)
+				throws java.lang.Exception
+			{
+				return r1ToR1TransactionCostVarianceRate.integrate (dblTime, dblExecutionTime);
+			}
+		};
+
+		_ectt = new org.drip.execution.optimum.EfficientTradingTrajectoryContinuous (dblExecutionTime,
+			_dblStaticTransactionCost + _dblTransactionCostGain, dblPriceVolatility * dblPriceVolatility *
+				r1ToR1HoldingsSquared.integrate (_dblSpotTime, _dblFinishTime), dblCharacteristicTime,
+					r1ToR1Holdings, r1ToR1TradeRate, r1ToR1TransactionCostExpectation,
+						r1ToR1TransactionCostVariance);
 	}
 
 	/**
@@ -300,7 +354,7 @@ public class LinearTemporaryImpact {
 	 * @return The Holdings Trajectory
 	 */
 
-	public org.drip.execution.optimum.EfficientContinuousTradingTrajectory trajectory()
+	public org.drip.execution.optimum.EfficientTradingTrajectoryContinuous trajectory()
 	{
 		return _ectt;
 	}

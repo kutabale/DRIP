@@ -50,7 +50,7 @@ package org.drip.execution.optimum;
  */
 
 public class Almgren2003TradingEnhancedDiscrete extends
-	org.drip.execution.optimum.EfficientDiscreteTradingTrajectory {
+	org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete {
 	private double _dblCharacteristicSize = java.lang.Double.NaN;
 	private double _dblCharacteristicTime = java.lang.Double.NaN;
 

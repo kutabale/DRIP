@@ -2,9 +2,9 @@
 package org.drip.sample.execution;
 
 import org.drip.execution.dynamics.Almgren2003Parameters;
-import org.drip.execution.generator.OptimalDiscreteTrajectoryScheme;
+import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.EfficientDiscreteTradingTrajectory;
+import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
@@ -111,7 +111,7 @@ public class ConcaveImpactNoDrift {
 			iNumInterval
 		);
 
-		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalDiscreteTrajectoryScheme (
+		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
 			dttc,
 			a2003p,
 			new MeanVarianceObjectiveUtility (dblLambdaU)

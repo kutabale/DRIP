@@ -2,7 +2,7 @@
 package org.drip.sample.athl;
 
 import org.drip.execution.athl.DynamicsParameters;
-import org.drip.execution.generator.Almgren2003TrajectoryScheme;
+import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.AssetFlowSettings;
 import org.drip.execution.strategy.DiscreteTradingTrajectory;
@@ -76,7 +76,7 @@ public class OptimalTrajectoryIBM {
 
 		double dblRiskAversion = 1.e-02;
 
-		Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
+		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
 			dblTradeSize,
 			dblTradeTime,
 			new DynamicsParameters (

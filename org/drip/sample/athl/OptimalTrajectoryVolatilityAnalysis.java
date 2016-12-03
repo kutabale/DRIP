@@ -3,7 +3,7 @@ package org.drip.sample.athl;
 
 import org.drip.execution.athl.DynamicsParameters;
 import org.drip.execution.dynamics.Almgren2003Parameters;
-import org.drip.execution.generator.Almgren2003TrajectoryScheme;
+import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.AssetFlowSettings;
 import org.drip.function.definition.R1ToR1;
@@ -81,7 +81,7 @@ public class OptimalTrajectoryVolatilityAnalysis {
 			)
 		).almgren2003();
 
-		Almgren2003TrajectoryScheme a2003ts = Almgren2003TrajectoryScheme.Standard (
+		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
 			dblTradeSize,
 			dblTradeTime,
 			a2003p,

@@ -53,19 +53,25 @@ public class ContinuousTradingTrajectory implements org.drip.execution.strategy.
 	private double _dblExecutionTime = java.lang.Double.NaN;
 	private org.drip.function.definition.R1ToR1 _r1ToR1Holdings = null;
 	private org.drip.function.definition.R1ToR1 _r1ToR1TradeRate = null;
+	private org.drip.function.definition.R1ToR1 _r1ToR1TransactionCostVariance = null;
+	private org.drip.function.definition.R1ToR1 _r1ToR1TransactionCostExpectation = null;
 
 	/**
 	 * Construct a Standard Instance of ContinuousTradingTrajectory
 	 * 
 	 * @param dblExecutionTime The Execution Time
 	 * @param r1ToR1Holdings The Holdings Function
+	 * @param r1ToR1TransactionCostExpectation The Transaction Cost Expectation Function
+	 * @param r1ToR1TransactionCostVariance The Transaction Cost Variance Function
 	 * 
 	 * @return Standard Instance of ContinuousTradingTrajectory
 	 */
 
 	public static final ContinuousTradingTrajectory Standard (
 		final double dblExecutionTime,
-		final org.drip.function.definition.R1ToR1 r1ToR1Holdings)
+		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostExpectation,
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostVariance)
 	{
 		if (null == r1ToR1Holdings) return null;
 
@@ -80,7 +86,8 @@ public class ContinuousTradingTrajectory implements org.drip.execution.strategy.
 		};
 
 		try {
-			return new ContinuousTradingTrajectory (dblExecutionTime, r1ToR1Holdings, r1ToR1TradeRate);
+			return new ContinuousTradingTrajectory (dblExecutionTime, r1ToR1Holdings, r1ToR1TradeRate,
+				r1ToR1TransactionCostExpectation, r1ToR1TransactionCostVariance);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -94,6 +101,8 @@ public class ContinuousTradingTrajectory implements org.drip.execution.strategy.
 	 * @param dblExecutionTime The Execution Time
 	 * @param r1ToR1Holdings The Holdings Function
 	 * @param r1ToR1TradeRate The Trade Rate Function
+	 * @param r1ToR1TransactionCostExpectation The Transaction Cost Expectation Function
+	 * @param r1ToR1TransactionCostVariance The Transaction Cost Variance Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -101,11 +110,16 @@ public class ContinuousTradingTrajectory implements org.drip.execution.strategy.
 	public ContinuousTradingTrajectory (
 		final double dblExecutionTime,
 		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
-		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate)
+		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate,
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostExpectation,
+		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostVariance)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblExecutionTime = dblExecutionTime) || null ==
-			(_r1ToR1Holdings = r1ToR1Holdings) || null == (_r1ToR1TradeRate = r1ToR1TradeRate))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblExecutionTime = dblExecutionTime) || 0. >=
+			_dblExecutionTime || null == (_r1ToR1Holdings = r1ToR1Holdings) || null == (_r1ToR1TradeRate =
+				r1ToR1TradeRate) || null == (_r1ToR1TransactionCostExpectation =
+					r1ToR1TransactionCostExpectation) || null == (_r1ToR1TransactionCostVariance =
+						r1ToR1TransactionCostVariance))
 			throw new java.lang.Exception ("ContinuousTradingTrajectory Constructor => Invalid Inputs");
 	}
 
@@ -156,5 +170,27 @@ public class ContinuousTradingTrajectory implements org.drip.execution.strategy.
 	public org.drip.function.definition.R1ToR1 tradeRate()
 	{
 		return _r1ToR1TradeRate;
+	}
+
+	/**
+	 * Retrieve the Transaction Cost Expectation Function
+	 * 
+	 * @return The Transaction Cost Expectation Function
+	 */
+
+	public org.drip.function.definition.R1ToR1 transactionCostExpectationFunction()
+	{
+		return _r1ToR1TransactionCostExpectation;
+	}
+
+	/**
+	 * Retrieve the Transaction Cost Variance Function
+	 * 
+	 * @return The Transaction Cost Variance Function
+	 */
+
+	public org.drip.function.definition.R1ToR1 transactionCostVarianceFunction()
+	{
+		return _r1ToR1TransactionCostVariance;
 	}
 }

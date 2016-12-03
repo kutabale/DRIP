@@ -3,9 +3,9 @@ package org.drip.sample.almgrenchriss;
 
 import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.AC2000TrajectorySchemeWithDrift;
+import org.drip.execution.generator.AlmgrenChriss2000Drift;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.AlmgrenChriss2000DiscreteWithDrift;
+import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
 import org.drip.execution.parameters.*;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
@@ -115,7 +115,7 @@ public class OptimalTrajectoryWithDrift {
 			prlTemporary
 		);
 
-		AC2000TrajectorySchemeWithDrift acts = AC2000TrajectorySchemeWithDrift.Standard (
+		AlmgrenChriss2000Drift acts = AlmgrenChriss2000Drift.Standard (
 			dblX,
 			dblT,
 			iN,
@@ -123,7 +123,7 @@ public class OptimalTrajectoryWithDrift {
 			dblLambdaU
 		);
 
-		AlmgrenChriss2000DiscreteWithDrift tt = (AlmgrenChriss2000DiscreteWithDrift) acts.generate();
+		AlmgrenChriss2000DiscreteDrift tt = (AlmgrenChriss2000DiscreteDrift) acts.generate();
 
 		double[] adblTradeListDriftAdjustment = tt.tradeListDriftAdjustment();
 

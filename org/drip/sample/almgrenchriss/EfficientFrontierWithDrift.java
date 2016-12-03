@@ -2,9 +2,9 @@
 package org.drip.sample.almgrenchriss;
 
 import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.AC2000TrajectorySchemeWithDrift;
+import org.drip.execution.generator.AlmgrenChriss2000Drift;
 import org.drip.execution.impact.*;
-import org.drip.execution.optimum.AlmgrenChriss2000DiscreteWithDrift;
+import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -159,7 +159,7 @@ public class EfficientFrontierWithDrift {
 		System.out.println ("\t|------------------------------------------------------------||");
 
 		for (double dblLambda : adblLambdaShortEndU) {
-			AlmgrenChriss2000DiscreteWithDrift tt = (AlmgrenChriss2000DiscreteWithDrift) AC2000TrajectorySchemeWithDrift.Standard (
+			AlmgrenChriss2000DiscreteDrift tt = (AlmgrenChriss2000DiscreteDrift) AlmgrenChriss2000Drift.Standard (
 				dblX,
 				dblT,
 				iN,
@@ -199,7 +199,7 @@ public class EfficientFrontierWithDrift {
 		System.out.println ("\t|------------------------------------------------------------||");
 
 		for (double dblLambda : adblLambdaLongEndU) {
-			AlmgrenChriss2000DiscreteWithDrift tt = (AlmgrenChriss2000DiscreteWithDrift) AC2000TrajectorySchemeWithDrift.Standard (
+			AlmgrenChriss2000DiscreteDrift tt = (AlmgrenChriss2000DiscreteDrift) AlmgrenChriss2000Drift.Standard (
 				dblX,
 				dblT,
 				iN,

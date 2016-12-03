@@ -49,7 +49,7 @@ package org.drip.execution.optimum;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlmgrenChriss2000Discrete extends org.drip.execution.optimum.EfficientDiscreteTradingTrajectory
+public class AlmgrenChriss2000Discrete extends org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete
 {
 	private double _dblKappa = java.lang.Double.NaN;
 	private double _dblKappaTilda = java.lang.Double.NaN;

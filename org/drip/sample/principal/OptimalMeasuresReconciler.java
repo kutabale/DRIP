@@ -2,7 +2,7 @@
 package org.drip.sample.principal;
 
 import org.drip.execution.dynamics.Almgren2003Parameters;
-import org.drip.execution.generator.Almgren2003TrajectoryScheme;
+import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
@@ -128,7 +128,7 @@ public class OptimalMeasuresReconciler {
 			);
 
 			Almgren2003Estimator a2003e = new Almgren2003Estimator (
-				(Almgren2003PowerImpactContinuous) Almgren2003TrajectoryScheme.Standard (
+				(Almgren2003PowerImpactContinuous) Almgren2003PowerImpact.Standard (
 					dblX,
 					dblFinishTime,
 					a2003p,
@@ -199,7 +199,7 @@ public class OptimalMeasuresReconciler {
 			);
 
 			Almgren2003Estimator a2003e = new Almgren2003Estimator (
-				(Almgren2003PowerImpactContinuous) Almgren2003TrajectoryScheme.Standard (
+				(Almgren2003PowerImpactContinuous) Almgren2003PowerImpact.Standard (
 					dblX,
 					dblFinishTime,
 					a2003p,

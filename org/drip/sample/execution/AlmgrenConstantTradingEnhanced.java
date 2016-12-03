@@ -97,7 +97,7 @@ public class AlmgrenConstantTradingEnhanced {
 			)
 		);
 
-		EfficientDiscreteTradingTrajectory edtt = (EfficientDiscreteTradingTrajectory) new OptimalDiscreteTrajectoryScheme (
+		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
 			dttc,
 			tevp,
 			new MeanVarianceObjectiveUtility (dblLambda)
@@ -109,14 +109,14 @@ public class AlmgrenConstantTradingEnhanced {
 
 		double[] adblHoldings = edtt.holdings();
 
-		ConstantTradingEnhancedScheme ctes = ConstantTradingEnhancedScheme.Standard (
+		Almgren2003ConstantTradingEnhanced ctes = Almgren2003ConstantTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			tevp,
 			dblLambda
 		);
 
-		EfficientContinuousTradingTrajectory ectt = (EfficientContinuousTradingTrajectory) ctes.generate();
+		EfficientTradingTrajectoryContinuous ectt = (EfficientTradingTrajectoryContinuous) ctes.generate();
 
 		R1ToR1 r1ToR1Holdings = ectt.holdings();
 
