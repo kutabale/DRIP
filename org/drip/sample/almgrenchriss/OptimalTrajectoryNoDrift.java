@@ -134,7 +134,7 @@ public class OptimalTrajectoryNoDrift {
 			prlTemporary
 		);
 
-		AlmgrenChriss2000 acts = AlmgrenChriss2000.Standard (
+		AlmgrenChriss2000 ac2000 = AlmgrenChriss2000.Standard (
 			dblX,
 			dblT,
 			iN,
@@ -142,15 +142,15 @@ public class OptimalTrajectoryNoDrift {
 			dblLambdaU
 		);
 
-		AlmgrenChriss2000Discrete tt = (AlmgrenChriss2000Discrete) acts.generate();
+		AlmgrenChriss2000Discrete ac2000d = (AlmgrenChriss2000Discrete) ac2000.generate();
 
-		double[] adblExecutionTimeNode = tt.executionTimeNode();
+		double[] adblExecutionTimeNode = ac2000d.executionTimeNode();
 
-		double[] adblTradeList = tt.tradeList();
+		double[] adblTradeList = ac2000d.tradeList();
 
-		double[] adblHoldings = tt.holdings();
+		double[] adblHoldings = ac2000d.holdings();
 
-		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (tt);
+		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ac2000d);
 
 		TrajectoryShortfallAggregate tsa = lite.totalCostDistributionDetail (lep);
 
@@ -314,13 +314,13 @@ public class OptimalTrajectoryNoDrift {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (tt.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ac2000d.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (tt.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ac2000d.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------||");
@@ -331,11 +331,11 @@ public class OptimalTrajectoryNoDrift {
 
 		System.out.println ("\t|-----------------------||");
 
-		System.out.println ("\t| Kappa       : " + FormatUtil.FormatDouble (tt.kappa(), 1, 4, 1.) + " ||");
+		System.out.println ("\t| Kappa       : " + FormatUtil.FormatDouble (ac2000d.kappa(), 1, 4, 1.) + " ||");
 
-		System.out.println ("\t| Kappa Tilda : " + FormatUtil.FormatDouble (tt.kappaTilda(), 1, 4, 1.) + " ||");
+		System.out.println ("\t| Kappa Tilda : " + FormatUtil.FormatDouble (ac2000d.kappaTilda(), 1, 4, 1.) + " ||");
 
-		System.out.println ("\t| Half Life   : " + FormatUtil.FormatDouble (tt.halfLife(), 1, 4, 1.) + " ||");
+		System.out.println ("\t| Half Life   : " + FormatUtil.FormatDouble (ac2000d.halfLife(), 1, 4, 1.) + " ||");
 
 		System.out.println ("\t|-----------------------||");
 	}

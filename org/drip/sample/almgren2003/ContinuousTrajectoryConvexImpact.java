@@ -150,20 +150,20 @@ public class ContinuousTrajectoryConvexImpact {
 		System.out.println ("\t|-------------------------------------------||");
 
 		for (int i = 0; i < adblLambda.length; ++i) {
-			Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
+			Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
 				dblX,
 				dblFinishTime,
 				a2003p,
 				adblLambda[i]
 			);
 
-			Almgren2003PowerImpactContinuous a2003tt = (Almgren2003PowerImpactContinuous) a2003ts.generate();
+			Almgren2003PowerImpactContinuous a2003pic = (Almgren2003PowerImpactContinuous) a2003pi.generate();
 
 			System.out.println ("\t|  " +
 				FormatUtil.FormatDouble (1. / adblLambda[i], 5, 0, 1.e-03) + "   || " +
-				FormatUtil.FormatDouble (a2003tt.characteristicTime(), 1, 2, 1.) + "      " +
-				FormatUtil.FormatDouble (a2003tt.transactionCostExpectation(), 3, 0, 1.e-03) + "       " +
-				FormatUtil.FormatDouble (Math.sqrt (a2003tt.transactionCostVariance()), 3, 0, 1.e-03) + "   ||"
+				FormatUtil.FormatDouble (a2003pic.characteristicTime(), 1, 2, 1.) + "      " +
+				FormatUtil.FormatDouble (a2003pic.transactionCostExpectation(), 3, 0, 1.e-03) + "       " +
+				FormatUtil.FormatDouble (Math.sqrt (a2003pic.transactionCostVariance()), 3, 0, 1.e-03) + "   ||"
 			);
 		}
 

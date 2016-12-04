@@ -135,7 +135,7 @@ public class OptimalSerialCorrelationImpact {
 			prlTemporary
 		);
 
-		AlmgrenChriss2000 acts = AlmgrenChriss2000.Standard (
+		AlmgrenChriss2000 ac2000 = AlmgrenChriss2000.Standard (
 			dblX,
 			dblT,
 			iN,
@@ -143,15 +143,15 @@ public class OptimalSerialCorrelationImpact {
 			dblLambdaU
 		);
 
-		AlmgrenChriss2000Discrete tt = (AlmgrenChriss2000Discrete) acts.generate();
+		AlmgrenChriss2000Discrete ac2000d = (AlmgrenChriss2000Discrete) ac2000.generate();
 
-		double[] adblExecutionTimeNode = tt.executionTimeNode();
+		double[] adblExecutionTimeNode = ac2000d.executionTimeNode();
 
-		double[] adblTradeList = tt.tradeList();
+		double[] adblTradeList = ac2000d.tradeList();
 
-		double[] adblHoldings = tt.holdings();
+		double[] adblHoldings = ac2000d.holdings();
 
-		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (tt);
+		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (ac2000d);
 
 		OptimalSerialCorrelationAdjustment[] aOSCA = tse.serialCorrelationAdjustment (lep);
 

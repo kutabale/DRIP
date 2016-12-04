@@ -178,7 +178,7 @@ public class EfficientFrontierNoDrift {
 		System.out.println ("\t|------------------------------------------------------------||");
 
 		for (double dblLambda : adblLambdaShortEndU) {
-			AlmgrenChriss2000Discrete tt = (AlmgrenChriss2000Discrete) AlmgrenChriss2000.Standard (
+			AlmgrenChriss2000Discrete ac2000d = (AlmgrenChriss2000Discrete) AlmgrenChriss2000.Standard (
 				dblX,
 				dblT,
 				iN,
@@ -188,9 +188,9 @@ public class EfficientFrontierNoDrift {
 	
 			String strHoldings = "\t| [LAMBDA = " + FormatUtil.FormatDouble (dblLambda, 1, 3, dblX) + "]";
 
-			double dblTransactionCostExpectation = tt.transactionCostExpectation();
+			double dblTransactionCostExpectation = ac2000d.transactionCostExpectation();
 
-			double dblTransactionCostVariance = tt.transactionCostVariance();
+			double dblTransactionCostVariance = ac2000d.transactionCostVariance();
 
 			double dblTransactionCostPenalty = dblTransactionCostExpectation + dblLambda * dblTransactionCostVariance;
 
@@ -200,7 +200,7 @@ public class EfficientFrontierNoDrift {
 
 			strHoldings = strHoldings + " | " + FormatUtil.FormatDouble (dblTransactionCostPenalty / dblX, 1, 4, 1.);
 
-			strHoldings = strHoldings + " | " + FormatUtil.FormatDouble (tt.halfLife(), 2, 2, 1.);
+			strHoldings = strHoldings + " | " + FormatUtil.FormatDouble (ac2000d.halfLife(), 2, 2, 1.);
 
 			System.out.println (strHoldings + "   ||");
 		}
@@ -218,7 +218,7 @@ public class EfficientFrontierNoDrift {
 		System.out.println ("\t|------------------------------------------------------------||");
 
 		for (double dblLambda : adblLambdaLongEndU) {
-			AlmgrenChriss2000Discrete tt = (AlmgrenChriss2000Discrete) AlmgrenChriss2000.Standard (
+			AlmgrenChriss2000Discrete ac2000d = (AlmgrenChriss2000Discrete) AlmgrenChriss2000.Standard (
 				dblX,
 				dblT,
 				iN,
@@ -228,9 +228,9 @@ public class EfficientFrontierNoDrift {
 	
 			String strHoldings = "\t| [LAMBDA = " + FormatUtil.FormatDouble (dblLambda, 1, 3, dblX) + "]";
 
-			double dblTransactionCostExpectation = tt.transactionCostExpectation();
+			double dblTransactionCostExpectation = ac2000d.transactionCostExpectation();
 
-			double dblTransactionCostVariance = tt.transactionCostVariance();
+			double dblTransactionCostVariance = ac2000d.transactionCostVariance();
 
 			double dblTransactionCostPenalty = dblTransactionCostExpectation + dblLambda * dblTransactionCostVariance;
 
@@ -240,7 +240,7 @@ public class EfficientFrontierNoDrift {
 
 			strHoldings = strHoldings + " | " + FormatUtil.FormatDouble (dblTransactionCostPenalty / dblX, 1, 4, 1.);
 
-			strHoldings = strHoldings + " |  " + FormatUtil.FormatDouble (tt.halfLife(), 1, 2, 1.);
+			strHoldings = strHoldings + " |  " + FormatUtil.FormatDouble (ac2000d.halfLife(), 1, 2, 1.);
 
 			System.out.println (strHoldings + "   ||");
 		}

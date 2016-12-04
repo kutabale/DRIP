@@ -155,14 +155,14 @@ public class PowerLawOptimalTrajectory {
 				)
 			);
 
-			Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
+			Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
 				dblX,
 				dblFinishTime,
 				a2003p,
 				dblLambda
 			);
 
-			Almgren2003PowerImpactContinuous a2003tt = (Almgren2003PowerImpactContinuous) a2003ts.generate();
+			Almgren2003PowerImpactContinuous a2003pic = (Almgren2003PowerImpactContinuous) a2003pi.generate();
 
 			if (0 == i) {
 				String strExecutionTime = "\t|          |  ";
@@ -175,21 +175,21 @@ public class PowerLawOptimalTrajectory {
 				System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------||");
 			}
 
-			R1ToR1 r1ToR1Holdings = a2003tt.holdings();
+			R1ToR1 r1ToR1Holdings = a2003pic.holdings();
 
 			String strHoldings = "\t| k =" + FormatUtil.FormatDouble (adblK[i], 1, 2, 1.) + " | ";
 
 			for (int j = 0; j < iNumInterval; ++j)
 				strHoldings = strHoldings + "  " + FormatUtil.FormatDouble (r1ToR1Holdings.evaluate (adblExecutionTime[j]) / dblX, 2, 2, 100.);
 
-			double dblExecutionTimeUpperBound = a2003tt.executionTimeUpperBound();
+			double dblExecutionTimeUpperBound = a2003pic.executionTimeUpperBound();
 
 			System.out.println (
 				strHoldings + " | " +
-				FormatUtil.FormatDouble (a2003tt.characteristicTime(), 2, 1, 1.) + " | " +
+				FormatUtil.FormatDouble (a2003pic.characteristicTime(), 2, 1, 1.) + " | " +
 				FormatUtil.FormatDouble (Double.isNaN (dblExecutionTimeUpperBound) ? 0. : dblExecutionTimeUpperBound, 2, 1, 1.) + " | " +
-				FormatUtil.FormatDouble (a2003tt.transactionCostExpectation(), 3, 0, 1.e-03) + " | " +
-				FormatUtil.FormatDouble (Math.sqrt (a2003tt.transactionCostVariance()), 3, 0, 1.e-03) + " ||"
+				FormatUtil.FormatDouble (a2003pic.transactionCostExpectation(), 3, 0, 1.e-03) + " | " +
+				FormatUtil.FormatDouble (Math.sqrt (a2003pic.transactionCostVariance()), 3, 0, 1.e-03) + " ||"
 			);
 		}
 

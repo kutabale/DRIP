@@ -99,14 +99,14 @@ public class ConstantLiquidityVolatility {
 			)
 		);
 
-		Almgren2003ConstantTradingEnhanced ctes = Almgren2003ConstantTradingEnhanced.Standard (
+		Almgren2003ConstantTradingEnhanced a2003cte = Almgren2003ConstantTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			tevp,
 			dblLambda
 		);
 
-		EfficientTradingTrajectoryContinuous ectt = (EfficientTradingTrajectoryContinuous) ctes.generate();
+		EfficientTradingTrajectoryContinuous ectt = (EfficientTradingTrajectoryContinuous) a2003cte.generate();
 
 		R1ToR1 r1ToR1Holdings = ectt.holdings();
 

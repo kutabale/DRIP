@@ -134,7 +134,7 @@ public class OptimalTrajectoryWithDrift {
 			prlTemporary
 		);
 
-		AlmgrenChriss2000Drift acts = AlmgrenChriss2000Drift.Standard (
+		AlmgrenChriss2000Drift ac2000d = AlmgrenChriss2000Drift.Standard (
 			dblX,
 			dblT,
 			iN,
@@ -142,19 +142,19 @@ public class OptimalTrajectoryWithDrift {
 			dblLambdaU
 		);
 
-		AlmgrenChriss2000DiscreteDrift tt = (AlmgrenChriss2000DiscreteDrift) acts.generate();
+		AlmgrenChriss2000DiscreteDrift ac2000dd = (AlmgrenChriss2000DiscreteDrift) ac2000d.generate();
 
-		double[] adblTradeListDriftAdjustment = tt.tradeListDriftAdjustment();
+		double[] adblTradeListDriftAdjustment = ac2000dd.tradeListDriftAdjustment();
 
-		double[] adblHoldingsDriftAdjustment = tt.holdingsDriftAdjustment();
+		double[] adblHoldingsDriftAdjustment = ac2000dd.holdingsDriftAdjustment();
 
-		double[] adblExecutionTimeNode = tt.executionTimeNode();
+		double[] adblExecutionTimeNode = ac2000dd.executionTimeNode();
 
-		double[] adblTradeList = tt.tradeList();
+		double[] adblTradeList = ac2000dd.tradeList();
 
-		double[] adblHoldings = tt.holdings();
+		double[] adblHoldings = ac2000dd.holdings();
 
-		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (tt);
+		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ac2000dd);
 
 		TrajectoryShortfallAggregate tsa = lite.totalCostDistributionDetail (lep);
 
@@ -326,13 +326,13 @@ public class OptimalTrajectoryWithDrift {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (tt.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ac2000dd.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (tt.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ac2000dd.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------||");
@@ -343,15 +343,15 @@ public class OptimalTrajectoryWithDrift {
 
 		System.out.println ("\t|---------------------------------||");
 
-		System.out.println ("\t| Kappa                  : " + FormatUtil.FormatDouble (tt.kappa(), 1, 3, 1.) + " ||");
+		System.out.println ("\t| Kappa                  : " + FormatUtil.FormatDouble (ac2000dd.kappa(), 1, 3, 1.) + " ||");
 
-		System.out.println ("\t| Kappa Tilda            : " + FormatUtil.FormatDouble (tt.kappaTilda(), 1, 3, 1.) + " ||");
+		System.out.println ("\t| Kappa Tilda            : " + FormatUtil.FormatDouble (ac2000dd.kappaTilda(), 1, 3, 1.) + " ||");
 
-		System.out.println ("\t| Half Life              : " + FormatUtil.FormatDouble (tt.halfLife(), 1, 3, 1.) + " ||");
+		System.out.println ("\t| Half Life              : " + FormatUtil.FormatDouble (ac2000dd.halfLife(), 1, 3, 1.) + " ||");
 
-		System.out.println ("\t| Residual Holdings      : " + FormatUtil.FormatDouble (tt.residualHolding(), 5, 0, 1.) + " ||");
+		System.out.println ("\t| Residual Holdings      : " + FormatUtil.FormatDouble (ac2000dd.residualHolding(), 5, 0, 1.) + " ||");
 
-		System.out.println ("\t| Drift Gain Upper Bound : " + FormatUtil.FormatDouble (tt.driftGainUpperBound(), 2, 1, 1.) + " ||");
+		System.out.println ("\t| Drift Gain Upper Bound : " + FormatUtil.FormatDouble (ac2000dd.driftGainUpperBound(), 2, 1, 1.) + " ||");
 
 		System.out.println ("\t|---------------------------------||");
 	}

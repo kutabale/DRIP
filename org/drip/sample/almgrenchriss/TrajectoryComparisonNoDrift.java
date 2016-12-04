@@ -80,12 +80,12 @@ import org.drip.service.env.EnvManager;
 public class TrajectoryComparisonNoDrift {
 
 	private static final void DisplayTrajectory (
-		final AlmgrenChriss2000Discrete tt,
+		final AlmgrenChriss2000Discrete ac2000d,
 		final double dblLambda,
 		final double dblX)
 		throws Exception
 	{
-		double[] adblHoldings = tt.holdings();
+		double[] adblHoldings = ac2000d.holdings();
 
 		String strHoldings = "\t| [LAMBDA = " + FormatUtil.FormatDouble (dblLambda, 1, 3, dblX) + "]";
 
