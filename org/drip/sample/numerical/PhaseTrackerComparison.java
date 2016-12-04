@@ -13,6 +13,7 @@ import org.drip.quant.fourier.PhaseAdjuster;
  */
 
 /*!
+ * Copyright (C) 2017 Lakshmi Krishnamurthy
  * Copyright (C) 2016 Lakshmi Krishnamurthy
  * Copyright (C) 2015 Lakshmi Krishnamurthy
  * Copyright (C) 2014 Lakshmi Krishnamurthy
