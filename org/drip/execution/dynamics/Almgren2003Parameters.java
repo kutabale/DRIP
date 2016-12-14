@@ -73,19 +73,21 @@ public class Almgren2003Parameters extends org.drip.execution.dynamics.LinearPer
 	 * Almgren2003Parameters Constructor
 	 * 
 	 * @param apds The Asset Price Dynamics Settings
-	 * @param tflPermanent The Linear Permanent Market Impact Expectation Function
-	 * @param bprTemporary The Participation Rate Power Temporary Market Impact Expectation Function
+	 * @param bprlPermanentExpectation The Background Participation Rate Linear Permanent Expectation Market
+	 * 		Impact Function
+	 * @param bprTemporaryExpectation The Participation Rate Power Temporary Market Impact Expectation
+	 * 		Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public Almgren2003Parameters (
 		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
-		final org.drip.execution.impact.TransactionFunctionLinear tflPermanent,
-		final org.drip.execution.profiletime.BackgroundParticipationRate bprTemporary)
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlPermanentExpectation,
+		final org.drip.execution.profiletime.BackgroundParticipationRate bprTemporaryExpectation)
 		throws java.lang.Exception
 	{
-		super (apds, tflPermanent, bprTemporary);
+		super (apds, bprlPermanentExpectation, bprTemporaryExpectation);
 	}
 
 	/**
@@ -96,6 +98,7 @@ public class Almgren2003Parameters extends org.drip.execution.dynamics.LinearPer
 
 	public org.drip.execution.impact.TransactionFunctionPower powerTemporaryExpectation()
 	{
-		return (org.drip.execution.impact.TransactionFunctionPower) temporaryExpectation();
+		return (org.drip.execution.impact.TransactionFunctionPower)
+			temporaryExpectation().epochImpactFunction();
 	}
 }

@@ -104,7 +104,8 @@ public class LinearImpactUniformTrajectoryEstimator extends
 		org.drip.execution.dynamics.LinearExpectationParameters lep =
 			(org.drip.execution.dynamics.LinearExpectationParameters) apep;
 
-		double dblPermanentLinearImpactParameter = lep.linearPermanentExpectation().slope();
+		double dblPermanentLinearImpactParameter = ((org.drip.execution.impact.TransactionFunctionLinear)
+			lep.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		org.drip.execution.impact.TransactionFunctionLinear trlTemporaryExpectation =
 			lep.linearTemporaryExpectation();

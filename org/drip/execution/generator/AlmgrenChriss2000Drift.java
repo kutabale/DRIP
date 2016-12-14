@@ -153,7 +153,8 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 			return null;
 		}
 
-		double dblGamma = lep.linearPermanentExpectation().slope();
+		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
+			lep.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		int iNumNode = adblTNode.length;
 		final double dblSigma = dblEpochVolatility;

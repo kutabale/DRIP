@@ -6,7 +6,7 @@ import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.*;
-import org.drip.execution.profiletime.UniformParticipationRate;
+import org.drip.execution.profiletime.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -120,7 +120,7 @@ public class ConcaveImpactNoDrift {
 				new FlatUnivariate (dblVolatility),
 				0.
 			),
-			(ParticipationRateLinear) pmip.permanentTransactionFunction(),
+			new UniformParticipationRateLinear ((ParticipationRateLinear) pmip.permanentTransactionFunction()),
 			new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 		);
 

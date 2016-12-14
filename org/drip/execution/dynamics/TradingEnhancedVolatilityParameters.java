@@ -76,7 +76,8 @@ public class TradingEnhancedVolatilityParameters extends
 	 * @param dblPriceVolatility The Daily Price Volatility Parameter
 	 * @param bprlTemporaryExpectation The Background Participation Linear Temporary Market Impact
 	 * 	Expectation Function
-	 * @param tflTemporaryVolatility The Linear Temporary Market Impact Volatility Function
+	 * @param bprlTemporaryVolatility The Background Participation Linear Temporary Market Impact
+	 * 	Volatility Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -84,13 +85,16 @@ public class TradingEnhancedVolatilityParameters extends
 	public TradingEnhancedVolatilityParameters (
 		final double dblPriceVolatility,
 		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryExpectation,
-		final org.drip.execution.impact.TransactionFunctionLinear tflTemporaryVolatility)
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryVolatility)
 		throws java.lang.Exception
 	{
 		super (new org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., new
-			org.drip.function.r1tor1.FlatUnivariate (dblPriceVolatility), 0.),
-				org.drip.execution.impact.ParticipationRateLinear.NoImpact(), bprlTemporaryExpectation,
-					org.drip.execution.impact.ParticipationRateLinear.NoImpact(), tflTemporaryVolatility);
+			org.drip.function.r1tor1.FlatUnivariate (dblPriceVolatility), 0.), new
+				org.drip.execution.profiletime.UniformParticipationRate
+					(org.drip.execution.impact.ParticipationRateLinear.NoImpact()), bprlTemporaryExpectation,
+					 new org.drip.execution.profiletime.UniformParticipationRate
+						(org.drip.execution.impact.ParticipationRateLinear.NoImpact()),
+							bprlTemporaryVolatility);
 	}
 
 	/**
@@ -101,17 +105,18 @@ public class TradingEnhancedVolatilityParameters extends
 
 	public org.drip.execution.impact.TransactionFunctionLinear linearTemporaryExpectation()
 	{
-		return (org.drip.execution.impact.TransactionFunctionLinear) temporaryExpectation();
+		return (org.drip.execution.impact.TransactionFunctionLinear)
+			temporaryExpectation().epochImpactFunction();
 	}
 
 	/**
-	 * Retrieve the Linear Temporary Volatility Function
+	 * Retrieve the Background Participation Linear Temporary Market Impact Volatility Function
 	 * 
-	 * @return The Linear Temporary Volatility Function
+	 * @return The Background Participation Linear Temporary Market Impact Volatility Function
 	 */
 
-	public org.drip.execution.impact.TransactionFunctionLinear linearTemporaryVolatility()
+	public org.drip.execution.profiletime.BackgroundParticipationRateLinear linearTemporaryVolatility()
 	{
-		return (org.drip.execution.impact.TransactionFunctionLinear) temporaryVolatility();
+		return (org.drip.execution.profiletime.BackgroundParticipationRateLinear) temporaryVolatility();
 	}
 }

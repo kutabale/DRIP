@@ -142,7 +142,7 @@ public class LinearImpactNoDrift {
 				new FlatUnivariate (dblSigma),
 				0.
 			),
-			prlPermanent,
+			new UniformParticipationRateLinear (prlPermanent),
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 

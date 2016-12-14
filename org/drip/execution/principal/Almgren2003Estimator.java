@@ -111,7 +111,8 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 		org.drip.execution.impact.TransactionFunctionPower tfpTemporaryExpectation =
 			_a2003p.powerTemporaryExpectation();
 
-		double dblGamma = _a2003p.linearPermanentExpectation().slope();
+		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
+			_a2003p.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
@@ -146,7 +147,8 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 
 		double dblSigma = _a2003p.arithmeticPriceDynamicsSettings().epochVolatility();
 
-		double dblGamma = _a2003p.linearPermanentExpectation().slope();
+		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
+			_a2003p.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
@@ -184,7 +186,8 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
-		double dblGamma = _a2003p.linearPermanentExpectation().slope();
+		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
+			_a2003p.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		double dblSigma = _a2003p.arithmeticPriceDynamicsSettings().epochVolatility();
 

@@ -131,7 +131,8 @@ public class Almgren2003PowerImpact extends org.drip.execution.generator.Optimal
 
 		org.drip.execution.strategy.OrderSpecification os = orderSpecification();
 
-		double dblGamma = a2003p.linearPermanentExpectation().slope();
+		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
+			a2003p.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		final double dblK = tfpTemporaryExpectation.exponent();
 

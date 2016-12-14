@@ -133,7 +133,7 @@ public class LowUrgencyTrajectoryComparison {
 				new FlatUnivariate (dblSigma),
 				0.
 			),
-			prlPermanent,
+			new UniformParticipationRateLinear (prlPermanent),
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 

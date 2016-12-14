@@ -144,7 +144,8 @@ public class AlmgrenChriss2000 extends org.drip.execution.generator.OptimalTraje
 			return null;
 		}
 
-		double dblGamma = lep.linearPermanentExpectation().slope();
+		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
+			lep.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		double dblEta = tflTemporaryExpectation.slope();
 

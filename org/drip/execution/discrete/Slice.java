@@ -174,15 +174,17 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 				new org.drip.execution.evolution.MarketImpactComponent (
 					_dblTimeInterval * apds.drift(),
 					0.,
-					_dblTimeInterval * apep.permanentExpectation().evaluate (dblExecutionRate),
+					_dblTimeInterval * apep.permanentExpectation().epochImpactFunction().evaluate (dblExecutionRate),
 					apep.temporaryExpectation().epochImpactFunction().evaluate (dblExecutionRate)
 				),
 				new org.drip.execution.evolution.MarketImpactComponent (
 					dblMarketCoreJumpUnit * java.lang.Math.sqrt (1. + dblSerialCorrelation * dblSerialCorrelation) *
 						ws.currentWanderer(),
 					dblMarketCoreJumpUnit * dblSerialCorrelation * ws.previousWanderer(),
-					dblTimeUnitSQRT * apep.permanentVolatility().evaluate (dblExecutionRate) * ws.permanentImpactWanderer(),
-					dblTimeUnitSQRT * apep.temporaryVolatility().evaluate (dblExecutionRate) * ws.temporaryImpactWanderer()
+					dblTimeUnitSQRT * apep.permanentVolatility().epochImpactFunction().evaluate (dblExecutionRate) *
+						ws.permanentImpactWanderer(),
+					dblTimeUnitSQRT * apep.temporaryVolatility().epochImpactFunction().evaluate (dblExecutionRate) *
+						ws.temporaryImpactWanderer()
 				)
 			);
 		} catch (java.lang.Exception e) {
@@ -235,11 +237,11 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 		try {
 			double dblMarketCoreVolatility = apds.epochVolatility();
 
-			double dblTemporaryVolatility = apep.temporaryVolatility().evaluate (dblTradeAmount,
-				_dblTimeInterval);
+			double dblTemporaryVolatility = apep.temporaryVolatility().epochImpactFunction().evaluate
+				(dblTradeAmount, _dblTimeInterval);
 
 			return new org.drip.execution.discrete.ShortfallIncrementDistribution (
-				_dblTimeInterval * _dblRightHoldings * apep.permanentExpectation().evaluate
+				_dblTimeInterval * _dblRightHoldings * apep.permanentExpectation().epochImpactFunction().evaluate
 					(dblExecutionRate),
 				dblTradeAmount * apep.temporaryExpectation().epochImpactFunction().evaluate (dblExecutionRate),
 				-1. * _dblRightHoldings * apds.drift() * _dblTimeInterval,
@@ -264,7 +266,8 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 		double dblTradeAmount = _dblRightHoldings - _dblLeftHoldings;
 		double dblSign = _dblRightHoldings < _dblLeftHoldings ? -1. : 1.;
 
-		org.drip.execution.impact.TransactionFunction tfPermanentDrift = apep.permanentExpectation();
+		org.drip.execution.impact.TransactionFunction tfPermanentDrift =
+			apep.permanentExpectation().epochImpactFunction();
 
 		try {
 			double dblPermanentDrift = tfPermanentDrift.evaluate (dblTradeAmount, _dblTimeInterval);
@@ -397,7 +400,8 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 		double dblTradeAmount = _dblRightHoldings - _dblLeftHoldings;
 		double dblTradeAmountSquared = dblTradeAmount * dblTradeAmount;
 
-		org.drip.execution.impact.TransactionFunction tfTemporaryVolatility = apep.temporaryVolatility();
+		org.drip.execution.impact.TransactionFunction tfTemporaryVolatility =
+			apep.temporaryVolatility().epochImpactFunction();
 
 		try {
 			if (null == tfTemporaryVolatility)

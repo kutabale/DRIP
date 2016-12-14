@@ -6,7 +6,7 @@ import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
-import org.drip.execution.profiletime.UniformParticipationRate;
+import org.drip.execution.profiletime.*;
 import org.drip.function.definition.R1ToR1;
 import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
@@ -150,7 +150,7 @@ public class PowerLawOptimalTrajectory {
 
 			Almgren2003Parameters a2003p = new Almgren2003Parameters (
 				apds,
-				prlPermanent,
+				new UniformParticipationRateLinear (prlPermanent),
 				new UniformParticipationRate (
 					new ParticipationRatePower (
 						dblEta,

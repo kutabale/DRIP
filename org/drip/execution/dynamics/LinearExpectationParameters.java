@@ -76,7 +76,8 @@ public class LinearExpectationParameters extends
 	 * LinearExpectationParameters Constructor
 	 * 
 	 * @param apds The Asset Price Dynamics Settings
-	 * @param tflPermanentExpectation The Linear Permanent Market Impact Expectation Function
+	 * @param bprlPermanentExpectation The Background Participation Rate Linear Permanent Expectation Market
+	 * 		Impact Function
 	 * @param bprlTemporaryExpectation The Background Participation Rate Linear Temporary Market Impact
 	 * 		Expectation Function
 	 * 
@@ -85,11 +86,11 @@ public class LinearExpectationParameters extends
 
 	public LinearExpectationParameters (
 		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
-		final org.drip.execution.impact.TransactionFunctionLinear tflPermanentExpectation,
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlPermanentExpectation,
 		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryExpectation)
 		throws java.lang.Exception
 	{
-		super (apds, tflPermanentExpectation, bprlTemporaryExpectation);
+		super (apds, bprlPermanentExpectation, bprlTemporaryExpectation);
 	}
 
 	/**

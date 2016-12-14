@@ -109,9 +109,10 @@ public class DynamicsParameters {
 			return new org.drip.execution.dynamics.Almgren2003Parameters (new
 				org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., new
 					org.drip.function.r1tor1.FlatUnivariate (_afp.dailyVolatility()), 0.), new
-						org.drip.execution.athl.PermanentImpactNoArbitrage (_afp), new
-							org.drip.execution.profiletime.UniformParticipationRate (new
-								org.drip.execution.athl.TemporaryImpact (_afp)));
+						org.drip.execution.profiletime.UniformParticipationRateLinear (new
+							org.drip.execution.athl.PermanentImpactNoArbitrage (_afp)), new
+								org.drip.execution.profiletime.UniformParticipationRate (new
+									org.drip.execution.athl.TemporaryImpact (_afp)));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

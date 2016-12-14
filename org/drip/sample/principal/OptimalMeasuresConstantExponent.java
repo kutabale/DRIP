@@ -7,7 +7,7 @@ import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.*;
-import org.drip.execution.profiletime.UniformParticipationRate;
+import org.drip.execution.profiletime.*;
 import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -148,7 +148,7 @@ public class OptimalMeasuresConstantExponent {
 					new FlatUnivariate (dblVolatility),
 					dblSerialCorrelation
 				),
-				(ParticipationRateLinear) pmip.permanentTransactionFunction(),
+				new UniformParticipationRateLinear ((ParticipationRateLinear) pmip.permanentTransactionFunction()),
 				new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 			);
 

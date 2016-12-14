@@ -68,7 +68,7 @@ package org.drip.execution.athl;
  * @author Lakshmi Krishnamurthy
  */
 
-public class PermanentImpactNoArbitrage extends org.drip.execution.impact.TransactionFunctionLinear {
+public class PermanentImpactNoArbitrage extends org.drip.execution.impact.ParticipationRateLinear {
 	private double _dblLiquidityFactor = java.lang.Double.NaN;
 	private org.drip.execution.parameters.AssetFlowSettings _afp = null;
 
@@ -84,6 +84,10 @@ public class PermanentImpactNoArbitrage extends org.drip.execution.impact.Transa
 		final org.drip.execution.parameters.AssetFlowSettings afp)
 		throws java.lang.Exception
 	{
+		super (0., org.drip.execution.athl.CalibrationEmpirics.PERMANENT_IMPACT_COEFFICIENT *
+			java.lang.Math.pow (afp.inverseTurnover(),
+				org.drip.execution.athl.CalibrationEmpirics.PERMANENT_IMPACT_INVERSE_TURNOVER_EXPONENT));
+
 		if (null == (_afp = afp))
 			throw new java.lang.Exception ("PermanentImpactNoArbitrage Constructor => Invalid Inputs");
 

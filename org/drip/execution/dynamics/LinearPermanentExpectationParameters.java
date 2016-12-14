@@ -74,7 +74,8 @@ public class LinearPermanentExpectationParameters extends
 	 * LinearPermanentExpectationParameters Constructor
 	 * 
 	 * @param apds The Asset Price Dynamics Settings
-	 * @param tflPermanentExpectation The Linear Permanent Expectation Market Impact Function
+	 * @param bprlPermanentExpectation The Background Participation Rate Linear Permanent Expectation Market
+	 * 		Impact Function
 	 * @param bprTemporaryExpectation The Background Participation Rate Temporary Expectation Market Impact
 	 * 		Function
 	 * 
@@ -83,23 +84,25 @@ public class LinearPermanentExpectationParameters extends
 
 	public LinearPermanentExpectationParameters (
 		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
-		final org.drip.execution.impact.TransactionFunctionLinear tflPermanentExpectation,
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlPermanentExpectation,
 		final org.drip.execution.profiletime.BackgroundParticipationRate bprTemporaryExpectation)
 		throws java.lang.Exception
 	{
-		super (apds, tflPermanentExpectation, bprTemporaryExpectation,
-			org.drip.execution.impact.ParticipationRateLinear.NoImpact(),
-				org.drip.execution.impact.ParticipationRateLinear.NoImpact());
+		super (apds, bprlPermanentExpectation, bprTemporaryExpectation, new
+			org.drip.execution.profiletime.UniformParticipationRateLinear
+				(org.drip.execution.impact.ParticipationRateLinear.NoImpact()), new
+					org.drip.execution.profiletime.UniformParticipationRateLinear
+						(org.drip.execution.impact.ParticipationRateLinear.NoImpact()));
 	}
 
 	/**
-	 * Retrieve the Linear Permanent Market Impact Expectation Function
+	 * Retrieve the Background Participation Linear Permanent Market Impact Expectation Function
 	 * 
-	 * @return The Linear Permanent Market Impact Expectation Function
+	 * @return The Background Participation Linear Permanent Market Impact Expectation Function
 	 */
 
-	public org.drip.execution.impact.TransactionFunctionLinear linearPermanentExpectation()
+	public org.drip.execution.profiletime.BackgroundParticipationRateLinear linearPermanentExpectation()
 	{
-		return (org.drip.execution.impact.TransactionFunctionLinear) permanentExpectation();
+		return (org.drip.execution.profiletime.BackgroundParticipationRateLinear) permanentExpectation();
 	}
 }

@@ -91,9 +91,11 @@ public class LinearLiquidityVolatility {
 		TradingEnhancedVolatilityParameters tevp = new TradingEnhancedVolatilityParameters (
 			dblSigma,
 			new UniformParticipationRateLinear (ParticipationRateLinear.SlopeOnly (dblEta)),
-			new ParticipationRateLinear (
-				0.,
-				dblBeta
+			new UniformParticipationRateLinear (
+				new ParticipationRateLinear (
+					0.,
+					dblBeta
+				)
 			)
 		);
 

@@ -134,7 +134,8 @@ public class Almgren2003LinearTradingEnhanced extends
 
 		return org.drip.execution.optimum.Almgren2003TradingEnhancedDiscrete.Standard
 			((org.drip.execution.strategy.DiscreteTradingTrajectory) super.generate(), tevp, dblTStar,
-				dblSigma * dblTStar * dblTStar / (tevp.linearTemporaryVolatility().slope() *
-					java.lang.Math.sqrt (3.)));
+				dblSigma * dblTStar * dblTStar / ((org.drip.execution.impact.TransactionFunctionLinear)
+					(tevp.linearTemporaryVolatility().epochImpactFunction())).slope() * java.lang.Math.sqrt
+						(3.));
 	}
 }

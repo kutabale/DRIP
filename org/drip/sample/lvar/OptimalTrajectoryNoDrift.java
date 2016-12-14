@@ -119,9 +119,11 @@ public class OptimalTrajectoryNoDrift {
 				new FlatUnivariate (dblSigma),
 				0.
 			),
-			new ParticipationRateLinear (
-				0.,
-				dblGamma
+			new UniformParticipationRateLinear (
+				new ParticipationRateLinear (
+					0.,
+					dblGamma
+				)
 			),
 			new UniformParticipationRateLinear (
 				new ParticipationRateLinear (

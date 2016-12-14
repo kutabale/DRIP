@@ -71,35 +71,36 @@ package org.drip.execution.dynamics;
 
 public class ArithmeticPriceEvolutionParameters {
 	private org.drip.execution.parameters.ArithmeticPriceDynamicsSettings _apds = null;
-	private org.drip.execution.impact.TransactionFunction _tfPermanentVolatility = null;
-	private org.drip.execution.impact.TransactionFunction _tfTemporaryVolatility = null;
-	private org.drip.execution.impact.TransactionFunction _tfPermanentExpectation = null;
+	private org.drip.execution.profiletime.BackgroundParticipationRate _bprPermanentVolatility = null;
+	private org.drip.execution.profiletime.BackgroundParticipationRate _bprTemporaryVolatility = null;
+	private org.drip.execution.profiletime.BackgroundParticipationRate _bprPermanentExpectation = null;
 	private org.drip.execution.profiletime.BackgroundParticipationRate _bprTemporaryExpectation = null;
 
 	/**
 	 * ArithmeticPriceEvolutionParameters Constructor
 	 * 
 	 * @param apds The Asset Price Dynamics Settings
-	 * @param tfPermanentExpectation The Permanent Market Impact Expectation Function
+	 * @param bprPermanentExpectation The Background Participation Permanent Market Impact Expectation
+	 * 		Function
 	 * @param bprTemporaryExpectation The Background Participation Temporary Market Impact Expectation
 	 * 		Function
-	 * @param tfPermanentVolatility The Permanent Market Impact Volatility Function
-	 * @param tfTemporaryVolatility The Temporary Market Impact Volatility Function
+	 * @param bprPermanentVolatility The Background Participation Permanent Market Impact Volatility Function
+	 * @param bprTemporaryVolatility The Background Participation Temporary Market Impact Volatility Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ArithmeticPriceEvolutionParameters (
 		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
-		final org.drip.execution.impact.TransactionFunction tfPermanentExpectation,
+		final org.drip.execution.profiletime.BackgroundParticipationRate bprPermanentExpectation,
 		final org.drip.execution.profiletime.BackgroundParticipationRate bprTemporaryExpectation,
-		final org.drip.execution.impact.TransactionFunction tfPermanentVolatility,
-		final org.drip.execution.impact.TransactionFunction tfTemporaryVolatility)
+		final org.drip.execution.profiletime.BackgroundParticipationRate bprPermanentVolatility,
+		final org.drip.execution.profiletime.BackgroundParticipationRate bprTemporaryVolatility)
 		throws java.lang.Exception
 	{
-		if (null == (_apds = apds) || null == (_tfPermanentExpectation = tfPermanentExpectation) || null ==
-			(_bprTemporaryExpectation = bprTemporaryExpectation) || null == (_tfPermanentVolatility =
-				tfPermanentVolatility) || null == (_tfTemporaryVolatility = tfTemporaryVolatility))
+		if (null == (_apds = apds) || null == (_bprPermanentExpectation = bprPermanentExpectation) || null ==
+			(_bprTemporaryExpectation = bprTemporaryExpectation) || null == (_bprPermanentExpectation =
+				bprPermanentVolatility) || null == (_bprTemporaryVolatility = bprTemporaryVolatility))
 			throw new java.lang.Exception
 				("ArithmeticPriceEvolutionParameters Constructor => Invalid Inputs!");
 	}
@@ -116,14 +117,14 @@ public class ArithmeticPriceEvolutionParameters {
 	}
 
 	/**
-	 * Retrieve the Permanent Market Impact Expectation Function
+	 * Retrieve the Background Participation Permanent Market Impact Expectation Function
 	 * 
-	 * @return The Permanent Market Impact Expectation Function
+	 * @return The Background Participation Permanent Market Impact Expectation Function
 	 */
 
-	public org.drip.execution.impact.TransactionFunction permanentExpectation()
+	public org.drip.execution.profiletime.BackgroundParticipationRate permanentExpectation()
 	{
-		return _tfPermanentExpectation;
+		return _bprPermanentExpectation;
 	}
 
 	/**
@@ -138,24 +139,24 @@ public class ArithmeticPriceEvolutionParameters {
 	}
 
 	/**
-	 * Retrieve the Permanent Market Impact Volatility Function
+	 * Retrieve the Background Participation Permanent Market Impact Volatility Function
 	 * 
-	 * @return The Permanent Market Impact Volatility Function
+	 * @return The Background Participation Permanent Market Impact Volatility Function
 	 */
 
-	public org.drip.execution.impact.TransactionFunction permanentVolatility()
+	public org.drip.execution.profiletime.BackgroundParticipationRate permanentVolatility()
 	{
-		return _tfPermanentVolatility;
+		return _bprPermanentVolatility;
 	}
 
 	/**
-	 * Retrieve the Temporary Market Impact Volatility Function
+	 * Retrieve the Background Participation Temporary Market Impact Volatility Function
 	 * 
-	 * @return The Temporary Market Impact Volatility Function
+	 * @return The Background Participation Temporary Market Impact Volatility Function
 	 */
 
-	public org.drip.execution.impact.TransactionFunction temporaryVolatility()
+	public org.drip.execution.profiletime.BackgroundParticipationRate temporaryVolatility()
 	{
-		return _tfTemporaryVolatility;
+		return _bprTemporaryVolatility;
 	}
 }

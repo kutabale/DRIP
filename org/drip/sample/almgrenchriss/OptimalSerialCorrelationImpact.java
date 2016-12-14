@@ -133,7 +133,7 @@ public class OptimalSerialCorrelationImpact {
 				new FlatUnivariate (dblSigma),
 				dblSerialCorrelation
 			),
-			prlPermanent,
+			new UniformParticipationRateLinear (prlPermanent),
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 

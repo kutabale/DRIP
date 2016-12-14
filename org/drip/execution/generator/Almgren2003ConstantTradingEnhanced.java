@@ -132,7 +132,8 @@ public class Almgren2003ConstantTradingEnhanced extends
 
 		final double dblEta = tevp.linearTemporaryExpectation().slope();
 
-		double dblAlpha = tevp.linearTemporaryVolatility().offset();
+		double dblAlpha = ((org.drip.execution.impact.TransactionFunctionLinear)
+			tevp.linearTemporaryVolatility().epochImpactFunction()).offset();
 
 		final double dblExecutionTime = os.maxExecutionTime();
 
