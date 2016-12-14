@@ -76,7 +76,7 @@ public class Almgren2003ConstantTradingEnhanced extends
 	 * 
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
-	 * @param tevp Almgren 2003 Impact Price Walk Parameters
+	 * @param apep Almgren 2003 Arithmetic Price Evolution Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
 	 * @return The Almgren2003ConstantTradingEnhanced Instance
@@ -85,12 +85,12 @@ public class Almgren2003ConstantTradingEnhanced extends
 	public static final Almgren2003ConstantTradingEnhanced Standard (
 		final double dblStartHoldings,
 		final double dblFinishTime,
-		final org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp,
+		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
 		final double dblRiskAversion)
 	{
 		try {
 			return new Almgren2003ConstantTradingEnhanced (new org.drip.execution.strategy.OrderSpecification
-				(dblStartHoldings, dblFinishTime), tevp, new
+				(dblStartHoldings, dblFinishTime), apep, new
 					org.drip.execution.risk.MeanVarianceObjectiveUtility (dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -101,17 +101,16 @@ public class Almgren2003ConstantTradingEnhanced extends
 
 	private Almgren2003ConstantTradingEnhanced (
 		final org.drip.execution.strategy.OrderSpecification os,
-		final org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp,
+		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (os, tevp, mvou);
+		super (os, apep, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
-		org.drip.execution.dynamics.TradingEnhancedVolatilityParameters tevp =
-			(org.drip.execution.dynamics.TradingEnhancedVolatilityParameters) priceWalkParameters();
+		org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep = priceWalkParameters();
 
 		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
@@ -119,7 +118,7 @@ public class Almgren2003ConstantTradingEnhanced extends
 		double dblEpochVolatility = java.lang.Double.NaN;
 
 		try {
-			dblEpochVolatility = tevp.arithmeticPriceDynamicsSettings().epochVolatility();
+			dblEpochVolatility = apep.arithmeticPriceDynamicsSettings().epochVolatility();
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
@@ -130,10 +129,11 @@ public class Almgren2003ConstantTradingEnhanced extends
 
 		org.drip.execution.strategy.OrderSpecification os = orderSpecification();
 
-		final double dblEta = tevp.linearTemporaryExpectation().slope();
+		final double dblEta = ((org.drip.execution.impact.TransactionFunctionLinear)
+			apep.temporaryExpectation()).slope();
 
 		double dblAlpha = ((org.drip.execution.impact.TransactionFunctionLinear)
-			tevp.linearTemporaryVolatility().epochImpactFunction()).offset();
+			apep.temporaryVolatility().epochImpactFunction()).offset();
 
 		final double dblExecutionTime = os.maxExecutionTime();
 

@@ -1,7 +1,7 @@
 
 package org.drip.sample.almgren2003;
 
-import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.generator.Almgren2003LinearTradingEnhanced;
 import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.execution.optimum.Almgren2003TradingEnhancedDiscrete;
@@ -88,7 +88,7 @@ public class LinearLiquidityVolatility {
 		double dblLambda = 1.e-05;
 		double dblX = 100000.;
 
-		TradingEnhancedVolatilityParameters tevp = new TradingEnhancedVolatilityParameters (
+		ArithmeticPriceEvolutionParameters apep = ArithmeticPriceEvolutionParametersBuilder.TradingEnhancedVolatility (
 			dblSigma,
 			new UniformParticipationRateLinear (ParticipationRateLinear.SlopeOnly (dblEta)),
 			new UniformParticipationRateLinear (
@@ -103,7 +103,7 @@ public class LinearLiquidityVolatility {
 			dblX,
 			dblT,
 			iNumInterval,
-			tevp,
+			apep,
 			dblLambda
 		);
 

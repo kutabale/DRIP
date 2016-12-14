@@ -2,7 +2,7 @@
 package org.drip.sample.athl;
 
 import org.drip.execution.athl.DynamicsParameters;
-import org.drip.execution.dynamics.Almgren2003Parameters;
+import org.drip.execution.dynamics.LinearPermanentExpectationParameters;
 import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.AssetFlowSettings;
@@ -103,7 +103,7 @@ public class OptimalTrajectoryDRI {
 			dblDailyVolatility
 		);
 
-		Almgren2003Parameters a2003p = new DynamicsParameters (afs).almgren2003();
+		LinearPermanentExpectationParameters a2003p = new DynamicsParameters (afs).almgren2003();
 
 		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
 			dblTradeSize,

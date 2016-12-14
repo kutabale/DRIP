@@ -76,7 +76,7 @@ public class Almgren2012Static extends org.drip.execution.generator.OptimalTraje
 	 * 
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
-	 * @param lep The Linear Impact Expectation Parameters
+	 * @param lpep The Linear Impact Expectation Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
 	 * @return The Almgren2012Static Instance
@@ -85,12 +85,12 @@ public class Almgren2012Static extends org.drip.execution.generator.OptimalTraje
 	public static final Almgren2012Static Standard (
 		final double dblStartHoldings,
 		final double dblFinishTime,
-		final org.drip.execution.dynamics.LinearExpectationParameters lep,
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final double dblRiskAversion)
 	{
 		try {
 			return new Almgren2012Static (new org.drip.execution.strategy.OrderSpecification
-				(dblStartHoldings, dblFinishTime), lep, new
+				(dblStartHoldings, dblFinishTime), lpep, new
 					org.drip.execution.risk.MeanVarianceObjectiveUtility (dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -101,25 +101,26 @@ public class Almgren2012Static extends org.drip.execution.generator.OptimalTraje
 
 	private Almgren2012Static (
 		final org.drip.execution.strategy.OrderSpecification os,
-		final org.drip.execution.dynamics.LinearExpectationParameters lep,
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (os, lep, mvou);
+		super (os, lpep, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
-		org.drip.execution.dynamics.LinearExpectationParameters lep =
-			(org.drip.execution.dynamics.LinearExpectationParameters) priceWalkParameters();
+		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
+			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) priceWalkParameters();
 
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
-			lep.linearTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionLinear)
+				lpep.temporaryExpectation().epochImpactFunction();
 
 		double dblEpochVolatility = java.lang.Double.NaN;
 
 		try {
-			dblEpochVolatility = lep.arithmeticPriceDynamicsSettings().epochVolatility();
+			dblEpochVolatility = lpep.arithmeticPriceDynamicsSettings().epochVolatility();
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 

@@ -48,8 +48,8 @@ package org.drip.execution.dynamics;
  */
 
 /**
- * Almgren2003Parameters uses the Specific Temporary/Permanent Market Impact Displacement and Volatility
- * 	Functions specified in Almgren (2003). The References are:
+ * ArithmeticPriceEvolutionParametersBuilder constructs a variety of Arithmetic Price Evolution Parameters.
+ *  The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -67,38 +67,94 @@ package org.drip.execution.dynamics;
  * @author Lakshmi Krishnamurthy
  */
 
-public class Almgren2003Parameters extends org.drip.execution.dynamics.LinearPermanentExpectationParameters {
+public class ArithmeticPriceEvolutionParametersBuilder {
 
 	/**
-	 * Almgren2003Parameters Constructor
+	 * Linear Expectation Version of LinearPermanentExpectationParameters Instance
 	 * 
 	 * @param apds The Asset Price Dynamics Settings
 	 * @param bprlPermanentExpectation The Background Participation Rate Linear Permanent Expectation Market
-	 * 		Impact Function
-	 * @param bprTemporaryExpectation The Participation Rate Power Temporary Market Impact Expectation
-	 * 		Function
+	 * 	Impact Function
+	 * @param bprlTemporaryExpectation The Background Participation Rate Linear Temporary Market Impact
+	 * 	Expectation Function
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return Linear Expectation Version of LinearPermanentExpectationParameters Instance
 	 */
 
-	public Almgren2003Parameters (
+	public static final org.drip.execution.dynamics.LinearPermanentExpectationParameters LinearExpectation (
 		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
 		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlPermanentExpectation,
-		final org.drip.execution.profiletime.BackgroundParticipationRate bprTemporaryExpectation)
-		throws java.lang.Exception
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryExpectation)
 	{
-		super (apds, bprlPermanentExpectation, bprTemporaryExpectation);
+		try {
+			return new org.drip.execution.dynamics.LinearPermanentExpectationParameters (apds,
+				bprlPermanentExpectation, bprlTemporaryExpectation);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**
-	 * Retrieve the Power Temporary Market Impact Expectation Function
+	 * Almgren 2003 Version of LinearPermanentExpectationParameters Instance
 	 * 
-	 * @return The Power Temporary Market Impact Expectation Function
+	 * @param apds The Asset Price Dynamics Settings
+	 * @param bprlPermanentExpectation The Background Participation Rate Linear Permanent Expectation Market
+	 * 	Impact Function
+	 * @param bprTemporaryExpectation The Participation Rate Power Temporary Market Impact Expectation
+	 * 	Function
+	 * 
+	 * @return Almgren 2003 Version of LinearPermanentExpectationParameters Instance
 	 */
 
-	public org.drip.execution.impact.TransactionFunctionPower powerTemporaryExpectation()
+	public static final org.drip.execution.dynamics.LinearPermanentExpectationParameters Almgren2003 (
+		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlPermanentExpectation,
+		final org.drip.execution.profiletime.BackgroundParticipationRate bprTemporaryExpectation)
 	{
-		return (org.drip.execution.impact.TransactionFunctionPower)
-			temporaryExpectation().epochImpactFunction();
+		try {
+			return new org.drip.execution.dynamics.LinearPermanentExpectationParameters (apds,
+				bprlPermanentExpectation, bprTemporaryExpectation);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Trading Enhanced Volatility ArithmeticPriceEvolutionParameters Instance
+	 * 
+	 * @param dblPriceVolatility The Daily Price Volatility Parameter
+	 * @param bprlTemporaryExpectation The Background Participation Linear Temporary Market Impact
+	 * 	Expectation Function
+	 * @param bprlTemporaryVolatility The Background Participation Linear Temporary Market Impact
+	 * 	Volatility Function
+	 * 
+	 * @return The Trading Enhanced Volatility /ArithmeticPriceEvolutionParameters Instance
+	 */
+
+	public static final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters
+		TradingEnhancedVolatility (
+			final double dblPriceVolatility,
+			final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryExpectation,
+			final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryVolatility)
+	{
+		try {
+			return new org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters (new
+				org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., new
+					org.drip.function.r1tor1.FlatUnivariate (dblPriceVolatility), 0.), new
+						org.drip.execution.profiletime.UniformParticipationRate
+							(org.drip.execution.impact.ParticipationRateLinear.NoImpact()),
+								bprlTemporaryExpectation, new
+									org.drip.execution.profiletime.UniformParticipationRate
+										(org.drip.execution.impact.ParticipationRateLinear.NoImpact()),
+											bprlTemporaryVolatility);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

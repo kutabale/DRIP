@@ -1,7 +1,7 @@
 
 package org.drip.sample.almgren2003;
 
-import org.drip.execution.dynamics.Almgren2003Parameters;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
@@ -148,7 +148,7 @@ public class PowerLawOptimalTrajectory {
 		for (int i = 0; i < adblK.length; ++i) {
 			double dblEta = dblHRef / java.lang.Math.pow (dblVRef, adblK[i]);
 
-			Almgren2003Parameters a2003p = new Almgren2003Parameters (
+			LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.Almgren2003 (
 				apds,
 				new UniformParticipationRateLinear (prlPermanent),
 				new UniformParticipationRate (
@@ -162,7 +162,7 @@ public class PowerLawOptimalTrajectory {
 			Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
 				dblX,
 				dblFinishTime,
-				a2003p,
+				lpep,
 				dblLambda
 			);
 

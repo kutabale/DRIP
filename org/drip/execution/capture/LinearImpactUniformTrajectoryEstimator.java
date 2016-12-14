@@ -101,16 +101,16 @@ public class LinearImpactUniformTrajectoryEstimator extends
 		double dblNumberOfTradesReciprocal = 1. / mitt.numberOfTrades();
 
 		double dblMarketCoreVolatility = java.lang.Double.NaN;
-		org.drip.execution.dynamics.LinearExpectationParameters lep =
-			(org.drip.execution.dynamics.LinearExpectationParameters) apep;
+		double dblBlockSizeSquared = dblBlockSize * dblBlockSize;
+		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
+			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) apep;
 
 		double dblPermanentLinearImpactParameter = ((org.drip.execution.impact.TransactionFunctionLinear)
-			lep.linearPermanentExpectation().epochImpactFunction()).slope();
+			lpep.linearPermanentExpectation().epochImpactFunction()).slope();
 
-		org.drip.execution.impact.TransactionFunctionLinear trlTemporaryExpectation =
-			lep.linearTemporaryExpectation();
-
-		double dblBlockSizeSquared = dblBlockSize * dblBlockSize;
+		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
+			(org.drip.execution.impact.TransactionFunctionLinear)
+				apep.temporaryExpectation().epochImpactFunction();
 
 		try {
 			dblMarketCoreVolatility = apep.arithmeticPriceDynamicsSettings().epochVolatility();
@@ -122,8 +122,8 @@ public class LinearImpactUniformTrajectoryEstimator extends
 
 		try {
 			return new org.drip.measure.gaussian.R1UnivariateNormal (0.5 * dblPermanentLinearImpactParameter
-				* dblBlockSizeSquared + trlTemporaryExpectation.offset() * java.lang.Math.abs (dblBlockSize)
-					+ (trlTemporaryExpectation.slope() - 0.5 * dblPermanentLinearImpactParameter *
+				* dblBlockSizeSquared + tflTemporaryExpectation.offset() * java.lang.Math.abs (dblBlockSize)
+					+ (tflTemporaryExpectation.slope() - 0.5 * dblPermanentLinearImpactParameter *
 						mitt.tradeTimeInterval()) * dblBlockSizeSquared / dblExecutionTime,
 							dblMarketCoreVolatility * dblMarketCoreVolatility * dblBlockSizeSquared *
 								dblExecutionTime * (1. - dblNumberOfTradesReciprocal) * (1. - 0.5 *

@@ -68,7 +68,7 @@ package org.drip.execution.principal;
  */
 
 public class Almgren2003Estimator extends org.drip.execution.principal.GrossProfitEstimator {
-	private org.drip.execution.dynamics.Almgren2003Parameters _a2003p =  null;
+	private org.drip.execution.dynamics.LinearPermanentExpectationParameters _lpep =  null;
 
 	/**
 	 * Almgren2003Estimator Constructor
@@ -81,12 +81,12 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 
 	public Almgren2003Estimator (
 		final org.drip.execution.optimum.Almgren2003PowerImpactContinuous a2003tt,
-		final org.drip.execution.dynamics.Almgren2003Parameters a2003p)
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep)
 		throws java.lang.Exception
 	{
 		super (a2003tt);
 
-		if (null == (_a2003p = a2003p))
+		if (null == (_lpep = lpep))
 			throw new java.lang.Exception ("Almgren2003Estimator Constructor => Invalid Inputs");
 	}
 
@@ -109,10 +109,11 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 				("Almgren2003Estimator::optimalInformationRatioHorizon => Invalid Inputs");
 
 		org.drip.execution.impact.TransactionFunctionPower tfpTemporaryExpectation =
-			_a2003p.powerTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionPower)
+				_lpep.temporaryExpectation().epochImpactFunction();
 
 		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
-			_a2003p.linearPermanentExpectation().epochImpactFunction()).slope();
+			_lpep.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
@@ -143,12 +144,13 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 				("Almgren2003Estimator::optimalInformationRatio => Invalid Inputs");
 
 		org.drip.execution.impact.TransactionFunctionPower tfpTemporaryExpectation =
-			_a2003p.powerTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionPower)
+				_lpep.temporaryExpectation().epochImpactFunction();
 
-		double dblSigma = _a2003p.arithmeticPriceDynamicsSettings().epochVolatility();
+		double dblSigma = _lpep.arithmeticPriceDynamicsSettings().epochVolatility();
 
 		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
-			_a2003p.linearPermanentExpectation().epochImpactFunction()).slope();
+			_lpep.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
@@ -182,14 +184,15 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 				("Almgren2003Estimator::principalDiscountHurdle => Invalid Inputs");
 
 		org.drip.execution.impact.TransactionFunctionPower tfpTemporaryExpectation =
-			_a2003p.powerTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionPower)
+				_lpep.temporaryExpectation().epochImpactFunction();
 
 		double dblEta = tfpTemporaryExpectation.constant();
 
 		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
-			_a2003p.linearPermanentExpectation().epochImpactFunction()).slope();
+			_lpep.linearPermanentExpectation().epochImpactFunction()).slope();
 
-		double dblSigma = _a2003p.arithmeticPriceDynamicsSettings().epochVolatility();
+		double dblSigma = _lpep.arithmeticPriceDynamicsSettings().epochVolatility();
 
 		double dblK = tfpTemporaryExpectation.exponent();
 
@@ -215,7 +218,8 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 	public org.drip.execution.principal.HorizonInformationRatioDependence optimalMeasures()
 	{
 		org.drip.execution.impact.TransactionFunctionPower tfpTemporaryExpectation =
-			_a2003p.powerTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionPower)
+				_lpep.temporaryExpectation().epochImpactFunction();
 
 		double dblK = tfpTemporaryExpectation.exponent();
 

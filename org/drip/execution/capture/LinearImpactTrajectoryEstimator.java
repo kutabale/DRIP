@@ -92,14 +92,15 @@ public class LinearImpactTrajectoryEstimator extends org.drip.execution.capture.
 		if (null == apep) return null;
 
 		double dblMarketCoreVolatility = java.lang.Double.NaN;
-		org.drip.execution.dynamics.LinearExpectationParameters lep =
-			(org.drip.execution.dynamics.LinearExpectationParameters) apep;
+		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
+			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) apep;
 
 		double dblPermanentLinearImpactParameter = ((org.drip.execution.impact.TransactionFunctionLinear)
-			lep.linearPermanentExpectation().epochImpactFunction()).slope();
+			lpep.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
-			lep.linearTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionLinear)
+				apep.temporaryExpectation().epochImpactFunction();
 
 		double dblTemporaryLinearImpactParameter = tflTemporaryExpectation.slope();
 
@@ -110,7 +111,7 @@ public class LinearImpactTrajectoryEstimator extends org.drip.execution.capture.
 		double[] adblExecutionTimeNode = tt.executionTimeNode();
 
 		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
-			lep.arithmeticPriceDynamicsSettings();
+			lpep.arithmeticPriceDynamicsSettings();
 
 		try {
 			dblMarketCoreVolatility = apds.epochVolatility();

@@ -92,16 +92,4 @@ public class LinearExpectationParameters extends
 	{
 		super (apds, bprlPermanentExpectation, bprlTemporaryExpectation);
 	}
-
-	/**
-	 * Retrieve the Linear Temporary Market Impact Expectation Function
-	 * 
-	 * @return The Linear Temporary Market Impact Expectation Function
-	 */
-
-	public org.drip.execution.impact.TransactionFunctionLinear linearTemporaryExpectation()
-	{
-		return (org.drip.execution.impact.TransactionFunctionLinear)
-			temporaryExpectation().epochImpactFunction();
-	}
 }

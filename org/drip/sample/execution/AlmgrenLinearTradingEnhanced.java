@@ -2,7 +2,7 @@
 package org.drip.sample.execution;
 
 import org.drip.execution.capture.TrajectoryShortfallEstimator;
-import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.generator.*;
 import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.execution.optimum.*;
@@ -105,7 +105,7 @@ public class AlmgrenLinearTradingEnhanced {
 			iNumInterval
 		);
 
-		TradingEnhancedVolatilityParameters tevp = new TradingEnhancedVolatilityParameters (
+		ArithmeticPriceEvolutionParameters apep = ArithmeticPriceEvolutionParametersBuilder.TradingEnhancedVolatility (
 			dblSigma,
 			new UniformParticipationRateLinear (ParticipationRateLinear.SlopeOnly (dblEta)),
 			new UniformParticipationRateLinear (
@@ -118,7 +118,7 @@ public class AlmgrenLinearTradingEnhanced {
 
 		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
 			dttc,
-			tevp,
+			apep,
 			new MeanVarianceObjectiveUtility (dblLambda)
 		).generate();
 
@@ -132,7 +132,7 @@ public class AlmgrenLinearTradingEnhanced {
 			dblX,
 			dblT,
 			iNumInterval,
-			tevp,
+			apep,
 			dblLambda
 		);
 
@@ -144,7 +144,7 @@ public class AlmgrenLinearTradingEnhanced {
 
 		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (edtt);
 
-		R1UnivariateNormal r1un = tse.totalCostDistributionSynopsis (tevp);
+		R1UnivariateNormal r1un = tse.totalCostDistributionSynopsis (apep);
 
 		System.out.println ("\n\t|------------------------------------------------||");
 

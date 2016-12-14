@@ -77,7 +77,7 @@ public class HighUrgencyAsymptoteStatic extends org.drip.execution.generator.Opt
 	 * 
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
-	 * @param lep The Linear Impact Expectation Parameters
+	 * @param lpep The Linear Impact Expectation Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
 	 * @return The HighUrgencyAsymptoteStatic Instance
@@ -86,12 +86,12 @@ public class HighUrgencyAsymptoteStatic extends org.drip.execution.generator.Opt
 	public static final HighUrgencyAsymptoteStatic Standard (
 		final double dblStartHoldings,
 		final double dblFinishTime,
-		final org.drip.execution.dynamics.LinearExpectationParameters lep,
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final double dblRiskAversion)
 	{
 		try {
 			return new HighUrgencyAsymptoteStatic (new org.drip.execution.strategy.OrderSpecification
-				(dblStartHoldings, dblFinishTime), lep, new
+				(dblStartHoldings, dblFinishTime), lpep, new
 					org.drip.execution.risk.MeanVarianceObjectiveUtility (dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -102,25 +102,26 @@ public class HighUrgencyAsymptoteStatic extends org.drip.execution.generator.Opt
 
 	private HighUrgencyAsymptoteStatic (
 		final org.drip.execution.strategy.OrderSpecification os,
-		final org.drip.execution.dynamics.LinearExpectationParameters lep,
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (os, lep, mvou);
+		super (os, lpep, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
-		org.drip.execution.dynamics.LinearExpectationParameters lep =
-			(org.drip.execution.dynamics.LinearExpectationParameters) priceWalkParameters();
+		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
+			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) priceWalkParameters();
 
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
-			lep.linearTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionLinear)
+				lpep.temporaryExpectation().epochImpactFunction();
 
 		double dblEpochVolatility = java.lang.Double.NaN;
 
 		try {
-			dblEpochVolatility = lep.arithmeticPriceDynamicsSettings().epochVolatility();
+			dblEpochVolatility = lpep.arithmeticPriceDynamicsSettings().epochVolatility();
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 

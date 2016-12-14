@@ -1,7 +1,7 @@
 
 package org.drip.sample.principal;
 
-import org.drip.execution.dynamics.Almgren2003Parameters;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
@@ -138,7 +138,7 @@ public class OptimalMeasuresReconciler {
 				dblK
 			);
 
-			Almgren2003Parameters a2003p = new Almgren2003Parameters (
+			LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.Almgren2003 (
 				new ArithmeticPriceDynamicsSettings (
 					dblDrift,
 					new FlatUnivariate (dblVolatility),
@@ -152,10 +152,10 @@ public class OptimalMeasuresReconciler {
 				(Almgren2003PowerImpactContinuous) Almgren2003PowerImpact.Standard (
 					dblX,
 					dblFinishTime,
-					a2003p,
+					lpep,
 					dblLambda
 				).generate(),
-				a2003p
+				lpep
 			);
 
 			OptimalMeasureDependence omd = a2003e.optimalMeasures().omdHorizon();
@@ -209,7 +209,7 @@ public class OptimalMeasuresReconciler {
 				dblK
 			);
 
-			Almgren2003Parameters a2003p = new Almgren2003Parameters (
+			LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.Almgren2003 (
 				new ArithmeticPriceDynamicsSettings (
 					dblDrift,
 					new FlatUnivariate (dblVolatility),
@@ -223,10 +223,10 @@ public class OptimalMeasuresReconciler {
 				(Almgren2003PowerImpactContinuous) Almgren2003PowerImpact.Standard (
 					dblX,
 					dblFinishTime,
-					a2003p,
+					lpep,
 					dblLambda
 				).generate(),
-				a2003p
+				lpep
 			);
 
 			OptimalMeasureDependence omd = a2003e.optimalMeasures().omdInformationRatio();

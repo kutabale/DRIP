@@ -87,7 +87,7 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
 	 * @param iNumInterval The Number of Fixed Intervals
-	 * @param lep Linear Impact Price Walk Parameters
+	 * @param lpep Linear Impact Price Walk Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
 	 * @return The AC2000TrajectorySchemeWithDrift Instance
@@ -97,14 +97,14 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 		final double dblStartHoldings,
 		final double dblFinishTime,
 		final int iNumInterval,
-		final org.drip.execution.dynamics.LinearExpectationParameters lep,
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final double dblRiskAversion)
 	{
 		try {
 			return new AlmgrenChriss2000Drift
 				(org.drip.execution.strategy.DiscreteTradingTrajectoryControl.FixedInterval (new
 					org.drip.execution.strategy.OrderSpecification (dblStartHoldings, dblFinishTime),
-						iNumInterval), lep, new org.drip.execution.risk.MeanVarianceObjectiveUtility
+						iNumInterval), lpep, new org.drip.execution.risk.MeanVarianceObjectiveUtility
 							(dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -115,11 +115,11 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 
 	private AlmgrenChriss2000Drift (
 		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl dttc,
-		final org.drip.execution.dynamics.LinearExpectationParameters lep,
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (dttc, lep, mvou);
+		super (dttc, lpep, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete generate()
@@ -128,16 +128,17 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 
 		double[] adblTNode = dttc.executionTimeNodes();
 
-		org.drip.execution.dynamics.LinearExpectationParameters lep =
-			(org.drip.execution.dynamics.LinearExpectationParameters) priceWalkParameters();
+		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
+			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) priceWalkParameters();
 
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
-			lep.linearTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionLinear)
+				lpep.temporaryExpectation().epochImpactFunction();
 
 		double dblX = dttc.startHoldings();
 
 		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
-			lep.arithmeticPriceDynamicsSettings();
+			lpep.arithmeticPriceDynamicsSettings();
 
 		double dblAlpha = apds.drift();
 
@@ -154,7 +155,7 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 		}
 
 		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
-			lep.linearPermanentExpectation().epochImpactFunction()).slope();
+			lpep.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		int iNumNode = adblTNode.length;
 		final double dblSigma = dblEpochVolatility;
@@ -211,7 +212,7 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 			org.drip.measure.gaussian.R1UnivariateNormal r1un = (new
 				org.drip.execution.capture.TrajectoryShortfallEstimator (new
 					org.drip.execution.strategy.DiscreteTradingTrajectory (adblTNode, adblHoldings,
-						adblTradeList))).totalCostDistributionSynopsis (lep);
+						adblTradeList))).totalCostDistributionSynopsis (lpep);
 
 			return null == r1un ? null : new org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift
 				(adblTNode, adblHoldings, adblTradeList, adblHoldingsDriftAdjustment,

@@ -1,7 +1,7 @@
 
 package org.drip.sample.execution;
 
-import org.drip.execution.dynamics.Almgren2003Parameters;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
@@ -114,7 +114,7 @@ public class ConcaveImpactNoDrift {
 			dblK
 		);
 
-		Almgren2003Parameters a2003p = new Almgren2003Parameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.Almgren2003 (
 			new ArithmeticPriceDynamicsSettings (
 				dblDrift,
 				new FlatUnivariate (dblVolatility),
@@ -134,7 +134,7 @@ public class ConcaveImpactNoDrift {
 
 		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
 			dttc,
-			a2003p,
+			lpep,
 			new MeanVarianceObjectiveUtility (dblLambdaU)
 		).generate();
 

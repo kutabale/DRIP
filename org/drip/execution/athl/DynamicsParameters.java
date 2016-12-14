@@ -103,10 +103,10 @@ public class DynamicsParameters {
 	 * @return Instance of the Almgren 2003 Dynamics Parameters
 	 */
 
-	public org.drip.execution.dynamics.Almgren2003Parameters almgren2003()
+	public org.drip.execution.dynamics.LinearPermanentExpectationParameters almgren2003()
 	{
 		try {
-			return new org.drip.execution.dynamics.Almgren2003Parameters (new
+			return org.drip.execution.dynamics.ArithmeticPriceEvolutionParametersBuilder.Almgren2003 (new
 				org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., new
 					org.drip.function.r1tor1.FlatUnivariate (_afp.dailyVolatility()), 0.), new
 						org.drip.execution.profiletime.UniformParticipationRateLinear (new

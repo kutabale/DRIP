@@ -1,7 +1,7 @@
 
 package org.drip.sample.almgren2003;
 
-import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.generator.Almgren2003ConstantTradingEnhanced;
 import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
@@ -89,7 +89,7 @@ public class ConstantLiquidityVolatility {
 		double dblLambda = 1.e-05;
 		double dblX = 100000.;
 
-		TradingEnhancedVolatilityParameters tevp = new TradingEnhancedVolatilityParameters (
+		ArithmeticPriceEvolutionParameters apep = ArithmeticPriceEvolutionParametersBuilder.TradingEnhancedVolatility (
 			dblSigma,
 			new UniformParticipationRateLinear (ParticipationRateLinear.SlopeOnly (dblEta)),
 			new UniformParticipationRateLinear (
@@ -103,7 +103,7 @@ public class ConstantLiquidityVolatility {
 		Almgren2003ConstantTradingEnhanced a2003cte = Almgren2003ConstantTradingEnhanced.Standard (
 			dblX,
 			dblT,
-			tevp,
+			apep,
 			dblLambda
 		);
 

@@ -1,7 +1,7 @@
 
 package org.drip.sample.almgren2003;
 
-import org.drip.execution.dynamics.Almgren2003Parameters;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
@@ -128,7 +128,7 @@ public class ContinuousTrajectoryConvexImpact {
 			dblK
 		);
 
-		Almgren2003Parameters a2003p = new Almgren2003Parameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.Almgren2003 (
 			new ArithmeticPriceDynamicsSettings (
 				dblDrift,
 				new FlatUnivariate (dblVolatility),
@@ -157,7 +157,7 @@ public class ContinuousTrajectoryConvexImpact {
 			Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
 				dblX,
 				dblFinishTime,
-				a2003p,
+				lpep,
 				adblLambda[i]
 			);
 

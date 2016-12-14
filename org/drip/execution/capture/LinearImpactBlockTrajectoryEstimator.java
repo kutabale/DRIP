@@ -93,7 +93,8 @@ public class LinearImpactBlockTrajectoryEstimator extends
 		if (null == apep) return null;
 
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
-			((org.drip.execution.dynamics.LinearExpectationParameters) apep).linearTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionLinear)
+				apep.temporaryExpectation().epochImpactFunction();
 
 		org.drip.execution.strategy.MinimumImpactTradingTrajectory mitt =
 			(org.drip.execution.strategy.MinimumImpactTradingTrajectory) trajectory();

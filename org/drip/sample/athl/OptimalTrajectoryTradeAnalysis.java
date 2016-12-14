@@ -2,7 +2,7 @@
 package org.drip.sample.athl;
 
 import org.drip.execution.athl.DynamicsParameters;
-import org.drip.execution.dynamics.Almgren2003Parameters;
+import org.drip.execution.dynamics.LinearPermanentExpectationParameters;
 import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.AssetFlowSettings;
@@ -81,7 +81,7 @@ public class OptimalTrajectoryTradeAnalysis {
 	private static final void TradeSizeSensitivity (
 		final double dblADVRatio,
 		final double dblTradeSize,
-		final Almgren2003Parameters a2003p)
+		final LinearPermanentExpectationParameters a2003p)
 		throws Exception
 	{
 		double dblTradeTime = 0.5;
@@ -146,7 +146,7 @@ public class OptimalTrajectoryTradeAnalysis {
 			0.30
 		};
 
-		Almgren2003Parameters a2003p = new DynamicsParameters (
+		LinearPermanentExpectationParameters a2003p = new DynamicsParameters (
 			new AssetFlowSettings (
 				strAssetName,
 				dblAverageDailyVolume,

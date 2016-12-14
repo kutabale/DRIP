@@ -74,7 +74,7 @@ public class Almgren2003PowerImpact extends org.drip.execution.generator.Optimal
 	 * 
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
-	 * @param a2003p Almgren 2003 Impact Price Walk Parameters
+	 * @param lpep Almgren 2003 Linear Permanent Expectation Market Impact Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
 	 * @return The Almgren2003PowerImpact Instance
@@ -83,12 +83,12 @@ public class Almgren2003PowerImpact extends org.drip.execution.generator.Optimal
 	public static final Almgren2003PowerImpact Standard (
 		final double dblStartHoldings,
 		final double dblFinishTime,
-		final org.drip.execution.dynamics.Almgren2003Parameters a2003p,
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final double dblRiskAversion)
 	{
 		try {
 			return new Almgren2003PowerImpact (new org.drip.execution.strategy.OrderSpecification
-				(dblStartHoldings, dblFinishTime), a2003p, new
+				(dblStartHoldings, dblFinishTime), lpep, new
 					org.drip.execution.risk.MeanVarianceObjectiveUtility (dblRiskAversion));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -99,20 +99,21 @@ public class Almgren2003PowerImpact extends org.drip.execution.generator.Optimal
 
 	private Almgren2003PowerImpact (
 		final org.drip.execution.strategy.OrderSpecification os,
-		final org.drip.execution.dynamics.Almgren2003Parameters a2003p,
+		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
 		throws java.lang.Exception
 	{
-		super (os, a2003p, mvou);
+		super (os, lpep, mvou);
 	}
 
 	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
-		org.drip.execution.dynamics.Almgren2003Parameters a2003p =
-			(org.drip.execution.dynamics.Almgren2003Parameters) priceWalkParameters();
+		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
+			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) priceWalkParameters();
 
 		final org.drip.execution.impact.TransactionFunctionPower tfpTemporaryExpectation =
-			a2003p.powerTemporaryExpectation();
+			(org.drip.execution.impact.TransactionFunctionPower)
+				lpep.temporaryExpectation().epochImpactFunction();
 
 		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
@@ -120,7 +121,7 @@ public class Almgren2003PowerImpact extends org.drip.execution.generator.Optimal
 		double dblEpochVolatility = java.lang.Double.NaN;
 
 		try {
-			dblEpochVolatility = a2003p.arithmeticPriceDynamicsSettings().epochVolatility();
+			dblEpochVolatility = lpep.arithmeticPriceDynamicsSettings().epochVolatility();
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
@@ -132,7 +133,7 @@ public class Almgren2003PowerImpact extends org.drip.execution.generator.Optimal
 		org.drip.execution.strategy.OrderSpecification os = orderSpecification();
 
 		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
-			a2003p.linearPermanentExpectation().epochImpactFunction()).slope();
+			lpep.linearPermanentExpectation().epochImpactFunction()).slope();
 
 		final double dblK = tfpTemporaryExpectation.exponent();
 

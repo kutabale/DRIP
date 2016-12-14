@@ -1,7 +1,7 @@
 
 package org.drip.sample.principal;
 
-import org.drip.execution.dynamics.Almgren2003Parameters;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
@@ -144,7 +144,7 @@ public class InformationRatioAnalysis {
 			dblK
 		);
 
-		Almgren2003Parameters a2003p = new Almgren2003Parameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.Almgren2003 (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
 				new FlatUnivariate (dblVolatility),
@@ -157,7 +157,7 @@ public class InformationRatioAnalysis {
 		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
 			dblX,
 			dblT,
-			a2003p,
+			lpep,
 			dblLambda
 		);
 
@@ -165,7 +165,7 @@ public class InformationRatioAnalysis {
 
 		Almgren2003Estimator a2003e = new Almgren2003Estimator (
 			a2003tt,
-			a2003p
+			lpep
 		);
 
 		System.out.println();
