@@ -100,6 +100,7 @@ public class LinearImpactUniformTrajectoryEstimator extends
 
 		double dblNumberOfTradesReciprocal = 1. / mitt.numberOfTrades();
 
+		double dblMarketCoreVolatility = java.lang.Double.NaN;
 		org.drip.execution.dynamics.LinearExpectationParameters lep =
 			(org.drip.execution.dynamics.LinearExpectationParameters) apep;
 
@@ -110,7 +111,13 @@ public class LinearImpactUniformTrajectoryEstimator extends
 
 		double dblBlockSizeSquared = dblBlockSize * dblBlockSize;
 
-		double dblMarketCoreVolatility = apep.arithmeticPriceDynamicsSettings().volatility();
+		try {
+			dblMarketCoreVolatility = apep.arithmeticPriceDynamicsSettings().epochVolatility();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		try {
 			return new org.drip.measure.gaussian.R1UnivariateNormal (0.5 * dblPermanentLinearImpactParameter

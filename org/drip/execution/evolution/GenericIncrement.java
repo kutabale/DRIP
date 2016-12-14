@@ -1,5 +1,5 @@
 
-package org.drip.execution.athl;
+package org.drip.execution.evolution;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,73 +48,69 @@ package org.drip.execution.athl;
  */
 
 /**
- * DynamicsParameters generates the Variants of the Market Dynamics Parameters constructed using the
- *  Methodologies presented in Almgren, Thum, Hauptmann, and Li (2005), using the Parameterization of Almgren
- *  (2003). The References are:
+ * GenericIncrement implements the Pre- and Post-transformed Increment as used in the "Trading Time" Model.
+ *  The References are:
  * 
- * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
- * 
- * 	- Almgren, R., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3 (2)
- * 		5-39.
- * 
- * 	- Almgren, R. (2003): Optimal Execution with Nonlinear Impact Functions and Trading-Enhanced Risk,
- * 		Applied Mathematical Finance 10 (1) 1-18.
+ * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
+ * 		(2) 5-39.
  *
- * 	- Almgren, R., and N. Chriss (2003): Bidding Principles, Risk 97-102.
+ * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
+ * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
+ *
+ * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
+ * 		Financial Mathematics  3 (1) 163-181.
  * 
- * 	- Almgren, R., C. Thum, E. Hauptmann, and H. Li (2005): Equity Market Impact, Risk 18 (7) 57-62.
+ * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
+ * 		79-96.
+ * 
+ * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
+ * 		Financial Studies & (4) 631-651.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class DynamicsParameters {
-	private org.drip.execution.parameters.AssetFlowSettings _afp = null;
+public class GenericIncrement {
+	private double _dblBrownian = java.lang.Double.NaN;
+	private double _dblTemporal = java.lang.Double.NaN;
 
 	/**
-	 * DynamicsParameters Constructor
+	 * GenericIncrement Constructor
 	 * 
-	 * @param afp The Asset Flow Parameters Instance
+	 * @param dblTemporal The Temporal Increment
+	 * @param dblBrownian The Brownian Increment
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public DynamicsParameters (
-		final org.drip.execution.parameters.AssetFlowSettings afp)
+	public GenericIncrement (
+		final double dblTemporal,
+		final double dblBrownian)
 		throws java.lang.Exception
 	{
-		if (null == (_afp = afp))
-			throw new java.lang.Exception ("DynamicsParameters Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTemporal = dblTemporal) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBrownian = dblBrownian))
+			throw new java.lang.Exception ("GenericIncrement Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asset Flow Parameters Instance
+	 * Retrieve the Temporal Increment
 	 * 
-	 * @return The Asset Flow Parameters Instance
+	 * @return The Temporal Increment
 	 */
 
-	public org.drip.execution.parameters.AssetFlowSettings assetFlowParameters()
+	public double temporal()
 	{
-		return _afp;
+		return _dblTemporal;
 	}
 
 	/**
-	 * Generate an Instance of the Almgren 2003 Dynamics Parameters
+	 * Retrieve the Brownian Increment
 	 * 
-	 * @return Instance of the Almgren 2003 Dynamics Parameters
+	 * @return The Brownian Increment
 	 */
 
-	public org.drip.execution.dynamics.Almgren2003Parameters almgren2003()
+	public double brownian()
 	{
-		try {
-			return new org.drip.execution.dynamics.Almgren2003Parameters (new
-				org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., new
-					org.drip.function.r1tor1.FlatUnivariate (_afp.dailyVolatility()), 0.), new
-						org.drip.execution.athl.PermanentImpactNoArbitrage (_afp), new
-							org.drip.execution.athl.TemporaryImpact (_afp));
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		return _dblBrownian;
 	}
 }

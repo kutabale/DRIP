@@ -134,7 +134,15 @@ public class AlmgrenChriss2000 extends org.drip.execution.generator.OptimalTraje
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
 			lep.linearTemporaryExpectation();
 
-		double dblSigma = lep.arithmeticPriceDynamicsSettings().volatility();
+		double dblEpochVolatility = java.lang.Double.NaN;
+
+		try {
+			dblEpochVolatility = lep.arithmeticPriceDynamicsSettings().epochVolatility();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		double dblGamma = lep.linearPermanentExpectation().slope();
 
@@ -144,6 +152,7 @@ public class AlmgrenChriss2000 extends org.drip.execution.generator.OptimalTraje
 
 		int iNumNode = adblTNode.length;
 		double dblXSquared = dblX * dblX;
+		final double dblSigma = dblEpochVolatility;
 		double dblTau = adblTNode[1] - adblTNode[0];
 		double dblSigmaSquared = dblSigma * dblSigma;
 		double[] adblHoldings = new double[iNumNode];

@@ -8,6 +8,7 @@ import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
+import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -115,7 +116,7 @@ public class ConcaveImpactNoDrift {
 		Almgren2003Parameters a2003p = new Almgren2003Parameters (
 			new ArithmeticPriceDynamicsSettings (
 				dblDrift,
-				dblVolatility,
+				new FlatUnivariate (dblVolatility),
 				0.
 			),
 			(ParticipationRateLinear) pmip.permanentTransactionFunction(),

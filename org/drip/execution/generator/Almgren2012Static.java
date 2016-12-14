@@ -116,7 +116,17 @@ public class Almgren2012Static extends org.drip.execution.generator.OptimalTraje
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
 			lep.linearTemporaryExpectation();
 
-		final double dblSigma = lep.arithmeticPriceDynamicsSettings().volatility();
+		double dblEpochVolatility = java.lang.Double.NaN;
+
+		try {
+			dblEpochVolatility = lep.arithmeticPriceDynamicsSettings().epochVolatility();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		final double dblSigma = dblEpochVolatility;
 
 		final double dblEta = tflTemporaryExpectation.slope();
 
@@ -132,30 +142,30 @@ public class Almgren2012Static extends org.drip.execution.generator.OptimalTraje
 		final org.drip.function.definition.R1ToR1 r1ToR1Holdings = new org.drip.function.definition.R1ToR1
 			(null) {
 			@Override public double evaluate (
-				final double dblS)
+				final double dblTime)
 				throws java.lang.Exception
 			{
-				if (!org.drip.quant.common.NumberUtil.IsValid (dblS))
+				if (!org.drip.quant.common.NumberUtil.IsValid (dblTime))
 					throw new java.lang.Exception
 						("Almgren2012Static::Holdings::evaluate => Invalid Inputs");
 
-				return java.lang.Math.sinh (dblKappa * (dblT - dblS)) / java.lang.Math.sinh (dblKappa * dblT)
-					* dblX;
+				return java.lang.Math.sinh (dblKappa * (dblT - dblTime)) / java.lang.Math.sinh (dblKappa *
+					dblT) * dblX;
 			}
 		};
 
 		org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1 (null)
 		{
 			@Override public double evaluate (
-				final double dblS)
+				final double dblTime)
 				throws java.lang.Exception
 			{
-				if (!org.drip.quant.common.NumberUtil.IsValid (dblS))
+				if (!org.drip.quant.common.NumberUtil.IsValid (dblTime))
 					throw new java.lang.Exception
 						("Almgren2012Static::TradeRate::evaluate => Invalid Inputs");
 
-				return dblKappa * dblX * java.lang.Math.cosh (dblKappa * (dblT - dblS)) / java.lang.Math.sinh
-					(dblKappa * dblT);
+				return dblKappa * dblX * java.lang.Math.cosh (dblKappa * (dblT - dblTime)) /
+					java.lang.Math.sinh (dblKappa * dblT);
 			}
 		};
 
@@ -165,9 +175,13 @@ public class Almgren2012Static extends org.drip.execution.generator.OptimalTraje
 				final double dblTime)
 				throws java.lang.Exception
 			{
-				double dblTradeRate = r1ToR1Holdings.derivative (dblTime, 1);
+				double dblTradeRate = r1ToR1TradeRate.evaluate (dblTime);
 
-				return dblEta * dblEta * dblTradeRate * dblTradeRate;
+				if (!org.drip.quant.common.NumberUtil.IsValid (dblTradeRate))
+					throw new java.lang.Exception
+						("Almgren2012Static::ExpectationRate::evaluate => Invalid Inputs");
+
+				return dblEta * dblTradeRate * dblTradeRate;
 			}
 		};
 

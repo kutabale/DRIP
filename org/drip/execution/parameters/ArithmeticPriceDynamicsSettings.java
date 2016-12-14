@@ -70,8 +70,8 @@ package org.drip.execution.parameters;
 
 public class ArithmeticPriceDynamicsSettings {
 	private double _dblDrift = java.lang.Double.NaN;
-	private double _dblVolatility = java.lang.Double.NaN;
 	private double _dblSerialCorrelation = java.lang.Double.NaN;
+	private org.drip.function.definition.R1ToR1 _r1ToR1Volatility = null;
 
 	/**
 	 * Construct the Asset Dynamics Settings from the Annual Returns Parameters
@@ -96,8 +96,9 @@ public class ArithmeticPriceDynamicsSettings {
 			return null;
 
 		try {
-			return new ArithmeticPriceDynamicsSettings (dblPrice * dblAnnualReturnsExpectation / 250.,
-				dblPrice * dblAnnualReturnsVolatility / java.lang.Math.sqrt (250.), dblSerialCorrelation);
+			return new ArithmeticPriceDynamicsSettings (dblPrice * dblAnnualReturnsExpectation / 250., new
+				org.drip.function.r1tor1.FlatUnivariate (dblPrice * dblAnnualReturnsVolatility /
+					java.lang.Math.sqrt (250.)), dblSerialCorrelation);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -109,7 +110,7 @@ public class ArithmeticPriceDynamicsSettings {
 	 * ArithmeticPriceDynamicsSettings Constructor
 	 * 
 	 * @param dblDrift The Asset Daily Arithmetic Drift
-	 * @param dblVolatility The Asset Daily Normal Volatility
+	 * @param r1ToR1Volatility The R^1 -> R^1 Volatility Function
 	 * @param dblSerialCorrelation The Asset Serial Correlation
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -117,14 +118,13 @@ public class ArithmeticPriceDynamicsSettings {
 
 	public ArithmeticPriceDynamicsSettings (
 		final double dblDrift,
-		final double dblVolatility,
+		final org.drip.function.definition.R1ToR1 r1ToR1Volatility,
 		final double dblSerialCorrelation)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility) || 0. >=
-				_dblVolatility || !org.drip.quant.common.NumberUtil.IsValid (_dblSerialCorrelation =
-					dblSerialCorrelation) || 1. < _dblSerialCorrelation || -1. > _dblSerialCorrelation)
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) || null == (_r1ToR1Volatility =
+			r1ToR1Volatility)|| !org.drip.quant.common.NumberUtil.IsValid (_dblSerialCorrelation =
+				dblSerialCorrelation) || 1. < _dblSerialCorrelation || -1. > _dblSerialCorrelation)
 			throw new java.lang.Exception ("ArithmeticPriceDynamicsSettings Constructor => Invalid Inputs!");
 	}
 
@@ -143,11 +143,25 @@ public class ArithmeticPriceDynamicsSettings {
 	 * Retrieve the Asset Annual Volatility
 	 *  
 	 * @return The Asset Annual Volatility
+	 * 
+	 * @throws java.lang.Exception - Thrown if the Inputs are Invalid
 	 */
 
-	public double volatility()
+	public double epochVolatility()
+		throws java.lang.Exception
 	{
-		return _dblVolatility;
+		return _r1ToR1Volatility.evaluate (0.);
+	}
+
+	/**
+	 * Retrieve the Asset Annual Volatility Function
+	 *  
+	 * @return The Asset Annual Volatility Function
+	 */
+
+	public org.drip.function.definition.R1ToR1 volatilityFunction()
+	{
+		return _r1ToR1Volatility;
 	}
 
 	/**

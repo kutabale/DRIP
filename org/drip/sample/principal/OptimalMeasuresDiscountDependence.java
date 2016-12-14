@@ -7,6 +7,7 @@ import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.Almgren2003Estimator;
+import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -136,7 +137,7 @@ public class OptimalMeasuresDiscountDependence {
 		Almgren2003Parameters a2003p = new Almgren2003Parameters (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
-				dblVolatility,
+				new FlatUnivariate (dblVolatility),
 				0.
 			),
 			(ParticipationRateLinear) pmip.permanentTransactionFunction(),

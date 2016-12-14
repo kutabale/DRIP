@@ -117,7 +117,17 @@ public class Almgren2003PowerImpact extends org.drip.execution.generator.Optimal
 		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
 
-		final double dblSigma = a2003p.arithmeticPriceDynamicsSettings().volatility();
+		double dblEpochVolatility = java.lang.Double.NaN;
+
+		try {
+			dblEpochVolatility = a2003p.arithmeticPriceDynamicsSettings().epochVolatility();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		final double dblSigma = dblEpochVolatility;
 
 		org.drip.execution.strategy.OrderSpecification os = orderSpecification();
 

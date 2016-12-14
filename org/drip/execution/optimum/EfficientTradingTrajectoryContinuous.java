@@ -132,4 +132,15 @@ public class EfficientTradingTrajectoryContinuous extends
 	{
 		return _dblCharacteristicTime;
 	}
+
+	/**
+	 * Retrieve the Optimal Trajectory Urgency
+	 * 
+	 * @return The Optimal Trajectory Urgency
+	 */
+
+	public double urgency()
+	{
+		return 0. == _dblCharacteristicTime ? 0. : 1. / _dblCharacteristicTime;
+	}
 }

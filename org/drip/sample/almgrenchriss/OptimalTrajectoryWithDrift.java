@@ -7,6 +7,7 @@ import org.drip.execution.generator.AlmgrenChriss2000Drift;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
 import org.drip.execution.parameters.*;
+import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -108,7 +109,7 @@ public class OptimalTrajectoryWithDrift {
 
 		double dblAlpha = apds.drift();
 
-		double dblSigma = apds.volatility();
+		double dblSigma = apds.epochVolatility();
 
 		PriceMarketImpactLinear pmil = new PriceMarketImpactLinear (
 			new AssetTransactionSettings (
@@ -127,7 +128,7 @@ public class OptimalTrajectoryWithDrift {
 		LinearExpectationParameters lep = new LinearExpectationParameters (
 			new ArithmeticPriceDynamicsSettings (
 				dblAlpha,
-				dblSigma,
+				new FlatUnivariate (dblSigma),
 				0.
 			),
 			prlPermanent,

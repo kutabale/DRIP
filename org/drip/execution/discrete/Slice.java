@@ -166,9 +166,9 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 
 		double dblExecutionRate = (_dblRightHoldings - _dblLeftHoldings) / _dblTimeInterval;
 
-		double dblMarketCoreJumpUnit = apds.volatility() * dblTimeUnitSQRT;
-
 		try {
+			double dblMarketCoreJumpUnit = apds.epochVolatility() * dblTimeUnitSQRT;
+
 			return new org.drip.execution.discrete.PriceIncrement (
 				dblPreviousEquilibriumPrice,
 				new org.drip.execution.evolution.MarketImpactComponent (
@@ -232,9 +232,9 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
 			apep.arithmeticPriceDynamicsSettings();
 
-		double dblMarketCoreVolatility = apds.volatility();
-
 		try {
+			double dblMarketCoreVolatility = apds.epochVolatility();
+
 			double dblTemporaryVolatility = apep.temporaryVolatility().evaluate (dblTradeAmount,
 				_dblTimeInterval);
 
@@ -492,9 +492,9 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 	{
 		if (null == apep) return null;
 
-		double dblVolatility = apep.arithmeticPriceDynamicsSettings().volatility();
-
 		try {
+			double dblVolatility = apep.arithmeticPriceDynamicsSettings().epochVolatility();
+
 			return new org.drip.execution.sensitivity.ControlNodesGreek (
 				_dblTimeInterval * dblVolatility * dblVolatility * _dblRightHoldings * _dblRightHoldings,
 				new double[] {
@@ -630,13 +630,13 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
 			apep.arithmeticPriceDynamicsSettings();
 
-		double dblRhoSigma = apds.serialCorrelation() * apds.volatility();
-
 		double dblTradeRate = (_dblRightHoldings - _dblLeftHoldings) / _dblTimeInterval;
 
 		org.drip.execution.impact.TransactionFunction miTemporary = apep.temporaryExpectation();
 
 		try {
+			double dblRhoSigma = apds.serialCorrelation() * apds.epochVolatility();
+
 			double dblDenominator = 1. / (dblTradeRate * miTemporary.derivative (dblTradeRate, 2) + 2. *
 				miTemporary.derivative (dblTradeRate, 1));
 

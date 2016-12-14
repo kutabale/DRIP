@@ -7,6 +7,7 @@ import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.*;
+import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -139,7 +140,7 @@ public class OptimalMeasuresReconciler {
 			Almgren2003Parameters a2003p = new Almgren2003Parameters (
 				new ArithmeticPriceDynamicsSettings (
 					dblDrift,
-					dblVolatility,
+					new FlatUnivariate (dblVolatility),
 					dblSerialCorrelation
 				),
 				(ParticipationRateLinear) pmip.permanentTransactionFunction(),
@@ -210,7 +211,7 @@ public class OptimalMeasuresReconciler {
 			Almgren2003Parameters a2003p = new Almgren2003Parameters (
 				new ArithmeticPriceDynamicsSettings (
 					dblDrift,
-					dblVolatility,
+					new FlatUnivariate (dblVolatility),
 					dblSerialCorrelation
 				),
 				(ParticipationRateLinear) pmip.permanentTransactionFunction(),

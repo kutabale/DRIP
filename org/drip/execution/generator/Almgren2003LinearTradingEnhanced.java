@@ -119,7 +119,15 @@ public class Almgren2003LinearTradingEnhanced extends
 		double dblLambda = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
 			objectiveUtility()).riskAversion();
 
-		double dblSigma = tevp.arithmeticPriceDynamicsSettings().volatility();
+		double dblSigma = java.lang.Double.NaN;
+
+		try {
+			dblSigma = tevp.arithmeticPriceDynamicsSettings().epochVolatility();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		double dblTStar = java.lang.Math.sqrt (tevp.linearTemporaryExpectation().slope() / (dblLambda *
 			dblSigma * dblSigma));

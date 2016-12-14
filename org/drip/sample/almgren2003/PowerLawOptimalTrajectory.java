@@ -7,6 +7,7 @@ import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.function.definition.R1ToR1;
+import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -129,7 +130,7 @@ public class PowerLawOptimalTrajectory {
 
 		ArithmeticPriceDynamicsSettings apds = new ArithmeticPriceDynamicsSettings (
 			dblDrift,
-			dblVolatility,
+			new FlatUnivariate (dblVolatility),
 			dblSerialCorrelation
 		);
 

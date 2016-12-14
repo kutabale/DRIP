@@ -91,6 +91,7 @@ public class LinearImpactTrajectoryEstimator extends org.drip.execution.capture.
 	{
 		if (null == apep) return null;
 
+		double dblMarketCoreVolatility = java.lang.Double.NaN;
 		org.drip.execution.dynamics.LinearExpectationParameters lep =
 			(org.drip.execution.dynamics.LinearExpectationParameters) apep;
 
@@ -110,7 +111,13 @@ public class LinearImpactTrajectoryEstimator extends org.drip.execution.capture.
 		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
 			lep.arithmeticPriceDynamicsSettings();
 
-		double dblMarketCoreVolatility = apds.volatility();
+		try {
+			dblMarketCoreVolatility = apds.epochVolatility();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		double dblMarketCoreDrift = apds.drift();
 
