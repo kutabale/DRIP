@@ -77,7 +77,8 @@ public class LinearExpectationParameters extends
 	 * 
 	 * @param apds The Asset Price Dynamics Settings
 	 * @param tflPermanentExpectation The Linear Permanent Market Impact Expectation Function
-	 * @param tflTemporaryExpectation The Linear Temporary Market Impact Expectation Function
+	 * @param bprlTemporaryExpectation The Background Participation Rate Linear Temporary Market Impact
+	 * 		Expectation Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -85,10 +86,10 @@ public class LinearExpectationParameters extends
 	public LinearExpectationParameters (
 		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
 		final org.drip.execution.impact.TransactionFunctionLinear tflPermanentExpectation,
-		final org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation)
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryExpectation)
 		throws java.lang.Exception
 	{
-		super (apds, tflPermanentExpectation, tflTemporaryExpectation);
+		super (apds, tflPermanentExpectation, bprlTemporaryExpectation);
 	}
 
 	/**
@@ -99,6 +100,7 @@ public class LinearExpectationParameters extends
 
 	public org.drip.execution.impact.TransactionFunctionLinear linearTemporaryExpectation()
 	{
-		return (org.drip.execution.impact.TransactionFunctionLinear) temporaryExpectation();
+		return (org.drip.execution.impact.TransactionFunctionLinear)
+			temporaryExpectation().epochImpactFunction();
 	}
 }

@@ -74,7 +74,8 @@ public class TradingEnhancedVolatilityParameters extends
 	 * TradingEnhancedVolatilityParameters Constructor
 	 * 
 	 * @param dblPriceVolatility The Daily Price Volatility Parameter
-	 * @param tflTemporaryExpectation The Linear Temporary Market Impact Expectation Function
+	 * @param bprlTemporaryExpectation The Background Participation Linear Temporary Market Impact
+	 * 	Expectation Function
 	 * @param tflTemporaryVolatility The Linear Temporary Market Impact Volatility Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -82,13 +83,13 @@ public class TradingEnhancedVolatilityParameters extends
 
 	public TradingEnhancedVolatilityParameters (
 		final double dblPriceVolatility,
-		final org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation,
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryExpectation,
 		final org.drip.execution.impact.TransactionFunctionLinear tflTemporaryVolatility)
 		throws java.lang.Exception
 	{
 		super (new org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., new
 			org.drip.function.r1tor1.FlatUnivariate (dblPriceVolatility), 0.),
-				org.drip.execution.impact.ParticipationRateLinear.NoImpact(), tflTemporaryExpectation,
+				org.drip.execution.impact.ParticipationRateLinear.NoImpact(), bprlTemporaryExpectation,
 					org.drip.execution.impact.ParticipationRateLinear.NoImpact(), tflTemporaryVolatility);
 	}
 

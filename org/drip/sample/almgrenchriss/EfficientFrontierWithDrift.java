@@ -6,6 +6,7 @@ import org.drip.execution.generator.AlmgrenChriss2000Drift;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
+import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -136,9 +137,11 @@ public class EfficientFrontierWithDrift {
 				0.,
 				dblGamma
 			),
-			new ParticipationRateLinear (
-				dblEpsilon,
-				dblEta
+			new UniformParticipationRateLinear (
+				new ParticipationRateLinear (
+					dblEpsilon,
+					dblEta
+				)
 			)
 		);
 

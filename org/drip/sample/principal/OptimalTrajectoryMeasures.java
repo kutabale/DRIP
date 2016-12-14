@@ -7,6 +7,7 @@ import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.Almgren2003Estimator;
+import org.drip.execution.profiletime.UniformParticipationRate;
 import org.drip.function.definition.R1ToR1;
 import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
@@ -119,7 +120,7 @@ public class OptimalTrajectoryMeasures {
 				0.
 			),
 			(ParticipationRateLinear) pmip.permanentTransactionFunction(),
-			(ParticipationRatePower) pmip.temporaryTransactionFunction()
+			new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 		);
 
 		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (

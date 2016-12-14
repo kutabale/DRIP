@@ -6,6 +6,7 @@ import org.drip.execution.generator.AlmgrenChriss2000Drift;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
 import org.drip.execution.parameters.*;
+import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -164,7 +165,7 @@ public class TrajectoryComparisonWithDrift {
 				0.
 			),
 			prlPermanent,
-			prlTemporary
+			new UniformParticipationRateLinear (prlTemporary)
 		);
 
 		System.out.println ("\n\t|---------------------------------------------||");

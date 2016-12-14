@@ -48,8 +48,8 @@ package org.drip.execution.profiletime;
  */
 
 /**
- * BackgroundParticipationRateLinear exposes the Background Profile Adjusted Version of the Linear
- *  Participation Rate Transaction Function as described in the "Trading Time" Model. The References are:
+ * BackgroundParticipationRate exposes the Background Profile Adjusted Version of the Participation Rate
+ * 	Transaction Function as described in the "Trading Time" Model. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,25 +69,24 @@ package org.drip.execution.profiletime;
  * @author Lakshmi Krishnamurthy
  */
 
-public interface BackgroundParticipationRateLinear extends
-	org.drip.execution.profiletime.BackgroundParticipationRate {
+public interface BackgroundParticipationRate {
 
 	/**
-	 * Compute the Liquidity Market Impact Function from the Volatility Function
+	 * Compute the Market Impact Function from the Volatility Function
 	 * 
 	 * @param dblTime The Time Snapshot
 	 * 
-	 * @return The Liquidity Market Impact Function
+	 * @return The Market Impact Function
 	 */
 
-	public abstract org.drip.execution.impact.ParticipationRateLinear liquidityFunction (
+	public abstract org.drip.execution.impact.TransactionFunction impactFunction (
 		final double dblTime);
 
 	/**
-	 * Compute the Epoch Liquidity Market Impact Function
+	 * Compute the Epoch Market Impact Function
 	 * 
-	 * @return The Epoch Liquidity Market Impact Function
+	 * @return The Epoch Market Impact Function
 	 */
 
-	public abstract org.drip.execution.impact.ParticipationRateLinear epochLiquidityFunction();
+	public abstract org.drip.execution.impact.TransactionFunction epochImpactFunction();
 }

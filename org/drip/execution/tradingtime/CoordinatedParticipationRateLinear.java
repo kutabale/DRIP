@@ -93,9 +93,9 @@ public class CoordinatedParticipationRateLinear implements
 				("CoordinatedParticipationRateLinear Constructor => Invalid Inputs");
 	}
 	/**
-	 * Retrieve the Coordinated Variation COnstraint
+	 * Retrieve the Coordinated Variation Constraint
 	 * 
-	 * @return The Coordinated Variation COnstraint
+	 * @return The Coordinated Variation Constraint
 	 */
 
 	public org.drip.execution.tradingtime.CoordinatedVariation variationConstraint()
@@ -118,9 +118,20 @@ public class CoordinatedParticipationRateLinear implements
 		return null;
 	}
 
+	@Override public org.drip.execution.impact.TransactionFunction impactFunction (
+		final double dblTime)
+	{
+		return liquidityFunction (dblTime);
+	}
+
 	@Override public org.drip.execution.impact.ParticipationRateLinear epochLiquidityFunction()
 	{
 		return liquidityFunction (0.);
+	}
+
+	@Override public org.drip.execution.impact.TransactionFunction epochImpactFunction()
+	{
+		return epochLiquidityFunction();
 	}
 
 	/**

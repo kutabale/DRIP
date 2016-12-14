@@ -6,6 +6,7 @@ import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.*;
 import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.execution.optimum.*;
+import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
 import org.drip.function.definition.R1ToR1;
@@ -107,9 +108,7 @@ public class AlmgrenConstantTradingEnhanced {
 
 		TradingEnhancedVolatilityParameters tevp = new TradingEnhancedVolatilityParameters (
 			dblSigma,
-			ParticipationRateLinear.SlopeOnly (
-				dblEta
-			),
+			new UniformParticipationRateLinear (ParticipationRateLinear.SlopeOnly (dblEta)),
 			new ParticipationRateLinear (
 				dblAlpha,
 				0.

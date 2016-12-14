@@ -175,7 +175,7 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 					_dblTimeInterval * apds.drift(),
 					0.,
 					_dblTimeInterval * apep.permanentExpectation().evaluate (dblExecutionRate),
-					apep.temporaryExpectation().evaluate (dblExecutionRate)
+					apep.temporaryExpectation().epochImpactFunction().evaluate (dblExecutionRate)
 				),
 				new org.drip.execution.evolution.MarketImpactComponent (
 					dblMarketCoreJumpUnit * java.lang.Math.sqrt (1. + dblSerialCorrelation * dblSerialCorrelation) *
@@ -241,7 +241,7 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 			return new org.drip.execution.discrete.ShortfallIncrementDistribution (
 				_dblTimeInterval * _dblRightHoldings * apep.permanentExpectation().evaluate
 					(dblExecutionRate),
-				dblTradeAmount * apep.temporaryExpectation().evaluate (dblExecutionRate),
+				dblTradeAmount * apep.temporaryExpectation().epochImpactFunction().evaluate (dblExecutionRate),
 				-1. * _dblRightHoldings * apds.drift() * _dblTimeInterval,
 				0.,
 				dblExecutionRate * dblExecutionRate * dblTemporaryVolatility * dblTemporaryVolatility *
@@ -337,7 +337,8 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 
 		double dblTradeAmount = _dblRightHoldings - _dblLeftHoldings;
 
-		org.drip.execution.impact.TransactionFunction tfTemporaryDrift = apep.temporaryExpectation();
+		org.drip.execution.impact.TransactionFunction tfTemporaryDrift =
+			apep.temporaryExpectation().epochImpactFunction();
 
 		try {
 			double dblTemporaryDrift = tfTemporaryDrift.evaluate (dblTradeAmount, _dblTimeInterval);
@@ -632,7 +633,8 @@ public class Slice implements org.drip.execution.sensitivity.ControlNodesGreekGe
 
 		double dblTradeRate = (_dblRightHoldings - _dblLeftHoldings) / _dblTimeInterval;
 
-		org.drip.execution.impact.TransactionFunction miTemporary = apep.temporaryExpectation();
+		org.drip.execution.impact.TransactionFunction miTemporary =
+			apep.temporaryExpectation().epochImpactFunction();
 
 		try {
 			double dblRhoSigma = apds.serialCorrelation() * apds.epochVolatility();

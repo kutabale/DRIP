@@ -6,6 +6,7 @@ import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
+import org.drip.execution.profiletime.UniformParticipationRate;
 import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -137,7 +138,7 @@ public class ContinuousTrajectoryConcaveImpact {
 				0.,
 				dblGamma
 			),
-			(ParticipationRatePower) pmip.temporaryTransactionFunction()
+			new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 		);
 
 		System.out.println ("\n\t|-------------------------------------------||");

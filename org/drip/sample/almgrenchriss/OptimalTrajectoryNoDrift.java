@@ -7,6 +7,7 @@ import org.drip.execution.generator.AlmgrenChriss2000;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.AlmgrenChriss2000Discrete;
 import org.drip.execution.parameters.*;
+import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.r1tor1.FlatUnivariate;
 import org.drip.measure.gaussian.R1UnivariateNormal;
 import org.drip.quant.common.FormatUtil;
@@ -132,7 +133,7 @@ public class OptimalTrajectoryNoDrift {
 				0.
 			),
 			prlPermanent,
-			prlTemporary
+			new UniformParticipationRateLinear (prlTemporary)
 		);
 
 		AlmgrenChriss2000 ac2000 = AlmgrenChriss2000.Standard (

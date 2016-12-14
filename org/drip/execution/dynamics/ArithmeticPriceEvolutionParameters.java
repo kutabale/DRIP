@@ -74,14 +74,15 @@ public class ArithmeticPriceEvolutionParameters {
 	private org.drip.execution.impact.TransactionFunction _tfPermanentVolatility = null;
 	private org.drip.execution.impact.TransactionFunction _tfTemporaryVolatility = null;
 	private org.drip.execution.impact.TransactionFunction _tfPermanentExpectation = null;
-	private org.drip.execution.impact.TransactionFunction _tfTemporaryExpectation = null;
+	private org.drip.execution.profiletime.BackgroundParticipationRate _bprTemporaryExpectation = null;
 
 	/**
 	 * ArithmeticPriceEvolutionParameters Constructor
 	 * 
 	 * @param apds The Asset Price Dynamics Settings
 	 * @param tfPermanentExpectation The Permanent Market Impact Expectation Function
-	 * @param tfTemporaryExpectation The Temporary Market Impact Expectation Function
+	 * @param bprTemporaryExpectation The Background Participation Temporary Market Impact Expectation
+	 * 		Function
 	 * @param tfPermanentVolatility The Permanent Market Impact Volatility Function
 	 * @param tfTemporaryVolatility The Temporary Market Impact Volatility Function
 	 * 
@@ -91,13 +92,13 @@ public class ArithmeticPriceEvolutionParameters {
 	public ArithmeticPriceEvolutionParameters (
 		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
 		final org.drip.execution.impact.TransactionFunction tfPermanentExpectation,
-		final org.drip.execution.impact.TransactionFunction tfTemporaryExpectation,
+		final org.drip.execution.profiletime.BackgroundParticipationRate bprTemporaryExpectation,
 		final org.drip.execution.impact.TransactionFunction tfPermanentVolatility,
 		final org.drip.execution.impact.TransactionFunction tfTemporaryVolatility)
 		throws java.lang.Exception
 	{
 		if (null == (_apds = apds) || null == (_tfPermanentExpectation = tfPermanentExpectation) || null ==
-			(_tfTemporaryExpectation = tfTemporaryExpectation) || null == (_tfPermanentVolatility =
+			(_bprTemporaryExpectation = bprTemporaryExpectation) || null == (_tfPermanentVolatility =
 				tfPermanentVolatility) || null == (_tfTemporaryVolatility = tfTemporaryVolatility))
 			throw new java.lang.Exception
 				("ArithmeticPriceEvolutionParameters Constructor => Invalid Inputs!");
@@ -126,14 +127,14 @@ public class ArithmeticPriceEvolutionParameters {
 	}
 
 	/**
-	 * Retrieve the Temporary Market Impact Expectation Function
+	 * Retrieve the Background Participation Temporary Market Impact Expectation Function
 	 * 
-	 * @return The Temporary Market Impact Expectation Function
+	 * @return The Background Participation Temporary Market Impact Expectation Function
 	 */
 
-	public org.drip.execution.impact.TransactionFunction temporaryExpectation()
+	public org.drip.execution.profiletime.BackgroundParticipationRate temporaryExpectation()
 	{
-		return _tfTemporaryExpectation;
+		return _bprTemporaryExpectation;
 	}
 
 	/**

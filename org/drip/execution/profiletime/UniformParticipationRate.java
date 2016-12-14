@@ -48,7 +48,7 @@ package org.drip.execution.profiletime;
  */
 
 /**
- * BackgroundParticipationRateLinear exposes the Background Profile Adjusted Version of the Linear
+ * UniformParticipationRateLinear exposes the Uniform Background Profile Adjusted Version of the Linear
  *  Participation Rate Transaction Function as described in the "Trading Time" Model. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
@@ -69,25 +69,33 @@ package org.drip.execution.profiletime;
  * @author Lakshmi Krishnamurthy
  */
 
-public interface BackgroundParticipationRateLinear extends
-	org.drip.execution.profiletime.BackgroundParticipationRate {
+public class UniformParticipationRate implements org.drip.execution.profiletime.BackgroundParticipationRate {
+	private org.drip.execution.impact.TransactionFunction _tf = null;
 
 	/**
-	 * Compute the Liquidity Market Impact Function from the Volatility Function
+	 * UniformParticipationRate Constructor
 	 * 
-	 * @param dblTime The Time Snapshot
+	 * @param tf The Participation Rate Transaction Function
 	 * 
-	 * @return The Liquidity Market Impact Function
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract org.drip.execution.impact.ParticipationRateLinear liquidityFunction (
-		final double dblTime);
+	public UniformParticipationRate (
+		final org.drip.execution.impact.TransactionFunction tf)
+		throws java.lang.Exception
+	{
+		if (null == (_tf = tf))
+			throw new java.lang.Exception ("UniformParticipationRate Constructor => Invalid Inputs");
+	}
 
-	/**
-	 * Compute the Epoch Liquidity Market Impact Function
-	 * 
-	 * @return The Epoch Liquidity Market Impact Function
-	 */
+	@Override public org.drip.execution.impact.TransactionFunction impactFunction (
+		final double dblTime)
+	{
+		return _tf;
+	}
 
-	public abstract org.drip.execution.impact.ParticipationRateLinear epochLiquidityFunction();
+	@Override public org.drip.execution.impact.TransactionFunction epochImpactFunction()
+	{
+		return _tf;
+	}
 }

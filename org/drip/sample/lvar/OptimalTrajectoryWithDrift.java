@@ -7,6 +7,7 @@ import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
+import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.execution.risk.PowerVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -122,9 +123,11 @@ public class OptimalTrajectoryWithDrift {
 				0.,
 				dblGamma
 			),
-			new ParticipationRateLinear (
-				dblEpsilon,
-				dblEta
+			new UniformParticipationRateLinear (
+				new ParticipationRateLinear (
+					dblEpsilon,
+					dblEta
+				)
 			)
 		);
 

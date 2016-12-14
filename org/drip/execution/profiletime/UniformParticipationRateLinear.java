@@ -69,6 +69,45 @@ package org.drip.execution.profiletime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class UniformParticipationRateLinear {
+public class UniformParticipationRateLinear implements
+	org.drip.execution.profiletime.BackgroundParticipationRateLinear {
 	private org.drip.execution.impact.ParticipationRateLinear _prl = null;
+
+	/**
+	 * UniformParticipationRateLinear Constructor
+	 * 
+	 * @param prl The Linear Participation Rate Transaction Function
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public UniformParticipationRateLinear (
+		final org.drip.execution.impact.ParticipationRateLinear prl)
+		throws java.lang.Exception
+	{
+		if (null == (_prl = prl))
+			throw new java.lang.Exception ("UniformParticipationRateLinear Constructor => Invalid Inputs");
+	}
+
+	@Override public org.drip.execution.impact.TransactionFunction impactFunction (
+		final double dblTime)
+	{
+		return _prl;
+	}
+
+	@Override public org.drip.execution.impact.TransactionFunction epochImpactFunction()
+	{
+		return _prl;
+	}
+
+	@Override public org.drip.execution.impact.ParticipationRateLinear liquidityFunction (
+		final double dblTime)
+	{
+		return _prl;
+	}
+
+	@Override public org.drip.execution.impact.ParticipationRateLinear epochLiquidityFunction()
+	{
+		return _prl;
+	}
 }

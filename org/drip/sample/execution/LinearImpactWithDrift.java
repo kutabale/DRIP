@@ -7,6 +7,7 @@ import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
 import org.drip.execution.impact.*;
 import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.*;
+import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.*;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -142,7 +143,7 @@ public class LinearImpactWithDrift {
 				0.
 			),
 			prlPermanent,
-			prlTemporary
+			new UniformParticipationRateLinear (prlTemporary)
 		);
 
 		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (

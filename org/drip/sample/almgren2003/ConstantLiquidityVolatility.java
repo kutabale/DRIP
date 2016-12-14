@@ -5,6 +5,7 @@ import org.drip.execution.dynamics.TradingEnhancedVolatilityParameters;
 import org.drip.execution.generator.Almgren2003ConstantTradingEnhanced;
 import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
+import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.definition.R1ToR1;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -90,9 +91,7 @@ public class ConstantLiquidityVolatility {
 
 		TradingEnhancedVolatilityParameters tevp = new TradingEnhancedVolatilityParameters (
 			dblSigma,
-			ParticipationRateLinear.SlopeOnly (
-				dblEta
-			),
+			new UniformParticipationRateLinear (ParticipationRateLinear.SlopeOnly (dblEta)),
 			new ParticipationRateLinear (
 				dblAlpha,
 				0.
