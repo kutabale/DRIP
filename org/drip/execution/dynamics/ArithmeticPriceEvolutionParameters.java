@@ -99,7 +99,7 @@ public class ArithmeticPriceEvolutionParameters {
 		throws java.lang.Exception
 	{
 		if (null == (_apds = apds) || null == (_bprPermanentExpectation = bprPermanentExpectation) || null ==
-			(_bprTemporaryExpectation = bprTemporaryExpectation) || null == (_bprPermanentExpectation =
+			(_bprTemporaryExpectation = bprTemporaryExpectation) || null == (_bprPermanentVolatility =
 				bprPermanentVolatility) || null == (_bprTemporaryVolatility = bprTemporaryVolatility))
 			throw new java.lang.Exception
 				("ArithmeticPriceEvolutionParameters Constructor => Invalid Inputs!");

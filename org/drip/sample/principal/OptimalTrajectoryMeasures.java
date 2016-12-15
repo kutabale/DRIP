@@ -2,8 +2,8 @@
 package org.drip.sample.principal;
 
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.Almgren2003PowerImpact;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.Almgren2003Estimator;
@@ -123,16 +123,16 @@ public class OptimalTrajectoryMeasures {
 			new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 		);
 
-		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
+		Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
 			dblX,
 			dblT,
 			lpep,
 			dblLambda
 		);
 
-		Almgren2003PowerImpactContinuous a2003tt = (Almgren2003PowerImpactContinuous) a2003ts.generate();
+		Almgren2003PowerImpactContinuous a2003pic = (Almgren2003PowerImpactContinuous) a2003pi.generate();
 
-		R1ToR1 r1ToR1Holdings = a2003tt.holdings();
+		R1ToR1 r1ToR1Holdings = a2003pic.holdings();
 
 		double[] adblHoldings = new double[iNumInterval];
 		double[] adblExecutionTime = new double[iNumInterval];
@@ -144,7 +144,7 @@ public class OptimalTrajectoryMeasures {
 		}
 
 		Almgren2003Estimator a2003e = new Almgren2003Estimator (
-			a2003tt,
+			a2003pic,
 			lpep
 		);
 
@@ -189,22 +189,22 @@ public class OptimalTrajectoryMeasures {
 
 		System.out.println (
 			"\t| Transaction Cost Expectation ( X 10^-03)                  : " +
-			FormatUtil.FormatDouble (a2003tt.transactionCostExpectation(), 5, 2, 1.e-03) + " ||"
+			FormatUtil.FormatDouble (a2003pic.transactionCostExpectation(), 5, 2, 1.e-03) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance ( X 10^-06)                     : " +
-			FormatUtil.FormatDouble (a2003tt.transactionCostVariance(), 5, 2, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (a2003pic.transactionCostVariance(), 5, 2, 1.e-06) + " ||"
 		);
 
 		System.out.println (
 			"\t| Characteristic Time                                       : " +
-			FormatUtil.FormatDouble (a2003tt.characteristicTime(), 5, 2, 1.) + " ||"
+			FormatUtil.FormatDouble (a2003pic.characteristicTime(), 5, 2, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Efficient Frontier Hyperboloid Boundary Value ( X 10^-12) : " +
-			FormatUtil.FormatDouble (a2003tt.hyperboloidBoundaryValue(), 5, 2, 1.e-12) + " ||"
+			FormatUtil.FormatDouble (a2003pic.hyperboloidBoundaryValue(), 5, 2, 1.e-12) + " ||"
 		);
 
 		System.out.println (

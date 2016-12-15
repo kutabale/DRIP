@@ -1,5 +1,5 @@
 
-package org.drip.execution.generator;
+package org.drip.execution.nonadaptive;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.execution.generator;
  */
 
 /**
- * OptimalTrajectoryScheme generates the Trade/Holdings List of Optimal Execution Schedule based on the
+ * StaticOptimalScheme generates the Trade/Holdings List of Static Optimal Execution Schedule based on the
  *  Discrete/Continuous Trade Trajectory Control, the Price Walk Parameters, and the Objective Utility
  *  Function. The References are:
  * 
@@ -69,17 +69,17 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class OptimalTrajectoryScheme {
+public abstract class StaticOptimalScheme {
 	private org.drip.execution.risk.ObjectiveUtility _ou = null;
 	private org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters _apep = null;
 
-	protected OptimalTrajectoryScheme (
+	protected StaticOptimalScheme (
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
 		final org.drip.execution.risk.ObjectiveUtility ou)
 		throws java.lang.Exception
 	{
 		if (null == (_apep = apep) || null == (_ou = ou))
-			throw new java.lang.Exception ("OptimalTrajectoryScheme Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("StaticOptimalScheme Constructor => Invalid Inputs");
 	}
 
 	/**

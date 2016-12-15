@@ -3,8 +3,8 @@ package org.drip.sample.execution;
 
 import org.drip.execution.capture.TrajectoryShortfallEstimator;
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.*;
 import org.drip.execution.impact.ParticipationRateLinear;
+import org.drip.execution.nonadaptive.*;
 import org.drip.execution.optimum.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
@@ -116,19 +116,19 @@ public class AlmgrenLinearTradingEnhanced {
 			)
 		);
 
-		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
+		EfficientTradingTrajectoryDiscrete ettd = (EfficientTradingTrajectoryDiscrete) new StaticOptimalSchemeDiscrete (
 			dttc,
 			apep,
 			new MeanVarianceObjectiveUtility (dblLambda)
 		).generate();
 
-		double[] adblExecutionTimeNode = edtt.executionTimeNode();
+		double[] adblExecutionTimeNode = ettd.executionTimeNode();
 
-		double[] adblTradeList = edtt.tradeList();
+		double[] adblTradeList = ettd.tradeList();
 
-		double[] adblHoldings = edtt.holdings();
+		double[] adblHoldings = ettd.holdings();
 
-		Almgren2003LinearTradingEnhanced ltes = Almgren2003LinearTradingEnhanced.Standard (
+		Almgren2003LinearTradingEnhanced a2003lte = Almgren2003LinearTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			iNumInterval,
@@ -136,13 +136,13 @@ public class AlmgrenLinearTradingEnhanced {
 			dblLambda
 		);
 
-		Almgren2003TradingEnhancedDiscrete ltet = (Almgren2003TradingEnhancedDiscrete) ltes.generate();
+		Almgren2003TradingEnhancedDiscrete a2003ted = (Almgren2003TradingEnhancedDiscrete) a2003lte.generate();
 
-		double[] adblTradeListCF = ltet.tradeList();
+		double[] adblTradeListCF = a2003ted.tradeList();
 
-		double[] adblHoldingsCF = ltet.holdings();
+		double[] adblHoldingsCF = a2003ted.holdings();
 
-		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (edtt);
+		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (ettd);
 
 		R1UnivariateNormal r1un = tse.totalCostDistributionSynopsis (apep);
 
@@ -187,15 +187,15 @@ public class AlmgrenLinearTradingEnhanced {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (edtt.transactionCostExpectation(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ltet.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ettd.transactionCostExpectation(), 6, 1, 1.) + " | " +
+			FormatUtil.FormatDouble (a2003ted.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (edtt.transactionCostVariance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ltet.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ettd.transactionCostVariance(), 6, 1, 1.e-06) + " | " +
+			FormatUtil.FormatDouble (a2003ted.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------------------||");

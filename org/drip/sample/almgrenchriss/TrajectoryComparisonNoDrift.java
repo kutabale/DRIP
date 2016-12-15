@@ -1,9 +1,9 @@
 
 package org.drip.sample.almgrenchriss;
 
-import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.AlmgrenChriss2000;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.AlmgrenChriss2000;
 import org.drip.execution.optimum.AlmgrenChriss2000Discrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -158,7 +158,7 @@ public class TrajectoryComparisonNoDrift {
 
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
-		LinearExpectationParameters lep = new LinearExpectationParameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.LinearExpectation (
 			new ArithmeticPriceDynamicsSettings (
 				dblAlpha,
 				new FlatUnivariate (dblSigma),
@@ -228,7 +228,7 @@ public class TrajectoryComparisonNoDrift {
 					dblX,
 					dblT,
 					iN,
-					lep,
+					lpep,
 					dblLambdaU
 				).generate(),
 				dblLambdaU,

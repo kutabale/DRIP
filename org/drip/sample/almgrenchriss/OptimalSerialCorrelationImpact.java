@@ -3,9 +3,9 @@ package org.drip.sample.almgrenchriss;
 
 import org.drip.execution.capture.TrajectoryShortfallEstimator;
 import org.drip.execution.discrete.OptimalSerialCorrelationAdjustment;
-import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.AlmgrenChriss2000;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.AlmgrenChriss2000;
 import org.drip.execution.optimum.AlmgrenChriss2000Discrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -127,7 +127,7 @@ public class OptimalSerialCorrelationImpact {
 
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
-		LinearExpectationParameters lep = new LinearExpectationParameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.LinearExpectation (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
 				new FlatUnivariate (dblSigma),
@@ -141,7 +141,7 @@ public class OptimalSerialCorrelationImpact {
 			dblX,
 			dblT,
 			iN,
-			lep,
+			lpep,
 			dblLambdaU
 		);
 
@@ -155,7 +155,7 @@ public class OptimalSerialCorrelationImpact {
 
 		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (ac2000d);
 
-		OptimalSerialCorrelationAdjustment[] aOSCA = tse.serialCorrelationAdjustment (lep);
+		OptimalSerialCorrelationAdjustment[] aOSCA = tse.serialCorrelationAdjustment (lpep);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 

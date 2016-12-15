@@ -3,7 +3,7 @@ package org.drip.sample.athl;
 
 import org.drip.execution.athl.DynamicsParameters;
 import org.drip.execution.dynamics.LinearPermanentExpectationParameters;
-import org.drip.execution.generator.Almgren2003PowerImpact;
+import org.drip.execution.nonadaptive.Almgren2003PowerImpact;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.AssetFlowSettings;
 import org.drip.function.definition.R1ToR1;
@@ -81,7 +81,7 @@ public class OptimalTrajectoryTradeAnalysis {
 	private static final void TradeSizeSensitivity (
 		final double dblADVRatio,
 		final double dblTradeSize,
-		final LinearPermanentExpectationParameters a2003p)
+		final LinearPermanentExpectationParameters lpep)
 		throws Exception
 	{
 		double dblTradeTime = 0.5;
@@ -89,16 +89,16 @@ public class OptimalTrajectoryTradeAnalysis {
 
 		double dblRiskAversion = 1.e-02;
 
-		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
+		Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
 			dblTradeSize,
 			dblTradeTime,
-			a2003p,
+			lpep,
 			dblRiskAversion
 		);
 
-		Almgren2003PowerImpactContinuous a2003tt = (Almgren2003PowerImpactContinuous) a2003ts.generate();
+		Almgren2003PowerImpactContinuous a2003pic = (Almgren2003PowerImpactContinuous) a2003pi.generate();
 
-		R1ToR1 r1ToR1Holdings = a2003tt.holdings();
+		R1ToR1 r1ToR1Holdings = a2003pic.holdings();
 
 		double[] adblHoldings = new double[iNumInterval];
 		double[] adblExecutionTime = new double[iNumInterval];
@@ -117,7 +117,7 @@ public class OptimalTrajectoryTradeAnalysis {
 		System.out.println (
 			"\t| " +
 			FormatUtil.FormatDouble (dblADVRatio, 2, 0, 100.) + "% | " + strDump +
-			FormatUtil.FormatDouble (a2003tt.characteristicTime(), 1, 3, 1.) + " ||"
+			FormatUtil.FormatDouble (a2003pic.characteristicTime(), 1, 3, 1.) + " ||"
 		);
 	}
 
@@ -146,7 +146,7 @@ public class OptimalTrajectoryTradeAnalysis {
 			0.30
 		};
 
-		LinearPermanentExpectationParameters a2003p = new DynamicsParameters (
+		LinearPermanentExpectationParameters lpep = new DynamicsParameters (
 			new AssetFlowSettings (
 				strAssetName,
 				dblAverageDailyVolume,
@@ -177,7 +177,7 @@ public class OptimalTrajectoryTradeAnalysis {
 			TradeSizeSensitivity (
 				dblADVRatio,
 				dblADVRatio * dblAverageDailyVolume,
-				a2003p
+				lpep
 			);
 
 		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------||");

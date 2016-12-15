@@ -2,9 +2,9 @@
 package org.drip.sample.almgrenchriss;
 
 import org.drip.execution.capture.*;
-import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.AlmgrenChriss2000Drift;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.AlmgrenChriss2000Drift;
 import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -126,7 +126,7 @@ public class OptimalTrajectoryWithDrift {
 
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
-		LinearExpectationParameters lep = new LinearExpectationParameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.LinearExpectation (
 			new ArithmeticPriceDynamicsSettings (
 				dblAlpha,
 				new FlatUnivariate (dblSigma),
@@ -140,7 +140,7 @@ public class OptimalTrajectoryWithDrift {
 			dblX,
 			dblT,
 			iN,
-			lep,
+			lpep,
 			dblLambdaU
 		);
 
@@ -158,7 +158,7 @@ public class OptimalTrajectoryWithDrift {
 
 		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ac2000dd);
 
-		TrajectoryShortfallAggregate tsa = lite.totalCostDistributionDetail (lep);
+		TrajectoryShortfallAggregate tsa = lite.totalCostDistributionDetail (lpep);
 
 		double[] adblIncrementalPermanentImpact = tsa.incrementalPermanentImpactExpectation();
 
@@ -176,7 +176,7 @@ public class OptimalTrajectoryWithDrift {
 
 		double[] adblCumulativeShortfallMean = tsa.cumulativeExpectation();
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lep);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lpep);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 

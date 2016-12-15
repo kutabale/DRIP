@@ -1,9 +1,9 @@
 
 package org.drip.sample.almgrenchriss;
 
-import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.AlmgrenChriss2000Drift;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.AlmgrenChriss2000Drift;
 import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -127,7 +127,7 @@ public class EfficientFrontierWithDrift {
 			4.000e-06
 		};
 
-		LinearExpectationParameters lep = new LinearExpectationParameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.LinearExpectation (
 			new ArithmeticPriceDynamicsSettings (
 				dblAlpha,
 				new FlatUnivariate (dblSigma),
@@ -188,7 +188,7 @@ public class EfficientFrontierWithDrift {
 				dblX,
 				dblT,
 				iN,
-				lep,
+				lpep,
 				dblLambda
 			).generate();
 	
@@ -228,7 +228,7 @@ public class EfficientFrontierWithDrift {
 				dblX,
 				dblT,
 				iN,
-				lep,
+				lpep,
 				dblLambda
 			).generate();
 	

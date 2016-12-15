@@ -2,8 +2,8 @@
 package org.drip.sample.almgren2003;
 
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.Almgren2003LinearTradingEnhanced;
 import org.drip.execution.impact.ParticipationRateLinear;
+import org.drip.execution.nonadaptive.Almgren2003LinearTradingEnhanced;
 import org.drip.execution.optimum.Almgren2003TradingEnhancedDiscrete;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.quant.common.FormatUtil;

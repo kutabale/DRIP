@@ -148,7 +148,7 @@ public class FixedDriftTrajectoryComparator {
 				cpd
 			);
 
-			ConstrainedLinearTemporaryImpact dcli = ConstrainedLinearTemporaryImpact.Standard (
+			ConstrainedLinearTemporaryImpact clti = ConstrainedLinearTemporaryImpact.Standard (
 				0.,
 				dblT,
 				dblXConstrained,
@@ -157,7 +157,7 @@ public class FixedDriftTrajectoryComparator {
 				prlTemporary
 			);
 
-			double dblConstrainedInstantaneousTradeRate = dcli.instantaneousTradeRate();
+			double dblConstrainedInstantaneousTradeRate = clti.instantaneousTradeRate();
 
 			dblXConstrained = dblXConstrained - dblConstrainedInstantaneousTradeRate * dblTimeWidth;
 
@@ -178,9 +178,9 @@ public class FixedDriftTrajectoryComparator {
 
 			System.out.println (
 				"\t| " + FormatUtil.FormatDouble (dblTime, 1, 2, 1.) + " => " +
-				FormatUtil.FormatDouble (dcli.tradeStartTime(), 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dcli.tradeFinishTime(), 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dcli.criticalDrift(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (clti.tradeStartTime(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (clti.tradeFinishTime(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (clti.criticalDrift(), 1, 3, 1.) + " | " +
 				FormatUtil.FormatDouble (dblConstrainedInstantaneousTradeRate, 1, 3, 1.) + " | " +
 				FormatUtil.FormatDouble (dblUnconstrainedInstantaneousTradeRate, 1, 3, 1.) + " | " +
 				FormatUtil.FormatDouble (dblXConstrained, 1, 3, 1.) + " | " +

@@ -179,9 +179,7 @@ public class VariableDriftTrajectoryComparator {
 			double dblPriceSwingHigh = cpdHigh.priceVolatilitySwing();
 
 			double dblRealizedPriceChangeLow = adblAlphaLow[i] * dblTimeWidth + dblPriceSwingLow;
-
 			double dblRealizedPriceChangeMid = adblAlphaMid[i] * dblTimeWidth + dblPriceSwingMid;
-
 			double dblRealizedPriceChangeHigh = adblAlphaHigh[i] * dblTimeWidth + dblPriceSwingHigh;
 
 			PriorConditionalCombiner pccLow = new PriorConditionalCombiner (
@@ -199,7 +197,7 @@ public class VariableDriftTrajectoryComparator {
 				cpdHigh
 			);
 
-			ConstrainedLinearTemporaryImpact dcliLow = ConstrainedLinearTemporaryImpact.Standard (
+			ConstrainedLinearTemporaryImpact cltiLow = ConstrainedLinearTemporaryImpact.Standard (
 				0.,
 				dblT,
 				dblXConstrainedLow,
@@ -208,7 +206,7 @@ public class VariableDriftTrajectoryComparator {
 				prlTemporary
 			);
 
-			ConstrainedLinearTemporaryImpact dcliMid = ConstrainedLinearTemporaryImpact.Standard (
+			ConstrainedLinearTemporaryImpact cltiMid = ConstrainedLinearTemporaryImpact.Standard (
 				0.,
 				dblT,
 				dblXConstrainedMid,
@@ -217,7 +215,7 @@ public class VariableDriftTrajectoryComparator {
 				prlTemporary
 			);
 
-			ConstrainedLinearTemporaryImpact dcliHigh = ConstrainedLinearTemporaryImpact.Standard (
+			ConstrainedLinearTemporaryImpact cltiHigh = ConstrainedLinearTemporaryImpact.Standard (
 				0.,
 				dblT,
 				dblXConstrainedHigh,
@@ -226,19 +224,19 @@ public class VariableDriftTrajectoryComparator {
 				prlTemporary
 			);
 
-			double dblConstrainedInstantaneousTradeRateLow = dcliLow.instantaneousTradeRate();
+			double dblConstrainedInstantaneousTradeRateLow = cltiLow.instantaneousTradeRate();
 
 			dblXConstrainedLow = dblXConstrainedLow - dblConstrainedInstantaneousTradeRateLow * dblTimeWidth;
 
 			if (0 > dblXConstrainedLow) dblXConstrainedLow = 0.;
 
-			double dblConstrainedInstantaneousTradeRateMid = dcliMid.instantaneousTradeRate();
+			double dblConstrainedInstantaneousTradeRateMid = cltiMid.instantaneousTradeRate();
 
 			dblXConstrainedMid = dblXConstrainedMid - dblConstrainedInstantaneousTradeRateMid * dblTimeWidth;
 
 			if (0 > dblXConstrainedMid) dblXConstrainedMid = 0.;
 
-			double dblConstrainedInstantaneousTradeRateHigh = dcliHigh.instantaneousTradeRate();
+			double dblConstrainedInstantaneousTradeRateHigh = cltiHigh.instantaneousTradeRate();
 
 			dblXConstrainedHigh = dblXConstrainedHigh - dblConstrainedInstantaneousTradeRateHigh * dblTimeWidth;
 

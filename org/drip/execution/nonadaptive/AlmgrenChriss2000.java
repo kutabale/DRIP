@@ -1,5 +1,5 @@
 
-package org.drip.execution.generator;
+package org.drip.execution.nonadaptive;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -69,7 +69,7 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlmgrenChriss2000 extends org.drip.execution.generator.OptimalTrajectorySchemeDiscrete {
+public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOptimalSchemeDiscrete {
 
 	private double KappaTau (
 		final double dblKappaTildaSquared,
@@ -131,11 +131,15 @@ public class AlmgrenChriss2000 extends org.drip.execution.generator.OptimalTraje
 		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
 			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) priceWalkParameters();
 
-		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
-			(org.drip.execution.impact.TransactionFunctionLinear)
-				lpep.temporaryExpectation().epochImpactFunction();
+		org.drip.execution.impact.TransactionFunction tfTemporaryExpectation =
+			lpep.temporaryExpectation().epochImpactFunction();
+
+		if (!(tfTemporaryExpectation instanceof org.drip.execution.impact.TransactionFunctionLinear))
+			return null;
 
 		double dblEpochVolatility = java.lang.Double.NaN;
+		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
+			(org.drip.execution.impact.TransactionFunctionLinear) tfTemporaryExpectation;
 
 		try {
 			dblEpochVolatility = lpep.arithmeticPriceDynamicsSettings().epochVolatility();
@@ -145,8 +149,7 @@ public class AlmgrenChriss2000 extends org.drip.execution.generator.OptimalTraje
 			return null;
 		}
 
-		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
-			lpep.linearPermanentExpectation().epochImpactFunction()).slope();
+		double dblGamma = lpep.linearPermanentExpectation().epochLiquidityFunction().slope();
 
 		double dblEta = tflTemporaryExpectation.slope();
 
@@ -167,8 +170,8 @@ public class AlmgrenChriss2000 extends org.drip.execution.generator.OptimalTraje
 
 		double dblKappaTau = KappaTau (dblKappaTildaSquared, dblTau);
 
-		double dblKappa = dblKappaTau / dblTau;
 		double dblHalfKappaTau = 0.5 * dblKappaTau;
+		double dblKappa = dblKappaTau / dblTau;
 		double dblKappaT = dblKappa * dblT;
 
 		double dblSinhKappaT = java.lang.Math.sinh (dblKappaT);

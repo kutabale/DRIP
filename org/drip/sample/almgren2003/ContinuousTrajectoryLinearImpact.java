@@ -2,8 +2,8 @@
 package org.drip.sample.almgren2003;
 
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.Almgren2003PowerImpact;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.*;

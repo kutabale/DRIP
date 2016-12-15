@@ -1,9 +1,9 @@
 
 package org.drip.sample.almgren2012;
 
-import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.Almgren2012Static;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.ParticipationRateLinear;
+import org.drip.execution.nonadaptive.Almgren2012Static;
 import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -128,7 +128,7 @@ public class StaticContinuousOptimalTrajectory {
 
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
-		LinearExpectationParameters lep = new LinearExpectationParameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.LinearExpectation (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
 				new FlatUnivariate (dblSigma),
@@ -141,7 +141,7 @@ public class StaticContinuousOptimalTrajectory {
 		Almgren2012Static a2012s = Almgren2012Static.Standard (
 			dblX,
 			dblT,
-			lep,
+			lpep,
 			dblLambdaU
 		);
 

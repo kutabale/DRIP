@@ -2,8 +2,8 @@
 package org.drip.sample.almgren2003;
 
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.Almgren2003ConstantTradingEnhanced;
 import org.drip.execution.impact.ParticipationRateLinear;
+import org.drip.execution.nonadaptive.Almgren2003ConstantTradingEnhanced;
 import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.definition.R1ToR1;
@@ -107,9 +107,9 @@ public class ConstantLiquidityVolatility {
 			dblLambda
 		);
 
-		EfficientTradingTrajectoryContinuous ectt = (EfficientTradingTrajectoryContinuous) a2003cte.generate();
+		EfficientTradingTrajectoryContinuous ettc = (EfficientTradingTrajectoryContinuous) a2003cte.generate();
 
-		R1ToR1 r1ToR1Holdings = ectt.holdings();
+		R1ToR1 r1ToR1Holdings = ettc.holdings();
 
 		double[] adblHoldings = new double[iNumInterval];
 		double[] adblExecutionTime = new double[iNumInterval];
@@ -125,11 +125,11 @@ public class ConstantLiquidityVolatility {
 		for (int i = 0; i < adblExecutionTime.length; ++i)
 			strDump = strDump + FormatUtil.FormatDouble (adblHoldings[i] / dblX, 2, 1, 100.) + "% ";
 
-		strDump = strDump + FormatUtil.FormatDouble (ectt.transactionCostExpectation(), 5, 0, 1.) + " | ";
+		strDump = strDump + FormatUtil.FormatDouble (ettc.transactionCostExpectation(), 5, 0, 1.) + " | ";
 
-		strDump = strDump + FormatUtil.FormatDouble (ectt.transactionCostVariance(), 5, 0, 1.e-06) + " | ";
+		strDump = strDump + FormatUtil.FormatDouble (ettc.transactionCostVariance(), 5, 0, 1.e-06) + " | ";
 
-		strDump = strDump + FormatUtil.FormatDouble (ectt.characteristicTime(), 1, 3, 1.) + " ||";
+		strDump = strDump + FormatUtil.FormatDouble (ettc.characteristicTime(), 1, 3, 1.) + " ||";
 
 		System.out.println (strDump);
 	}

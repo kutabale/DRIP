@@ -3,8 +3,8 @@ package org.drip.sample.almgren2003;
 
 import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.Almgren2003ConstantTradingEnhanced;
 import org.drip.execution.impact.ParticipationRateLinear;
+import org.drip.execution.nonadaptive.Almgren2003ConstantTradingEnhanced;
 import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.execution.strategy.DiscreteTradingTrajectory;
@@ -113,9 +113,9 @@ public class ConstantTradingEnhancedVolatility {
 			dblLambda
 		);
 
-		EfficientTradingTrajectoryContinuous ectt = (EfficientTradingTrajectoryContinuous) a2003cte.generate();
+		EfficientTradingTrajectoryContinuous ettc = (EfficientTradingTrajectoryContinuous) a2003cte.generate();
 
-		R1ToR1 r1ToR1Holdings = ectt.holdings();
+		R1ToR1 r1ToR1Holdings = ettc.holdings();
 
 		double[] adblHoldings = new double[iNumInterval];
 		double[] adblExecutionTime = new double[iNumInterval];
@@ -156,13 +156,13 @@ public class ConstantTradingEnhancedVolatility {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ectt.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ettc.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ectt.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ettc.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------||");

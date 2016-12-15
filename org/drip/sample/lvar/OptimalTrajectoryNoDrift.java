@@ -2,9 +2,9 @@
 package org.drip.sample.lvar;
 
 import org.drip.execution.capture.LinearImpactTrajectoryEstimator;
-import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.StaticOptimalSchemeDiscrete;
 import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -113,7 +113,7 @@ public class OptimalTrajectoryNoDrift {
 			iN
 		);
 
-		LinearExpectationParameters lep = new LinearExpectationParameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.LinearExpectation (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
 				new FlatUnivariate (dblSigma),
@@ -133,21 +133,21 @@ public class OptimalTrajectoryNoDrift {
 			)
 		);
 
-		EfficientTradingTrajectoryDiscrete ett = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
+		EfficientTradingTrajectoryDiscrete ettd = (EfficientTradingTrajectoryDiscrete) new StaticOptimalSchemeDiscrete (
 			dttc,
-			lep,
+			lpep,
 			PowerVarianceObjectiveUtility.LiquidityVaR (dblLambdaV)
 		).generate();
 
-		double[] adblExecutionTimeNode = ett.executionTimeNode();
+		double[] adblExecutionTimeNode = ettd.executionTimeNode();
 
-		double[] adblTradeList = ett.tradeList();
+		double[] adblTradeList = ettd.tradeList();
 
-		double[] adblHoldings = ett.holdings();
+		double[] adblHoldings = ettd.holdings();
 
-		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ett);
+		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ettd);
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lep);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lpep);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 
@@ -231,13 +231,13 @@ public class OptimalTrajectoryNoDrift {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 7, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ett.transactionCostExpectation(), 7, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ettd.transactionCostExpectation(), 7, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 7, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ett.transactionCostVariance(), 7, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ettd.transactionCostVariance(), 7, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|----------------------------------------------------------------||");

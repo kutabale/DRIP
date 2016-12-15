@@ -1,5 +1,5 @@
 
-package org.drip.execution.generator;
+package org.drip.execution.nonadaptive;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -69,7 +69,7 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlmgrenChriss2000Drift extends org.drip.execution.generator.OptimalTrajectorySchemeDiscrete {
+public class AlmgrenChriss2000Drift extends org.drip.execution.nonadaptive.StaticOptimalSchemeDiscrete {
 
 	private double KappaTau (
 		final double dblKappaTildaSquared,
@@ -131,9 +131,15 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
 			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) priceWalkParameters();
 
+		org.drip.execution.impact.TransactionFunction tfTemporaryExpectation =
+			lpep.temporaryExpectation().epochImpactFunction();
+
+		if (!(tfTemporaryExpectation instanceof org.drip.execution.impact.TransactionFunctionLinear))
+			return null;
+
+		double dblEpochVolatility = java.lang.Double.NaN;
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
-			(org.drip.execution.impact.TransactionFunctionLinear)
-				lpep.temporaryExpectation().epochImpactFunction();
+			(org.drip.execution.impact.TransactionFunctionLinear) tfTemporaryExpectation;
 
 		double dblX = dttc.startHoldings();
 
@@ -144,8 +150,6 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 
 		double dblEta = tflTemporaryExpectation.slope();
 
-		double dblEpochVolatility = java.lang.Double.NaN;
-
 		try {
 			dblEpochVolatility = apds.epochVolatility();
 		} catch (java.lang.Exception e) {
@@ -154,8 +158,7 @@ public class AlmgrenChriss2000Drift extends org.drip.execution.generator.Optimal
 			return null;
 		}
 
-		double dblGamma = ((org.drip.execution.impact.TransactionFunctionLinear)
-			lpep.linearPermanentExpectation().epochImpactFunction()).slope();
+		double dblGamma = lpep.linearPermanentExpectation().epochLiquidityFunction().slope();
 
 		int iNumNode = adblTNode.length;
 		final double dblSigma = dblEpochVolatility;

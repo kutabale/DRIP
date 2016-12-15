@@ -2,8 +2,8 @@
 package org.drip.sample.execution;
 
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.StaticOptimalSchemeDiscrete;
 import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.*;
@@ -132,17 +132,17 @@ public class ConcaveImpactNoDrift {
 			iNumInterval
 		);
 
-		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
+		EfficientTradingTrajectoryDiscrete ettd = (EfficientTradingTrajectoryDiscrete) new StaticOptimalSchemeDiscrete (
 			dttc,
 			lpep,
 			new MeanVarianceObjectiveUtility (dblLambdaU)
 		).generate();
 
-		double[] adblExecutionTimeNode = edtt.executionTimeNode();
+		double[] adblExecutionTimeNode = ettd.executionTimeNode();
 
-		double[] adblTradeList = edtt.tradeList();
+		double[] adblTradeList = ettd.tradeList();
 
-		double[] adblHoldings = edtt.holdings();
+		double[] adblHoldings = ettd.holdings();
 
 		System.out.println ("\n\t|-----------------------------||");
 

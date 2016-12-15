@@ -2,8 +2,8 @@
 package org.drip.sample.principal;
 
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.Almgren2003PowerImpact;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.Almgren2003PowerImpact;
 import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.Almgren2003Estimator;
@@ -154,17 +154,17 @@ public class InformationRatioAnalysis {
 			new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 		);
 
-		Almgren2003PowerImpact a2003ts = Almgren2003PowerImpact.Standard (
+		Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
 			dblX,
 			dblT,
 			lpep,
 			dblLambda
 		);
 
-		Almgren2003PowerImpactContinuous a2003tt = (Almgren2003PowerImpactContinuous) a2003ts.generate();
+		Almgren2003PowerImpactContinuous a2003pic = (Almgren2003PowerImpactContinuous) a2003pi.generate();
 
 		Almgren2003Estimator a2003e = new Almgren2003Estimator (
-			a2003tt,
+			a2003pic,
 			lpep
 		);
 

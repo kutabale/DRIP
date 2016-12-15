@@ -157,4 +157,59 @@ public class ArithmeticPriceEvolutionParametersBuilder {
 
 		return null;
 	}
+
+	/**
+	 * Construct a Arithmetic Price Evolution Parameters from Coordinated Variation Instance
+	 * 
+	 * @param r1ToR1Volatility The R^1 -> R^1 Volatility Function
+	 * @param cv The Coordinated Volatility/Liquidity Variation
+	 * 
+	 * @return The Arithmetic Price Evolution Parameters from Coordinated Variation Instance
+	 */
+
+	public static final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters CoordinatedVariation (
+		final org.drip.function.definition.R1ToR1 r1ToR1Volatility,
+		final org.drip.execution.tradingtime.CoordinatedVariation cv)
+	{
+		try {
+			return new org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters (new
+				org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., r1ToR1Volatility, 0.), new
+					org.drip.execution.profiletime.UniformParticipationRate
+						(org.drip.execution.impact.ParticipationRateLinear.NoImpact()), new
+							org.drip.execution.tradingtime.CoordinatedParticipationRateLinear (cv,
+								r1ToR1Volatility), new
+									org.drip.execution.profiletime.UniformParticipationRate
+										(org.drip.execution.impact.ParticipationRateLinear.NoImpact()), new
+											org.drip.execution.profiletime.UniformParticipationRate
+												(org.drip.execution.impact.ParticipationRateLinear.NoImpact()));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Construct a Arithmetic Price Evolution Parameters from a Deterministic Coordinated Variation Instance
+	 * 
+	 * @param dblPriceVolatility The Daily Price Volatility Parameter
+	 * @param cv The Coordinated Volatility/Liquidity Variation
+	 * 
+	 * @return The Arithmetic Price Evolution Parameters from a Deterministic Coordinated Variation Instance
+	 */
+
+	public static final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters
+		DeterministicCoordinatedVariation (
+			final double dblPriceVolatility,
+			final org.drip.execution.tradingtime.CoordinatedVariation cv)
+	{
+		try {
+			return CoordinatedVariation (new org.drip.function.r1tor1.FlatUnivariate (dblPriceVolatility),
+				cv);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

@@ -3,8 +3,8 @@ package org.drip.sample.execution;
 
 import org.drip.execution.capture.TrajectoryShortfallEstimator;
 import org.drip.execution.dynamics.*;
-import org.drip.execution.generator.*;
 import org.drip.execution.impact.ParticipationRateLinear;
+import org.drip.execution.nonadaptive.*;
 import org.drip.execution.optimum.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
@@ -117,35 +117,35 @@ public class AlmgrenConstantTradingEnhanced {
 			)
 		);
 
-		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
+		EfficientTradingTrajectoryDiscrete ettd = (EfficientTradingTrajectoryDiscrete) new StaticOptimalSchemeDiscrete (
 			dttc,
 			apep,
 			new MeanVarianceObjectiveUtility (dblLambda)
 		).generate();
 
-		double[] adblExecutionTimeNode = edtt.executionTimeNode();
+		double[] adblExecutionTimeNode = ettd.executionTimeNode();
 
-		double[] adblTradeList = edtt.tradeList();
+		double[] adblTradeList = ettd.tradeList();
 
-		double[] adblHoldings = edtt.holdings();
+		double[] adblHoldings = ettd.holdings();
 
-		Almgren2003ConstantTradingEnhanced ctes = Almgren2003ConstantTradingEnhanced.Standard (
+		Almgren2003ConstantTradingEnhanced a2003cte = Almgren2003ConstantTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			apep,
 			dblLambda
 		);
 
-		EfficientTradingTrajectoryContinuous ectt = (EfficientTradingTrajectoryContinuous) ctes.generate();
+		EfficientTradingTrajectoryContinuous ettc = (EfficientTradingTrajectoryContinuous) a2003cte.generate();
 
-		R1ToR1 r1ToR1Holdings = ectt.holdings();
+		R1ToR1 r1ToR1Holdings = ettc.holdings();
 
 		double[] adblHoldingsCF = new double[adblExecutionTimeNode.length];
 
 		for (int i = 0; i < adblExecutionTimeNode.length; ++i)
 			adblHoldingsCF[i] = r1ToR1Holdings.evaluate (adblExecutionTimeNode[i]);
 
-		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (edtt);
+		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (ettd);
 
 		R1UnivariateNormal r1un = tse.totalCostDistributionSynopsis (apep);
 
@@ -190,15 +190,15 @@ public class AlmgrenConstantTradingEnhanced {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (edtt.transactionCostExpectation(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ectt.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ettd.transactionCostExpectation(), 6, 1, 1.) + " | " +
+			FormatUtil.FormatDouble (ettc.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (edtt.transactionCostVariance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ectt.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ettd.transactionCostVariance(), 6, 1, 1.e-06) + " | " +
+			FormatUtil.FormatDouble (ettc.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------------------||");

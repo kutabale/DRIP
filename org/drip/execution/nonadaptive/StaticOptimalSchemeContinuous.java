@@ -1,5 +1,5 @@
 
-package org.drip.execution.dynamics;
+package org.drip.execution.nonadaptive;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,9 +48,9 @@ package org.drip.execution.dynamics;
  */
 
 /**
- * LinearExpectationParameters contains the Exogenous Parameters that determine the Dynamics of the Price
- *  Movements exhibited by an Asset owing to the Volatility and the Linear Market Impact Permanent/Temporary
- *  Factors. The References are:
+ * StaticOptimalSchemeContinuous generates the Trade/Holdings List of Static Optimal Execution Schedule based
+ *  on the Continuous Trade Trajectory Control, the Price Walk Parameters, and the Objective Utility
+ *  Function. The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -69,27 +69,40 @@ package org.drip.execution.dynamics;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LinearExpectationParameters extends
-	org.drip.execution.dynamics.LinearPermanentExpectationParameters {
+public abstract class StaticOptimalSchemeContinuous extends
+	org.drip.execution.nonadaptive.StaticOptimalScheme {
+	private org.drip.execution.strategy.OrderSpecification _os = null;
 
 	/**
-	 * LinearExpectationParameters Constructor
+	 * StaticOptimalSchemeContinuous Constructor
 	 * 
-	 * @param apds The Asset Price Dynamics Settings
-	 * @param bprlPermanentExpectation The Background Participation Rate Linear Permanent Expectation Market
-	 * 		Impact Function
-	 * @param bprlTemporaryExpectation The Background Participation Rate Linear Temporary Market Impact
-	 * 		Expectation Function
+	 * @param os The Order Specification
+	 * @param apep The Arithmetic Price Walk Parameters
+	 * @param ou The Optimizer Objective Utility Function
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are not valid
 	 */
 
-	public LinearExpectationParameters (
-		final org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds,
-		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlPermanentExpectation,
-		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporaryExpectation)
+	public StaticOptimalSchemeContinuous (
+		final org.drip.execution.strategy.OrderSpecification os,
+		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
+		final org.drip.execution.risk.ObjectiveUtility ou)
 		throws java.lang.Exception
 	{
-		super (apds, bprlPermanentExpectation, bprlTemporaryExpectation);
+		super (apep, ou);
+
+		if (null == (_os = os))
+			throw new java.lang.Exception ("StaticOptimalSchemeContinuous Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Order Specification
+	 * 
+	 * @return The Order Specification
+	 */
+
+	public org.drip.execution.strategy.OrderSpecification orderSpecification()
+	{
+		return _os;
 	}
 }

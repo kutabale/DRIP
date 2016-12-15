@@ -1,9 +1,9 @@
 
 package org.drip.sample.almgren2012;
 
-import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.*;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.ParticipationRateLinear;
+import org.drip.execution.nonadaptive.*;
 import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -127,7 +127,7 @@ public class HighUrgencyTrajectoryComparison {
 
 		ParticipationRateLinear prlTemporary = (ParticipationRateLinear) pmil.temporaryTransactionFunction();
 
-		LinearExpectationParameters lep = new LinearExpectationParameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.LinearExpectation (
 			new ArithmeticPriceDynamicsSettings (
 				0.,
 				new FlatUnivariate (dblSigma),
@@ -140,7 +140,7 @@ public class HighUrgencyTrajectoryComparison {
 		Almgren2012Static a2012s = Almgren2012Static.Standard (
 			dblX,
 			dblT,
-			lep,
+			lpep,
 			dblLambdaU
 		);
 
@@ -152,10 +152,10 @@ public class HighUrgencyTrajectoryComparison {
 
 		R1ToR1 r1ToR1TransactionCostA2012S = ettcA2012S.transactionCostExpectationFunction();
 
-		HighUrgencyAsymptoteStatic huas = HighUrgencyAsymptoteStatic.Standard (
+		HighUrgencyAsymptoteContinuous huas = HighUrgencyAsymptoteContinuous.Standard (
 			dblX,
 			dblT,
-			lep,
+			lpep,
 			dblLambdaU
 		);
 

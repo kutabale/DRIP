@@ -2,9 +2,9 @@
 package org.drip.sample.execution;
 
 import org.drip.execution.capture.LinearImpactTrajectoryEstimator;
-import org.drip.execution.dynamics.LinearExpectationParameters;
-import org.drip.execution.generator.OptimalTrajectorySchemeDiscrete;
+import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
+import org.drip.execution.nonadaptive.StaticOptimalSchemeDiscrete;
 import org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -136,7 +136,7 @@ public class LinearImpactWithDrift {
 			iN
 		);
 
-		LinearExpectationParameters lep = new LinearExpectationParameters (
+		LinearPermanentExpectationParameters lpep = ArithmeticPriceEvolutionParametersBuilder.LinearExpectation (
 			new ArithmeticPriceDynamicsSettings (
 				dblAlpha,
 				new FlatUnivariate (dblSigma),
@@ -146,21 +146,21 @@ public class LinearImpactWithDrift {
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 
-		EfficientTradingTrajectoryDiscrete edtt = (EfficientTradingTrajectoryDiscrete) new OptimalTrajectorySchemeDiscrete (
+		EfficientTradingTrajectoryDiscrete ettd = (EfficientTradingTrajectoryDiscrete) new StaticOptimalSchemeDiscrete (
 			dttc,
-			lep,
+			lpep,
 			new MeanVarianceObjectiveUtility (dblLambdaU)
 		).generate();
 
-		double[] adblExecutionTimeNode = edtt.executionTimeNode();
+		double[] adblExecutionTimeNode = ettd.executionTimeNode();
 
-		double[] adblTradeList = edtt.tradeList();
+		double[] adblTradeList = ettd.tradeList();
 
-		double[] adblHoldings = edtt.holdings();
+		double[] adblHoldings = ettd.holdings();
 
-		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (edtt);
+		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ettd);
 
-		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lep);
+		R1UnivariateNormal r1un = lite.totalCostDistributionSynopsis (lpep);
 
 		System.out.println ("\n\t|---------------------------------------------||");
 
@@ -254,13 +254,13 @@ public class LinearImpactWithDrift {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (edtt.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ettd.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (edtt.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ettd.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------||");

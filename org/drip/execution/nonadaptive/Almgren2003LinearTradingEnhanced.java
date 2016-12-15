@@ -1,5 +1,5 @@
 
-package org.drip.execution.generator;
+package org.drip.execution.nonadaptive;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -68,7 +68,7 @@ package org.drip.execution.generator;
  */
 
 public class Almgren2003LinearTradingEnhanced extends
-	org.drip.execution.generator.OptimalTrajectorySchemeDiscrete {
+	org.drip.execution.nonadaptive.StaticOptimalSchemeDiscrete {
 
 	/**
 	 * Create the Standard Almgren2003LinearTradingEnhanced Instance
@@ -128,12 +128,24 @@ public class Almgren2003LinearTradingEnhanced extends
 			return null;
 		}
 
+		org.drip.execution.impact.TransactionFunction tfTemporaryExpectation =
+			apep.temporaryExpectation().epochImpactFunction();
+
+		if (!(tfTemporaryExpectation instanceof org.drip.execution.impact.TransactionFunctionLinear))
+			return null;
+
+		org.drip.execution.impact.TransactionFunction tfTemporaryVolatility =
+			apep.temporaryVolatility().epochImpactFunction();
+
+		if (!(tfTemporaryVolatility instanceof org.drip.execution.impact.TransactionFunctionLinear))
+			return null;
+
 		double dblTStar = java.lang.Math.sqrt (((org.drip.execution.impact.TransactionFunctionLinear)
-			apep.temporaryExpectation()).slope() / (dblLambda * dblSigma * dblSigma));
+			tfTemporaryExpectation).slope() / (dblLambda * dblSigma * dblSigma));
 
 		return org.drip.execution.optimum.Almgren2003TradingEnhancedDiscrete.Standard
 			((org.drip.execution.strategy.DiscreteTradingTrajectory) super.generate(), apep, dblTStar,
 				dblSigma * dblTStar * dblTStar / ((org.drip.execution.impact.TransactionFunctionLinear)
-					(apep.temporaryVolatility().epochImpactFunction())).slope() * java.lang.Math.sqrt (3.));
+					tfTemporaryVolatility).slope() * java.lang.Math.sqrt (3.));
 	}
 }

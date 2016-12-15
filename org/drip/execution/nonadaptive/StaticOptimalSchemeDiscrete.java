@@ -1,5 +1,5 @@
 
-package org.drip.execution.generator;
+package org.drip.execution.nonadaptive;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,9 +48,9 @@ package org.drip.execution.generator;
  */
 
 /**
- * OptimalTrajectorySchemeDiscrete generates the Trade/Holdings List of Optimal Execution Schedule based on
- *  the Discrete Trade Trajectory Control, the Price Walk Parameters, and the Objective Utility Function. The
- *  References are:
+ * StaticOptimalSchemeDiscrete generates the Trade/Holdings List of Static Optimal Execution Schedule based
+ *  on the Discrete Trade Trajectory Control, the Price Walk Parameters, and the Objective Utility Function.
+ *  The References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -69,7 +69,7 @@ package org.drip.execution.generator;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OptimalTrajectorySchemeDiscrete extends org.drip.execution.generator.OptimalTrajectoryScheme {
+public class StaticOptimalSchemeDiscrete extends org.drip.execution.nonadaptive.StaticOptimalScheme {
 	private org.drip.execution.strategy.DiscreteTradingTrajectoryControl _dttc = null;
 
 	private double[] completeHoldings (
@@ -136,7 +136,7 @@ public class OptimalTrajectorySchemeDiscrete extends org.drip.execution.generato
 
 				if (null == cngObjectiveUtility)
 					throw new java.lang.Exception
-						("OptimalTrajectorySchemeDiscrete::optimizerRdToR1::evaluate => Invalid Inputs");
+						("StaticOptimalSchemeDiscrete::optimizerRdToR1::evaluate => Invalid Inputs");
 
 				return cngObjectiveUtility.value();
 			}
@@ -162,7 +162,7 @@ public class OptimalTrajectorySchemeDiscrete extends org.drip.execution.generato
 	}
 
 	/**
-	 * OptimalTrajectorySchemeDiscrete Constructor
+	 * StaticOptimalSchemeDiscrete Constructor
 	 * 
 	 * @param dttc The Discrete Trading Trajectory Control Parameters
 	 * @param apep The Arithmetic Price Walk Parameters
@@ -171,7 +171,7 @@ public class OptimalTrajectorySchemeDiscrete extends org.drip.execution.generato
 	 * @throws java.lang.Exception Thrown if the Inputs are not valid
 	 */
 
-	public OptimalTrajectorySchemeDiscrete (
+	public StaticOptimalSchemeDiscrete (
 		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl dttc,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep,
 		final org.drip.execution.risk.ObjectiveUtility ou)
@@ -180,7 +180,7 @@ public class OptimalTrajectorySchemeDiscrete extends org.drip.execution.generato
 		super (apep, ou);
 
 		if (null == (_dttc = dttc))
-			throw new java.lang.Exception ("OptimalTrajectorySchemeDiscrete Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("StaticOptimalSchemeDiscrete Constructor => Invalid Inputs");
 	}
 
 	/**
