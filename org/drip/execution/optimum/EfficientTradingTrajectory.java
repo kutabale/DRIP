@@ -71,6 +71,14 @@ package org.drip.execution.optimum;
 public interface EfficientTradingTrajectory extends org.drip.execution.strategy.TradingTrajectory {
 
 	/**
+	 * Retrieve the Intrinsic Market Power Parameter
+	 * 
+	 * @return The Intrinsic Market Power Parameter
+	 */
+
+	abstract public double marketPower();
+
+	/**
 	 * Retrieve the Expected Transaction Cost
 	 * 
 	 * @return The Expected Transaction Cost

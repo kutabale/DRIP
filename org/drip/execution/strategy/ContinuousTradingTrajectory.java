@@ -169,6 +169,11 @@ public class ContinuousTradingTrajectory implements org.drip.execution.strategy.
 		return _dblExecutionTime;
 	}
 
+	@Override public double instantTradeRate()
+	{
+		return executedBlockSize() / executionTime();
+	}
+
 	/**
 	 * Retrieve the Holdings Function
 	 * 

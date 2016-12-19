@@ -4,7 +4,7 @@ package org.drip.sample.almgren2003;
 import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.execution.nonadaptive.Almgren2003ConstantTradingEnhanced;
+import org.drip.execution.nonadaptive.ContinuousConstantTradingEnhanced;
 import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.execution.strategy.DiscreteTradingTrajectory;
@@ -106,7 +106,7 @@ public class ConstantTradingEnhancedVolatility {
 			)
 		);
 
-		Almgren2003ConstantTradingEnhanced a2003cte = Almgren2003ConstantTradingEnhanced.Standard (
+		ContinuousConstantTradingEnhanced a2003cte = ContinuousConstantTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			apep,

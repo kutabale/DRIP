@@ -3,8 +3,8 @@ package org.drip.sample.almgrenchriss;
 
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
-import org.drip.execution.nonadaptive.AlmgrenChriss2000Drift;
-import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
+import org.drip.execution.nonadaptive.DiscreteAlmgrenChrissDrift;
+import org.drip.execution.optimum.AlmgrenChrissDriftDiscrete;
 import org.drip.execution.parameters.ArithmeticPriceDynamicsSettings;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -184,7 +184,7 @@ public class EfficientFrontierWithDrift {
 		System.out.println ("\t|------------------------------------------------------------||");
 
 		for (double dblLambda : adblLambdaShortEndU) {
-			AlmgrenChriss2000DiscreteDrift ac2000dd = (AlmgrenChriss2000DiscreteDrift) AlmgrenChriss2000Drift.Standard (
+			AlmgrenChrissDriftDiscrete acdd = (AlmgrenChrissDriftDiscrete) DiscreteAlmgrenChrissDrift.Standard (
 				dblX,
 				dblT,
 				iN,
@@ -194,9 +194,9 @@ public class EfficientFrontierWithDrift {
 	
 			String strHoldings = "\t| [LAMBDA = " + FormatUtil.FormatDouble (dblLambda, 1, 3, dblX) + "]";
 
-			double dblTransactionCostExpectation = ac2000dd.transactionCostExpectation();
+			double dblTransactionCostExpectation = acdd.transactionCostExpectation();
 
-			double dblTransactionCostVariance = ac2000dd.transactionCostVariance();
+			double dblTransactionCostVariance = acdd.transactionCostVariance();
 
 			double dblTransactionCostPenalty = dblTransactionCostExpectation + dblLambda * dblTransactionCostVariance;
 
@@ -206,7 +206,7 @@ public class EfficientFrontierWithDrift {
 
 			strHoldings = strHoldings + " | " + FormatUtil.FormatDouble (dblTransactionCostPenalty / dblX, 1, 4, 1.);
 
-			strHoldings = strHoldings + " | " + FormatUtil.FormatDouble (ac2000dd.halfLife(), 2, 2, 1.);
+			strHoldings = strHoldings + " | " + FormatUtil.FormatDouble (acdd.halfLife(), 2, 2, 1.);
 
 			System.out.println (strHoldings + "   ||");
 		}
@@ -224,7 +224,7 @@ public class EfficientFrontierWithDrift {
 		System.out.println ("\t|------------------------------------------------------------||");
 
 		for (double dblLambda : adblLambdaLongEndU) {
-			AlmgrenChriss2000DiscreteDrift ac2000dd = (AlmgrenChriss2000DiscreteDrift) AlmgrenChriss2000Drift.Standard (
+			AlmgrenChrissDriftDiscrete acdd = (AlmgrenChrissDriftDiscrete) DiscreteAlmgrenChrissDrift.Standard (
 				dblX,
 				dblT,
 				iN,
@@ -234,9 +234,9 @@ public class EfficientFrontierWithDrift {
 	
 			String strHoldings = "\t| [LAMBDA = " + FormatUtil.FormatDouble (dblLambda, 1, 3, dblX) + "]";
 
-			double dblTransactionCostExpectation = ac2000dd.transactionCostExpectation();
+			double dblTransactionCostExpectation = acdd.transactionCostExpectation();
 
-			double dblTransactionCostVariance = ac2000dd.transactionCostVariance();
+			double dblTransactionCostVariance = acdd.transactionCostVariance();
 
 			double dblTransactionCostPenalty = dblTransactionCostExpectation + dblLambda * dblTransactionCostVariance;
 
@@ -246,7 +246,7 @@ public class EfficientFrontierWithDrift {
 
 			strHoldings = strHoldings + " | " + FormatUtil.FormatDouble (dblTransactionCostPenalty / dblX, 1, 4, 1.);
 
-			strHoldings = strHoldings + " |  " + FormatUtil.FormatDouble (ac2000dd.halfLife(), 1, 2, 1.);
+			strHoldings = strHoldings + " |  " + FormatUtil.FormatDouble (acdd.halfLife(), 1, 2, 1.);
 
 			System.out.println (strHoldings + "   ||");
 		}

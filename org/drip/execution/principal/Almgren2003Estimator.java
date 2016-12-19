@@ -80,7 +80,7 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 	 */
 
 	public Almgren2003Estimator (
-		final org.drip.execution.optimum.Almgren2003PowerImpactContinuous a2003tt,
+		final org.drip.execution.optimum.PowerImpactContinuous a2003tt,
 		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep)
 		throws java.lang.Exception
 	{

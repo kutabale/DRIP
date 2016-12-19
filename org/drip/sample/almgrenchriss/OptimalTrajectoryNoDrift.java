@@ -4,8 +4,8 @@ package org.drip.sample.almgrenchriss;
 import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
-import org.drip.execution.nonadaptive.AlmgrenChriss2000;
-import org.drip.execution.optimum.AlmgrenChriss2000Discrete;
+import org.drip.execution.nonadaptive.DiscreteAlmgrenChriss;
+import org.drip.execution.optimum.AlmgrenChrissDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -136,7 +136,7 @@ public class OptimalTrajectoryNoDrift {
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 
-		AlmgrenChriss2000 ac2000 = AlmgrenChriss2000.Standard (
+		DiscreteAlmgrenChriss dac = DiscreteAlmgrenChriss.Standard (
 			dblX,
 			dblT,
 			iN,
@@ -144,15 +144,15 @@ public class OptimalTrajectoryNoDrift {
 			dblLambdaU
 		);
 
-		AlmgrenChriss2000Discrete ac2000d = (AlmgrenChriss2000Discrete) ac2000.generate();
+		AlmgrenChrissDiscrete acd = (AlmgrenChrissDiscrete) dac.generate();
 
-		double[] adblExecutionTimeNode = ac2000d.executionTimeNode();
+		double[] adblExecutionTimeNode = acd.executionTimeNode();
 
-		double[] adblTradeList = ac2000d.tradeList();
+		double[] adblTradeList = acd.tradeList();
 
-		double[] adblHoldings = ac2000d.holdings();
+		double[] adblHoldings = acd.holdings();
 
-		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ac2000d);
+		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (acd);
 
 		TrajectoryShortfallAggregate tsa = lite.totalCostDistributionDetail (lpep);
 
@@ -316,13 +316,13 @@ public class OptimalTrajectoryNoDrift {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ac2000d.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (acd.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ac2000d.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (acd.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------||");
@@ -333,11 +333,13 @@ public class OptimalTrajectoryNoDrift {
 
 		System.out.println ("\t|-----------------------||");
 
-		System.out.println ("\t| Kappa       : " + FormatUtil.FormatDouble (ac2000d.kappa(), 1, 4, 1.) + " ||");
+		System.out.println ("\t| Kappa       : " + FormatUtil.FormatDouble (acd.kappa(), 1, 4, 1.) + " ||");
 
-		System.out.println ("\t| Kappa Tilda : " + FormatUtil.FormatDouble (ac2000d.kappaTilda(), 1, 4, 1.) + " ||");
+		System.out.println ("\t| Kappa Tilda : " + FormatUtil.FormatDouble (acd.kappaTilda(), 1, 4, 1.) + " ||");
 
-		System.out.println ("\t| Half Life   : " + FormatUtil.FormatDouble (ac2000d.halfLife(), 1, 4, 1.) + " ||");
+		System.out.println ("\t| Half Life   : " + FormatUtil.FormatDouble (acd.halfLife(), 1, 4, 1.) + " ||");
+
+		// System.out.println ("\t| Market Power: " + FormatUtil.FormatDouble (acd.marketPower(), 1, 4, 1.) + " ||");
 
 		System.out.println ("\t|-----------------------||");
 	}

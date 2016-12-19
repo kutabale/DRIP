@@ -275,8 +275,9 @@ public class LinearTemporaryImpact {
 		_ectt = new org.drip.execution.optimum.EfficientTradingTrajectoryContinuous (dblExecutionTime,
 			_dblStaticTransactionCost + _dblTransactionCostGain, dblPriceVolatility * dblPriceVolatility *
 				r1ToR1HoldingsSquared.integrate (_dblSpotTime, _dblFinishTime), dblCharacteristicTime,
-					r1ToR1Holdings, r1ToR1TradeRate, r1ToR1TransactionCostExpectation,
-						r1ToR1TransactionCostVariance);
+					dblLiquidityCoefficient * _dblSpotHoldings / (dblExecutionTime * dblLiquidityCoefficient
+						* java.lang.Math.sqrt (dblExecutionTime)), r1ToR1Holdings, r1ToR1TradeRate,
+							r1ToR1TransactionCostExpectation, r1ToR1TransactionCostVariance);
 	}
 
 	/**

@@ -3,7 +3,7 @@ package org.drip.sample.almgren2012;
 
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.execution.nonadaptive.Almgren2012Static;
+import org.drip.execution.nonadaptive.ContinuousAlmgrenChriss;
 import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
@@ -138,7 +138,7 @@ public class StaticContinuousOptimalTrajectory {
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 
-		Almgren2012Static a2012s = Almgren2012Static.Standard (
+		ContinuousAlmgrenChriss a2012s = ContinuousAlmgrenChriss.Standard (
 			dblX,
 			dblT,
 			lpep,

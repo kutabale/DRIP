@@ -93,4 +93,12 @@ public interface TradingTrajectory {
 	 */
 
 	abstract public double executedBlockSize();
+
+	/**
+	 * Retrieve the Instant Trade Rate
+	 * 
+	 * @return The Instant Trade Rate
+	 */
+
+	abstract public double instantTradeRate();
 }

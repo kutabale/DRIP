@@ -129,7 +129,7 @@ public class AlmgrenConstantTradingEnhanced {
 
 		double[] adblHoldings = ettd.holdings();
 
-		Almgren2003ConstantTradingEnhanced a2003cte = Almgren2003ConstantTradingEnhanced.Standard (
+		ContinuousConstantTradingEnhanced a2003cte = ContinuousConstantTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			apep,

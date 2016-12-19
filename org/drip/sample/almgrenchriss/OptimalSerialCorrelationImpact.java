@@ -5,8 +5,8 @@ import org.drip.execution.capture.TrajectoryShortfallEstimator;
 import org.drip.execution.discrete.OptimalSerialCorrelationAdjustment;
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
-import org.drip.execution.nonadaptive.AlmgrenChriss2000;
-import org.drip.execution.optimum.AlmgrenChriss2000Discrete;
+import org.drip.execution.nonadaptive.DiscreteAlmgrenChriss;
+import org.drip.execution.optimum.AlmgrenChrissDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -137,7 +137,7 @@ public class OptimalSerialCorrelationImpact {
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 
-		AlmgrenChriss2000 ac2000 = AlmgrenChriss2000.Standard (
+		DiscreteAlmgrenChriss dac = DiscreteAlmgrenChriss.Standard (
 			dblX,
 			dblT,
 			iN,
@@ -145,15 +145,15 @@ public class OptimalSerialCorrelationImpact {
 			dblLambdaU
 		);
 
-		AlmgrenChriss2000Discrete ac2000d = (AlmgrenChriss2000Discrete) ac2000.generate();
+		AlmgrenChrissDiscrete acd = (AlmgrenChrissDiscrete) dac.generate();
 
-		double[] adblExecutionTimeNode = ac2000d.executionTimeNode();
+		double[] adblExecutionTimeNode = acd.executionTimeNode();
 
-		double[] adblTradeList = ac2000d.tradeList();
+		double[] adblTradeList = acd.tradeList();
 
-		double[] adblHoldings = ac2000d.holdings();
+		double[] adblHoldings = acd.holdings();
 
-		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (ac2000d);
+		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (acd);
 
 		OptimalSerialCorrelationAdjustment[] aOSCA = tse.serialCorrelationAdjustment (lpep);
 

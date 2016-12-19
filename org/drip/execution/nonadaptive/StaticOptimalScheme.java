@@ -94,12 +94,12 @@ public abstract class StaticOptimalScheme {
 	}
 
 	/**
-	 * Retrieve the Asset Arithmetic Price Walk Evolution Parameters
+	 * Retrieve the Asset Arithmetic Price Evolution Parameters
 	 * 
-	 * @return The Asset Arithmetic Price Walk Evolution Parameters
+	 * @return The Asset Arithmetic Price Evolution Parameters
 	 */
 
-	public org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters priceWalkParameters()
+	public org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters priceEvolutionParameters()
 	{
 		return _apep;
 	}

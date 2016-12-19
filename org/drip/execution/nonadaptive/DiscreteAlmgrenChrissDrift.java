@@ -48,9 +48,9 @@ package org.drip.execution.nonadaptive;
  */
 
 /**
- * AlmgrenChriss2000 generates the Trade/Holdings List of Optimal Execution Schedule for the Equally Spaced
- *  Trading Intervals based on the No-Drift Linear Impact Evolution Walk Parameters specified. The References
- *  are:
+ * DiscreteAlmgrenChrissDrift generates the Trade/Holdings List of Optimal Execution Schedule for the Equally
+ *  Spaced Trading Intervals based on the Linear Impact Evolution Walk Parameters with Drift specified. The
+ *  References are:
  * 
  * 	- Almgren, R., and N. Chriss (1999): Value under Liquidation, Risk 12 (12).
  * 
@@ -69,7 +69,7 @@ package org.drip.execution.nonadaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOptimalSchemeDiscrete {
+public class DiscreteAlmgrenChrissDrift extends org.drip.execution.nonadaptive.StaticOptimalSchemeDiscrete {
 
 	private double KappaTau (
 		final double dblKappaTildaSquared,
@@ -82,7 +82,7 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 	}
 
 	/**
-	 * Create the Standard AlmgrenChriss2000 Instance
+	 * Create the Standard DiscreteAlmgrenChrissDrift Instance
 	 * 
 	 * @param dblStartHoldings Trajectory Start Holdings
 	 * @param dblFinishTime Trajectory Finish Time
@@ -90,10 +90,10 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 	 * @param lpep Linear Impact Price Walk Parameters
 	 * @param dblRiskAversion The Risk Aversion Parameter
 	 * 
-	 * @return The AlmgrenChriss2000 Instance
+	 * @return The DiscreteAlmgrenChrissDrift Instance
 	 */
 
-	public static final AlmgrenChriss2000 Standard (
+	public static final DiscreteAlmgrenChrissDrift Standard (
 		final double dblStartHoldings,
 		final double dblFinishTime,
 		final int iNumInterval,
@@ -101,7 +101,7 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 		final double dblRiskAversion)
 	{
 		try {
-			return new AlmgrenChriss2000
+			return new DiscreteAlmgrenChrissDrift
 				(org.drip.execution.strategy.DiscreteTradingTrajectoryControl.FixedInterval (new
 					org.drip.execution.strategy.OrderSpecification (dblStartHoldings, dblFinishTime),
 						iNumInterval), lpep, new org.drip.execution.risk.MeanVarianceObjectiveUtility
@@ -113,7 +113,7 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 		return null;
 	}
 
-	private AlmgrenChriss2000 (
+	private DiscreteAlmgrenChrissDrift (
 		final org.drip.execution.strategy.DiscreteTradingTrajectoryControl dttc,
 		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
@@ -129,7 +129,7 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 		double[] adblTNode = dttc.executionTimeNodes();
 
 		org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep =
-			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) priceWalkParameters();
+			(org.drip.execution.dynamics.LinearPermanentExpectationParameters) priceEvolutionParameters();
 
 		org.drip.execution.impact.TransactionFunction tfTemporaryExpectation =
 			lpep.temporaryExpectation().epochImpactFunction();
@@ -141,8 +141,17 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
 			(org.drip.execution.impact.TransactionFunctionLinear) tfTemporaryExpectation;
 
+		double dblX = dttc.startHoldings();
+
+		org.drip.execution.parameters.ArithmeticPriceDynamicsSettings apds =
+			lpep.arithmeticPriceDynamicsSettings();
+
+		double dblAlpha = apds.drift();
+
+		double dblEta = tflTemporaryExpectation.slope();
+
 		try {
-			dblEpochVolatility = lpep.arithmeticPriceDynamicsSettings().epochVolatility();
+			dblEpochVolatility = apds.epochVolatility();
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
@@ -151,12 +160,7 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 
 		double dblGamma = lpep.linearPermanentExpectation().epochLiquidityFunction().slope();
 
-		double dblEta = tflTemporaryExpectation.slope();
-
-		double dblX = dttc.startHoldings();
-
 		int iNumNode = adblTNode.length;
-		double dblXSquared = dblX * dblX;
 		final double dblSigma = dblEpochVolatility;
 		double dblTau = adblTNode[1] - adblTNode[0];
 		double dblSigmaSquared = dblSigma * dblSigma;
@@ -164,9 +168,14 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 		double[] adblTradeList = new double[iNumNode - 1];
 		double dblT = adblTNode[iNumNode - 1] - adblTNode[0];
 		double dblEtaTilda = dblEta - 0.5 * dblGamma * dblTau;
+		double[] adblHoldingsDriftAdjustment = new double[iNumNode];
+		double[] adblTradeListDriftAdjustment = new double[iNumNode - 1];
 
-		double dblKappaTildaSquared = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
-			objectiveUtility()).riskAversion() * dblSigmaSquared / dblEtaTilda;
+		double dblLambdaSigmaSquared = ((org.drip.execution.risk.MeanVarianceObjectiveUtility)
+			objectiveUtility()).riskAversion() * dblSigmaSquared;
+
+		double dblResidualHolding = 0.5 * dblAlpha / dblLambdaSigmaSquared;
+		double dblKappaTildaSquared = dblLambdaSigmaSquared / dblEtaTilda;
 
 		double dblKappaTau = KappaTau (dblKappaTildaSquared, dblTau);
 
@@ -176,33 +185,45 @@ public class AlmgrenChriss2000 extends org.drip.execution.nonadaptive.StaticOpti
 
 		double dblSinhKappaT = java.lang.Math.sinh (dblKappaT);
 
-		double dblSinhKappaTau = java.lang.Math.sinh (dblKappaTau);
-
 		double dblSinhHalfKappaTau = java.lang.Math.sinh (dblHalfKappaTau);
 
-		double dblTSinhKappaTau = dblT * dblSinhKappaTau;
 		double dblInverseSinhKappaT = 1. / dblSinhKappaT;
 		double dblTrajectoryScaler = dblInverseSinhKappaT * dblX;
 		double dblTradeListScaler = 2. * dblSinhHalfKappaTau * dblTrajectoryScaler;
-		double dblReciprocalSinhKappaTSquared = dblInverseSinhKappaT * dblInverseSinhKappaT;
+		double dblTrajectoryAdjustmentScaler = dblInverseSinhKappaT * dblResidualHolding;
+		double dblTradeListAdjustmentScaler = 2. * dblSinhHalfKappaTau * dblTrajectoryAdjustmentScaler;
 
 		for (int i = 0; i < iNumNode; ++i) {
-			adblHoldings[i] = dblTrajectoryScaler * java.lang.Math.sinh (dblKappa * (dblT - adblTNode[i]));
+			adblHoldingsDriftAdjustment[i] = dblResidualHolding * (1. - dblInverseSinhKappaT *
+				(java.lang.Math.sinh (dblKappa * (dblT - adblTNode[i])) + java.lang.Math.sinh (dblKappa *
+					adblTNode[i])));
 
-			if (i < iNumNode - 1)
+			adblHoldings[i] = dblTrajectoryScaler * java.lang.Math.sinh (dblKappa * (dblT - adblTNode[i])) +
+				adblHoldingsDriftAdjustment[i];
+
+			if (i < iNumNode - 1) {
+				adblTradeListDriftAdjustment[i] = -1. * dblTradeListAdjustmentScaler * (java.lang.Math.cosh
+					(dblKappa * dblTau * (0.5 + i)) - java.lang.Math.cosh (dblKappa * (dblT - dblTau * (0.5 +
+						i))));
+
 				adblTradeList[i] = -1. * dblTradeListScaler * java.lang.Math.cosh (dblKappa * (dblT - dblTau
-					* (0.5 + i)));
+					* (0.5 + i))) + adblTradeListDriftAdjustment[i];
+			}
 		}
 
 		try {
-			return new org.drip.execution.optimum.AlmgrenChriss2000Discrete (adblTNode, adblHoldings,
-				adblTradeList, java.lang.Math.sqrt (dblKappaTildaSquared), dblKappa, 0.5 * dblGamma *
-					dblXSquared + tflTemporaryExpectation.offset() * dblX + dblEtaTilda * dblXSquared *
-						dblReciprocalSinhKappaTSquared * java.lang.Math.tanh (dblHalfKappaTau) * (dblTau *
-							java.lang.Math.sinh (2. * dblKappaT) + 2. * dblTSinhKappaTau) / (2. * dblTau *
-								dblTau), 0.5 * dblSigmaSquared * dblXSquared * dblReciprocalSinhKappaTSquared
-									* (dblTau * dblSinhKappaT * java.lang.Math.cosh (dblKappa * (dblT -
-										dblTau)) - dblTSinhKappaTau) / dblSinhKappaTau);
+			org.drip.measure.gaussian.R1UnivariateNormal r1un = (new
+				org.drip.execution.capture.TrajectoryShortfallEstimator (new
+					org.drip.execution.strategy.DiscreteTradingTrajectory (adblTNode, adblHoldings,
+						adblTradeList))).totalCostDistributionSynopsis (lpep);
+
+			return null == r1un ? null : new org.drip.execution.optimum.AlmgrenChrissDriftDiscrete
+				(adblTNode, adblHoldings, adblTradeList, adblHoldingsDriftAdjustment,
+					adblTradeListDriftAdjustment, java.lang.Math.sqrt (dblKappaTildaSquared), dblKappa,
+						dblResidualHolding, dblAlpha * dblResidualHolding * dblT * (1. - (dblTau *
+							java.lang.Math.tanh (0.5 * dblKappa * dblT) / (dblT * java.lang.Math.tanh
+								(dblHalfKappaTau)))), r1un.mean(), r1un.variance(), dblEpochVolatility * dblX
+									/ (dblT * dblEpochVolatility * java.lang.Math.sqrt (dblT)));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

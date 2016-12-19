@@ -128,7 +128,7 @@ public class AlmgrenLinearTradingEnhanced {
 
 		double[] adblHoldings = ettd.holdings();
 
-		Almgren2003LinearTradingEnhanced a2003lte = Almgren2003LinearTradingEnhanced.Standard (
+		DiscreteLinearTradingEnhanced a2003lte = DiscreteLinearTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			iNumInterval,
@@ -136,7 +136,7 @@ public class AlmgrenLinearTradingEnhanced {
 			dblLambda
 		);
 
-		Almgren2003TradingEnhancedDiscrete a2003ted = (Almgren2003TradingEnhancedDiscrete) a2003lte.generate();
+		TradingEnhancedDiscrete a2003ted = (TradingEnhancedDiscrete) a2003lte.generate();
 
 		double[] adblTradeListCF = a2003ted.tradeList();
 

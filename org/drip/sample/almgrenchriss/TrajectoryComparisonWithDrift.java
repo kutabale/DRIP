@@ -3,8 +3,8 @@ package org.drip.sample.almgrenchriss;
 
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
-import org.drip.execution.nonadaptive.AlmgrenChriss2000Drift;
-import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
+import org.drip.execution.nonadaptive.DiscreteAlmgrenChrissDrift;
+import org.drip.execution.optimum.AlmgrenChrissDriftDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -82,12 +82,12 @@ import org.drip.service.env.EnvManager;
 public class TrajectoryComparisonWithDrift {
 
 	private static final void DisplayTrajectory (
-		final AlmgrenChriss2000DiscreteDrift ac2000dd,
+		final AlmgrenChrissDriftDiscrete acdd,
 		final double dblLambda,
 		final double dblX)
 		throws Exception
 	{
-		double[] adblHoldings = ac2000dd.holdings();
+		double[] adblHoldings = acdd.holdings();
 
 		String strHoldings = "\t| [LAMBDA = " + FormatUtil.FormatDouble (dblLambda, 1, 3, dblX) + "]";
 
@@ -224,7 +224,7 @@ public class TrajectoryComparisonWithDrift {
 
 		for (double dblLambdaU : adblLambdaU)
 			DisplayTrajectory (
-				(AlmgrenChriss2000DiscreteDrift) AlmgrenChriss2000Drift.Standard (
+				(AlmgrenChrissDriftDiscrete) DiscreteAlmgrenChrissDrift.Standard (
 					dblX,
 					dblT,
 					iN,

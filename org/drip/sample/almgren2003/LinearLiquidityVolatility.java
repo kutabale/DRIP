@@ -3,8 +3,8 @@ package org.drip.sample.almgren2003;
 
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.ParticipationRateLinear;
-import org.drip.execution.nonadaptive.Almgren2003LinearTradingEnhanced;
-import org.drip.execution.optimum.Almgren2003TradingEnhancedDiscrete;
+import org.drip.execution.nonadaptive.DiscreteLinearTradingEnhanced;
+import org.drip.execution.optimum.TradingEnhancedDiscrete;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -99,7 +99,7 @@ public class LinearLiquidityVolatility {
 			)
 		);
 
-		Almgren2003LinearTradingEnhanced a2003lte = Almgren2003LinearTradingEnhanced.Standard (
+		DiscreteLinearTradingEnhanced a2003lte = DiscreteLinearTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			iNumInterval,
@@ -107,7 +107,7 @@ public class LinearLiquidityVolatility {
 			dblLambda
 		);
 
-		Almgren2003TradingEnhancedDiscrete a2003ted = (Almgren2003TradingEnhancedDiscrete) a2003lte.generate();
+		TradingEnhancedDiscrete a2003ted = (TradingEnhancedDiscrete) a2003lte.generate();
 
 		double[] adblExecutionTimeNode = a2003ted.executionTimeNode();
 

@@ -107,7 +107,7 @@ public class StaticOptimalSchemeDiscrete extends org.drip.execution.nonadaptive.
 			return null;
 		}
 
-		org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep = priceWalkParameters();
+		org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep = priceEvolutionParameters();
 
 		org.drip.execution.sensitivity.ControlNodesGreek cngVariance = tse.varianceContribution (apep);
 
@@ -194,13 +194,7 @@ public class StaticOptimalSchemeDiscrete extends org.drip.execution.nonadaptive.
 		return _dttc;
 	}
 
-	/**
-	 * Invoke the Optimizer, and generate/return the Optimal Trading Trajectory Instance
-	 * 
-	 * @return The Optimal Trading Trajectory Instance
-	 */
-
-	public org.drip.execution.optimum.EfficientTradingTrajectory generate()
+	@Override public org.drip.execution.optimum.EfficientTradingTrajectory generate()
 	{
 		double[] adblExecutionTimeNode = _dttc.executionTimeNodes();
 
@@ -225,6 +219,6 @@ public class StaticOptimalSchemeDiscrete extends org.drip.execution.nonadaptive.
 		}
 
 		return org.drip.execution.optimum.EfficientTradingTrajectoryDiscrete.Standard (adblExecutionTimeNode,
-			completeHoldings (vicm.variates()), priceWalkParameters());
+			completeHoldings (vicm.variates()), priceEvolutionParameters());
 	}
 }

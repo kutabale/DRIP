@@ -137,7 +137,7 @@ public class LowUrgencyTrajectoryComparison {
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 
-		Almgren2012Static a2012s = Almgren2012Static.Standard (
+		ContinuousAlmgrenChriss a2012s = ContinuousAlmgrenChriss.Standard (
 			dblX,
 			dblT,
 			lpep,
@@ -152,7 +152,7 @@ public class LowUrgencyTrajectoryComparison {
 
 		R1ToR1 r1ToR1TransactionCostA2012S = ettcA2012S.transactionCostExpectationFunction();
 
-		LowUrgencyAsymptoteContinuous luas = LowUrgencyAsymptoteContinuous.Standard (
+		ContinuousLowUrgencyAsymptote luas = ContinuousLowUrgencyAsymptote.Standard (
 			dblX,
 			dblT,
 			lpep,

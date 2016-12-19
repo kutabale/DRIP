@@ -4,8 +4,8 @@ package org.drip.sample.almgrenchriss;
 import org.drip.execution.capture.*;
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
-import org.drip.execution.nonadaptive.AlmgrenChriss2000Drift;
-import org.drip.execution.optimum.AlmgrenChriss2000DiscreteDrift;
+import org.drip.execution.nonadaptive.DiscreteAlmgrenChrissDrift;
+import org.drip.execution.optimum.AlmgrenChrissDriftDiscrete;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.UniformParticipationRateLinear;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -136,7 +136,7 @@ public class OptimalTrajectoryWithDrift {
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 
-		AlmgrenChriss2000Drift ac2000d = AlmgrenChriss2000Drift.Standard (
+		DiscreteAlmgrenChrissDrift dacd = DiscreteAlmgrenChrissDrift.Standard (
 			dblX,
 			dblT,
 			iN,
@@ -144,19 +144,19 @@ public class OptimalTrajectoryWithDrift {
 			dblLambdaU
 		);
 
-		AlmgrenChriss2000DiscreteDrift ac2000dd = (AlmgrenChriss2000DiscreteDrift) ac2000d.generate();
+		AlmgrenChrissDriftDiscrete acdd = (AlmgrenChrissDriftDiscrete) dacd.generate();
 
-		double[] adblTradeListDriftAdjustment = ac2000dd.tradeListDriftAdjustment();
+		double[] adblTradeListDriftAdjustment = acdd.tradeListDriftAdjustment();
 
-		double[] adblHoldingsDriftAdjustment = ac2000dd.holdingsDriftAdjustment();
+		double[] adblHoldingsDriftAdjustment = acdd.holdingsDriftAdjustment();
 
-		double[] adblExecutionTimeNode = ac2000dd.executionTimeNode();
+		double[] adblExecutionTimeNode = acdd.executionTimeNode();
 
-		double[] adblTradeList = ac2000dd.tradeList();
+		double[] adblTradeList = acdd.tradeList();
 
-		double[] adblHoldings = ac2000dd.holdings();
+		double[] adblHoldings = acdd.holdings();
 
-		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (ac2000dd);
+		LinearImpactTrajectoryEstimator lite = new LinearImpactTrajectoryEstimator (acdd);
 
 		TrajectoryShortfallAggregate tsa = lite.totalCostDistributionDetail (lpep);
 
@@ -328,13 +328,13 @@ public class OptimalTrajectoryWithDrift {
 		System.out.println (
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (ac2000dd.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (acdd.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (ac2000dd.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (acdd.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------||");
@@ -345,15 +345,17 @@ public class OptimalTrajectoryWithDrift {
 
 		System.out.println ("\t|---------------------------------||");
 
-		System.out.println ("\t| Kappa                  : " + FormatUtil.FormatDouble (ac2000dd.kappa(), 1, 3, 1.) + " ||");
+		System.out.println ("\t| Kappa                  : " + FormatUtil.FormatDouble (acdd.kappa(), 1, 3, 1.) + " ||");
 
-		System.out.println ("\t| Kappa Tilda            : " + FormatUtil.FormatDouble (ac2000dd.kappaTilda(), 1, 3, 1.) + " ||");
+		System.out.println ("\t| Kappa Tilda            : " + FormatUtil.FormatDouble (acdd.kappaTilda(), 1, 3, 1.) + " ||");
 
-		System.out.println ("\t| Half Life              : " + FormatUtil.FormatDouble (ac2000dd.halfLife(), 1, 3, 1.) + " ||");
+		System.out.println ("\t| Half Life              : " + FormatUtil.FormatDouble (acdd.halfLife(), 1, 3, 1.) + " ||");
 
-		System.out.println ("\t| Residual Holdings      : " + FormatUtil.FormatDouble (ac2000dd.residualHolding(), 5, 0, 1.) + " ||");
+		// System.out.println ("\t| Market Power: " + FormatUtil.FormatDouble (acdd.marketPower(), 1, 4, 1.) + " ||");
 
-		System.out.println ("\t| Drift Gain Upper Bound : " + FormatUtil.FormatDouble (ac2000dd.driftGainUpperBound(), 2, 1, 1.) + " ||");
+		System.out.println ("\t| Residual Holdings      : " + FormatUtil.FormatDouble (acdd.residualHolding(), 5, 0, 1.) + " ||");
+
+		System.out.println ("\t| Drift Gain Upper Bound : " + FormatUtil.FormatDouble (acdd.driftGainUpperBound(), 2, 1, 1.) + " ||");
 
 		System.out.println ("\t|---------------------------------||");
 	}

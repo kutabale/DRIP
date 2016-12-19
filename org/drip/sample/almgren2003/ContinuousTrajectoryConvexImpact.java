@@ -3,8 +3,8 @@ package org.drip.sample.almgren2003;
 
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
-import org.drip.execution.nonadaptive.Almgren2003PowerImpact;
-import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
+import org.drip.execution.nonadaptive.ContinuousPowerImpact;
+import org.drip.execution.optimum.PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.profiletime.*;
 import org.drip.function.r1tor1.FlatUnivariate;
@@ -154,14 +154,14 @@ public class ContinuousTrajectoryConvexImpact {
 		System.out.println ("\t|-------------------------------------------||");
 
 		for (int i = 0; i < adblLambda.length; ++i) {
-			Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
+			ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
 				dblX,
 				dblFinishTime,
 				lpep,
 				adblLambda[i]
 			);
 
-			Almgren2003PowerImpactContinuous a2003pic = (Almgren2003PowerImpactContinuous) a2003pi.generate();
+			PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
 
 			System.out.println ("\t|  " +
 				FormatUtil.FormatDouble (1. / adblLambda[i], 5, 0, 1.e-03) + "   || " +

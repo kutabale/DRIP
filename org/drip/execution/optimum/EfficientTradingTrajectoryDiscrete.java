@@ -70,6 +70,7 @@ package org.drip.execution.optimum;
 
 public class EfficientTradingTrajectoryDiscrete extends org.drip.execution.strategy.DiscreteTradingTrajectory
 	implements org.drip.execution.optimum.EfficientTradingTrajectory {
+	private double _dblMarketPower = java.lang.Double.NaN;
 	private double _dblTransactionCostVariance = java.lang.Double.NaN;
 	private double _dblTransactionCostExpectation = java.lang.Double.NaN;
 
@@ -79,7 +80,7 @@ public class EfficientTradingTrajectoryDiscrete extends org.drip.execution.strat
 	 * @param adblExecutionTimeNode Array containing the Trajectory Time Nodes
 	 * @param adblHoldings Array containing the Holdings
 	 * @param apep The Arithmetic Price Walk Evolution Parameters
-	 * 
+ * 
 	 * @return The EfficientTradingTrajectoryDiscrete Instance
 	 */
 
@@ -88,11 +89,15 @@ public class EfficientTradingTrajectoryDiscrete extends org.drip.execution.strat
 		final double[] adblHoldings,
 		final org.drip.execution.dynamics.ArithmeticPriceEvolutionParameters apep)
 	{
+		if (null == apep) return null;
+
 		org.drip.execution.strategy.DiscreteTradingTrajectory dtt =
 			org.drip.execution.strategy.DiscreteTradingTrajectory.Standard (adblExecutionTimeNode,
 				adblHoldings);
 
 		if (null == dtt) return null;
+
+		double dblExecutionTime = dtt.executionTime();
 
 		try {
 			org.drip.measure.gaussian.R1UnivariateNormal r1un = (new
@@ -100,7 +105,10 @@ public class EfficientTradingTrajectoryDiscrete extends org.drip.execution.strat
 					(apep);
 
 			return null == r1un ? null : new EfficientTradingTrajectoryDiscrete (adblExecutionTimeNode,
-				adblHoldings, dtt.tradeList(), r1un.mean(), r1un.variance());
+				adblHoldings, dtt.tradeList(), r1un.mean(), r1un.variance(),
+					apep.temporaryExpectation().epochImpactFunction().evaluate (dtt.tradeSize(),
+						dblExecutionTime) / (apep.arithmeticPriceDynamicsSettings().epochVolatility() *
+							java.lang.Math.sqrt (dblExecutionTime)));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -116,6 +124,7 @@ public class EfficientTradingTrajectoryDiscrete extends org.drip.execution.strat
 	 * @param adblTradeList Array containing the Trade List
 	 * @param dblTransactionCostExpectation The Expected Transaction Cost
 	 * @param dblTransactionCostVariance The Variance of the Transaction Cost
+	 * @param dblMarketPower The Dimension-less Relative Market Impact
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -125,16 +134,23 @@ public class EfficientTradingTrajectoryDiscrete extends org.drip.execution.strat
 		final double[] adblHoldings,
 		final double[] adblTradeList,
 		final double dblTransactionCostExpectation,
-		final double dblTransactionCostVariance)
+		final double dblTransactionCostVariance,
+		final double dblMarketPower)
 		throws java.lang.Exception
 	{
 		super (adblExecutionTimeNode, adblHoldings, adblTradeList);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTransactionCostExpectation =
 			dblTransactionCostExpectation) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblTransactionCostVariance = dblTransactionCostVariance))
+				(_dblTransactionCostVariance = dblTransactionCostVariance) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblMarketPower = dblMarketPower))
 			throw new java.lang.Exception
 				("EfficientTradingTrajectoryDiscrete Constructor => Invalid Inputs");
+	}
+
+	@Override public double marketPower()
+	{
+		return _dblMarketPower;
 	}
 
 	@Override public double transactionCostExpectation()

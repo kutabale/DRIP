@@ -189,6 +189,11 @@ public class DiscreteTradingTrajectory implements org.drip.execution.strategy.Tr
 		return _adblExecutionTimeNode[_adblExecutionTimeNode.length - 1] - _adblExecutionTimeNode[0];
 	}
 
+	@Override public double instantTradeRate()
+	{
+		return executedBlockSize() / executionTime();
+	}
+
 	/**
 	 * Retrieve the Array containing the Execution Time Nodes Sequence
 	 * 

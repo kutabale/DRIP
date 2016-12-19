@@ -70,6 +70,7 @@ package org.drip.execution.optimum;
 public class EfficientTradingTrajectoryContinuous extends
 	org.drip.execution.strategy.ContinuousTradingTrajectory implements
 		org.drip.execution.optimum.EfficientTradingTrajectory {
+	private double _dblMarketPower = java.lang.Double.NaN;
 	private double _dblCharacteristicTime = java.lang.Double.NaN;
 	private double _dblTransactionCostVariance = java.lang.Double.NaN;
 	private double _dblTransactionCostExpectation = java.lang.Double.NaN;
@@ -81,6 +82,7 @@ public class EfficientTradingTrajectoryContinuous extends
 	 * @param dblTransactionCostExpectation The Expected Transaction Cost
 	 * @param dblTransactionCostVariance The Variance of the Transaction Cost
 	 * @param dblCharacteristicTime The Optimal Trajectory's "Characteristic" Time
+	 * @param dblMarketPower The Dimension-less Relative Market Impact
 	 * @param r1ToR1Holdings The Optimal Trajectory R^1 To R^1 Holdings Function
 	 * @param r1ToR1TradeRate The Optimal Trajectory R^1 To R^1 Trade Rate Function
 	 * @param r1ToR1TransactionCostExpectation The Transaction Cost Expectation Function
@@ -94,6 +96,7 @@ public class EfficientTradingTrajectoryContinuous extends
 		final double dblTransactionCostExpectation,
 		final double dblTransactionCostVariance,
 		final double dblCharacteristicTime,
+		final double dblMarketPower,
 		final org.drip.function.definition.R1ToR1 r1ToR1Holdings,
 		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate,
 		final org.drip.function.definition.R1ToR1 r1ToR1TransactionCostExpectation,
@@ -110,6 +113,11 @@ public class EfficientTradingTrajectoryContinuous extends
 						dblCharacteristicTime))
 			throw new java.lang.Exception
 				("EfficientTradingTrajectoryContinuous Constructor => Invalid Inputs");
+	}
+
+	@Override public double marketPower()
+	{
+		return _dblMarketPower;
 	}
 
 	@Override public double transactionCostExpectation()

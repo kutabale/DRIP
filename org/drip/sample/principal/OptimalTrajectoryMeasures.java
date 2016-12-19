@@ -3,8 +3,8 @@ package org.drip.sample.principal;
 
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
-import org.drip.execution.nonadaptive.Almgren2003PowerImpact;
-import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
+import org.drip.execution.nonadaptive.ContinuousPowerImpact;
+import org.drip.execution.optimum.PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.Almgren2003Estimator;
 import org.drip.execution.profiletime.*;
@@ -123,14 +123,14 @@ public class OptimalTrajectoryMeasures {
 			new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 		);
 
-		Almgren2003PowerImpact a2003pi = Almgren2003PowerImpact.Standard (
+		ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
 			dblX,
 			dblT,
 			lpep,
 			dblLambda
 		);
 
-		Almgren2003PowerImpactContinuous a2003pic = (Almgren2003PowerImpactContinuous) a2003pi.generate();
+		PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
 
 		R1ToR1 r1ToR1Holdings = a2003pic.holdings();
 

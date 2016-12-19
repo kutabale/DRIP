@@ -3,8 +3,8 @@ package org.drip.sample.principal;
 
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.*;
-import org.drip.execution.nonadaptive.Almgren2003PowerImpact;
-import org.drip.execution.optimum.Almgren2003PowerImpactContinuous;
+import org.drip.execution.nonadaptive.ContinuousPowerImpact;
+import org.drip.execution.optimum.PowerImpactContinuous;
 import org.drip.execution.parameters.*;
 import org.drip.execution.principal.*;
 import org.drip.execution.profiletime.*;
@@ -149,7 +149,7 @@ public class OptimalMeasuresReconciler {
 			);
 
 			Almgren2003Estimator a2003e = new Almgren2003Estimator (
-				(Almgren2003PowerImpactContinuous) Almgren2003PowerImpact.Standard (
+				(PowerImpactContinuous) ContinuousPowerImpact.Standard (
 					dblX,
 					dblFinishTime,
 					lpep,
@@ -220,7 +220,7 @@ public class OptimalMeasuresReconciler {
 			);
 
 			Almgren2003Estimator a2003e = new Almgren2003Estimator (
-				(Almgren2003PowerImpactContinuous) Almgren2003PowerImpact.Standard (
+				(PowerImpactContinuous) ContinuousPowerImpact.Standard (
 					dblX,
 					dblFinishTime,
 					lpep,
