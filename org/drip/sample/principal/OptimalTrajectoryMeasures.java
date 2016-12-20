@@ -123,16 +123,16 @@ public class OptimalTrajectoryMeasures {
 			new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 		);
 
-		ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
+		ContinuousPowerImpact cpi = ContinuousPowerImpact.Standard (
 			dblX,
 			dblT,
 			lpep,
 			dblLambda
 		);
 
-		PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
+		PowerImpactContinuous pic = (PowerImpactContinuous) cpi.generate();
 
-		R1ToR1 r1ToR1Holdings = a2003pic.holdings();
+		R1ToR1 r1ToR1Holdings = pic.holdings();
 
 		double[] adblHoldings = new double[iNumInterval];
 		double[] adblExecutionTime = new double[iNumInterval];
@@ -144,7 +144,7 @@ public class OptimalTrajectoryMeasures {
 		}
 
 		Almgren2003Estimator a2003e = new Almgren2003Estimator (
-			a2003pic,
+			pic,
 			lpep
 		);
 
@@ -189,22 +189,22 @@ public class OptimalTrajectoryMeasures {
 
 		System.out.println (
 			"\t| Transaction Cost Expectation ( X 10^-03)                  : " +
-			FormatUtil.FormatDouble (a2003pic.transactionCostExpectation(), 5, 2, 1.e-03) + " ||"
+			FormatUtil.FormatDouble (pic.transactionCostExpectation(), 5, 2, 1.e-03) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance ( X 10^-06)                     : " +
-			FormatUtil.FormatDouble (a2003pic.transactionCostVariance(), 5, 2, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (pic.transactionCostVariance(), 5, 2, 1.e-06) + " ||"
 		);
 
 		System.out.println (
 			"\t| Characteristic Time                                       : " +
-			FormatUtil.FormatDouble (a2003pic.characteristicTime(), 5, 2, 1.) + " ||"
+			FormatUtil.FormatDouble (pic.characteristicTime(), 5, 2, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Efficient Frontier Hyperboloid Boundary Value ( X 10^-12) : " +
-			FormatUtil.FormatDouble (a2003pic.hyperboloidBoundaryValue(), 5, 2, 1.e-12) + " ||"
+			FormatUtil.FormatDouble (pic.hyperboloidBoundaryValue(), 5, 2, 1.e-12) + " ||"
 		);
 
 		System.out.println (

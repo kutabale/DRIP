@@ -138,14 +138,14 @@ public class StaticContinuousOptimalTrajectory {
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 
-		ContinuousAlmgrenChriss a2012s = ContinuousAlmgrenChriss.Standard (
+		ContinuousAlmgrenChriss cac = ContinuousAlmgrenChriss.Standard (
 			dblX,
 			dblT,
 			lpep,
 			dblLambdaU
 		);
 
-		EfficientTradingTrajectoryContinuous ettc = (EfficientTradingTrajectoryContinuous) a2012s.generate();
+		EfficientTradingTrajectoryContinuous ettc = (EfficientTradingTrajectoryContinuous) cac.generate();
 
 		R1ToR1 r1ToR1Holdings = ettc.holdings();
 

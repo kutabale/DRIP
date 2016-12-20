@@ -159,14 +159,14 @@ public class PowerLawOptimalTrajectory {
 				)
 			);
 
-			ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
+			ContinuousPowerImpact cpi = ContinuousPowerImpact.Standard (
 				dblX,
 				dblFinishTime,
 				lpep,
 				dblLambda
 			);
 
-			PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
+			PowerImpactContinuous pic = (PowerImpactContinuous) cpi.generate();
 
 			if (0 == i) {
 				String strExecutionTime = "\t|          |  ";
@@ -179,21 +179,21 @@ public class PowerLawOptimalTrajectory {
 				System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------||");
 			}
 
-			R1ToR1 r1ToR1Holdings = a2003pic.holdings();
+			R1ToR1 r1ToR1Holdings = pic.holdings();
 
 			String strHoldings = "\t| k =" + FormatUtil.FormatDouble (adblK[i], 1, 2, 1.) + " | ";
 
 			for (int j = 0; j < iNumInterval; ++j)
 				strHoldings = strHoldings + "  " + FormatUtil.FormatDouble (r1ToR1Holdings.evaluate (adblExecutionTime[j]) / dblX, 2, 2, 100.);
 
-			double dblExecutionTimeUpperBound = a2003pic.executionTimeUpperBound();
+			double dblExecutionTimeUpperBound = pic.executionTimeUpperBound();
 
 			System.out.println (
 				strHoldings + " | " +
-				FormatUtil.FormatDouble (a2003pic.characteristicTime(), 2, 1, 1.) + " | " +
+				FormatUtil.FormatDouble (pic.characteristicTime(), 2, 1, 1.) + " | " +
 				FormatUtil.FormatDouble (Double.isNaN (dblExecutionTimeUpperBound) ? 0. : dblExecutionTimeUpperBound, 2, 1, 1.) + " | " +
-				FormatUtil.FormatDouble (a2003pic.transactionCostExpectation(), 3, 0, 1.e-03) + " | " +
-				FormatUtil.FormatDouble (Math.sqrt (a2003pic.transactionCostVariance()), 3, 0, 1.e-03) + " ||"
+				FormatUtil.FormatDouble (pic.transactionCostExpectation(), 3, 0, 1.e-03) + " | " +
+				FormatUtil.FormatDouble (Math.sqrt (pic.transactionCostVariance()), 3, 0, 1.e-03) + " ||"
 			);
 		}
 

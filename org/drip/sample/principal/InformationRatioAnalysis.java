@@ -154,17 +154,17 @@ public class InformationRatioAnalysis {
 			new UniformParticipationRate ((ParticipationRatePower) pmip.temporaryTransactionFunction())
 		);
 
-		ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
+		ContinuousPowerImpact cpi = ContinuousPowerImpact.Standard (
 			dblX,
 			dblT,
 			lpep,
 			dblLambda
 		);
 
-		PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
+		PowerImpactContinuous pic = (PowerImpactContinuous) cpi.generate();
 
 		Almgren2003Estimator a2003e = new Almgren2003Estimator (
-			a2003pic,
+			pic,
 			lpep
 		);
 

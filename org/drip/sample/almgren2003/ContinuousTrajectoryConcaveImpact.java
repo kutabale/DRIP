@@ -154,20 +154,20 @@ public class ContinuousTrajectoryConcaveImpact {
 		System.out.println ("\t|-------------------------------------------||");
 
 		for (int i = 0; i < adblLambda.length; ++i) {
-			ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
+			ContinuousPowerImpact cpi = ContinuousPowerImpact.Standard (
 				dblX,
 				dblFinishTime,
 				lpep,
 				adblLambda[i]
 			);
 
-			PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
+			PowerImpactContinuous pic = (PowerImpactContinuous) cpi.generate();
 
 			System.out.println ("\t|  " +
 				FormatUtil.FormatDouble (1. / adblLambda[i], 5, 0, 1.e-03) + "   || " +
-				FormatUtil.FormatDouble (a2003pic.characteristicTime(), 1, 2, 1.) + "      " +
-				FormatUtil.FormatDouble (a2003pic.transactionCostExpectation(), 3, 0, 1.e-03) + "       " +
-				FormatUtil.FormatDouble (Math.sqrt (a2003pic.transactionCostVariance()), 3, 0, 1.e-03) + "   ||"
+				FormatUtil.FormatDouble (pic.characteristicTime(), 1, 2, 1.) + "      " +
+				FormatUtil.FormatDouble (pic.transactionCostExpectation(), 3, 0, 1.e-03) + "       " +
+				FormatUtil.FormatDouble (Math.sqrt (pic.transactionCostVariance()), 3, 0, 1.e-03) + "   ||"
 			);
 		}
 

@@ -100,16 +100,16 @@ public class OptimalTrajectoryVolatilityAnalysis {
 			)
 		).almgren2003();
 
-		ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
+		ContinuousPowerImpact cpi = ContinuousPowerImpact.Standard (
 			dblTradeSize,
 			dblTradeTime,
 			lpep,
 			dblRiskAversion
 		);
 
-		PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
+		PowerImpactContinuous pic = (PowerImpactContinuous) cpi.generate();
 
-		R1ToR1 r1ToR1Holdings = a2003pic.holdings();
+		R1ToR1 r1ToR1Holdings = pic.holdings();
 
 		double[] adblHoldings = new double[iNumInterval];
 		double[] adblExecutionTime = new double[iNumInterval];
@@ -128,7 +128,7 @@ public class OptimalTrajectoryVolatilityAnalysis {
 		System.out.println (
 			"\t| " +
 			FormatUtil.FormatDouble (dblDailyVolatility, 1, 2, 1.) + "% | " + strDump +
-			FormatUtil.FormatDouble (a2003pic.characteristicTime(), 1, 3, 1.) + " ||"
+			FormatUtil.FormatDouble (pic.characteristicTime(), 1, 3, 1.) + " ||"
 		);
 	}
 

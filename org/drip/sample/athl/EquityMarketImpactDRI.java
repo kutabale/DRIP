@@ -158,7 +158,10 @@ public class EquityMarketImpactDRI {
 
 		PermanentImpactNoArbitrage pina = new PermanentImpactNoArbitrage (afs);
 
-		double dblDenormalizedPermanentImpact = pina.evaluate (dblTradeSize, dblTradeTime);
+		double dblDenormalizedPermanentImpact = pina.evaluate (
+			dblTradeSize,
+			dblTradeTime
+		);
 
 		double dblNormalizedPermanentImpact = pina.evaluate (
 			dblTradeSize / (afs.averageDailyVolume() * dblTradeTime)

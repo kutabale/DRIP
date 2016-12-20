@@ -48,8 +48,9 @@ package org.drip.execution.tradingtime;
  */
 
 /**
- * CoordinatedParticipationRateLinear implements the Coordinated Variation Version of the Linear
- *  Participation Rate Transaction Function as described in the "Trading Time" Model. The References are:
+ * CoordinatedMarketState implements the Coordinated Variation Version of the Volatility and the Linear
+ *  Transaction Function arising from the Realization of the Market State Variable as described in the
+ *  "Trading Time" Model. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,28 +70,38 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CoordinatedParticipationRateLinear implements
-	org.drip.execution.profiletime.BackgroundParticipationRateLinear {
-	private org.drip.function.definition.R1ToR1 _r1ToR1Volatility = null;
+public class CoordinatedMarketState {
+	private double _dblMarketState = java.lang.Double.NaN;
 	private org.drip.execution.tradingtime.CoordinatedVariation _cv = null;
 
 	/**
 	 * CoordinatedParticipationRateLinear Constructor
 	 * 
 	 * @param cv The Coordinated Volatility/Liquidity Variation
-	 * @param r1ToR1Volatility The R^1 -> R^1 Volatility Function
+	 * @param dblMarketState The Realized Market State
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CoordinatedParticipationRateLinear (
+	public CoordinatedMarketState (
 		final org.drip.execution.tradingtime.CoordinatedVariation cv,
-		final org.drip.function.definition.R1ToR1 r1ToR1Volatility)
+		final double dblMarketState)
 		throws java.lang.Exception
 	{
-		if (null == (_cv = cv) || null == (_r1ToR1Volatility = r1ToR1Volatility))
-			throw new java.lang.Exception
-				("CoordinatedParticipationRateLinear Constructor => Invalid Inputs");
+		if (null == (_cv = cv) || !org.drip.quant.common.NumberUtil.IsValid (_dblMarketState =
+			dblMarketState))
+			throw new java.lang.Exception ("CoordinatedMarketState Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Realized Market State
+	 * 
+	 * @return The Realized Market State
+	 */
+
+	public double marketState()
+	{
+		return _dblMarketState;
 	}
 
 	/**
@@ -104,58 +115,25 @@ public class CoordinatedParticipationRateLinear implements
 		return _cv;
 	}
 
-	@Override public org.drip.execution.impact.ParticipationRateLinear liquidityFunction (
-		final double dblTime)
+	/**
+	 * Retrieve the Realized Random Volatility
+	 * 
+	 * @return The Realized Random Volatility
+	 */
+
+	public double volatility()
 	{
-		try {
-			double dblVolatility = _r1ToR1Volatility.evaluate (dblTime);
-
-			return org.drip.execution.impact.ParticipationRateLinear.SlopeOnly (_cv.invariant() /
-				(dblVolatility * dblVolatility));
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	@Override public org.drip.execution.impact.TransactionFunction impactFunction (
-		final double dblTime)
-	{
-		return liquidityFunction (dblTime);
-	}
-
-	@Override public org.drip.execution.impact.ParticipationRateLinear epochLiquidityFunction()
-	{
-		return liquidityFunction (0.);
-	}
-
-	@Override public org.drip.execution.impact.TransactionFunction epochImpactFunction()
-	{
-		return epochLiquidityFunction();
+		return _cv.referenceVolatility() * java.lang.Math.exp (-0.5 * _dblMarketState);
 	}
 
 	/**
-	 * Compute the Volatility Function from the Liquidity Function
+	 * Retrieve the Realized Random Liquidity
 	 * 
-	 * @return The R^1 -> R^1 Volatility Function
+	 * @return The Realized Random Liquidity
 	 */
 
-	public org.drip.function.definition.R1ToR1 volatilityFunction()
+	public double liquidity()
 	{
-		return new org.drip.function.definition.R1ToR1 (null) {
-			@Override public double evaluate (
-				final double dblTime)
-				throws java.lang.Exception
-			{
-				org.drip.execution.impact.TransactionFunctionLinear tfl = liquidityFunction (dblTime);
-
-				if (null == tfl)
-					throw new java.lang.Exception
-						("CoordinatedParticipationRateLinear::volatilityFunction::evaluate => Invalid Inputs");
-
-				return java.lang.Math.sqrt (_cv.invariant() / tfl.slope());
-			}
-		};
+		return _cv.referenceLiquidity() * java.lang.Math.exp (_dblMarketState);
 	}
 }

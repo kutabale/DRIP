@@ -1,5 +1,5 @@
 
-package org.drip.execution.tradingtime;
+package org.drip.execution.adaptive;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,9 @@ package org.drip.execution.tradingtime;
  */
 
 /**
- * CoordinatedParticipationRateLinear implements the Coordinated Variation Version of the Linear
- *  Participation Rate Transaction Function as described in the "Trading Time" Model. The References are:
+ * HamiltonJacobiBellmanStep implements the HJB-based Single Step Optimal Trajectory Step using the
+ *  Coordinated Variation Version of the Stochastic Volatility and the Transaction Function arising from the
+ *  Realization of the Market State Variable as described in the "Trading Time" Model. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,93 +70,77 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CoordinatedParticipationRateLinear implements
-	org.drip.execution.profiletime.BackgroundParticipationRateLinear {
-	private org.drip.function.definition.R1ToR1 _r1ToR1Volatility = null;
-	private org.drip.execution.tradingtime.CoordinatedVariation _cv = null;
+public class HamiltonJacobiBellmanStep {
+	private double _dblMarketState = java.lang.Double.NaN;
+	private double _dblDimensionlessBurstiness = java.lang.Double.NaN;
+	private double _dblDimensionlessRiskAversion = java.lang.Double.NaN;
+	private double _dblInitialDimensionlessValue = java.lang.Double.NaN;
+	private double _dblInitialDimensionlessValueGradient = java.lang.Double.NaN;
+	private double _dblInitialDimensionlessValueJacobian = java.lang.Double.NaN;
 
 	/**
-	 * CoordinatedParticipationRateLinear Constructor
+	 * Retrieve the Realized Market State
 	 * 
-	 * @param cv The Coordinated Volatility/Liquidity Variation
-	 * @param r1ToR1Volatility The R^1 -> R^1 Volatility Function
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Realized Market State
 	 */
 
-	public CoordinatedParticipationRateLinear (
-		final org.drip.execution.tradingtime.CoordinatedVariation cv,
-		final org.drip.function.definition.R1ToR1 r1ToR1Volatility)
-		throws java.lang.Exception
+	public double marketState()
 	{
-		if (null == (_cv = cv) || null == (_r1ToR1Volatility = r1ToR1Volatility))
-			throw new java.lang.Exception
-				("CoordinatedParticipationRateLinear Constructor => Invalid Inputs");
+		return _dblMarketState;
 	}
 
 	/**
-	 * Retrieve the Coordinated Variation Constraint
+	 * Retrieve the Initial Non-dimensional Value
 	 * 
-	 * @return The Coordinated Variation Constraint
+	 * @return The Initial Non-dimensional Value
 	 */
 
-	public org.drip.execution.tradingtime.CoordinatedVariation variationConstraint()
+	public double initialDimensionlessValue()
 	{
-		return _cv;
-	}
-
-	@Override public org.drip.execution.impact.ParticipationRateLinear liquidityFunction (
-		final double dblTime)
-	{
-		try {
-			double dblVolatility = _r1ToR1Volatility.evaluate (dblTime);
-
-			return org.drip.execution.impact.ParticipationRateLinear.SlopeOnly (_cv.invariant() /
-				(dblVolatility * dblVolatility));
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	@Override public org.drip.execution.impact.TransactionFunction impactFunction (
-		final double dblTime)
-	{
-		return liquidityFunction (dblTime);
-	}
-
-	@Override public org.drip.execution.impact.ParticipationRateLinear epochLiquidityFunction()
-	{
-		return liquidityFunction (0.);
-	}
-
-	@Override public org.drip.execution.impact.TransactionFunction epochImpactFunction()
-	{
-		return epochLiquidityFunction();
+		return _dblInitialDimensionlessValue;
 	}
 
 	/**
-	 * Compute the Volatility Function from the Liquidity Function
+	 * Retrieve the Initial Non-dimensional Value Gradient
 	 * 
-	 * @return The R^1 -> R^1 Volatility Function
+	 * @return The Initial Non-dimensional Value Gradient
 	 */
 
-	public org.drip.function.definition.R1ToR1 volatilityFunction()
+	public double initialDimensionlessValueGradient()
 	{
-		return new org.drip.function.definition.R1ToR1 (null) {
-			@Override public double evaluate (
-				final double dblTime)
-				throws java.lang.Exception
-			{
-				org.drip.execution.impact.TransactionFunctionLinear tfl = liquidityFunction (dblTime);
+		return _dblInitialDimensionlessValueGradient;
+	}
 
-				if (null == tfl)
-					throw new java.lang.Exception
-						("CoordinatedParticipationRateLinear::volatilityFunction::evaluate => Invalid Inputs");
+	/**
+	 * Retrieve the Initial Non-dimensional Value Jacobian
+	 * 
+	 * @return The Initial Non-dimensional Value Jacobian
+	 */
 
-				return java.lang.Math.sqrt (_cv.invariant() / tfl.slope());
-			}
-		};
+	public double initialDimensionlessValueJacobian()
+	{
+		return _dblInitialDimensionlessValueJacobian;
+	}
+
+	/**
+	 * Retrieve the Non-dimensional Burstiness Parameter
+	 * 
+	 * @return The Non-dimensional Burstiness Parameter
+	 */
+
+	public double dimensionlessBurstiness()
+	{
+		return _dblDimensionlessBurstiness;
+	}
+
+	/**
+	 * Retrieve the Non-dimensional Risk Aversion Parameter
+	 * 
+	 * @return The Non-dimensional Risk Aversion Parameter
+	 */
+
+	public double dimensionlessRiskAversion()
+	{
+		return _dblDimensionlessRiskAversion;
 	}
 }

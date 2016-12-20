@@ -128,7 +128,7 @@ public class AlmgrenLinearTradingEnhanced {
 
 		double[] adblHoldings = ettd.holdings();
 
-		DiscreteLinearTradingEnhanced a2003lte = DiscreteLinearTradingEnhanced.Standard (
+		DiscreteLinearTradingEnhanced dlte = DiscreteLinearTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			iNumInterval,
@@ -136,11 +136,11 @@ public class AlmgrenLinearTradingEnhanced {
 			dblLambda
 		);
 
-		TradingEnhancedDiscrete a2003ted = (TradingEnhancedDiscrete) a2003lte.generate();
+		TradingEnhancedDiscrete ted = (TradingEnhancedDiscrete) dlte.generate();
 
-		double[] adblTradeListCF = a2003ted.tradeList();
+		double[] adblTradeListCF = ted.tradeList();
 
-		double[] adblHoldingsCF = a2003ted.holdings();
+		double[] adblHoldingsCF = ted.holdings();
 
 		TrajectoryShortfallEstimator tse = new TrajectoryShortfallEstimator (ettd);
 
@@ -188,14 +188,14 @@ public class AlmgrenLinearTradingEnhanced {
 			"\t| Transaction Cost Expectation         : " +
 			FormatUtil.FormatDouble (r1un.mean(), 6, 1, 1.) + " | " +
 			FormatUtil.FormatDouble (ettd.transactionCostExpectation(), 6, 1, 1.) + " | " +
-			FormatUtil.FormatDouble (a2003ted.transactionCostExpectation(), 6, 1, 1.) + " ||"
+			FormatUtil.FormatDouble (ted.transactionCostExpectation(), 6, 1, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance (X 10^-06) : " +
 			FormatUtil.FormatDouble (r1un.variance(), 6, 1, 1.e-06) + " | " +
 			FormatUtil.FormatDouble (ettd.transactionCostVariance(), 6, 1, 1.e-06) + " | " +
-			FormatUtil.FormatDouble (a2003ted.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (ted.transactionCostVariance(), 6, 1, 1.e-06) + " ||"
 		);
 
 		System.out.println ("\t|--------------------------------------------------------------------------||");

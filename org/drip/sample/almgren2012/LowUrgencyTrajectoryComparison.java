@@ -137,14 +137,14 @@ public class LowUrgencyTrajectoryComparison {
 			new UniformParticipationRateLinear (prlTemporary)
 		);
 
-		ContinuousAlmgrenChriss a2012s = ContinuousAlmgrenChriss.Standard (
+		ContinuousAlmgrenChriss cac = ContinuousAlmgrenChriss.Standard (
 			dblX,
 			dblT,
 			lpep,
 			dblLambdaU
 		);
 
-		EfficientTradingTrajectoryContinuous ettcA2012S = (EfficientTradingTrajectoryContinuous) a2012s.generate();
+		EfficientTradingTrajectoryContinuous ettcA2012S = (EfficientTradingTrajectoryContinuous) cac.generate();
 
 		R1ToR1 r1ToR1HoldingsA2012S = ettcA2012S.holdings();
 

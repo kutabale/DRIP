@@ -105,16 +105,16 @@ public class OptimalTrajectoryDRI {
 
 		LinearPermanentExpectationParameters lpep = new DynamicsParameters (afs).almgren2003();
 
-		ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
+		ContinuousPowerImpact cpi = ContinuousPowerImpact.Standard (
 			dblTradeSize,
 			dblTradeTime,
 			lpep,
 			dblRiskAversion
 		);
 
-		PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
+		PowerImpactContinuous pic = (PowerImpactContinuous) cpi.generate();
 
-		R1ToR1 r1ToR1Holdings = a2003pic.holdings();
+		R1ToR1 r1ToR1Holdings = pic.holdings();
 
 		double[] adblHoldings = new double[iNumInterval];
 		double[] adblExecutionTime = new double[iNumInterval];
@@ -173,22 +173,22 @@ public class OptimalTrajectoryDRI {
 
 		System.out.println (
 			"\t| Transaction Cost Expectation ( X 10^-06)                  : " +
-			FormatUtil.FormatDouble (a2003pic.transactionCostExpectation(), 3, 2, 1.e-06) + " ||"
+			FormatUtil.FormatDouble (pic.transactionCostExpectation(), 3, 2, 1.e-06) + " ||"
 		);
 
 		System.out.println (
 			"\t| Transaction Cost Variance ( X 10^-09)                     : " +
-			FormatUtil.FormatDouble (a2003pic.transactionCostVariance(), 3, 2, 1.e-09) + " ||"
+			FormatUtil.FormatDouble (pic.transactionCostVariance(), 3, 2, 1.e-09) + " ||"
 		);
 
 		System.out.println (
 			"\t| Characteristic Time                                       : " +
-			FormatUtil.FormatDouble (a2003pic.characteristicTime(), 3, 2, 1.) + " ||"
+			FormatUtil.FormatDouble (pic.characteristicTime(), 3, 2, 1.) + " ||"
 		);
 
 		System.out.println (
 			"\t| Efficient Frontier Hyperboloid Boundary Value ( X 10^-12) : " +
-			FormatUtil.FormatDouble (a2003pic.hyperboloidBoundaryValue(), 3, 2, 1.e-12) + " ||"
+			FormatUtil.FormatDouble (pic.hyperboloidBoundaryValue(), 3, 2, 1.e-12) + " ||"
 		);
 
 		System.out.println ("\t|---------------------------------------------------------------------||");

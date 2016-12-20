@@ -99,7 +99,7 @@ public class LinearLiquidityVolatility {
 			)
 		);
 
-		DiscreteLinearTradingEnhanced a2003lte = DiscreteLinearTradingEnhanced.Standard (
+		DiscreteLinearTradingEnhanced dlte = DiscreteLinearTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			iNumInterval,
@@ -107,24 +107,24 @@ public class LinearLiquidityVolatility {
 			dblLambda
 		);
 
-		TradingEnhancedDiscrete a2003ted = (TradingEnhancedDiscrete) a2003lte.generate();
+		TradingEnhancedDiscrete ted = (TradingEnhancedDiscrete) dlte.generate();
 
-		double[] adblExecutionTimeNode = a2003ted.executionTimeNode();
+		double[] adblExecutionTimeNode = ted.executionTimeNode();
 
-		double[] adblHoldings = a2003ted.holdings();
+		double[] adblHoldings = ted.holdings();
 
 		String strDump = "\t|" + FormatUtil.FormatDouble (dblBeta, 1, 1, 1.e+06) + " =>";
 
 		for (int i = 0; i < adblExecutionTimeNode.length; ++i)
 			strDump = strDump + FormatUtil.FormatDouble (adblHoldings[i] / dblX, 2, 1, 100.) + "% ";
 
-		strDump = strDump + FormatUtil.FormatDouble (a2003ted.transactionCostExpectation(), 5, 0, 1.) + " | ";
+		strDump = strDump + FormatUtil.FormatDouble (ted.transactionCostExpectation(), 5, 0, 1.) + " | ";
 
-		strDump = strDump + FormatUtil.FormatDouble (a2003ted.transactionCostVariance(), 5, 0, 1.e-06) + " | ";
+		strDump = strDump + FormatUtil.FormatDouble (ted.transactionCostVariance(), 5, 0, 1.e-06) + " | ";
 
-		strDump = strDump + FormatUtil.FormatDouble (a2003ted.characteristicTime(), 1, 3, 1.) + " | ";
+		strDump = strDump + FormatUtil.FormatDouble (ted.characteristicTime(), 1, 3, 1.) + " | ";
 
-		strDump = strDump + FormatUtil.FormatDouble (a2003ted.characteristicSize(), 6, 0, 1.) + " ||";
+		strDump = strDump + FormatUtil.FormatDouble (ted.characteristicSize(), 6, 0, 1.) + " ||";
 
 		System.out.println (strDump);
 	}

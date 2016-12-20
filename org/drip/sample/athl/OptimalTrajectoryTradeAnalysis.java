@@ -89,16 +89,16 @@ public class OptimalTrajectoryTradeAnalysis {
 
 		double dblRiskAversion = 1.e-02;
 
-		ContinuousPowerImpact a2003pi = ContinuousPowerImpact.Standard (
+		ContinuousPowerImpact cpi = ContinuousPowerImpact.Standard (
 			dblTradeSize,
 			dblTradeTime,
 			lpep,
 			dblRiskAversion
 		);
 
-		PowerImpactContinuous a2003pic = (PowerImpactContinuous) a2003pi.generate();
+		PowerImpactContinuous pic = (PowerImpactContinuous) cpi.generate();
 
-		R1ToR1 r1ToR1Holdings = a2003pic.holdings();
+		R1ToR1 r1ToR1Holdings = pic.holdings();
 
 		double[] adblHoldings = new double[iNumInterval];
 		double[] adblExecutionTime = new double[iNumInterval];
@@ -117,7 +117,7 @@ public class OptimalTrajectoryTradeAnalysis {
 		System.out.println (
 			"\t| " +
 			FormatUtil.FormatDouble (dblADVRatio, 2, 0, 100.) + "% | " + strDump +
-			FormatUtil.FormatDouble (a2003pic.characteristicTime(), 1, 3, 1.) + " ||"
+			FormatUtil.FormatDouble (pic.characteristicTime(), 1, 3, 1.) + " ||"
 		);
 	}
 

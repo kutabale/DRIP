@@ -100,14 +100,14 @@ public class ConstantLiquidityVolatility {
 			)
 		);
 
-		ContinuousConstantTradingEnhanced a2003cte = ContinuousConstantTradingEnhanced.Standard (
+		ContinuousConstantTradingEnhanced ccte = ContinuousConstantTradingEnhanced.Standard (
 			dblX,
 			dblT,
 			apep,
 			dblLambda
 		);
 
-		EfficientTradingTrajectoryContinuous ettc = (EfficientTradingTrajectoryContinuous) a2003cte.generate();
+		EfficientTradingTrajectoryContinuous ettc = (EfficientTradingTrajectoryContinuous) ccte.generate();
 
 		R1ToR1 r1ToR1Holdings = ettc.holdings();
 
