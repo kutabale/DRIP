@@ -1,5 +1,5 @@
 
-package org.drip.execution.evolution;
+package org.drip.quant.stochastic;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,8 @@ package org.drip.execution.evolution;
  */
 
 /**
- * GenericIncrement implements the Pre- and Post-transformed Increment as used in the "Trading Time" Model.
- *  The References are:
+ * GenericIncrement implements the Deterministic and the Stochastic Components of a Random Increment. The
+ *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -70,47 +70,47 @@ package org.drip.execution.evolution;
  */
 
 public class GenericIncrement {
-	private double _dblBrownian = java.lang.Double.NaN;
-	private double _dblTemporal = java.lang.Double.NaN;
+	private double _dblStochastic = java.lang.Double.NaN;
+	private double _dblDeterministic = java.lang.Double.NaN;
 
 	/**
 	 * GenericIncrement Constructor
 	 * 
-	 * @param dblTemporal The Temporal Increment
-	 * @param dblBrownian The Brownian Increment
+	 * @param dblDeterministic The Deterministic Increment Component
+	 * @param dblStochastic The Stochastic Increment Component
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public GenericIncrement (
-		final double dblTemporal,
-		final double dblBrownian)
+		final double dblDeterministic,
+		final double dblStochastic)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTemporal = dblTemporal) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBrownian = dblBrownian))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblStochastic = dblStochastic))
 			throw new java.lang.Exception ("GenericIncrement Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Temporal Increment
+	 * Retrieve the Deterministic Increment Component
 	 * 
-	 * @return The Temporal Increment
+	 * @return The Deterministic Increment Component
 	 */
 
-	public double temporal()
+	public double deterministic()
 	{
-		return _dblTemporal;
+		return _dblDeterministic;
 	}
 
 	/**
-	 * Retrieve the Brownian Increment
+	 * Retrieve the Stochastic Increment Component
 	 * 
-	 * @return The Brownian Increment
+	 * @return The Stochastic Increment Component
 	 */
 
-	public double brownian()
+	public double stochastic()
 	{
-		return _dblBrownian;
+		return _dblStochastic;
 	}
 }

@@ -1,5 +1,5 @@
 
-package org.drip.execution.tradingtime;
+package org.drip.quant.stochastic;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,12 +48,9 @@ package org.drip.execution.tradingtime;
  */
 
 /**
- * VolumeTimeFrame implements the Pre- and Post-transformed Increment in the Volume Time Space as used in the
- *  "Trading Time" Model. The References are:
+ * OrnsteinUhlenbeckProcess guides the Random Variable Evolution according to Ornstein-Uhlenbeck Mean
+ *  Reverting Process. The References are:
  * 
- * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
- * 		(2) 5-39.
- *
  * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
  *
@@ -66,81 +63,119 @@ package org.drip.execution.tradingtime;
  * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
  * 		Financial Studies & (4) 631-651.
  * 
+ * 	- Walia, N. (2006): Optimal Trading - Dynamic Stock Liquidation Strategies, Senior Thesis, Princeton
+ * 		University.
+ *
  * @author Lakshmi Krishnamurthy
  */
 
-public class VolumeTimeFrame extends org.drip.quant.stochastic.GenericIncrement {
-	private double _dblHoldings = java.lang.Double.NaN;
-	private double _dblTradeRate = java.lang.Double.NaN;
+public class OrnsteinUhlenbeckProcess {
+	private double _dblBurstiness = java.lang.Double.NaN;
+	private double _dblRelaxationTime = java.lang.Double.NaN;
+	private double _dblMeanReversionLevel = java.lang.Double.NaN;
 
 	/**
-	 * VolumeTimeFrame Constructor
+	 * Construct a Zero-Mean Instance of OrnsteinUhlenbeckProcess
 	 * 
-	 * @param dblTemporal The Temporal Increment
-	 * @param dblBrownian The Brownian Increment
-	 * @param dblVolatility The Volatility
-	 * @param dblHoldings Current Holdings
-	 * @param dblTradeRate Current Trade Rate
+	 * @param dblBurstiness The Burstiness Parameter
+	 * @param dblRelaxationTime The Relaxation Time
+	 * 
+	 * @return The Zero-Mean Instance of OrnsteinUhlenbeckProcess
+	 */
+
+	public static final OrnsteinUhlenbeckProcess ZeroMean (
+		final double dblBurstiness,
+		final double dblRelaxationTime)
+	{
+		try {
+			return new OrnsteinUhlenbeckProcess (0., dblBurstiness, dblRelaxationTime);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * OrnsteinUhlenbeckProcess Constructor
+	 * 
+	 * @param dblMeanReversionLevel The Mean Reversion Level
+	 * @param dblBurstiness The Burstiness Parameter
+	 * @param dblRelaxationTime The Relaxation Time
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public VolumeTimeFrame (
-		final double dblTemporal,
-		final double dblBrownian,
-		final double dblVolatility,
-		final double dblHoldings,
-		final double dblTradeRate)
+	public OrnsteinUhlenbeckProcess (
+		final double dblMeanReversionLevel,
+		final double dblBurstiness,
+		final double dblRelaxationTime)
 		throws java.lang.Exception
 	{
-		super (dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *
-				dblVolatility)))
-			throw new java.lang.Exception ("VolumeTimeFrame Constructor => Invalid Inputs!");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) || 0. >=
+				_dblBurstiness || !org.drip.quant.common.NumberUtil.IsValid (_dblRelaxationTime =
+					dblRelaxationTime) || 0. >= _dblRelaxationTime)
+			throw new java.lang.Exception ("OrnsteinUhlenbeckProcess Constructor - Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Holdings
+	 * Retrieve the Mean Reversion Level
 	 * 
-	 * @return The Holdings
+	 * @return The Mean Reversion Level
 	 */
 
-	public double holdings()
+	public double meanReversionLevel()
 	{
-		return _dblHoldings;
+		return _dblMeanReversionLevel;
 	}
 
 	/**
-	 * Retrieve the Trade Rate
+	 * Retrieve the Burstiness Parameter
 	 * 
-	 * @return The Trade Rate
+	 * @return The Burstiness Parameter
 	 */
 
-	public double tradeRate()
+	public double burstiness()
 	{
-		return _dblTradeRate;
+		return _dblBurstiness;
 	}
 
 	/**
-	 * Generate the Transaction Cost Increment
+	 * Retrieve the Relaxation Time
 	 * 
-	 * @param cv The Coordinated Variation Parameters
-	 * 
-	 * @return The Transaction Cost Increment
-	 * 
-	 * @throws java.lang.Exception Throw if the Inputs are Invalid
+	 * @return The Relaxation Time
 	 */
 
-	public double transactionCostIncrement (
-		final org.drip.execution.tradingtime.CoordinatedVariation cv)
-		throws java.lang.Exception
+	public double relaxationTime()
 	{
-		if (null == cv)
-			throw new java.lang.Exception ("VolumeTimeFrame::transactionCostIncrement => Invalid Inputs");
+		return _dblRelaxationTime;
+	}
 
-		return _dblHoldings * stochastic() + cv.invariant() * _dblTradeRate * _dblTradeRate *
-			deterministic();
+	/**
+	 * Generate the Adjacent Increment from the specified Ornstein Uhlenbeck Random Variate
+	 * 
+	 * @param dblOU The Ornstein Uhlenbeck Random Variate
+	 * 
+	 * @return The Adjecent Ornstein Uhlenbeck Increment
+	 */
+
+	public org.drip.quant.stochastic.GenericIncrement increment (
+		final double dblOU,
+		final double dblTimeIncrement)
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblOU) || !org.drip.quant.common.NumberUtil.IsValid
+			(dblTimeIncrement) || 0. >= dblTimeIncrement)
+			return null;
+
+		try {
+			return new org.drip.quant.stochastic.GenericIncrement (-1. * dblOU / _dblRelaxationTime *
+				dblTimeIncrement, _dblBurstiness * java.lang.Math.random() * java.lang.Math.sqrt
+					(dblTimeIncrement / _dblRelaxationTime));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

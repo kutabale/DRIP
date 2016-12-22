@@ -1,5 +1,5 @@
 
-package org.drip.execution.tradingtime;
+package org.drip.execution.adaptive;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,8 @@ package org.drip.execution.tradingtime;
  */
 
 /**
- * VolumeTimeFrame implements the Pre- and Post-transformed Increment in the Volume Time Space as used in the
- *  "Trading Time" Model. The References are:
+ * NonDimensionalCost contains the Level, the Gradient, and the Jacobian of the HJB Non-dimensional Cost
+ * 	Value Function to the Market State. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,78 +69,79 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class VolumeTimeFrame extends org.drip.quant.stochastic.GenericIncrement {
-	private double _dblHoldings = java.lang.Double.NaN;
-	private double _dblTradeRate = java.lang.Double.NaN;
+public class NonDimensionalCost {
+	private double _dblRealization = java.lang.Double.NaN;
+	private double _dblRealizationGradient = java.lang.Double.NaN;
+	private double _dblRealizationJacobian = java.lang.Double.NaN;
+	private double _dblNonDimensionalTradeRate = java.lang.Double.NaN;
 
 	/**
-	 * VolumeTimeFrame Constructor
+	 * NonDimensionalCost Constructor
 	 * 
-	 * @param dblTemporal The Temporal Increment
-	 * @param dblBrownian The Brownian Increment
-	 * @param dblVolatility The Volatility
-	 * @param dblHoldings Current Holdings
-	 * @param dblTradeRate Current Trade Rate
+	 * @param dblRealization The Non dimensional Value Function Realization
+	 * @param dblRealizationGradient The Non dimensional Value Function Realization Gradient
+	 * @param dblRealizationJacobian The Non dimensional Value Function Realization Jacobian
+	 * @param dblNonDimensionalTradeRate The Non-dimensional Trade Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public VolumeTimeFrame (
-		final double dblTemporal,
-		final double dblBrownian,
-		final double dblVolatility,
-		final double dblHoldings,
-		final double dblTradeRate)
+	public NonDimensionalCost (
+		final double dblRealization,
+		final double dblRealizationGradient,
+		final double dblRealizationJacobian,
+		final double dblNonDimensionalTradeRate)
 		throws java.lang.Exception
 	{
-		super (dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *
-				dblVolatility)))
-			throw new java.lang.Exception ("VolumeTimeFrame Constructor => Invalid Inputs!");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblRealization = dblRealization) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblRealizationGradient = dblRealizationGradient) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblRealizationJacobian = dblRealizationJacobian)
+					|| !org.drip.quant.common.NumberUtil.IsValid (_dblNonDimensionalTradeRate =
+						dblNonDimensionalTradeRate))
+			throw new java.lang.Exception ("NonDimensionalCost Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Holdings
+	 * Retrieve the Realized Non-dimensional Value
 	 * 
-	 * @return The Holdings
+	 * @return The Realized Non-dimensional Value
 	 */
 
-	public double holdings()
+	public double realization()
 	{
-		return _dblHoldings;
+		return _dblRealization;
 	}
 
 	/**
-	 * Retrieve the Trade Rate
+	 * Retrieve the Realized Non-dimensional Value Gradient
 	 * 
-	 * @return The Trade Rate
+	 * @return The Realized Non-dimensional Value Gradient
 	 */
 
-	public double tradeRate()
+	public double realizationGradient()
 	{
-		return _dblTradeRate;
+		return _dblRealizationGradient;
 	}
 
 	/**
-	 * Generate the Transaction Cost Increment
+	 * Retrieve the Realized Non-dimensional Value Jacobian
 	 * 
-	 * @param cv The Coordinated Variation Parameters
-	 * 
-	 * @return The Transaction Cost Increment
-	 * 
-	 * @throws java.lang.Exception Throw if the Inputs are Invalid
+	 * @return The Realized Non-dimensional Value Jacobian
 	 */
 
-	public double transactionCostIncrement (
-		final org.drip.execution.tradingtime.CoordinatedVariation cv)
-		throws java.lang.Exception
+	public double realizationJacobian()
 	{
-		if (null == cv)
-			throw new java.lang.Exception ("VolumeTimeFrame::transactionCostIncrement => Invalid Inputs");
+		return _dblRealizationJacobian;
+	}
 
-		return _dblHoldings * stochastic() + cv.invariant() * _dblTradeRate * _dblTradeRate *
-			deterministic();
+	/**
+	 * Retrieve the Non-dimensional Trade Rate
+	 * 
+	 * @return The Non-dimensional Trade Rate
+	 */
+
+	public double nonDimensionalTradeRate()
+	{
+		return _dblNonDimensionalTradeRate;
 	}
 }

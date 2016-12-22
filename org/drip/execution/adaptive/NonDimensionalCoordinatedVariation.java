@@ -48,9 +48,10 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * HamiltonJacobiBellmanStep implements the HJB-based Single Step Optimal Trajectory Step using the
- *  Coordinated Variation Version of the Stochastic Volatility and the Transaction Function arising from the
- *  Realization of the Market State Variable as described in the "Trading Time" Model. The References are:
+ * NonDimensionalCoordinatedVariation implements the Non-dimensional HJB-based Multi Step Optimal Trajectory
+ *  Cost Step Evolver using the Coordinated Variation Version of the Stochastic Volatility and the
+ *  Transaction Function arising from the Realization of the Market State Variable as described in the
+ *  "Trading Time" Model. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -70,77 +71,63 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class HamiltonJacobiBellmanStep {
-	private double _dblMarketState = java.lang.Double.NaN;
-	private double _dblDimensionlessBurstiness = java.lang.Double.NaN;
-	private double _dblDimensionlessRiskAversion = java.lang.Double.NaN;
-	private double _dblInitialDimensionlessValue = java.lang.Double.NaN;
-	private double _dblInitialDimensionlessValueGradient = java.lang.Double.NaN;
-	private double _dblInitialDimensionlessValueJacobian = java.lang.Double.NaN;
+public class NonDimensionalCoordinatedVariation {
+	private double _dblInitialMarketState = java.lang.Double.NaN;
+	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess _oup = null;
+	private org.drip.execution.tradingtime.CoordinatedVariation _cv = null;
 
 	/**
-	 * Retrieve the Realized Market State
+	 * NonDimensionalCoordinatedVariation Constructor
 	 * 
-	 * @return The Realized Market State
+	 * @param oup The Underlying Market State Ornstein-Uhlenbeck Evolver
+	 * @param cv The Coordinated Variation Trading Time Parameters
+	 * @param dblInitialMarketState The Initial Market State
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double marketState()
+	public NonDimensionalCoordinatedVariation (
+		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup,
+		final org.drip.execution.tradingtime.CoordinatedVariation cv,
+		final double dblInitialMarketState)
+		throws java.lang.Exception
 	{
-		return _dblMarketState;
+		if (null == (_oup = oup) || null == (_cv = cv) || !org.drip.quant.common.NumberUtil.IsValid
+			(_dblInitialMarketState = dblInitialMarketState))
+			throw new java.lang.Exception
+				("NonDimensionalCoordinatedVariation Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Initial Non-dimensional Value
+	 * Retrieve the Initial Market State
 	 * 
-	 * @return The Initial Non-dimensional Value
+	 * @return The Initial Market State
 	 */
 
-	public double initialDimensionlessValue()
+	public double initialMarketState()
 	{
-		return _dblInitialDimensionlessValue;
+		return _dblInitialMarketState;
 	}
 
 	/**
-	 * Retrieve the Initial Non-dimensional Value Gradient
+	 * Retrieve the Coordinated Variation Trading Time Parameters
 	 * 
-	 * @return The Initial Non-dimensional Value Gradient
+	 * @return The Coordinated Variation Trading Time Parameters
 	 */
 
-	public double initialDimensionlessValueGradient()
+	public org.drip.execution.tradingtime.CoordinatedVariation tradingTimeParameters()
 	{
-		return _dblInitialDimensionlessValueGradient;
+		return _cv;
 	}
 
 	/**
-	 * Retrieve the Initial Non-dimensional Value Jacobian
+	 * Retrieve the Underlying Market State Ornstein-Uhlenbeck Evolver
 	 * 
-	 * @return The Initial Non-dimensional Value Jacobian
+	 * @return The Underlying Market State Ornstein-Uhlenbeck Evolver
 	 */
 
-	public double initialDimensionlessValueJacobian()
+	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess ornsteinUhlenbeckProcess()
 	{
-		return _dblInitialDimensionlessValueJacobian;
-	}
-
-	/**
-	 * Retrieve the Non-dimensional Burstiness Parameter
-	 * 
-	 * @return The Non-dimensional Burstiness Parameter
-	 */
-
-	public double dimensionlessBurstiness()
-	{
-		return _dblDimensionlessBurstiness;
-	}
-
-	/**
-	 * Retrieve the Non-dimensional Risk Aversion Parameter
-	 * 
-	 * @return The Non-dimensional Risk Aversion Parameter
-	 */
-
-	public double dimensionlessRiskAversion()
-	{
-		return _dblDimensionlessRiskAversion;
+		return _oup;
 	}
 }
