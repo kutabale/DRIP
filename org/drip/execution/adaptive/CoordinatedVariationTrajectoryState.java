@@ -48,10 +48,10 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * NonDimensionalCoordinatedVariation implements the Non-dimensional HJB-based Multi Step Optimal Trajectory
- *  Cost Step Evolver using the Coordinated Variation Version of the Stochastic Volatility and the
- *  Transaction Function arising from the Realization of the Market State Variable as described in the
- *  "Trading Time" Model. The References are:
+ * CoordinatedVariationTrajectoryState holds the HJB-based Multi Step Optimal Trajectory State at each Step
+ *  of the Evolution using the Coordinated Variation Version of the Stochastic Volatility and the Transaction
+ *  Function arising from the Realization of the Market State Variable as described in the "Trading Time"
+ *  Model. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -71,63 +71,94 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NonDimensionalCoordinatedVariation {
-	private double _dblInitialMarketState = java.lang.Double.NaN;
-	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess _oup = null;
-	private org.drip.execution.tradingtime.CoordinatedVariation _cv = null;
+public class CoordinatedVariationTrajectoryState {
+	private double _dblCost = java.lang.Double.NaN;
+	private double _dblTime = java.lang.Double.NaN;
+	private double _dblHoldings = java.lang.Double.NaN;
+	private double _dblTradeRate = java.lang.Double.NaN;
+	private double _dblMarketState = java.lang.Double.NaN;
 
 	/**
-	 * NonDimensionalCoordinatedVariation Constructor
+	 * CoordinatedVariationTrajectoryState Constructor
 	 * 
-	 * @param oup The Underlying Market State Ornstein-Uhlenbeck Evolver
-	 * @param cv The Coordinated Variation Trading Time Parameters
-	 * @param dblInitialMarketState The Initial Market State
+	 * @param dblTime The Time Instant
+	 * @param dblHoldings The Holdings
+	 * @param dblTradeRate The Trade Rate
+	 * @param dblCost The Accumulated Cost
+	 * @param dblMarketState The Current Market State
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public NonDimensionalCoordinatedVariation (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup,
-		final org.drip.execution.tradingtime.CoordinatedVariation cv,
-		final double dblInitialMarketState)
+	public CoordinatedVariationTrajectoryState (
+		final double dblTime,
+		final double dblHoldings,
+		final double dblTradeRate,
+		final double dblCost,
+		final double dblMarketState)
 		throws java.lang.Exception
 	{
-		if (null == (_oup = oup) || null == (_cv = cv) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblInitialMarketState = dblInitialMarketState))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblCost = dblCost) ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblMarketState = dblMarketState))
 			throw new java.lang.Exception
-				("NonDimensionalCoordinatedVariation Constructor => Invalid Inputs");
+				("CoordinatedVariationTrajectoryState Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Initial Market State
+	 * Retrieve the Trajectory State Time Node
 	 * 
-	 * @return The Initial Market State
+	 * @return The Trajectory State Time Node
 	 */
 
-	public double initialMarketState()
+	public double time()
 	{
-		return _dblInitialMarketState;
+		return _dblTime;
 	}
 
 	/**
-	 * Retrieve the Coordinated Variation Trading Time Parameters
+	 * Retrieve the Trajectory State Time Node Holdings
 	 * 
-	 * @return The Coordinated Variation Trading Time Parameters
+	 * @return The Trajectory State Time Node Holdings
 	 */
 
-	public org.drip.execution.tradingtime.CoordinatedVariation tradingTimeParameters()
+	public double holdings()
 	{
-		return _cv;
+		return _dblHoldings;
 	}
 
 	/**
-	 * Retrieve the Underlying Market State Ornstein-Uhlenbeck Evolver
+	 * Retrieve the Trajectory State Time Node Cost
 	 * 
-	 * @return The Underlying Market State Ornstein-Uhlenbeck Evolver
+	 * @return The Trajectory State Time Node Cost
 	 */
 
-	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess ornsteinUhlenbeckProcess()
+	public double cost()
 	{
-		return _oup;
+		return _dblCost;
+	}
+
+	/**
+	 * Retrieve the Trajectory State Time Node Trade Rate
+	 * 
+	 * @return The Trajectory State Time Node Trade Rate
+	 */
+
+	public double tradeRate()
+	{
+		return _dblTradeRate;
+	}
+
+	/**
+	 * Retrieve the Trajectory Time Node Market State
+	 * 
+	 * @return The Trajectory Time Node Market State
+	 */
+
+	public double marketState()
+	{
+		return _dblMarketState;
 	}
 }

@@ -72,7 +72,7 @@ package org.drip.execution.adaptive;
  */
 
 public class NonDimensionalCostEvolver {
-	private double _dblDimensionlessBurstiness = java.lang.Double.NaN;
+	private double _dblBurstiness = java.lang.Double.NaN;
 	private double _dblDimensionlessRiskAversion = java.lang.Double.NaN;
 
 	private double advance (
@@ -83,27 +83,27 @@ public class NonDimensionalCostEvolver {
 
 		return java.lang.Math.exp (-dblMarketState) * (_dblDimensionlessRiskAversion *
 			_dblDimensionlessRiskAversion - dblNondimensionalCost * dblNondimensionalCost) + 0.5 *
-				_dblDimensionlessBurstiness * _dblDimensionlessBurstiness * ndcInitial.realizationJacobian()
-					- dblMarketState * ndcInitial.realizationGradient();
+				_dblBurstiness * _dblBurstiness * ndcInitial.realizationJacobian() - dblMarketState *
+					ndcInitial.realizationGradient();
 	}
 
 	/**
 	 * NonDimensionalCostEvolver Constructor
 	 * 
-	 * @param dblDimensionlessBurstiness The Non-dimensional Burstiness Parameter
+	 * @param dblBurstiness The Non-dimensional Burstiness Parameter
 	 * @param dblDimensionlessRiskAversion The Non-dimensional Risk Aversion Parameter
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public NonDimensionalCostEvolver (
-		final double dblDimensionlessBurstiness,
+		final double dblBurstiness,
 		final double dblDimensionlessRiskAversion)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDimensionlessBurstiness =
-			dblDimensionlessBurstiness) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblDimensionlessRiskAversion = dblDimensionlessRiskAversion))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDimensionlessRiskAversion =
+				dblDimensionlessRiskAversion))
 			throw new java.lang.Exception ("NonDimensionalCostEvolver Constructor => Invalid Inputs");
 	}
 
@@ -113,9 +113,9 @@ public class NonDimensionalCostEvolver {
 	 * @return The Non-dimensional Burstiness Parameter
 	 */
 
-	public double dimensionlessBurstiness()
+	public double burstiness()
 	{
-		return _dblDimensionlessBurstiness;
+		return _dblBurstiness;
 	}
 
 	/**
