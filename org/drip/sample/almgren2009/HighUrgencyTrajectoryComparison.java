@@ -1,5 +1,5 @@
 
-package org.drip.sample.almgren2012;
+package org.drip.sample.almgren2009;
 
 import org.drip.execution.dynamics.*;
 import org.drip.execution.impact.ParticipationRateLinear;

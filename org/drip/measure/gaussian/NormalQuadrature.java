@@ -144,4 +144,18 @@ public class NormalQuadrature {
 
         return InverseCDF (dblY, .00000001, -8., 8.);
     } 
+
+    /**
+     * Generate a Random Univariate Number following a Gaussian Distribution
+     * 
+     * @return The Random Univariate Number
+     * 
+     * @throws java.lang.Exception Thrown the Random Number cannot be generated
+     */
+
+    public static final double Random()
+    	throws java.lang.Exception
+    {
+    	return InverseCDF (java.lang.Math.random());
+    }
 }

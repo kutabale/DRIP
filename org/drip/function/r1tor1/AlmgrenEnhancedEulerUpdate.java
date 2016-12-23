@@ -1,5 +1,5 @@
 
-package org.drip.execution.tradingtime;
+package org.drip.function.r1tor1;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,9 +48,8 @@ package org.drip.execution.tradingtime;
  */
 
 /**
- * CoordinatedMarketState implements the Coordinated Variation Version of the Volatility and the Linear
- *  Transaction Function arising from the Realization of the Market State Variable as described in the
- *  "Trading Time" Model. The References are:
+ * AlmgrenEnhancedEulerUpdate is a R^1 -> R^1 Function that is used in Almgren (2009, 2012) to illustrate the
+ * 	Construction of the Enhanced Euler Update Scheme. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -61,70 +60,67 @@ package org.drip.execution.tradingtime;
  * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
  * 		Financial Mathematics  3 (1) 163-181.
  * 
- * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
- * 		79-96.
- * 
- * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies & (4) 631-651.
- * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CoordinatedMarketState {
-	private org.drip.execution.tradingtime.CoordinatedVariation _cv = null;
+public class AlmgrenEnhancedEulerUpdate extends org.drip.function.definition.R1ToR1 {
+	private double _dblA = java.lang.Double.NaN;
+	private double _dblB = java.lang.Double.NaN;
 
 	/**
-	 * CoordinatedParticipationRateLinear Constructor
+	 * AlmgrenEnhancedEulerUpdate Constructor
 	 * 
-	 * @param cv The Coordinated Volatility/Liquidity Variation
+	 * @param dblA The "A" Parameter
+	 * @param dblB The "B" Parameter
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CoordinatedMarketState (
-		final org.drip.execution.tradingtime.CoordinatedVariation cv)
+	public AlmgrenEnhancedEulerUpdate (
+		final double dblA,
+		final double dblB)
 		throws java.lang.Exception
 	{
-		if (null == (_cv = cv))
-			throw new java.lang.Exception ("CoordinatedMarketState Constructor => Invalid Inputs");
+		super (null);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblA = dblA) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblB = dblB) || _dblA == _dblB)
+			throw new java.lang.Exception ("AlmgrenEnhancedEulerUpdate Constructor => Inbalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Coordinated Variation Constraint
+	 * Retrieve the "A" Parameter
 	 * 
-	 * @return The Coordinated Variation Constraint
+	 * @return The "A" Parameter
 	 */
 
-	public org.drip.execution.tradingtime.CoordinatedVariation variationConstraint()
+	public double a()
 	{
-		return _cv;
+		return _dblA;
 	}
 
 	/**
-	 * Retrieve the Realized Random Volatility
+	 * Retrieve the "B" Parameter
 	 * 
-	 * @param dblMarketState The Realized Market State
-	 * 
-	 * @return The Realized Random Volatility
+	 * @return The "B" Parameter
 	 */
 
-	public double volatility (
-		final double dblMarketState)
+	public double b()
 	{
-		return _cv.referenceVolatility() * java.lang.Math.exp (-0.5 * dblMarketState);
+		return _dblB;
 	}
 
-	/**
-	 * Retrieve the Realized Random Liquidity
-	 * 
-	 * @param dblMarketState The Realized Market State
-	 * 
-	 * @return The Realized Random Liquidity
-	 */
-
-	public double liquidity (
-		final double dblMarketState)
+	@Override public double evaluate (
+		final double dblT)
+		throws java.lang.Exception
 	{
-		return _cv.referenceLiquidity() * java.lang.Math.exp (dblMarketState);
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblT))
+			throw new java.lang.Exception ("AlmgrenEnhancedEulerUpdate::evaluate => Invalid Inputs");
+
+		double dblInvExpAT = java.lang.Math.exp (-1. * _dblA * dblT);
+
+		double dblInvExpBT = java.lang.Math.exp (-1. * _dblB * dblT);
+
+		return (_dblA * dblInvExpBT - _dblB * dblInvExpAT) / (dblInvExpBT - dblInvExpAT);
 	}
 }

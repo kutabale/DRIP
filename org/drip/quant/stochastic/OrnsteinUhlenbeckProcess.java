@@ -170,8 +170,8 @@ public class OrnsteinUhlenbeckProcess {
 
 		try {
 			return new org.drip.quant.stochastic.GenericIncrement (-1. * dblOU / _dblRelaxationTime *
-				dblTimeIncrement, _dblBurstiness * java.lang.Math.random() * java.lang.Math.sqrt
-					(dblTimeIncrement / _dblRelaxationTime));
+				dblTimeIncrement, _dblBurstiness * org.drip.measure.gaussian.NormalQuadrature.Random() *
+					java.lang.Math.sqrt (dblTimeIncrement / _dblRelaxationTime));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
