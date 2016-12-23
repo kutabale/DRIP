@@ -76,6 +76,53 @@ public class NonDimensionalCost {
 	private double _dblNonDimensionalTradeRate = java.lang.Double.NaN;
 
 	/**
+	 * Generate a Zero Cost Non-dimensional Cost Instance
+	 * 
+	 * @return The Zero Cost Non-dimensional Cost Instance
+	 */
+
+	public static final NonDimensionalCost Zero()
+	{
+		try {
+			return new NonDimensionalCost (0., 0., 0., 0.);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate a Linear Trading Non Dimensional Cost Instance
+	 * 
+	 * @param dblMarketStateExponentiation The Exponentiated Market State
+	 * @param dblNonDimensionalTime The Non Dimensional Time
+	 * 
+	 * @return The Linear Trading Non Dimensional Cost Instance
+	 */
+
+	public static final NonDimensionalCost LinearThreshold (
+		final double dblMarketStateExponentiation,
+		final double dblNonDimensionalTime)
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblMarketStateExponentiation) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTime) || 0. >= dblNonDimensionalTime)
+			return null;
+
+		double dblNonDimensionalUrgency = 1. / dblNonDimensionalTime;
+		double dblNonDimensionalCostThreshold = dblMarketStateExponentiation * dblNonDimensionalUrgency;
+
+		try {
+			return new NonDimensionalCost (dblNonDimensionalCostThreshold, dblNonDimensionalCostThreshold,
+				dblNonDimensionalCostThreshold, dblNonDimensionalUrgency);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * NonDimensionalCost Constructor
 	 * 
 	 * @param dblRealization The Non dimensional Value Function Realization

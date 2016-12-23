@@ -1,8 +1,9 @@
 
-package org.drip.sample.almgren2009;
+package org.drip.sample.almgren2012;
 
-import org.drip.function.r1tor1.AlmgrenEnhancedEulerUpdate;
+import org.drip.execution.adaptive.*;
 import org.drip.quant.common.FormatUtil;
+import org.drip.quant.stochastic.*;
 import org.drip.service.env.EnvManager;
 
 /*
@@ -52,8 +53,8 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * EnhancedEulerScheme demonstrates the Enhancement used by Almgren (2009, 2012) to deal with Time Evolution
- * 	under Singular Initial Conditions. The References are:
+ * AdaptiveOptimalCostTrajectory traces a Sample Realization of the Adaptive Cost Strategy using the Market
+ *  State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck Evolution Dynamics. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -73,7 +74,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EnhancedEulerScheme {
+public class AdaptiveOptimalCostTrajectory {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -81,71 +82,79 @@ public class EnhancedEulerScheme {
 	{
 		EnvManager.InitEnv ("");
 
-		double dblA = 2.;
-		double dblB = 1.;
-		double dblTimeIncrement = 0.1;
-		double dblSimulationTime = 1.0;
-		int iK = 2;
+		double dblBurstiness = 1.;
+		double dblDimensionlessRiskAversion = 0.1;
+		double dblRelaxationTime = 1.;
+		double dblSimulationTime = 10.;
+		double dblTimeInterval = 0.25;
+		double dblInitialMarketState = -0.5;
 
-		int iNumSimulationSteps = (int) (dblSimulationTime / dblTimeIncrement);
-		double dblInitialOrder0 = 1. / (iK * dblTimeIncrement);
-		double dblInitialOrder1 = dblInitialOrder0 + 0.5 * (dblA + dblB);
-		double dblOrder0Euler = dblInitialOrder0;
-		double dblOrder1Euler = dblInitialOrder1;
-		double dblOrder0EnhancedEuler = dblInitialOrder0;
-		double dblOrder1EnhancedEuler = dblInitialOrder1;
+		int iNumTimeNode = (int) (dblSimulationTime / dblTimeInterval);
+		double[] adblMarketState = new double[iNumTimeNode + 1];
+		adblMarketState[0] = dblInitialMarketState;
 
-		AlmgrenEnhancedEulerUpdate aeeu = new AlmgrenEnhancedEulerUpdate (
-			dblA,
-			dblB
+		OrnsteinUhlenbeckProcess oup = OrnsteinUhlenbeckProcess.ZeroMean (
+			dblBurstiness,
+			dblRelaxationTime
+		);
+
+		for (int i = 0; i < iNumTimeNode; ++i) {
+			GenericIncrement gi = oup.increment (
+				adblMarketState[i],
+				dblTimeInterval
+			);
+
+			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
+		}
+
+		NonDimensionalCostEvolver ndce = new NonDimensionalCostEvolver (
+			dblBurstiness,
+			dblDimensionlessRiskAversion
+		);
+
+		NonDimensionalCost ndc = new NonDimensionalCost (
+			0.,
+			0.,
+			0.,
+			0.
 		);
 
 		System.out.println();
 
-		System.out.println ("\t||----------------------------------------------------||");
+		System.out.println ("\t||---------------------------------------------------------||");
 
-		System.out.println ("\t||      L -> R:                                       ||");
+		System.out.println ("\t||      L -> R:                                            ||");
 
-		System.out.println ("\t||            - Time                                  ||");
+		System.out.println ("\t||---------------------------------------------------------||");
 
-		System.out.println ("\t||            - Exact Solution                        ||");
+		System.out.println ("\t||" + 
+			FormatUtil.FormatDouble (0., 1, 2, 1.) + " => " +
+			FormatUtil.FormatDouble (adblMarketState[0], 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (ndc.realization(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (ndc.realizationGradient(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (ndc.realizationJacobian(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (ndc.nonDimensionalTradeRate(), 1, 4, 1.) + " ||"
+		);
 
-		System.out.println ("\t||            - Order 1 Initial + Enhanced Euler      ||");
-
-		System.out.println ("\t||            - Order 0 Initial + Enhanced Euler      ||");
-
-		System.out.println ("\t||            - Order 1 Initial + Regular Euler       ||");
-
-		System.out.println ("\t||            - Order 0 Initial + Regular Euler       ||");
-
-		System.out.println ("\t||----------------------------------------------------||");
-
-		for (int i = iK; i <= iNumSimulationSteps; ++i) {
-			double dblTime = i * dblTimeIncrement;
-
-			System.out.println (
-				"\t|| " +
-				FormatUtil.FormatDouble (dblTime, 1, 1, 1.) + " => " +
-				FormatUtil.FormatDouble (aeeu.evaluate (dblTime), 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dblOrder1EnhancedEuler, 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dblOrder0EnhancedEuler, 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dblOrder1Euler, 1, 3, 1.) + " | " +
-				FormatUtil.FormatDouble (dblOrder0Euler, 1, 3, 1.) + " ||"
+		for (int i = 1; i < iNumTimeNode; ++i) {
+			ndc = ndce.evolve (
+				ndc,
+				adblMarketState[i],
+				(iNumTimeNode - i) * dblTimeInterval,
+				dblTimeInterval
 			);
 
-			double dblOrder0EulerIncrement = -1. * (dblOrder0Euler - dblA) * (dblOrder0Euler - dblB) * dblTimeIncrement;
-			double dblOrder1EulerIncrement = -1. * (dblOrder1Euler - dblA) * (dblOrder1Euler - dblB) * dblTimeIncrement;
-			dblOrder0Euler = dblOrder0Euler + dblOrder0EulerIncrement;
-			dblOrder1Euler = dblOrder1Euler + dblOrder1EulerIncrement;
-			double dblOrder0EnhancedEulerIncrement = -1. * (dblOrder0EnhancedEuler - dblA) * (dblOrder0EnhancedEuler - dblB)
-				* dblTimeIncrement * iK / (iK + 1);
-			dblOrder0EnhancedEuler = dblOrder0EnhancedEuler + dblOrder0EnhancedEulerIncrement;
-			double dblOrder1EnhancedEulerIncrement = -1. * (dblOrder1EnhancedEuler - dblA) * (dblOrder1EnhancedEuler - dblB)
-				* dblTimeIncrement * iK / (iK + 1);
-			dblOrder1EnhancedEuler = dblOrder1EnhancedEuler + dblOrder1EnhancedEulerIncrement;
+			System.out.println ("\t||" + 
+				FormatUtil.FormatDouble (dblTimeInterval * i, 1, 2, 1.) + " => " +
+				FormatUtil.FormatDouble (adblMarketState[i], 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (ndc.realization(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (ndc.realizationGradient(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (ndc.realizationJacobian(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (ndc.nonDimensionalTradeRate(), 1, 4, 1.) + " ||"
+			);
 		}
 
-		System.out.println ("\t||----------------------------------------------------||");
+		System.out.println ("\t||---------------------------------------------------------||");
 
 		System.out.println();
 	}

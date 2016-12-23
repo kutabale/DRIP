@@ -72,6 +72,8 @@ package org.drip.execution.adaptive;
  */
 
 public class NonDimensionalCostEvolver {
+	private static final double SINGULAR_URGENCY_THRESHOLD = 10.;
+
 	private double _dblBurstiness = java.lang.Double.NaN;
 	private double _dblDimensionlessRiskAversion = java.lang.Double.NaN;
 
@@ -134,29 +136,46 @@ public class NonDimensionalCostEvolver {
 	 * 
 	 * @param ndcInitial The Initial Non-dimensional Cost Value Function
 	 * @param dblMarketState The Non-dimensional Market State
+	 * @param dblNonDimensionalTime The Non Dimensional Time Node
+	 * @param dblNonDimensionalTimeIncrement The Non Dimensional Time Increment
 	 * 
 	 * @return The Post Evolved Non-dimensional Cost Value Function
 	 */
 
 	public org.drip.execution.adaptive.NonDimensionalCost evolve (
 		final org.drip.execution.adaptive.NonDimensionalCost ndcInitial,
-		final double dblMarketState)
+		final double dblMarketState,
+		final double dblNonDimensionalTime,
+		final double dblNonDimensionalTimeIncrement)
 	{
-		if (null == ndcInitial || !org.drip.quant.common.NumberUtil.IsValid (dblMarketState)) return null;
+		if (null == ndcInitial || !org.drip.quant.common.NumberUtil.IsValid (dblMarketState) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTime) ||
+				!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTimeIncrement))
+			return null;
+
+		double dblMarketStateExponentiation = java.lang.Math.exp (-dblMarketState);
 
 		double dblMarketStateIncrement = 0.01 * dblMarketState;
 
-		double dblCostAdvanceUp = advance (ndcInitial, dblMarketState + dblMarketStateIncrement);
+		if (SINGULAR_URGENCY_THRESHOLD * dblNonDimensionalTime < 1.)
+			return org.drip.execution.adaptive.NonDimensionalCost.LinearThreshold
+				(dblMarketStateExponentiation, dblNonDimensionalTime);
 
-		double dblCostAdvanceMid = advance (ndcInitial, dblMarketState);
+		double dblCostIncrementMid = advance (ndcInitial, dblMarketState) * dblNonDimensionalTimeIncrement;
 
-		double dblCostAdvanceDown = advance (ndcInitial, dblMarketState - dblMarketStateIncrement);
+		double dblCostIncrementUp = advance (ndcInitial, dblMarketState + dblMarketStateIncrement) *
+			dblNonDimensionalTimeIncrement;
+
+		double dblCostIncrementDown = advance (ndcInitial, dblMarketState - dblMarketStateIncrement) *
+			dblNonDimensionalTimeIncrement;
+
+		double dblCost = ndcInitial.realization() + dblCostIncrementMid;
 
 		try {
-			return new org.drip.execution.adaptive.NonDimensionalCost (dblCostAdvanceMid, 0.5 *
-				(dblCostAdvanceUp - dblCostAdvanceDown) / dblMarketStateIncrement, (dblCostAdvanceUp +
-					dblCostAdvanceDown - 2. * dblCostAdvanceMid) / dblMarketStateIncrement,
-						java.lang.Math.exp (-dblMarketState) * dblCostAdvanceMid);
+			return new org.drip.execution.adaptive.NonDimensionalCost (dblCost, 0.5 * (dblCostIncrementUp -
+				dblCostIncrementDown) / dblMarketStateIncrement, (dblCostIncrementUp + dblCostIncrementDown -
+					2. * dblCostIncrementMid) / (dblMarketStateIncrement * dblMarketStateIncrement),
+						dblMarketStateExponentiation * dblCost);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

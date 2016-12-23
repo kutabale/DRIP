@@ -211,7 +211,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 				dblNonDimensionalTimeUnit);
 
 			if (null == giMarketState || null == (ndc = ndce.evolve (ndc, dblMarketState = dblMarketState +
-				giMarketState.deterministic() + giMarketState.stochastic())))
+				giMarketState.deterministic() + giMarketState.stochastic(), i, dblNonDimensionalTimeUnit)))
 				return null;
 
 			double dblTradeRate = dblHoldings / dblMarketRelaxationTime * ndc.nonDimensionalTradeRate();
