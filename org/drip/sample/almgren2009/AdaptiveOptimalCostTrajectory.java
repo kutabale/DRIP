@@ -1,5 +1,5 @@
 
-package org.drip.sample.almgren2012;
+package org.drip.sample.almgren2009;
 
 import org.drip.execution.adaptive.*;
 import org.drip.quant.common.FormatUtil;
@@ -92,6 +92,7 @@ public class AdaptiveOptimalCostTrajectory {
 		int iNumTimeNode = (int) (dblSimulationTime / dblTimeInterval);
 		double[] adblMarketState = new double[iNumTimeNode + 1];
 		adblMarketState[0] = dblInitialMarketState;
+		double dblNonDimensionalHoldings = 1.;
 
 		OrnsteinUhlenbeckProcess oup = OrnsteinUhlenbeckProcess.ZeroMean (
 			dblBurstiness,
@@ -107,25 +108,34 @@ public class AdaptiveOptimalCostTrajectory {
 			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
 		}
 
-		NonDimensionalCostEvolver ndce = new NonDimensionalCostEvolver (
-			dblBurstiness,
+		NonDimensionalCostEvolver ndce = NonDimensionalCostEvolver.Standard (
+			oup,
 			dblDimensionlessRiskAversion
 		);
 
-		NonDimensionalCost ndc = new NonDimensionalCost (
-			0.,
-			0.,
-			0.,
-			0.
-		);
+		NonDimensionalCost ndc = NonDimensionalCost.Zero();
 
 		System.out.println();
 
-		System.out.println ("\t||---------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------||");
 
-		System.out.println ("\t||      L -> R:                                            ||");
+		System.out.println ("\t||      L -> R:                                                      ||");
 
-		System.out.println ("\t||---------------------------------------------------------||");
+		System.out.println ("\t||              - Non Dimensional Time                               ||");
+
+		System.out.println ("\t||              - Realized Market State                              ||");
+
+		System.out.println ("\t||              - Non Dimensional Cost                               ||");
+
+		System.out.println ("\t||              - Non Dimensional Cost Gradient                      ||");
+
+		System.out.println ("\t||              - Non Dimensional Cost Jacobian                      ||");
+
+		System.out.println ("\t||              - Non Dimensional Cost Trade Velocity                ||");
+
+		System.out.println ("\t||              - Non Dimensional Outstanding Holdings               ||");
+
+		System.out.println ("\t||-------------------------------------------------------------------||");
 
 		System.out.println ("\t||" + 
 			FormatUtil.FormatDouble (0., 1, 2, 1.) + " => " +
@@ -133,7 +143,8 @@ public class AdaptiveOptimalCostTrajectory {
 			FormatUtil.FormatDouble (ndc.realization(), 1, 4, 1.) + " | " +
 			FormatUtil.FormatDouble (ndc.realizationGradient(), 1, 4, 1.) + " | " +
 			FormatUtil.FormatDouble (ndc.realizationJacobian(), 1, 4, 1.) + " | " +
-			FormatUtil.FormatDouble (ndc.nonDimensionalTradeRate(), 1, 4, 1.) + " ||"
+			FormatUtil.FormatDouble (ndc.nonDimensionalTradeRate(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (dblNonDimensionalHoldings, 1, 4, 1.) + " ||"
 		);
 
 		for (int i = 1; i < iNumTimeNode; ++i) {
@@ -144,17 +155,25 @@ public class AdaptiveOptimalCostTrajectory {
 				dblTimeInterval
 			);
 
+			double dblNonDimensionalTradeRate = ndc.nonDimensionalTradeRate();
+
+			if (dblNonDimensionalHoldings > 0.)
+				dblNonDimensionalHoldings = dblNonDimensionalHoldings - dblNonDimensionalTradeRate * dblTimeInterval;
+
+			if (dblNonDimensionalHoldings <= 0.) dblNonDimensionalHoldings = 0.;
+
 			System.out.println ("\t||" + 
 				FormatUtil.FormatDouble (dblTimeInterval * i, 1, 2, 1.) + " => " +
 				FormatUtil.FormatDouble (adblMarketState[i], 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (ndc.realization(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (ndc.realizationGradient(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (ndc.realizationJacobian(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (ndc.nonDimensionalTradeRate(), 1, 4, 1.) + " ||"
+				FormatUtil.FormatDouble (dblNonDimensionalTradeRate, 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (dblNonDimensionalHoldings, 1, 4, 1.) + " ||"
 			);
 		}
 
-		System.out.println ("\t||---------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------||");
 
 		System.out.println();
 	}

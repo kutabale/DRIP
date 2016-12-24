@@ -123,6 +123,37 @@ public class NonDimensionalCost {
 	}
 
 	/**
+	 * Generate a Euler Enhanced Linear Trading Non Dimensional Cost Instance
+	 * 
+	 * @param dblMarketState The Market State
+	 * @param dblNonDimensionalCost The Non Dimensional Cost
+	 * @param dblNonDimensionalCostCross The Non Dimensional Cost Cross Term
+	 * 
+	 * @return The Euler Enhanced Linear Trading Non Dimensional Cost Instance
+	 */
+
+	public static final NonDimensionalCost EulerEnhancedLinearThreshold (
+		final double dblMarketState,
+		final double dblNonDimensionalCost,
+		final double dblNonDimensionalCostCross)
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblMarketState) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalCost) ||
+				!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalCostCross))
+			return null;
+
+		try {
+			return new NonDimensionalCost (dblNonDimensionalCost, dblNonDimensionalCost +
+				dblNonDimensionalCostCross, dblNonDimensionalCost + 2. * dblNonDimensionalCostCross,
+					java.lang.Math.exp (-dblMarketState) * dblNonDimensionalCost);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * NonDimensionalCost Constructor
 	 * 
 	 * @param dblRealization The Non dimensional Value Function Realization

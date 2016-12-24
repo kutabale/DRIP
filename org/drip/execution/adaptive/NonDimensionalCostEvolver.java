@@ -72,52 +72,107 @@ package org.drip.execution.adaptive;
  */
 
 public class NonDimensionalCostEvolver {
-	private static final double SINGULAR_URGENCY_THRESHOLD = 10.;
+	private static final double SINGULAR_URGENCY_THRESHOLD = 50.;
 
-	private double _dblBurstiness = java.lang.Double.NaN;
+	private boolean _bAsymptoticEnhancedEulerCorrection = false;
 	private double _dblDimensionlessRiskAversion = java.lang.Double.NaN;
+	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess _oup = null;
+	private double _dblAsymptoticEulerUrgencyThreshold = java.lang.Double.NaN;
+
+	/**
+	 * Construct a Standard NonDimensionalCostEvoler Instance
+	 * 
+	 * @param oup The Underlying Ornstein-Unlenbeck Process
+	 * @param dblDimensionlessRiskAversion The Non-dimensional Risk Aversion Parameter
+	 * 
+	 * @return The Standard NonDimensionalCostEvoler Instance
+	 */
+
+	public static final NonDimensionalCostEvolver Standard (
+		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup,
+		final double dblDimensionlessRiskAversion)
+	{
+		try {
+			return new NonDimensionalCostEvolver (oup, dblDimensionlessRiskAversion,
+				SINGULAR_URGENCY_THRESHOLD, true);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	private double advance (
 		final org.drip.execution.adaptive.NonDimensionalCost ndcInitial,
 		final double dblMarketState)
 	{
+		double dblBurstiness = _oup.burstiness();
+
 		double dblNondimensionalCost = ndcInitial.realization();
 
 		return java.lang.Math.exp (-dblMarketState) * (_dblDimensionlessRiskAversion *
 			_dblDimensionlessRiskAversion - dblNondimensionalCost * dblNondimensionalCost) + 0.5 *
-				_dblBurstiness * _dblBurstiness * ndcInitial.realizationJacobian() - dblMarketState *
+				dblBurstiness * dblBurstiness * ndcInitial.realizationJacobian() - dblMarketState *
 					ndcInitial.realizationGradient();
 	}
 
 	/**
 	 * NonDimensionalCostEvolver Constructor
 	 * 
-	 * @param dblBurstiness The Non-dimensional Burstiness Parameter
+	 * @param oup The Underlying Ornstein-Unlenbeck Process
 	 * @param dblDimensionlessRiskAversion The Non-dimensional Risk Aversion Parameter
+	 * @param bAsymptoticEnhancedEulerCorrection Asymptotic Enhanced Euler Correction Application Flag
+	 * @param dblAsymptoticEulerUrgencyThreshold The Asymptotic Euler Urgency Threshold
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public NonDimensionalCostEvolver (
-		final double dblBurstiness,
-		final double dblDimensionlessRiskAversion)
+		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup,
+		final double dblDimensionlessRiskAversion,
+		final double dblAsymptoticEulerUrgencyThreshold,
+		final boolean bAsymptoticEnhancedEulerCorrection)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblDimensionlessRiskAversion =
-				dblDimensionlessRiskAversion))
+		if (null == (_oup = oup) || !org.drip.quant.common.NumberUtil.IsValid (_dblDimensionlessRiskAversion
+			= dblDimensionlessRiskAversion) || !org.drip.quant.common.NumberUtil.IsValid
+				(_dblAsymptoticEulerUrgencyThreshold = dblAsymptoticEulerUrgencyThreshold))
 			throw new java.lang.Exception ("NonDimensionalCostEvolver Constructor => Invalid Inputs");
+
+		_bAsymptoticEnhancedEulerCorrection = bAsymptoticEnhancedEulerCorrection;
 	}
 
 	/**
-	 * Retrieve the Non-dimensional Burstiness Parameter
+	 * Retrieve the Asymptotic Enhanced Euler Correction Application Flag
 	 * 
-	 * @return The Non-dimensional Burstiness Parameter
+	 * @return The Asymptotic Enhanced Euler Correction Application Flag
 	 */
 
-	public double burstiness()
+	public boolean asymptoticEnhancedEulerCorrection()
 	{
-		return _dblBurstiness;
+		return _bAsymptoticEnhancedEulerCorrection;
+	}
+
+	/**
+	 * Retrieve the Asymptotic Euler Urgency Threshold
+	 * 
+	 * @return The Asymptotic Euler Urgency Threshold
+	 */
+
+	public double asymptoticEulerUrgencyThreshold()
+	{
+		return _dblAsymptoticEulerUrgencyThreshold;
+	}
+
+	/**
+	 * Retrieve the Underlying Ornstein-Unlenbeck Process
+	 * 
+	 * @return The Underlying Ornstein-Unlenbeck Process
+	 */
+
+	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess ornsteinUnlenbeckProcess()
+	{
+		return _oup;
 	}
 
 	/**
@@ -153,13 +208,24 @@ public class NonDimensionalCostEvolver {
 				!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTimeIncrement))
 			return null;
 
-		double dblMarketStateExponentiation = java.lang.Math.exp (-dblMarketState);
+		double dblMarketStateExponentiation = java.lang.Math.exp (dblMarketState);
 
 		double dblMarketStateIncrement = 0.01 * dblMarketState;
 
-		if (SINGULAR_URGENCY_THRESHOLD * dblNonDimensionalTime < 1.)
-			return org.drip.execution.adaptive.NonDimensionalCost.LinearThreshold
-				(dblMarketStateExponentiation, dblNonDimensionalTime);
+		if (_dblAsymptoticEulerUrgencyThreshold * dblNonDimensionalTime < 1.) {
+			if (!_bAsymptoticEnhancedEulerCorrection)
+				return org.drip.execution.adaptive.NonDimensionalCost.LinearThreshold
+					(dblMarketStateExponentiation, dblNonDimensionalTime);
+
+			double dblBurstiness = _oup.burstiness();
+
+			double dblNonDimensionalCostCross = -0.5 * dblMarketState * dblMarketStateExponentiation;
+
+			return org.drip.execution.adaptive.NonDimensionalCost.EulerEnhancedLinearThreshold
+				(dblMarketState, ((1. / dblNonDimensionalTimeIncrement) + 0.25 * dblBurstiness *
+					dblBurstiness) * java.lang.Math.exp (dblMarketState) + dblNonDimensionalCostCross,
+						dblNonDimensionalCostCross);
+		}
 
 		double dblCostIncrementMid = advance (ndcInitial, dblMarketState) * dblNonDimensionalTimeIncrement;
 
@@ -175,7 +241,7 @@ public class NonDimensionalCostEvolver {
 			return new org.drip.execution.adaptive.NonDimensionalCost (dblCost, 0.5 * (dblCostIncrementUp -
 				dblCostIncrementDown) / dblMarketStateIncrement, (dblCostIncrementUp + dblCostIncrementDown -
 					2. * dblCostIncrementMid) / (dblMarketStateIncrement * dblMarketStateIncrement),
-						dblMarketStateExponentiation * dblCost);
+						dblCost / dblMarketStateExponentiation);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
