@@ -212,4 +212,34 @@ public class ArithmeticPriceEvolutionParametersBuilder {
 
 		return null;
 	}
+
+	/**
+	 * Construct a Linear Permanent Evolution Parameters from a Deterministic Coordinated Variation Instance
+	 * 
+	 * @param cv The Coordinated Volatility/Liquidity Variation
+	 * 
+	 * @return The Linear Permanent Evolution Parameters from a Deterministic Coordinated Variation Instance
+	 */
+
+	public static final org.drip.execution.dynamics.LinearPermanentExpectationParameters
+		ReferenceCoordinatedVariation (
+			final org.drip.execution.tradingtime.CoordinatedVariation cv)
+	{
+		if (null == cv) return null;
+
+		try {
+			return new org.drip.execution.dynamics.LinearPermanentExpectationParameters (new
+				org.drip.execution.parameters.ArithmeticPriceDynamicsSettings (0., new
+					org.drip.function.r1tor1.FlatUnivariate (cv.referenceVolatility()), 0.), new
+						org.drip.execution.profiletime.UniformParticipationRateLinear
+							(org.drip.execution.impact.ParticipationRateLinear.NoImpact()), new
+								org.drip.execution.profiletime.UniformParticipationRateLinear
+									(org.drip.execution.impact.ParticipationRateLinear.SlopeOnly
+										(cv.referenceLiquidity())));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

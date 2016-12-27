@@ -2,6 +2,7 @@
 package org.drip.sample.almgren2012;
 
 import org.drip.execution.adaptive.*;
+import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
 import org.drip.quant.common.FormatUtil;
@@ -93,17 +94,17 @@ public class AdaptiveOptimalTrajectoryHoldings {
 		double dblReferenceLiquidity = 1.;
 		double dblReferenceVolatility = 1.;
 		double dblInitialMarketState = -0.5;
-		double[] adblDimensionlessRiskAversion = new double[] {
-			0.1,
-			0.2,
-			0.3,
-			0.4,
-			0.6,
-			0.8,
-			1.0
+		double[] adblRiskAversion = new double[] {
+			0.01,
+			0.04,
+			0.09,
+			0.16,
+			0.36,
+			0.64,
+			1.00
 		};
 
-		double[][] aadblNonDimensionalHoldings = new double[adblDimensionlessRiskAversion.length][];
+		double[][] aadblNonDimensionalHoldings = new double[adblRiskAversion.length][];
 		double dblTimeInterval = dblExecutionTime / (iNumTimeNode - 1);
 		double[] adblMarketState = new double[iNumTimeNode];
 		adblMarketState[0] = dblInitialMarketState;
@@ -132,15 +133,13 @@ public class AdaptiveOptimalTrajectoryHoldings {
 			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
 		}
 
-		for (int i = 0; i < adblDimensionlessRiskAversion.length; ++i)
+		for (int i = 0; i < adblRiskAversion.length; ++i)
 			aadblNonDimensionalHoldings[i] = new ContinuousCoordinatedVariation (
 				os,
 				cv,
-				NonDimensionalCostEvolver.Standard (
-					oup,
-					adblDimensionlessRiskAversion[i]
-				)
-			).generate (adblMarketState).nonDimensionalHoldings();
+				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
+				NonDimensionalCostEvolver.Standard (oup)
+			).generateDynamic (adblMarketState).nonDimensionalHoldings();
 
 		System.out.println();
 
@@ -154,10 +153,10 @@ public class AdaptiveOptimalTrajectoryHoldings {
 
 		System.out.println ("\t||             - Time                                                          ||");
 
-		for (int j = 0; j < adblDimensionlessRiskAversion.length; ++j)
+		for (int j = 0; j < adblRiskAversion.length; ++j)
 			System.out.println (
 				"\t||             - Non Dimensional Risk Aversion =>" +
-				FormatUtil.FormatDouble (adblDimensionlessRiskAversion[j], 1, 2, 1.) +
+				FormatUtil.FormatDouble (dblRelaxationTime * dblReferenceVolatility * Math.sqrt (adblRiskAversion[j] / dblReferenceLiquidity), 1, 2, 1.) +
 				"                         ||"
 			);
 
@@ -166,7 +165,7 @@ public class AdaptiveOptimalTrajectoryHoldings {
 		for (int i = 0; i < iNumTimeNode - 1; ++i) {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (i * dblTimeInterval, 1, 2, 1.);
 
-			for (int j = 0; j < adblDimensionlessRiskAversion.length; ++j)
+			for (int j = 0; j < adblRiskAversion.length; ++j)
 				strDump = strDump + " | " + FormatUtil.FormatDouble (aadblNonDimensionalHoldings[j][i], 1, 4, 1.);
 
 			System.out.println (strDump + " ||");

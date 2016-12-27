@@ -74,6 +74,7 @@ package org.drip.execution.adaptive;
 public class ContinuousCoordinatedVariation {
 	private org.drip.execution.strategy.OrderSpecification _os = null;
 	private org.drip.execution.tradingtime.CoordinatedVariation _cv = null;
+	private org.drip.execution.risk.MeanVarianceObjectiveUtility _mvou = null;
 	private org.drip.execution.adaptive.NonDimensionalCostEvolver _ndce = null;
 
 	/**
@@ -81,6 +82,7 @@ public class ContinuousCoordinatedVariation {
 	 * 
 	 * @param os The Order Specification
 	 * @param cv The Coordinated Variation Instance
+	 * @param mvou  The Mean Variance Objective Utility Function
 	 * @param ndce The Non Dimensional Cost Evolver
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -89,10 +91,11 @@ public class ContinuousCoordinatedVariation {
 	public ContinuousCoordinatedVariation (
 		final org.drip.execution.strategy.OrderSpecification os,
 		final org.drip.execution.tradingtime.CoordinatedVariation cv,
+		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou,
 		final org.drip.execution.adaptive.NonDimensionalCostEvolver ndce)
 		throws java.lang.Exception
 	{
-		if (null == (_os = os) || null == (_cv = cv) || null == (_ndce = ndce))
+		if (null == (_os = os) || null == (_cv = cv) || null == (_mvou = mvou) || null == (_ndce = ndce))
 			throw new java.lang.Exception ("ContinuousCoordinatedVariation Constructor => Invalid Inputs");
 	}
 
@@ -130,6 +133,17 @@ public class ContinuousCoordinatedVariation {
 	}
 
 	/**
+	 * Retrieve the Mean Variance Objective Utility Function
+	 * 
+	 * @return The Mean Variance Objective Utility Function
+	 */
+
+	public org.drip.execution.risk.MeanVarianceObjectiveUtility objectiveUtility()
+	{
+		return _mvou;
+	}
+
+	/**
 	 * Generate the Continuous Coordinated Variation Dynamic Trajectory
 	 * 
 	 * @param adblMarketState Array of Realized Market States
@@ -137,7 +151,7 @@ public class ContinuousCoordinatedVariation {
 	 * @return The Continuous Coordinated Variation Dynamic Trajectory
 	 */
 
-	public org.drip.execution.adaptive.ContinuousCoordinatedVariationDynamic generate (
+	public org.drip.execution.adaptive.ContinuousCoordinatedVariationDynamic generateDynamic (
 		final double[] adblMarketState)
 	{
 		if (null == adblMarketState || !org.drip.quant.common.NumberUtil.IsValid (adblMarketState))
@@ -149,40 +163,61 @@ public class ContinuousCoordinatedVariation {
 
 		double dblExecutionSize = _os.size();
 
+		double dblReferenceLiquidity = _cv.referenceLiquidity();
+
 		double dblTimeIncrement = _os.maxExecutionTime() / (iNumTimeNode - 1);
 
-		double dblNonDimensionalCost = _cv.referenceLiquidity() * dblExecutionSize * dblExecutionSize /
-			_ndce.ornsteinUnlenbeckProcess().relaxationTime();
+		double dblRelaxationTime = _ndce.ornsteinUnlenbeckProcess().relaxationTime();
 
+		double dblMeanMarketUrgency = _cv.referenceVolatility() * java.lang.Math.sqrt (_mvou.riskAversion() /
+			dblReferenceLiquidity);
+
+		double dblTradeRateScale = dblExecutionSize / dblRelaxationTime;
 		double[] adblNonDimensionalHoldings = new double[iNumTimeNode];
-		double[] adblNonDimensionalAdjustedTradeRate = new double[iNumTimeNode];
+		double[] adblNonDimensionalScaledTradeRate = new double[iNumTimeNode];
 		adblNonDimensionalHoldings[0] = 1.;
-		adblNonDimensionalAdjustedTradeRate[0] = 0.;
+		adblNonDimensionalScaledTradeRate[0] = 0.;
 		org.drip.execution.adaptive.NonDimensionalCost[] aNDC = new
 			org.drip.execution.adaptive.NonDimensionalCost[iNumTimeNode];
 
 		if (null == (aNDC[0] = org.drip.execution.adaptive.NonDimensionalCost.Zero())) return null;
 
 		for (int i = 1; i < iNumTimeNode; ++i) {
-			if (null == (aNDC[i] = _ndce.evolve (aNDC[i - 1], adblMarketState[i], (iNumTimeNode - i) *
-				dblTimeIncrement, dblTimeIncrement)))
+			if (null == (aNDC[i] = _ndce.evolve (aNDC[i - 1], adblMarketState[i], dblMeanMarketUrgency *
+				dblRelaxationTime, (iNumTimeNode - i) * dblTimeIncrement, dblTimeIncrement)))
 				return null;
 
-			adblNonDimensionalAdjustedTradeRate[i] = aNDC[i].nonDimensionalTradeRate();
+			adblNonDimensionalScaledTradeRate[i] = adblNonDimensionalHoldings[i - 1] *
+				aNDC[i].nonDimensionalTradeRate();
 
-			if (adblNonDimensionalHoldings[i - 1] > 0.)
-				adblNonDimensionalHoldings[i] = adblNonDimensionalHoldings[i - 1] -
-					aNDC[i].nonDimensionalTradeRate() * dblTimeIncrement;
-
-			if (adblNonDimensionalHoldings[i] <= 0.) {
-				adblNonDimensionalHoldings[i] = 0.;
-				adblNonDimensionalAdjustedTradeRate[i] = 0.;
-			}
+			adblNonDimensionalHoldings[i] = adblNonDimensionalHoldings[i - 1] -
+				adblNonDimensionalScaledTradeRate[i] * dblTimeIncrement;
 		}
 
 		try {
 			return new org.drip.execution.adaptive.ContinuousCoordinatedVariationDynamic (dblExecutionSize,
-				aNDC, adblNonDimensionalHoldings, adblNonDimensionalAdjustedTradeRate);
+				aNDC, adblNonDimensionalHoldings, adblNonDimensionalScaledTradeRate, dblRelaxationTime,
+					dblReferenceLiquidity * dblExecutionSize * dblExecutionSize / dblTradeRateScale,
+						dblTradeRateScale, dblMeanMarketUrgency, dblMeanMarketUrgency * dblRelaxationTime);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate a Static, Non-adaptive Trading Trajectory Instance
+	 * 
+	 * @return The Static, Non-adaptive Trading Trajectory Instance
+	 */
+
+	public org.drip.execution.optimum.EfficientTradingTrajectory generateStatic()
+	{
+		try {
+			return new org.drip.execution.nonadaptive.ContinuousAlmgrenChriss (_os,
+				org.drip.execution.dynamics.ArithmeticPriceEvolutionParametersBuilder.ReferenceCoordinatedVariation
+					(_cv), _mvou).generate();
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

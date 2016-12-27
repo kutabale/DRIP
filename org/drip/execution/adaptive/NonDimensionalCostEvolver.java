@@ -75,7 +75,6 @@ public class NonDimensionalCostEvolver {
 	private static final double SINGULAR_URGENCY_THRESHOLD = 50.;
 
 	private boolean _bAsymptoticEnhancedEulerCorrection = false;
-	private double _dblDimensionlessRiskAversion = java.lang.Double.NaN;
 	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess _oup = null;
 	private double _dblAsymptoticEulerUrgencyThreshold = java.lang.Double.NaN;
 
@@ -83,18 +82,15 @@ public class NonDimensionalCostEvolver {
 	 * Construct a Standard NonDimensionalCostEvoler Instance
 	 * 
 	 * @param oup The Underlying Ornstein-Unlenbeck Process
-	 * @param dblDimensionlessRiskAversion The Non-dimensional Risk Aversion Parameter
 	 * 
 	 * @return The Standard NonDimensionalCostEvoler Instance
 	 */
 
 	public static final NonDimensionalCostEvolver Standard (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup,
-		final double dblDimensionlessRiskAversion)
+		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup)
 	{
 		try {
-			return new NonDimensionalCostEvolver (oup, dblDimensionlessRiskAversion,
-				SINGULAR_URGENCY_THRESHOLD, true);
+			return new NonDimensionalCostEvolver (oup, SINGULAR_URGENCY_THRESHOLD, true);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -104,14 +100,15 @@ public class NonDimensionalCostEvolver {
 
 	private double advance (
 		final org.drip.execution.adaptive.NonDimensionalCost ndcInitial,
-		final double dblMarketState)
+		final double dblMarketState,
+		final double dblDimensionlessRiskAversion)
 	{
 		double dblBurstiness = _oup.burstiness();
 
 		double dblNondimensionalCost = ndcInitial.realization();
 
-		return java.lang.Math.exp (-dblMarketState) * (_dblDimensionlessRiskAversion *
-			_dblDimensionlessRiskAversion - dblNondimensionalCost * dblNondimensionalCost) + 0.5 *
+		return java.lang.Math.exp (-dblMarketState) * (dblDimensionlessRiskAversion *
+			dblDimensionlessRiskAversion - dblNondimensionalCost * dblNondimensionalCost) + 0.5 *
 				dblBurstiness * dblBurstiness * ndcInitial.realizationJacobian() - dblMarketState *
 					ndcInitial.realizationGradient();
 	}
@@ -120,7 +117,6 @@ public class NonDimensionalCostEvolver {
 	 * NonDimensionalCostEvolver Constructor
 	 * 
 	 * @param oup The Underlying Ornstein-Unlenbeck Process
-	 * @param dblDimensionlessRiskAversion The Non-dimensional Risk Aversion Parameter
 	 * @param bAsymptoticEnhancedEulerCorrection Asymptotic Enhanced Euler Correction Application Flag
 	 * @param dblAsymptoticEulerUrgencyThreshold The Asymptotic Euler Urgency Threshold
 	 * 
@@ -129,14 +125,12 @@ public class NonDimensionalCostEvolver {
 
 	public NonDimensionalCostEvolver (
 		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup,
-		final double dblDimensionlessRiskAversion,
 		final double dblAsymptoticEulerUrgencyThreshold,
 		final boolean bAsymptoticEnhancedEulerCorrection)
 		throws java.lang.Exception
 	{
-		if (null == (_oup = oup) || !org.drip.quant.common.NumberUtil.IsValid (_dblDimensionlessRiskAversion
-			= dblDimensionlessRiskAversion) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblAsymptoticEulerUrgencyThreshold = dblAsymptoticEulerUrgencyThreshold))
+		if (null == (_oup = oup) || !org.drip.quant.common.NumberUtil.IsValid
+			(_dblAsymptoticEulerUrgencyThreshold = dblAsymptoticEulerUrgencyThreshold))
 			throw new java.lang.Exception ("NonDimensionalCostEvolver Constructor => Invalid Inputs");
 
 		_bAsymptoticEnhancedEulerCorrection = bAsymptoticEnhancedEulerCorrection;
@@ -176,21 +170,11 @@ public class NonDimensionalCostEvolver {
 	}
 
 	/**
-	 * Retrieve the Non-dimensional Risk Aversion Parameter
-	 * 
-	 * @return The Non-dimensional Risk Aversion Parameter
-	 */
-
-	public double dimensionlessRiskAversion()
-	{
-		return _dblDimensionlessRiskAversion;
-	}
-
-	/**
 	 * Evolve a Single Time Step of the Optimal Trajectory
 	 * 
 	 * @param ndcInitial The Initial Non-dimensional Cost Value Function
 	 * @param dblMarketState The Non-dimensional Market State
+	 * @param dblDimensionlessRiskAversion The Non-dimensional Risk Aversion Parameter
 	 * @param dblNonDimensionalTime The Non Dimensional Time Node
 	 * @param dblNonDimensionalTimeIncrement The Non Dimensional Time Increment
 	 * 
@@ -200,12 +184,14 @@ public class NonDimensionalCostEvolver {
 	public org.drip.execution.adaptive.NonDimensionalCost evolve (
 		final org.drip.execution.adaptive.NonDimensionalCost ndcInitial,
 		final double dblMarketState,
+		final double dblDimensionlessRiskAversion,
 		final double dblNonDimensionalTime,
 		final double dblNonDimensionalTimeIncrement)
 	{
 		if (null == ndcInitial || !org.drip.quant.common.NumberUtil.IsValid (dblMarketState) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTime) ||
-				!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTimeIncrement))
+			!org.drip.quant.common.NumberUtil.IsValid (dblDimensionlessRiskAversion) ||
+				!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTime) ||
+					!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTimeIncrement))
 			return null;
 
 		double dblMarketStateExponentiation = java.lang.Math.exp (dblMarketState);
@@ -227,13 +213,14 @@ public class NonDimensionalCostEvolver {
 						dblNonDimensionalCostCross);
 		}
 
-		double dblCostIncrementMid = advance (ndcInitial, dblMarketState) * dblNonDimensionalTimeIncrement;
-
-		double dblCostIncrementUp = advance (ndcInitial, dblMarketState + dblMarketStateIncrement) *
+		double dblCostIncrementMid = advance (ndcInitial, dblMarketState, dblDimensionlessRiskAversion) *
 			dblNonDimensionalTimeIncrement;
 
-		double dblCostIncrementDown = advance (ndcInitial, dblMarketState - dblMarketStateIncrement) *
-			dblNonDimensionalTimeIncrement;
+		double dblCostIncrementUp = advance (ndcInitial, dblMarketState + dblMarketStateIncrement,
+			dblDimensionlessRiskAversion) * dblNonDimensionalTimeIncrement;
+
+		double dblCostIncrementDown = advance (ndcInitial, dblMarketState - dblMarketStateIncrement,
+			dblDimensionlessRiskAversion) * dblNonDimensionalTimeIncrement;
 
 		double dblCost = ndcInitial.realization() + dblCostIncrementMid;
 

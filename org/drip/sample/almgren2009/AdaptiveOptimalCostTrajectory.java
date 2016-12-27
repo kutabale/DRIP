@@ -108,10 +108,7 @@ public class AdaptiveOptimalCostTrajectory {
 			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
 		}
 
-		NonDimensionalCostEvolver ndce = NonDimensionalCostEvolver.Standard (
-			oup,
-			dblDimensionlessRiskAversion
-		);
+		NonDimensionalCostEvolver ndce = NonDimensionalCostEvolver.Standard (oup);
 
 		NonDimensionalCost ndc = NonDimensionalCost.Zero();
 
@@ -151,16 +148,14 @@ public class AdaptiveOptimalCostTrajectory {
 			ndc = ndce.evolve (
 				ndc,
 				adblMarketState[i],
+				dblDimensionlessRiskAversion,
 				(iNumTimeNode - i) * dblTimeInterval,
 				dblTimeInterval
 			);
 
-			double dblNonDimensionalTradeRate = ndc.nonDimensionalTradeRate();
+			double dblNonDimensionalTradeRate = dblNonDimensionalHoldings * ndc.nonDimensionalTradeRate();
 
-			if (dblNonDimensionalHoldings > 0.)
-				dblNonDimensionalHoldings = dblNonDimensionalHoldings - dblNonDimensionalTradeRate * dblTimeInterval;
-
-			if (dblNonDimensionalHoldings <= 0.) dblNonDimensionalHoldings = 0.;
+			dblNonDimensionalHoldings = dblNonDimensionalHoldings - dblNonDimensionalTradeRate * dblTimeInterval;
 
 			System.out.println ("\t||" + 
 				FormatUtil.FormatDouble (dblTimeInterval * i, 1, 2, 1.) + " => " +

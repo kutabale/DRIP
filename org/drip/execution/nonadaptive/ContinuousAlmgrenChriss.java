@@ -99,7 +99,17 @@ public class ContinuousAlmgrenChriss extends org.drip.execution.nonadaptive.Stat
 		return null;
 	}
 
-	private ContinuousAlmgrenChriss (
+	/**
+	 * ContinuousAlmgrenChriss Constructor
+	 * 
+	 * @param os The Order Specification
+	 * @param lpep The Linear Impact Expectation Parameters
+	 * @param mvou The Mean Variation Objective Utility
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public ContinuousAlmgrenChriss (
 		final org.drip.execution.strategy.OrderSpecification os,
 		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou)
