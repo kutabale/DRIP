@@ -56,9 +56,11 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * AdaptiveOptimalTrajectoryHoldings simulates the Outstanding Holdings from the Sample Realization of the
- *  Adaptive Cost Strategy using the Market State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck
- *  Evolution Dynamics. The References are:
+ * AdaptiveZeroInitialHoldings simulates the Outstanding Holdings from the Sample Realization of the Adaptive
+ *  Cost Strategy using the Market State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck Evolution
+ *  Dynamics. The Initial Dynamics is derived from the "Mean Market State" Initial Static Trajectory. The
+ *  Initial Dynamics corresponds to the Zero Cost, Zero Cost Sensitivities, and Zero Trade Rate. The
+ *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -78,7 +80,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AdaptiveOptimalTrajectoryHoldings {
+public class AdaptiveZeroInitialHoldings {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -134,11 +136,12 @@ public class AdaptiveOptimalTrajectoryHoldings {
 		}
 
 		for (int i = 0; i < adblRiskAversion.length; ++i)
-			aadblNonDimensionalHoldings[i] = new ContinuousCoordinatedVariation (
+			aadblNonDimensionalHoldings[i] = new CoordinatedVariationTrajectoryGenerator (
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
-				NonDimensionalCostEvolver.Standard (oup)
+				NonDimensionalCostEvolver.Standard (oup),
+				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
 			).generateDynamic (adblMarketState).nonDimensionalHoldings();
 
 		System.out.println();

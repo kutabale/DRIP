@@ -48,10 +48,10 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * ContinuousCoordinatedVariationTrajectory contains the Continuous HJB-based MultiStep Optimal Cost Dynamic
- *  Trajectory Generation Metrics using the Coordinated Variation Version of the Stochastic Volatility and
- *  the Transaction Function arising from the Realization of the Market State Variable as described in the
- *  "Trading Time" Model. The References are:
+ * CoordinatedVariationTrajectory holds the "Common" Measures generated from the HJB-based MultiStep Optimal
+ *  Cost Dynamic Trajectory Generation using the Coordinated Variation Version of the Stochastic Volatility
+ *  and the Transaction Function arising from the Realization of the Market State Variable as described in
+ *  the "Trading Time" Model. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -71,110 +71,33 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ContinuousCoordinatedVariationTrajectory {
-	private double _dblOrderSize = java.lang.Double.NaN;
-	private double _dblCostScale = java.lang.Double.NaN;
-	private double _dblTimeScale = java.lang.Double.NaN;
-	private double _dblTradeRateScale = java.lang.Double.NaN;
-	private double _dblMeanMarketUrgency = java.lang.Double.NaN;
-	private double _dblNonDimensionalRiskAversion = java.lang.Double.NaN;
+public class CoordinatedVariationTrajectory {
+	private org.drip.execution.adaptive.CoordinatedVariationTrajectoryDeterminant _cvtd = null;
 
 	/**
-	 * ContinuousCoordinatedVariationDynamic Constructor
+	 * CoordinatedVariationTrajectory Constructor
 	 * 
-	 * @param dblOrderSize The Order Size
-	 * @param dblTimeScale The Time Scale
-	 * @param dblCostScale The Cost Scale
-	 * @param dblTradeRateScale The Trade Rate Scale
-	 * @param dblMeanMarketUrgency The Mean Market Urgency
-	 * @param dblNonDimensionalRiskAversion The Non Dimensional Risk Aversion Parameter
+	 * @param cvtd The Coordinated Variation Trajectory Determinant 
 	 * 
-	 * @throws java.lang.Exception Thrown if the the Inputs are Invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ContinuousCoordinatedVariationTrajectory (
-		final double dblOrderSize,
-		final double dblTimeScale,
-		final double dblCostScale,
-		final double dblTradeRateScale,
-		final double dblMeanMarketUrgency,
-		final double dblNonDimensionalRiskAversion)
+	public CoordinatedVariationTrajectory (
+		final org.drip.execution.adaptive.CoordinatedVariationTrajectoryDeterminant cvtd)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblOrderSize = dblOrderSize) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblTimeScale = dblTimeScale) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCostScale = dblCostScale) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRateScale = dblTradeRateScale) ||
-						!org.drip.quant.common.NumberUtil.IsValid (_dblMeanMarketUrgency =
-							dblMeanMarketUrgency) || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblNonDimensionalRiskAversion = dblNonDimensionalRiskAversion))
-			throw new java.lang.Exception
-				("ContinuousCoordinatedVariationDynamic Constructor => Invalid Inputs");
+		if (null == (_cvtd = cvtd))
+			throw new java.lang.Exception ("CoordinatedVariationTrajectory Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Order Size
+	 * Retrieve The Coordinated Variation Trajectory Determinant Instance
 	 * 
-	 * @return The Order Size
+	 * @return The Coordinated Variation Trajectory Determinant Instance
 	 */
 
-	public double orderSize()
+	public org.drip.execution.adaptive.CoordinatedVariationTrajectoryDeterminant trajectoryDeterminant()
 	{
-		return _dblOrderSize;
-	}
-
-	/**
-	 * Retrieve the Time Scale
-	 * 
-	 * @return The Time Scale
-	 */
-
-	public double timeScale()
-	{
-		return _dblTimeScale;
-	}
-
-	/**
-	 * Retrieve the Cost Scale
-	 * 
-	 * @return The Cost Scale
-	 */
-
-	public double costScale()
-	{
-		return _dblCostScale;
-	}
-
-	/**
-	 * Retrieve the Trade Rate Scale
-	 * 
-	 * @return The Trade Rate Scale
-	 */
-
-	public double tradeRateScale()
-	{
-		return _dblTradeRateScale;
-	}
-
-	/**
-	 * Retrieve the Mean Market Urgency
-	 * 
-	 * @return The Mean Market Urgency
-	 */
-
-	public double meanMarketUrgency()
-	{
-		return _dblMeanMarketUrgency;
-	}
-
-	/**
-	 * Retrieve the Non Dimensional Risk Aversion Parameter
-	 * 
-	 * @return The Non Dimensional Risk Aversion Parameter
-	 */
-
-	public double nonDimensionalRiskAversion()
-	{
-		return _dblNonDimensionalRiskAversion;
+		return _cvtd;
 	}
 }

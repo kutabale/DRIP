@@ -48,10 +48,9 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * ContinuousCoordinatedVariationDynamic implements the Continuous HJB-based Single Step Optimal Cost Dynamic
- *  Trajectory using the Coordinated Variation Version of the Stochastic Volatility and the Transaction
- *  Function arising from the Realization of the Market State Variable as described in the "Trading Time"
- *  Model. The References are:
+ * CoordinatedVariationDynamic implements the HJB-based Single Step Optimal Cost Dynamic Trajectory using the
+ *  Coordinated Variation Version of the Stochastic Volatility and the Transaction Function arising from the
+ *  Realization of the Market State Variable as described in the "Trading Time" Model. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -71,84 +70,47 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ContinuousCoordinatedVariationDynamic {
+public class CoordinatedVariationDynamic extends org.drip.execution.adaptive.CoordinatedVariationTrajectory {
 	private double[] _adblNonDimensionalHoldings = null;
-	private double _dblOrderSize = java.lang.Double.NaN;
-	private double _dblCostScale = java.lang.Double.NaN;
-	private double _dblTimeScale = java.lang.Double.NaN;
-	private double _dblTradeRateScale = java.lang.Double.NaN;
 	private double[] _adblScaledNonDimensionalTradeRate = null;
-	private double _dblMeanMarketUrgency = java.lang.Double.NaN;
-	private double _dblNonDimensionalRiskAversion = java.lang.Double.NaN;
 	private org.drip.execution.adaptive.NonDimensionalCost[] _aNDC = null;
 
 	/**
-	 * ContinuousCoordinatedVariationDynamic Constructor
+	 * CoordinatedVariationDynamic Constructor
 	 * 
-	 * @param dblOrderSize The Order Size
-	 * @param aNDC The Array of the Non Dimensional Costs
+	 * @param cvtd The Coordinated Variation Trajectory Determinant 
 	 * @param adblNonDimensionalHoldings The Array of the Non Dimensional Holdings
 	 * @param adblScaledNonDimensionalTradeRate The Array of the Scaled Non Dimensional Trade Rate
-	 * @param dblTimeScale The Time Scale
-	 * @param dblCostScale The Cost Scale
-	 * @param dblTradeRateScale The Trade Rate Scale
-	 * @param dblMeanMarketUrgency The Mean Market Urgency
-	 * @param dblNonDimensionalRiskAversion The Non Dimensional Risk Aversion Parameter
+	 * @param aNDC The Array of the Non Dimensional Costs
 	 * 
 	 * @throws java.lang.Exception Thrown if the the Inputs are Invalid
 	 */
 
-	public ContinuousCoordinatedVariationDynamic (
-		final double dblOrderSize,
-		final org.drip.execution.adaptive.NonDimensionalCost[] aNDC,
+	public CoordinatedVariationDynamic (
+		final org.drip.execution.adaptive.CoordinatedVariationTrajectoryDeterminant cvtd,
 		final double[] adblNonDimensionalHoldings,
 		final double[] adblScaledNonDimensionalTradeRate,
-		final double dblTimeScale,
-		final double dblCostScale,
-		final double dblTradeRateScale,
-		final double dblMeanMarketUrgency,
-		final double dblNonDimensionalRiskAversion)
+		final org.drip.execution.adaptive.NonDimensionalCost[] aNDC)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblOrderSize = dblOrderSize) || null == (_aNDC =
-			aNDC) || null == (_adblNonDimensionalHoldings = adblNonDimensionalHoldings) || null ==
-				(_adblScaledNonDimensionalTradeRate = adblScaledNonDimensionalTradeRate) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_adblNonDimensionalHoldings) ||
-						!org.drip.quant.common.NumberUtil.IsValid (_adblScaledNonDimensionalTradeRate) ||
-							!org.drip.quant.common.NumberUtil.IsValid (_dblTimeScale = dblTimeScale) ||
-								!org.drip.quant.common.NumberUtil.IsValid (_dblCostScale = dblCostScale) ||
-									!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRateScale =
-										dblTradeRateScale) || !org.drip.quant.common.NumberUtil.IsValid
-											(_dblMeanMarketUrgency = dblMeanMarketUrgency) ||
-												!org.drip.quant.common.NumberUtil.IsValid
-													(_dblNonDimensionalRiskAversion =
-														dblNonDimensionalRiskAversion))
-			throw new java.lang.Exception
-				("ContinuousCoordinatedVariationDynamic Constructor => Invalid Inputs");
+		super (cvtd);
+
+		if (null == (_aNDC = aNDC) || null == (_adblNonDimensionalHoldings = adblNonDimensionalHoldings) ||
+			null == (_adblScaledNonDimensionalTradeRate = adblScaledNonDimensionalTradeRate) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_adblNonDimensionalHoldings) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_adblScaledNonDimensionalTradeRate))
+			throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
 
 		int iNumTimeNode = _adblNonDimensionalHoldings.length;
 
 		if (0 == iNumTimeNode || iNumTimeNode != _adblScaledNonDimensionalTradeRate.length || iNumTimeNode !=
 			_aNDC.length)
-			throw new java.lang.Exception
-				("ContinuousCoordinatedVariationDynamic Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
 			if (null == _aNDC[i])
-				throw new java.lang.Exception
-					("ContinuousCoordinatedVariationDynamic Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
 		}
-	}
-
-	/**
-	 * Retrieve the Order Size
-	 * 
-	 * @return The Order Size
-	 */
-
-	public double orderSize()
-	{
-		return _dblOrderSize;
 	}
 
 	/**
@@ -182,60 +144,5 @@ public class ContinuousCoordinatedVariationDynamic {
 	public org.drip.execution.adaptive.NonDimensionalCost[] nonDimensionalCost()
 	{
 		return _aNDC;
-	}
-
-	/**
-	 * Retrieve the Time Scale
-	 * 
-	 * @return The Time Scale
-	 */
-
-	public double timeScale()
-	{
-		return _dblTimeScale;
-	}
-
-	/**
-	 * Retrieve the Cost Scale
-	 * 
-	 * @return The Cost Scale
-	 */
-
-	public double costScale()
-	{
-		return _dblCostScale;
-	}
-
-	/**
-	 * Retrieve the Trade Rate Scale
-	 * 
-	 * @return The Trade Rate Scale
-	 */
-
-	public double tradeRateScale()
-	{
-		return _dblTradeRateScale;
-	}
-
-	/**
-	 * Retrieve the Mean Market Urgency
-	 * 
-	 * @return The Mean Market Urgency
-	 */
-
-	public double meanMarketUrgency()
-	{
-		return _dblMeanMarketUrgency;
-	}
-
-	/**
-	 * Retrieve the Non Dimensional Risk Aversion Parameter
-	 * 
-	 * @return The Non Dimensional Risk Aversion Parameter
-	 */
-
-	public double nonDimensionalRiskAversion()
-	{
-		return _dblNonDimensionalRiskAversion;
 	}
 }

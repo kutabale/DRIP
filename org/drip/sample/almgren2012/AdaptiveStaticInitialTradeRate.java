@@ -2,7 +2,6 @@
 package org.drip.sample.almgren2012;
 
 import org.drip.execution.adaptive.*;
-import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
@@ -57,9 +56,10 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * StaticOptimalTrajectoryTradeRate simulates the Trade Rate from the Sample Realization of the Static Cost
- *  Strategy extracted using the Mean Market State that follows the Zero Mean Ornstein-Uhlenbeck Evolution
- *  Dynamics. The References are:
+ * AdaptiveStaticInitialTradeRate simulates the Trade Rate from the Sample Realization of the Adaptive Cost
+ *  Strategy using the Market State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck Evolution
+ *  Dynamics. The Initial Dynamics is derived from the "Mean Market State" Initial Static Trajectory. The
+ *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -79,7 +79,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class StaticOptimalTrajectoryTradeRate {
+public class AdaptiveStaticInitialTradeRate {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -94,6 +94,7 @@ public class StaticOptimalTrajectoryTradeRate {
 		double dblRelaxationTime = 1.;
 		double dblReferenceLiquidity = 1.;
 		double dblReferenceVolatility = 1.;
+		double dblInitialMarketState = -0.5;
 		double[] adblRiskAversion = new double[] {
 			0.01,
 			0.04,
@@ -104,8 +105,10 @@ public class StaticOptimalTrajectoryTradeRate {
 			1.00
 		};
 
-		EfficientTradingTrajectoryContinuous[] aETTCHoldings = new EfficientTradingTrajectoryContinuous[adblRiskAversion.length];
+		double[][] aadblAdjustedNonDimensionalTradeRate = new double[adblRiskAversion.length][];
 		double dblTimeInterval = dblExecutionTime / (iNumTimeNode - 1);
+		double[] adblMarketState = new double[iNumTimeNode];
+		adblMarketState[0] = dblInitialMarketState;
 
 		OrderSpecification os = new OrderSpecification (
 			dblSize,
@@ -122,20 +125,29 @@ public class StaticOptimalTrajectoryTradeRate {
 			dblRelaxationTime
 		);
 
+		for (int i = 0; i < iNumTimeNode - 1; ++i) {
+			GenericIncrement gi = oup.increment (
+				adblMarketState[i],
+				dblTimeInterval
+			);
+
+			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
+		}
+
 		for (int i = 0; i < adblRiskAversion.length; ++i)
-			aETTCHoldings[i] = new CoordinatedVariationTrajectoryGenerator (
+			aadblAdjustedNonDimensionalTradeRate[i] = new CoordinatedVariationTrajectoryGenerator (
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
 				NonDimensionalCostEvolver.Standard (oup),
-				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
-			).generateStatic().trajectory();
+				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_STATIC_INITIALIZATION
+			).generateDynamic (adblMarketState).scaledNonDimensionalTradeRate();
 
 		System.out.println();
 
 		System.out.println ("\t||-----------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                     STATIC OPTIMAL TRAJECTORY TRADE RATE                    ||");
+		System.out.println ("\t||                    ADAPTIVE OPTIMAL TRAJECTORY TRADE RATE                   ||");
 
 		System.out.println ("\t||-----------------------------------------------------------------------------||");
 
@@ -156,7 +168,7 @@ public class StaticOptimalTrajectoryTradeRate {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (i * dblTimeInterval, 1, 2, 1.);
 
 			for (int j = 0; j < adblRiskAversion.length; ++j)
-				strDump = strDump + " | " + FormatUtil.FormatDouble (dblTimeInterval * aETTCHoldings[j].tradeRate().evaluate (dblTimeInterval * i), 1, 4, 1.);
+				strDump = strDump + " | " + FormatUtil.FormatDouble (aadblAdjustedNonDimensionalTradeRate[j][i], 1, 4, 1.);
 
 			System.out.println (strDump + " ||");
 		}

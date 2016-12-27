@@ -56,9 +56,10 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * AdaptiveOptimalTrajectoryTradeRate simulates the Trade Rate from the Sample Realization of the Adaptive
- *  Cost Strategy using the Market State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck Evolution
- *  Dynamics. The References are:
+ * AdaptiveStaticInitialHoldings simulates the Outstanding Holdings from the Sample Realization of the
+ *  Adaptive Cost Strategy using the Market State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck
+ *  Evolution Dynamics. The Initial Dynamics is derived from the "Mean Market State" Initial Static
+ *  Trajectory. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -78,7 +79,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AdaptiveOptimalTrajectoryTradeRate {
+public class AdaptiveStaticInitialHoldings {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -104,7 +105,7 @@ public class AdaptiveOptimalTrajectoryTradeRate {
 			1.00
 		};
 
-		double[][] aadblAdjustedNonDimensionalTradeRate = new double[adblRiskAversion.length][];
+		double[][] aadblNonDimensionalHoldings = new double[adblRiskAversion.length][];
 		double dblTimeInterval = dblExecutionTime / (iNumTimeNode - 1);
 		double[] adblMarketState = new double[iNumTimeNode];
 		adblMarketState[0] = dblInitialMarketState;
@@ -134,18 +135,19 @@ public class AdaptiveOptimalTrajectoryTradeRate {
 		}
 
 		for (int i = 0; i < adblRiskAversion.length; ++i)
-			aadblAdjustedNonDimensionalTradeRate[i] = new ContinuousCoordinatedVariation (
+			aadblNonDimensionalHoldings[i] = new CoordinatedVariationTrajectoryGenerator (
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
-				NonDimensionalCostEvolver.Standard (oup)
-			).generateDynamic (adblMarketState).scaledNonDimensionalTradeRate();
+				NonDimensionalCostEvolver.Standard (oup),
+				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_STATIC_INITIALIZATION
+			).generateDynamic (adblMarketState).nonDimensionalHoldings();
 
 		System.out.println();
 
 		System.out.println ("\t||-----------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                    ADAPTIVE OPTIMAL TRAJECTORY TRADE RATE                   ||");
+		System.out.println ("\t||                     ADAPTIVE OPTIMAL TRAJECTORY HOLDINGS                    ||");
 
 		System.out.println ("\t||-----------------------------------------------------------------------------||");
 
@@ -166,7 +168,7 @@ public class AdaptiveOptimalTrajectoryTradeRate {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (i * dblTimeInterval, 1, 2, 1.);
 
 			for (int j = 0; j < adblRiskAversion.length; ++j)
-				strDump = strDump + " | " + FormatUtil.FormatDouble (aadblAdjustedNonDimensionalTradeRate[j][i], 1, 4, 1.);
+				strDump = strDump + " | " + FormatUtil.FormatDouble (aadblNonDimensionalHoldings[j][i], 1, 4, 1.);
 
 			System.out.println (strDump + " ||");
 		}

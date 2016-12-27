@@ -123,12 +123,13 @@ public class StaticOptimalTrajectoryHoldings {
 		);
 
 		for (int i = 0; i < adblRiskAversion.length; ++i)
-			aETTCHoldings[i] = (EfficientTradingTrajectoryContinuous) new ContinuousCoordinatedVariation (
+			aETTCHoldings[i] = new CoordinatedVariationTrajectoryGenerator (
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
-				NonDimensionalCostEvolver.Standard (oup)
-			).generateStatic();
+				NonDimensionalCostEvolver.Standard (oup),
+				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
+			).generateStatic().trajectory();
 
 		System.out.println();
 
