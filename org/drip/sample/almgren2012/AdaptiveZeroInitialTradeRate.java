@@ -105,8 +105,8 @@ public class AdaptiveZeroInitialTradeRate {
 			1.00
 		};
 
+		double dblNonDimensionalTimeInterval = dblExecutionTime / (iNumTimeNode - 1) / dblRelaxationTime;
 		double[][] aadblAdjustedNonDimensionalTradeRate = new double[adblRiskAversion.length][];
-		double dblTimeInterval = dblExecutionTime / (iNumTimeNode - 1);
 		double[] adblMarketState = new double[iNumTimeNode];
 		adblMarketState[0] = dblInitialMarketState;
 
@@ -128,7 +128,7 @@ public class AdaptiveZeroInitialTradeRate {
 		for (int i = 0; i < iNumTimeNode - 1; ++i) {
 			GenericIncrement gi = oup.increment (
 				adblMarketState[i],
-				dblTimeInterval
+				dblNonDimensionalTimeInterval * dblRelaxationTime
 			);
 
 			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
@@ -141,7 +141,7 @@ public class AdaptiveZeroInitialTradeRate {
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
 				NonDimensionalCostEvolver.Standard (oup),
 				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
-			).generateDynamic (adblMarketState).scaledNonDimensionalTradeRate();
+			).adaptive (adblMarketState).scaledNonDimensionalTradeRate();
 
 		System.out.println();
 
@@ -165,7 +165,7 @@ public class AdaptiveZeroInitialTradeRate {
 		System.out.println ("\t||-----------------------------------------------------------------------------||");
 
 		for (int i = 0; i < iNumTimeNode - 1; ++i) {
-			String strDump = "\t|| " + FormatUtil.FormatDouble (i * dblTimeInterval, 1, 2, 1.);
+			String strDump = "\t|| " + FormatUtil.FormatDouble (i * dblNonDimensionalTimeInterval * dblRelaxationTime, 1, 2, 1.);
 
 			for (int j = 0; j < adblRiskAversion.length; ++j)
 				strDump = strDump + " | " + FormatUtil.FormatDouble (aadblAdjustedNonDimensionalTradeRate[j][i], 1, 4, 1.);

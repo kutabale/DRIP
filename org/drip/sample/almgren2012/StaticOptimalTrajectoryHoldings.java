@@ -129,7 +129,7 @@ public class StaticOptimalTrajectoryHoldings {
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
 				NonDimensionalCostEvolver.Standard (oup),
 				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
-			).generateStatic().trajectory();
+			).nonAdaptive().trajectory();
 
 		System.out.println();
 

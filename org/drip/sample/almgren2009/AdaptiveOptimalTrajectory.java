@@ -1,5 +1,5 @@
 
-package org.drip.sample.almgren2012;
+package org.drip.sample.almgren2009;
 
 import org.drip.execution.adaptive.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
@@ -56,11 +56,10 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * AdaptiveZeroInitialHoldings simulates the Outstanding Holdings from the Sample Realization of the Adaptive
- *  Cost Strategy using the Market State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck Evolution
- *  Dynamics. The Initial Dynamics is derived from the "Mean Market State" Initial Static Trajectory. The
- *  Initial Dynamics corresponds to the Zero Cost, Zero Cost Sensitivities, and Zero Trade Rate. The
- *  References are:
+ * AdaptiveOptimalTrajectory simulates the Outstanding Holdings and the Trade Rate from the Sample
+ *  Realization of the Adaptive Cost Strategy using the Market State Trajectory the follows the Zero Mean
+ *  Ornstein-Uhlenbeck Evolution Dynamics. The Initial Dynamics is derived from the "Mean Market State"
+ *  Initial Static Trajectory. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -80,7 +79,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AdaptiveZeroInitialHoldings {
+public class AdaptiveOptimalTrajectory {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -89,25 +88,46 @@ public class AdaptiveZeroInitialHoldings {
 		EnvManager.InitEnv ("");
 
 		double dblSize = 1.;
-		int iNumTimeNode = 51;
+		int iNumTimeNode = 41;
 		double dblBurstiness = 1.;
 		double dblExecutionTime = 10.;
 		double dblRelaxationTime = 1.;
 		double dblReferenceLiquidity = 1.;
 		double dblReferenceVolatility = 1.;
 		double dblInitialMarketState = -0.5;
-		double[] adblRiskAversion = new double[] {
-			0.01,
-			0.04,
-			0.09,
-			0.16,
-			0.36,
-			0.64,
-			1.00
-		};
+		double dblRiskAversion = 0.5;
+
+		System.out.println (
+			"\t|| Order Size                                =>  " +
+			FormatUtil.FormatDouble (dblSize, 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Order Execution Time                      => " +
+			FormatUtil.FormatDouble (dblExecutionTime, 2, 0, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Ornstein Uhlenbeck Burstiness             =>  " +
+			FormatUtil.FormatDouble (dblBurstiness, 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Ornstein Uhlenbeck Relaxation Time        =>  " +
+			FormatUtil.FormatDouble (dblRelaxationTime, 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Coordinated Variation Reference Liquidity =>  " +
+			FormatUtil.FormatDouble (dblReferenceLiquidity, 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Number of Evolution Nodes                 => " +
+			FormatUtil.FormatDouble (dblSize, 2, 0, 1.) + "     ||"
+		);
 
 		double dblNonDimensionalTimeInterval = dblExecutionTime / (iNumTimeNode - 1) / dblRelaxationTime;
-		double[][] aadblNonDimensionalHoldings = new double[adblRiskAversion.length][];
 		double[] adblMarketState = new double[iNumTimeNode];
 		adblMarketState[0] = dblInitialMarketState;
 
@@ -135,46 +155,53 @@ public class AdaptiveZeroInitialHoldings {
 			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
 		}
 
-		for (int i = 0; i < adblRiskAversion.length; ++i)
-			aadblNonDimensionalHoldings[i] = new CoordinatedVariationTrajectoryGenerator (
-				os,
-				cv,
-				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
-				NonDimensionalCostEvolver.Standard (oup),
-				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
-			).adaptive (adblMarketState).nonDimensionalHoldings();
+		CoordinatedVariationDynamic cvd = new CoordinatedVariationTrajectoryGenerator (
+			os,
+			cv,
+			new MeanVarianceObjectiveUtility (dblRiskAversion),
+			NonDimensionalCostEvolver.Standard (oup),
+			CoordinatedVariationTrajectoryGenerator.TRADE_RATE_STATIC_INITIALIZATION
+		).adaptive (adblMarketState);
+
+		double[] adblNonDimensionalHoldings = cvd.nonDimensionalHoldings();
+
+		double[] adblNonDimensionalTradeRate = cvd.scaledNonDimensionalTradeRate();
+
+		NonDimensionalCost[] aNDC = cvd.nonDimensionalCost();
 
 		System.out.println();
 
-		System.out.println ("\t||-----------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------||");
 
-		System.out.println ("\t||                     ADAPTIVE OPTIMAL TRAJECTORY HOLDINGS                    ||");
+		System.out.println ("\t||     ADAPTIVE OPTIMAL TRAJECTORY     ||");
 
-		System.out.println ("\t||-----------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------||");
 
-		System.out.println ("\t||     L -> R:                                                                 ||");
+		System.out.println ("\t||     L -> R:                         ||");
 
-		System.out.println ("\t||             - Time                                                          ||");
+		System.out.println ("\t||             - Time                  ||");
 
-		for (int j = 0; j < adblRiskAversion.length; ++j)
-			System.out.println (
-				"\t||             - Non Dimensional Risk Aversion =>" +
-				FormatUtil.FormatDouble (dblRelaxationTime * dblReferenceVolatility * Math.sqrt (adblRiskAversion[j] / dblReferenceLiquidity), 1, 2, 1.) +
-				"                         ||"
-			);
+		System.out.println ("\t||             - Holdings              ||");
 
-		System.out.println ("\t||-----------------------------------------------------------------------------||");
+		System.out.println ("\t||             - Trade Rate            ||");
+
+		System.out.println ("\t||             - Realized Cost         ||");
+
+		System.out.println ("\t||-------------------------------------||");
 
 		for (int i = 0; i < iNumTimeNode - 1; ++i) {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (i * dblNonDimensionalTimeInterval * dblRelaxationTime, 1, 2, 1.);
 
-			for (int j = 0; j < adblRiskAversion.length; ++j)
-				strDump = strDump + " | " + FormatUtil.FormatDouble (aadblNonDimensionalHoldings[j][i], 1, 4, 1.);
+			strDump = strDump + " | " + FormatUtil.FormatDouble (adblNonDimensionalHoldings[i], 1, 4, 1.);
+
+			strDump = strDump + " | " + FormatUtil.FormatDouble (adblNonDimensionalTradeRate[i], 1, 4, 1.);
+
+			strDump = strDump + " | " + FormatUtil.FormatDouble (aNDC[i].realization(), 1, 4, 1.);
 
 			System.out.println (strDump + " ||");
 		}
 
-		System.out.println ("\t||-----------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------||");
 
 		System.out.println();
 	}

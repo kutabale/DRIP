@@ -56,10 +56,9 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * AdaptiveZeroInitialHoldings simulates the Outstanding Holdings from the Sample Realization of the Adaptive
- *  Cost Strategy using the Market State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck Evolution
- *  Dynamics. The Initial Dynamics is derived from the "Mean Market State" Initial Static Trajectory. The
- *  Initial Dynamics corresponds to the Zero Cost, Zero Cost Sensitivities, and Zero Trade Rate. The
+ * RollingHorizonOptimalHoldings simulates the Holdings from the Sample Realization of the Adaptive Cost
+ *  Strategy using the Market State Trajectory the follows the Zero Mean Ornstein-Uhlenbeck Evolution
+ *  Dynamics. Instead of a HJB Based Truly Adaptive Strategy, a Rolling Horizon Approximation is used. The
  *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
@@ -80,7 +79,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AdaptiveZeroInitialHoldings {
+public class RollingHorizonOptimalHoldings {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -107,7 +106,7 @@ public class AdaptiveZeroInitialHoldings {
 		};
 
 		double dblNonDimensionalTimeInterval = dblExecutionTime / (iNumTimeNode - 1) / dblRelaxationTime;
-		double[][] aadblNonDimensionalHoldings = new double[adblRiskAversion.length][];
+		double[][] aadblAdjustedNonDimensionalHoldings = new double[adblRiskAversion.length][];
 		double[] adblMarketState = new double[iNumTimeNode];
 		adblMarketState[0] = dblInitialMarketState;
 
@@ -136,19 +135,19 @@ public class AdaptiveZeroInitialHoldings {
 		}
 
 		for (int i = 0; i < adblRiskAversion.length; ++i)
-			aadblNonDimensionalHoldings[i] = new CoordinatedVariationTrajectoryGenerator (
+			aadblAdjustedNonDimensionalHoldings[i] = new CoordinatedVariationTrajectoryGenerator (
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
 				NonDimensionalCostEvolver.Standard (oup),
 				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
-			).adaptive (adblMarketState).nonDimensionalHoldings();
+			).rollingHorizon (adblMarketState).nonDimensionalHoldings();
 
 		System.out.println();
 
 		System.out.println ("\t||-----------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                     ADAPTIVE OPTIMAL TRAJECTORY HOLDINGS                    ||");
+		System.out.println ("\t||                 ROLLING HORIZON OPTIMAL TRAJECTORY HOLDINGS                 ||");
 
 		System.out.println ("\t||-----------------------------------------------------------------------------||");
 
@@ -169,7 +168,7 @@ public class AdaptiveZeroInitialHoldings {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (i * dblNonDimensionalTimeInterval * dblRelaxationTime, 1, 2, 1.);
 
 			for (int j = 0; j < adblRiskAversion.length; ++j)
-				strDump = strDump + " | " + FormatUtil.FormatDouble (aadblNonDimensionalHoldings[j][i], 1, 4, 1.);
+				strDump = strDump + " | " + FormatUtil.FormatDouble (aadblAdjustedNonDimensionalHoldings[j][i], 1, 4, 1.);
 
 			System.out.println (strDump + " ||");
 		}
