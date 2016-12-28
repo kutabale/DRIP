@@ -2,7 +2,7 @@
 package org.drip.sample.almgren2012;
 
 import org.drip.execution.adaptive.*;
-import org.drip.execution.latent.MarketStateSystemic;
+import org.drip.execution.latent.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
@@ -108,9 +108,6 @@ public class AdaptiveZeroInitialTradeRate {
 
 		double dblNonDimensionalTimeInterval = dblExecutionTime / (iNumTimeNode - 1) / dblRelaxationTime;
 		double[][] aadblAdjustedNonDimensionalTradeRate = new double[adblRiskAversion.length][];
-		MarketStateSystemic[] aMS = new MarketStateSystemic[iNumTimeNode];
-
-		aMS[0] = new MarketStateSystemic (dblInitialMarketState);
 
 		OrderSpecification os = new OrderSpecification (
 			dblSize,
@@ -127,14 +124,12 @@ public class AdaptiveZeroInitialTradeRate {
 			dblRelaxationTime
 		);
 
-		for (int i = 0; i < iNumTimeNode - 1; ++i) {
-			GenericIncrement gi = oup.weinerIncrement (
-				aMS[i].common(),
-				dblNonDimensionalTimeInterval * dblRelaxationTime
-			);
-
-			aMS[i + 1] = new MarketStateSystemic (aMS[i].common() + gi.deterministic() + gi.stochastic());
-		}
+		MarketState[] aMS = OrnsteinUhlenbeckSequence.Systemic (
+			oup,
+			dblNonDimensionalTimeInterval * dblRelaxationTime,
+			dblInitialMarketState,
+			iNumTimeNode
+		).realizedMarketState();
 
 		for (int i = 0; i < adblRiskAversion.length; ++i)
 			aadblAdjustedNonDimensionalTradeRate[i] = new CoordinatedVariationTrajectoryGenerator (

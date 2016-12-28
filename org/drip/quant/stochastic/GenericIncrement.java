@@ -70,6 +70,7 @@ package org.drip.quant.stochastic;
  */
 
 public class GenericIncrement {
+	private double _dblWander = java.lang.Double.NaN;
 	private double _dblStochastic = java.lang.Double.NaN;
 	private double _dblDeterministic = java.lang.Double.NaN;
 
@@ -78,17 +79,20 @@ public class GenericIncrement {
 	 * 
 	 * @param dblDeterministic The Deterministic Increment Component
 	 * @param dblStochastic The Stochastic Increment Component
+	 * @param dblWander The Random Wander Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public GenericIncrement (
 		final double dblDeterministic,
-		final double dblStochastic)
+		final double dblStochastic,
+		final double dblWander)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblStochastic = dblStochastic))
+			!org.drip.quant.common.NumberUtil.IsValid (_dblStochastic = dblStochastic) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblWander = dblWander))
 			throw new java.lang.Exception ("GenericIncrement Constructor => Invalid Inputs");
 	}
 
@@ -112,5 +116,16 @@ public class GenericIncrement {
 	public double stochastic()
 	{
 		return _dblStochastic;
+	}
+
+	/**
+	 * Retrieve the Random Wander Realization
+	 * 
+	 * @return The Random Wander Realization
+	 */
+
+	public double wander()
+	{
+		return _dblWander;
 	}
 }

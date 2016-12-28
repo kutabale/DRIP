@@ -2,6 +2,7 @@
 package org.drip.sample.almgren2012;
 
 import org.drip.execution.adaptive.*;
+import org.drip.execution.latent.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
@@ -107,8 +108,6 @@ public class RollingHorizonOptimalHoldings {
 
 		double dblNonDimensionalTimeInterval = dblExecutionTime / (iNumTimeNode - 1) / dblRelaxationTime;
 		double[][] aadblAdjustedNonDimensionalHoldings = new double[adblRiskAversion.length][];
-		double[] adblMarketState = new double[iNumTimeNode];
-		adblMarketState[0] = dblInitialMarketState;
 
 		OrderSpecification os = new OrderSpecification (
 			dblSize,
@@ -125,14 +124,12 @@ public class RollingHorizonOptimalHoldings {
 			dblRelaxationTime
 		);
 
-		for (int i = 0; i < iNumTimeNode - 1; ++i) {
-			GenericIncrement gi = oup.weinerIncrement (
-				adblMarketState[i],
-				dblNonDimensionalTimeInterval * dblRelaxationTime
-			);
-
-			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
-		}
+		MarketState[] aMS = OrnsteinUhlenbeckSequence.Systemic (
+			oup,
+			dblNonDimensionalTimeInterval * dblRelaxationTime,
+			dblInitialMarketState,
+			iNumTimeNode
+		).realizedMarketState();
 
 		for (int i = 0; i < adblRiskAversion.length; ++i)
 			aadblAdjustedNonDimensionalHoldings[i] = new CoordinatedVariationTrajectoryGenerator (
@@ -141,7 +138,7 @@ public class RollingHorizonOptimalHoldings {
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
 				NonDimensionalCostEvolver1D.Standard (oup),
 				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
-			).rollingHorizon (adblMarketState).nonDimensionalHoldings();
+			).rollingHorizon (aMS).nonDimensionalHoldings();
 
 		System.out.println();
 

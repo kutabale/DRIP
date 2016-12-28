@@ -272,7 +272,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 	/**
 	 * Generate the Continuous Coordinated Variation Dynamic Adaptive Trajectory
 	 * 
-	 * @param adblMarketState Array of Realized Market States
+	 * @param aMS Array of Realized Market States
 	 * 
 	 * @return The Continuous Coordinated Variation Dynamic Adaptive Trajectory
 	 */
@@ -362,18 +362,17 @@ public class CoordinatedVariationTrajectoryGenerator {
 	/**
 	 * Generate the Continuous Coordinated Variation Rolling Horizon Trajectory
 	 * 
-	 * @param adblMarketState Array of Realized Market States
+	 * @param aMS Array of Realized Market States
 	 * 
 	 * @return The Continuous Coordinated Variation Rolling Horizon Trajectory
 	 */
 
 	public org.drip.execution.adaptive.CoordinatedVariationRollingHorizon rollingHorizon (
-		final double[] adblMarketState)
+		final org.drip.execution.latent.MarketState[] aMS)
 	{
-		if (null == adblMarketState || !org.drip.quant.common.NumberUtil.IsValid (adblMarketState))
-			return null;
+		if (null == aMS) return null;
 
-		int iNumTimeNode = adblMarketState.length;
+		int iNumTimeNode = aMS.length;
 		double[] adblNonDimensionalCost = 0 == iNumTimeNode ? null : new double[iNumTimeNode];
 		double[] adblNonDimensionalHoldings = 0 == iNumTimeNode ? null : new double[iNumTimeNode];
 		double[] adblNonDimensionalTradeRate = 0 == iNumTimeNode ? null : new double[iNumTimeNode];
@@ -404,7 +403,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 
 		for (int i = 0; i < iNumTimeNode - 1; ++i) {
 			org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep = realizedLPEP
-				(adblMarketState[i]);
+				(aMS[i].liquidity());
 
 			if (null == lpep) return null;
 

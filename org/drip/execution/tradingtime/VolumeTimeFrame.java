@@ -93,7 +93,7 @@ public class VolumeTimeFrame extends org.drip.quant.stochastic.GenericIncrement 
 		final double dblTradeRate)
 		throws java.lang.Exception
 	{
-		super (dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian);
+		super (dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian, dblBrownian);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *

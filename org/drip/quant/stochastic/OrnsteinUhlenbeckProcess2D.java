@@ -69,59 +69,59 @@ package org.drip.quant.stochastic;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OrnsteinUhlenbeckProcess2D {
+public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.stochastic.OrnsteinUhlenbeck {
 	private double _dblCorrelation = java.lang.Double.NaN;
-	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D _oup1D0 = null;
-	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D _oup1D1 = null;
+	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D _oupDerived = null;
+	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D _oupReference = null;
 
 	/**
 	 * OrnsteinUhlenbeckProcess2D Constructor
 	 * 
-	 * @param oup1D0 The First 1D Ornstein-Uhlenbeck Process
-	 * @param oup1D1 The Second 1D Ornstein-Uhlenbeck Process
+	 * @param oupReference The Reference 1D Ornstein-Uhlenbeck Process
+	 * @param oupDerived The Derived 1D Ornstein-Uhlenbeck Process
 	 * @param dblCorrelation The Correlation between the Two Ornstein-Uhlenbeck Processes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public OrnsteinUhlenbeckProcess2D (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1D0,
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1D1,
+		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oupReference,
+		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oupDerived,
 		final double dblCorrelation)
 		throws java.lang.Exception
 	{
-		if (null == (_oup1D0 = oup1D0) || null == (_oup1D1 = oup1D1) ||
+		if (null == (_oupReference = oupReference) || null == (_oupDerived = oupDerived) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblCorrelation = dblCorrelation) || _dblCorrelation <
 				-1. || _dblCorrelation > 1.)
 			throw new java.lang.Exception ("OrnsteinUhlenbeckProcess2D Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the First 1D Ornstein-Uhlenbeck Process
+	 * Retrieve the Reference 1D Ornstein-Uhlenbeck Process
 	 * 
-	 * @return The First 1D Ornstein-Uhlenbeck Process
+	 * @return The Reference 1D Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D firstProcess()
+	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D reference()
 	{
-		return _oup1D0;
+		return _oupReference;
 	}
 
 	/**
-	 * Retrieve the Second 1D Ornstein-Uhlenbeck Process
+	 * Retrieve the Derived 1D Ornstein-Uhlenbeck Process
 	 * 
-	 * @return The Second 1D Ornstein-Uhlenbeck Process
+	 * @return The Derived 1D Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D secondProcess()
+	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D derived()
 	{
-		return _oup1D1;
+		return _oupDerived;
 	}
 
 	/**
-	 * Retrieve the Correlation between the Two Ornstein-Uhlenbeck Processes
+	 * Retrieve the Correlation between the Ornstein-Uhlenbeck Processes
 	 * 
-	 * @return The Correlation between the Two Ornstein-Uhlenbeck Processes
+	 * @return The Correlation between the Ornstein-Uhlenbeck Processes
 	 */
 
 	public double correlation()
@@ -151,19 +151,21 @@ public class OrnsteinUhlenbeckProcess2D {
 						!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
 			return null;
 
-		double dblRelaxationTime0 = _oup1D0.relaxationTime();
+		double dblRelaxationTime0 = _oupReference.relaxationTime();
 
-		double dblRelaxationTime1 = _oup1D1.relaxationTime();
+		double dblRelaxationTime1 = _oupDerived.relaxationTime();
 
 		try {
 			return new org.drip.quant.stochastic.GenericIncrement[] {
 				new org.drip.quant.stochastic.GenericIncrement (
 					-1. * adblOrnsteinUhlenbeckVariate[0] / dblRelaxationTime0 * dblTimeIncrement,
-					_oup1D0.burstiness() * adblRandomRealization[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0)
+					_oupReference.burstiness() * adblRandomRealization[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
+					adblRandomRealization[0]
 				),
 				new org.drip.quant.stochastic.GenericIncrement (
 					-1. * adblOrnsteinUhlenbeckVariate[1] / dblRelaxationTime1 * dblTimeIncrement,
-					_oup1D1.burstiness() * adblRandomRealization[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1)
+					_oupDerived.burstiness() * adblRandomRealization[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
+					adblRandomRealization[1]
 				)
 			};
 		} catch (java.lang.Exception e) {
@@ -197,5 +199,20 @@ public class OrnsteinUhlenbeckProcess2D {
 		}
 
 		return null;
+	}
+
+	@Override public double referenceRelaxationTime()
+	{
+		return _oupReference.relaxationTime();
+	}
+
+	@Override public double referenceBurstiness()
+	{
+		return _oupReference.burstiness();
+	}
+
+	@Override public double referenceMeanReversionLevel()
+	{
+		return _oupReference.meanReversionLevel();
 	}
 }

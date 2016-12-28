@@ -80,9 +80,9 @@ public class NonDimensionalCostEvolver2D {
 		final double dblVolatilityMarketState,
 		final double dblNonDimensionalRiskAversion)
 	{
-		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1DVolatility = _oup2D.secondProcess();
+		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1DLiquidity = _oup2D.reference();
 
-		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1DLiquidity = _oup2D.firstProcess();
+		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1DVolatility = _oup2D.derived();
 
 		double dblMu = oup1DLiquidity.relaxationTime() / oup1DVolatility.relaxationTime();
 

@@ -95,7 +95,6 @@ public class AdaptiveOptimalStaticTrajectory {
 		double dblRelaxationTime = 1.;
 		double dblReferenceLiquidity = 1.;
 		double dblReferenceVolatility = 1.;
-		double dblInitialMarketState = -0.5;
 		double dblRiskAversion = 0.5;
 
 		System.out.println();
@@ -151,8 +150,6 @@ public class AdaptiveOptimalStaticTrajectory {
 		System.out.println();
 
 		double dblNonDimensionalTimeInterval = dblExecutionTime / (iNumTimeNode - 1) / dblRelaxationTime;
-		double[] adblMarketState = new double[iNumTimeNode];
-		adblMarketState[0] = dblInitialMarketState;
 
 		OrderSpecification os = new OrderSpecification (
 			dblSize,
@@ -168,15 +165,6 @@ public class AdaptiveOptimalStaticTrajectory {
 			dblBurstiness,
 			dblRelaxationTime
 		);
-
-		for (int i = 0; i < iNumTimeNode - 1; ++i) {
-			GenericIncrement gi = oup.weinerIncrement (
-				adblMarketState[i],
-				dblNonDimensionalTimeInterval * dblRelaxationTime
-			);
-
-			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
-		}
 
 		CoordinatedVariationStatic cvs = new CoordinatedVariationTrajectoryGenerator (
 			os,

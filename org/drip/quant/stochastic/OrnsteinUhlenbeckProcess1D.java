@@ -69,7 +69,7 @@ package org.drip.quant.stochastic;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OrnsteinUhlenbeckProcess1D {
+public class OrnsteinUhlenbeckProcess1D implements org.drip.quant.stochastic.OrnsteinUhlenbeck {
 	private double _dblBurstiness = java.lang.Double.NaN;
 	private double _dblRelaxationTime = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
@@ -175,7 +175,7 @@ public class OrnsteinUhlenbeckProcess1D {
 		try {
 			return new org.drip.quant.stochastic.GenericIncrement (-1. * dblOrnsteinUhlenbeckVariate /
 				_dblRelaxationTime * dblTimeIncrement, _dblBurstiness * dblRandomRealization *
-					java.lang.Math.sqrt (dblTimeIncrement / _dblRelaxationTime));
+					java.lang.Math.sqrt (dblTimeIncrement / _dblRelaxationTime), dblRandomRealization);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -204,5 +204,20 @@ public class OrnsteinUhlenbeckProcess1D {
 		}
 
 		return null;
+	}
+
+	@Override public double referenceRelaxationTime()
+	{
+		return relaxationTime();
+	}
+
+	@Override public double referenceBurstiness()
+	{
+		return burstiness();
+	}
+
+	@Override public double referenceMeanReversionLevel()
+	{
+		return meanReversionLevel();
 	}
 }

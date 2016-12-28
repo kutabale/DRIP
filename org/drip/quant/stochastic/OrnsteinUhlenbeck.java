@@ -1,5 +1,5 @@
 
-package org.drip.execution.latent;
+package org.drip.quant.stochastic;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,12 +48,9 @@ package org.drip.execution.latent;
  */
 
 /**
- * MarketStateCorrelated holds the Correlated Market State that drives the Liquidity and the Volatility
- *  Market States separately. The References are:
+ * OrnsteinUhlenbeck Interface exposes the Reference Parameter Scales the guide the Random Variable Evolution
+ *  according to Ornstein-Uhlenbeck Mean Reverting Process. The References are:
  * 
- * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
- * 		(2) 5-39.
- *
  * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
  *
@@ -66,50 +63,35 @@ package org.drip.execution.latent;
  * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
  * 		Financial Studies & (4) 631-651.
  * 
+ * 	- Walia, N. (2006): Optimal Trading - Dynamic Stock Liquidation Strategies, Senior Thesis, Princeton
+ * 		University.
+ *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarketStateCorrelated implements org.drip.execution.latent.MarketState {
-	private double _dblLiquidity = java.lang.Double.NaN;
-	private double _dblVolatility = java.lang.Double.NaN;
+public interface OrnsteinUhlenbeck {
 
 	/**
-	 * MarketStateCorrelated Constructor
+	 * Retrieve the Reference Relaxation Time Scale
 	 * 
-	 * @param dblLiquidity The Realized Liquidity Market State Realization
-	 * @param dblVolatility The Realized Volatility Market State Realization
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Reference Relaxation Time Scale
 	 */
 
-	public MarketStateCorrelated (
-		final double dblLiquidity,
-		final double dblVolatility)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblLiquidity = dblLiquidity) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("MarketStateCorrelated Constructor => Invalid Inpus");
-	}
-
-	@Override public double liquidity()
-	{
-		return _dblLiquidity;
-	}
-
-	@Override public double volatility()
-	{
-		return _dblVolatility;
-	}
+	public abstract double referenceRelaxationTime();
 
 	/**
-	 * Retrieve the Liquidity/Volatility Market State Realizations
+	 * Retrieve the Reference Burstiness Scale
 	 * 
-	 * @return The Liquidity/Volatility Market State Realizations
+	 * @return The Reference Burstiness Scale
 	 */
 
-	public double[] realization()
-	{
-		return new double[] {_dblLiquidity, _dblVolatility};
-	}
+	public abstract double referenceBurstiness();
+
+	/**
+	 * Retrieve the Reference Mean Reversion Level Scale
+	 * 
+	 * @return The Reference Mean Reversion Level Scale
+	 */
+
+	public abstract double referenceMeanReversionLevel();
 }
