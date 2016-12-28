@@ -231,22 +231,20 @@ public class CoordinatedVariationTrajectoryGenerator {
 	/**
 	 * Retrieve the Initial Non Dimensional Cost
 	 * 
-	 * @param dblInitialMarketState The Initial Market State
+	 * @param ms The Initial Market State
 	 * @param dblTradeRateScale The Trade Rate Scale
 	 * 
 	 * @return The Initial Non Dimensional Cost
 	 */
 
-	public org.drip.execution.adaptive.NonDimensionalCost initializeNonDimensionalCost (
-		final double dblInitialMarketState,
+	public org.drip.execution.adaptive.NonDimensionalCost1D initializeNonDimensionalCost (
+		final org.drip.execution.latent.MarketState ms,
 		final double dblTradeRateScale)
 	{
 		if (TRADE_RATE_ZERO_INITIALIZATION == _iTradeRateInitializer)
-			return org.drip.execution.adaptive.NonDimensionalCost.Zero();
+			return org.drip.execution.adaptive.NonDimensionalCost1D.Zero();
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblInitialMarketState) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblTradeRateScale))
-			return null;
+		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblTradeRateScale)) return null;
 
 		try {
 			org.drip.execution.strategy.ContinuousTradingTrajectory ctt =
@@ -259,10 +257,10 @@ public class CoordinatedVariationTrajectoryGenerator {
 
 			double dblNonDimensionalInstantTradeRate = ctt.tradeRate().evaluate (0.) / dblTradeRateScale;
 
-			double dblNonDimensionalCostSensitivity = java.lang.Math.exp (dblInitialMarketState) *
+			double dblNonDimensionalCostSensitivity = java.lang.Math.exp (ms.liquidity()) *
 				dblNonDimensionalInstantTradeRate;
 
-			return new org.drip.execution.adaptive.NonDimensionalCost (0., dblNonDimensionalCostSensitivity,
+			return new org.drip.execution.adaptive.NonDimensionalCost1D (0., dblNonDimensionalCostSensitivity,
 				dblNonDimensionalCostSensitivity, dblNonDimensionalInstantTradeRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -280,12 +278,11 @@ public class CoordinatedVariationTrajectoryGenerator {
 	 */
 
 	public org.drip.execution.adaptive.CoordinatedVariationDynamic adaptive (
-		final double[] adblMarketState)
+		final org.drip.execution.latent.MarketState[] aMS)
 	{
-		if (null == adblMarketState || !org.drip.quant.common.NumberUtil.IsValid (adblMarketState))
-			return null;
+		if (null == aMS) return null;
 
-		int iNumTimeNode = adblMarketState.length;
+		int iNumTimeNode = aMS.length;
 
 		if (1 >= iNumTimeNode) return null;
 
@@ -303,19 +300,18 @@ public class CoordinatedVariationTrajectoryGenerator {
 		double dblMeanMarketUrgency = dblReferenceVolatility * java.lang.Math.sqrt (_mvou.riskAversion() /
 			dblReferenceLiquidity);
 
-		org.drip.execution.adaptive.NonDimensionalCost[] aNDC = new
-			org.drip.execution.adaptive.NonDimensionalCost[iNumTimeNode];
+		org.drip.execution.adaptive.NonDimensionalCost1D[] aNDC = new
+			org.drip.execution.adaptive.NonDimensionalCost1D[iNumTimeNode];
 		double[] adblNonDimensionalScaledTradeRate = new double[iNumTimeNode];
 		double dblTradeRateScale = dblExecutionSize / dblRelaxationTime;
 		double[] adblNonDimensionalHoldings = new double[iNumTimeNode];
 		adblNonDimensionalScaledTradeRate[0] = 0.;
 		adblNonDimensionalHoldings[0] = 1.;
 
-		if (null == (aNDC[0] = initializeNonDimensionalCost (adblMarketState[0], dblTradeRateScale)))
-			return null;
+		if (null == (aNDC[0] = initializeNonDimensionalCost (aMS[0], dblTradeRateScale))) return null;
 
 		for (int i = 1; i < iNumTimeNode; ++i) {
-			if (null == (aNDC[i] = _ndce.evolve (aNDC[i - 1], adblMarketState[i], dblMeanMarketUrgency *
+			if (null == (aNDC[i] = _ndce.evolve (aNDC[i - 1], aMS[i], dblMeanMarketUrgency *
 				dblRelaxationTime, (iNumTimeNode - i) * dblNonDimensionalTimeIncrement,
 					dblNonDimensionalTimeIncrement)))
 				return null;

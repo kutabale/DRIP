@@ -99,7 +99,7 @@ public class NonDimensionalCostEvolver1D {
 	}
 
 	private double advance (
-		final org.drip.execution.adaptive.NonDimensionalCost ndcInitial,
+		final org.drip.execution.adaptive.NonDimensionalCost1D ndcInitial,
 		final double dblMarketState,
 		final double dblNonDimensionalRiskAversion)
 	{
@@ -173,59 +173,61 @@ public class NonDimensionalCostEvolver1D {
 	 * Evolve a Single Time Step of the Optimal Trajectory
 	 * 
 	 * @param ndcInitial The Initial Non-dimensional Cost Value Function
-	 * @param dblMarketState The Non-dimensional Market State
-	 * @param dblDimensionlessRiskAversion The Non-dimensional Risk Aversion Parameter
+	 * @param ms The Market State
+	 * @param dblNonDimensionalRiskAversion The Non-dimensional Risk Aversion Parameter
 	 * @param dblNonDimensionalTime The Non Dimensional Time Node
 	 * @param dblNonDimensionalTimeIncrement The Non Dimensional Time Increment
 	 * 
 	 * @return The Post Evolved Non-dimensional Cost Value Function
 	 */
 
-	public org.drip.execution.adaptive.NonDimensionalCost evolve (
-		final org.drip.execution.adaptive.NonDimensionalCost ndcInitial,
-		final double dblMarketState,
-		final double dblDimensionlessRiskAversion,
+	public org.drip.execution.adaptive.NonDimensionalCost1D evolve (
+		final org.drip.execution.adaptive.NonDimensionalCost1D ndcInitial,
+		final org.drip.execution.latent.MarketState ms,
+		final double dblNonDimensionalRiskAversion,
 		final double dblNonDimensionalTime,
 		final double dblNonDimensionalTimeIncrement)
 	{
-		if (null == ndcInitial || !org.drip.quant.common.NumberUtil.IsValid (dblMarketState) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblDimensionlessRiskAversion) ||
-				!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTime) ||
-					!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTimeIncrement))
+		if (null == ndcInitial || null == ms || !org.drip.quant.common.NumberUtil.IsValid
+			(dblNonDimensionalRiskAversion) || !org.drip.quant.common.NumberUtil.IsValid
+				(dblNonDimensionalTime) || !org.drip.quant.common.NumberUtil.IsValid
+					(dblNonDimensionalTimeIncrement))
 			return null;
 
-		double dblMarketStateExponentiation = java.lang.Math.exp (dblMarketState);
+		double dblMarketState = ms.liquidity();
 
 		double dblMarketStateIncrement = 0.01 * dblMarketState;
 
+		double dblMarketStateExponentiation = java.lang.Math.exp (dblMarketState);
+
 		if (_dblAsymptoticEulerUrgencyThreshold * dblNonDimensionalTime < 1.) {
 			if (!_bAsymptoticEnhancedEulerCorrection)
-				return org.drip.execution.adaptive.NonDimensionalCost.LinearThreshold
+				return org.drip.execution.adaptive.NonDimensionalCost1D.LinearThreshold
 					(dblMarketStateExponentiation, dblNonDimensionalTime);
 
 			double dblBurstiness = _oup.burstiness();
 
 			double dblNonDimensionalCostCross = -0.5 * dblMarketState * dblMarketStateExponentiation;
 
-			return org.drip.execution.adaptive.NonDimensionalCost.EulerEnhancedLinearThreshold
+			return org.drip.execution.adaptive.NonDimensionalCost1D.EulerEnhancedLinearThreshold
 				(dblMarketState, ((1. / dblNonDimensionalTimeIncrement) + 0.25 * dblBurstiness *
 					dblBurstiness) * java.lang.Math.exp (dblMarketState) + dblNonDimensionalCostCross,
 						dblNonDimensionalCostCross);
 		}
 
-		double dblCostIncrementMid = advance (ndcInitial, dblMarketState, dblDimensionlessRiskAversion) *
+		double dblCostIncrementMid = advance (ndcInitial, dblMarketState, dblNonDimensionalRiskAversion) *
 			dblNonDimensionalTimeIncrement;
 
 		double dblCostIncrementUp = advance (ndcInitial, dblMarketState + dblMarketStateIncrement,
-			dblDimensionlessRiskAversion) * dblNonDimensionalTimeIncrement;
+			dblNonDimensionalRiskAversion) * dblNonDimensionalTimeIncrement;
 
 		double dblCostIncrementDown = advance (ndcInitial, dblMarketState - dblMarketStateIncrement,
-			dblDimensionlessRiskAversion) * dblNonDimensionalTimeIncrement;
+			dblNonDimensionalRiskAversion) * dblNonDimensionalTimeIncrement;
 
 		double dblCost = ndcInitial.realization() + dblCostIncrementMid;
 
 		try {
-			return new org.drip.execution.adaptive.NonDimensionalCost (dblCost, 0.5 * (dblCostIncrementUp -
+			return new org.drip.execution.adaptive.NonDimensionalCost1D (dblCost, 0.5 * (dblCostIncrementUp -
 				dblCostIncrementDown) / dblMarketStateIncrement, (dblCostIncrementUp + dblCostIncrementDown -
 					2. * dblCostIncrementMid) / (dblMarketStateIncrement * dblMarketStateIncrement),
 						dblCost / dblMarketStateExponentiation);

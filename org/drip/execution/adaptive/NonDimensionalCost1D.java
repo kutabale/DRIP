@@ -48,8 +48,8 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * NonDimensionalCost contains the Level, the Gradient, and the Jacobian of the HJB Non-dimensional Cost
- * 	Value Function to the Market State. The References are:
+ * NonDimensionalCost1D contains the Level, the Gradient, and the Jacobian of the HJB Non-dimensional Cost
+ * 	Value Function to the 1D Market State. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,22 +69,22 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NonDimensionalCost {
+public class NonDimensionalCost1D {
 	private double _dblRealization = java.lang.Double.NaN;
 	private double _dblRealizationGradient = java.lang.Double.NaN;
 	private double _dblRealizationJacobian = java.lang.Double.NaN;
 	private double _dblNonDimensionalTradeRate = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Zero Cost Non-dimensional Cost Instance
+	 * Generate a Zero Sensitivity 1D Non-dimensional Cost Instance
 	 * 
-	 * @return The Zero Cost Non-dimensional Cost Instance
+	 * @return The Zero Sensitivity 1D Non-dimensional Cost Instance
 	 */
 
-	public static final NonDimensionalCost Zero()
+	public static final NonDimensionalCost1D Zero()
 	{
 		try {
-			return new NonDimensionalCost (0., 0., 0., 0.);
+			return new NonDimensionalCost1D (0., 0., 0., 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -93,15 +93,15 @@ public class NonDimensionalCost {
 	}
 
 	/**
-	 * Generate a Linear Trading Non Dimensional Cost Instance
+	 * Generate a Linear Trading 1D Non Dimensional Cost Instance
 	 * 
 	 * @param dblMarketStateExponentiation The Exponentiated Market State
 	 * @param dblNonDimensionalTime The Non Dimensional Time
 	 * 
-	 * @return The Linear Trading Non Dimensional Cost Instance
+	 * @return The Linear Trading 1D Non Dimensional Cost Instance
 	 */
 
-	public static final NonDimensionalCost LinearThreshold (
+	public static final NonDimensionalCost1D LinearThreshold (
 		final double dblMarketStateExponentiation,
 		final double dblNonDimensionalTime)
 	{
@@ -113,7 +113,7 @@ public class NonDimensionalCost {
 		double dblNonDimensionalCostThreshold = dblMarketStateExponentiation * dblNonDimensionalUrgency;
 
 		try {
-			return new NonDimensionalCost (dblNonDimensionalCostThreshold, dblNonDimensionalCostThreshold,
+			return new NonDimensionalCost1D (dblNonDimensionalCostThreshold, dblNonDimensionalCostThreshold,
 				dblNonDimensionalCostThreshold, dblNonDimensionalUrgency);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -123,16 +123,16 @@ public class NonDimensionalCost {
 	}
 
 	/**
-	 * Generate a Euler Enhanced Linear Trading Non Dimensional Cost Instance
+	 * Generate a Euler Enhanced Linear Trading 1D Non Dimensional Cost Instance
 	 * 
 	 * @param dblMarketState The Market State
 	 * @param dblNonDimensionalCost The Non Dimensional Cost
 	 * @param dblNonDimensionalCostCross The Non Dimensional Cost Cross Term
 	 * 
-	 * @return The Euler Enhanced Linear Trading Non Dimensional Cost Instance
+	 * @return The Euler Enhanced Linear Trading 1D Non Dimensional Cost Instance
 	 */
 
-	public static final NonDimensionalCost EulerEnhancedLinearThreshold (
+	public static final NonDimensionalCost1D EulerEnhancedLinearThreshold (
 		final double dblMarketState,
 		final double dblNonDimensionalCost,
 		final double dblNonDimensionalCostCross)
@@ -143,7 +143,7 @@ public class NonDimensionalCost {
 			return null;
 
 		try {
-			return new NonDimensionalCost (dblNonDimensionalCost, dblNonDimensionalCost +
+			return new NonDimensionalCost1D (dblNonDimensionalCost, dblNonDimensionalCost +
 				dblNonDimensionalCostCross, dblNonDimensionalCost + 2. * dblNonDimensionalCostCross,
 					java.lang.Math.exp (-dblMarketState) * dblNonDimensionalCost);
 		} catch (java.lang.Exception e) {
@@ -154,7 +154,7 @@ public class NonDimensionalCost {
 	}
 
 	/**
-	 * NonDimensionalCost Constructor
+	 * NonDimensionalCost1D Constructor
 	 * 
 	 * @param dblRealization The Non dimensional Value Function Realization
 	 * @param dblRealizationGradient The Non dimensional Value Function Realization Gradient
@@ -164,7 +164,7 @@ public class NonDimensionalCost {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public NonDimensionalCost (
+	public NonDimensionalCost1D (
 		final double dblRealization,
 		final double dblRealizationGradient,
 		final double dblRealizationJacobian,
@@ -176,7 +176,7 @@ public class NonDimensionalCost {
 				!org.drip.quant.common.NumberUtil.IsValid (_dblRealizationJacobian = dblRealizationJacobian)
 					|| !org.drip.quant.common.NumberUtil.IsValid (_dblNonDimensionalTradeRate =
 						dblNonDimensionalTradeRate))
-			throw new java.lang.Exception ("NonDimensionalCost Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("NonDimensionalCost1D Constructor => Invalid Inputs");
 	}
 
 	/**

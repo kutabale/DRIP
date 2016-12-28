@@ -72,5 +72,128 @@ package org.drip.execution.adaptive;
  */
 
 public class NonDimensionalCostEvolver2D {
+	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess2D _oup2D = null;
 
+	private double advance (
+		final org.drip.execution.adaptive.NonDimensionalCost2D ndc2D,
+		final double dblLiquidityMarketState,
+		final double dblVolatilityMarketState,
+		final double dblNonDimensionalRiskAversion)
+	{
+		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1DVolatility = _oup2D.secondProcess();
+
+		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1DLiquidity = _oup2D.firstProcess();
+
+		double dblMu = oup1DLiquidity.relaxationTime() / oup1DVolatility.relaxationTime();
+
+		double dblVolatilityBurstiness = oup1DVolatility.burstiness();
+
+		double dblLiquidityBurstiness = oup1DLiquidity.burstiness();
+
+		double dblNonDimensionalCost = ndc2D.realization();
+
+		return
+			dblNonDimensionalRiskAversion * dblNonDimensionalRiskAversion * java.lang.Math.exp (2. *
+				dblVolatilityMarketState) -
+			dblNonDimensionalCost * dblNonDimensionalCost * java.lang.Math.exp (-dblLiquidityMarketState) +
+			_oup2D.correlation() + java.lang.Math.sqrt (dblMu) * dblLiquidityBurstiness *
+				dblVolatilityBurstiness * ndc2D.realizationLiquidityVolatilityGradient() +
+			0.5 * dblLiquidityBurstiness * dblLiquidityBurstiness * ndc2D.realizationLiquidityJacobian() +
+			0.5 * dblMu * dblVolatilityBurstiness * dblVolatilityBurstiness *
+				ndc2D.realizationVolatilityJacobian() -
+			dblLiquidityMarketState * ndc2D.realizationLiquidityGradient() -
+			dblMu * dblVolatilityMarketState * ndc2D.realizationVolatilityGradient();
+	}
+
+	/**
+	 * Retrieve the Underlying 2D Ornstein-Unlenbeck Process
+	 * 
+	 * @return The Underlying 2D Ornstein-Unlenbeck Process
+	 */
+
+	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess2D ornsteinUnlenbeckProcess()
+	{
+		return _oup2D;
+	}
+
+	/**
+	 * Generate the 2D Non Dimensional Cost Increment
+	 * 
+	 * @param ndc2D The 2D Non Dimensional Cost
+	 * @param dblLiquidityMarketState The Liquidity Market State
+	 * @param dblVolatilityMarketState The Volatility Market State
+	 * @param dblNonDimensionalRiskAversion The Non-dimensional Risk Aversion Parameter
+	 * @param dblNonDimensionalTime The Non Dimensional Time Node
+	 * @param dblNonDimensionalTimeIncrement The Non Dimensional Time Increment
+	 * 
+	 * @return The 2D Non Dimensional Cost Increment
+	 */
+
+	public org.drip.execution.adaptive.NonDimensionalCost2D evolve (
+		final org.drip.execution.adaptive.NonDimensionalCost2D ndc2D,
+		final double dblLiquidityMarketState,
+		final double dblVolatilityMarketState,
+		final double dblNonDimensionalRiskAversion,
+		final double dblNonDimensionalTime,
+		final double dblNonDimensionalTimeIncrement)
+	{
+		if (null == ndc2D || !org.drip.quant.common.NumberUtil.IsValid (dblLiquidityMarketState) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblVolatilityMarketState) ||
+				!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalRiskAversion) ||
+					!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTime) ||
+						!org.drip.quant.common.NumberUtil.IsValid (dblNonDimensionalTimeIncrement))
+			return null;
+
+		double dblLiquidityMarketStateIncrement = 0.01 * dblLiquidityMarketState;
+		double dblVolatilityMarketStateIncrement = 0.01 * dblVolatilityMarketState;
+
+		double dblCostIncrementMid = advance (ndc2D, dblLiquidityMarketState, dblVolatilityMarketState,
+			dblNonDimensionalRiskAversion) * dblNonDimensionalTimeIncrement;
+
+		double dblCostIncrementLiquidityUp = advance (ndc2D, dblLiquidityMarketState +
+			dblLiquidityMarketStateIncrement, dblVolatilityMarketState, dblNonDimensionalRiskAversion) *
+				dblNonDimensionalTimeIncrement;
+
+		double dblCostIncrementLiquidityDown = advance (ndc2D, dblLiquidityMarketState -
+			dblLiquidityMarketStateIncrement, dblVolatilityMarketState, dblNonDimensionalRiskAversion) *
+				dblNonDimensionalTimeIncrement;
+
+		double dblCostIncrementVolatilityUp = advance (ndc2D, dblLiquidityMarketState,
+			dblVolatilityMarketState + dblVolatilityMarketStateIncrement, dblNonDimensionalRiskAversion) *
+				dblNonDimensionalTimeIncrement;
+
+		double dblCostIncrementVolatilityDown = advance (ndc2D, dblLiquidityMarketState,
+			dblVolatilityMarketState - dblVolatilityMarketStateIncrement, dblNonDimensionalRiskAversion) *
+				dblNonDimensionalTimeIncrement;
+
+		double dblCostIncrementCrossUp = advance (ndc2D, dblLiquidityMarketState +
+			dblLiquidityMarketStateIncrement, dblVolatilityMarketState + dblVolatilityMarketStateIncrement,
+				dblNonDimensionalRiskAversion) * dblNonDimensionalTimeIncrement;
+
+		double dblCostIncrementCrossDown = advance (ndc2D, dblLiquidityMarketState -
+			dblLiquidityMarketStateIncrement, dblVolatilityMarketState - dblVolatilityMarketStateIncrement,
+				dblNonDimensionalRiskAversion) * dblNonDimensionalTimeIncrement;
+
+		double dblNonDimensionalCost = ndc2D.realization() + dblCostIncrementMid;
+
+		try {
+			return new org.drip.execution.adaptive.NonDimensionalCost2D (
+				dblNonDimensionalCost,
+				0.5 * (dblCostIncrementLiquidityUp - dblCostIncrementLiquidityDown) /
+					dblLiquidityMarketStateIncrement,
+				(dblCostIncrementLiquidityUp + dblCostIncrementLiquidityDown - 2. * dblCostIncrementMid) /
+					(dblLiquidityMarketStateIncrement * dblLiquidityMarketStateIncrement),
+				0.5 * (dblCostIncrementVolatilityUp - dblCostIncrementVolatilityDown) /
+					dblVolatilityMarketStateIncrement,
+				(dblCostIncrementVolatilityUp + dblCostIncrementVolatilityDown - 2. * dblCostIncrementMid) /
+					(dblVolatilityMarketStateIncrement * dblVolatilityMarketStateIncrement),
+				0.25 * (dblCostIncrementCrossUp - dblCostIncrementCrossDown) /
+					(dblLiquidityMarketStateIncrement * dblVolatilityMarketStateIncrement),
+				dblNonDimensionalCost * java.lang.Math.exp (-dblLiquidityMarketState));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

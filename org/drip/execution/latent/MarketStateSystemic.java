@@ -1,5 +1,5 @@
 
-package org.drip.execution.adaptive;
+package org.drip.execution.latent;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,9 +48,8 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * CoordinatedVariationDynamic implements the HJB-based Single Step Optimal Cost Dynamic Trajectory using the
- *  Coordinated Variation Version of the Stochastic Volatility and the Transaction Function arising from the
- *  Realization of the Market State Variable as described in the "Trading Time" Model. The References are:
+ * MarketStateSystemic holds the Single Systemic Market State that drives both the Liquidity and the
+ *  Volatility Market States. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -59,7 +58,7 @@ package org.drip.execution.adaptive;
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
  *
  * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
- * 		Financial Mathematics 3 (1) 163-181.
+ * 		Financial Mathematics  3 (1) 163-181.
  * 
  * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
  * 		79-96.
@@ -70,79 +69,43 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CoordinatedVariationDynamic extends org.drip.execution.adaptive.CoordinatedVariationTrajectory {
-	private double[] _adblNonDimensionalHoldings = null;
-	private double[] _adblScaledNonDimensionalTradeRate = null;
-	private org.drip.execution.adaptive.NonDimensionalCost1D[] _aNDC = null;
+public class MarketStateSystemic implements org.drip.execution.latent.MarketState {
+	private double _dblCommon = java.lang.Double.NaN;
 
 	/**
-	 * CoordinatedVariationDynamic Constructor
+	 * MarketStateSystemic Constructor
 	 * 
-	 * @param cvtd The Coordinated Variation Trajectory Determinant 
-	 * @param adblNonDimensionalHoldings The Array of the Non Dimensional Holdings
-	 * @param adblScaledNonDimensionalTradeRate The Array of the Scaled Non Dimensional Trade Rate
-	 * @param aNDC The Array of the Non Dimensional Costs
+	 * @param dblCommon The Common Systemic Market State
 	 * 
-	 * @throws java.lang.Exception Thrown if the the Inputs are Invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CoordinatedVariationDynamic (
-		final org.drip.execution.adaptive.CoordinatedVariationTrajectoryDeterminant cvtd,
-		final double[] adblNonDimensionalHoldings,
-		final double[] adblScaledNonDimensionalTradeRate,
-		final org.drip.execution.adaptive.NonDimensionalCost1D[] aNDC)
+	public MarketStateSystemic (
+		final double dblCommon)
 		throws java.lang.Exception
 	{
-		super (cvtd);
-
-		if (null == (_aNDC = aNDC) || null == (_adblNonDimensionalHoldings = adblNonDimensionalHoldings) ||
-			null == (_adblScaledNonDimensionalTradeRate = adblScaledNonDimensionalTradeRate) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_adblNonDimensionalHoldings) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_adblScaledNonDimensionalTradeRate))
-			throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-
-		int iNumTimeNode = _adblNonDimensionalHoldings.length;
-
-		if (0 == iNumTimeNode || iNumTimeNode != _adblScaledNonDimensionalTradeRate.length || iNumTimeNode !=
-			_aNDC.length)
-			throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-
-		for (int i = 0; i < iNumTimeNode; ++i) {
-			if (null == _aNDC[i])
-				throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-		}
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCommon = dblCommon))
+			throw new java.lang.Exception ("MarketStateSystemic Constructor => Invalid Inpus");
 	}
 
 	/**
-	 * Retrieve the Array of the Non Dimensional Holdings
+	 * Retrieve the Common Systemic Market State
 	 * 
-	 * @return The Array of the Non Dimensional Holdings
+	 * @return The Common Systemic Market State
 	 */
 
-	public double[] nonDimensionalHoldings()
+	public double common()
 	{
-		return _adblNonDimensionalHoldings;
+		return _dblCommon;
 	}
 
-	/**
-	 * Retrieve the Array of the Scaled Non Dimensional Trade Rate
-	 * 
-	 * @return The Array of the Scaled Non Dimensional Trade Rate
-	 */
-
-	public double[] scaledNonDimensionalTradeRate()
+	@Override public double liquidity()
 	{
-		return _adblScaledNonDimensionalTradeRate;
+		return _dblCommon;
 	}
 
-	/**
-	 * Retrieve the Array of the Non Dimensional Costs
-	 * 
-	 * @return The Array of the Non Dimensional Costs
-	 */
-
-	public org.drip.execution.adaptive.NonDimensionalCost1D[] nonDimensionalCost()
+	@Override public double volatility()
 	{
-		return _aNDC;
+		return _dblCommon;
 	}
 }
