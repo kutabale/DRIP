@@ -48,10 +48,10 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * NonDimensionalCostEvolver implements the HJB-based Single Step Optimal Trajectory Cost Step Evolver using
- *  the Coordinated Variation Version of the Stochastic Volatility and the Transaction Function arising from
- *  the Realization of the Market State Variable as described in the "Trading Time" Model. The References
- *  are:
+ * NonDimensionalCostEvolver1D implements the 1D HJB-based Single Step Optimal Trajectory Cost Step Evolver
+ *  using the 1D Coordinated Variation Version of the Stochastic Volatility and the Transaction Function
+ *  arising from the Realization of the Market State Variable as described in the "Trading Time" Model. The
+ *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -71,26 +71,26 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NonDimensionalCostEvolver {
+public class NonDimensionalCostEvolver1D {
 	private static final double SINGULAR_URGENCY_THRESHOLD = 50.;
 
 	private boolean _bAsymptoticEnhancedEulerCorrection = false;
-	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess _oup = null;
+	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D _oup = null;
 	private double _dblAsymptoticEulerUrgencyThreshold = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Standard NonDimensionalCostEvoler Instance
+	 * Construct a Standard NonDimensionalCostEvolver1D Instance
 	 * 
 	 * @param oup The Underlying Ornstein-Unlenbeck Process
 	 * 
-	 * @return The Standard NonDimensionalCostEvoler Instance
+	 * @return The Standard NonDimensionalCostEvolver1D Instance
 	 */
 
-	public static final NonDimensionalCostEvolver Standard (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup)
+	public static final NonDimensionalCostEvolver1D Standard (
+		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup)
 	{
 		try {
-			return new NonDimensionalCostEvolver (oup, SINGULAR_URGENCY_THRESHOLD, true);
+			return new NonDimensionalCostEvolver1D (oup, SINGULAR_URGENCY_THRESHOLD, true);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -101,20 +101,20 @@ public class NonDimensionalCostEvolver {
 	private double advance (
 		final org.drip.execution.adaptive.NonDimensionalCost ndcInitial,
 		final double dblMarketState,
-		final double dblDimensionlessRiskAversion)
+		final double dblNonDimensionalRiskAversion)
 	{
 		double dblBurstiness = _oup.burstiness();
 
-		double dblNondimensionalCost = ndcInitial.realization();
+		double dblNonDimensionalCost = ndcInitial.realization();
 
-		return java.lang.Math.exp (-dblMarketState) * (dblDimensionlessRiskAversion *
-			dblDimensionlessRiskAversion - dblNondimensionalCost * dblNondimensionalCost) + 0.5 *
+		return java.lang.Math.exp (-dblMarketState) * (dblNonDimensionalRiskAversion *
+			dblNonDimensionalRiskAversion - dblNonDimensionalCost * dblNonDimensionalCost) + 0.5 *
 				dblBurstiness * dblBurstiness * ndcInitial.realizationJacobian() - dblMarketState *
 					ndcInitial.realizationGradient();
 	}
 
 	/**
-	 * NonDimensionalCostEvolver Constructor
+	 * NonDimensionalCostEvolver1D Constructor
 	 * 
 	 * @param oup The Underlying Ornstein-Unlenbeck Process
 	 * @param bAsymptoticEnhancedEulerCorrection Asymptotic Enhanced Euler Correction Application Flag
@@ -123,15 +123,15 @@ public class NonDimensionalCostEvolver {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public NonDimensionalCostEvolver (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess oup,
+	public NonDimensionalCostEvolver1D (
+		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup,
 		final double dblAsymptoticEulerUrgencyThreshold,
 		final boolean bAsymptoticEnhancedEulerCorrection)
 		throws java.lang.Exception
 	{
 		if (null == (_oup = oup) || !org.drip.quant.common.NumberUtil.IsValid
 			(_dblAsymptoticEulerUrgencyThreshold = dblAsymptoticEulerUrgencyThreshold))
-			throw new java.lang.Exception ("NonDimensionalCostEvolver Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("NonDimensionalCostEvolver1D Constructor => Invalid Inputs");
 
 		_bAsymptoticEnhancedEulerCorrection = bAsymptoticEnhancedEulerCorrection;
 	}
@@ -164,7 +164,7 @@ public class NonDimensionalCostEvolver {
 	 * @return The Underlying Ornstein-Unlenbeck Process
 	 */
 
-	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess ornsteinUnlenbeckProcess()
+	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D ornsteinUnlenbeckProcess()
 	{
 		return _oup;
 	}

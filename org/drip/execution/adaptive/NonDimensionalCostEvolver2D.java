@@ -48,10 +48,10 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * CoordinatedVariationRollingHorizon implements the "Rolling Horizon" Approximation of the Optimal Cost
- *  Dynamic Trajectory arising from the Coordinated Variation Version of the Stochastic Volatility and the
- *  Transaction Function arising from the Realization of the Market State Variable as described in the
- *  "Trading Time" Model. The References are:
+ * NonDimensionalCostEvolver2D implements the 2D HJB-based Single Step Optimal Trajectory Cost Step Evolver
+ *  using the 2D Coordinated Variation Version of the Stochastic Volatility and the Transaction Function
+ *  arising from the Realization of the Market State Variable as described in the "Trading Time" Model. The
+ *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -60,7 +60,7 @@ package org.drip.execution.adaptive;
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
  *
  * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
- * 		Financial Mathematics 3 (1) 163-181.
+ * 		Financial Mathematics  3 (1) 163-181.
  * 
  * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
  * 		79-96.
@@ -71,78 +71,6 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CoordinatedVariationRollingHorizon extends
-	org.drip.execution.adaptive.CoordinatedVariationTrajectory {
-	private double[] _adblNonDimensionalCost = null;
-	private double[] _adblNonDimensionalHoldings = null;
-	private double[] _adblNonDimensionalTradeRate = null;
+public class NonDimensionalCostEvolver2D {
 
-	/**
-	 * CoordinatedVariationRollingHorizon Constructor
-	 * 
-	 * @param cvtd The Coordinated Variation Trajectory Determinant 
-	 * @param adblNonDimensionalHoldings The Array of the Non Dimensional Holdings
-	 * @param adblNonDimensionalTradeRate The Array of the Non Dimensional Trade Rate
-	 * @param adblNonDimensionalCost The Array of the Non Dimensional Cost
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public CoordinatedVariationRollingHorizon (
-		final org.drip.execution.adaptive.CoordinatedVariationTrajectoryDeterminant cvtd,
-		final double[] adblNonDimensionalHoldings,
-		final double[] adblNonDimensionalTradeRate,
-		final double[] adblNonDimensionalCost)
-		throws java.lang.Exception
-	{
-		super (cvtd);
-
-		if (null == (_adblNonDimensionalHoldings = adblNonDimensionalHoldings) || null ==
-			(_adblNonDimensionalTradeRate = adblNonDimensionalTradeRate) || null == (_adblNonDimensionalCost
-				= adblNonDimensionalCost) || !org.drip.quant.common.NumberUtil.IsValid
-					(_adblNonDimensionalHoldings) || !org.drip.quant.common.NumberUtil.IsValid
-						(_adblNonDimensionalTradeRate) || !org.drip.quant.common.NumberUtil.IsValid
-							(_adblNonDimensionalCost))
-			throw new java.lang.Exception
-				("CoordinatedVariationRollingHorizon Constructor => Invalid Inputs");
-
-		int iNumTimeNode = _adblNonDimensionalHoldings.length;
-
-		if (0 == iNumTimeNode || iNumTimeNode != _adblNonDimensionalTradeRate.length)
-			throw new java.lang.Exception
-				("CoordinatedVariationRollingHorizon Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the Array of the Non Dimensional Holdings
-	 * 
-	 * @return The Array of the Non Dimensional Holdings
-	 */
-
-	public double[] nonDimensionalHoldings()
-	{
-		return _adblNonDimensionalHoldings;
-	}
-
-	/**
-	 * Retrieve the Array of the Non Dimensional Trade Rate
-	 * 
-	 * @return The Array of the Non Dimensional Trade Rate
-	 */
-
-	public double[] nonDimensionalTradeRate()
-	{
-		return _adblNonDimensionalTradeRate;
-	}
-
-	/**
-	 * Retrieve the Array of the Non Dimensional Cost
-	 * 
-	 * @return The Array of the Non Dimensional Cost
-	 */
-
-	public double[] nonDimensionalCost()
-	{
-		return _adblNonDimensionalCost;
-	}
 }

@@ -56,10 +56,10 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * AdaptiveOptimalTrajectory simulates the Outstanding Holdings and the Trade Rate from the Sample
- *  Realization of the Adaptive Cost Strategy using the Market State Trajectory the follows the Zero Mean
- *  Ornstein-Uhlenbeck Evolution Dynamics. The Initial Dynamics is derived from the "Mean Market State"
- *  Initial Static Trajectory. The References are:
+ * AdaptiveOptimalHJBTrajectory simulates the Outstanding Holdings and the Trade Rate from the Sample
+ *  Realization of the HJB Based Adaptive Cost Strategy using the Market State Trajectory the follows the
+ *  Zero Mean Ornstein-Uhlenbeck Evolution Dynamics. The Initial Dynamics is derived from the "Mean Market
+ *  State" Initial Static Trajectory. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -79,7 +79,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AdaptiveOptimalTrajectory {
+public class AdaptiveOptimalHJBTrajectory {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -97,35 +97,57 @@ public class AdaptiveOptimalTrajectory {
 		double dblInitialMarketState = -0.5;
 		double dblRiskAversion = 0.5;
 
+		System.out.println();
+
+		System.out.println ("\t||--------------------------------------------------------||");
+
+		System.out.println ("\t||     ADAPTIVE OPTIMAL TRAJECTORY GENERATION INPUTS      ||");
+
+		System.out.println ("\t||--------------------------------------------------------||");
+
 		System.out.println (
-			"\t|| Order Size                                =>  " +
+			"\t|| Order Size                                 =>  " +
 			FormatUtil.FormatDouble (dblSize, 1, 4, 1.) + " ||"
 		);
 
 		System.out.println (
-			"\t|| Order Execution Time                      => " +
-			FormatUtil.FormatDouble (dblExecutionTime, 2, 0, 1.) + " ||"
+			"\t|| Order Execution Time                       => " +
+			FormatUtil.FormatDouble (dblExecutionTime, 2, 0, 1.) + "      ||"
 		);
 
 		System.out.println (
-			"\t|| Ornstein Uhlenbeck Burstiness             =>  " +
+			"\t|| Ornstein Uhlenbeck Burstiness              =>  " +
 			FormatUtil.FormatDouble (dblBurstiness, 1, 4, 1.) + " ||"
 		);
 
 		System.out.println (
-			"\t|| Ornstein Uhlenbeck Relaxation Time        =>  " +
+			"\t|| Ornstein Uhlenbeck Relaxation Time         =>  " +
 			FormatUtil.FormatDouble (dblRelaxationTime, 1, 4, 1.) + " ||"
 		);
 
 		System.out.println (
-			"\t|| Coordinated Variation Reference Liquidity =>  " +
+			"\t|| Coordinated Variation Reference Liquidity  =>  " +
 			FormatUtil.FormatDouble (dblReferenceLiquidity, 1, 4, 1.) + " ||"
 		);
 
 		System.out.println (
-			"\t|| Number of Evolution Nodes                 => " +
-			FormatUtil.FormatDouble (dblSize, 2, 0, 1.) + "     ||"
+			"\t|| Coordinated Variation Reference Volatility =>  " +
+			FormatUtil.FormatDouble (dblReferenceVolatility, 1, 4, 1.) + " ||"
 		);
+
+		System.out.println (
+			"\t|| Mean Variance Risk Aversion                =>  " +
+			FormatUtil.FormatDouble (dblReferenceVolatility, 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Number of Evolution Nodes                  => " +
+			FormatUtil.FormatDouble (iNumTimeNode - 1, 2, 0, 1.) + "      ||"
+		);
+
+		System.out.println ("\t||--------------------------------------------------------||");
+
+		System.out.println();
 
 		double dblNonDimensionalTimeInterval = dblExecutionTime / (iNumTimeNode - 1) / dblRelaxationTime;
 		double[] adblMarketState = new double[iNumTimeNode];
@@ -141,13 +163,13 @@ public class AdaptiveOptimalTrajectory {
 			dblReferenceLiquidity
 		);
 
-		OrnsteinUhlenbeckProcess oup = OrnsteinUhlenbeckProcess.ZeroMean (
+		OrnsteinUhlenbeckProcess1D oup = OrnsteinUhlenbeckProcess1D.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		for (int i = 0; i < iNumTimeNode - 1; ++i) {
-			GenericIncrement gi = oup.increment (
+			GenericIncrement gi = oup.weinerIncrement (
 				adblMarketState[i],
 				dblNonDimensionalTimeInterval * dblRelaxationTime
 			);
@@ -159,7 +181,7 @@ public class AdaptiveOptimalTrajectory {
 			os,
 			cv,
 			new MeanVarianceObjectiveUtility (dblRiskAversion),
-			NonDimensionalCostEvolver.Standard (oup),
+			NonDimensionalCostEvolver1D.Standard (oup),
 			CoordinatedVariationTrajectoryGenerator.TRADE_RATE_STATIC_INITIALIZATION
 		).adaptive (adblMarketState);
 
@@ -168,8 +190,6 @@ public class AdaptiveOptimalTrajectory {
 		double[] adblNonDimensionalTradeRate = cvd.scaledNonDimensionalTradeRate();
 
 		NonDimensionalCost[] aNDC = cvd.nonDimensionalCost();
-
-		System.out.println();
 
 		System.out.println ("\t||-------------------------------------||");
 
@@ -202,6 +222,48 @@ public class AdaptiveOptimalTrajectory {
 		}
 
 		System.out.println ("\t||-------------------------------------||");
+
+		System.out.println();
+
+		CoordinatedVariationTrajectoryDeterminant cvtd = cvd.trajectoryDeterminant();
+
+		System.out.println ("\t||---------------------------------||");
+
+		System.out.println ("\t||    OPTIMAL TRAJECTORY OUTPUTS   ||");
+
+		System.out.println ("\t||---------------------------------||");
+
+		System.out.println (
+			"\t|| Time Scale          =>  " +
+			FormatUtil.FormatDouble (cvtd.timeScale(), 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Trade Rate Scale    =>  " +
+			FormatUtil.FormatDouble (cvtd.tradeRateScale(), 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Cost Scale          =>  " +
+			FormatUtil.FormatDouble (cvtd.costScale(), 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Mean Market Urgency =>  " +
+			FormatUtil.FormatDouble (cvtd.meanMarketUrgency(), 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Market Power        =>  " +
+			FormatUtil.FormatDouble (cvtd.marketPower(), 1, 4, 1.) + " ||"
+		);
+
+		System.out.println (
+			"\t|| Risk Aversion Scale =>  " +
+			FormatUtil.FormatDouble (cvtd.nonDimensionalRiskAversion(), 1, 4, 1.) + " ||"
+		);
+
+		System.out.println ("\t||---------------------------------||");
 
 		System.out.println();
 	}

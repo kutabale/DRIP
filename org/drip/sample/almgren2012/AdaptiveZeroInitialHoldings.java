@@ -121,13 +121,13 @@ public class AdaptiveZeroInitialHoldings {
 			dblReferenceLiquidity
 		);
 
-		OrnsteinUhlenbeckProcess oup = OrnsteinUhlenbeckProcess.ZeroMean (
+		OrnsteinUhlenbeckProcess1D oup = OrnsteinUhlenbeckProcess1D.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		for (int i = 0; i < iNumTimeNode - 1; ++i) {
-			GenericIncrement gi = oup.increment (
+			GenericIncrement gi = oup.weinerIncrement (
 				adblMarketState[i],
 				dblNonDimensionalTimeInterval * dblRelaxationTime
 			);
@@ -140,7 +140,7 @@ public class AdaptiveZeroInitialHoldings {
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
-				NonDimensionalCostEvolver.Standard (oup),
+				NonDimensionalCostEvolver1D.Standard (oup),
 				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
 			).adaptive (adblMarketState).nonDimensionalHoldings();
 

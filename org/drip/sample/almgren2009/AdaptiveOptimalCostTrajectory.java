@@ -94,13 +94,13 @@ public class AdaptiveOptimalCostTrajectory {
 		adblMarketState[0] = dblInitialMarketState;
 		double dblNonDimensionalHoldings = 1.;
 
-		OrnsteinUhlenbeckProcess oup = OrnsteinUhlenbeckProcess.ZeroMean (
+		OrnsteinUhlenbeckProcess1D oup = OrnsteinUhlenbeckProcess1D.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
-			GenericIncrement gi = oup.increment (
+			GenericIncrement gi = oup.weinerIncrement (
 				adblMarketState[i],
 				dblTimeInterval
 			);
@@ -108,7 +108,7 @@ public class AdaptiveOptimalCostTrajectory {
 			adblMarketState[i + 1] = adblMarketState[i] + gi.deterministic() + gi.stochastic();
 		}
 
-		NonDimensionalCostEvolver ndce = NonDimensionalCostEvolver.Standard (oup);
+		NonDimensionalCostEvolver1D ndce = NonDimensionalCostEvolver1D.Standard (oup);
 
 		NonDimensionalCost ndc = NonDimensionalCost.Zero();
 

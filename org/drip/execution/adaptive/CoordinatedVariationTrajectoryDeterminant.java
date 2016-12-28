@@ -75,6 +75,7 @@ public class CoordinatedVariationTrajectoryDeterminant {
 	private double _dblOrderSize = java.lang.Double.NaN;
 	private double _dblCostScale = java.lang.Double.NaN;
 	private double _dblTimeScale = java.lang.Double.NaN;
+	private double _dblMarketPower = java.lang.Double.NaN;
 	private double _dblTradeRateScale = java.lang.Double.NaN;
 	private double _dblMeanMarketUrgency = java.lang.Double.NaN;
 	private double _dblNonDimensionalRiskAversion = java.lang.Double.NaN;
@@ -88,6 +89,7 @@ public class CoordinatedVariationTrajectoryDeterminant {
 	 * @param dblTradeRateScale The Trade Rate Scale
 	 * @param dblMeanMarketUrgency The Mean Market Urgency
 	 * @param dblNonDimensionalRiskAversion The Non Dimensional Risk Aversion Parameter
+	 * @param dblMarketPower The Preference-free "Market Power" Parameter
 	 * 
 	 * @throws java.lang.Exception Thrown if the the Inputs are Invalid
 	 */
@@ -98,7 +100,8 @@ public class CoordinatedVariationTrajectoryDeterminant {
 		final double dblCostScale,
 		final double dblTradeRateScale,
 		final double dblMeanMarketUrgency,
-		final double dblNonDimensionalRiskAversion)
+		final double dblNonDimensionalRiskAversion,
+		final double dblMarketPower)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblOrderSize = dblOrderSize) ||
@@ -107,7 +110,9 @@ public class CoordinatedVariationTrajectoryDeterminant {
 					!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRateScale = dblTradeRateScale) ||
 						!org.drip.quant.common.NumberUtil.IsValid (_dblMeanMarketUrgency =
 							dblMeanMarketUrgency) || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblNonDimensionalRiskAversion = dblNonDimensionalRiskAversion))
+								(_dblNonDimensionalRiskAversion = dblNonDimensionalRiskAversion) ||
+									!org.drip.quant.common.NumberUtil.IsValid (_dblMarketPower =
+										dblMarketPower))
 			throw new java.lang.Exception
 				("CoordinatedVariationTrajectoryDeterminant Constructor => Invalid Inputs");
 	}
@@ -176,5 +181,16 @@ public class CoordinatedVariationTrajectoryDeterminant {
 	public double nonDimensionalRiskAversion()
 	{
 		return _dblNonDimensionalRiskAversion;
+	}
+
+	/**
+	 * Retrieve the Preference-free "Market Power" Parameter
+	 * 
+	 * @return The Preference-free "Market Power" Parameter
+	 */
+
+	public double marketPower()
+	{
+		return _dblMarketPower;
 	}
 }
