@@ -120,13 +120,13 @@ public class RollingHorizonOptimalHoldings {
 			dblReferenceLiquidity
 		);
 
-		OrnsteinUhlenbeckProcess1D oup = OrnsteinUhlenbeckProcess1D.ZeroMean (
+		OrnsteinUhlenbeckProcess1D oup1D = OrnsteinUhlenbeckProcess1D.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		MarketState[] aMS = OrnsteinUhlenbeckSequence.Systemic (
-			oup,
+			oup1D,
 			dblNonDimensionalTimeInterval * dblRelaxationTime,
 			dblInitialMarketState,
 			iNumTimeNode
@@ -137,7 +137,7 @@ public class RollingHorizonOptimalHoldings {
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
-				NonDimensionalCostEvolverSystemic.Standard (oup),
+				NonDimensionalCostEvolverSystemic.Standard (oup1D),
 				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
 			).rollingHorizon (aMS).nonDimensionalHoldings();
 

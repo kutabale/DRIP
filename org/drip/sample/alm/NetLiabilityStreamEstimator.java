@@ -68,7 +68,7 @@ public class NetLiabilityStreamEstimator {
 		double dblAfterTaxIncome = 800.;
 		double dblRetirementAge = 65.;
 		double dblMaximumAge = 85.;
-		double dblIncomeReplacementRate  = 0.35;
+		double dblIncomeReplacementRate = 0.35;
 		double dblWorkingAgeConsumptionRate = 0.80;
 		double dblRetirementAgeConsumptionRate = 0.60;
 		double dblStartAge = 45.;

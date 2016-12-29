@@ -118,7 +118,7 @@ public class StaticOptimalTrajectoryTradeRate {
 			dblReferenceLiquidity
 		);
 
-		OrnsteinUhlenbeckProcess1D oup = OrnsteinUhlenbeckProcess1D.ZeroMean (
+		OrnsteinUhlenbeckProcess1D oup1D = OrnsteinUhlenbeckProcess1D.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
@@ -128,7 +128,7 @@ public class StaticOptimalTrajectoryTradeRate {
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
-				NonDimensionalCostEvolverSystemic.Standard (oup),
+				NonDimensionalCostEvolverSystemic.Standard (oup1D),
 				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
 			).nonAdaptive().trajectory();
 
