@@ -1,5 +1,5 @@
 
-package org.drip.execution.adaptive;
+package org.drip.execution.hjb;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,9 +48,10 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * CoordinatedVariationDynamic implements the HJB-based Single Step Optimal Cost Dynamic Trajectory using the
- *  Coordinated Variation Version of the Stochastic Volatility and the Transaction Function arising from the
- *  Realization of the Market State Variable as described in the "Trading Time" Model. The References are:
+ * NonDimensionalCostEvolver exposes the HJB-based Single Step Optimal Trajectory Cost Step Evolver using the
+ *  Variants of the Coordinated Variation Version of the Stochastic Volatility and the Transaction Function
+ *  arising from the Realization of the Market State Variable as described in the "Trading Time" Model. The
+ *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -59,7 +60,7 @@ package org.drip.execution.adaptive;
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
  *
  * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
- * 		Financial Mathematics 3 (1) 163-181.
+ * 		Financial Mathematics  3 (1) 163-181.
  * 
  * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
  * 		79-96.
@@ -70,79 +71,82 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CoordinatedVariationDynamic extends org.drip.execution.adaptive.CoordinatedVariationTrajectory {
-	private double[] _adblNonDimensionalHoldings = null;
-	private double[] _adblScaledNonDimensionalTradeRate = null;
-	private org.drip.execution.hjb.NonDimensionalCost[] _aNDC = null;
+public abstract class NonDimensionalCostEvolver {
+	protected static final double SINGULAR_URGENCY_THRESHOLD = 50.;
 
-	/**
-	 * CoordinatedVariationDynamic Constructor
-	 * 
-	 * @param cvtd The Coordinated Variation Trajectory Determinant 
-	 * @param adblNonDimensionalHoldings The Array of the Non Dimensional Holdings
-	 * @param adblScaledNonDimensionalTradeRate The Array of the Scaled Non Dimensional Trade Rate
-	 * @param aNDC The Array of the Non Dimensional Costs
-	 * 
-	 * @throws java.lang.Exception Thrown if the the Inputs are Invalid
-	 */
+	private boolean _bAsymptoticEnhancedEulerCorrection = false;
+	private org.drip.quant.stochastic.OrnsteinUhlenbeck _ou = null;
+	private double _dblAsymptoticEulerUrgencyThreshold = java.lang.Double.NaN;
 
-	public CoordinatedVariationDynamic (
-		final org.drip.execution.adaptive.CoordinatedVariationTrajectoryDeterminant cvtd,
-		final double[] adblNonDimensionalHoldings,
-		final double[] adblScaledNonDimensionalTradeRate,
-		final org.drip.execution.hjb.NonDimensionalCost[] aNDC)
+	protected abstract double advance (
+		final org.drip.execution.hjb.NonDimensionalCost ndc,
+		final org.drip.execution.latent.MarketState ms,
+		final double[] adblMarketStateTweak,
+		final double dblNonDimensionalRiskAversion)
+		throws java.lang.Exception;
+
+	protected NonDimensionalCostEvolver (
+		final org.drip.quant.stochastic.OrnsteinUhlenbeck ou,
+		final double dblAsymptoticEulerUrgencyThreshold,
+		final boolean bAsymptoticEnhancedEulerCorrection)
 		throws java.lang.Exception
 	{
-		super (cvtd);
+		if (null == (_ou = ou) || !org.drip.quant.common.NumberUtil.IsValid
+			(_dblAsymptoticEulerUrgencyThreshold = dblAsymptoticEulerUrgencyThreshold))
+			throw new java.lang.Exception ("NonDimensionalCostEvolver Constructor => Invalid Inputs");
 
-		if (null == (_aNDC = aNDC) || null == (_adblNonDimensionalHoldings = adblNonDimensionalHoldings) ||
-			null == (_adblScaledNonDimensionalTradeRate = adblScaledNonDimensionalTradeRate) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_adblNonDimensionalHoldings) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_adblScaledNonDimensionalTradeRate))
-			throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-
-		int iNumTimeNode = _adblNonDimensionalHoldings.length;
-
-		if (0 == iNumTimeNode || iNumTimeNode != _adblScaledNonDimensionalTradeRate.length || iNumTimeNode !=
-			_aNDC.length)
-			throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-
-		for (int i = 0; i < iNumTimeNode; ++i) {
-			if (null == _aNDC[i])
-				throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-		}
+		_bAsymptoticEnhancedEulerCorrection = bAsymptoticEnhancedEulerCorrection;
 	}
 
 	/**
-	 * Retrieve the Array of the Non Dimensional Holdings
+	 * Retrieve the Asymptotic Enhanced Euler Correction Application Flag
 	 * 
-	 * @return The Array of the Non Dimensional Holdings
+	 * @return The Asymptotic Enhanced Euler Correction Application Flag
 	 */
 
-	public double[] nonDimensionalHoldings()
+	public boolean asymptoticEnhancedEulerCorrection()
 	{
-		return _adblNonDimensionalHoldings;
+		return _bAsymptoticEnhancedEulerCorrection;
 	}
 
 	/**
-	 * Retrieve the Array of the Scaled Non Dimensional Trade Rate
+	 * Retrieve the Asymptotic Euler Urgency Threshold
 	 * 
-	 * @return The Array of the Scaled Non Dimensional Trade Rate
+	 * @return The Asymptotic Euler Urgency Threshold
 	 */
 
-	public double[] scaledNonDimensionalTradeRate()
+	public double asymptoticEulerUrgencyThreshold()
 	{
-		return _adblScaledNonDimensionalTradeRate;
+		return _dblAsymptoticEulerUrgencyThreshold;
 	}
 
 	/**
-	 * Retrieve the Array of the Non Dimensional Costs
+	 * Retrieve the Reference Ornstein-Unlenbeck Process
 	 * 
-	 * @return The Array of the Non Dimensional Costs
+	 * @return The Reference Ornstein-Unlenbeck Process
 	 */
 
-	public org.drip.execution.hjb.NonDimensionalCost[] nonDimensionalCost()
+	public org.drip.quant.stochastic.OrnsteinUhlenbeck ornsteinUnlenbeckProcess()
 	{
-		return _aNDC;
+		return _ou;
 	}
+
+	/**
+	 * Evolve a Single Time Step of the Optimal Trajectory
+	 * 
+	 * @param ndc The Initial Non Dimensional Cost Value Function
+	 * @param ms The Market State
+	 * @param dblNonDimensionalRiskAversion The Non Dimensional Risk Aversion Parameter
+	 * @param dblNonDimensionalTime The Non Dimensional Time Node
+	 * @param dblNonDimensionalTimeIncrement The Non Dimensional Time Increment
+	 * 
+	 * @return The Post Evolved Non-dimensional Cost Value Function
+	 */
+
+	public abstract org.drip.execution.hjb.NonDimensionalCost evolve (
+		final org.drip.execution.hjb.NonDimensionalCost ndc,
+		final org.drip.execution.latent.MarketState ms,
+		final double dblNonDimensionalRiskAversion,
+		final double dblNonDimensionalTime,
+		final double dblNonDimensionalTimeIncrement);
 }

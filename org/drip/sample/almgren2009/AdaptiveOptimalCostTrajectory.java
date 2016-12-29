@@ -1,7 +1,7 @@
 
 package org.drip.sample.almgren2009;
 
-import org.drip.execution.adaptive.*;
+import org.drip.execution.hjb.*;
 import org.drip.execution.latent.MarketStateSystemic;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.stochastic.*;
@@ -96,13 +96,13 @@ public class AdaptiveOptimalCostTrajectory {
 
 		aMSS[0] = new MarketStateSystemic (dblInitialMarketState);
 
-		OrnsteinUhlenbeckProcess1D oup = OrnsteinUhlenbeckProcess1D.ZeroMean (
+		OrnsteinUhlenbeckProcess1D oup1D = OrnsteinUhlenbeckProcess1D.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
-			GenericIncrement gi = oup.weinerIncrement (
+			GenericIncrement gi = oup1D.weinerIncrement (
 				aMSS[i].common(),
 				dblTimeInterval
 			);
@@ -110,9 +110,9 @@ public class AdaptiveOptimalCostTrajectory {
 			aMSS[i + 1] = new MarketStateSystemic (aMSS[i].common() + gi.deterministic() + gi.stochastic());
 		}
 
-		NonDimensionalCostEvolver1D ndce = NonDimensionalCostEvolver1D.Standard (oup);
+		NonDimensionalCostEvolverSystemic ndces = NonDimensionalCostEvolverSystemic.Standard (oup1D);
 
-		NonDimensionalCost1D ndc = NonDimensionalCost1D.Zero();
+		NonDimensionalCostSystemic ndcs = NonDimensionalCostSystemic.Zero();
 
 		System.out.println();
 
@@ -139,32 +139,32 @@ public class AdaptiveOptimalCostTrajectory {
 		System.out.println ("\t||" + 
 			FormatUtil.FormatDouble (0., 1, 2, 1.) + " => " +
 			FormatUtil.FormatDouble (aMSS[0].common(), 1, 4, 1.) + " | " +
-			FormatUtil.FormatDouble (ndc.realization(), 1, 4, 1.) + " | " +
-			FormatUtil.FormatDouble (ndc.realizationGradient(), 1, 4, 1.) + " | " +
-			FormatUtil.FormatDouble (ndc.realizationJacobian(), 1, 4, 1.) + " | " +
-			FormatUtil.FormatDouble (ndc.nonDimensionalTradeRate(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (ndcs.realization(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (ndcs.gradient(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (ndcs.jacobian(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (ndcs.nonDimensionalTradeRate(), 1, 4, 1.) + " | " +
 			FormatUtil.FormatDouble (dblNonDimensionalHoldings, 1, 4, 1.) + " ||"
 		);
 
 		for (int i = 1; i < iNumTimeNode; ++i) {
-			ndc = ndce.evolve (
-				ndc,
+			ndcs = (NonDimensionalCostSystemic) ndces.evolve (
+				ndcs,
 				aMSS[i],
 				dblDimensionlessRiskAversion,
 				(iNumTimeNode - i) * dblTimeInterval,
 				dblTimeInterval
 			);
 
-			double dblNonDimensionalTradeRate = dblNonDimensionalHoldings * ndc.nonDimensionalTradeRate();
+			double dblNonDimensionalTradeRate = dblNonDimensionalHoldings * ndcs.nonDimensionalTradeRate();
 
 			dblNonDimensionalHoldings = dblNonDimensionalHoldings - dblNonDimensionalTradeRate * dblTimeInterval;
 
 			System.out.println ("\t||" + 
 				FormatUtil.FormatDouble (dblTimeInterval * i, 1, 2, 1.) + " => " +
 				FormatUtil.FormatDouble (aMSS[i].common(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (ndc.realization(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (ndc.realizationGradient(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (ndc.realizationJacobian(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (ndcs.realization(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (ndcs.gradient(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (ndcs.jacobian(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (dblNonDimensionalTradeRate, 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (dblNonDimensionalHoldings, 1, 4, 1.) + " ||"
 			);

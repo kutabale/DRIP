@@ -1,5 +1,5 @@
 
-package org.drip.execution.adaptive;
+package org.drip.execution.hjb;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,9 +48,8 @@ package org.drip.execution.adaptive;
  */
 
 /**
- * CoordinatedVariationDynamic implements the HJB-based Single Step Optimal Cost Dynamic Trajectory using the
- *  Coordinated Variation Version of the Stochastic Volatility and the Transaction Function arising from the
- *  Realization of the Market State Variable as described in the "Trading Time" Model. The References are:
+ * NonDimensionalCost exposes the Level, the Gradient, and the Jacobian of the Realized Non Dimensional Cost
+ *  Value Function to the Market State. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -59,7 +58,7 @@ package org.drip.execution.adaptive;
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
  *
  * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
- * 		Financial Mathematics 3 (1) 163-181.
+ * 		Financial Mathematics  3 (1) 163-181.
  * 
  * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
  * 		79-96.
@@ -70,79 +69,49 @@ package org.drip.execution.adaptive;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CoordinatedVariationDynamic extends org.drip.execution.adaptive.CoordinatedVariationTrajectory {
-	private double[] _adblNonDimensionalHoldings = null;
-	private double[] _adblScaledNonDimensionalTradeRate = null;
-	private org.drip.execution.hjb.NonDimensionalCost[] _aNDC = null;
+public class NonDimensionalCost {
+	private double _dblRealization = java.lang.Double.NaN;
+	private double _dblNonDimensionalTradeRate = java.lang.Double.NaN;
 
 	/**
-	 * CoordinatedVariationDynamic Constructor
+	 * NonDimensionalCost Constructor
 	 * 
-	 * @param cvtd The Coordinated Variation Trajectory Determinant 
-	 * @param adblNonDimensionalHoldings The Array of the Non Dimensional Holdings
-	 * @param adblScaledNonDimensionalTradeRate The Array of the Scaled Non Dimensional Trade Rate
-	 * @param aNDC The Array of the Non Dimensional Costs
+	 * @param dblRealization The Non dimensional Value Function Realization
+	 * @param dblNonDimensionalTradeRate The Non-dimensional Trade Rate
 	 * 
-	 * @throws java.lang.Exception Thrown if the the Inputs are Invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CoordinatedVariationDynamic (
-		final org.drip.execution.adaptive.CoordinatedVariationTrajectoryDeterminant cvtd,
-		final double[] adblNonDimensionalHoldings,
-		final double[] adblScaledNonDimensionalTradeRate,
-		final org.drip.execution.hjb.NonDimensionalCost[] aNDC)
+	public NonDimensionalCost (
+		final double dblRealization,
+		final double dblNonDimensionalTradeRate)
 		throws java.lang.Exception
 	{
-		super (cvtd);
-
-		if (null == (_aNDC = aNDC) || null == (_adblNonDimensionalHoldings = adblNonDimensionalHoldings) ||
-			null == (_adblScaledNonDimensionalTradeRate = adblScaledNonDimensionalTradeRate) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_adblNonDimensionalHoldings) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_adblScaledNonDimensionalTradeRate))
-			throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-
-		int iNumTimeNode = _adblNonDimensionalHoldings.length;
-
-		if (0 == iNumTimeNode || iNumTimeNode != _adblScaledNonDimensionalTradeRate.length || iNumTimeNode !=
-			_aNDC.length)
-			throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-
-		for (int i = 0; i < iNumTimeNode; ++i) {
-			if (null == _aNDC[i])
-				throw new java.lang.Exception ("CoordinatedVariationDynamic Constructor => Invalid Inputs");
-		}
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblRealization = dblRealization) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblNonDimensionalTradeRate =
+				dblNonDimensionalTradeRate))
+			throw new java.lang.Exception ("NonDimensionalCost Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Array of the Non Dimensional Holdings
+	 * Retrieve the Realized Non-dimensional Value
 	 * 
-	 * @return The Array of the Non Dimensional Holdings
+	 * @return The Realized Non-dimensional Value
 	 */
 
-	public double[] nonDimensionalHoldings()
+	public double realization()
 	{
-		return _adblNonDimensionalHoldings;
+		return _dblRealization;
 	}
 
 	/**
-	 * Retrieve the Array of the Scaled Non Dimensional Trade Rate
+	 * Retrieve the Non-dimensional Trade Rate
 	 * 
-	 * @return The Array of the Scaled Non Dimensional Trade Rate
+	 * @return The Non-dimensional Trade Rate
 	 */
 
-	public double[] scaledNonDimensionalTradeRate()
+	public double nonDimensionalTradeRate()
 	{
-		return _adblScaledNonDimensionalTradeRate;
-	}
-
-	/**
-	 * Retrieve the Array of the Non Dimensional Costs
-	 * 
-	 * @return The Array of the Non Dimensional Costs
-	 */
-
-	public org.drip.execution.hjb.NonDimensionalCost[] nonDimensionalCost()
-	{
-		return _aNDC;
+		return _dblNonDimensionalTradeRate;
 	}
 }

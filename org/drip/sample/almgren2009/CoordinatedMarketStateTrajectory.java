@@ -93,7 +93,7 @@ public class CoordinatedMarketStateTrajectory {
 		double dblMarketState = dblInitialMarketState;
 		double dblTimeInterval = dblSimulationTime / iNumSimulation;
 
-		OrnsteinUhlenbeckProcess1D oup = OrnsteinUhlenbeckProcess1D.ZeroMean (
+		OrnsteinUhlenbeckProcess1D oup1D = OrnsteinUhlenbeckProcess1D.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
@@ -137,7 +137,7 @@ public class CoordinatedMarketStateTrajectory {
 		);
 
 		for (int i = 0; i < iNumSimulation; ++i) {
-			GenericIncrement gi = oup.weinerIncrement (
+			GenericIncrement gi = oup1D.weinerIncrement (
 				dblMarketState,
 				dblTimeInterval
 			);

@@ -2,6 +2,7 @@
 package org.drip.sample.almgren2009;
 
 import org.drip.execution.adaptive.*;
+import org.drip.execution.hjb.*;
 import org.drip.execution.latent.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
@@ -162,13 +163,13 @@ public class AdaptiveOptimalHJBTrajectory {
 			dblReferenceLiquidity
 		);
 
-		OrnsteinUhlenbeckProcess1D oup = OrnsteinUhlenbeckProcess1D.ZeroMean (
+		OrnsteinUhlenbeckProcess1D oup1D = OrnsteinUhlenbeckProcess1D.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		MarketState[] aMS = OrnsteinUhlenbeckSequence.Systemic (
-			oup,
+			oup1D,
 			dblNonDimensionalTimeInterval * dblRelaxationTime,
 			dblInitialMarketState,
 			iNumTimeNode
@@ -178,7 +179,7 @@ public class AdaptiveOptimalHJBTrajectory {
 			os,
 			cv,
 			new MeanVarianceObjectiveUtility (dblRiskAversion),
-			NonDimensionalCostEvolver1D.Standard (oup),
+			NonDimensionalCostEvolverSystemic.Standard (oup1D),
 			CoordinatedVariationTrajectoryGenerator.TRADE_RATE_STATIC_INITIALIZATION
 		).adaptive (aMS);
 
@@ -186,7 +187,7 @@ public class AdaptiveOptimalHJBTrajectory {
 
 		double[] adblNonDimensionalTradeRate = cvd.scaledNonDimensionalTradeRate();
 
-		NonDimensionalCost1D[] aNDC = cvd.nonDimensionalCost();
+		NonDimensionalCost[] aNDC = cvd.nonDimensionalCost();
 
 		System.out.println ("\t||-------------------------------------||");
 

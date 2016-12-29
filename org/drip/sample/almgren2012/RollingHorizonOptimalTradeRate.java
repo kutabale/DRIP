@@ -2,6 +2,7 @@
 package org.drip.sample.almgren2012;
 
 import org.drip.execution.adaptive.*;
+import org.drip.execution.hjb.NonDimensionalCostEvolverSystemic;
 import org.drip.execution.latent.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
@@ -136,7 +137,7 @@ public class RollingHorizonOptimalTradeRate {
 				os,
 				cv,
 				new MeanVarianceObjectiveUtility (adblRiskAversion[i]),
-				NonDimensionalCostEvolver1D.Standard (oup),
+				NonDimensionalCostEvolverSystemic.Standard (oup),
 				CoordinatedVariationTrajectoryGenerator.TRADE_RATE_ZERO_INITIALIZATION
 			).rollingHorizon (aMS).nonDimensionalTradeRate();
 

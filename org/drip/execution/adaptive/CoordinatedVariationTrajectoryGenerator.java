@@ -89,7 +89,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 	private int _iTradeRateInitializer = TRADE_RATE_ZERO_INITIALIZATION;
 	private org.drip.execution.tradingtime.CoordinatedVariation _cv = null;
 	private org.drip.execution.risk.MeanVarianceObjectiveUtility _mvou = null;
-	private org.drip.execution.adaptive.NonDimensionalCostEvolver1D _ndce = null;
+	private org.drip.execution.hjb.NonDimensionalCostEvolver _ndce = null;
 
 	private org.drip.execution.dynamics.LinearPermanentExpectationParameters realizedLPEP (
 		final double dblMarketState)
@@ -128,7 +128,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 		final org.drip.execution.strategy.OrderSpecification os,
 		final org.drip.execution.tradingtime.CoordinatedVariation cv,
 		final org.drip.execution.risk.MeanVarianceObjectiveUtility mvou,
-		final org.drip.execution.adaptive.NonDimensionalCostEvolver1D ndce,
+		final org.drip.execution.hjb.NonDimensionalCostEvolver ndce,
 		final int iTradeRateInitializer)
 		throws java.lang.Exception
 	{
@@ -178,7 +178,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 	 * @return The Non Dimensional Cost Evolver
 	 */
 
-	public org.drip.execution.adaptive.NonDimensionalCostEvolver1D evolver()
+	public org.drip.execution.hjb.NonDimensionalCostEvolver evolver()
 	{
 		return _ndce;
 	}
@@ -208,7 +208,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 
 		double dblReferenceVolatility = _cv.referenceVolatility();
 
-		double dblRelaxationTime = _ndce.ornsteinUnlenbeckProcess().relaxationTime();
+		double dblRelaxationTime = _ndce.ornsteinUnlenbeckProcess().referenceRelaxationTime();
 
 		double dblMeanMarketUrgency = _cv.referenceVolatility() * java.lang.Math.sqrt (_mvou.riskAversion() /
 			dblReferenceLiquidity);
@@ -237,12 +237,12 @@ public class CoordinatedVariationTrajectoryGenerator {
 	 * @return The Initial Non Dimensional Cost
 	 */
 
-	public org.drip.execution.adaptive.NonDimensionalCost1D initializeNonDimensionalCost (
+	public org.drip.execution.hjb.NonDimensionalCost initializeNonDimensionalCost (
 		final org.drip.execution.latent.MarketState ms,
 		final double dblTradeRateScale)
 	{
 		if (TRADE_RATE_ZERO_INITIALIZATION == _iTradeRateInitializer)
-			return org.drip.execution.adaptive.NonDimensionalCost1D.Zero();
+			return org.drip.execution.hjb.NonDimensionalCostSystemic.Zero();
 
 		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblTradeRateScale)) return null;
 
@@ -260,7 +260,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 			double dblNonDimensionalCostSensitivity = java.lang.Math.exp (ms.liquidity()) *
 				dblNonDimensionalInstantTradeRate;
 
-			return new org.drip.execution.adaptive.NonDimensionalCost1D (0., dblNonDimensionalCostSensitivity,
+			return new org.drip.execution.hjb.NonDimensionalCostSystemic (0., dblNonDimensionalCostSensitivity,
 				dblNonDimensionalCostSensitivity, dblNonDimensionalInstantTradeRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -292,7 +292,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 
 		double dblReferenceVolatility = _cv.referenceVolatility();
 
-		double dblRelaxationTime = _ndce.ornsteinUnlenbeckProcess().relaxationTime();
+		double dblRelaxationTime = _ndce.ornsteinUnlenbeckProcess().referenceRelaxationTime();
 
 		double dblNonDimensionalTimeIncrement = _os.maxExecutionTime() / (iNumTimeNode - 1) /
 			dblRelaxationTime;
@@ -300,8 +300,8 @@ public class CoordinatedVariationTrajectoryGenerator {
 		double dblMeanMarketUrgency = dblReferenceVolatility * java.lang.Math.sqrt (_mvou.riskAversion() /
 			dblReferenceLiquidity);
 
-		org.drip.execution.adaptive.NonDimensionalCost1D[] aNDC = new
-			org.drip.execution.adaptive.NonDimensionalCost1D[iNumTimeNode];
+		org.drip.execution.hjb.NonDimensionalCost[] aNDC = new
+			org.drip.execution.hjb.NonDimensionalCost[iNumTimeNode];
 		double[] adblNonDimensionalScaledTradeRate = new double[iNumTimeNode];
 		double dblTradeRateScale = dblExecutionSize / dblRelaxationTime;
 		double[] adblNonDimensionalHoldings = new double[iNumTimeNode];
@@ -389,7 +389,7 @@ public class CoordinatedVariationTrajectoryGenerator {
 
 		double dblReferenceVolatility = _cv.referenceVolatility();
 
-		double dblRelaxationTime = _ndce.ornsteinUnlenbeckProcess().relaxationTime();
+		double dblRelaxationTime = _ndce.ornsteinUnlenbeckProcess().referenceRelaxationTime();
 
 		double dblMeanMarketUrgency = dblReferenceVolatility * java.lang.Math.sqrt (dblRiskAversion /
 			dblReferenceLiquidity);
