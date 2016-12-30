@@ -48,101 +48,88 @@ package org.drip.function.rdtor1;
  */
 
 /**
- * LinearBoundMultivariate implements a Bounded R^d To R^1 Function.
+ * AffineMultivariate implements a Planar Linear R^d To R^1 Function using a Multivariate Vector.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class LinearBoundMultivariate extends org.drip.function.definition.RdToR1 implements
-	org.drip.function.rdtor1.BoundMultivariate {
-	private boolean _bIsUpper = false;
-	private int _iNumTotalVariate = -1;
-	private int _iBoundVariateIndex = -1;
-	private double _dblBoundValue = java.lang.Double.NaN;
+public class AffineMultivariate extends org.drip.function.definition.RdToR1 implements
+	org.drip.function.rdtor1.ConvexMultivariate {
+	private double[] _adblCoefficient = null;
+	private double _dblConstant = java.lang.Double.NaN;
 
 	/**
-	 * LinearBoundMultivariate Constructor
+	 * AffineMultivariate Constructor
 	 * 
-	 * @param bIsUpper TRUE To The Bound is an Upper Bound
-	 * @param iBoundVariateIndex The Bound Variate Index
-	 * @param iNumTotalVariate The Total Number of Variates
-	 * @param dblBoundValue The Bounding Value
+	 * @param adblCoefficient Array of Variate Coefficients
+	 * @param dblConstant The Constant Offset
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public LinearBoundMultivariate (
-		final boolean bIsUpper,
-		final int iBoundVariateIndex,
-		final int iNumTotalVariate,
-		final double dblBoundValue)
+	public AffineMultivariate (
+		final double[] adblCoefficient,
+		final double dblConstant)
 		throws java.lang.Exception
 	{
 		super (null);
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBoundValue = dblBoundValue) || 0 ==
-			(_iNumTotalVariate = iNumTotalVariate) || _iNumTotalVariate <= (_iBoundVariateIndex =
-				iBoundVariateIndex))
-			throw new java.lang.Exception ("LinearBoundMultivariate Constructor => Invalid Inputs");
-
-		_bIsUpper = bIsUpper;
+		if (null == (_adblCoefficient = adblCoefficient) || 0 == _adblCoefficient.length ||
+			!org.drip.quant.common.NumberUtil.IsValid (_adblCoefficient) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblConstant = dblConstant))
+			throw new java.lang.Exception ("AffineMultivariate Constructor => Invalid Inputs");
 	}
 
-	@Override public boolean isUpper()
+	/**
+	 * Retrieve the Array of the Coefficients
+	 * 
+	 * @return The Array of the Coefficients
+	 */
+
+	public double[] coefficients()
 	{
-		return _bIsUpper;
+		return _adblCoefficient;
 	}
 
-	@Override public int boundVariateIndex()
+	/**
+	 * Retrieve the Constant
+	 * 
+	 * @return The Constant
+	 */
+
+	public double constant()
 	{
-		return _iBoundVariateIndex;
-	}
-
-	@Override public double boundValue()
-	{
-		return _dblBoundValue;
-	}
-
-	@Override public boolean violated (
-		final double dblVariate)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblVariate))
-			throw new java.lang.Exception ("LinearBoundMultivariate::violated => Invalid Inputs");
-
-		if (_bIsUpper && dblVariate > _dblBoundValue) return true;
-
-		if (!_bIsUpper && dblVariate < _dblBoundValue) return true;
-
-		return false;
+		return _dblConstant;
 	}
 
 	@Override public int dimension()
 	{
-		return _iNumTotalVariate;
+		return _adblCoefficient.length;
 	}
 
 	@Override public double evaluate (
 		final double[] adblVariate)
 		throws java.lang.Exception
 	{
-		if (null == adblVariate || !org.drip.quant.common.NumberUtil.IsValid (adblVariate) ||
-			adblVariate.length != dimension())
-			throw new java.lang.Exception ("LinearBoundMultivariate::evaluate => Invalid Inputs");
+		if (null == adblVariate || !org.drip.quant.common.NumberUtil.IsValid (adblVariate))
+			throw new java.lang.Exception ("AffineMultivariate::evaluate => Invalid Inputs");
 
-		return _bIsUpper ? _dblBoundValue - adblVariate[_iBoundVariateIndex] :
-			adblVariate[_iBoundVariateIndex] - _dblBoundValue;
+		double dblValue = 0.;
+		int iDimension = adblVariate.length;
+
+		if (iDimension != dimension())
+			throw new java.lang.Exception ("AffineMultivariate::evaluate => Invalid Inputs");
+
+		for (int i = 0; i < iDimension; ++i)
+			dblValue += adblVariate[i] * _adblCoefficient[i];
+
+		return dblValue + _dblConstant;
 	}
 
 	@Override public double[] jacobian (
 		final double[] adblVariate)
 	{
-		double[] adblJacobian = new double[_iNumTotalVariate];
-
-		for (int i = 0; i < _iNumTotalVariate; ++i)
-			adblJacobian[i] = i == _iBoundVariateIndex ? (_bIsUpper ? -1. : 1.) : 0.;
-
-		return adblJacobian;
+		return _adblCoefficient;
 	}
 
 	@Override public double[][] hessian (

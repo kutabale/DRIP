@@ -121,7 +121,7 @@ public class PortfolioConstructionParameters {
 	public org.drip.function.definition.RdToR1 fullyInvestedConstraint()
 	{
 		try {
-			return new org.drip.function.rdtor1.LinearMultivariate
+			return new org.drip.function.rdtor1.AffineMultivariate
 				(org.drip.function.rdtor1.ObjectiveConstraintVariateSet.Unitary (assets().length), -1.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -158,7 +158,7 @@ public class PortfolioConstructionParameters {
 		}
 
 		try {
-			return new org.drip.function.rdtor1.LinearMultivariate (adblAssetReturn, -1. *
+			return new org.drip.function.rdtor1.AffineMultivariate (adblAssetReturn, -1. *
 				_pecs.returnsConstraint());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

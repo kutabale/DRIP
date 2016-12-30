@@ -280,6 +280,49 @@ public class OptimizationFramework {
 	}
 
 	/**
+	 * Retrieve the Array of Active Constraints
+	 * 
+	 * @param adblVariate The R^d Variate
+	 * 
+	 * @return The Array of Active Constraints
+	 */
+
+	public org.drip.function.definition.RdToR1[] activeConstraints (
+		final double[] adblVariate)
+	{
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		java.util.List<org.drip.function.definition.RdToR1> lsActiveConstraint = new
+			java.util.ArrayList<org.drip.function.definition.RdToR1>();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i)
+			lsActiveConstraint.add (_aRdToR1EqualityConstraint[i]);
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i) {
+			try {
+				if (0. == _aRdToR1InequalityConstraint[i].evaluate (adblVariate))
+					lsActiveConstraint.add (_aRdToR1InequalityConstraint[i]);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		int iNumActiveConstraint = lsActiveConstraint.size();
+
+		org.drip.function.definition.RdToR1[] aRdToR1ActiveConstraint = new
+			org.drip.function.definition.RdToR1[iNumActiveConstraint];
+
+		for (int i = 0; i < iNumActiveConstraint; ++i)
+			aRdToR1ActiveConstraint[i] = lsActiveConstraint.get (i);
+
+		return aRdToR1ActiveConstraint;
+	}
+
+	/**
 	 * Active Constraint Set Rank Computation
 	 * 
 	 * @param adblVariate The Candidate R^d Variate
@@ -379,12 +422,14 @@ public class OptimizationFramework {
 		}
 
 		for (int i = iNumEqualityConstraint; i < iNumConstraint; ++i) {
-			if (0. == _aRdToR1InequalityConstraint[i - iNumEqualityConstraint].evaluate (adblVariate)) {
-				if (null == (aadblJacobian[i] =
-					_aRdToR1InequalityConstraint[i - iNumEqualityConstraint].jacobian (adblVariate)))
+			aadblJacobian[i] = null;
+			org.drip.function.definition.RdToR1 rdToR1InequalityConstraint =
+				_aRdToR1InequalityConstraint[i - iNumEqualityConstraint];
+
+			if (0. == rdToR1InequalityConstraint.evaluate (adblVariate)) {
+				if (null == (aadblJacobian[i] = rdToR1InequalityConstraint.jacobian (adblVariate)))
 					return false;
-			} else
-				aadblJacobian[i] = null;
+			}
 		}
 
 		for (int i = 0; i < iNumConstraint; ++i) {
@@ -399,13 +444,42 @@ public class OptimizationFramework {
 
 		if (bPositiveLinearDependenceCheck) {
 			for (int i = 0; i < iNumConstraint; ++i) {
-				if (null != aadblJacobian[i] || 0. == org.drip.quant.linearalgebra.Matrix.Modulus
-					(aadblJacobian[i]))
+				if (null != aadblJacobian[i] ||
+					!org.drip.quant.linearalgebra.Matrix.PositiveLinearlyIndependent (aadblJacobian[i]))
 					return false;
 			}
 		}
 
 		return true;
+	}
+
+	/**
+	 * Compute the Along/Away "Naturally" Incremented Variates
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return The Along/Away "Natural" Incremented Variates
+	 */
+
+	public double[][] alongAwayVariate (
+		final double[] adblVariate)
+	{
+		double[] adblVariateIncrement = org.drip.quant.linearalgebra.Matrix.Product
+			(org.drip.quant.linearalgebra.Matrix.InvertUsingGaussianElimination (_rdToR1Objective.hessian
+				(adblVariate)), _rdToR1Objective.jacobian (adblVariate));
+
+		if (null == adblVariateIncrement) return null;
+
+		int iVariateDimension = adblVariate.length;
+		double[] adblVariateAway = new double[iVariateDimension];
+		double[] adblVariateAlong = new double[iVariateDimension];
+
+		for (int i = 0; i < iVariateDimension; ++i) {
+			adblVariateAway[i] = adblVariate[i] - adblVariateIncrement[i];
+			adblVariateAlong[i] = adblVariate[i] + adblVariateIncrement[i];
+		}
+
+		return new double[][] {adblVariateAlong, adblVariateAway};
 	}
 
 	/**
@@ -421,12 +495,12 @@ public class OptimizationFramework {
 		int iNumInequalityConstraint = numInequalityConstraint();
 
 		for (int i = 0; i < iNumEqualityConstraint; ++i) {
-			if (!(_aRdToR1EqualityConstraint[i] instanceof org.drip.function.rdtor1.LinearMultivariate))
+			if (!(_aRdToR1EqualityConstraint[i] instanceof org.drip.function.rdtor1.AffineMultivariate))
 				return false;
 		}
 
 		for (int i = 0; i < iNumInequalityConstraint; ++i) {
-			if (!(_aRdToR1InequalityConstraint[i] instanceof org.drip.function.rdtor1.LinearMultivariate))
+			if (!(_aRdToR1InequalityConstraint[i] instanceof org.drip.function.rdtor1.AffineMultivariate))
 				return false;
 		}
 
@@ -465,5 +539,132 @@ public class OptimizationFramework {
 		throws java.lang.Exception
 	{
 		return activeConstraintLinearDependence (adblVariate, true);
+	}
+
+	/**
+	 * Check for Constant Rank Constraint Qualification
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return TRUE - The Constant Rank Constraint Qualification is satisfied
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public boolean isCRCQ (
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		int iRank = activeConstraintRank (adblVariate);
+
+		double[][] aadblAlongAwayVariatePair = alongAwayVariate (adblVariate);
+
+		if (null == aadblAlongAwayVariatePair)
+			throw new java.lang.Exception ("OptimizationFramework::isCRCQ => Cannot generate along/away");
+
+		return iRank == activeConstraintRank (aadblAlongAwayVariatePair[0]) && iRank == activeConstraintRank
+			(aadblAlongAwayVariatePair[1]);
+	}
+
+	/**
+	 * Check for Constant Positive Linear Dependence Constraint Qualification
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return TRUE - The Constant Positive Linear Dependence Constraint Qualification is satisfied
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public boolean isCPLDCQ (
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		if (!isMFCQ (adblVariate)) return false;
+
+		double[][] aadblAlongAwayVariatePair = alongAwayVariate (adblVariate);
+
+		if (null == aadblAlongAwayVariatePair)
+			throw new java.lang.Exception ("OptimizationFramework::isCPLDCQ => Cannot generate along/away");
+
+		return isMFCQ (aadblAlongAwayVariatePair[0]) && isMFCQ (aadblAlongAwayVariatePair[1]);
+	}
+
+	/**
+	 * Check for Quasi Normal Constraint Qualification
+	 * 
+	 * @param kktMultiplier The specified KKT Multipliers
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return TRUE - The Quasi Normal Constraint Qualification is satisfied
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public boolean isQNCQ (
+		final org.drip.optimization.kkt.Multipliers kktMultiplier,
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		if (!isCompatible (kktMultiplier))
+			throw new java.lang.Exception ("OptimizationFramework::isQNCQ => Invalid Inputs");
+
+		if (!isMFCQ (adblVariate)) return false;
+
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		double[] adblEqualityConstraintCoefficient = null == kktMultiplier ? null :
+			kktMultiplier.equalityConstraintCoefficient();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			if (0. != adblEqualityConstraintCoefficient[i] && 0. <= _aRdToR1EqualityConstraint[i].evaluate
+				(adblVariate) * adblEqualityConstraintCoefficient[i])
+				return false;
+		}
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		double[] adblInequalityConstraintCoefficient = null == kktMultiplier ? null :
+			kktMultiplier.inequalityConstraintCoefficient();
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i) {
+			if (0. != adblInequalityConstraintCoefficient[i] && 0. <=
+				_aRdToR1InequalityConstraint[i].evaluate (adblVariate) *
+					adblInequalityConstraintCoefficient[i])
+				return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check for Slater Condition Constraint Qualification
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return TRUE - The Slater Condition Constraint Qualification is satisfied
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public boolean isSCCQ (
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		if (!(_rdToR1Objective instanceof org.drip.function.rdtor1.ConvexMultivariate)) return false;
+
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			if (0. != _aRdToR1EqualityConstraint[i].evaluate (adblVariate)) return false;
+		}
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i) {
+			if (0. <= _aRdToR1InequalityConstraint[i].evaluate (adblVariate)) return false;
+		}
+
+		return true;
 	}
 }

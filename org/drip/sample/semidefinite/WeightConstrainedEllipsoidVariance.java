@@ -117,7 +117,7 @@ public class WeightConstrainedEllipsoidVariance {
 		InteriorPointBarrierControl ipbc = InteriorPointBarrierControl.Standard();
 
 		RdToR1[] aRdToR1EqualityConstraint = new RdToR1[] {
-			new LinearMultivariate (
+			new AffineMultivariate (
 				ObjectiveConstraintVariateSet.Unitary (iNumEntity),
 				dblEqualityConstraintConstant
 			)
@@ -126,20 +126,20 @@ public class WeightConstrainedEllipsoidVariance {
 		int iNumEqualityConstraint = aRdToR1EqualityConstraint.length;
 
 		RdToR1[] aRdToR1InequalityConstraint = new RdToR1[] {
-			new LinearBoundMultivariate (false, 0, iNumEntity + iNumEqualityConstraint, 0.05),
-			new LinearBoundMultivariate (true, 0, iNumEntity + iNumEqualityConstraint, 0.65),
-			new LinearBoundMultivariate (false, 1, iNumEntity + iNumEqualityConstraint, 0.05),
-			new LinearBoundMultivariate (true, 1, iNumEntity + iNumEqualityConstraint, 0.65),
-			new LinearBoundMultivariate (false, 2, iNumEntity + iNumEqualityConstraint, 0.05),
-			new LinearBoundMultivariate (true, 2, iNumEntity + iNumEqualityConstraint, 0.65),
-			new LinearBoundMultivariate (false, 3, iNumEntity + iNumEqualityConstraint, 0.05),
-			new LinearBoundMultivariate (true, 3, iNumEntity + iNumEqualityConstraint, 0.65),
-			new LinearBoundMultivariate (false, 4, iNumEntity + iNumEqualityConstraint, 0.05),
-			new LinearBoundMultivariate (true, 4, iNumEntity + iNumEqualityConstraint, 0.65),
-			new LinearBoundMultivariate (false, 5, iNumEntity + iNumEqualityConstraint, 0.05),
-			new LinearBoundMultivariate (true, 5, iNumEntity + iNumEqualityConstraint, 0.65),
-			new LinearBoundMultivariate (false, 6, iNumEntity + iNumEqualityConstraint, 0.05),
-			new LinearBoundMultivariate (true, 6, iNumEntity + iNumEqualityConstraint, 0.65)
+			new AffineBoundMultivariate (false, 0, iNumEntity + iNumEqualityConstraint, 0.05),
+			new AffineBoundMultivariate (true, 0, iNumEntity + iNumEqualityConstraint, 0.65),
+			new AffineBoundMultivariate (false, 1, iNumEntity + iNumEqualityConstraint, 0.05),
+			new AffineBoundMultivariate (true, 1, iNumEntity + iNumEqualityConstraint, 0.65),
+			new AffineBoundMultivariate (false, 2, iNumEntity + iNumEqualityConstraint, 0.05),
+			new AffineBoundMultivariate (true, 2, iNumEntity + iNumEqualityConstraint, 0.65),
+			new AffineBoundMultivariate (false, 3, iNumEntity + iNumEqualityConstraint, 0.05),
+			new AffineBoundMultivariate (true, 3, iNumEntity + iNumEqualityConstraint, 0.65),
+			new AffineBoundMultivariate (false, 4, iNumEntity + iNumEqualityConstraint, 0.05),
+			new AffineBoundMultivariate (true, 4, iNumEntity + iNumEqualityConstraint, 0.65),
+			new AffineBoundMultivariate (false, 5, iNumEntity + iNumEqualityConstraint, 0.05),
+			new AffineBoundMultivariate (true, 5, iNumEntity + iNumEqualityConstraint, 0.65),
+			new AffineBoundMultivariate (false, 6, iNumEntity + iNumEqualityConstraint, 0.05),
+			new AffineBoundMultivariate (true, 6, iNumEntity + iNumEqualityConstraint, 0.65)
 		};
 
 		LagrangianMultivariate ceec = new LagrangianMultivariate (

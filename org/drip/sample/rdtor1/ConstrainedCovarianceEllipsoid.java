@@ -79,7 +79,7 @@ public class ConstrainedCovarianceEllipsoid {
 
 		double dblEqualityConstraintConstant = -1.;
 
-		LinearMultivariate lmConstraintRdToR1 = new LinearMultivariate (
+		AffineMultivariate lmConstraintRdToR1 = new AffineMultivariate (
 			adblEqualityConstraint,
 			dblEqualityConstraintConstant
 		);

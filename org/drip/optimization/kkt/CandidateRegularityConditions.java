@@ -1,5 +1,5 @@
 
-package org.drip.optimization.regularity;
+package org.drip.optimization.kkt;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,9 @@ package org.drip.optimization.regularity;
  */
 
 /**
- * CandidateRegularity holds the Results of the Verification of the Regularity Conditions/Constraint
- * 	Qualifications at the specified possible Optimal Variate. The References are:
+ * CandidateRegularityConditions holds the Results of the Verification of the Regularity
+ *  Conditions/Constraint Qualifications at the specified (possibly) Optimal Variate and the corresponding
+ *  KKT Multiplier Suite. The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -67,20 +68,22 @@ package org.drip.optimization.regularity;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CandidateRegularity {
+public class CandidateRegularityConditions {
 	private double[] _adblOptimalVariate = null;
-	private org.drip.optimization.regularity.ConstraintQualifier _cqLCQ = null;
-	private org.drip.optimization.regularity.ConstraintQualifier _cqCRCQ = null;
-	private org.drip.optimization.regularity.ConstraintQualifier _cqLICQ = null;
-	private org.drip.optimization.regularity.ConstraintQualifier _cqMFCQ = null;
-	private org.drip.optimization.regularity.ConstraintQualifier _cqQNCQ = null;
-	private org.drip.optimization.regularity.ConstraintQualifier _cqSCCQ = null;
-	private org.drip.optimization.regularity.ConstraintQualifier _cqCPLDCQ = null;
+	private org.drip.optimization.kkt.Multipliers _kktMultipliers = null;
+	private org.drip.optimization.regularity.ConstraintQualifierLCQ _cqLCQ = null;
+	private org.drip.optimization.regularity.ConstraintQualifierCRCQ _cqCRCQ = null;
+	private org.drip.optimization.regularity.ConstraintQualifierLICQ _cqLICQ = null;
+	private org.drip.optimization.regularity.ConstraintQualifierMFCQ _cqMFCQ = null;
+	private org.drip.optimization.regularity.ConstraintQualifierQNCQ _cqQNCQ = null;
+	private org.drip.optimization.regularity.ConstraintQualifierSCCQ _cqSCCQ = null;
+	private org.drip.optimization.regularity.ConstraintQualifierCPLDCQ _cqCPLDCQ = null;
 
 	/**
-	 * Construct a Standard Instance of CandidateRegularity
+	 * Construct a Standard Instance of CandidateRegularityConditions
 	 * 
 	 * @param adblOptimalVariate The Optimal Variate Array
+	 * @param kktMultiplers The KKT Multipliers
 	 * @param bValidLCQ The LCQ Validity Flag
 	 * @param bValidLICQ The LICQ Validity Flag
 	 * @param bValidMFCQ The MFCQ Validity Flag
@@ -92,8 +95,9 @@ public class CandidateRegularity {
 	 * @return The Standard Instance of CandidateRegularity
 	 */
 
-	public static final CandidateRegularity Standard (
+	public static final CandidateRegularityConditions Standard (
 		final double[] adblOptimalVariate,
+		final org.drip.optimization.kkt.Multipliers kktMultipliers,
 		final boolean bValidLCQ,
 		final boolean bValidLICQ,
 		final boolean bValidMFCQ,
@@ -103,7 +107,7 @@ public class CandidateRegularity {
 		final boolean bValidSCCQ)
 	{
 		try {
-			return new CandidateRegularity (adblOptimalVariate, new
+			return new CandidateRegularityConditions (adblOptimalVariate, kktMultipliers, new
 				org.drip.optimization.regularity.ConstraintQualifierLCQ (bValidLCQ), new
 					org.drip.optimization.regularity.ConstraintQualifierLICQ (bValidLICQ), new
 						org.drip.optimization.regularity.ConstraintQualifierMFCQ (bValidMFCQ), new
@@ -121,9 +125,10 @@ public class CandidateRegularity {
 	}
 
 	/**
-	 * CandidateRegularity Constructor
+	 * CandidateRegularityConditions Constructor
 	 * 
 	 * @param adblOptimalVariate The Optimal Variate Array
+	 * @param kktMultiplers The KKT Multipliers
 	 * @param cqLCQ LCQ Constraint Qualifier Instance
 	 * @param cqLICQ LICQ Constraint Qualifier Instance
 	 * @param cqMFCQ MFCQ Constraint Qualifier Instance
@@ -135,22 +140,23 @@ public class CandidateRegularity {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CandidateRegularity (
+	public CandidateRegularityConditions (
 		final double[] adblOptimalVariate,
-		final org.drip.optimization.regularity.ConstraintQualifier cqLCQ,
-		final org.drip.optimization.regularity.ConstraintQualifier cqLICQ,
-		final org.drip.optimization.regularity.ConstraintQualifier cqMFCQ,
-		final org.drip.optimization.regularity.ConstraintQualifier cqCRCQ,
-		final org.drip.optimization.regularity.ConstraintQualifier cqCPLDCQ,
-		final org.drip.optimization.regularity.ConstraintQualifier cqQNCQ,
-		final org.drip.optimization.regularity.ConstraintQualifier cqSCCQ)
+		final org.drip.optimization.kkt.Multipliers kktMultipliers,
+		final org.drip.optimization.regularity.ConstraintQualifierLCQ cqLCQ,
+		final org.drip.optimization.regularity.ConstraintQualifierLICQ cqLICQ,
+		final org.drip.optimization.regularity.ConstraintQualifierMFCQ cqMFCQ,
+		final org.drip.optimization.regularity.ConstraintQualifierCRCQ cqCRCQ,
+		final org.drip.optimization.regularity.ConstraintQualifierCPLDCQ cqCPLDCQ,
+		final org.drip.optimization.regularity.ConstraintQualifierQNCQ cqQNCQ,
+		final org.drip.optimization.regularity.ConstraintQualifierSCCQ cqSCCQ)
 		throws java.lang.Exception
 	{
 		if (null == (_adblOptimalVariate = adblOptimalVariate) || 0 == _adblOptimalVariate.length || null ==
-			(_cqLCQ = cqLCQ) || null == (_cqLICQ = cqLICQ) || null == (_cqMFCQ = cqMFCQ) || null == (_cqCRCQ
-				= cqCRCQ) || null == (_cqCPLDCQ = cqCPLDCQ) || null == (_cqQNCQ = cqQNCQ) || null == (_cqSCCQ
-					= cqSCCQ))
-			throw new java.lang.Exception ("CandidateRegularity Constructor => Invalid Inputs");
+			(_kktMultipliers = kktMultipliers) || null == (_cqLCQ = cqLCQ) || null == (_cqLICQ = cqLICQ) ||
+				null == (_cqMFCQ = cqMFCQ) || null == (_cqCRCQ = cqCRCQ) || null == (_cqCPLDCQ = cqCPLDCQ) ||
+					null == (_cqQNCQ = cqQNCQ) || null == (_cqSCCQ = cqSCCQ))
+			throw new java.lang.Exception ("CandidateRegularityConditions Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -165,12 +171,23 @@ public class CandidateRegularity {
 	}
 
 	/**
+	 * Retrieve the KKT Mutipliers Array
+	 * 
+	 * @return The KKT Mutipliers Array
+	 */
+
+	public org.drip.optimization.kkt.Multipliers kktMultipliers()
+	{
+		return _kktMultipliers;
+	}
+
+	/**
 	 * Retrieve the LCQ Constraint Qualifier
 	 * 
 	 * @return The LCQ Constraint Qualifier
 	 */
 
-	public org.drip.optimization.regularity.ConstraintQualifier lcq()
+	public org.drip.optimization.regularity.ConstraintQualifierLCQ lcq()
 	{
 		return _cqLCQ;
 	}
@@ -181,7 +198,7 @@ public class CandidateRegularity {
 	 * @return The LICQ Constraint Qualifier
 	 */
 
-	public org.drip.optimization.regularity.ConstraintQualifier licq()
+	public org.drip.optimization.regularity.ConstraintQualifierLICQ licq()
 	{
 		return _cqLICQ;
 	}
@@ -192,7 +209,7 @@ public class CandidateRegularity {
 	 * @return The MFCQ Constraint Qualifier
 	 */
 
-	public org.drip.optimization.regularity.ConstraintQualifier mfcq()
+	public org.drip.optimization.regularity.ConstraintQualifierMFCQ mfcq()
 	{
 		return _cqMFCQ;
 	}
@@ -203,7 +220,7 @@ public class CandidateRegularity {
 	 * @return The CRCQ Constraint Qualifier
 	 */
 
-	public org.drip.optimization.regularity.ConstraintQualifier crcq()
+	public org.drip.optimization.regularity.ConstraintQualifierCRCQ crcq()
 	{
 		return _cqCRCQ;
 	}
@@ -214,7 +231,7 @@ public class CandidateRegularity {
 	 * @return The CPLDCQ Constraint Qualifier
 	 */
 
-	public org.drip.optimization.regularity.ConstraintQualifier cpldcq()
+	public org.drip.optimization.regularity.ConstraintQualifierCPLDCQ cpldcq()
 	{
 		return _cqCPLDCQ;
 	}
@@ -225,7 +242,7 @@ public class CandidateRegularity {
 	 * @return The QNCQ Constraint Qualifier
 	 */
 
-	public org.drip.optimization.regularity.ConstraintQualifier qncq()
+	public org.drip.optimization.regularity.ConstraintQualifierQNCQ qncq()
 	{
 		return _cqQNCQ;
 	}
@@ -236,20 +253,19 @@ public class CandidateRegularity {
 	 * @return The SCCQ Constraint Qualifier
 	 */
 
-	public org.drip.optimization.regularity.ConstraintQualifier sccq()
+	public org.drip.optimization.regularity.ConstraintQualifierSCCQ sccq()
 	{
 		return _cqSCCQ;
 	}
 
 	/**
-	 * Indicate the Gross Regularity Validity across all the Constraint Qualifiers
+	 * Indicate the Ordered Gross Regularity Validity across all the Constraint Qualifiers
 	 * 
-	 * @return TRUE - The Regularity Criteria is satisfied across all the Constraint Qualifiers
+	 * @return TRUE - The Ordered Regularity Criteria is satisfied across all the Constraint Qualifiers
 	 */
 
 	public boolean valid()
 	{
-		return _cqCPLDCQ.valid() && _cqCRCQ.valid() && _cqLCQ.valid() && _cqLICQ.valid() && _cqMFCQ.valid()
-			&& _cqQNCQ.valid() && _cqSCCQ.valid();
+		return _cqLICQ.valid() && _cqCRCQ.valid() && _cqMFCQ.valid() && _cqCPLDCQ.valid() && _cqQNCQ.valid();
 	}
 }

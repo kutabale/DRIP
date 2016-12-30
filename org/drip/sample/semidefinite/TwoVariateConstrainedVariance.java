@@ -82,8 +82,8 @@ public class TwoVariateConstrainedVariance {
 		double dblEqualityConstraintConstant = -1.;
 		int iObjectiveDimension = aadblCovarianceMatrix.length;
 
-		RdToR1[] aEqualityConstraintRdToR1 = new LinearMultivariate[] {
-			new LinearMultivariate (
+		RdToR1[] aEqualityConstraintRdToR1 = new AffineMultivariate[] {
+			new AffineMultivariate (
 				adblEqualityConstraint,
 				dblEqualityConstraintConstant
 			)
@@ -91,28 +91,28 @@ public class TwoVariateConstrainedVariance {
 
 		int iNumEqualityConstraint = aEqualityConstraintRdToR1.length;
 
-		LinearBoundMultivariate lmbConstraint1 = new LinearBoundMultivariate (
+		AffineBoundMultivariate lmbConstraint1 = new AffineBoundMultivariate (
 			true,
 			0,
 			2 + iNumEqualityConstraint,
 			0.65
 		);
 
-		LinearBoundMultivariate lmbConstraint2 = new LinearBoundMultivariate (
+		AffineBoundMultivariate lmbConstraint2 = new AffineBoundMultivariate (
 			true,
 			1,
 			2 + iNumEqualityConstraint,
 			0.65
 		);
 
-		LinearBoundMultivariate lmbConstraint3 = new LinearBoundMultivariate (
+		AffineBoundMultivariate lmbConstraint3 = new AffineBoundMultivariate (
 			false,
 			0,
 			2 + iNumEqualityConstraint,
 			0.15
 		);
 
-		LinearBoundMultivariate lmbConstraint4 = new LinearBoundMultivariate (
+		AffineBoundMultivariate lmbConstraint4 = new AffineBoundMultivariate (
 			false,
 			1,
 			2 + iNumEqualityConstraint,

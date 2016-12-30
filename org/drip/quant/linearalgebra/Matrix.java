@@ -532,10 +532,15 @@ public class Matrix {
 		final double[][] aadblSource)
 		throws java.lang.Exception
 	{
-		if (null == aadblSource) throw new java.lang.Exception ("Matrix::Rank => Cannot Compute");
+		if (null == aadblSource) return 0;
 
 		int iNumRow = aadblSource.length;
 		int iNumCol = aadblSource[0].length;
+
+		for (int iScanRow = 0; iScanRow < iNumRow; ++iScanRow) {
+			if (!org.drip.quant.common.NumberUtil.IsValid (aadblSource[iScanRow]))
+				throw new java.lang.Exception ("Matrix::Rank => Invalid Inputs");
+		}
 
 		double[][] aadblRegularizedSource = iNumRow < iNumCol ?
 			org.drip.quant.linearalgebra.Matrix.Transpose (aadblSource) : aadblSource;
@@ -704,7 +709,7 @@ public class Matrix {
 	 * 
 	 * @param adbl The Input Vector
 	 * 
-	 * @return The Modulus of the Input Vector
+	 * @return TRUE - The Modulus of the Input Vector
 	 * 
 	 * @param java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -719,12 +724,85 @@ public class Matrix {
 		double dblModulus = 0.;
 		int iSize = adbl.length;
 
-		if (0 == iSize)  throw new java.lang.Exception ("Matrix::Modulus => Invalid Inputs");
+		if (0 == iSize) throw new java.lang.Exception ("Matrix::Modulus => Invalid Inputs");
 
 		for (int i = 0; i < iSize; ++i)
 			dblModulus += adbl[i] * adbl[i];
 
 		return java.lang.Math.sqrt (dblModulus);
+	}
+
+	/**
+	 * Indicate if the Array Entries are Positive or Zero
+	 * 
+	 * @param adbl The Array
+	 * 
+	 * @return TRUE - The Array Entries are Positive or Zero
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public static final boolean PositiveOrZero (
+		final double[] adbl)
+		throws java.lang.Exception
+	{
+		if (null == adbl || !org.drip.quant.common.NumberUtil.IsValid (adbl))
+			throw new java.lang.Exception ("Matrix::PositiveOrZero => Invalid Inputs");
+
+		int iSize = adbl.length;
+
+		if (0 == iSize) throw new java.lang.Exception ("Matrix::PositiveOrZero => Invalid Inputs");
+
+		for (int i = 0; i < iSize; ++i) {
+			if (0. > adbl[i]) return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Indicate if the Array Entries are Negative or Zero
+	 * 
+	 * @param adbl The Array
+	 * 
+	 * @return The Array Entries are Negative or Zero
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public static final boolean NegativeOrZero (
+		final double[] adbl)
+		throws java.lang.Exception
+	{
+		if (null == adbl || !org.drip.quant.common.NumberUtil.IsValid (adbl))
+			throw new java.lang.Exception ("Matrix::NegativeOrZero => Invalid Inputs");
+
+		int iSize = adbl.length;
+
+		if (0 == iSize)  throw new java.lang.Exception ("Matrix::NegativeOrZero => Invalid Inputs");
+
+		for (int i = 0; i < iSize; ++i) {
+			if (0. < adbl[i]) return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Indicate if the Array Entries are Positive Linearly Independent
+	 * 
+	 * @param adbl The Array
+	 * 
+	 * @return TRUE - The Array Entries are Positive Linearly Independent
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public static final boolean PositiveLinearlyIndependent (
+		final double[] adbl)
+		throws java.lang.Exception
+	{
+		return !PositiveOrZero (adbl) && !NegativeOrZero (adbl);
 	}
 
 	/**

@@ -158,15 +158,15 @@ public class BoundedPortfolioConstructionParameters extends
 	 * @return The Array of the Inequality Constraint Functions
 	 */
 
-	public org.drip.function.rdtor1.LinearBoundMultivariate[] boundingConstraints (
+	public org.drip.function.rdtor1.AffineBoundMultivariate[] boundingConstraints (
 		final int iNumExtraneousVariate)
 	{
 		java.lang.String[] astrAssetID = assets();
 
 		int iNumAsset = astrAssetID.length;
 
-		java.util.List<org.drip.function.rdtor1.LinearBoundMultivariate> lsRdToR1 = new
-			java.util.ArrayList<org.drip.function.rdtor1.LinearBoundMultivariate>();
+		java.util.List<org.drip.function.rdtor1.AffineBoundMultivariate> lsRdToR1 = new
+			java.util.ArrayList<org.drip.function.rdtor1.AffineBoundMultivariate>();
 
 		for (int i = 0; i < iNumAsset; ++i) {
 			if (!_mapBounds.containsKey (astrAssetID[i])) continue;
@@ -179,11 +179,11 @@ public class BoundedPortfolioConstructionParameters extends
 
 			try {
 				if (org.drip.quant.common.NumberUtil.IsValid (dblLowerBound))
-					lsRdToR1.add (new org.drip.function.rdtor1.LinearBoundMultivariate (false, i, iNumAsset +
+					lsRdToR1.add (new org.drip.function.rdtor1.AffineBoundMultivariate (false, i, iNumAsset +
 						iNumExtraneousVariate, dblLowerBound));
 
 				if (org.drip.quant.common.NumberUtil.IsValid (dblUpperBound))
-					lsRdToR1.add (new org.drip.function.rdtor1.LinearBoundMultivariate (true, i, iNumAsset +
+					lsRdToR1.add (new org.drip.function.rdtor1.AffineBoundMultivariate (true, i, iNumAsset +
 						iNumExtraneousVariate, dblUpperBound));
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
@@ -196,8 +196,8 @@ public class BoundedPortfolioConstructionParameters extends
 
 		if (0 == iNumConstraint) return null;
 
-		org.drip.function.rdtor1.LinearBoundMultivariate[] aRdToR1Constraint = new
-			org.drip.function.rdtor1.LinearBoundMultivariate[iNumConstraint];
+		org.drip.function.rdtor1.AffineBoundMultivariate[] aRdToR1Constraint = new
+			org.drip.function.rdtor1.AffineBoundMultivariate[iNumConstraint];
 
 		for (int i = 0; i < iNumConstraint; ++i)
 			aRdToR1Constraint[i] = lsRdToR1.get (i);
