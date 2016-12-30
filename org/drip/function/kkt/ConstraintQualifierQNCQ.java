@@ -48,8 +48,7 @@ package org.drip.function.kkt;
  */
 
 /**
- * NonLinearObjectiveFunction holds the Non Linear Objective Function and the Collection of Equality and the
- *  Inequality Constraints that correspond to the Optimization Setup. The References are:
+ * ConstraintQualifierQNCQ holds the Quasi Normal Constraint Qualifier (QNCQ). The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -67,17 +66,20 @@ package org.drip.function.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NonLinearObjectiveFunction {
-	private org.drip.function.definition.RdToR1 _rdToR1Objective = null;
+public class ConstraintQualifierQNCQ extends org.drip.function.kkt.ConstraintQualifier {
 
 	/**
-	 * Retrieve the Objective Function
+	 * ConstraintQualifierQNCQ Constructor
 	 * 
-	 * @return The Objective Function
+	 * @param bValid Constraint Qualifier Validity
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public org.drip.function.definition.RdToR1 objectiveFunction()
+	public ConstraintQualifierQNCQ (
+		final boolean bValid)
+		throws java.lang.Exception
 	{
-		return _rdToR1Objective;
+		super ("CNCQ", "QUASI NORMAL CONSTRAINT QUALIFICATION", bValid);
 	}
 }
