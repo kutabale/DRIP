@@ -1,5 +1,5 @@
 
-package org.drip.function.kkt;
+package org.drip.optimization.kkt;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -200,7 +200,7 @@ public class OptimizationFramework {
 	 */
 
 	public boolean isCompatible (
-		final org.drip.function.kkt.Multipliers kktMultiplier)
+		final org.drip.optimization.kkt.Multipliers kktMultiplier)
 	{
 		int iNumEqualityConstraint = numEqualityConstraint();
 
@@ -257,7 +257,7 @@ public class OptimizationFramework {
 	 */
 
 	public boolean complementarySlacknessCheck (
-		final org.drip.function.kkt.Multipliers kktMultiplier,
+		final org.drip.optimization.kkt.Multipliers kktMultiplier,
 		final double[] adblVariate)
 		throws java.lang.Exception
 	{
@@ -274,6 +274,135 @@ public class OptimizationFramework {
 			if (0. != _aRdToR1InequalityConstraint[i].evaluate (adblVariate) *
 				adblInequalityConstraintCoefficient[i])
 				return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Active Constraint Set Rank Computation
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return The Active Constraint Set Rank
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public int activeConstraintRank (
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		java.util.List<double[]> lsJacobian = new java.util.ArrayList<double[]>();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			double[] adblJacobian = _aRdToR1EqualityConstraint[i].jacobian (adblVariate);
+
+			if (null == adblJacobian)
+				throw new java.lang.Exception
+					("OptimizationFramework::activeConstraintRank => Cannot Compute");
+
+			lsJacobian.add (adblJacobian);
+		}
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i) {
+			if (0. == _aRdToR1InequalityConstraint[i].evaluate (adblVariate)) {
+				double[] adblJacobian = _aRdToR1InequalityConstraint[i].jacobian (adblVariate);
+
+				if (null == adblJacobian)
+					throw new java.lang.Exception
+						("OptimizationFramework::activeConstraintRank => Cannot Compute");
+
+				lsJacobian.add (adblJacobian);
+			}
+		}
+
+		int iNumJacobian = lsJacobian.size();
+
+		double[][] aadblJacobian = new double[iNumJacobian][];
+
+		for (int i = 0; i < iNumJacobian; ++i)
+			aadblJacobian[i] = lsJacobian.get (i);
+
+		return org.drip.quant.linearalgebra.Matrix.Rank (aadblJacobian);
+	}
+
+	/**
+	 * Compare the Active Constraint Set Rank at the specified against the specified Rank
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * @param iRank The specified Rank
+	 * 
+	 * @return TRUE - Active Constraint Set Rank matches the specified Rank
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public boolean activeConstraintRankComparison (
+		final double[] adblVariate,
+		final int iRank)
+		throws java.lang.Exception
+	{
+		return activeConstraintRank (adblVariate) == iRank;
+	}
+
+	/**
+	 * Active Constraint Set Linear Dependence Check
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * @param bPositiveLinearDependenceCheck TRUE - Perform an Additional Positive Dependence Check
+	 * 
+	 * @return TRUE - Active Constraint Set Linear Dependence Check is satisfied
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public boolean activeConstraintLinearDependence (
+		final double[] adblVariate,
+		final boolean bPositiveLinearDependenceCheck)
+		throws java.lang.Exception
+	{
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		int iNumConstraint = iNumEqualityConstraint + iNumInequalityConstraint;
+		double[][] aadblJacobian = new double[iNumConstraint][];
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			if (null == (aadblJacobian[i] = _aRdToR1EqualityConstraint[i].jacobian (adblVariate)))
+				return false;
+		}
+
+		for (int i = iNumEqualityConstraint; i < iNumConstraint; ++i) {
+			if (0. == _aRdToR1InequalityConstraint[i - iNumEqualityConstraint].evaluate (adblVariate)) {
+				if (null == (aadblJacobian[i] =
+					_aRdToR1InequalityConstraint[i - iNumEqualityConstraint].jacobian (adblVariate)))
+					return false;
+			} else
+				aadblJacobian[i] = null;
+		}
+
+		for (int i = 0; i < iNumConstraint; ++i) {
+			if (null != aadblJacobian[i]) {
+				for (int j = i + 1; j < iNumConstraint; ++j) {
+					if (null != aadblJacobian[j] && 0. != org.drip.quant.linearalgebra.Matrix.DotProduct
+						(aadblJacobian[i], aadblJacobian[j]))
+						return false;
+				}
+			}
+		}
+
+		if (bPositiveLinearDependenceCheck) {
+			for (int i = 0; i < iNumConstraint; ++i) {
+				if (null != aadblJacobian[i] || 0. == org.drip.quant.linearalgebra.Matrix.Modulus
+					(aadblJacobian[i]))
+					return false;
+			}
 		}
 
 		return true;
@@ -302,5 +431,39 @@ public class OptimizationFramework {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check for Linearity Independent Constraint Qualification
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return TRUE - Linearity Independent Constraint Qualification is satisfied
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public boolean isLICQ (
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		return activeConstraintLinearDependence (adblVariate, false);
+	}
+
+	/**
+	 * Check for Mangasarian Fromovitz Constraint Qualification
+	 * 
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return TRUE - The Mangasarian Fromovitz Constraint Qualification is satisfied
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public boolean isMFCQ (
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		return activeConstraintLinearDependence (adblVariate, true);
 	}
 }

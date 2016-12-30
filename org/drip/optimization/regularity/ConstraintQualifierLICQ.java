@@ -1,5 +1,5 @@
 
-package org.drip.function.kkt;
+package org.drip.optimization.regularity;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,7 @@ package org.drip.function.kkt;
  */
 
 /**
- * ConstraintQualifierCPLDCQ holds the Constant Positive Linear Dependence Constraint Qualifier (CPLDCQ). The
- *  References are:
+ * ConstraintQualifierLICQ holds the Linear Independence Constraint Qualifier (LICQ). The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -67,20 +66,20 @@ package org.drip.function.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstraintQualifierCPLDCQ extends org.drip.function.kkt.ConstraintQualifier {
+public class ConstraintQualifierLICQ extends org.drip.optimization.regularity.ConstraintQualifier {
 
 	/**
-	 * ConstraintQualifierCPLDCQ Constructor
+	 * ConstraintQualifierLICQ Constructor
 	 * 
 	 * @param bValid Constraint Qualifier Validity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConstraintQualifierCPLDCQ (
+	public ConstraintQualifierLICQ (
 		final boolean bValid)
 		throws java.lang.Exception
 	{
-		super ("CPLDCQ", "CONSTANT POSITIVE LINEAR DEPENDENCE CONSTRAINT QUALIFICATION", bValid);
+		super ("LICQ", "LINEAR INDEPENDENCE CONSTRAINT QUALIFICATION", bValid);
 	}
 }

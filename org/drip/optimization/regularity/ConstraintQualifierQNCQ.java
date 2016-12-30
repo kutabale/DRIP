@@ -1,5 +1,5 @@
 
-package org.drip.function.kkt;
+package org.drip.optimization.regularity;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,7 @@ package org.drip.function.kkt;
  */
 
 /**
- * ConstraintQualifier holds the Constraint Name, the Constraint Code, and the Constraint Validity Flag. The
- *  References are:
+ * ConstraintQualifierQNCQ holds the Quasi Normal Constraint Qualifier (QNCQ). The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -67,64 +66,20 @@ package org.drip.function.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstraintQualifier {
-	private boolean _bValid = false;
-	private java.lang.String _strCode = "";
-	private java.lang.String _strDescription = "";
+public class ConstraintQualifierQNCQ extends org.drip.optimization.regularity.ConstraintQualifier {
 
 	/**
-	 * ConstraintQualifier Constructor
+	 * ConstraintQualifierQNCQ Constructor
 	 * 
-	 * @param strCode Constraint Qualifier Code
-	 * @param strDescription Constraint Qualifier Description
 	 * @param bValid Constraint Qualifier Validity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConstraintQualifier (
-		final java.lang.String strCode,
-		final java.lang.String strDescription,
+	public ConstraintQualifierQNCQ (
 		final boolean bValid)
 		throws java.lang.Exception
 	{
-		if (null == (_strCode = strCode) || _strCode.isEmpty() || null == (_strDescription = strDescription)
-			|| _strDescription.isEmpty())
-			throw new java.lang.Exception ("ConstraintQualifier Constructor => Invalid Inputs");
-
-		_bValid = bValid;
-	}
-
-	/**
-	 * Retrieve the Constraint Qualifier Code
-	 * 
-	 * @return The Constraint Qualifier Code
-	 */
-
-	public java.lang.String code()
-	{
-		return _strCode;
-	}
-
-	/**
-	 * Retrieve the Constraint Qualifier Description
-	 * 
-	 * @return The Constraint Qualifier Description
-	 */
-
-	public java.lang.String description()
-	{
-		return _strDescription;
-	}
-
-	/**
-	 * Retrieve the Constraint Qualifier Validity
-	 * 
-	 * @return The Constraint Qualifier Validity
-	 */
-
-	public boolean valid()
-	{
-		return _bValid;
+		super ("CNCQ", "QUASI NORMAL CONSTRAINT QUALIFICATION", bValid);
 	}
 }

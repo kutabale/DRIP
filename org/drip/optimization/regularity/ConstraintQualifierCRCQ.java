@@ -1,5 +1,5 @@
 
-package org.drip.function.kkt;
+package org.drip.optimization.regularity;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.function.kkt;
  */
 
 /**
- * ConstraintQualifierQNCQ holds the Quasi Normal Constraint Qualifier (QNCQ). The References are:
+ * ConstraintQualifierCRCQ holds the Constant Rank Constraint Qualifier (CRCQ). The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -66,20 +66,20 @@ package org.drip.function.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstraintQualifierQNCQ extends org.drip.function.kkt.ConstraintQualifier {
+public class ConstraintQualifierCRCQ extends org.drip.optimization.regularity.ConstraintQualifier {
 
 	/**
-	 * ConstraintQualifierQNCQ Constructor
+	 * ConstraintQualifierCRCQ Constructor
 	 * 
 	 * @param bValid Constraint Qualifier Validity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConstraintQualifierQNCQ (
+	public ConstraintQualifierCRCQ (
 		final boolean bValid)
 		throws java.lang.Exception
 	{
-		super ("CNCQ", "QUASI NORMAL CONSTRAINT QUALIFICATION", bValid);
+		super ("CRCQ", "CONSTANT RANK CONSTRAINT QUALIFICATION", bValid);
 	}
 }

@@ -1,5 +1,5 @@
 
-package org.drip.function.kkt;
+package org.drip.optimization.regularity;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.function.kkt;
  */
 
 /**
- * ConstraintQualifierCRCQ holds the Constant Rank Constraint Qualifier (CRCQ). The References are:
+ * ConstraintQualifierSCCQ holds the Slater Condition Constraint Qualifier (SCCQ). The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -66,20 +66,20 @@ package org.drip.function.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstraintQualifierCRCQ extends org.drip.function.kkt.ConstraintQualifier {
+public class ConstraintQualifierSCCQ extends org.drip.optimization.regularity.ConstraintQualifier {
 
 	/**
-	 * ConstraintQualifierCRCQ Constructor
+	 * ConstraintQualifierSCCQ Constructor
 	 * 
 	 * @param bValid Constraint Qualifier Validity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConstraintQualifierCRCQ (
+	public ConstraintQualifierSCCQ (
 		final boolean bValid)
 		throws java.lang.Exception
 	{
-		super ("CRCQ", "CONSTANT RANK CONSTRAINT QUALIFICATION", bValid);
+		super ("SCCQ", "SLATER CONDITION CONSTRAINT QUALIFICATION", bValid);
 	}
 }

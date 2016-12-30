@@ -1,5 +1,5 @@
 
-package org.drip.function.kkt;
+package org.drip.optimization.regularity;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,7 @@ package org.drip.function.kkt;
  */
 
 /**
- * RegularityConditions holds the Results of the Verification of the Regularity Conditions/Constraint
- * 	Qualifications at the specified possible Optimal Variate. The References are:
+ * ConstraintQualifierMFCQ holds the Mangasarian-Fromovitz Constraint Qualifier (MFCQ). The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -67,17 +66,20 @@ package org.drip.function.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class RegularityConditions {
-	private double[] _adblOptimalVariate = null;
+public class ConstraintQualifierMFCQ extends org.drip.optimization.regularity.ConstraintQualifier {
 
 	/**
-	 * Retrieve the Optimal Variate Array
+	 * ConstraintQualifierMFCQ Constructor
 	 * 
-	 * @return The Optimal Variate Array
+	 * @param bValid Constraint Qualifier Validity
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double[] optimalVariate()
+	public ConstraintQualifierMFCQ (
+		final boolean bValid)
+		throws java.lang.Exception
 	{
-		return _adblOptimalVariate;
+		super ("MFCQ", "MANGASARIAN FROMOVITZ CONSTRAINT QUALIFICATION", bValid);
 	}
 }

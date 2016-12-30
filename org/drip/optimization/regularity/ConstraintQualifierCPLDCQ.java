@@ -1,5 +1,5 @@
 
-package org.drip.function.kkt;
+package org.drip.optimization.regularity;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,8 @@ package org.drip.function.kkt;
  */
 
 /**
- * ConstraintQualifierMFCQ holds the Mangasarian-Fromovitz Constraint Qualifier (MFCQ). The References are:
+ * ConstraintQualifierCPLDCQ holds the Constant Positive Linear Dependence Constraint Qualifier (CPLDCQ). The
+ *  References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -66,20 +67,20 @@ package org.drip.function.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstraintQualifierMFCQ extends org.drip.function.kkt.ConstraintQualifier {
+public class ConstraintQualifierCPLDCQ extends org.drip.optimization.regularity.ConstraintQualifier {
 
 	/**
-	 * ConstraintQualifierMFCQ Constructor
+	 * ConstraintQualifierCPLDCQ Constructor
 	 * 
 	 * @param bValid Constraint Qualifier Validity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConstraintQualifierMFCQ (
+	public ConstraintQualifierCPLDCQ (
 		final boolean bValid)
 		throws java.lang.Exception
 	{
-		super ("MFCQ", "MANGASARIAN FROMOVITZ CONSTRAINT QUALIFICATION", bValid);
+		super ("CPLDCQ", "CONSTANT POSITIVE LINEAR DEPENDENCE CONSTRAINT QUALIFICATION", bValid);
 	}
 }

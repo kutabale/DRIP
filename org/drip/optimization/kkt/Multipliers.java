@@ -1,5 +1,5 @@
 
-package org.drip.function.kkt;
+package org.drip.optimization.kkt;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,8 @@ package org.drip.function.kkt;
  */
 
 /**
- * ConstraintQualifierLCQ holds the Linear Constraint Qualifier (LCQ). The References are:
+ * Multipliers holds the Array of the KKT Multipliers for the Array of the Equality and the Inequality
+ * 	Constraints, one per each Constraint. The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -66,20 +67,97 @@ package org.drip.function.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstraintQualifierLCQ extends org.drip.function.kkt.ConstraintQualifier {
+public class Multipliers {
+	private double[] _adblEquality = null;
+	private double[] _adblInequality = null;
 
 	/**
-	 * ConstraintQualifierLCQ Constructor
+	 * Multipliers Constructor
 	 * 
-	 * @param bValid Constraint Qualifier Validity
+	 * @param adblEquality Array of the Equality Constraint Coefficients
+	 * @param adblInequality Array of the Inequality Constraint Coefficients
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConstraintQualifierLCQ (
-		final boolean bValid)
+	public Multipliers (
+		final double[] adblEquality,
+		final double[] adblInequality)
 		throws java.lang.Exception
 	{
-		super ("LCQ", "LINEAR CONSTRAINT QUALIFICATION", bValid);
+		_adblEquality = adblEquality;
+		_adblInequality = adblInequality;
+	}
+
+	/**
+	 * Retrieve the Array of the Equality Constraint Coefficients
+	 * 
+	 * @return The Array of the Equality Constraint Coefficients
+	 */
+
+	public double[] equalityConstraintCoefficient()
+	{
+		return _adblEquality;
+	}
+
+	/**
+	 * Retrieve the Array of the Inequality Constraint Coefficients
+	 * 
+	 * @return The Array of the Inequality Constraint Coefficients
+	 */
+
+	public double[] inequalityConstraintCoefficient()
+	{
+		return _adblInequality;
+	}
+
+	/**
+	 * Retrieve the Number of Equality Multiplier Coefficients
+	 * 
+	 * @return The Number of Equality Multiplier Coefficients
+	 */
+
+	public int numEqualityCoefficients()
+	{
+		return null == _adblEquality ? 0 : _adblEquality.length;
+	}
+
+	/**
+	 * Retrieve the Number of Inequality Multiplier Coefficients
+	 * 
+	 * @return The Number of Inequality Multiplier Coefficients
+	 */
+
+	public int numInequalityCoefficients()
+	{
+		return null == _adblInequality ? 0 : _adblInequality.length;
+	}
+
+	/**
+	 * Retrieve the Number of Total KKT Multiplier Coefficients
+	 * 
+	 * @return The Number of Total KKT Multiplier Coefficients
+	 */
+
+	public int numTotalCoefficients()
+	{
+		return numEqualityCoefficients() + numInequalityCoefficients();
+	}
+
+	/**
+	 * Indicate of the Multipliers constitute Valid Dual Feasibility
+	 * 
+	 * @return TRUE - The Multipliers constitute Valid Dual Feasibility
+	 */
+
+	public boolean dualFeasibilityCheck()
+	{
+		int iNumInequalityCoefficient = numInequalityCoefficients();
+
+		for (int i = 0; i < iNumInequalityCoefficient; ++i) {
+			if (0. > _adblInequality[i]) return false;
+		}
+
+		return true;
 	}
 }

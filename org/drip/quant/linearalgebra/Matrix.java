@@ -519,6 +519,52 @@ public class Matrix {
 	}
 
 	/**
+	 * Compute the Rank of the Matrix
+	 * 
+	 * @param aadblSource Source Matrix
+	 * 
+	 * @return The Rank of the Matrix
+	 * 
+	 * @throws java.lang.Exception Thrown if the Rank Cannot be computed
+	 */
+
+	public static final int Rank (
+		final double[][] aadblSource)
+		throws java.lang.Exception
+	{
+		if (null == aadblSource) throw new java.lang.Exception ("Matrix::Rank => Cannot Compute");
+
+		int iNumRow = aadblSource.length;
+		int iNumCol = aadblSource[0].length;
+
+		double[][] aadblRegularizedSource = iNumRow < iNumCol ?
+			org.drip.quant.linearalgebra.Matrix.Transpose (aadblSource) : aadblSource;
+
+		int iNumDependentRow = 0;
+		int iSize = aadblRegularizedSource.length;
+
+		for (int iScanRow = 0; iScanRow < iSize; ++iScanRow) {
+			for (int iRow = 0; iRow < iSize; ++iRow) {
+				if (iRow == iScanRow || 0. == aadblRegularizedSource[iRow][iScanRow]) continue;
+
+				double dblColEntryEliminatorRatio = aadblRegularizedSource[iScanRow][iScanRow] /
+					aadblRegularizedSource[iRow][iScanRow];
+
+				for (int iCol = 0; iCol < iSize; ++iCol)
+					aadblRegularizedSource[iRow][iCol] = aadblRegularizedSource[iRow][iCol] *
+						dblColEntryEliminatorRatio - aadblRegularizedSource[iScanRow][iCol];
+			}
+		}
+
+		for (int iScanRow = 0; iScanRow < iSize; ++iScanRow) {
+			if (0. == org.drip.quant.linearalgebra.Matrix.Modulus (aadblRegularizedSource[iScanRow]))
+				++iNumDependentRow;
+		}
+
+		return iSize - iNumDependentRow;
+	}
+
+	/**
 	 * Transpose the specified Square Matrix
 	 * 
 	 * @param aadblA The Input Square Matrix
@@ -651,6 +697,34 @@ public class Matrix {
 			adblProjectAOnE[i] = adblE[i] * dblProjection;
 
 		return adblProjectAOnE;
+	}
+
+	/**
+	 * Compute the Modulus of the Input Vector
+	 * 
+	 * @param adbl The Input Vector
+	 * 
+	 * @return The Modulus of the Input Vector
+	 * 
+	 * @param java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public static final double Modulus (
+		final double[] adbl)
+		throws java.lang.Exception
+	{
+		if (null == adbl || !org.drip.quant.common.NumberUtil.IsValid (adbl))
+			throw new java.lang.Exception ("Matrix::Modulus => Invalid Inputs");
+
+		double dblModulus = 0.;
+		int iSize = adbl.length;
+
+		if (0 == iSize)  throw new java.lang.Exception ("Matrix::Modulus => Invalid Inputs");
+
+		for (int i = 0; i < iSize; ++i)
+			dblModulus += adbl[i] * adbl[i];
+
+		return java.lang.Math.sqrt (dblModulus);
 	}
 
 	/**
