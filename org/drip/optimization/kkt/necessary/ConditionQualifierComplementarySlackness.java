@@ -1,5 +1,5 @@
 
-package org.drip.optimization.regularity;
+package org.drip.optimization.kkt.necessary;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,8 @@ package org.drip.optimization.regularity;
  */
 
 /**
- * ConstraintQualifier holds the Constraint Name, the Constraint Code, and the Constraint Validity Flag that
- *  correspond to the Regularity Conditions. The References are:
+ * ConditionQualifierComplementarySlackness holds the Zero Order Necessary Complementary Slackness Condition.
+ *  The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -67,75 +67,21 @@ package org.drip.optimization.regularity;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstraintQualifier {
-	private boolean _bValid = false;
-	private java.lang.String _strCode = "";
-	private java.lang.String _strDescription = "";
+public class ConditionQualifierComplementarySlackness extends
+	org.drip.optimization.kkt.necessary.ConditionQualifier {
 
 	/**
-	 * ConstraintQualifier Constructor
+	 * ConditionQualifierComplementarySlackness Constructor
 	 * 
-	 * @param strCode Constraint Qualifier Code
-	 * @param strDescription Constraint Qualifier Description
-	 * @param bValid Constraint Qualifier Validity
+	 * @param bValid Condition Qualifier Validity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConstraintQualifier (
-		final java.lang.String strCode,
-		final java.lang.String strDescription,
+	public ConditionQualifierComplementarySlackness (
 		final boolean bValid)
 		throws java.lang.Exception
 	{
-		if (null == (_strCode = strCode) || _strCode.isEmpty() || null == (_strDescription = strDescription)
-			|| _strDescription.isEmpty())
-			throw new java.lang.Exception ("ConstraintQualifier Constructor => Invalid Inputs");
-
-		_bValid = bValid;
-	}
-
-	/**
-	 * Retrieve the Constraint Qualifier Code
-	 * 
-	 * @return The Constraint Qualifier Code
-	 */
-
-	public java.lang.String code()
-	{
-		return _strCode;
-	}
-
-	/**
-	 * Retrieve the Constraint Qualifier Description
-	 * 
-	 * @return The Constraint Qualifier Description
-	 */
-
-	public java.lang.String description()
-	{
-		return _strDescription;
-	}
-
-	/**
-	 * Retrieve the Constraint Qualifier Validity
-	 * 
-	 * @return The Constraint Qualifier Validity
-	 */
-
-	public boolean valid()
-	{
-		return _bValid;
-	}
-
-	/**
-	 * Convert the Constraint Qualifier into a Display String
-	 * 
-	 * @return The Constraint Qualifier into a Display String
-	 */
-
-	public java.lang.String display()
-	{
-		return "[ " + _strCode + " | " + _strDescription + " => " + _bValid + "]";
+		super ("COMPLEMENTARY SLACKNESS", 0, bValid);
 	}
 }

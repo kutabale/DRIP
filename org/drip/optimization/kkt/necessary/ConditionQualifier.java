@@ -1,5 +1,5 @@
 
-package org.drip.optimization.regularity;
+package org.drip.optimization.kkt.necessary;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,8 @@ package org.drip.optimization.regularity;
  */
 
 /**
- * ConstraintQualifier holds the Constraint Name, the Constraint Code, and the Constraint Validity Flag that
- *  correspond to the Regularity Conditions. The References are:
+ * ConditionQualifier holds the Condition Name, the Condition Order, and the Condition Validity Flag that
+ *  correspond to the Necessary and the Sufficient Conditions. The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -67,49 +67,38 @@ package org.drip.optimization.regularity;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstraintQualifier {
+public class ConditionQualifier {
+	private int _iOrder = -1;
 	private boolean _bValid = false;
-	private java.lang.String _strCode = "";
 	private java.lang.String _strDescription = "";
 
 	/**
-	 * ConstraintQualifier Constructor
+	 * ConditionQualifier Constructor
 	 * 
-	 * @param strCode Constraint Qualifier Code
-	 * @param strDescription Constraint Qualifier Description
-	 * @param bValid Constraint Qualifier Validity
+	 * @param strDescription Condition Qualifier Description
+	 * @param iOrder Order of the Condition - Typically First/Second
+	 * @param bValid Condition Qualifier Validity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConstraintQualifier (
-		final java.lang.String strCode,
+	public ConditionQualifier (
 		final java.lang.String strDescription,
+		final int iOrder,
 		final boolean bValid)
 		throws java.lang.Exception
 	{
-		if (null == (_strCode = strCode) || _strCode.isEmpty() || null == (_strDescription = strDescription)
-			|| _strDescription.isEmpty())
-			throw new java.lang.Exception ("ConstraintQualifier Constructor => Invalid Inputs");
+		if (null == (_strDescription = strDescription) || _strDescription.isEmpty() || 0 > (_iOrder =
+			iOrder))
+			throw new java.lang.Exception ("ConditionQualifier Constructor => Invalid Inputs");
 
 		_bValid = bValid;
 	}
 
 	/**
-	 * Retrieve the Constraint Qualifier Code
+	 * Retrieve the Condition Qualifier Description
 	 * 
-	 * @return The Constraint Qualifier Code
-	 */
-
-	public java.lang.String code()
-	{
-		return _strCode;
-	}
-
-	/**
-	 * Retrieve the Constraint Qualifier Description
-	 * 
-	 * @return The Constraint Qualifier Description
+	 * @return The Condition Qualifier Description
 	 */
 
 	public java.lang.String description()
@@ -118,9 +107,20 @@ public class ConstraintQualifier {
 	}
 
 	/**
-	 * Retrieve the Constraint Qualifier Validity
+	 * Retrieve the Condition Qualifier Order
 	 * 
-	 * @return The Constraint Qualifier Validity
+	 * @return The Condition Qualifier Order
+	 */
+
+	public int order()
+	{
+		return _iOrder;
+	}
+
+	/**
+	 * Retrieve the Condition Qualifier Validity
+	 * 
+	 * @return The Condition Qualifier Validity
 	 */
 
 	public boolean valid()
@@ -129,13 +129,13 @@ public class ConstraintQualifier {
 	}
 
 	/**
-	 * Convert the Constraint Qualifier into a Display String
+	 * Convert the Condition Qualifier into a Display String
 	 * 
-	 * @return The Constraint Qualifier into a Display String
+	 * @return The Condition Qualifier into a Display String
 	 */
 
 	public java.lang.String display()
 	{
-		return "[ " + _strCode + " | " + _strDescription + " => " + _bValid + "]";
+		return "[ " + _strDescription + " | " + _iOrder + " ORDER => " + _bValid + "]";
 	}
 }

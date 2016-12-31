@@ -48,9 +48,9 @@ package org.drip.optimization.kkt;
  */
 
 /**
- * CandidateRegularityConditions holds the Results of the Verification of the Regularity
- *  Conditions/Constraint Qualifications at the specified (possibly) Optimal Variate and the corresponding
- *  KKT Multiplier Suite. The References are:
+ * RegularityConditions holds the Results of the Verification of the Regularity Conditions/Constraint
+ *  Qualifications at the specified (possibly) Optimal Variate and the corresponding KKT Multiplier Suite.
+ *  The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -68,8 +68,8 @@ package org.drip.optimization.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CandidateRegularityConditions {
-	private double[] _adblOptimalVariate = null;
+public class RegularityConditions {
+	private double[] _adblVariate = null;
 	private org.drip.optimization.kkt.Multipliers _kktMultipliers = null;
 	private org.drip.optimization.regularity.ConstraintQualifierLCQ _cqLCQ = null;
 	private org.drip.optimization.regularity.ConstraintQualifierCRCQ _cqCRCQ = null;
@@ -80,9 +80,9 @@ public class CandidateRegularityConditions {
 	private org.drip.optimization.regularity.ConstraintQualifierCPLDCQ _cqCPLDCQ = null;
 
 	/**
-	 * Construct a Standard Instance of CandidateRegularityConditions
+	 * Construct a Standard Instance of RegularityConditions
 	 * 
-	 * @param adblOptimalVariate The Optimal Variate Array
+	 * @param adblVariate The Candidate Variate Array
 	 * @param kktMultiplers The KKT Multipliers
 	 * @param bValidLCQ The LCQ Validity Flag
 	 * @param bValidLICQ The LICQ Validity Flag
@@ -95,8 +95,8 @@ public class CandidateRegularityConditions {
 	 * @return The Standard Instance of CandidateRegularity
 	 */
 
-	public static final CandidateRegularityConditions Standard (
-		final double[] adblOptimalVariate,
+	public static final RegularityConditions Standard (
+		final double[] adblVariate,
 		final org.drip.optimization.kkt.Multipliers kktMultipliers,
 		final boolean bValidLCQ,
 		final boolean bValidLICQ,
@@ -107,7 +107,7 @@ public class CandidateRegularityConditions {
 		final boolean bValidSCCQ)
 	{
 		try {
-			return new CandidateRegularityConditions (adblOptimalVariate, kktMultipliers, new
+			return new RegularityConditions (adblVariate, kktMultipliers, new
 				org.drip.optimization.regularity.ConstraintQualifierLCQ (bValidLCQ), new
 					org.drip.optimization.regularity.ConstraintQualifierLICQ (bValidLICQ), new
 						org.drip.optimization.regularity.ConstraintQualifierMFCQ (bValidMFCQ), new
@@ -125,9 +125,9 @@ public class CandidateRegularityConditions {
 	}
 
 	/**
-	 * CandidateRegularityConditions Constructor
+	 * RegularityConditions Constructor
 	 * 
-	 * @param adblOptimalVariate The Optimal Variate Array
+	 * @param adblVariate The Candidate Variate Array
 	 * @param kktMultiplers The KKT Multipliers
 	 * @param cqLCQ LCQ Constraint Qualifier Instance
 	 * @param cqLICQ LICQ Constraint Qualifier Instance
@@ -140,8 +140,8 @@ public class CandidateRegularityConditions {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CandidateRegularityConditions (
-		final double[] adblOptimalVariate,
+	public RegularityConditions (
+		final double[] adblVariate,
 		final org.drip.optimization.kkt.Multipliers kktMultipliers,
 		final org.drip.optimization.regularity.ConstraintQualifierLCQ cqLCQ,
 		final org.drip.optimization.regularity.ConstraintQualifierLICQ cqLICQ,
@@ -152,22 +152,22 @@ public class CandidateRegularityConditions {
 		final org.drip.optimization.regularity.ConstraintQualifierSCCQ cqSCCQ)
 		throws java.lang.Exception
 	{
-		if (null == (_adblOptimalVariate = adblOptimalVariate) || 0 == _adblOptimalVariate.length || null ==
-			(_kktMultipliers = kktMultipliers) || null == (_cqLCQ = cqLCQ) || null == (_cqLICQ = cqLICQ) ||
-				null == (_cqMFCQ = cqMFCQ) || null == (_cqCRCQ = cqCRCQ) || null == (_cqCPLDCQ = cqCPLDCQ) ||
-					null == (_cqQNCQ = cqQNCQ) || null == (_cqSCCQ = cqSCCQ))
-			throw new java.lang.Exception ("CandidateRegularityConditions Constructor => Invalid Inputs");
+		if (null == (_adblVariate = adblVariate) || 0 == _adblVariate.length || null == (_kktMultipliers =
+			kktMultipliers) || null == (_cqLCQ = cqLCQ) || null == (_cqLICQ = cqLICQ) || null == (_cqMFCQ =
+				cqMFCQ) || null == (_cqCRCQ = cqCRCQ) || null == (_cqCPLDCQ = cqCPLDCQ) || null == (_cqQNCQ =
+					cqQNCQ) || null == (_cqSCCQ = cqSCCQ))
+			throw new java.lang.Exception ("RegularityConditions Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Optimal Variate Array
+	 * Retrieve the Candidate Variate Array
 	 * 
-	 * @return The Optimal Variate Array
+	 * @return The Candidate Variate Array
 	 */
 
-	public double[] optimalVariate()
+	public double[] variate()
 	{
-		return _adblOptimalVariate;
+		return _adblVariate;
 	}
 
 	/**
@@ -267,5 +267,23 @@ public class CandidateRegularityConditions {
 	public boolean valid()
 	{
 		return _cqLICQ.valid() && _cqCRCQ.valid() && _cqMFCQ.valid() && _cqCPLDCQ.valid() && _cqQNCQ.valid();
+	}
+
+	/**
+	 * Retrieve the Array of Strength Orders as specified in Eustaquio, Karas, and Ribeiro (2008)
+	 * 
+	 * @return The Array of Strength Orders as specified in Eustaquio, Karas, and Ribeiro (2008)
+	 */
+
+	public java.lang.String[] strengthOrder()
+	{
+		return new java.lang.String[] {"EUSTAQUIO KARAS RIBEIRO STRENGTH ORDER #1: " + _cqLICQ.display() +
+			" >> " + _cqMFCQ.display() + " >> " + _cqCPLDCQ.display() + " >> " + _cqQNCQ.display(),
+				"EUSTAQUIO KARAS RIBEIRO STRENGTH ORDER #2: " + _cqLICQ.display() + " >> " +
+					_cqCRCQ.display() + " >> " + _cqCPLDCQ.display() + " >> " + _cqQNCQ.display(),
+						"EUSTAQUIO KARAS RIBEIRO STRENGTH ORDER #3: " + _cqLCQ.display() + " >> " +
+							_cqLICQ.display() + " >> " + _cqMFCQ.display() + " >> " + _cqCRCQ.display() +
+								" >> " + _cqCPLDCQ.display() + " >> " + _cqQNCQ.display() + " >> " + " >> " +
+									_cqSCCQ.display()};
 	}
 }

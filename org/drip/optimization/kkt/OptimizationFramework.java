@@ -280,6 +280,71 @@ public class OptimizationFramework {
 	}
 
 	/**
+	 * Check the Candidate Point for First Order Necessary Condition
+	 * 
+	 * @param kktMultiplier The specified KKT Multipliers
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return TRUE - The Candidate Point satisfied the First Order Necessary Condition
+	 * 
+	 * @throws java.lang.Exception Thrown if the Input in Invalid
+	 */
+
+	public boolean isFONC (
+		final org.drip.optimization.kkt.Multipliers kktMultiplier,
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		if (!isCompatible (kktMultiplier))
+			throw new java.lang.Exception ("OptimizationFramework::isFONC => Invalid Inputs");
+
+		double[] adblFONCJacobian = _rdToR1Objective.jacobian (adblVariate);
+
+		if (null == adblFONCJacobian)
+			throw new java.lang.Exception ("OptimizationFramework::isFONC => Cannot calculate Jacobian");
+
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		double[] adblEqualityConstraintCoefficient = null == kktMultiplier ? null :
+			kktMultiplier.equalityConstraintCoefficient();
+
+		double[] adblInequalityConstraintCoefficient = null == kktMultiplier ? null :
+			kktMultiplier.inequalityConstraintCoefficient();
+
+		int iDimension = _rdToR1Objective.dimension();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			double[] adblJacobian = _aRdToR1EqualityConstraint[i].jacobian (adblVariate);
+
+			if (null == adblJacobian)
+				throw new java.lang.Exception ("OptimizationFramework::isFONC => Cannot calculate Jacobian");
+
+			for (int j = 0; j < iDimension; ++j)
+				adblFONCJacobian[j] = adblFONCJacobian[j] + adblEqualityConstraintCoefficient[j] *
+					adblJacobian[j];
+		}
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i) {
+			double[] adblJacobian = _aRdToR1InequalityConstraint[i].jacobian (adblVariate);
+
+			if (null == adblJacobian)
+				throw new java.lang.Exception ("OptimizationFramework::isFONC => Cannot calculate Jacobian");
+
+			for (int j = 0; j < iDimension; ++j)
+				adblFONCJacobian[j] = adblFONCJacobian[j] + adblInequalityConstraintCoefficient[j] *
+					adblJacobian[j];
+		}
+
+		for (int j = 0; j < iDimension; ++j) {
+			if (0. == adblFONCJacobian[j]) return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Retrieve the Array of Active Constraints
 	 * 
 	 * @param adblVariate The R^d Variate
@@ -666,5 +731,29 @@ public class OptimizationFramework {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Generate the Battery of Regularity Constraint Qualification Tests
+	 * 
+	 * @param kktMultiplier The specified KKT Multipliers
+	 * @param adblVariate The Candidate R^d Variate
+	 * 
+	 * @return The Regularity Constraint Qualifier Instance
+	 */
+
+	public org.drip.optimization.kkt.RegularityConditions regularityQualifier (
+		final org.drip.optimization.kkt.Multipliers kktMultiplier,
+		final double[] adblVariate)
+	{
+		try {
+			return org.drip.optimization.kkt.RegularityConditions.Standard (adblVariate,
+				kktMultiplier, isLCQ(), isLICQ (adblVariate), isMFCQ (adblVariate), isCRCQ (adblVariate),
+					isCPLDCQ (adblVariate), isQNCQ (kktMultiplier, adblVariate), isSCCQ (adblVariate));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }
