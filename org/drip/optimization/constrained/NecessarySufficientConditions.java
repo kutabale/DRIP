@@ -1,5 +1,5 @@
 
-package org.drip.optimization.kkt;
+package org.drip.optimization.constrained;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -49,8 +49,8 @@ package org.drip.optimization.kkt;
 
 /**
  * NecessarySufficientConditions holds the Results of the Verification of the Necessary and the Sufficient
- * 	Conditions at the specified (possibly) Optimal Variate and the corresponding KKT Multiplier Suite. The
- *  References are:
+ * 	Conditions at the specified (possibly) Optimal Variate and the corresponding Fritz John Multiplier Suite.
+ *  The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -70,20 +70,22 @@ package org.drip.optimization.kkt;
 
 public class NecessarySufficientConditions {
 	private double[] _adblVariate = null;
-	private org.drip.optimization.kkt.Multipliers _kktMultipliers = null;
-	private org.drip.optimization.kkt.necessary.ConditionQualifierFONC _cqFONC = null;
-	private org.drip.optimization.kkt.necessary.ConditionQualifierSOSC _cqSOSC = null;
-	private org.drip.optimization.kkt.necessary.ConditionQualifierDualFeasibility _cqDualFeasibility = null;
-	private org.drip.optimization.kkt.necessary.ConditionQualifierPrimalFeasibility _cqPrimalFeasibility =
+	private boolean _bCheckForMinima = false;
+	private org.drip.optimization.constrained.FritzJohnMultipliers _fjm = null;
+	private org.drip.optimization.necessary.ConditionQualifierFONC _cqFONC = null;
+	private org.drip.optimization.necessary.ConditionQualifierSOSC _cqSOSC = null;
+	private org.drip.optimization.necessary.ConditionQualifierDualFeasibility _cqDualFeasibility = null;
+	private org.drip.optimization.necessary.ConditionQualifierPrimalFeasibility _cqPrimalFeasibility =
 		null;
-	private org.drip.optimization.kkt.necessary.ConditionQualifierComplementarySlackness
+	private org.drip.optimization.necessary.ConditionQualifierComplementarySlackness
 		_cqComplementarySlackness = null;
 
 	/**
 	 * Create a Standard Instance of NecessarySufficientConditions
 	 * 
 	 * @param adblVariate The Candidate Variate Array
-	 * @param kktMultipliers The KKT Multipliers Array
+	 * @param fjm The Fritz John Multipliers
+	 * @param bCheckForMinima TRUE - Check For Minima
 	 * @param bPrimalFeasibilityValid The Primal Feasibility Validity
 	 * @param bDualFeasibilityValid The Dual Feasibility Validity
 	 * @param bComplementarySlacknessValid The Complementary Slackness Validity
@@ -95,7 +97,8 @@ public class NecessarySufficientConditions {
 
 	public static final NecessarySufficientConditions Standard (
 		final double[] adblVariate,
-		final org.drip.optimization.kkt.Multipliers kktMultipliers,
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
+		final boolean bCheckForMinima,
 		final boolean bPrimalFeasibilityValidity,
 		final boolean bDualFeasibilityValidity,
 		final boolean bComplementarySlacknessValidity,
@@ -103,16 +106,16 @@ public class NecessarySufficientConditions {
 		final boolean bSOSCValidity)
 	{
 		try {
-			return new NecessarySufficientConditions (adblVariate, kktMultipliers, new
-				org.drip.optimization.kkt.necessary.ConditionQualifierPrimalFeasibility
+			return new NecessarySufficientConditions (adblVariate, fjm, bCheckForMinima, new
+				org.drip.optimization.necessary.ConditionQualifierPrimalFeasibility
 					(bPrimalFeasibilityValidity), new
-						org.drip.optimization.kkt.necessary.ConditionQualifierDualFeasibility
+						org.drip.optimization.necessary.ConditionQualifierDualFeasibility
 							(bDualFeasibilityValidity), new
-								org.drip.optimization.kkt.necessary.ConditionQualifierComplementarySlackness
+								org.drip.optimization.necessary.ConditionQualifierComplementarySlackness
 									(bComplementarySlacknessValidity), new
-										org.drip.optimization.kkt.necessary.ConditionQualifierFONC
+										org.drip.optimization.necessary.ConditionQualifierFONC
 											(bFONCValidity), new
-												org.drip.optimization.kkt.necessary.ConditionQualifierSOSC
+												org.drip.optimization.necessary.ConditionQualifierSOSC
 													(bSOSCValidity));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -125,7 +128,8 @@ public class NecessarySufficientConditions {
 	 * NecessarySufficientConditions Constructor
 	 * 
 	 * @param adblVariate The Candidate Variate Array
-	 * @param kktMultipliers The KKT Multipliers Array
+	 * @param fjm The Fritz John Multipliers
+	 * @param bCheckForMinima TRUE - Check For Minima
 	 * @param cqPrimalFeasibility The Primal Feasibility Necessary Condition
 	 * @param cqDualFeasibility The Dual Feasibility Necessary Condition
 	 * @param cqComplementarySlackness The Complementary Slackness Necessary Condition
@@ -137,20 +141,23 @@ public class NecessarySufficientConditions {
 
 	public NecessarySufficientConditions (
 		final double[] adblVariate,
-		final org.drip.optimization.kkt.Multipliers kktMultipliers,
-		final org.drip.optimization.kkt.necessary.ConditionQualifierPrimalFeasibility cqPrimalFeasibility,
-		final org.drip.optimization.kkt.necessary.ConditionQualifierDualFeasibility cqDualFeasibility,
-		final org.drip.optimization.kkt.necessary.ConditionQualifierComplementarySlackness
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
+		final boolean bCheckForMinima,
+		final org.drip.optimization.necessary.ConditionQualifierPrimalFeasibility cqPrimalFeasibility,
+		final org.drip.optimization.necessary.ConditionQualifierDualFeasibility cqDualFeasibility,
+		final org.drip.optimization.necessary.ConditionQualifierComplementarySlackness
 			cqComplementarySlackness,
-		final org.drip.optimization.kkt.necessary.ConditionQualifierFONC cqFONC,
-		final org.drip.optimization.kkt.necessary.ConditionQualifierSOSC cqSOSC)
+		final org.drip.optimization.necessary.ConditionQualifierFONC cqFONC,
+		final org.drip.optimization.necessary.ConditionQualifierSOSC cqSOSC)
 		throws java.lang.Exception
 	{
-		if (null == (_adblVariate = adblVariate) || 0 == _adblVariate.length || null == (_kktMultipliers =
-			kktMultipliers) || null == (_cqPrimalFeasibility = cqPrimalFeasibility) || null ==
-				(_cqDualFeasibility = cqDualFeasibility) || null == (_cqComplementarySlackness =
-					cqComplementarySlackness) || null == (_cqFONC = cqFONC) || null == (_cqSOSC = cqSOSC))
+		if (null == (_adblVariate = adblVariate) || 0 == _adblVariate.length || null == (_fjm = fjm) || null
+			== (_cqPrimalFeasibility = cqPrimalFeasibility) || null == (_cqDualFeasibility =
+				cqDualFeasibility) || null == (_cqComplementarySlackness = cqComplementarySlackness) || null
+					== (_cqFONC = cqFONC) || null == (_cqSOSC = cqSOSC))
 			throw new java.lang.Exception ("NecessarySufficientConditions Constructor => Invalid Inputs");
+
+		_bCheckForMinima = bCheckForMinima;
 	}
 
 	/**
@@ -165,14 +172,25 @@ public class NecessarySufficientConditions {
 	}
 
 	/**
-	 * Retrieve the KKT Mutipliers Array
+	 * Retrieve the Fritz John Mutipliers
 	 * 
-	 * @return The KKT Mutipliers Array
+	 * @return The Fritz John Mutipliers
 	 */
 
-	public org.drip.optimization.kkt.Multipliers kktMultipliers()
+	public org.drip.optimization.constrained.FritzJohnMultipliers fritzJohnMultipliers()
 	{
-		return _kktMultipliers;
+		return _fjm;
+	}
+
+	/**
+	 * Retrieve if the Check corresponds to Local Minima
+	 * 
+	 * @return TRUE - The Check corresponds to Local Minima
+	 */
+
+	public boolean checkFroMinima()
+	{
+		return _bCheckForMinima;
 	}
 
 	/**
@@ -181,7 +199,7 @@ public class NecessarySufficientConditions {
 	 * @return The Primal Feasibility Necessary Condition
 	 */
 
-	public org.drip.optimization.kkt.necessary.ConditionQualifierPrimalFeasibility primalFeasibility()
+	public org.drip.optimization.necessary.ConditionQualifierPrimalFeasibility primalFeasibility()
 	{
 		return _cqPrimalFeasibility;
 	}
@@ -192,7 +210,7 @@ public class NecessarySufficientConditions {
 	 * @return The Dual Feasibility Necessary Condition
 	 */
 
-	public org.drip.optimization.kkt.necessary.ConditionQualifierDualFeasibility dualFeasibility()
+	public org.drip.optimization.necessary.ConditionQualifierDualFeasibility dualFeasibility()
 	{
 		return _cqDualFeasibility;
 	}
@@ -203,7 +221,7 @@ public class NecessarySufficientConditions {
 	 * @return The Complementary Slackness Necessary Condition
 	 */
 
-	public org.drip.optimization.kkt.necessary.ConditionQualifierComplementarySlackness
+	public org.drip.optimization.necessary.ConditionQualifierComplementarySlackness
 		complementarySlackness()
 	{
 		return _cqComplementarySlackness;
@@ -215,7 +233,7 @@ public class NecessarySufficientConditions {
 	 * @return The First Order Necessary Condition
 	 */
 
-	public org.drip.optimization.kkt.necessary.ConditionQualifierFONC fonc()
+	public org.drip.optimization.necessary.ConditionQualifierFONC fonc()
 	{
 		return _cqFONC;
 	}
@@ -226,7 +244,7 @@ public class NecessarySufficientConditions {
 	 * @return The Second Order Sufficiency Condition
 	 */
 
-	public org.drip.optimization.kkt.necessary.ConditionQualifierSOSC sosc()
+	public org.drip.optimization.necessary.ConditionQualifierSOSC sosc()
 	{
 		return _cqSOSC;
 	}

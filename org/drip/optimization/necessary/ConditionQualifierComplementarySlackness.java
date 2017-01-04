@@ -1,5 +1,5 @@
 
-package org.drip.optimization.kkt.necessary;
+package org.drip.optimization.necessary;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,8 @@ package org.drip.optimization.kkt.necessary;
  */
 
 /**
- * ConditionQualifierFONC holds the First Order Necessary Condition. The References are:
+ * ConditionQualifierComplementarySlackness holds the Zero Order Necessary Complementary Slackness Condition.
+ *  The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -66,20 +67,21 @@ package org.drip.optimization.kkt.necessary;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConditionQualifierFONC extends org.drip.optimization.kkt.necessary.ConditionQualifier {
+public class ConditionQualifierComplementarySlackness extends
+	org.drip.optimization.necessary.ConditionQualifier {
 
 	/**
-	 * ConditionQualifierFONC Constructor
+	 * ConditionQualifierComplementarySlackness Constructor
 	 * 
 	 * @param bValid Condition Qualifier Validity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ConditionQualifierFONC (
+	public ConditionQualifierComplementarySlackness (
 		final boolean bValid)
 		throws java.lang.Exception
 	{
-		super ("FONC", 1, bValid);
+		super ("COMPLEMENTARY SLACKNESS", 0, bValid);
 	}
 }

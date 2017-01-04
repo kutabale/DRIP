@@ -1,5 +1,5 @@
 
-package org.drip.sample.lagrangian;
+package org.drip.sample.optimizer;
 
 import org.drip.function.definition.RdToR1;
 import org.drip.function.rdtor1.LagrangianMultivariate;
@@ -55,51 +55,13 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * ConstrainedNSphereSurfaceExtremization computes the Extrema of the Specified Function along the Surface of
- *  the Sphere.
+ * VariateSumExtremization computes the Equality Constrained Extrema of the Sum of Variates along the Surface
+ *  of the Sphere using Lagrange Multipliers.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConstrainedNSphereSurfaceExtremization {
-
-	private static final void Solve (
-		final NewtonFixedPointFinder nfpf,
-		final double[] adblVariateStarting)
-		throws Exception
-	{
-		System.out.println ("\n\t|------------------------------------||");
-
-		String strDump = "\t| STARTER: [";
-
-		strDump += FormatUtil.FormatDouble (adblVariateStarting[0], 1, 4, 1.) + ",";
-
-		strDump += FormatUtil.FormatDouble (adblVariateStarting[1], 1, 4, 1.) + ",";
-
-		strDump += FormatUtil.FormatDouble (adblVariateStarting[2], 1, 4, 1.);
-
-		System.out.println (strDump + "] ||");
-
-		System.out.println ("\t|------------------------------------||");
-
-		VariateInequalityConstraintMultiplier vcmt = nfpf.convergeVariate (
-			new VariateInequalityConstraintMultiplier (
-				false,
-				adblVariateStarting,
-				null
-			)
-		);
-
-		double[] adblVariate = vcmt.variates();
-
-		System.out.println ("\t| Optimal X      : " + FormatUtil.FormatDouble (adblVariate[0], 1, 4, 1.) + "           ||");
-
-		System.out.println ("\t| Optimal Y      : " + FormatUtil.FormatDouble (adblVariate[1], 1, 4, 1.) + "           ||");
-
-		System.out.println ("\t| Optimal Lambda : " + FormatUtil.FormatDouble (adblVariate[2], 1, 4, 1.) + "           ||");
-
-		System.out.println ("\t|------------------------------------||");
-	}
+public class VariateSumExtremization {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -112,7 +74,7 @@ public class ConstrainedNSphereSurfaceExtremization {
 				final double[] adblVariate)
 				throws Exception
 			{
-				return adblVariate[0] * adblVariate[0] * adblVariate[1];
+				return adblVariate[0] + adblVariate[1];
 			}
 
 			@Override public int dimension()
@@ -124,8 +86,8 @@ public class ConstrainedNSphereSurfaceExtremization {
 				final double[] adblVariate)
 			{
 				double[] adblJacobian = new double[2];
-				adblJacobian[0] = 2. * adblVariate[0] * adblVariate[1];
-				adblJacobian[1] = adblVariate[0] * adblVariate[0];
+				adblJacobian[0] = 1.;
+				adblJacobian[1] = 1.;
 				return adblJacobian;
 			}
 
@@ -133,9 +95,9 @@ public class ConstrainedNSphereSurfaceExtremization {
 				final double[] adblVariate)
 			{
 				double[][] aadblHessian = new double[2][2];
-				aadblHessian[0][0] = 2. * adblVariate[1];
-				aadblHessian[0][1] = 2. * adblVariate[0];
-				aadblHessian[1][0] = 2. * adblVariate[0];
+				aadblHessian[0][0] = 0.;
+				aadblHessian[0][1] = 0.;
+				aadblHessian[1][0] = 0.;
 				aadblHessian[1][1] = 0.;
 				return aadblHessian;
 			}
@@ -146,7 +108,7 @@ public class ConstrainedNSphereSurfaceExtremization {
 				final double[] adblVariate)
 				throws Exception
 			{
-				return adblVariate[0] * adblVariate[0] + adblVariate[1] * adblVariate[1] - 3.;
+				return adblVariate[0] * adblVariate[0] + adblVariate[1] * adblVariate[1] - 1.;
 			}
 
 			@Override public int dimension()
@@ -186,58 +148,24 @@ public class ConstrainedNSphereSurfaceExtremization {
 			ConvergenceControl.Standard()
 		);
 
-		Solve (
-			nfpf,
-			new double[] {
-				2.,
-				1.,
-				1.
-			}
+		VariateInequalityConstraintMultiplier vcmt = nfpf.convergeVariate (
+			new VariateInequalityConstraintMultiplier (
+				false,
+				new double[] {
+					1.,
+					1.,
+					1.
+				},
+				null
+			)
 		);
 
-		Solve (
-			nfpf,
-			new double[] {
-				-2.,
-				 1.,
-				 1.
-			}
-		);
+		double[] adblVariate = vcmt.variates();
 
-		Solve (
-			nfpf,
-			new double[] {
-				 2.,
-				-1.,
-				 1.
-			}
-		);
+		System.out.println ("\tOptimal X      : " + FormatUtil.FormatDouble (adblVariate[0], 1, 4, 1.));
 
-		Solve (
-			nfpf,
-			new double[] {
-				-2.,
-				-1.,
-				 1.
-			}
-		);
+		System.out.println ("\tOptimal Y      : " + FormatUtil.FormatDouble (adblVariate[1], 1, 4, 1.));
 
-		Solve (
-			nfpf,
-			new double[] {
-				0.,
-				1.,
-				0.
-			}
-		);
-
-		Solve (
-			nfpf,
-			new double[] {
-				 0.,
-				-1.,
-				 0.
-			}
-		);
+		System.out.println ("\tOptimal Lambda : " + FormatUtil.FormatDouble (adblVariate[2], 1, 4, 1.));
 	}
 }

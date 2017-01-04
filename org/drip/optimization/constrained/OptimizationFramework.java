@@ -1,5 +1,5 @@
 
-package org.drip.optimization.kkt;
+package org.drip.optimization.constrained;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -67,7 +67,7 @@ package org.drip.optimization.kkt;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OptimizationFramework {
+public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 	private org.drip.function.definition.RdToR1 _rdToR1Objective = null;
 	private org.drip.function.definition.RdToR1[] _aRdToR1EqualityConstraint = null;
 	private org.drip.function.definition.RdToR1[] _aRdToR1InequalityConstraint = null;
@@ -88,6 +88,8 @@ public class OptimizationFramework {
 		final org.drip.function.definition.RdToR1[] aRdToR1InequalityConstraint)
 		throws java.lang.Exception
 	{
+		super (null);
+
 		if (null == (_rdToR1Objective = rdToR1Objective))
 			throw new java.lang.Exception ("OptimizationFramework Constructor => Invalid Inputs");
 
@@ -192,28 +194,27 @@ public class OptimizationFramework {
 	}
 
 	/**
-	 * Indicate if the specified KKT Multiplier Suite is compatible with the Optimization Framework
+	 * Indicate if the specified Fritz John Multipliers are compatible with the Optimization Framework
 	 * 
 	 * @param kktMultiplier The specified KKT Multipliers
 	 * 
-	 * @return TRUE - The specified KKT Multiplier Suite is compatible with the Optimization Framework
+	 * @return TRUE - The specified Fritz John Multipliers are compatible with the Optimization Framework
 	 */
 
 	public boolean isCompatible (
-		final org.drip.optimization.kkt.Multipliers kktMultiplier)
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm)
 	{
 		int iNumEqualityConstraint = numEqualityConstraint();
 
 		int iNumInequalityConstraint = numInequalityConstraint();
 
-		int iNumEqualityKKTMultiplier = null == kktMultiplier ? 0 : kktMultiplier.numEqualityCoefficients();
+		int iNumEqualityFJMMultiplier = null == fjm ? 0 : fjm.numEqualityCoefficients();
 
-		if (iNumEqualityConstraint != iNumEqualityKKTMultiplier) return false;
+		if (iNumEqualityConstraint != iNumEqualityFJMMultiplier) return false;
 
-		int iNumInequalityKKTMultiplier = null == kktMultiplier ? 0 :
-			kktMultiplier.numInequalityCoefficients();
+		int iNumInequalityFJMMultiplier = null == fjm ? 0 : fjm.numInequalityCoefficients();
 
-		return iNumInequalityConstraint == iNumInequalityKKTMultiplier;
+		return iNumInequalityConstraint == iNumInequalityFJMMultiplier;
 	}
 
 	/**
@@ -248,7 +249,7 @@ public class OptimizationFramework {
 	/**
 	 * Check for Complementary Slackness across the Inequality Constraints
 	 * 
-	 * @param kktMultiplier The specified KKT Multipliers
+	 * @param fjm The specified Fritz John Multipliers
 	 * @param adblVariate The Candidate R^d Variate
 	 * 
 	 * @return TRUE - The Complementary Slackness Test passed
@@ -257,18 +258,18 @@ public class OptimizationFramework {
 	 */
 
 	public boolean complementarySlacknessCheck (
-		final org.drip.optimization.kkt.Multipliers kktMultiplier,
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
 		final double[] adblVariate)
 		throws java.lang.Exception
 	{
-		if (!isCompatible (kktMultiplier))
+		if (!isCompatible (fjm))
 			throw new java.lang.Exception
 				("OptimizationFramework::complementarySlacknessCheck => Invalid Inputs");
 
 		int iNumInequalityConstraint = numInequalityConstraint();
 
-		double[] adblInequalityConstraintCoefficient = null == kktMultiplier ? null :
-			kktMultiplier.inequalityConstraintCoefficient();
+		double[] adblInequalityConstraintCoefficient = null == fjm ? null :
+			fjm.inequalityConstraintCoefficient();
 
 		for (int i = 0; i < iNumInequalityConstraint; ++i) {
 			if (0. != _aRdToR1InequalityConstraint[i].evaluate (adblVariate) *
@@ -282,7 +283,7 @@ public class OptimizationFramework {
 	/**
 	 * Check the Candidate Point for First Order Necessary Condition
 	 * 
-	 * @param kktMultiplier The specified KKT Multipliers
+	 * @param fjm The specified Fritz John Multipliers
 	 * @param adblVariate The Candidate R^d Variate
 	 * 
 	 * @return TRUE - The Candidate Point satisfied the First Order Necessary Condition
@@ -291,11 +292,11 @@ public class OptimizationFramework {
 	 */
 
 	public boolean isFONC (
-		final org.drip.optimization.kkt.Multipliers kktMultiplier,
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
 		final double[] adblVariate)
 		throws java.lang.Exception
 	{
-		if (!isCompatible (kktMultiplier))
+		if (!isCompatible (fjm))
 			throw new java.lang.Exception ("OptimizationFramework::isFONC => Invalid Inputs");
 
 		double[] adblFONCJacobian = _rdToR1Objective.jacobian (adblVariate);
@@ -307,11 +308,11 @@ public class OptimizationFramework {
 
 		int iNumInequalityConstraint = numInequalityConstraint();
 
-		double[] adblEqualityConstraintCoefficient = null == kktMultiplier ? null :
-			kktMultiplier.equalityConstraintCoefficient();
+		double[] adblEqualityConstraintCoefficient = null == fjm ? null :
+			fjm.equalityConstraintCoefficient();
 
-		double[] adblInequalityConstraintCoefficient = null == kktMultiplier ? null :
-			kktMultiplier.inequalityConstraintCoefficient();
+		double[] adblInequalityConstraintCoefficient = null == fjm ? null :
+			fjm.inequalityConstraintCoefficient();
 
 		int iDimension = _rdToR1Objective.dimension();
 
@@ -342,6 +343,102 @@ public class OptimizationFramework {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check the Candidate Point for Second Order Sufficiency Condition
+	 * 
+	 * @param fjm The specified Fritz John Multipliers
+	 * @param adblVariate The Candidate R^d Variate
+	 * @param bCheckForMinima TRUE - Check whether the R^d Variate corresponds to the SOSC Minimum
+	 * 
+	 * @return TRUE - The Candidate Point satisfies the Second Order Sufficiency Condition
+	 * 
+	 * @throws java.lang.Exception Thrown if the Input in Invalid
+	 */
+
+	public boolean isSOSC (
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
+		final double[] adblVariate,
+		final boolean bCheckForMinima)
+		throws java.lang.Exception
+	{
+		if (!isFONC (fjm, adblVariate)) return false;
+
+		double[][] aadblSOSCHessian = _rdToR1Objective.hessian (adblVariate);
+
+		if (null == aadblSOSCHessian)
+			throw new java.lang.Exception ("OptimizationFramework::isSOSC => Cannot calculate Jacobian");
+
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		double[] adblEqualityConstraintCoefficient = null == fjm ? null :
+			fjm.equalityConstraintCoefficient();
+
+		double[] adblInequalityConstraintCoefficient = null == fjm ? null :
+			fjm.inequalityConstraintCoefficient();
+
+		int iDimension = _rdToR1Objective.dimension();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			double[][] aadblHessian = _aRdToR1EqualityConstraint[i].hessian (adblVariate);
+
+			if (null == aadblHessian)
+				throw new java.lang.Exception ("OptimizationFramework::isSOSC => Cannot calculate Jacobian");
+
+			for (int j = 0; j < iDimension; ++j) {
+				for (int k = 0; k < iDimension; ++k)
+					aadblSOSCHessian[j][k] = aadblSOSCHessian[j][k] + adblEqualityConstraintCoefficient[j] *
+						aadblHessian[j][k];
+			}
+		}
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i) {
+			double[][] aadblHessian = _aRdToR1InequalityConstraint[i].hessian (adblVariate);
+
+			if (null == aadblHessian)
+				throw new java.lang.Exception ("OptimizationFramework::isSOSC => Cannot calculate Jacobian");
+
+			for (int j = 0; j < iDimension; ++j) {
+				for (int k = 0; k < iDimension; ++k)
+					aadblSOSCHessian[j][k] = aadblSOSCHessian[j][k] + adblInequalityConstraintCoefficient[j]
+						* aadblHessian[j][k];
+			}
+		}
+
+		double dblSOSC = org.drip.quant.linearalgebra.Matrix.DotProduct (adblVariate,
+			org.drip.quant.linearalgebra.Matrix.Product (aadblSOSCHessian, adblVariate));
+
+		return bCheckForMinima && dblSOSC > 0. || !bCheckForMinima && dblSOSC < 0.;
+	}
+
+	/**
+	 * Generate the Battery of Necessary and Sufficient Qualification Tests
+	 * 
+	 * @param fjm The specified Fritz John Multipliers
+	 * @param adblVariate The Candidate R^d Variate
+	 * @param bCheckForMinima TRUE - Check whether the R^d Variate corresponds to the SOSC Minimum
+	 * 
+	 * @return The Necessary and Sufficient Conditions Qualifier Instance
+	 */
+
+	public org.drip.optimization.constrained.NecessarySufficientConditions necessarySufficientQualifier (
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
+		final double[] adblVariate,
+		final boolean bCheckForMinima)
+	{
+		try {
+			return org.drip.optimization.constrained.NecessarySufficientConditions.Standard (adblVariate, fjm,
+				bCheckForMinima, primalFeasibilityCheck (adblVariate), fjm.dualFeasibilityCheck(),
+					complementarySlacknessCheck (fjm, adblVariate), isFONC (fjm, adblVariate), isSOSC (fjm,
+						adblVariate, bCheckForMinima));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**
@@ -658,7 +755,7 @@ public class OptimizationFramework {
 	/**
 	 * Check for Quasi Normal Constraint Qualification
 	 * 
-	 * @param kktMultiplier The specified KKT Multipliers
+	 * @param fjm The specified Fritz John Multipliers
 	 * @param adblVariate The Candidate R^d Variate
 	 * 
 	 * @return TRUE - The Quasi Normal Constraint Qualification is satisfied
@@ -667,19 +764,19 @@ public class OptimizationFramework {
 	 */
 
 	public boolean isQNCQ (
-		final org.drip.optimization.kkt.Multipliers kktMultiplier,
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
 		final double[] adblVariate)
 		throws java.lang.Exception
 	{
-		if (!isCompatible (kktMultiplier))
+		if (!isCompatible (fjm))
 			throw new java.lang.Exception ("OptimizationFramework::isQNCQ => Invalid Inputs");
 
 		if (!isMFCQ (adblVariate)) return false;
 
 		int iNumEqualityConstraint = numEqualityConstraint();
 
-		double[] adblEqualityConstraintCoefficient = null == kktMultiplier ? null :
-			kktMultiplier.equalityConstraintCoefficient();
+		double[] adblEqualityConstraintCoefficient = null == fjm ? null :
+			fjm.equalityConstraintCoefficient();
 
 		for (int i = 0; i < iNumEqualityConstraint; ++i) {
 			if (0. != adblEqualityConstraintCoefficient[i] && 0. <= _aRdToR1EqualityConstraint[i].evaluate
@@ -689,8 +786,8 @@ public class OptimizationFramework {
 
 		int iNumInequalityConstraint = numInequalityConstraint();
 
-		double[] adblInequalityConstraintCoefficient = null == kktMultiplier ? null :
-			kktMultiplier.inequalityConstraintCoefficient();
+		double[] adblInequalityConstraintCoefficient = null == fjm ? null :
+			fjm.inequalityConstraintCoefficient();
 
 		for (int i = 0; i < iNumInequalityConstraint; ++i) {
 			if (0. != adblInequalityConstraintCoefficient[i] && 0. <=
@@ -736,24 +833,142 @@ public class OptimizationFramework {
 	/**
 	 * Generate the Battery of Regularity Constraint Qualification Tests
 	 * 
-	 * @param kktMultiplier The specified KKT Multipliers
+	 * @param fjm The specified Fritz John Multipliers
 	 * @param adblVariate The Candidate R^d Variate
 	 * 
 	 * @return The Regularity Constraint Qualifier Instance
 	 */
 
-	public org.drip.optimization.kkt.RegularityConditions regularityQualifier (
-		final org.drip.optimization.kkt.Multipliers kktMultiplier,
+	public org.drip.optimization.constrained.RegularityConditions regularityQualifier (
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
 		final double[] adblVariate)
 	{
 		try {
-			return org.drip.optimization.kkt.RegularityConditions.Standard (adblVariate,
-				kktMultiplier, isLCQ(), isLICQ (adblVariate), isMFCQ (adblVariate), isCRCQ (adblVariate),
-					isCPLDCQ (adblVariate), isQNCQ (kktMultiplier, adblVariate), isSCCQ (adblVariate));
+			return org.drip.optimization.constrained.RegularityConditions.Standard (adblVariate, fjm,
+				isLCQ(), isLICQ (adblVariate), isMFCQ (adblVariate), isCRCQ (adblVariate), isCPLDCQ
+					(adblVariate), isQNCQ (fjm, adblVariate), isSCCQ (adblVariate));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
 
 		return null;
+	}
+
+	/**
+	 * Retrieve the Objective Function Dimension
+	 * 
+	 * @return The Objective Function Dimension
+	 */
+
+	public int objectiveFunctionDimension()
+	{
+		return _rdToR1Objective.dimension();
+	}
+
+	/**
+	 * Retrieve the Constraint Function Dimension
+	 * 
+	 * @return The Constraint Function Dimension
+	 */
+
+	public int constraintFunctionDimension()
+	{
+		return numEqualityConstraint() + numInequalityConstraint();
+	}
+
+	@Override public int dimension()
+	{
+		return objectiveFunctionDimension() + constraintFunctionDimension();
+	}
+
+	@Override public double evaluate (
+		final double[] adblVariate)
+		throws java.lang.Exception
+	{
+		double dblValue = _rdToR1Objective.evaluate (adblVariate);
+
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i)
+			dblValue = dblValue + _aRdToR1EqualityConstraint[i].evaluate (adblVariate);
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i)
+			dblValue = dblValue + _aRdToR1InequalityConstraint[i].evaluate (adblVariate);
+
+		return dblValue;
+	}
+
+	@Override public double[] jacobian (
+		final double[] adblVariate)
+	{
+		double[] adblJacobian = _rdToR1Objective.jacobian (adblVariate);
+
+		if (null == adblJacobian) return null;
+
+		int iDimension = _rdToR1Objective.dimension();
+
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			double[] adblConstraintJacobian = _aRdToR1EqualityConstraint[i].jacobian (adblVariate);
+
+			if (null == adblConstraintJacobian) return null;
+
+			for (int j = 0; j < iDimension; ++j)
+				adblJacobian[j] += adblConstraintJacobian[j];
+		}
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i) {
+			double[] adblConstraintJacobian = _aRdToR1InequalityConstraint[i].jacobian (adblVariate);
+
+			if (null == adblConstraintJacobian) return null;
+
+			for (int j = 0; j < iDimension; ++j)
+				adblJacobian[j] += adblConstraintJacobian[j];
+		}
+
+		return adblJacobian;
+	}
+
+	@Override public double[][] hessian (
+		final double[] adblVariate)
+	{
+		double[][] aadblHessian = _rdToR1Objective.hessian (adblVariate);
+
+		if (null == aadblHessian) return null;
+
+		int iDimension = _rdToR1Objective.dimension();
+
+		int iNumEqualityConstraint = numEqualityConstraint();
+
+		int iNumInequalityConstraint = numInequalityConstraint();
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			double[][] aadblConstraintHessian = _aRdToR1EqualityConstraint[i].hessian (adblVariate);
+
+			if (null == aadblConstraintHessian) return null;
+
+			for (int j = 0; j < iDimension; ++j) {
+				for (int k = 0; k < iDimension; ++k)
+					aadblHessian[j][k] += aadblConstraintHessian[j][k];
+			}
+		}
+
+		for (int i = 0; i < iNumInequalityConstraint; ++i) {
+			double[][] aadblConstraintHessian = _aRdToR1InequalityConstraint[i].hessian (adblVariate);
+
+			if (null == aadblConstraintHessian) return null;
+
+			for (int j = 0; j < iDimension; ++j) {
+				for (int k = 0; k < iDimension; ++k)
+					aadblHessian[j][k] += aadblConstraintHessian[j][k];
+			}
+		}
+
+		return aadblHessian;
 	}
 }

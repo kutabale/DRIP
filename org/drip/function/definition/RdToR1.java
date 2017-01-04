@@ -153,7 +153,7 @@ public abstract class RdToR1 {
 
 			double[] adblVariateIncremental = new double[iNumVariate];
 
-			for (int j = 0; i < iNumVariate; ++j)
+			for (int j = 0; j < iNumVariate; ++j)
 				adblVariateIncremental[j] = j == iVariateIndex ? adblVariate[j] + dblVariateInfinitesimal *
 					(iOrder - 2. * i) : adblVariate[j];
 

@@ -1,5 +1,5 @@
 
-package org.drip.optimization.kkt;
+package org.drip.optimization.constrained;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -49,7 +49,7 @@ package org.drip.optimization.kkt;
 
 /**
  * RegularityConditions holds the Results of the Verification of the Regularity Conditions/Constraint
- *  Qualifications at the specified (possibly) Optimal Variate and the corresponding KKT Multiplier Suite.
+ *  Qualifications at the specified (possibly) Optimal Variate and the corresponding Fritz John Multipliers.
  *  The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
@@ -70,7 +70,7 @@ package org.drip.optimization.kkt;
 
 public class RegularityConditions {
 	private double[] _adblVariate = null;
-	private org.drip.optimization.kkt.Multipliers _kktMultipliers = null;
+	private org.drip.optimization.constrained.FritzJohnMultipliers _fjm = null;
 	private org.drip.optimization.regularity.ConstraintQualifierLCQ _cqLCQ = null;
 	private org.drip.optimization.regularity.ConstraintQualifierCRCQ _cqCRCQ = null;
 	private org.drip.optimization.regularity.ConstraintQualifierLICQ _cqLICQ = null;
@@ -83,7 +83,7 @@ public class RegularityConditions {
 	 * Construct a Standard Instance of RegularityConditions
 	 * 
 	 * @param adblVariate The Candidate Variate Array
-	 * @param kktMultiplers The KKT Multipliers
+	 * @param fjm The Fritz John Multipliers
 	 * @param bValidLCQ The LCQ Validity Flag
 	 * @param bValidLICQ The LICQ Validity Flag
 	 * @param bValidMFCQ The MFCQ Validity Flag
@@ -97,7 +97,7 @@ public class RegularityConditions {
 
 	public static final RegularityConditions Standard (
 		final double[] adblVariate,
-		final org.drip.optimization.kkt.Multipliers kktMultipliers,
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
 		final boolean bValidLCQ,
 		final boolean bValidLICQ,
 		final boolean bValidMFCQ,
@@ -107,7 +107,7 @@ public class RegularityConditions {
 		final boolean bValidSCCQ)
 	{
 		try {
-			return new RegularityConditions (adblVariate, kktMultipliers, new
+			return new RegularityConditions (adblVariate, fjm, new
 				org.drip.optimization.regularity.ConstraintQualifierLCQ (bValidLCQ), new
 					org.drip.optimization.regularity.ConstraintQualifierLICQ (bValidLICQ), new
 						org.drip.optimization.regularity.ConstraintQualifierMFCQ (bValidMFCQ), new
@@ -128,7 +128,7 @@ public class RegularityConditions {
 	 * RegularityConditions Constructor
 	 * 
 	 * @param adblVariate The Candidate Variate Array
-	 * @param kktMultiplers The KKT Multipliers
+	 * @param fjm The Fritz John Multipliers
 	 * @param cqLCQ LCQ Constraint Qualifier Instance
 	 * @param cqLICQ LICQ Constraint Qualifier Instance
 	 * @param cqMFCQ MFCQ Constraint Qualifier Instance
@@ -142,7 +142,7 @@ public class RegularityConditions {
 
 	public RegularityConditions (
 		final double[] adblVariate,
-		final org.drip.optimization.kkt.Multipliers kktMultipliers,
+		final org.drip.optimization.constrained.FritzJohnMultipliers fjm,
 		final org.drip.optimization.regularity.ConstraintQualifierLCQ cqLCQ,
 		final org.drip.optimization.regularity.ConstraintQualifierLICQ cqLICQ,
 		final org.drip.optimization.regularity.ConstraintQualifierMFCQ cqMFCQ,
@@ -152,10 +152,10 @@ public class RegularityConditions {
 		final org.drip.optimization.regularity.ConstraintQualifierSCCQ cqSCCQ)
 		throws java.lang.Exception
 	{
-		if (null == (_adblVariate = adblVariate) || 0 == _adblVariate.length || null == (_kktMultipliers =
-			kktMultipliers) || null == (_cqLCQ = cqLCQ) || null == (_cqLICQ = cqLICQ) || null == (_cqMFCQ =
-				cqMFCQ) || null == (_cqCRCQ = cqCRCQ) || null == (_cqCPLDCQ = cqCPLDCQ) || null == (_cqQNCQ =
-					cqQNCQ) || null == (_cqSCCQ = cqSCCQ))
+		if (null == (_adblVariate = adblVariate) || 0 == _adblVariate.length || null == (_fjm = fjm) || null
+			== (_cqLCQ = cqLCQ) || null == (_cqLICQ = cqLICQ) || null == (_cqMFCQ = cqMFCQ) || null ==
+				(_cqCRCQ = cqCRCQ) || null == (_cqCPLDCQ = cqCPLDCQ) || null == (_cqQNCQ = cqQNCQ) || null ==
+					(_cqSCCQ = cqSCCQ))
 			throw new java.lang.Exception ("RegularityConditions Constructor => Invalid Inputs");
 	}
 
@@ -171,14 +171,14 @@ public class RegularityConditions {
 	}
 
 	/**
-	 * Retrieve the KKT Mutipliers Array
+	 * Retrieve the Fritz John Mutipliers
 	 * 
-	 * @return The KKT Mutipliers Array
+	 * @return The Fritz John Mutipliers
 	 */
 
-	public org.drip.optimization.kkt.Multipliers kktMultipliers()
+	public org.drip.optimization.constrained.FritzJohnMultipliers fjm()
 	{
-		return _kktMultipliers;
+		return _fjm;
 	}
 
 	/**

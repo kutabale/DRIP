@@ -1,5 +1,5 @@
 
-package org.drip.optimization.kkt.necessary;
+package org.drip.optimization.necessary;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -67,7 +67,7 @@ package org.drip.optimization.kkt.necessary;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ConditionQualifierDualFeasibility extends org.drip.optimization.kkt.necessary.ConditionQualifier
+public class ConditionQualifierDualFeasibility extends org.drip.optimization.necessary.ConditionQualifier
 {
 
 	/**
