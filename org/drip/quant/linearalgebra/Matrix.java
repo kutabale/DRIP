@@ -535,6 +535,9 @@ public class Matrix {
 		if (null == aadblSource) return 0;
 
 		int iNumRow = aadblSource.length;
+
+		if (iNumRow == 0) return 0;
+
 		int iNumCol = aadblSource[0].length;
 
 		for (int iScanRow = 0; iScanRow < iNumRow; ++iScanRow) {
@@ -547,6 +550,8 @@ public class Matrix {
 
 		int iNumDependentRow = 0;
 		int iSize = aadblRegularizedSource.length;
+
+		if (1 == iNumRow || 1 == iNumCol) return iSize;
 
 		for (int iScanRow = 0; iScanRow < iSize; ++iScanRow) {
 			for (int iRow = 0; iRow < iSize; ++iRow) {

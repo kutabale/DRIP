@@ -339,7 +339,7 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 		}
 
 		for (int j = 0; j < iDimension; ++j) {
-			if (0. == adblFONCJacobian[j]) return false;
+			if (0. != adblFONCJacobian[j]) return false;
 		}
 
 		return true;
@@ -411,7 +411,7 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 		double dblSOSC = org.drip.quant.linearalgebra.Matrix.DotProduct (adblVariate,
 			org.drip.quant.linearalgebra.Matrix.Product (aadblSOSCHessian, adblVariate));
 
-		return bCheckForMinima && dblSOSC > 0. || !bCheckForMinima && dblSOSC < 0.;
+		return (bCheckForMinima && dblSOSC > 0.) || (!bCheckForMinima && dblSOSC < 0.);
 	}
 
 	/**
@@ -504,10 +504,15 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 
 		java.util.List<double[]> lsJacobian = new java.util.ArrayList<double[]>();
 
-		for (int i = 0; i < iNumEqualityConstraint; ++i) {
-			double[] adblJacobian = _aRdToR1EqualityConstraint[i].jacobian (adblVariate);
+		double[] adblJacobian = _rdToR1Objective.jacobian (adblVariate);
 
-			if (null == adblJacobian)
+		if (null == adblJacobian)
+			throw new java.lang.Exception ("OptimizationFramework::activeConstraintRank => Cannot Compute");
+
+		lsJacobian.add (adblJacobian);
+
+		for (int i = 0; i < iNumEqualityConstraint; ++i) {
+			if (null == (adblJacobian = _aRdToR1EqualityConstraint[i].jacobian (adblVariate)))
 				throw new java.lang.Exception
 					("OptimizationFramework::activeConstraintRank => Cannot Compute");
 
@@ -516,9 +521,7 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 
 		for (int i = 0; i < iNumInequalityConstraint; ++i) {
 			if (0. == _aRdToR1InequalityConstraint[i].evaluate (adblVariate)) {
-				double[] adblJacobian = _aRdToR1InequalityConstraint[i].jacobian (adblVariate);
-
-				if (null == adblJacobian)
+				if (null == (adblJacobian = _aRdToR1InequalityConstraint[i].jacobian (adblVariate)))
 					throw new java.lang.Exception
 						("OptimizationFramework::activeConstraintRank => Cannot Compute");
 
@@ -606,7 +609,7 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 
 		if (bPositiveLinearDependenceCheck) {
 			for (int i = 0; i < iNumConstraint; ++i) {
-				if (null != aadblJacobian[i] ||
+				if (null != aadblJacobian[i] &&
 					!org.drip.quant.linearalgebra.Matrix.PositiveLinearlyIndependent (aadblJacobian[i]))
 					return false;
 			}

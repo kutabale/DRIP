@@ -53,8 +53,8 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * KKTNecessarySufficientCheck carries out the Zero and the First Order Necessary and the Second Order
- * 	Sufficiency Checks for a Constrained KKT Optimization Problem. The References are:
+ * KKTRegularityConditions carries out the Regularity Checks satisfied by the Optimizing Variate for a
+ *  Constrained KKT Optimization Problem. The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 
@@ -72,7 +72,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class KKTNecessarySufficientCheck {
+public class KKTRegularityConditions {
 
 	private static final RdToR1 Objective (
 		final double dblX0,
@@ -317,71 +317,39 @@ public class KKTNecessarySufficientCheck {
 			)
 		);
 
-		NecessarySufficientConditions nsc = of.necessarySufficientQualifier (
-			fjm,
-			adblVariate,
-			true
+		System.out.println ("\t|| ACTIVE SET RANK                                              : " +
+			of.activeConstraintRank (adblVariate) + "     ||"
 		);
 
-		System.out.println();
-
-		System.out.println ("\t||---------------------------------------------------||");
-
-		System.out.println ("\t||    KKT NECESSARY & SUFFICIENT CONDITIONS CHECK    ||");
-
-		System.out.println ("\t||---------------------------------------------------||");
-
-		System.out.println ("\t|| KKT Multiplier Compatibility             : " +
-			of.isCompatible (fjm) + "   ||"
+		System.out.println ("\t|| LINEAR CONSTRAINT QUALIFICATION                              : " +
+			of.isLCQ() + " ||"
 		);
 
-		System.out.println ("\t|| Dual Feasibility Check                   : " +
-			fjm.dualFeasibilityCheck() + "   ||"
+		System.out.println ("\t|| LINEAR INDEPENDENT CONSTRAINT QUALIFICATION                  : " +
+			of.isLICQ (adblVariate) + "  ||"
 		);
 
-		System.out.println ("\t|| Primal Feasibility Check                 : " +
-			of.primalFeasibilityCheck (adblVariate) + "   ||"
+		System.out.println ("\t|| MANGASARIAN FROMOVITZ CONSTRAINT QUALIFICATION               : " +
+			of.isMFCQ (adblVariate) + "  ||"
 		);
 
-		System.out.println ("\t|| Complementary Slackness Check            : " +
-			of.complementarySlacknessCheck (
+		System.out.println ("\t|| CONSTANT RANK CONSTRAINT QUALIFICATION                       : " +
+			of.isCRCQ (adblVariate) + "  ||"
+		);
+
+		System.out.println ("\t|| CONSTANT POSITIVE LINEAR DEPENDENCE CONSTRAINT QUALIFICATION : " +
+			of.isCPLDCQ (adblVariate) + "  ||"
+		);
+
+		System.out.println ("\t|| QUASI NORMAL CONSTRAINT QUALIFICATION                        : " +
+			of.isQNCQ (
 				fjm,
 				adblVariate
 			) + "  ||"
 		);
 
-		System.out.println ("\t|| First Order Necessary Condition Check    : " +
-			of.isFONC (
-				fjm,
-				adblVariate
-			) + "   ||"
+		System.out.println ("\t|| SLATER'S CONDITION CONSTRAINT QUALIFICATION                  : " +
+			of.isSCCQ (adblVariate) + " ||"
 		);
-
-		System.out.println ("\t|| Second Order Sufficiency Condition Check : " +
-			of.isSOSC (
-				fjm,
-				adblVariate,
-				true
-			) + "   ||"
-		);
-
-		System.out.println ("\t||---------------------------------------------------||");
-
-		System.out.println();
-
-		System.out.println ("\t||------------------------------------------------------------------------------------------------------||");
-
-		System.out.println ("\t||                 KKT NECESSARY & SUFFICIENT CONSTIONS - ZERO, FIRST, & SECOND ORDERS                  ||");
-
-		System.out.println ("\t||------------------------------------------------------------------------------------------------------||");
-
-		String[] astrNSC = nsc.conditionOrder();
-
-		for (int i = 0; i < astrNSC.length; ++i)
-			System.out.println ("\t|| " + astrNSC[i]);
-
-		System.out.println ("\t||------------------------------------------------------------------------------------------------------||");
-
-		System.out.println();
 	}
 }
