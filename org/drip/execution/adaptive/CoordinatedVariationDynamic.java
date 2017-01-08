@@ -65,7 +65,7 @@ package org.drip.execution.adaptive;
  * 		79-96.
  * 
  * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies & (4) 631-651.
+ * 		Financial Studies 7 (4) 631-651.
  * 
  * @author Lakshmi Krishnamurthy
  */

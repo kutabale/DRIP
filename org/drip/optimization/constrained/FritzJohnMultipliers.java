@@ -97,7 +97,7 @@ public class FritzJohnMultipliers {
 	/**
 	 * FritzJohnMultipliers Constructor
 	 * 
-	 * @param dblObjectiveCoefficientThe Objective Function Coefficient
+	 * @param dblObjectiveCoefficient The Objective Function Coefficient
 	 * @param adblEquality Array of the Equality Constraint Coefficients
 	 * @param adblInequality Array of the Inequality Constraint Coefficients
 	 * 

@@ -245,7 +245,10 @@ public class MultiStretchCurveBuilder {
 			dtSpot,
 			strCurrency,
 			new String[] {
-				"1W", "2W", "3W", "1M"
+				"1W",
+				"2W",
+				"3W",
+				"1M"
 			},
 			adblShortEndOISQuote
 		);

@@ -64,7 +64,7 @@ package org.drip.execution.tradingtime;
  * 		79-96.
  * 
  * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies & (4) 631-651.
+ * 		Financial Studies 7 (4) 631-651.
  * 
  * @author Lakshmi Krishnamurthy
  */
@@ -78,7 +78,7 @@ public class CoordinatedParticipationRateLinear implements
 	 * CoordinatedParticipationRateLinear Constructor
 	 * 
 	 * @param cv The Coordinated Volatility/Liquidity Variation
-	 * @param r1ToR1Volatility The R^1 -> R^1 Volatility Function
+	 * @param r1ToR1Volatility The R^1 To R^1 Volatility Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -138,7 +138,7 @@ public class CoordinatedParticipationRateLinear implements
 	/**
 	 * Compute the Volatility Function from the Liquidity Function
 	 * 
-	 * @return The R^1 -> R^1 Volatility Function
+	 * @return The R^1 To R^1 Volatility Function
 	 */
 
 	public org.drip.function.definition.R1ToR1 volatilityFunction()

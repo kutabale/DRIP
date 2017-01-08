@@ -86,11 +86,11 @@ public class NecessarySufficientConditions {
 	 * @param adblVariate The Candidate Variate Array
 	 * @param fjm The Fritz John Multipliers
 	 * @param bCheckForMinima TRUE - Check For Minima
-	 * @param bPrimalFeasibilityValid The Primal Feasibility Validity
-	 * @param bDualFeasibilityValid The Dual Feasibility Validity
-	 * @param bComplementarySlacknessValid The Complementary Slackness Validity
-	 * @param bFONCValid The FONC Validity
-	 * @param bSOSCValid The SOSC Validity
+	 * @param bPrimalFeasibilityValidity The Primal Feasibility Validity
+	 * @param bDualFeasibilityValidity The Dual Feasibility Validity
+	 * @param bComplementarySlacknessValidity The Complementary Slackness Validity
+	 * @param bFONCValidity The FONC Validity
+	 * @param bSOSCValidity The SOSC Validity
 	 * 
 	 * @return The Standard NecessarySufficientConditions Instance
 	 */

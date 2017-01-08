@@ -87,7 +87,7 @@ public class ShortfallIncrementDistribution extends org.drip.measure.gaussian.R1
 	 * @param dblMarketDynamicExpectation The Market Dynamics Expectation Component
 	 * @param dblPermanentImpactVariance The Permanent Market Impact Variance Component
 	 * @param dblTemporaryImpactVariance The Temporary Market Impact Variance Component
-	 * @param dblMarketCoreVariance The Market Dynamics Variance Component
+	 * @param dblMarketDynamicVariance The Market Dynamics Variance Component
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

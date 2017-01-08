@@ -67,7 +67,7 @@ package org.drip.optimization.constrained;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
+public class OptimizationFramework {
 	private org.drip.function.definition.RdToR1 _rdToR1Objective = null;
 	private org.drip.function.definition.RdToR1[] _aRdToR1EqualityConstraint = null;
 	private org.drip.function.definition.RdToR1[] _aRdToR1InequalityConstraint = null;
@@ -75,9 +75,9 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 	/**
 	 * OptimizationFramework Constructor
 	 * 
-	 * @param rdToR1Objective The R^d -> R^1 Objective Function
-	 * @param aRdToR1EqualityConstraint The Array of R^d -> R^1 Equality Constraint Functions
-	 * @param aRdToR1InequalityConstraint The Array of R^d -> R^1 Inequality Constraint Functions
+	 * @param rdToR1Objective The R^d To R^1 Objective Function
+	 * @param aRdToR1EqualityConstraint The Array of R^d To R^1 Equality Constraint Functions
+	 * @param aRdToR1InequalityConstraint The Array of R^d To R^1 Inequality Constraint Functions
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -88,8 +88,6 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 		final org.drip.function.definition.RdToR1[] aRdToR1InequalityConstraint)
 		throws java.lang.Exception
 	{
-		super (null);
-
 		if (null == (_rdToR1Objective = rdToR1Objective))
 			throw new java.lang.Exception ("OptimizationFramework Constructor => Invalid Inputs");
 
@@ -117,9 +115,9 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 	}
 
 	/**
-	 * Retrieve the R^d -> R^1 Objective Function
+	 * Retrieve the R^d To R^1 Objective Function
 	 * 
-	 * @return The R^d -> R^1 Objective Function
+	 * @return The R^d To R^1 Objective Function
 	 */
 
 	public org.drip.function.definition.RdToR1 objectiveFunction()
@@ -128,9 +126,9 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 	}
 
 	/**
-	 * Retrieve the Array of R^d -> R^1 Equality Constraint Functions
+	 * Retrieve the Array of R^d To R^1 Equality Constraint Functions
 	 * 
-	 * @return The Array of R^d -> R^1 Equality Constraint Functions
+	 * @return The Array of R^d To R^1 Equality Constraint Functions
 	 */
 
 	public org.drip.function.definition.RdToR1[] equalityConstraint()
@@ -139,9 +137,9 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 	}
 
 	/**
-	 * Retrieve the Array of R^d -> R^1 Inequality Constraint Functions
+	 * Retrieve the Array of R^d To R^1 Inequality Constraint Functions
 	 * 
-	 * @return The Array of R^d -> R^1 Inequality Constraint Functions
+	 * @return The Array of R^d To R^1 Inequality Constraint Functions
 	 */
 
 	public org.drip.function.definition.RdToR1[] inequalityConstraint()
@@ -196,7 +194,7 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 	/**
 	 * Indicate if the specified Fritz John Multipliers are compatible with the Optimization Framework
 	 * 
-	 * @param kktMultiplier The specified KKT Multipliers
+	 * @param fjm The specified FJM Multipliers
 	 * 
 	 * @return TRUE - The specified Fritz John Multipliers are compatible with the Optimization Framework
 	 */
@@ -855,123 +853,5 @@ public class OptimizationFramework extends org.drip.function.definition.RdToR1 {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Retrieve the Objective Function Dimension
-	 * 
-	 * @return The Objective Function Dimension
-	 */
-
-	public int objectiveFunctionDimension()
-	{
-		return _rdToR1Objective.dimension();
-	}
-
-	/**
-	 * Retrieve the Constraint Function Dimension
-	 * 
-	 * @return The Constraint Function Dimension
-	 */
-
-	public int constraintFunctionDimension()
-	{
-		return numEqualityConstraint() + numInequalityConstraint();
-	}
-
-	@Override public int dimension()
-	{
-		return objectiveFunctionDimension() + constraintFunctionDimension();
-	}
-
-	@Override public double evaluate (
-		final double[] adblVariate)
-		throws java.lang.Exception
-	{
-		double dblValue = _rdToR1Objective.evaluate (adblVariate);
-
-		int iNumEqualityConstraint = numEqualityConstraint();
-
-		int iNumInequalityConstraint = numInequalityConstraint();
-
-		for (int i = 0; i < iNumEqualityConstraint; ++i)
-			dblValue = dblValue + _aRdToR1EqualityConstraint[i].evaluate (adblVariate);
-
-		for (int i = 0; i < iNumInequalityConstraint; ++i)
-			dblValue = dblValue + _aRdToR1InequalityConstraint[i].evaluate (adblVariate);
-
-		return dblValue;
-	}
-
-	@Override public double[] jacobian (
-		final double[] adblVariate)
-	{
-		double[] adblJacobian = _rdToR1Objective.jacobian (adblVariate);
-
-		if (null == adblJacobian) return null;
-
-		int iDimension = _rdToR1Objective.dimension();
-
-		int iNumEqualityConstraint = numEqualityConstraint();
-
-		int iNumInequalityConstraint = numInequalityConstraint();
-
-		for (int i = 0; i < iNumEqualityConstraint; ++i) {
-			double[] adblConstraintJacobian = _aRdToR1EqualityConstraint[i].jacobian (adblVariate);
-
-			if (null == adblConstraintJacobian) return null;
-
-			for (int j = 0; j < iDimension; ++j)
-				adblJacobian[j] += adblConstraintJacobian[j];
-		}
-
-		for (int i = 0; i < iNumInequalityConstraint; ++i) {
-			double[] adblConstraintJacobian = _aRdToR1InequalityConstraint[i].jacobian (adblVariate);
-
-			if (null == adblConstraintJacobian) return null;
-
-			for (int j = 0; j < iDimension; ++j)
-				adblJacobian[j] += adblConstraintJacobian[j];
-		}
-
-		return adblJacobian;
-	}
-
-	@Override public double[][] hessian (
-		final double[] adblVariate)
-	{
-		double[][] aadblHessian = _rdToR1Objective.hessian (adblVariate);
-
-		if (null == aadblHessian) return null;
-
-		int iDimension = _rdToR1Objective.dimension();
-
-		int iNumEqualityConstraint = numEqualityConstraint();
-
-		int iNumInequalityConstraint = numInequalityConstraint();
-
-		for (int i = 0; i < iNumEqualityConstraint; ++i) {
-			double[][] aadblConstraintHessian = _aRdToR1EqualityConstraint[i].hessian (adblVariate);
-
-			if (null == aadblConstraintHessian) return null;
-
-			for (int j = 0; j < iDimension; ++j) {
-				for (int k = 0; k < iDimension; ++k)
-					aadblHessian[j][k] += aadblConstraintHessian[j][k];
-			}
-		}
-
-		for (int i = 0; i < iNumInequalityConstraint; ++i) {
-			double[][] aadblConstraintHessian = _aRdToR1InequalityConstraint[i].hessian (adblVariate);
-
-			if (null == aadblConstraintHessian) return null;
-
-			for (int j = 0; j < iDimension; ++j) {
-				for (int k = 0; k < iDimension; ++k)
-					aadblHessian[j][k] += aadblConstraintHessian[j][k];
-			}
-		}
-
-		return aadblHessian;
 	}
 }

@@ -65,7 +65,7 @@ package org.drip.execution.nonadaptive;
  * 		79-96.
  * 
  * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies & (4) 631-651.
+ * 		Financial Studies 7 (4) 631-651.
  * 
  * @author Lakshmi Krishnamurthy
  */
@@ -122,7 +122,7 @@ public class ContinuousCoordinatedVariationDeterministic extends
 			return null;
 
 		double dblInitialVolatility = java.lang.Double.NaN;
-		org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporary =
+		final org.drip.execution.profiletime.BackgroundParticipationRateLinear bprlTemporary =
 			(org.drip.execution.profiletime.BackgroundParticipationRateLinear) bprTemporary;
 
 		org.drip.execution.impact.TransactionFunctionLinear tflTemporaryExpectation =
@@ -171,7 +171,8 @@ public class ContinuousCoordinatedVariationDeterministic extends
 			}
 		};
 
-		org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1 (null)
+		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1
+			(null)
 		{
 			@Override public double evaluate (
 				final double dblTime)

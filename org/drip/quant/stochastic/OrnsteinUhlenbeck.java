@@ -61,7 +61,7 @@ package org.drip.quant.stochastic;
  * 		79-96.
  * 
  * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies & (4) 631-651.
+ * 		Financial Studies 7 (4) 631-651.
  * 
  * 	- Walia, N. (2006): Optimal Trading - Dynamic Stock Liquidation Strategies, Senior Thesis, Princeton
  * 		University.

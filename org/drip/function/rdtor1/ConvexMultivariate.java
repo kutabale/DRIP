@@ -48,7 +48,7 @@ package org.drip.function.rdtor1;
  */
 
 /**
- * ConvexMultivariate is a Shell Interface that "typifies" a Convex R^d -> R^1. The References are:
+ * ConvexMultivariate is a Shell Interface that "typifies" a Convex R^d To R^1. The References are:
  * 
  * 	- Boyd, S., and L. van den Berghe (2009): Convex Optimization, Cambridge University Press, Cambridge UK.
  * 

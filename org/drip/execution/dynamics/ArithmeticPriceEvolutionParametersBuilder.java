@@ -161,7 +161,7 @@ public class ArithmeticPriceEvolutionParametersBuilder {
 	/**
 	 * Construct a Arithmetic Price Evolution Parameters from Coordinated Variation Instance
 	 * 
-	 * @param r1ToR1Volatility The R^1 -> R^1 Volatility Function
+	 * @param r1ToR1Volatility The R^1 To R^1 Volatility Function
 	 * @param cv The Coordinated Volatility/Liquidity Variation
 	 * 
 	 * @return The Arithmetic Price Evolution Parameters from Coordinated Variation Instance

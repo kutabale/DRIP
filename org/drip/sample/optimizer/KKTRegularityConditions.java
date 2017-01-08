@@ -317,6 +317,19 @@ public class KKTRegularityConditions {
 			)
 		);
 
+		String[] astrSO = of.regularityQualifier (
+			fjm,
+			adblVariate
+		).strengthOrder();
+
+		System.out.println();
+
+		System.out.println ("\t||----------------------------------------------------------------------||");
+
+		System.out.println ("\t||                      KKT REGULARITY CONDITIONS                       ||");
+
+		System.out.println ("\t||----------------------------------------------------------------------||");
+
 		System.out.println ("\t|| ACTIVE SET RANK                                              : " +
 			of.activeConstraintRank (adblVariate) + "     ||"
 		);
@@ -351,5 +364,22 @@ public class KKTRegularityConditions {
 		System.out.println ("\t|| SLATER'S CONDITION CONSTRAINT QUALIFICATION                  : " +
 			of.isSCCQ (adblVariate) + " ||"
 		);
+
+		System.out.println ("\t||----------------------------------------------------------------------||");
+
+		System.out.println();
+
+		System.out.println ("\t||----------------------------------------------------------------------||");
+
+		System.out.println ("\t||                      KKT REGULARITY CONDITIONS                       ||");
+
+		System.out.println ("\t||----------------------------------------------------------------------||");
+
+		for (int i = 0; i < astrSO.length; ++i)
+			System.out.println ("\t|| " + astrSO[i]);
+
+		System.out.println ("\t||----------------------------------------------------------------------||");
+
+		System.out.println();
 	}
 }

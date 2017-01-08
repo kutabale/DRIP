@@ -549,29 +549,30 @@ public class Matrix {
 			org.drip.quant.linearalgebra.Matrix.Transpose (aadblSource) : aadblSource;
 
 		int iNumDependentRow = 0;
-		int iSize = aadblRegularizedSource.length;
+		int iProcessedRow = aadblRegularizedSource.length;
+		int iProcessedCol = aadblRegularizedSource[0].length;
 
-		if (1 == iNumRow || 1 == iNumCol) return iSize;
+		if (1 == iNumRow || 1 == iNumCol) return iProcessedRow;
 
-		for (int iScanRow = 0; iScanRow < iSize; ++iScanRow) {
-			for (int iRow = 0; iRow < iSize; ++iRow) {
+		for (int iScanRow = 0; iScanRow < iProcessedCol; ++iScanRow) {
+			for (int iRow = 0; iRow < iProcessedCol; ++iRow) {
 				if (iRow == iScanRow || 0. == aadblRegularizedSource[iRow][iScanRow]) continue;
 
 				double dblColEntryEliminatorRatio = aadblRegularizedSource[iScanRow][iScanRow] /
 					aadblRegularizedSource[iRow][iScanRow];
 
-				for (int iCol = 0; iCol < iSize; ++iCol)
+				for (int iCol = 0; iCol < iProcessedCol; ++iCol)
 					aadblRegularizedSource[iRow][iCol] = aadblRegularizedSource[iRow][iCol] *
 						dblColEntryEliminatorRatio - aadblRegularizedSource[iScanRow][iCol];
 			}
 		}
 
-		for (int iScanRow = 0; iScanRow < iSize; ++iScanRow) {
+		for (int iScanRow = 0; iScanRow < iProcessedCol; ++iScanRow) {
 			if (0. == org.drip.quant.linearalgebra.Matrix.Modulus (aadblRegularizedSource[iScanRow]))
 				++iNumDependentRow;
 		}
 
-		return iSize - iNumDependentRow;
+		return iProcessedRow - iNumDependentRow;
 	}
 
 	/**
@@ -716,7 +717,7 @@ public class Matrix {
 	 * 
 	 * @return TRUE - The Modulus of the Input Vector
 	 * 
-	 * @param java.lang.Exception Thrown if the Inputs are Invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final double Modulus (

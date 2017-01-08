@@ -110,7 +110,7 @@ public class ArithmeticPriceDynamicsSettings {
 	 * ArithmeticPriceDynamicsSettings Constructor
 	 * 
 	 * @param dblDrift The Asset Daily Arithmetic Drift
-	 * @param r1ToR1Volatility The R^1 -> R^1 Volatility Function
+	 * @param r1ToR1Volatility The R^1 To R^1 Volatility Function
 	 * @param dblSerialCorrelation The Asset Serial Correlation
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid

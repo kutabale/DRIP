@@ -14,6 +14,7 @@ org.drip.dynamics.hjm
 org.drip.dynamics.hullwhite
 org.drip.dynamics.lmm
 org.drip.dynamics.sabr
+org.drip.execution.adaptive
 org.drip.execution.athl
 org.drip.execution.bayesian
 org.drip.execution.capture
@@ -21,14 +22,18 @@ org.drip.execution.cost
 org.drip.execution.discrete
 org.drip.execution.dynamics
 org.drip.execution.evolution
-org.drip.execution.generator
+org.drip.execution.hjb
 org.drip.execution.impact
+org.drip.execution.latent
+org.drip.execution.nonadaptive
 org.drip.execution.optimum
 org.drip.execution.parameters
 org.drip.execution.principal
+org.drip.execution.profiletime
 org.drip.execution.risk
 org.drip.execution.sensitivity
 org.drip.execution.strategy
+org.drip.execution.tradingtime
 org.drip.feed.loader
 org.drip.feed.metric
 org.drip.feed.transformer
@@ -61,6 +66,9 @@ org.drip.measure.discretemarginal
 org.drip.measure.gaussian
 org.drip.measure.lebesgue
 org.drip.measure.statistics
+org.drip.optimization.constrained
+org.drip.optimization.necessary
+org.drip.optimization.regularity
 org.drip.param.config
 org.drip.param.creator
 org.drip.param.definition
@@ -101,6 +109,7 @@ org.drip.regression.spline
 org.drip.sample.algo
 org.drip.sample.alm
 org.drip.sample.almgren2003
+org.drip.sample.almgren2009
 org.drip.sample.almgren2012
 org.drip.sample.almgrenchriss
 org.drip.sample.assetallocation
@@ -150,7 +159,6 @@ org.drip.sample.hjm
 org.drip.sample.hullwhite
 org.drip.sample.idzorek
 org.drip.sample.json
-org.drip.sample.lagrangian
 org.drip.sample.lmm
 org.drip.sample.lvar
 org.drip.sample.matrix
@@ -159,6 +167,7 @@ org.drip.sample.multicurve
 org.drip.sample.numerical
 org.drip.sample.ois
 org.drip.sample.oisapi
+org.drip.sample.optimizer
 org.drip.sample.option
 org.drip.sample.overnight
 org.drip.sample.overnightfeed
@@ -234,10 +243,3 @@ org.drip.template.irs
 org.drip.template.state
 org.drip.template.statebump
 org.drip.template.ust
-org.drip.zen.algorithm
-org.drip.zen.equation
-org.drip.zen.geometry
-org.drip.zen.grid
-org.drip.zen.juice
-org.drip.zen.numbers
-org.drip.zen.text

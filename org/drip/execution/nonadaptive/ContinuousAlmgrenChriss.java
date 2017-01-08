@@ -169,7 +169,8 @@ public class ContinuousAlmgrenChriss extends org.drip.execution.nonadaptive.Stat
 			}
 		};
 
-		org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1 (null)
+		final org.drip.function.definition.R1ToR1 r1ToR1TradeRate = new org.drip.function.definition.R1ToR1
+			(null)
 		{
 			@Override public double evaluate (
 				final double dblTime)

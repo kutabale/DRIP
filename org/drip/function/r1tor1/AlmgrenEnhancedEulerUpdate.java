@@ -48,7 +48,7 @@ package org.drip.function.r1tor1;
  */
 
 /**
- * AlmgrenEnhancedEulerUpdate is a R^1 -> R^1 Function that is used in Almgren (2009, 2012) to illustrate the
+ * AlmgrenEnhancedEulerUpdate is a R^1 To R^1 Function that is used in Almgren (2009, 2012) to illustrate the
  * 	Construction of the Enhanced Euler Update Scheme. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3

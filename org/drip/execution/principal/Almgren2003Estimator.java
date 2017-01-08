@@ -73,18 +73,18 @@ public class Almgren2003Estimator extends org.drip.execution.principal.GrossProf
 	/**
 	 * Almgren2003Estimator Constructor
 	 * 
-	 * @param a2003tt The Almgren 2003 Trading Trajectory Instance
-	 * @param a2003p The Almgren 2003 Parameters Instance
+	 * @param pic The Power Continuous Market Impact Trajectory
+	 * @param lpep The Linear Permanent Expectation Paremeter
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public Almgren2003Estimator (
-		final org.drip.execution.optimum.PowerImpactContinuous a2003tt,
+		final org.drip.execution.optimum.PowerImpactContinuous pic,
 		final org.drip.execution.dynamics.LinearPermanentExpectationParameters lpep)
 		throws java.lang.Exception
 	{
-		super (a2003tt);
+		super (pic);
 
 		if (null == (_lpep = lpep))
 			throw new java.lang.Exception ("Almgren2003Estimator Constructor => Invalid Inputs");
