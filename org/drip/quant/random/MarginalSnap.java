@@ -47,47 +47,53 @@ package org.drip.quant.random;
  */
 
 /**
- * ProcessMarginal exposes the Functionality that guides the Single Factor Random Process Variable Evolution.
+ * MarginalSnap holds the Snapshot values of the Realized Random Variable and Time.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class ProcessMarginal {
+public class MarginalSnap {
+	private double _dblTime = java.lang.Double.NaN;
+	private double _dblValue = java.lang.Double.NaN;
 
 	/**
-	 * Generate the Adjacent Increment from the specified Random Variate
+	 * MarginalSnap Constructor
 	 * 
-	 * @param ms The Random Variate Marginal Snap
-	 * @param dblRandomUnitRealization The Random Stochastic Realization Variate Unit
-	 * @param dblTimeIncrement The Time Increment Evolution Unit
+	 * @param dblTime The Time Instant
+	 * @param dblValue The Random Variable Value
 	 * 
-	 * @return The Adjacent Increment
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract org.drip.quant.random.GenericIncrement increment (
-		final org.drip.quant.random.MarginalSnap ms,
-		final double dblRandomUnitRealization,
-		final double dblTimeIncrement);
-
-	/**
-	 * Generate the Adjacent Increment from the specified Random Variate and a Weiner Driver
-	 * 
-	 * @param ms The Random Variate Marginal Snap
-	 * @param dblTimeIncrement The Time Increment Evolution Unit
-	 * 
-	 * @return The Adjacent Increment
-	 */
-
-	public org.drip.quant.random.GenericIncrement weinerIncrement (
-		final org.drip.quant.random.MarginalSnap ms,
-		final double dblTimeIncrement)
+	public MarginalSnap (
+		final double dblTime,
+		final double dblValue)
+		throws java.lang.Exception
 	{
-		try {
-			return increment (ms, org.drip.measure.gaussian.NormalQuadrature.Random(), dblTimeIncrement);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
+			throw new java.lang.Exception ("MarginalSnap Constructor => Invalid Inputs");
+	}
 
-		return null;
+	/**
+	 * Retrieve the Evolution Time Instant
+	 * 
+	 * @return The Evolution Time Instant
+	 */
+
+	public double time()
+	{
+		return _dblTime;
+	}
+
+	/**
+	 * Retrieve the Realized Random Value
+	 * 
+	 * @return The Realized Random Value
+	 */
+
+	public double value()
+	{
+		return _dblValue;
 	}
 }

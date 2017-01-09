@@ -55,30 +55,76 @@ package org.drip.quant.random;
 public class ProcessMarginalLogarithmic extends org.drip.quant.random.ProcessMarginal {
 	private double _dblDrift = java.lang.Double.NaN;
 	private double _dblVolatility = java.lang.Double.NaN;
+	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevDrift = null;
+	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
 	/**
-	 * ProcessMarginalLogarithmic Constructor
+	 * Generate a Standard Instance of ProcessMarginalLogarithmic
 	 * 
 	 * @param dblDrift The Drift
 	 * @param dblVolatility The Volatility
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Standard Instance of ProcessMarginalLogarithmic
 	 */
 
-	public ProcessMarginalLogarithmic (
+	public static final ProcessMarginalLogarithmic Standard (
 		final double dblDrift,
 		final double dblVolatility)
+	{
+		try {
+			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.quant.random.MarginalSnap ms)
+					throws java.lang.Exception
+				{
+					if (null == ms)
+						throw new java.lang.Exception
+							("ProcessMarginalLogarithmic::DriftLDEV::value => Invalid Inputs");
+
+					return ms.value() * dblDrift;
+				}
+			};
+
+			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.quant.random.MarginalSnap ms)
+					throws java.lang.Exception
+				{
+					if (null == ms)
+						throw new java.lang.Exception
+							("ProcessMarginalLogarithmic::VolatilityLDEV::value => Invalis Inputs");
+
+					return ms.value() * dblVolatility;
+				}
+			};
+
+			return new ProcessMarginalLogarithmic (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private ProcessMarginalLogarithmic (
+		final double dblDrift,
+		final double dblVolatility,
+		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift,
+		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
+			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility) || null == (_ldevDrift
+				= ldevDrift) || null == (_ldevVolatility = ldevVolatility))
 			throw new java.lang.Exception ("ProcessMarginalLogarithmic Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Drift of the Log Process
+	 * Retrieve the Drift
 	 * 
-	 * @return Drift of the Log Process
+	 * @return The Drift
 	 */
 
 	public double drift()
@@ -87,9 +133,9 @@ public class ProcessMarginalLogarithmic extends org.drip.quant.random.ProcessMar
 	}
 
 	/**
-	 * Retrieve the Volatility of the Log Process
+	 * Retrieve the Volatility
 	 * 
-	 * @return Volatility of the Log Process
+	 * @return The Volatility
 	 */
 
 	public double volatility()
@@ -97,20 +143,41 @@ public class ProcessMarginalLogarithmic extends org.drip.quant.random.ProcessMar
 		return _dblVolatility;
 	}
 
+	/**
+	 * Retrieve the LDEV Drift Function of the Log Process
+	 * 
+	 * @return The LDEV Drift Function of the Log Process
+	 */
+
+	public org.drip.quant.random.LocalDeterministicEvolutionFunction driftLDEV()
+	{
+		return _ldevDrift;
+	}
+
+	/**
+	 * Retrieve the LDEV Volatility Function of the Log Process
+	 * 
+	 * @return The LDEV Volatility Function of the Log Process
+	 */
+
+	public org.drip.quant.random.LocalDeterministicEvolutionFunction volatilityLDEV()
+	{
+		return _ldevVolatility;
+	}
+
 	@Override public org.drip.quant.random.GenericIncrement increment (
-		final double dblRandomVariate,
+		final org.drip.quant.random.MarginalSnap ms,
 		final double dblRandomUnitRealization,
 		final double dblTimeIncrement)
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblRandomVariate) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblRandomUnitRealization) ||
-				!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
+		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblRandomUnitRealization) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
 			return null;
 
 		try {
-			return new org.drip.quant.random.GenericIncrement (dblRandomVariate * _dblDrift *
-				dblTimeIncrement, dblRandomVariate * _dblVolatility * dblRandomUnitRealization *
-					java.lang.Math.sqrt (dblTimeIncrement), dblRandomUnitRealization);
+			return new org.drip.quant.random.GenericIncrement (_ldevDrift.value (ms) * dblTimeIncrement,
+				_ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
+					(dblTimeIncrement), dblRandomUnitRealization);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

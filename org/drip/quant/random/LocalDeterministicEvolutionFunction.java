@@ -47,47 +47,25 @@ package org.drip.quant.random;
  */
 
 /**
- * ProcessMarginal exposes the Functionality that guides the Single Factor Random Process Variable Evolution.
+ * LocalDeterministicEvolutionFunction exposes the Random Evolution's Local/Deterministic Drift/Volatility
+ * 	Function.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class ProcessMarginal {
+public interface LocalDeterministicEvolutionFunction {
 
 	/**
-	 * Generate the Adjacent Increment from the specified Random Variate
+	 * Determine the Value of the Evolution Function from the given Random Variate and Time
 	 * 
 	 * @param ms The Random Variate Marginal Snap
-	 * @param dblRandomUnitRealization The Random Stochastic Realization Variate Unit
-	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Adjacent Increment
+	 * @return Value of the Evolution Function
+	 * 
+	 * @throws java.lang.Exception Thworn if the Value cannot be evaluated
 	 */
 
-	public abstract org.drip.quant.random.GenericIncrement increment (
-		final org.drip.quant.random.MarginalSnap ms,
-		final double dblRandomUnitRealization,
-		final double dblTimeIncrement);
-
-	/**
-	 * Generate the Adjacent Increment from the specified Random Variate and a Weiner Driver
-	 * 
-	 * @param ms The Random Variate Marginal Snap
-	 * @param dblTimeIncrement The Time Increment Evolution Unit
-	 * 
-	 * @return The Adjacent Increment
-	 */
-
-	public org.drip.quant.random.GenericIncrement weinerIncrement (
-		final org.drip.quant.random.MarginalSnap ms,
-		final double dblTimeIncrement)
-	{
-		try {
-			return increment (ms, org.drip.measure.gaussian.NormalQuadrature.Random(), dblTimeIncrement);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
+	public abstract double value (
+		final org.drip.quant.random.MarginalSnap ms)
+		throws java.lang.Exception;
 }

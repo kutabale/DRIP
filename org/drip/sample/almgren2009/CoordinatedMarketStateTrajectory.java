@@ -4,6 +4,7 @@ package org.drip.sample.almgren2009;
 import org.drip.execution.tradingtime.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.random.GenericIncrement;
+import org.drip.quant.random.MarginalSnap;
 import org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck;
 import org.drip.service.env.EnvManager;
 
@@ -91,6 +92,7 @@ public class CoordinatedMarketStateTrajectory {
 		double dblReferenceVolatility = 1.0;
 		double dblInitialMarketState = -0.5;
 
+		double dblTime = 0.;
 		double dblMarketState = dblInitialMarketState;
 		double dblTimeInterval = dblSimulationTime / iNumSimulation;
 
@@ -139,9 +141,14 @@ public class CoordinatedMarketStateTrajectory {
 
 		for (int i = 0; i < iNumSimulation; ++i) {
 			GenericIncrement gi = oup1D.weinerIncrement (
-				dblMarketState,
+				new MarginalSnap (
+					dblTime,
+					dblMarketState
+				),
 				dblTimeInterval
 			);
+
+			dblTime += dblTimeInterval;
 
 			dblMarketState += gi.deterministic() + gi.stochastic();
 

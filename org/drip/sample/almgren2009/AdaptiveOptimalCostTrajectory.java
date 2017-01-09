@@ -83,6 +83,7 @@ public class AdaptiveOptimalCostTrajectory {
 	{
 		EnvManager.InitEnv ("");
 
+		double dblTime = 0.;
 		double dblBurstiness = 1.;
 		double dblDimensionlessRiskAversion = 0.1;
 		double dblRelaxationTime = 1.;
@@ -103,9 +104,14 @@ public class AdaptiveOptimalCostTrajectory {
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
 			GenericIncrement gi = oup1D.weinerIncrement (
-				aMSS[i].common(),
+				new MarginalSnap (
+					dblTime,
+					aMSS[i].common()
+				),
 				dblTimeInterval
 			);
+
+			dblTime += dblTimeInterval;
 
 			aMSS[i + 1] = new MarketStateSystemic (aMSS[i].common() + gi.deterministic() + gi.stochastic());
 		}

@@ -96,6 +96,7 @@ public class OrnsteinUhlenbeckSequence {
 			dblGenerationInterval || 1 >= iCount)
 			return null;
 
+		double dblTime = 0.;
 		org.drip.execution.latent.MarketStateSystemic[] aMSS = new
 			org.drip.execution.latent.MarketStateSystemic[iCount];
 
@@ -103,11 +104,13 @@ public class OrnsteinUhlenbeckSequence {
 			aMSS[0] = new org.drip.execution.latent.MarketStateSystemic (dblInitialMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.quant.random.GenericIncrement gi = oup1D.weinerIncrement (aMSS[i].common(),
-					dblGenerationInterval);
+				org.drip.quant.random.GenericIncrement gi = oup1D.weinerIncrement (new
+					org.drip.quant.random.MarginalSnap (dblTime, aMSS[i].common()), dblGenerationInterval);
 
 				aMSS[i + 1] = new org.drip.execution.latent.MarketStateSystemic (aMSS[i].common() +
 					gi.deterministic() + gi.stochastic());
+
+				dblTime += dblGenerationInterval;
 			}
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
