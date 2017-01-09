@@ -1,5 +1,5 @@
 
-package org.drip.quant.stochastic;
+package org.drip.quant.random;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,8 @@ package org.drip.quant.stochastic;
  */
 
 /**
- * OrnsteinUhlenbeckProcess1D guides the Random Variable Evolution according to 1D Ornstein-Uhlenbeck Mean
- *  Reverting Process. The References are:
+ * ProcessMarginalOrnsteinUhlenbeck guides the Random Variable Evolution according to 1D Ornstein-Uhlenbeck
+ *  Mean Reverting Process. The References are:
  * 
  * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
@@ -69,26 +69,27 @@ package org.drip.quant.stochastic;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OrnsteinUhlenbeckProcess1D implements org.drip.quant.stochastic.OrnsteinUhlenbeck {
+public class ProcessMarginalOrnsteinUhlenbeck extends org.drip.quant.random.ProcessMarginal implements
+	org.drip.quant.random.OrnsteinUhlenbeck {
 	private double _dblBurstiness = java.lang.Double.NaN;
 	private double _dblRelaxationTime = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Zero-Mean Instance of OrnsteinUhlenbeckProcess1D
+	 * Construct a Zero-Mean Instance of ProcessMarginalOrnsteinUhlenbeck
 	 * 
 	 * @param dblBurstiness The Burstiness Parameter
 	 * @param dblRelaxationTime The Relaxation Time
 	 * 
-	 * @return The Zero-Mean Instance of OrnsteinUhlenbeckProcess1D
+	 * @return The Zero-Mean Instance of ProcessMarginalOrnsteinUhlenbeck
 	 */
 
-	public static final OrnsteinUhlenbeckProcess1D ZeroMean (
+	public static final ProcessMarginalOrnsteinUhlenbeck ZeroMean (
 		final double dblBurstiness,
 		final double dblRelaxationTime)
 	{
 		try {
-			return new OrnsteinUhlenbeckProcess1D (0., dblBurstiness, dblRelaxationTime);
+			return new ProcessMarginalOrnsteinUhlenbeck (0., dblBurstiness, dblRelaxationTime);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -97,7 +98,7 @@ public class OrnsteinUhlenbeckProcess1D implements org.drip.quant.stochastic.Orn
 	}
 
 	/**
-	 * OrnsteinUhlenbeckProcess1D Constructor
+	 * ProcessMarginalOrnsteinUhlenbeck Constructor
 	 * 
 	 * @param dblMeanReversionLevel The Mean Reversion Level
 	 * @param dblBurstiness The Burstiness Parameter
@@ -106,7 +107,7 @@ public class OrnsteinUhlenbeckProcess1D implements org.drip.quant.stochastic.Orn
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public OrnsteinUhlenbeckProcess1D (
+	public ProcessMarginalOrnsteinUhlenbeck (
 		final double dblMeanReversionLevel,
 		final double dblBurstiness,
 		final double dblRelaxationTime)
@@ -116,7 +117,7 @@ public class OrnsteinUhlenbeckProcess1D implements org.drip.quant.stochastic.Orn
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) || 0. >=
 				_dblBurstiness || !org.drip.quant.common.NumberUtil.IsValid (_dblRelaxationTime =
 					dblRelaxationTime) || 0. >= _dblRelaxationTime)
-			throw new java.lang.Exception ("OrnsteinUhlenbeckProcess1D Constructor - Invalid Inputs");
+			throw new java.lang.Exception ("ProcessMarginalOrnsteinUhlenbeck Constructor - Invalid Inputs");
 	}
 
 	/**
@@ -152,53 +153,20 @@ public class OrnsteinUhlenbeckProcess1D implements org.drip.quant.stochastic.Orn
 		return _dblRelaxationTime;
 	}
 
-	/**
-	 * Generate the Adjacent Increment from the specified Ornstein Uhlenbeck Random Variate
-	 * 
-	 * @param dblOrnsteinUhlenbeckVariate The Ornstein Uhlenbeck Random Variate
-	 * @param dblRandomRealization The Random Stochastic Realization Variate
-	 * @param dblTimeIncrement The Time Increment Evolution Unit
-	 * 
-	 * @return The Adjacent Ornstein Uhlenbeck Increment
-	 */
-
-	public org.drip.quant.stochastic.GenericIncrement increment (
-		final double dblOrnsteinUhlenbeckVariate,
-		final double dblRandomRealization,
+	@Override public org.drip.quant.random.GenericIncrement increment (
+		final double dblRandomVariate,
+		final double dblRandomUnitRealization,
 		final double dblTimeIncrement)
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblOrnsteinUhlenbeckVariate) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblRandomRealization) ||
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblRandomVariate) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblRandomUnitRealization) ||
 				!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
 			return null;
 
 		try {
-			return new org.drip.quant.stochastic.GenericIncrement (-1. * dblOrnsteinUhlenbeckVariate /
-				_dblRelaxationTime * dblTimeIncrement, _dblBurstiness * dblRandomRealization *
-					java.lang.Math.sqrt (dblTimeIncrement / _dblRelaxationTime), dblRandomRealization);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * Generate the Adjacent Increment from the specified Ornstein Uhlenbeck Variate and a Weiner Driver
-	 * 
-	 * @param dblOrnsteinUhlenbeckVariate The Ornstein Uhlenbeck Random Variate
-	 * @param dblTimeIncrement The Time Increment Evolution Unit
-	 * 
-	 * @return The Adjacent Ornstein Uhlenbeck Increment
-	 */
-
-	public org.drip.quant.stochastic.GenericIncrement weinerIncrement (
-		final double dblOrnsteinUhlenbeckVariate,
-		final double dblTimeIncrement)
-	{
-		try {
-			return increment (dblOrnsteinUhlenbeckVariate,
-				org.drip.measure.gaussian.NormalQuadrature.Random(), dblTimeIncrement);
+			return new org.drip.quant.random.GenericIncrement (-1. * dblRandomVariate /
+				_dblRelaxationTime * dblTimeIncrement, _dblBurstiness * dblRandomUnitRealization *
+					java.lang.Math.sqrt (dblTimeIncrement / _dblRelaxationTime), dblRandomUnitRealization);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

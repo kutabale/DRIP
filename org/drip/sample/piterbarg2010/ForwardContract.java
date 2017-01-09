@@ -2,6 +2,7 @@
 package org.drip.sample.piterbarg2010;
 
 import org.drip.analytics.date.*;
+import org.drip.analytics.support.Helper;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
@@ -329,14 +330,42 @@ public class ForwardContract {
 
 		System.out.println();
 
+		System.out.println ("\t||-----------------------------------------------||");
+
+		System.out.println ("\t||     FORWARD CONTRACT CONVEXITY ADJUSTMENT     ||");
+
+		System.out.println ("\t||-----------------------------------------------||");
+
+		System.out.println ("\t|| L -> R:                                       ||");
+
+		System.out.println ("\t||        - Date                                 ||");
+
+		System.out.println ("\t||        - Spread Numeraire                     ||");
+
+		System.out.println ("\t||        - Convexity Adjustment                 ||");
+
+		System.out.println ("\t||        - CSA-Funding Convexity Adjustment     ||");
+
+		System.out.println ("\t||-----------------------------------------------||");
+
 		for (String strTenor : astrTenor) {
 			JulianDate dt = dtSpot.addTenor (strTenor);
 
+			double dblTenorToYF = Helper.TenorToYearFraction (strTenor);
+
+			double dblSpreadNumeraire = dcFunding.df (dt) / dcOvernight.df (dt);
+
+			double dblConvexityAdjustment = dblCSANonCSASpreadCorrelation * dblCSANonCSASpreadVolatility * dblCSAVolatility;
+
 			System.out.println ("\t|| " + dt + " | " +
-				FormatUtil.FormatDouble (dblATMForward * dcOvernight.df (dt), 2, 2, 1.) + " | " +
-				FormatUtil.FormatDouble (dblATMForward * dcFunding.df (dt), 2, 2, 1.) + " ||"
+				FormatUtil.FormatDouble (dblSpreadNumeraire, 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (dblConvexityAdjustment * dblTenorToYF, 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (dblConvexityAdjustment * dblATMForward * dblSpreadNumeraire * dblTenorToYF, 1, 6, 1.) + " ||"
 			);
 		}
+
+		System.out.println ("\t||-----------------------------------------------||");
+
 		System.out.println();
 	}
 }

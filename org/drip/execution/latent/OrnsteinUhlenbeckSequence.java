@@ -73,7 +73,7 @@ public class OrnsteinUhlenbeckSequence {
 	private int _iCount = 0;
 	private org.drip.execution.latent.MarketState[] _aMS = null;
 	private double _dblGenerationInterval = java.lang.Double.NaN;
-	private org.drip.quant.stochastic.OrnsteinUhlenbeck _ou = null;
+	private org.drip.quant.random.OrnsteinUhlenbeck _ou = null;
 
 	/**
 	 * Construct a Standard Systemic Instance of OrnsteinUhlenbeckSequence
@@ -87,7 +87,7 @@ public class OrnsteinUhlenbeckSequence {
 	 */
 
 	public static final OrnsteinUhlenbeckSequence Systemic (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1D,
+		final org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck oup1D,
 		final double dblGenerationInterval,
 		final double dblInitialMarketState,
 		final int iCount)
@@ -103,7 +103,7 @@ public class OrnsteinUhlenbeckSequence {
 			aMSS[0] = new org.drip.execution.latent.MarketStateSystemic (dblInitialMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.quant.stochastic.GenericIncrement gi = oup1D.weinerIncrement (aMSS[i].common(),
+				org.drip.quant.random.GenericIncrement gi = oup1D.weinerIncrement (aMSS[i].common(),
 					dblGenerationInterval);
 
 				aMSS[i + 1] = new org.drip.execution.latent.MarketStateSystemic (aMSS[i].common() +
@@ -131,7 +131,7 @@ public class OrnsteinUhlenbeckSequence {
 	 */
 
 	public static final OrnsteinUhlenbeckSequence Correlated (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess2D oup2D,
+		final org.drip.quant.random.OrnsteinUhlenbeckProcess2D oup2D,
 		final double dblGenerationInterval,
 		final double dblInitialLiquidityMarketState,
 		final double dblInitialVolatilityMarketState,
@@ -149,7 +149,7 @@ public class OrnsteinUhlenbeckSequence {
 				dblInitialVolatilityMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.quant.stochastic.GenericIncrement[] aGI = oup2D.weinerIncrement
+				org.drip.quant.random.GenericIncrement[] aGI = oup2D.weinerIncrement
 					(aMSC[i].realization(), dblGenerationInterval);
 
 				if (null == aGI || 2 != aGI.length) return null;
@@ -168,7 +168,7 @@ public class OrnsteinUhlenbeckSequence {
 	}
 
 	private OrnsteinUhlenbeckSequence (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeck ou,
+		final org.drip.quant.random.OrnsteinUhlenbeck ou,
 		final org.drip.execution.latent.MarketState[] aMS,
 		final double dblGenerationInterval)
 	{
@@ -217,7 +217,7 @@ public class OrnsteinUhlenbeckSequence {
 	 * @return The Ornstein-Uhlenbeck Generator Scheme Parameters
 	 */
 
-	public org.drip.quant.stochastic.OrnsteinUhlenbeck scheme()
+	public org.drip.quant.random.OrnsteinUhlenbeck scheme()
 	{
 		return _ou;
 	}

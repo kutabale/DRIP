@@ -83,7 +83,7 @@ public class NonDimensionalCostEvolverSystemic extends org.drip.execution.hjb.No
 	 */
 
 	public static final NonDimensionalCostEvolverSystemic Standard (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeck ou)
+		final org.drip.quant.random.OrnsteinUhlenbeck ou)
 	{
 		try {
 			return new NonDimensionalCostEvolverSystemic (ou,
@@ -127,7 +127,7 @@ public class NonDimensionalCostEvolverSystemic extends org.drip.execution.hjb.No
 	 */
 
 	public NonDimensionalCostEvolverSystemic (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeck ou,
+		final org.drip.quant.random.OrnsteinUhlenbeck ou,
 		final double dblAsymptoticEulerUrgencyThreshold,
 		final boolean bAsymptoticEnhancedEulerCorrection)
 		throws java.lang.Exception

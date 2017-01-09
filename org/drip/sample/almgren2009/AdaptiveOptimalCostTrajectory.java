@@ -4,7 +4,7 @@ package org.drip.sample.almgren2009;
 import org.drip.execution.hjb.*;
 import org.drip.execution.latent.MarketStateSystemic;
 import org.drip.quant.common.FormatUtil;
-import org.drip.quant.stochastic.*;
+import org.drip.quant.random.*;
 import org.drip.service.env.EnvManager;
 
 /*
@@ -96,7 +96,7 @@ public class AdaptiveOptimalCostTrajectory {
 
 		aMSS[0] = new MarketStateSystemic (dblInitialMarketState);
 
-		OrnsteinUhlenbeckProcess1D oup1D = OrnsteinUhlenbeckProcess1D.ZeroMean (
+		ProcessMarginalOrnsteinUhlenbeck oup1D = ProcessMarginalOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);

@@ -1,5 +1,5 @@
 
-package org.drip.quant.stochastic;
+package org.drip.quant.random;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -69,10 +69,10 @@ package org.drip.quant.stochastic;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.stochastic.OrnsteinUhlenbeck {
+public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.random.OrnsteinUhlenbeck {
 	private double _dblCorrelation = java.lang.Double.NaN;
-	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D _oupDerived = null;
-	private org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D _oupReference = null;
+	private org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck _oupDerived = null;
+	private org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck _oupReference = null;
 
 	/**
 	 * OrnsteinUhlenbeckProcess2D Constructor
@@ -85,8 +85,8 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.stochastic.Orn
 	 */
 
 	public OrnsteinUhlenbeckProcess2D (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oupReference,
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oupDerived,
+		final org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck oupReference,
+		final org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck oupDerived,
 		final double dblCorrelation)
 		throws java.lang.Exception
 	{
@@ -102,7 +102,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.stochastic.Orn
 	 * @return The Reference 1D Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D reference()
+	public org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck reference()
 	{
 		return _oupReference;
 	}
@@ -113,7 +113,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.stochastic.Orn
 	 * @return The Derived 1D Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D derived()
+	public org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck derived()
 	{
 		return _oupDerived;
 	}
@@ -139,7 +139,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.stochastic.Orn
 	 * @return The Adjacent Ornstein Uhlenbeck Increment Set
 	 */
 
-	public org.drip.quant.stochastic.GenericIncrement[] increment (
+	public org.drip.quant.random.GenericIncrement[] increment (
 		final double[] adblOrnsteinUhlenbeckVariate,
 		final double[] adblRandomRealization,
 		final double dblTimeIncrement)
@@ -156,13 +156,13 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.stochastic.Orn
 		double dblRelaxationTime1 = _oupDerived.relaxationTime();
 
 		try {
-			return new org.drip.quant.stochastic.GenericIncrement[] {
-				new org.drip.quant.stochastic.GenericIncrement (
+			return new org.drip.quant.random.GenericIncrement[] {
+				new org.drip.quant.random.GenericIncrement (
 					-1. * adblOrnsteinUhlenbeckVariate[0] / dblRelaxationTime0 * dblTimeIncrement,
 					_oupReference.burstiness() * adblRandomRealization[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
 					adblRandomRealization[0]
 				),
-				new org.drip.quant.stochastic.GenericIncrement (
+				new org.drip.quant.random.GenericIncrement (
 					-1. * adblOrnsteinUhlenbeckVariate[1] / dblRelaxationTime1 * dblTimeIncrement,
 					_oupDerived.burstiness() * adblRandomRealization[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
 					adblRandomRealization[1]
@@ -184,7 +184,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.quant.stochastic.Orn
 	 * @return The Weiner Based Increment Sequence from the Current Ornstein Uhlenbeck Random Variate
 	 */
 
-	public org.drip.quant.stochastic.GenericIncrement[] weinerIncrement (
+	public org.drip.quant.random.GenericIncrement[] weinerIncrement (
 		final double[] adblOrnsteinUhlenbeckVariate,
 		final double dblTimeIncrement)
 	{

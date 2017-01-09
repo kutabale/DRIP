@@ -8,7 +8,7 @@ import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
 import org.drip.quant.common.FormatUtil;
-import org.drip.quant.stochastic.*;
+import org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck;
 import org.drip.service.env.EnvManager;
 
 /*
@@ -118,7 +118,7 @@ public class StaticOptimalTrajectoryTradeRate {
 			dblReferenceLiquidity
 		);
 
-		OrnsteinUhlenbeckProcess1D oup1D = OrnsteinUhlenbeckProcess1D.ZeroMean (
+		ProcessMarginalOrnsteinUhlenbeck oup1D = ProcessMarginalOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);

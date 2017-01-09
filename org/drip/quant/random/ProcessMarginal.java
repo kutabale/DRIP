@@ -1,5 +1,5 @@
 
-package org.drip.quant.stochastic;
+package org.drip.quant.random;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,7 +7,6 @@ package org.drip.quant.stochastic;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -48,50 +47,48 @@ package org.drip.quant.stochastic;
  */
 
 /**
- * OrnsteinUhlenbeck Interface exposes the Reference Parameter Scales the guide the Random Variable Evolution
- *  according to Ornstein-Uhlenbeck Mean Reverting Process. The References are:
- * 
- * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
- * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
- *
- * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
- * 		Financial Mathematics  3 (1) 163-181.
- * 
- * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
- * 		79-96.
- * 
- * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies 7 (4) 631-651.
- * 
- * 	- Walia, N. (2006): Optimal Trading - Dynamic Stock Liquidation Strategies, Senior Thesis, Princeton
- * 		University.
+ * ProcessMarginal exposes the Functionality that guides the Single Factor Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public interface OrnsteinUhlenbeck {
+public abstract class ProcessMarginal {
 
 	/**
-	 * Retrieve the Reference Relaxation Time Scale
+	 * Generate the Adjacent Increment from the specified Random Variate
 	 * 
-	 * @return The Reference Relaxation Time Scale
+	 * @param dblRandomVariate The Random Variate
+	 * @param dblRandomUnitRealization The Random Stochastic Realization Variate Unit
+	 * @param dblTimeIncrement The Time Increment Evolution Unit
+	 * 
+	 * @return The Adjacent Increment
 	 */
 
-	public abstract double referenceRelaxationTime();
+	public abstract org.drip.quant.random.GenericIncrement increment (
+		final double dblRandomVariate,
+		final double dblRandomUnitRealization,
+		final double dblTimeIncrement);
 
 	/**
-	 * Retrieve the Reference Burstiness Scale
+	 * Generate the Adjacent Increment from the specified Random Variate and a Weiner Driver
 	 * 
-	 * @return The Reference Burstiness Scale
+	 * @param dblRandomVariate The Random Variate
+	 * @param dblTimeIncrement The Time Increment Evolution Unit
+	 * 
+	 * @return The Adjacent Increment
 	 */
 
-	public abstract double referenceBurstiness();
+	public org.drip.quant.random.GenericIncrement weinerIncrement (
+		final double dblRandomVariate,
+		final double dblTimeIncrement)
+	{
+		try {
+			return increment (dblRandomVariate, org.drip.measure.gaussian.NormalQuadrature.Random(),
+				dblTimeIncrement);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
 
-	/**
-	 * Retrieve the Reference Mean Reversion Level Scale
-	 * 
-	 * @return The Reference Mean Reversion Level Scale
-	 */
-
-	public abstract double referenceMeanReversionLevel();
+		return null;
+	}
 }

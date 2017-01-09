@@ -3,7 +3,8 @@ package org.drip.sample.almgren2009;
 
 import org.drip.execution.tradingtime.*;
 import org.drip.quant.common.FormatUtil;
-import org.drip.quant.stochastic.*;
+import org.drip.quant.random.GenericIncrement;
+import org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck;
 import org.drip.service.env.EnvManager;
 
 /*
@@ -93,7 +94,7 @@ public class CoordinatedMarketStateTrajectory {
 		double dblMarketState = dblInitialMarketState;
 		double dblTimeInterval = dblSimulationTime / iNumSimulation;
 
-		OrnsteinUhlenbeckProcess1D oup1D = OrnsteinUhlenbeckProcess1D.ZeroMean (
+		ProcessMarginalOrnsteinUhlenbeck oup1D = ProcessMarginalOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);

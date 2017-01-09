@@ -84,12 +84,12 @@ public class NonDimensionalCostEvolverCorrelated extends
 		org.drip.execution.hjb.NonDimensionalCostCorrelated ndcc =
 			(org.drip.execution.hjb.NonDimensionalCostCorrelated) ndc;
 
-		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess2D oup2D =
-			(org.drip.quant.stochastic.OrnsteinUhlenbeckProcess2D) ornsteinUnlenbeckProcess();
+		org.drip.quant.random.OrnsteinUhlenbeckProcess2D oup2D =
+			(org.drip.quant.random.OrnsteinUhlenbeckProcess2D) ornsteinUnlenbeckProcess();
 
-		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1DLiquidity = oup2D.reference();
+		org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck oup1DLiquidity = oup2D.reference();
 
-		org.drip.quant.stochastic.OrnsteinUhlenbeckProcess1D oup1DVolatility = oup2D.derived();
+		org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck oup1DVolatility = oup2D.derived();
 
 		double dblVolatilityMarketState = ms.volatility() + adblMarketStateTweak[1];
 
@@ -126,7 +126,7 @@ public class NonDimensionalCostEvolverCorrelated extends
 	 */
 
 	public NonDimensionalCostEvolverCorrelated (
-		final org.drip.quant.stochastic.OrnsteinUhlenbeckProcess2D oup2D,
+		final org.drip.quant.random.OrnsteinUhlenbeckProcess2D oup2D,
 		final double dblAsymptoticEulerUrgencyThreshold,
 		final boolean bAsymptoticEnhancedEulerCorrection)
 		throws java.lang.Exception

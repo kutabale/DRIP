@@ -74,20 +74,23 @@ public abstract class R1 {
 		throws java.lang.Exception;
 
 	/**
-	 * Compute the incremental under the distribution between the 2 variates
+	 * Compute the Incremental under the Distribution between the 2 variates
 	 * 
 	 * @param dblXLeft Left Variate to which the cumulative is to be computed
 	 * @param dblXRight Right Variate to which the cumulative is to be computed
 	 * 
-	 * @return The incremental
+	 * @return The Incremental under the Distribution between the 2 variates
 	 * 
 	 * @throws java.lang.Exception Thrown if the inputs are invalid
 	 */
 
-	public abstract double incremental (
+	public double incremental (
 		final double dblXLeft,
 		final double dblXRight)
-		throws java.lang.Exception;
+		throws java.lang.Exception
+	{
+		return cumulative (dblXRight) - cumulative (dblXLeft);
+	}
 
 	/**
 	 * Compute the inverse cumulative under the distribution corresponding to the given value

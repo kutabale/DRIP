@@ -1,5 +1,5 @@
 
-package org.drip.execution.hjb;
+package org.drip.quant.random;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,9 +48,7 @@ package org.drip.execution.hjb;
  */
 
 /**
- * NonDimensionalCostEvolver exposes the HJB-based Single Step Optimal Trajectory Cost Step Evolver using the
- *  Variants of the Coordinated Variation Version of the Stochastic Volatility and the Transaction Function
- *  arising from the Realization of the Market State Variable as described in the "Trading Time" Model. The
+ * GenericIncrement implements the Deterministic and the Stochastic Components of a Random Increment. The
  *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
@@ -71,82 +69,63 @@ package org.drip.execution.hjb;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class NonDimensionalCostEvolver {
-	protected static final double SINGULAR_URGENCY_THRESHOLD = 50.;
+public class GenericIncrement {
+	private double _dblWander = java.lang.Double.NaN;
+	private double _dblStochastic = java.lang.Double.NaN;
+	private double _dblDeterministic = java.lang.Double.NaN;
 
-	private boolean _bAsymptoticEnhancedEulerCorrection = false;
-	private org.drip.quant.random.OrnsteinUhlenbeck _ou = null;
-	private double _dblAsymptoticEulerUrgencyThreshold = java.lang.Double.NaN;
+	/**
+	 * GenericIncrement Constructor
+	 * 
+	 * @param dblDeterministic The Deterministic Increment Component
+	 * @param dblStochastic The Stochastic Increment Component
+	 * @param dblWander The Random Wander Realization
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
 
-	protected abstract double advance (
-		final org.drip.execution.hjb.NonDimensionalCost ndc,
-		final org.drip.execution.latent.MarketState ms,
-		final double[] adblMarketStateTweak,
-		final double dblNonDimensionalRiskAversion)
-		throws java.lang.Exception;
-
-	protected NonDimensionalCostEvolver (
-		final org.drip.quant.random.OrnsteinUhlenbeck ou,
-		final double dblAsymptoticEulerUrgencyThreshold,
-		final boolean bAsymptoticEnhancedEulerCorrection)
+	public GenericIncrement (
+		final double dblDeterministic,
+		final double dblStochastic,
+		final double dblWander)
 		throws java.lang.Exception
 	{
-		if (null == (_ou = ou) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblAsymptoticEulerUrgencyThreshold = dblAsymptoticEulerUrgencyThreshold))
-			throw new java.lang.Exception ("NonDimensionalCostEvolver Constructor => Invalid Inputs");
-
-		_bAsymptoticEnhancedEulerCorrection = bAsymptoticEnhancedEulerCorrection;
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblStochastic = dblStochastic) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblWander = dblWander))
+			throw new java.lang.Exception ("GenericIncrement Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asymptotic Enhanced Euler Correction Application Flag
+	 * Retrieve the Deterministic Increment Component
 	 * 
-	 * @return The Asymptotic Enhanced Euler Correction Application Flag
+	 * @return The Deterministic Increment Component
 	 */
 
-	public boolean asymptoticEnhancedEulerCorrection()
+	public double deterministic()
 	{
-		return _bAsymptoticEnhancedEulerCorrection;
+		return _dblDeterministic;
 	}
 
 	/**
-	 * Retrieve the Asymptotic Euler Urgency Threshold
+	 * Retrieve the Stochastic Increment Component
 	 * 
-	 * @return The Asymptotic Euler Urgency Threshold
+	 * @return The Stochastic Increment Component
 	 */
 
-	public double asymptoticEulerUrgencyThreshold()
+	public double stochastic()
 	{
-		return _dblAsymptoticEulerUrgencyThreshold;
+		return _dblStochastic;
 	}
 
 	/**
-	 * Retrieve the Reference Ornstein-Unlenbeck Process
+	 * Retrieve the Random Wander Realization
 	 * 
-	 * @return The Reference Ornstein-Unlenbeck Process
+	 * @return The Random Wander Realization
 	 */
 
-	public org.drip.quant.random.OrnsteinUhlenbeck ornsteinUnlenbeckProcess()
+	public double wander()
 	{
-		return _ou;
+		return _dblWander;
 	}
-
-	/**
-	 * Evolve a Single Time Step of the Optimal Trajectory
-	 * 
-	 * @param ndc The Initial Non Dimensional Cost Value Function
-	 * @param ms The Market State
-	 * @param dblNonDimensionalRiskAversion The Non Dimensional Risk Aversion Parameter
-	 * @param dblNonDimensionalTime The Non Dimensional Time Node
-	 * @param dblNonDimensionalTimeIncrement The Non Dimensional Time Increment
-	 * 
-	 * @return The Post Evolved Non-dimensional Cost Value Function
-	 */
-
-	public abstract org.drip.execution.hjb.NonDimensionalCost evolve (
-		final org.drip.execution.hjb.NonDimensionalCost ndc,
-		final org.drip.execution.latent.MarketState ms,
-		final double dblNonDimensionalRiskAversion,
-		final double dblNonDimensionalTime,
-		final double dblNonDimensionalTimeIncrement);
 }
