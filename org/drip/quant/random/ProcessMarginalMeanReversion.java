@@ -57,8 +57,16 @@ public class ProcessMarginalMeanReversion extends org.drip.quant.random.ProcessM
 	private double _dblVolatility = java.lang.Double.NaN;
 	private double _dblMeanReversionRate = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevDrift = null;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevVolatility = null;
+
+	/**
+	 * Generate a Standard Instance of ProcessMarginalMeanReversion
+	 * 
+	 * @param dblMeanReversionRate The Mean Reversion Rate
+	 * @param dblMeanReversionLevel The Mean Reversion Level
+	 * @param dblVolatility The Volatility
+	 * 
+	 * @return The Standard Instance of ProcessMarginalMeanReversion
+	 */
 
 	public static final ProcessMarginalMeanReversion Standard (
 		final double dblMeanReversionRate,
@@ -66,7 +74,32 @@ public class ProcessMarginalMeanReversion extends org.drip.quant.random.ProcessM
 		final double dblVolatility)
 	{
 		try {
-			
+			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.quant.random.MarginalSnap ms)
+					throws java.lang.Exception
+				{
+					if (null == ms)
+						throw new java.lang.Exception
+							("ProcessMarginalMeanReversion::DriftLDEV::value => Invalid Inputs");
+
+					return -1. * dblMeanReversionRate * (dblMeanReversionLevel - ms.value());
+				}
+			};
+
+			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.quant.random.MarginalSnap ms)
+					throws java.lang.Exception
+				{
+					return dblVolatility;
+				}
+			};
+
+			return new ProcessMarginalMeanReversion (dblMeanReversionRate, dblMeanReversionLevel,
+				dblVolatility, ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -74,17 +107,7 @@ public class ProcessMarginalMeanReversion extends org.drip.quant.random.ProcessM
 		return null;
 	}
 
-	/**
-	 * ProcessMarginalMeanReversion Constructor
-	 * 
-	 * @param dblMeanReversionRate The Mean Reversion Rate
-	 * @param dblMeanReversionLevel The Mean Reversion Level
-	 * @param dblVolatility The Volatility
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public ProcessMarginalMeanReversion (
+	private ProcessMarginalMeanReversion (
 		final double dblMeanReversionRate,
 		final double dblMeanReversionLevel,
 		final double dblVolatility,
@@ -92,35 +115,11 @@ public class ProcessMarginalMeanReversion extends org.drip.quant.random.ProcessM
 		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
+		super (ldevDrift, ldevVolatility);
+
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionRate = dblMeanReversionRate) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility) || null ==
-					(_ldevDrift = ldevDrift) || null == (_ldevVolatility = ldevVolatility))
-			throw new java.lang.Exception ("ProcessMarginalMeanReversion Constructor => Invalid Inputs");
-
-		_ldevDrift = new org.drip.quant.random.LocalDeterministicEvolutionFunction() {
-			@Override public double value (
-				final org.drip.quant.random.MarginalSnap ms)
-				throws java.lang.Exception
-			{
-				if (null == ms)
-					throw new java.lang.Exception
-						("ProcessMarginalMeanReversion::DriftLDEV::value => Invalid Inputs");
-
-				return -1. * _dblMeanReversionRate * (_dblMeanReversionLevel - ms.value());
-			}
-		};
-
-		_ldevVolatility = new org.drip.quant.random.LocalDeterministicEvolutionFunction() {
-			@Override public double value (
-				final org.drip.quant.random.MarginalSnap ms)
-				throws java.lang.Exception
-			{
-				return dblVolatility;
-			}
-		};
-
-		if (null == _ldevDrift || null == _ldevVolatility)
+				!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
 			throw new java.lang.Exception ("ProcessMarginalMeanReversion Constructor => Invalid Inputs");
 	}
 
@@ -155,47 +154,5 @@ public class ProcessMarginalMeanReversion extends org.drip.quant.random.ProcessM
 	public double volatility()
 	{
 		return _dblVolatility;
-	}
-
-	/**
-	 * Retrieve the LDEV Drift Function of the Mean Reversion Process
-	 * 
-	 * @return The LDEV Drift Function of the Mean Reversion Process
-	 */
-
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction driftLDEV()
-	{
-		return _ldevDrift;
-	}
-
-	/**
-	 * Retrieve the LDEV Volatility Function of the Log Process
-	 * 
-	 * @return The LDEV Volatility Function of the Log Process
-	 */
-
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction volatilityLDEV()
-	{
-		return _ldevVolatility;
-	}
-
-	@Override public org.drip.quant.random.GenericIncrement increment (
-		final org.drip.quant.random.MarginalSnap ms,
-		final double dblRandomUnitRealization,
-		final double dblTimeIncrement)
-	{
-		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblRandomUnitRealization) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
-			return null;
-
-		try {
-			return new org.drip.quant.random.GenericIncrement (_ldevDrift.value (ms) * dblTimeIncrement,
-				_ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
-					(dblTimeIncrement), dblRandomUnitRealization);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 }

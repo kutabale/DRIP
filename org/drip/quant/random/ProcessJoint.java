@@ -53,6 +53,66 @@ package org.drip.quant.random;
  */
 
 public abstract class ProcessJoint {
+	private double[][] _aadblCorrelation = null;
+	private org.drip.quant.random.LocalDeterministicEvolutionFunction[] _aLDEVDrift = null;
+	private org.drip.quant.random.LocalDeterministicEvolutionFunction[] _aLDEVVolatility = null;
+
+	protected ProcessJoint (
+		final org.drip.quant.random.LocalDeterministicEvolutionFunction[] aLDEVDrift,
+		final org.drip.quant.random.LocalDeterministicEvolutionFunction[] aLDEVVolatility,
+		final double[][] aadblCorrelation)
+		throws java.lang.Exception
+	{
+		if (null == (_aLDEVDrift = aLDEVDrift) || null == (_aLDEVVolatility = aLDEVVolatility) || null ==
+			(_aadblCorrelation = aadblCorrelation))
+			throw new java.lang.Exception ("ProcessJoint Constructor => Invalid Inputs");
+
+		int iNumFactor = _aLDEVDrift.length;
+
+		if (0 == iNumFactor || iNumFactor != _aLDEVVolatility.length || iNumFactor !=
+			_aadblCorrelation.length)
+			throw new java.lang.Exception ("ProcessJoint Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumFactor; ++i) {
+			if (null == _aLDEVDrift[i] || null == _aLDEVVolatility[i] || null == _aadblCorrelation[i] ||
+				iNumFactor != _aadblCorrelation[i].length || !org.drip.quant.common.NumberUtil.IsValid
+					(_aadblCorrelation[i]))
+				throw new java.lang.Exception ("ProcessJoint Constructor => Invalid Inputs");
+		}
+	}
+
+	/**
+	 * Retrieve the Array of the LDEV Drift Functions of the Individual Marginal Processes
+	 * 
+	 * @return The Array of the LDEV Drift Function of the Individual Marginal Processes
+	 */
+
+	public org.drip.quant.random.LocalDeterministicEvolutionFunction[] driftLDEV()
+	{
+		return _aLDEVDrift;
+	}
+
+	/**
+	 * Retrieve the Array of the LDEV Volatility Function of the Individual Marginal Processes
+	 * 
+	 * @return The Array of the LDEV Volatility Function of the Individual Marginal Processes
+	 */
+
+	public org.drip.quant.random.LocalDeterministicEvolutionFunction[] volatilityLDEV()
+	{
+		return _aLDEVVolatility;
+	}
+
+	/**
+	 * Retrieve the Correlation Matrix
+	 * 
+	 * @return The Correlation Matrix
+	 */
+
+	public double[][] correlation()
+	{
+		return _aadblCorrelation;
+	}
 
 	/**
 	 * Generate the Array of the Adjacent Increments from the Array of the specified Random Variate

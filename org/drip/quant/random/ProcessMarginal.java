@@ -47,12 +47,55 @@ package org.drip.quant.random;
  */
 
 /**
- * ProcessMarginal exposes the Functionality that guides the Single Factor Random Process Variable Evolution.
+ * ProcessMarginal implements the Functionality that guides the Single Factor Random Process Variable
+ *  Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class ProcessMarginal {
+public class ProcessMarginal {
+	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevDrift = null;
+	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevVolatility = null;
+
+	/**
+	 * ProcessMarginal Constructor
+	 * 
+	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
+	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public ProcessMarginal (
+		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift,
+		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility)
+		throws java.lang.Exception
+	{
+		if (null == (_ldevDrift = ldevDrift) || null == (_ldevVolatility = ldevVolatility))
+			throw new java.lang.Exception ("ProcessMarginal Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the LDEV Drift Function of the Marginal Process
+	 * 
+	 * @return The LDEV Drift Function of the Marginal Process
+	 */
+
+	public org.drip.quant.random.LocalDeterministicEvolutionFunction driftLDEV()
+	{
+		return _ldevDrift;
+	}
+
+	/**
+	 * Retrieve the LDEV Volatility Function of the Marginal Process
+	 * 
+	 * @return The LDEV Volatility Function of the Marginal Process
+	 */
+
+	public org.drip.quant.random.LocalDeterministicEvolutionFunction volatilityLDEV()
+	{
+		return _ldevVolatility;
+	}
 
 	/**
 	 * Generate the Adjacent Increment from the specified Random Variate
@@ -64,10 +107,25 @@ public abstract class ProcessMarginal {
 	 * @return The Adjacent Increment
 	 */
 
-	public abstract org.drip.quant.random.GenericIncrement increment (
+	public org.drip.quant.random.GenericIncrement increment (
 		final org.drip.quant.random.MarginalSnap ms,
 		final double dblRandomUnitRealization,
-		final double dblTimeIncrement);
+		final double dblTimeIncrement)
+	{
+		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblRandomUnitRealization) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
+			return null;
+
+		try {
+			return new org.drip.quant.random.GenericIncrement (_ldevDrift.value (ms) * dblTimeIncrement,
+				_ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
+					(dblTimeIncrement), dblRandomUnitRealization);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	/**
 	 * Generate the Adjacent Increment from the specified Random Variate and a Weiner Driver

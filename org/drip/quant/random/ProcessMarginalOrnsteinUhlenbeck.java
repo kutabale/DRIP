@@ -74,8 +74,6 @@ public class ProcessMarginalOrnsteinUhlenbeck extends org.drip.quant.random.Proc
 	private double _dblBurstiness = java.lang.Double.NaN;
 	private double _dblRelaxationTime = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevDrift = null;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
 	/**
 	 * Construct a Standard Instance of ProcessMarginalOrnsteinUhlenbeck
@@ -154,11 +152,12 @@ public class ProcessMarginalOrnsteinUhlenbeck extends org.drip.quant.random.Proc
 		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
+		super (ldevDrift, ldevVolatility);
+
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) || 0. >=
 				_dblBurstiness || !org.drip.quant.common.NumberUtil.IsValid (_dblRelaxationTime =
-					dblRelaxationTime) || 0. >= _dblRelaxationTime || null == (_ldevDrift = ldevDrift) ||
-						null == (_ldevVolatility = ldevVolatility))
+					dblRelaxationTime) || 0. >= _dblRelaxationTime)
 			throw new java.lang.Exception ("ProcessMarginalOrnsteinUhlenbeck Constructor - Invalid Inputs");
 	}
 
@@ -193,48 +192,6 @@ public class ProcessMarginalOrnsteinUhlenbeck extends org.drip.quant.random.Proc
 	public double relaxationTime()
 	{
 		return _dblRelaxationTime;
-	}
-
-	/**
-	 * Retrieve the LDEV Drift Function of the Log Process
-	 * 
-	 * @return The LDEV Drift Function of the Log Process
-	 */
-
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction driftLDEV()
-	{
-		return _ldevDrift;
-	}
-
-	/**
-	 * Retrieve the LDEV Volatility Function of the Log Process
-	 * 
-	 * @return The LDEV Volatility Function of the Log Process
-	 */
-
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction volatilityLDEV()
-	{
-		return _ldevVolatility;
-	}
-
-	@Override public org.drip.quant.random.GenericIncrement increment (
-		final org.drip.quant.random.MarginalSnap ms,
-		final double dblRandomUnitRealization,
-		final double dblTimeIncrement)
-	{
-		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblRandomUnitRealization) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
-			return null;
-
-		try {
-			return new org.drip.quant.random.GenericIncrement (_ldevDrift.value (ms) * dblTimeIncrement,
-				_ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
-					(dblTimeIncrement), dblRandomUnitRealization);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 
 	@Override public double referenceRelaxationTime()

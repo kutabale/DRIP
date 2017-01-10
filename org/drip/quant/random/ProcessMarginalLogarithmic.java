@@ -55,8 +55,6 @@ package org.drip.quant.random;
 public class ProcessMarginalLogarithmic extends org.drip.quant.random.ProcessMarginal {
 	private double _dblDrift = java.lang.Double.NaN;
 	private double _dblVolatility = java.lang.Double.NaN;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevDrift = null;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
 	/**
 	 * Generate a Standard Instance of ProcessMarginalLogarithmic
@@ -94,7 +92,7 @@ public class ProcessMarginalLogarithmic extends org.drip.quant.random.ProcessMar
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("ProcessMarginalLogarithmic::VolatilityLDEV::value => Invalis Inputs");
+							("ProcessMarginalLogarithmic::VolatilityLDEV::value => Invalid Inputs");
 
 					return ms.value() * dblVolatility;
 				}
@@ -115,9 +113,10 @@ public class ProcessMarginalLogarithmic extends org.drip.quant.random.ProcessMar
 		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
+		super (ldevDrift, ldevVolatility);
+
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility) || null == (_ldevDrift
-				= ldevDrift) || null == (_ldevVolatility = ldevVolatility))
+			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
 			throw new java.lang.Exception ("ProcessMarginalLogarithmic Constructor => Invalid Inputs");
 	}
 
@@ -141,47 +140,5 @@ public class ProcessMarginalLogarithmic extends org.drip.quant.random.ProcessMar
 	public double volatility()
 	{
 		return _dblVolatility;
-	}
-
-	/**
-	 * Retrieve the LDEV Drift Function of the Log Process
-	 * 
-	 * @return The LDEV Drift Function of the Log Process
-	 */
-
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction driftLDEV()
-	{
-		return _ldevDrift;
-	}
-
-	/**
-	 * Retrieve the LDEV Volatility Function of the Log Process
-	 * 
-	 * @return The LDEV Volatility Function of the Log Process
-	 */
-
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction volatilityLDEV()
-	{
-		return _ldevVolatility;
-	}
-
-	@Override public org.drip.quant.random.GenericIncrement increment (
-		final org.drip.quant.random.MarginalSnap ms,
-		final double dblRandomUnitRealization,
-		final double dblTimeIncrement)
-	{
-		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblRandomUnitRealization) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
-			return null;
-
-		try {
-			return new org.drip.quant.random.GenericIncrement (_ldevDrift.value (ms) * dblTimeIncrement,
-				_ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
-					(dblTimeIncrement), dblRandomUnitRealization);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 }
