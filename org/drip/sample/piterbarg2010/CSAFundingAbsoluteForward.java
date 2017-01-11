@@ -52,7 +52,7 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * CSAFundingRelativeForward compares the Relative Differences between the CSA and the non-CSA Forward Prices
+ * CSAFundingAbsoluteForward compares the Absolute Differences between the CSA and the non-CSA Forward LIBOR
  * 	under a Stochastic Funding Model. The References are:
  *  
  *  - Barden, P. (2009): Equity Forward Prices in the Presence of Funding Spreads, ICBI Conference, Rome.
@@ -70,7 +70,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CSAFundingRelativeForward {
+public class CSAFundingAbsoluteForward {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -81,13 +81,13 @@ public class CSAFundingRelativeForward {
 		double dblUnderlyingVolatility = 0.3;
 		double dblFundingSpreadVolatility = 0.015;
 		double dblFundingSpreadMeanReversionRate = 0.05;
+		double dblCSALIBOR = 0.018;
 
 		double[] adblCorrelation = new double[] {
-			-0.30,
 			-0.20,
-			-0.10,
 			 0.00,
-			 0.10
+			 0.20,
+			 0.40
 		};
 
 		int[] aiTenor = new int[] {
@@ -96,24 +96,12 @@ public class CSAFundingRelativeForward {
 			 3,
 			 4,
 			 5,
-			 6,
 			 7,
-			 8,
-			 9,
-			10
-		};
-
-		double[][] aadblRelativeDifferenceReconciler = new double[][] {
-			{ 0.0007,  0.0004,  0.0002,  0.0000, -0.0002},
-			{ 0.0026,  0.0017,  0.0009,  0.0000, -0.0009},
-			{ 0.0058,  0.0039,  0.0019,  0.0000, -0.0019},
-			{ 0.0102,  0.0068,  0.0034,  0.0000, -0.0034},
-			{ 0.0157,  0.0104,  0.0052,  0.0000, -0.0052},
-			{ 0.0223,  0.0148,  0.0074,  0.0000, -0.0073},
-			{ 0.0300,  0.0199,  0.0099,  0.0000, -0.0098},
-			{ 0.0387,  0.0256,  0.0127,  0.0000, -0.0126},
-			{ 0.0485,  0.0320,  0.0159,  0.0000, -0.0156},
-			{ 0.0592,  0.0391,  0.0194,  0.0000, -0.0190}
+			10,
+			15,
+			20,
+			25,
+			30
 		};
 
 		ProcessMarginalLogarithmic pmlUnderlying = ProcessMarginalLogarithmic.Standard (
@@ -129,11 +117,11 @@ public class CSAFundingRelativeForward {
 
 		System.out.println();
 
-		System.out.println ("\t||-----------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------||");
 
-		System.out.println ("\t||         DRIP CSA vs Non CSA Forward Prices          ||");
+		System.out.println ("\t||     DRIP CSA vs Non CSA Forward Rates      ||");
 
-		System.out.println ("\t||-----------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------||");
 
 		String strHeader = "\t|| CORR => ";
 
@@ -142,7 +130,7 @@ public class CSAFundingRelativeForward {
 
 		System.out.println (strHeader + "|");
 
-		System.out.println ("\t||-----------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------||");
 
 		for (int iTenor : aiTenor) {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (iTenor, 2, 0, 1.) + "Y => ";
@@ -154,41 +142,13 @@ public class CSAFundingRelativeForward {
 					dblCorrelation
 				);
 
-				strDump = strDump + " " + FormatUtil.FormatDouble (sftf.CSANoCSARatio (iTenor + "Y") - 1., 1, 2, 100.) + "% |";
+				strDump = strDump + " " + FormatUtil.FormatDouble (dblCSALIBOR * (sftf.CSANoCSARatio (iTenor + "Y") - 1.), 1, 2, 100.) + "% |";
 			}
 
 			System.out.println (strDump + "|");
 		}
 
-		System.out.println ("\t||-----------------------------------------------------||");
-
-		System.out.println();
-
-		System.out.println ("\t||-----------------------------------------------------||");
-
-		System.out.println ("\t||     Piterbarg 2010 CSA vs Non CSA Forward Prices    ||");
-
-		System.out.println ("\t||-----------------------------------------------------||");
-
-		strHeader = "\t|| CORR => ";
-
-		for (double dblCorrelation : adblCorrelation)
-			strHeader = strHeader + "  " + FormatUtil.FormatDouble (dblCorrelation, 2, 0, 100.) + "%  |";
-
-		System.out.println (strHeader + "|");
-
-		System.out.println ("\t||-----------------------------------------------------||");
-
-		for (int i = 0; i < aiTenor.length; ++i) {
-			String strDump = "\t|| " + FormatUtil.FormatDouble (aiTenor[i], 2, 0, 1.) + "Y => ";
-
-			for (int j = 0; j < adblCorrelation.length; ++j)
-				strDump = strDump + " " + FormatUtil.FormatDouble (aadblRelativeDifferenceReconciler[i][j], 1, 2, 100.) + "% |";
-
-			System.out.println (strDump + "|");
-		}
-
-		System.out.println ("\t||-----------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------||");
 
 		System.out.println();
 	}
