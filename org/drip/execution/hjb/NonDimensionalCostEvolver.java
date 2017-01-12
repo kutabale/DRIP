@@ -75,7 +75,7 @@ public abstract class NonDimensionalCostEvolver {
 	protected static final double SINGULAR_URGENCY_THRESHOLD = 50.;
 
 	private boolean _bAsymptoticEnhancedEulerCorrection = false;
-	private org.drip.quant.random.OrnsteinUhlenbeck _ou = null;
+	private org.drip.measure.process.OrnsteinUhlenbeck _ou = null;
 	private double _dblAsymptoticEulerUrgencyThreshold = java.lang.Double.NaN;
 
 	protected abstract double advance (
@@ -86,7 +86,7 @@ public abstract class NonDimensionalCostEvolver {
 		throws java.lang.Exception;
 
 	protected NonDimensionalCostEvolver (
-		final org.drip.quant.random.OrnsteinUhlenbeck ou,
+		final org.drip.measure.process.OrnsteinUhlenbeck ou,
 		final double dblAsymptoticEulerUrgencyThreshold,
 		final boolean bAsymptoticEnhancedEulerCorrection)
 		throws java.lang.Exception
@@ -126,7 +126,7 @@ public abstract class NonDimensionalCostEvolver {
 	 * @return The Reference Ornstein-Unlenbeck Process
 	 */
 
-	public org.drip.quant.random.OrnsteinUhlenbeck ornsteinUnlenbeckProcess()
+	public org.drip.measure.process.OrnsteinUhlenbeck ornsteinUnlenbeckProcess()
 	{
 		return _ou;
 	}

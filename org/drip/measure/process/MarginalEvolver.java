@@ -1,5 +1,5 @@
 
-package org.drip.quant.random;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,18 +47,18 @@ package org.drip.quant.random;
  */
 
 /**
- * ProcessMarginal implements the Functionality that guides the Single Factor Random Process Variable
+ * MarginalEvolver implements the Functionality that guides the Single Factor Random Process Variable
  *  Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class ProcessMarginal {
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevDrift = null;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction _ldevVolatility = null;
+public class MarginalEvolver {
+	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDrift = null;
+	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
 	/**
-	 * ProcessMarginal Constructor
+	 * MarginalEvolver Constructor
 	 * 
 	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
 	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process
@@ -66,13 +66,13 @@ public class ProcessMarginal {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ProcessMarginal (
-		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility)
+	public MarginalEvolver (
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
 		if (null == (_ldevDrift = ldevDrift) || null == (_ldevVolatility = ldevVolatility))
-			throw new java.lang.Exception ("ProcessMarginal Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("MarginalEvolver Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class ProcessMarginal {
 	 * @return The LDEV Drift Function of the Marginal Process
 	 */
 
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction driftLDEV()
+	public org.drip.measure.process.LocalDeterministicEvolutionFunction driftLDEV()
 	{
 		return _ldevDrift;
 	}
@@ -92,7 +92,7 @@ public class ProcessMarginal {
 	 * @return The LDEV Volatility Function of the Marginal Process
 	 */
 
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction volatilityLDEV()
+	public org.drip.measure.process.LocalDeterministicEvolutionFunction volatilityLDEV()
 	{
 		return _ldevVolatility;
 	}
@@ -107,8 +107,8 @@ public class ProcessMarginal {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.quant.random.GenericIncrement increment (
-		final org.drip.quant.random.MarginalSnap ms,
+	public org.drip.measure.process.GenericIncrement increment (
+		final org.drip.measure.process.MarginalSnap ms,
 		final double dblRandomUnitRealization,
 		final double dblTimeIncrement)
 	{
@@ -117,7 +117,7 @@ public class ProcessMarginal {
 			return null;
 
 		try {
-			return new org.drip.quant.random.GenericIncrement (_ldevDrift.value (ms) * dblTimeIncrement,
+			return new org.drip.measure.process.GenericIncrement (_ldevDrift.value (ms) * dblTimeIncrement,
 				_ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
 					(dblTimeIncrement), dblRandomUnitRealization);
 		} catch (java.lang.Exception e) {
@@ -136,8 +136,8 @@ public class ProcessMarginal {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.quant.random.GenericIncrement weinerIncrement (
-		final org.drip.quant.random.MarginalSnap ms,
+	public org.drip.measure.process.GenericIncrement weinerIncrement (
+		final org.drip.measure.process.MarginalSnap ms,
 		final double dblTimeIncrement)
 	{
 		try {

@@ -3,17 +3,18 @@ package org.drip.sample.piterbarg2010;
 
 import java.util.Map;
 
-import org.drip.analytics.collateral.*;
 import org.drip.analytics.date.*;
 import org.drip.function.r1tor1.FlatUnivariate;
+import org.drip.measure.process.*;
 import org.drip.param.valuation.ValuationParams;
 import org.drip.pricer.option.BlackScholesAlgorithm;
 import org.drip.product.option.EuropeanCallPut;
 import org.drip.quant.common.FormatUtil;
-import org.drip.quant.random.*;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
+import org.drip.xva.collateral.CSAInducedMeasureShift;
+import org.drip.xva.collateral.FundingBasisEvolver;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -252,7 +253,7 @@ public class CSAImpliedMeasureDifference {
 		double[][] aadblNoCSAForward = new double[adblCorrelation.length][adblStrike.length];
 		double[][] aadblMeasureShiftScale = new double[adblCorrelation.length][adblStrike.length];
 
-		ProcessMarginalMeanReversion pmmrFundingSpread = ProcessMarginalMeanReversion.Standard (
+		MarginalEvolverMeanReversion pmmrFundingSpread = MarginalEvolverMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility
@@ -278,12 +279,12 @@ public class CSAImpliedMeasureDifference {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (adblCorrelation[j], 2, 0, 100.) + "% => ";
 
 			for (int i = 0; i < adblStrike.length; ++i) {
-				ProcessMarginalLogarithmic pmlUnderlying = ProcessMarginalLogarithmic.Standard (
+				MarginalEvolverLogarithmic pmlUnderlying = MarginalEvolverLogarithmic.Standard (
 					0.,
 					adblCSAImpliedVolatility[i]
 				);
 
-				StochasticFundingTwoFactor sftf = new StochasticFundingTwoFactor (
+				FundingBasisEvolver sftf = new FundingBasisEvolver (
 					pmlUnderlying,
 					pmmrFundingSpread,
 					adblCorrelation[j]
@@ -325,6 +326,10 @@ public class CSAImpliedMeasureDifference {
 		double[] adblPrice = new double[adblStrike.length];
 		EuropeanCallPut[] aECP = new EuropeanCallPut[adblStrike.length];
 
+		System.out.println ("\t||---------------------------------------------------------------------------------------------------------------------------||");
+
+		String strDump = "\t|| CSA ATM Option Price => ";
+
 		for (int i = 0; i < adblStrike.length; ++i) {
 			aECP[i] = new EuropeanCallPut (
 				dtMaturity,
@@ -341,10 +346,32 @@ public class CSAImpliedMeasureDifference {
 			);
 
 			adblPrice[i] = mapOptionCalc.get ("CallPrice");
+
+			strDump = strDump + FormatUtil.FormatDouble (adblPrice[i], 2, 2, 1.) + "  |";
 		}
 
+		System.out.println (strDump + "|");
+
+		System.out.println ("\t||---------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ();
+
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||                                CSA CONVEXITY ADJUSTMENT IMPLIED VOLATILITY                                ||");
+
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||  L -> R :                                                                                                 ||");
+
+		System.out.println ("\t||           - Implied Volatility (%)                                                                        ||");
+
+		System.out.println ("\t||           - Adjustments for Strikes in unit of 10, from 50 to 150                                         ||");
+
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------||");
+
 		for (int j = 0; j < adblCorrelation.length; ++j) {
-			String strDump = "\t|| " + FormatUtil.FormatDouble (adblCorrelation[j], 2, 0, 100.) + "% => ";
+			strDump = "\t|| " + FormatUtil.FormatDouble (adblCorrelation[j], 2, 0, 100.) + "% => ";
 
 			for (int i = 0; i < adblStrike.length; ++i) {
 				double dblReimpliedVolatility = aECP[i].implyVolatilityFromCallPrice (
@@ -355,10 +382,14 @@ public class CSAImpliedMeasureDifference {
 					adblPrice[i]
 				);
 
-				strDump = strDump + " " + FormatUtil.FormatDouble (dblReimpliedVolatility, 1, 4, 1.) + " |";
+				strDump = strDump + FormatUtil.FormatDouble (dblReimpliedVolatility, 2, 2, 100.) + "% |";
 			}
 
-			System.out.println (strDump + "|");;
+			System.out.println (strDump + "|");
 		}
+
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ();
 	}
 }

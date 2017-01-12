@@ -1,5 +1,5 @@
 
-package org.drip.quant.random;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -66,6 +66,6 @@ public interface LocalDeterministicEvolutionFunction {
 	 */
 
 	public abstract double value (
-		final org.drip.quant.random.MarginalSnap ms)
+		final org.drip.measure.process.MarginalSnap ms)
 		throws java.lang.Exception;
 }

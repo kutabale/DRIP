@@ -1,5 +1,5 @@
 
-package org.drip.analytics.collateral;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.analytics.collateral;
  */
 
 /**
- * StochasticFundingTwoFactor implements a Two Factor Stochastic Funding Model with a Log Normal Forward
+ * FundingBasisEvolver implements a Two Factor Stochastic Funding Model Evolver with a Log Normal Forward
  * 	Process and a Mean Reverting Diffusion Process for the Funding Spread. The References are:
  *  
  *  - Antonov, A., and M. Arneguy (2009): Analytical Formulas for Pricing CMS Products in the LIBOR Market
@@ -66,13 +66,13 @@ package org.drip.analytics.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class StochasticFundingTwoFactor {
+public class FundingBasisEvolver {
 	private double _dblCorrelation = java.lang.Double.NaN;
-	private org.drip.quant.random.ProcessMarginalLogarithmic _pmlUnderlying = null;
-	private org.drip.quant.random.ProcessMarginalMeanReversion _pmmrFundingSpread = null;
+	private org.drip.measure.process.MarginalEvolverLogarithmic _pmlUnderlying = null;
+	private org.drip.measure.process.MarginalEvolverMeanReversion _pmmrFundingSpread = null;
 
 	/**
-	 * StochasticFundingTwoFactor Constructor
+	 * FundingBasisEvolver Constructor
 	 * 
 	 * @param pmlUnderlying The Underlying Dynamics Stochastic Process
 	 * @param pmmrFundingSpread The Funding Spread Dynamics Stochastic Process
@@ -81,16 +81,16 @@ public class StochasticFundingTwoFactor {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public StochasticFundingTwoFactor (
-		final org.drip.quant.random.ProcessMarginalLogarithmic pmlUnderlying,
-		final org.drip.quant.random.ProcessMarginalMeanReversion pmmrFundingSpread,
+	public FundingBasisEvolver (
+		final org.drip.measure.process.MarginalEvolverLogarithmic pmlUnderlying,
+		final org.drip.measure.process.MarginalEvolverMeanReversion pmmrFundingSpread,
 		final double dblCorrelation)
 		throws java.lang.Exception
 	{
 		if (null == (_pmlUnderlying = pmlUnderlying) || null == (_pmmrFundingSpread = pmmrFundingSpread) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblCorrelation = dblCorrelation) || 1. <
 				_dblCorrelation || -1. > _dblCorrelation)
-			throw new java.lang.Exception ("StochasticFundingTwoFactor Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("FundingBasisEvolver Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class StochasticFundingTwoFactor {
 	 * @return The Underlying Dynamics Stochastic Process
 	 */
 
-	public org.drip.quant.random.ProcessMarginalLogarithmic underlyingProcess()
+	public org.drip.measure.process.MarginalEvolverLogarithmic underlyingProcess()
 	{
 		return _pmlUnderlying;
 	}
@@ -110,7 +110,7 @@ public class StochasticFundingTwoFactor {
 	 * @return The Funding Spread Dynamics Stochastic Process
 	 */
 
-	public org.drip.quant.random.ProcessMarginalMeanReversion fundingSpreadProcess()
+	public org.drip.measure.process.MarginalEvolverMeanReversion fundingSpreadProcess()
 	{
 		return _pmmrFundingSpread;
 	}
@@ -132,34 +132,34 @@ public class StochasticFundingTwoFactor {
 	 * @return The Dynamics of the Marginal Process for the CSA Forward
 	 */
 
-	public org.drip.quant.random.ProcessMarginal csaForwardProcess()
+	public org.drip.measure.process.MarginalEvolver csaForwardProcess()
 	{
 		try {
-			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.quant.random.MarginalSnap ms)
+					final org.drip.measure.process.MarginalSnap ms)
 					throws java.lang.Exception
 				{
 					return 0.;
 				}
 			};
 
-			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.quant.random.MarginalSnap ms)
+					final org.drip.measure.process.MarginalSnap ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("StochasticFundingTwoFactor::CSAForwardVolatilityLDEV::value => Invalid Inputs");
+							("FundingBasisEvolver::CSAForwardVolatilityLDEV::value => Invalid Inputs");
 
 					return ms.value() * _pmlUnderlying.volatility();
 				}
 			};
 
-			return new org.drip.quant.random.ProcessMarginal (ldevDrift, ldevVolatility);
+			return new org.drip.measure.process.MarginalEvolver (ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -175,7 +175,7 @@ public class StochasticFundingTwoFactor {
 	 * @return The Dynamics of the Marginal Process for the Funding Numeraire
 	 */
 
-	public org.drip.quant.random.ProcessMarginal fundingNumeraireProcess (
+	public org.drip.measure.process.MarginalEvolver fundingNumeraireProcess (
 		final java.lang.String strTenor)
 	{
 		try {
@@ -189,31 +189,31 @@ public class StochasticFundingTwoFactor {
 
 			final double dblPiterbarg2010BFactor = dblB;
 
-			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.quant.random.MarginalSnap ms)
+					final org.drip.measure.process.MarginalSnap ms)
 					throws java.lang.Exception
 				{
 					return 0.;
 				}
 			};
 
-			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.quant.random.MarginalSnap ms)
+					final org.drip.measure.process.MarginalSnap ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("StochasticFundingTwoFactor::CSAFundingNumeraireLDEV::value => Invalid Inputs");
+							("FundingBasisEvolver::CSAFundingNumeraireLDEV::value => Invalid Inputs");
 
 					return -1. * ms.value() * dblPiterbarg2010BFactor * _pmmrFundingSpread.volatility();
 				}
 			};
 
-			return new org.drip.quant.random.ProcessMarginal (ldevDrift, ldevVolatility);
+			return new org.drip.measure.process.MarginalEvolver (ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -229,7 +229,7 @@ public class StochasticFundingTwoFactor {
 	 * @return The Dynamics of the Marginal Process for the Funding Spread Numeraire
 	 */
 
-	public org.drip.quant.random.ProcessMarginal fundingSpreadNumeraireProcess (
+	public org.drip.measure.process.MarginalEvolver fundingSpreadNumeraireProcess (
 		final java.lang.String strTenor)
 	{
 		try {
@@ -243,31 +243,31 @@ public class StochasticFundingTwoFactor {
 
 			final double dblPiterbarg2010BFactor = dblB;
 
-			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.quant.random.MarginalSnap ms)
+					final org.drip.measure.process.MarginalSnap ms)
 					throws java.lang.Exception
 				{
 					return 0.;
 				}
 			};
 
-			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.quant.random.MarginalSnap ms)
+					final org.drip.measure.process.MarginalSnap ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("StochasticFundingTwoFactor::CSAFundingSpreadNumeraireLDEV::value => Invalid Inputs");
+							("FundingBasisEvolver::CSAFundingSpreadNumeraireLDEV::value => Invalid Inputs");
 
 					return -1. * ms.value() * dblPiterbarg2010BFactor * _pmmrFundingSpread.volatility();
 				}
 			};
 
-			return new org.drip.quant.random.ProcessMarginal (ldevDrift, ldevVolatility);
+			return new org.drip.measure.process.MarginalEvolver (ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

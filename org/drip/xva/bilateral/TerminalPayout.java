@@ -1,5 +1,5 @@
 
-package org.drip.quant.random;
+package org.drip.xva.bilateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,53 +47,68 @@ package org.drip.quant.random;
  */
 
 /**
- * MarginalSnap holds the Snapshot values of the Realized Random Variable and Time.
- *
+ * TerminalPayout implements the Pay-out Function on the given Asset, using its Marginal Evolution Process,
+ *  at the specified Terminal Time Instance. The References are:
+ *  
+ *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
+ *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
+ *  
+ *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
+ *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
+ *  
+ *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
+ *  
+ *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
+ *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
+ *  	Singapore.
+ * 
+ *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
+ *  	21 (2) 97-102.
+ * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalSnap {
-	private double _dblTime = java.lang.Double.NaN;
-	private double _dblValue = java.lang.Double.NaN;
+public class TerminalPayout {
+	private org.drip.analytics.date.JulianDate _dtPayout = null;
+	private org.drip.function.definition.R1ToR1 _r1RToR1Payout = null;
 
 	/**
-	 * MarginalSnap Constructor
+	 * TerminalPayout Constructor
 	 * 
-	 * @param dblTime The Time Instant
-	 * @param dblValue The Random Variable Value
+	 * @param dtPayout The Terminal Pay Out Date
+	 * @param r1RToR1Payout The R^1 -> R^1 Pay-out Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarginalSnap (
-		final double dblTime,
-		final double dblValue)
+	public TerminalPayout (
+		final org.drip.analytics.date.JulianDate dtPayout,
+		final org.drip.function.definition.R1ToR1 r1RToR1Payout)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
-			throw new java.lang.Exception ("MarginalSnap Constructor => Invalid Inputs");
+		if (null == (_dtPayout = dtPayout) || null == (_r1RToR1Payout = r1RToR1Payout))
+			throw new java.lang.Exception ("TerminalPayout Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Evolution Time Instant
+	 * Retrieve the Terminal Pay Out Date
 	 * 
-	 * @return The Evolution Time Instant
+	 * @return The Terminal Pay Out Date
 	 */
 
-	public double time()
+	public org.drip.analytics.date.JulianDate date()
 	{
-		return _dblTime;
+		return _dtPayout;
 	}
 
 	/**
-	 * Retrieve the Realized Random Value
+	 * Retrieve the R^1 -> R^1 Pay-out Function
 	 * 
-	 * @return The Realized Random Value
+	 * @return The R^1 -> R^1 Pay-out Function
 	 */
 
-	public double value()
+	public org.drip.function.definition.R1ToR1 function()
 	{
-		return _dblValue;
+		return _r1RToR1Payout;
 	}
 }

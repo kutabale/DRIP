@@ -7,8 +7,8 @@ import org.drip.execution.optimum.EfficientTradingTrajectoryContinuous;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
+import org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck;
 import org.drip.quant.common.FormatUtil;
-import org.drip.quant.random.ProcessMarginalOrnsteinUhlenbeck;
 import org.drip.service.env.EnvManager;
 
 /*
@@ -118,7 +118,7 @@ public class StaticOptimalTrajectoryHoldings {
 			dblReferenceLiquidity
 		);
 
-		ProcessMarginalOrnsteinUhlenbeck oup1D = ProcessMarginalOrnsteinUhlenbeck.ZeroMean (
+		MarginalEvolverOrnsteinUhlenbeck oup1D = MarginalEvolverOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);

@@ -1,5 +1,5 @@
 
-package org.drip.quant.random;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,9 +48,12 @@ package org.drip.quant.random;
  */
 
 /**
- * OrnsteinUhlenbeck Interface exposes the Reference Parameter Scales the guide the Random Variable Evolution
- *  according to Ornstein-Uhlenbeck Mean Reverting Process. The References are:
+ * GenericIncrement implements the Deterministic and the Stochastic Components of a Random Increment. The
+ *  References are:
  * 
+ * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
+ * 		(2) 5-39.
+ *
  * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
  *
@@ -63,35 +66,66 @@ package org.drip.quant.random;
  * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
  * 		Financial Studies 7 (4) 631-651.
  * 
- * 	- Walia, N. (2006): Optimal Trading - Dynamic Stock Liquidation Strategies, Senior Thesis, Princeton
- * 		University.
- *
  * @author Lakshmi Krishnamurthy
  */
 
-public interface OrnsteinUhlenbeck {
+public class GenericIncrement {
+	private double _dblWander = java.lang.Double.NaN;
+	private double _dblStochastic = java.lang.Double.NaN;
+	private double _dblDeterministic = java.lang.Double.NaN;
 
 	/**
-	 * Retrieve the Reference Relaxation Time Scale
+	 * GenericIncrement Constructor
 	 * 
-	 * @return The Reference Relaxation Time Scale
+	 * @param dblDeterministic The Deterministic Increment Component
+	 * @param dblStochastic The Stochastic Increment Component
+	 * @param dblWander The Random Wander Realization
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double referenceRelaxationTime();
+	public GenericIncrement (
+		final double dblDeterministic,
+		final double dblStochastic,
+		final double dblWander)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblStochastic = dblStochastic) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblWander = dblWander))
+			throw new java.lang.Exception ("GenericIncrement Constructor => Invalid Inputs");
+	}
 
 	/**
-	 * Retrieve the Reference Burstiness Scale
+	 * Retrieve the Deterministic Increment Component
 	 * 
-	 * @return The Reference Burstiness Scale
+	 * @return The Deterministic Increment Component
 	 */
 
-	public abstract double referenceBurstiness();
+	public double deterministic()
+	{
+		return _dblDeterministic;
+	}
 
 	/**
-	 * Retrieve the Reference Mean Reversion Level Scale
+	 * Retrieve the Stochastic Increment Component
 	 * 
-	 * @return The Reference Mean Reversion Level Scale
+	 * @return The Stochastic Increment Component
 	 */
 
-	public abstract double referenceMeanReversionLevel();
+	public double stochastic()
+	{
+		return _dblStochastic;
+	}
+
+	/**
+	 * Retrieve the Random Wander Realization
+	 * 
+	 * @return The Random Wander Realization
+	 */
+
+	public double wander()
+	{
+		return _dblWander;
+	}
 }

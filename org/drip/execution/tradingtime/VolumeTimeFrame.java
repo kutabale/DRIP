@@ -69,7 +69,7 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class VolumeTimeFrame extends org.drip.quant.random.GenericIncrement {
+public class VolumeTimeFrame extends org.drip.measure.process.GenericIncrement {
 	private double _dblHoldings = java.lang.Double.NaN;
 	private double _dblTradeRate = java.lang.Double.NaN;
 

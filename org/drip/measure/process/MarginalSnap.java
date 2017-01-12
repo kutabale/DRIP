@@ -1,5 +1,5 @@
 
-package org.drip.dynamics.lmm;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,8 +7,6 @@ package org.drip.dynamics.lmm;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
- * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -49,84 +47,53 @@ package org.drip.dynamics.lmm;
  */
 
 /**
- * ShortRateProcess implements the Short Rate Process defined in the LIBOR Market Model. The References are:
- * 
- *  1) Goldys, B., M. Musiela, and D. Sondermann (1994): Log-normality of Rates and Term Structure Models,
- *  	The University of New South Wales.
- * 
- *  2) Musiela, M. (1994): Nominal Annual Rates and Log-normal Volatility Structure, The University of New
- *   	South Wales.
- * 
- * 	3) Brace, A., D. Gatarek, and M. Musiela (1997): The Market Model of Interest Rate Dynamics, Mathematical
- * 		Finance 7 (2), 127-155.
+ * MarginalSnap holds the Snapshot values of the Realized Random Variable and Time.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class ShortRateProcess {
-	private int _iSpotDate = java.lang.Integer.MIN_VALUE;
-	private org.drip.measure.stochastic.R1R1ToR1 _funcR1R1ToR1 = null;
+public class MarginalSnap {
+	private double _dblTime = java.lang.Double.NaN;
+	private double _dblValue = java.lang.Double.NaN;
 
 	/**
-	 * ShortRateProcess Constructor
+	 * MarginalSnap Constructor
 	 * 
-	 * @param iSpotDate The Spot Date
-	 * @param funcR1R1ToR1 The Stochastic Short Rate Function
+	 * @param dblTime The Time Instant
+	 * @param dblValue The Random Variable Value
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ShortRateProcess (
-		final int iSpotDate,
-		final org.drip.measure.stochastic.R1R1ToR1 funcR1R1ToR1)
+	public MarginalSnap (
+		final double dblTime,
+		final double dblValue)
 		throws java.lang.Exception
 	{
-		if (null == (_funcR1R1ToR1 = funcR1R1ToR1))
-			throw new java.lang.Exception ("ShortRateProcess ctr: Invalid Inputs");
-
-		_iSpotDate = iSpotDate;
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
+			throw new java.lang.Exception ("MarginalSnap Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Spot Date
+	 * Retrieve the Evolution Time Instant
 	 * 
-	 * @return The Spot Date
+	 * @return The Evolution Time Instant
 	 */
 
-	public int spotDate()
+	public double time()
 	{
-		return _iSpotDate;
+		return _dblTime;
 	}
 
 	/**
-	 * Retrieve the Stochastic Short Rate Function
+	 * Retrieve the Realized Random Value
 	 * 
-	 * @return The Stochastic Short Rate Function
+	 * @return The Realized Random Value
 	 */
 
-	public org.drip.measure.stochastic.R1R1ToR1 stochasticShortRateFunction()
+	public double value()
 	{
-		return _funcR1R1ToR1;
-	}
-
-	/**
-	 * Retrieve the Continuously Re-invested Accruing Bank Account
-	 * 
-	 * @param iMaturityDate The Maturity Date
-	 * 
-	 * @return The Continuously Re-invested Accruing Bank Account
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public double continuouslyReinvestedAccrualFactor (
-		final int iMaturityDate)
-		throws java.lang.Exception
-	{
-		if (iMaturityDate <= _iSpotDate)
-			throw new java.lang.Exception
-				("ShortRateProcess::continuouslyReinvestedAccrualFactor => Invalid Maturity Date");
-
-		return java.lang.Math.exp (_funcR1R1ToR1.integralRealization (0., iMaturityDate - _iSpotDate));
+		return _dblValue;
 	}
 }

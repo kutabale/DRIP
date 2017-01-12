@@ -1,5 +1,5 @@
 
-package org.drip.analytics.collateral;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-

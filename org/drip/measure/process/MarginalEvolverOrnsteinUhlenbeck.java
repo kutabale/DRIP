@@ -1,5 +1,5 @@
 
-package org.drip.quant.random;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.quant.random;
  */
 
 /**
- * ProcessMarginalOrnsteinUhlenbeck guides the Random Variable Evolution according to 1D Ornstein-Uhlenbeck
+ * MarginalEvolverOrnsteinUhlenbeck guides the Random Variable Evolution according to 1D Ornstein-Uhlenbeck
  *  Mean Reverting Process. The References are:
  * 
  * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
@@ -69,57 +69,57 @@ package org.drip.quant.random;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ProcessMarginalOrnsteinUhlenbeck extends org.drip.quant.random.ProcessMarginal implements
-	org.drip.quant.random.OrnsteinUhlenbeck {
+public class MarginalEvolverOrnsteinUhlenbeck extends org.drip.measure.process.MarginalEvolver implements
+	org.drip.measure.process.OrnsteinUhlenbeck {
 	private double _dblBurstiness = java.lang.Double.NaN;
 	private double _dblRelaxationTime = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Standard Instance of ProcessMarginalOrnsteinUhlenbeck
+	 * Construct a Standard Instance of MarginalEvolverOrnsteinUhlenbeck
 	 * 
 	 * @param dblMeanReversionLevel The Mean Reversion Level
 	 * @param dblBurstiness The Burstiness Parameter
 	 * @param dblRelaxationTime The Relaxation Time
 	 * 
-	 * @return The Standard Instance of ProcessMarginalOrnsteinUhlenbeck
+	 * @return The Standard Instance of MarginalEvolverOrnsteinUhlenbeck
 	 */
 
-	public static final ProcessMarginalOrnsteinUhlenbeck Standard (
+	public static final MarginalEvolverOrnsteinUhlenbeck Standard (
 		final double dblMeanReversionLevel,
 		final double dblBurstiness,
 		final double dblRelaxationTime)
 	{
 		try {
-			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.quant.random.MarginalSnap ms)
+					final org.drip.measure.process.MarginalSnap ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("ProcessMarginalOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
+							("MarginalEvolverOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
 
 					return -1. * ms.value() / dblRelaxationTime;
 				}
 			};
 
-			org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.quant.random.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.quant.random.MarginalSnap ms)
+					final org.drip.measure.process.MarginalSnap ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("ProcessMarginalOrnsteinUhlenbeck::VolatilityLDEV::value => Invalis Inputs");
+							("MarginalEvolverOrnsteinUhlenbeck::VolatilityLDEV::value => Invalis Inputs");
 
 					return dblBurstiness * java.lang.Math.sqrt (1. / dblRelaxationTime);
 				}
 			};
 
-			return new ProcessMarginalOrnsteinUhlenbeck (dblMeanReversionLevel, dblBurstiness,
+			return new MarginalEvolverOrnsteinUhlenbeck (dblMeanReversionLevel, dblBurstiness,
 				dblRelaxationTime, ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -129,27 +129,27 @@ public class ProcessMarginalOrnsteinUhlenbeck extends org.drip.quant.random.Proc
 	}
 
 	/**
-	 * Construct a Zero-Mean Instance of ProcessMarginalOrnsteinUhlenbeck
+	 * Construct a Zero-Mean Instance of MarginalEvolverOrnsteinUhlenbeck
 	 * 
 	 * @param dblBurstiness The Burstiness Parameter
 	 * @param dblRelaxationTime The Relaxation Time
 	 * 
-	 * @return The Zero-Mean Instance of ProcessMarginalOrnsteinUhlenbeck
+	 * @return The Zero-Mean Instance of MarginalEvolverOrnsteinUhlenbeck
 	 */
 
-	public static final ProcessMarginalOrnsteinUhlenbeck ZeroMean (
+	public static final MarginalEvolverOrnsteinUhlenbeck ZeroMean (
 		final double dblBurstiness,
 		final double dblRelaxationTime)
 	{
-		return ProcessMarginalOrnsteinUhlenbeck.Standard (0., dblBurstiness, dblRelaxationTime);
+		return MarginalEvolverOrnsteinUhlenbeck.Standard (0., dblBurstiness, dblRelaxationTime);
 	}
 
-	private ProcessMarginalOrnsteinUhlenbeck (
+	private MarginalEvolverOrnsteinUhlenbeck (
 		final double dblMeanReversionLevel,
 		final double dblBurstiness,
 		final double dblRelaxationTime,
-		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.quant.random.LocalDeterministicEvolutionFunction ldevVolatility)
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
 		super (ldevDrift, ldevVolatility);
@@ -158,7 +158,7 @@ public class ProcessMarginalOrnsteinUhlenbeck extends org.drip.quant.random.Proc
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) || 0. >=
 				_dblBurstiness || !org.drip.quant.common.NumberUtil.IsValid (_dblRelaxationTime =
 					dblRelaxationTime) || 0. >= _dblRelaxationTime)
-			throw new java.lang.Exception ("ProcessMarginalOrnsteinUhlenbeck Constructor - Invalid Inputs");
+			throw new java.lang.Exception ("MarginalEvolverOrnsteinUhlenbeck Constructor - Invalid Inputs");
 	}
 
 	/**

@@ -1,5 +1,5 @@
 
-package org.drip.quant.random;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -54,12 +54,12 @@ package org.drip.quant.random;
 
 public abstract class ProcessJoint {
 	private double[][] _aadblCorrelation = null;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction[] _aLDEVDrift = null;
-	private org.drip.quant.random.LocalDeterministicEvolutionFunction[] _aLDEVVolatility = null;
+	private org.drip.measure.process.LocalDeterministicEvolutionFunction[] _aLDEVDrift = null;
+	private org.drip.measure.process.LocalDeterministicEvolutionFunction[] _aLDEVVolatility = null;
 
 	protected ProcessJoint (
-		final org.drip.quant.random.LocalDeterministicEvolutionFunction[] aLDEVDrift,
-		final org.drip.quant.random.LocalDeterministicEvolutionFunction[] aLDEVVolatility,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction[] aLDEVDrift,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction[] aLDEVVolatility,
 		final double[][] aadblCorrelation)
 		throws java.lang.Exception
 	{
@@ -87,7 +87,7 @@ public abstract class ProcessJoint {
 	 * @return The Array of the LDEV Drift Function of the Individual Marginal Processes
 	 */
 
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction[] driftLDEV()
+	public org.drip.measure.process.LocalDeterministicEvolutionFunction[] driftLDEV()
 	{
 		return _aLDEVDrift;
 	}
@@ -98,7 +98,7 @@ public abstract class ProcessJoint {
 	 * @return The Array of the LDEV Volatility Function of the Individual Marginal Processes
 	 */
 
-	public org.drip.quant.random.LocalDeterministicEvolutionFunction[] volatilityLDEV()
+	public org.drip.measure.process.LocalDeterministicEvolutionFunction[] volatilityLDEV()
 	{
 		return _aLDEVVolatility;
 	}
@@ -124,7 +124,7 @@ public abstract class ProcessJoint {
 	 * @return The Array of the Adjacent Increments
 	 */
 
-	public abstract org.drip.quant.random.GenericIncrement[] increment (
+	public abstract org.drip.measure.process.GenericIncrement[] increment (
 		final double[] adblRandomVariate,
 		final double[] adblRandomUnitRealization,
 		final double dblTimeIncrement);

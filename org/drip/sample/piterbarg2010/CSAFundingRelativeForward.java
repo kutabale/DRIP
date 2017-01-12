@@ -1,10 +1,10 @@
 
 package org.drip.sample.piterbarg2010;
 
-import org.drip.analytics.collateral.StochasticFundingTwoFactor;
+import org.drip.measure.process.*;
 import org.drip.quant.common.FormatUtil;
-import org.drip.quant.random.*;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.FundingBasisEvolver;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -116,12 +116,12 @@ public class CSAFundingRelativeForward {
 			{ 0.0592,  0.0391,  0.0194,  0.0000, -0.0190}
 		};
 
-		ProcessMarginalLogarithmic pmlUnderlying = ProcessMarginalLogarithmic.Standard (
+		MarginalEvolverLogarithmic pmlUnderlying = MarginalEvolverLogarithmic.Standard (
 			0.,
 			dblUnderlyingVolatility
 		);
 
-		ProcessMarginalMeanReversion pmmrFundingSpread = ProcessMarginalMeanReversion.Standard (
+		MarginalEvolverMeanReversion pmmrFundingSpread = MarginalEvolverMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility
@@ -148,7 +148,7 @@ public class CSAFundingRelativeForward {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (iTenor, 2, 0, 1.) + "Y => ";
 
 			for (double dblCorrelation : adblCorrelation) {
-				StochasticFundingTwoFactor sftf = new StochasticFundingTwoFactor (
+				FundingBasisEvolver sftf = new FundingBasisEvolver (
 					pmlUnderlying,
 					pmmrFundingSpread,
 					dblCorrelation
