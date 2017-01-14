@@ -107,7 +107,7 @@ public class MarginalEvolver {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.process.GenericIncrement increment (
+	public org.drip.measure.process.RealizedIncrement increment (
 		final org.drip.measure.process.MarginalSnap ms,
 		final double dblRandomUnitRealization,
 		final double dblTimeIncrement)
@@ -117,8 +117,8 @@ public class MarginalEvolver {
 			return null;
 
 		try {
-			return new org.drip.measure.process.GenericIncrement (_ldevDrift.value (ms) * dblTimeIncrement,
-				_ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
+			return new org.drip.measure.process.RealizedIncrement (ms.value(), _ldevDrift.value (ms) *
+				dblTimeIncrement, _ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
 					(dblTimeIncrement), dblRandomUnitRealization);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -136,7 +136,7 @@ public class MarginalEvolver {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.process.GenericIncrement weinerIncrement (
+	public org.drip.measure.process.RealizedIncrement weinerIncrement (
 		final org.drip.measure.process.MarginalSnap ms,
 		final double dblTimeIncrement)
 	{

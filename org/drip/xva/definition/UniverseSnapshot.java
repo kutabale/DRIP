@@ -1,5 +1,5 @@
 
-package org.drip.xva.bilateral;
+package org.drip.xva.definition;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.bilateral;
  */
 
 /**
- * ReplicatingPortfolio maintains the dynamic Replicating Portfolio of the Pay-out using the Assets in the
- * 	Economy, from the Bank's View Point. The References are:
+ * UniverseSnapshot holds the current Realizations of the Traded Asset Numeraires of the Reference Universe.
+ *  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,79 +68,77 @@ package org.drip.xva.bilateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ReplicatingPortfolio {
-	private double _dblCash = java.lang.Double.NaN;
-	private double _dblAssetUnits = java.lang.Double.NaN;
-	private double _dblBankBondUnits = java.lang.Double.NaN;
-	private double _dblCounterPartyBondUnits = java.lang.Double.NaN;
+public class UniverseSnapshot {
+	private org.drip.measure.process.RealizedIncrement _riAssetNumeraire = null;
+	private org.drip.measure.process.RealizedIncrement _riBankFundingNumeraire = null;
+	private org.drip.measure.process.RealizedIncrement _riCreditRiskFreeNumeraire = null;
+	private org.drip.measure.process.RealizedIncrement _riCounterPartyFundingNumeraire = null;
 
 	/**
-	 * ReplicatingPortfolio Constructor
+	 * UniverseSnapshot Constructor
 	 * 
-	 * @param dblAssetUnits The Number of Asset Replication Units
-	 * @param dblBankBondUnits The Number of Bank Zero Coupon Bond Replication Units
-	 * @param dblCounterPartyBondUnits The Number of Counter Party Zero Coupon Bond Replication Units
-	 * @param dblCash The Cash Amount
+	 * @param riAssetNumeraire The Asset Numeraire Realization Increment
+	 * @param riCreditRiskFreeNumeraire The Credit Risk Free Numeraire Realization Increment
+	 * @param riBankFundingNumeraire The Bank Funding Numeraire Realization Increment
+	 * @param riCounterPartyFundingNumeraire The Counter Party Funding Numeraire Realization Increment
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ReplicatingPortfolio (
-		final double dblAssetUnits,
-		final double dblBankBondUnits,
-		final double dblCounterPartyBondUnits,
-		final double dblCash)
+	public UniverseSnapshot (
+		final org.drip.measure.process.RealizedIncrement riAssetNumeraire,
+		final org.drip.measure.process.RealizedIncrement riCreditRiskFreeNumeraire,
+		final org.drip.measure.process.RealizedIncrement riBankFundingNumeraire,
+		final org.drip.measure.process.RealizedIncrement riCounterPartyFundingNumeraire)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetUnits = dblAssetUnits) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankBondUnits = dblBankBondUnits) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyBondUnits =
-					dblCounterPartyBondUnits) || dblCounterPartyBondUnits > 0. ||
-						!org.drip.quant.common.NumberUtil.IsValid (_dblCash = dblCash))
-			throw new java.lang.Exception ("ReplicatingPortfolio Constructor => Invalid Inputs");
+		if (null == (_riAssetNumeraire = riAssetNumeraire) || null == (_riCreditRiskFreeNumeraire =
+			riCreditRiskFreeNumeraire) || null == (_riBankFundingNumeraire = riBankFundingNumeraire) || null
+				== (_riCounterPartyFundingNumeraire = riCounterPartyFundingNumeraire))
+			throw new java.lang.Exception ("UniverseSnapshot Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Number of Asset Replication Units
+	 * Retrieve the Asset Numeraire Realization Increment
 	 * 
-	 * @return The Number of Asset Replication Units
+	 * @return The Asset Numeraire Realization Increment
 	 */
 
-	public double assetUnits()
+	public org.drip.measure.process.RealizedIncrement assetNumeraire()
 	{
-		return _dblAssetUnits;
+		return _riAssetNumeraire;
 	}
 
 	/**
-	 * Retrieve the Number of Bank Zero Coupon Bond Replication Units
+	 * Retrieve the Credit Risk Free Numeraire Realization Increment
 	 * 
-	 * @return The Number of Bank Zero Coupon Bond Replication Units
+	 * @return The Credit Risk Free Numeraire Realization Increment
 	 */
 
-	public double bankBondUnits()
+	public org.drip.measure.process.RealizedIncrement creditRiskFreeNumeraire()
 	{
-		return _dblBankBondUnits;
+		return _riCreditRiskFreeNumeraire;
 	}
 
 	/**
-	 * Retrieve the Number of Counter Party Zero Coupon Bond Replication Units
+	 * Retrieve the Bank Funding Numeraire Realization Increment
 	 * 
-	 * @return The Number of Counter Party Zero Coupon Bond Replication Units
+	 * @return The Bank Funding Numeraire Realization Increment
 	 */
 
-	public double counterPartyBondUnits()
+	public org.drip.measure.process.RealizedIncrement bankFundingNumeraire()
 	{
-		return _dblCounterPartyBondUnits;
+		return _riBankFundingNumeraire;
 	}
 
 	/**
-	 * Retrieve the Cash Amount
+	 * Retrieve the Counter Party Funding Numeraire Realization Increment
 	 * 
-	 * @return The Cash Amount
+	 * @return The Counter Party Funding Numeraire Realization Increment
 	 */
 
-	public double cash()
+	public org.drip.measure.process.RealizedIncrement counterPartyFundingNumeraire()
 	{
-		return _dblCash;
+		return _riCounterPartyFundingNumeraire;
 	}
 }

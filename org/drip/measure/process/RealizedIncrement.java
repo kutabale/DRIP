@@ -1,5 +1,5 @@
 
-package org.drip.execution.tradingtime;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,8 +48,8 @@ package org.drip.execution.tradingtime;
  */
 
 /**
- * VolumeTimeFrame implements the Pre- and Post-transformed Increment in the Volume Time Space as used in the
- *  "Trading Time" Model. The References are:
+ * RealizedIncrement implements the Deterministic and the Stochastic Components of a Random Increment as well
+ * 	the Original Random Variate. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,81 +69,89 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class VolumeTimeFrame extends org.drip.measure.process.RealizedIncrement {
-	private double _dblHoldings = java.lang.Double.NaN;
-	private double _dblTradeRate = java.lang.Double.NaN;
+public class RealizedIncrement {
+	private double _dblWander = java.lang.Double.NaN;
+	private double _dblPrevious = java.lang.Double.NaN;
+	private double _dblStochastic = java.lang.Double.NaN;
+	private double _dblDeterministic = java.lang.Double.NaN;
 
 	/**
-	 * VolumeTimeFrame Constructor
+	 * RealizedIncrement Constructor
 	 * 
-	 * @param dblPrevious The Previous Realization
-	 * @param dblTemporal The Temporal Increment
-	 * @param dblBrownian The Brownian Increment
-	 * @param dblVolatility The Volatility
-	 * @param dblHoldings Current Holdings
-	 * @param dblTradeRate Current Trade Rate
+	 * @param dblPrevious The Previous Random Variable Realization
+	 * @param dblDeterministic The Deterministic Increment Component
+	 * @param dblStochastic The Stochastic Increment Component
+	 * @param dblWander The Random Wander Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public VolumeTimeFrame (
+	public RealizedIncrement (
 		final double dblPrevious,
-		final double dblTemporal,
-		final double dblBrownian,
-		final double dblVolatility,
-		final double dblHoldings,
-		final double dblTradeRate)
+		final double dblDeterministic,
+		final double dblStochastic,
+		final double dblWander)
 		throws java.lang.Exception
 	{
-		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian,
-			dblBrownian);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *
-				dblVolatility)))
-			throw new java.lang.Exception ("VolumeTimeFrame Constructor => Invalid Inputs!");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblPrevious = dblPrevious) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblStochastic = dblStochastic) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblWander = dblWander))
+			throw new java.lang.Exception ("RealizedIncrement Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Holdings
+	 * Retrieve the Previous Random Realization
 	 * 
-	 * @return The Holdings
+	 * @return The Previous Random Realization
 	 */
 
-	public double holdings()
+	public double previousRandom()
 	{
-		return _dblHoldings;
+		return _dblPrevious;
 	}
 
 	/**
-	 * Retrieve the Trade Rate
+	 * Retrieve the Deterministic Increment Component
 	 * 
-	 * @return The Trade Rate
+	 * @return The Deterministic Increment Component
 	 */
 
-	public double tradeRate()
+	public double deterministic()
 	{
-		return _dblTradeRate;
+		return _dblDeterministic;
 	}
 
 	/**
-	 * Generate the Transaction Cost Increment
+	 * Retrieve the Stochastic Increment Component
 	 * 
-	 * @param cv The Coordinated Variation Parameters
-	 * 
-	 * @return The Transaction Cost Increment
-	 * 
-	 * @throws java.lang.Exception Throw if the Inputs are Invalid
+	 * @return The Stochastic Increment Component
 	 */
 
-	public double transactionCostIncrement (
-		final org.drip.execution.tradingtime.CoordinatedVariation cv)
-		throws java.lang.Exception
+	public double stochastic()
 	{
-		if (null == cv)
-			throw new java.lang.Exception ("VolumeTimeFrame::transactionCostIncrement => Invalid Inputs");
+		return _dblStochastic;
+	}
 
-		return _dblHoldings * stochastic() + cv.invariant() * _dblTradeRate * _dblTradeRate *
-			deterministic();
+	/**
+	 * Retrieve the Random Wander Realization
+	 * 
+	 * @return The Random Wander Realization
+	 */
+
+	public double wander()
+	{
+		return _dblWander;
+	}
+
+	/**
+	 * Retrieve the Next Random Realization
+	 * 
+	 * @return The Next Random Realization
+	 */
+
+	public double nextRandom()
+	{
+		return _dblPrevious + _dblDeterministic + _dblStochastic;
 	}
 }

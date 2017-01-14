@@ -1,5 +1,5 @@
 
-package org.drip.xva.bilateral;
+package org.drip.xva.definition;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.bilateral;
  */
 
 /**
- * UniverseSnapshot holds the current Realizations of the Traded Asset Numeraires of the Reference Universe.
- *  The References are:
+ * TradeableAsset holds Definitions and Parameters that specify a Trade-able Asset in XVA Terms. The
+ *  References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,77 +68,59 @@ package org.drip.xva.bilateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class UniverseSnapshot {
-	private org.drip.measure.process.GenericIncrement _giAssetNumeraire = null;
-	private org.drip.measure.process.GenericIncrement _giBankFundingNumeraire = null;
-	private org.drip.measure.process.GenericIncrement _giCreditRiskFreeNumeraire = null;
-	private org.drip.measure.process.GenericIncrement _giCounterPartyFundingNumeraire = null;
+public class TradeableAsset {
+	private double _dblRepoRate = java.lang.Double.NaN;
+	private org.drip.measure.process.MarginalEvolver _mePriceNumeraire = null;
 
 	/**
-	 * UniverseSnapshot Constructor
+	 * TradeableAsset Constructor
 	 * 
-	 * @param giAssetNumeraire The Asset Numeraire Realization
-	 * @param giCreditRiskFreeNumeraire The Credit Risk Free Numeraire Realization
-	 * @param giBankFundingNumeraire The Bank Funding Numeraire Realization
-	 * @param giCounterPartyFundingNumeraire The Counter Party Funding Numeraire Realization
+	 * @param mePriceNumeraire The Trade-able Asset Price Numeraire
+	 * @param dblRepoRate The Trade-able Asset Repo Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public UniverseSnapshot (
-		final org.drip.measure.process.GenericIncrement giAssetNumeraire,
-		final org.drip.measure.process.GenericIncrement giCreditRiskFreeNumeraire,
-		final org.drip.measure.process.GenericIncrement giBankFundingNumeraire,
-		final org.drip.measure.process.GenericIncrement giCounterPartyFundingNumeraire)
+	public TradeableAsset (
+		final org.drip.measure.process.MarginalEvolver mePriceNumeraire,
+		final double dblRepoRate)
 		throws java.lang.Exception
 	{
-		if (null == (_giAssetNumeraire = giAssetNumeraire) || null == (_giCreditRiskFreeNumeraire =
-			giCreditRiskFreeNumeraire) || null == (_giBankFundingNumeraire = giBankFundingNumeraire) || null
-				== (_giCounterPartyFundingNumeraire = giCounterPartyFundingNumeraire))
-			throw new java.lang.Exception ("UniverseSnapshot Constructor => Invalid Inputs");
+		if (null == (_mePriceNumeraire = mePriceNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
+			(_dblRepoRate = dblRepoRate))
+			throw new java.lang.Exception ("TradeableAsset Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asset Numeraire Realization
+	 * Retrieve the Trade-able Asset Price Numeraire
 	 * 
-	 * @return The Asset Numeraire Realization
+	 * @return The Trade-able Asset Price Numeraire
 	 */
 
-	public org.drip.measure.process.GenericIncrement assetNumeraire()
+	public org.drip.measure.process.MarginalEvolver priceNumeraire()
 	{
-		return _giAssetNumeraire;
+		return _mePriceNumeraire;
 	}
 
 	/**
-	 * Retrieve the Credit Risk Free Numeraire Realization
+	 * Retrieve the Trade-able Asset Repo Rate
 	 * 
-	 * @return The Credit Risk Free Numeraire Realization
+	 * @return The Trade-able Asset Repo Rate
 	 */
 
-	public org.drip.measure.process.GenericIncrement creditRiskFreeNumeraire()
+	public double repoRate()
 	{
-		return _giCreditRiskFreeNumeraire;
+		return _dblRepoRate;
 	}
 
 	/**
-	 * Retrieve the Bank Funding Numeraire Realization
+	 * Retrieve the Trade-able Asset Cash Accumulation Rate
 	 * 
-	 * @return The Bank Funding Numeraire Realization
+	 * @return The Trade-able Asset Cash Accumulation Rate
 	 */
 
-	public org.drip.measure.process.GenericIncrement bankFundingNumeraire()
+	public double cashAccumulationRate()
 	{
-		return _giBankFundingNumeraire;
-	}
-
-	/**
-	 * Retrieve the Counter Party Funding Numeraire Realization
-	 * 
-	 * @return The Counter Party Funding Numeraire Realization
-	 */
-
-	public org.drip.measure.process.GenericIncrement counterPartyFundingNumeraire()
-	{
-		return _giCounterPartyFundingNumeraire;
+		return -1. * _dblRepoRate;
 	}
 }

@@ -103,7 +103,7 @@ public class AdaptiveOptimalCostTrajectory {
 		);
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
-			GenericIncrement gi = oup1D.weinerIncrement (
+			RealizedIncrement gi = oup1D.weinerIncrement (
 				new MarginalSnap (
 					dblTime,
 					aMSS[i].common()

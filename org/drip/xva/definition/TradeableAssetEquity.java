@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.xva.definition;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,7 +7,6 @@ package org.drip.measure.process;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -48,84 +47,64 @@ package org.drip.measure.process;
  */
 
 /**
- * GenericIncrement implements the Deterministic and the Stochastic Components of a Random Increment. The
- *  References are:
+ * TradeableAssetEquity describes a Trade-able Equity Asset. The References are:
+ *  
+ *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
+ *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
+ *  
+ *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
+ *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
+ *  
+ *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
+ *  
+ *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
+ *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
+ *  	Singapore.
  * 
- * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
- * 		(2) 5-39.
- *
- * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
- * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
- *
- * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
- * 		Financial Mathematics  3 (1) 163-181.
- * 
- * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
- * 		79-96.
- * 
- * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies 7 (4) 631-651.
+ *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
+ *  	21 (2) 97-102.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class GenericIncrement {
-	private double _dblWander = java.lang.Double.NaN;
-	private double _dblStochastic = java.lang.Double.NaN;
-	private double _dblDeterministic = java.lang.Double.NaN;
+public class TradeableAssetEquity extends org.drip.xva.definition.TradeableAsset {
+	private double _dblDividendRate = java.lang.Double.NaN;
 
 	/**
-	 * GenericIncrement Constructor
+	 * TradeableAsset Constructor
 	 * 
-	 * @param dblDeterministic The Deterministic Increment Component
-	 * @param dblStochastic The Stochastic Increment Component
-	 * @param dblWander The Random Wander Realization
+	 * @param mePriceNumeraire The Underlier Price Numeraire
+	 * @param dblRepoRate The Underlier Repo Rate
+	 * @param dblDividendRate The Underlier Dividend Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GenericIncrement (
-		final double dblDeterministic,
-		final double dblStochastic,
-		final double dblWander)
+	public TradeableAssetEquity (
+		final org.drip.measure.process.MarginalEvolver mePriceNumeraire,
+		final double dblRepoRate,
+		final double dblDividendRate)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblStochastic = dblStochastic) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblWander = dblWander))
-			throw new java.lang.Exception ("GenericIncrement Constructor => Invalid Inputs");
+		super (mePriceNumeraire, dblRepoRate);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDividendRate = dblDividendRate))
+			throw new java.lang.Exception ("TradeableAssetEquity Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Deterministic Increment Component
+	 * Retrieve the Underlier Dividend Rate
 	 * 
-	 * @return The Deterministic Increment Component
+	 * @return The Underlier Dividend Rate
 	 */
 
-	public double deterministic()
+	public double dividendRate()
 	{
-		return _dblDeterministic;
+		return _dblDividendRate;
 	}
 
-	/**
-	 * Retrieve the Stochastic Increment Component
-	 * 
-	 * @return The Stochastic Increment Component
-	 */
-
-	public double stochastic()
+	@Override public double cashAccumulationRate()
 	{
-		return _dblStochastic;
-	}
-
-	/**
-	 * Retrieve the Random Wander Realization
-	 * 
-	 * @return The Random Wander Realization
-	 */
-
-	public double wander()
-	{
-		return _dblWander;
+		return _dblDividendRate + repoRate();
 	}
 }

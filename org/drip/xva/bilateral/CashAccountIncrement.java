@@ -47,9 +47,8 @@ package org.drip.xva.bilateral;
  */
 
 /**
- * TwoWayRiskyUniverse describes the Economy with Four Traded Assets - the Default-free Zero Coupon Bond, the
- * 	Default-able Zero Coupon Bank Bond, the Default-able Zero Coupon Counter-party, and an Asset the follows
- * 	Brownian Motion. The References are:
+ * CashAccountIncrement holds the Increments of the Cash Account Components resulting from the Dynamic
+ * 	Replication Process. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,77 +68,76 @@ package org.drip.xva.bilateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TwoWayRiskyUniverse {
-	private org.drip.measure.process.MarginalEvolver _meAssetPriceNumeraire = null;
-	private org.drip.measure.process.MarginalEvolver _meBankFundingNumeraire = null;
-	private org.drip.measure.process.MarginalEvolver _meCreditRiskFreeNumeraire = null;
-	private org.drip.measure.process.MarginalEvolver _meCounterPartyFundingNumeraire = null;
+public class CashAccountIncrement {
+	private double _dblRepoIncrement = java.lang.Double.NaN;
+	private double _dblAssetIncrement = java.lang.Double.NaN;
+	private double _dblFundingIncrement = java.lang.Double.NaN;
 
 	/**
-	 * TwoWayRiskyUniverse Constructor
+	 * CashAccountIncrement Constructor
 	 * 
-	 * @param meAssetPriceNumeraire The Asset Price Numeraire
-	 * @param meCreditRiskFreeNumeraire The Credit Risk Free Numeraire
-	 * @param meBankFundingNumeraire The Credit Risky Bank Funding Numeraire
-	 * @param meCounterPartyFundingNumeraire The Credit Risky Counter Party Funding Numeraire
+	 * @param dblAssetIncrement The Incremental Amount added to the Cash Account coming from the Asset
+	 * @param dblFundingIncrement The Incremental Amount added to the Cash Account coming from
+	 * 	Borrowing/Funding
+	 * @param dblRepoIncrement The Incremental Amount added to the Cash Account coming from the Counter Party
+	 * 	Repo
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TwoWayRiskyUniverse (
-		final org.drip.measure.process.MarginalEvolver meAssetPriceNumeraire,
-		final org.drip.measure.process.MarginalEvolver meCreditRiskFreeNumeraire,
-		final org.drip.measure.process.MarginalEvolver meBankFundingNumeraire,
-		final org.drip.measure.process.MarginalEvolver meCounterPartyFundingNumeraire)
+	public CashAccountIncrement (
+		final double dblAssetIncrement,
+		final double dblFundingIncrement,
+		final double dblRepoIncrement)
 		throws java.lang.Exception
 	{
-		if (null == (_meAssetPriceNumeraire = meAssetPriceNumeraire) || null == (_meCreditRiskFreeNumeraire =
-			meCreditRiskFreeNumeraire) || null == (_meBankFundingNumeraire = meBankFundingNumeraire) || null
-				== (_meCounterPartyFundingNumeraire = meCounterPartyFundingNumeraire))
-			throw new java.lang.Exception ("TwoWayRiskyUniverse Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetIncrement = dblAssetIncrement) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblFundingIncrement = dblFundingIncrement) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblRepoIncrement = dblRepoIncrement))
+			throw new java.lang.Exception ("CashAccountIncrement Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asset Price Numeraire
+	 * Retrieve the Incremental Amount added to the Cash Account coming from the Asset
 	 * 
-	 * @return The Asset Price Numeraire
+	 * @return The Incremental Amount added to the Cash Account coming from the Asset
 	 */
 
-	public org.drip.measure.process.MarginalEvolver assetPriceNumeraire()
+	public double assetIncrement()
 	{
-		return _meAssetPriceNumeraire;
+		return _dblAssetIncrement;
 	}
 
 	/**
-	 * Retrieve the Credit Risk Free Numeraire
+	 * Retrieve the Incremental Amount added to the Cash Account coming from Borrowing/Funding
 	 * 
-	 * @return The Credit Risk Free Numeraire
+	 * @return The Incremental Amount added to the Cash Account coming from Borrowing/Funding
 	 */
 
-	public org.drip.measure.process.MarginalEvolver creditRiskFreeNumeraire()
+	public double fundingIncrement()
 	{
-		return _meCreditRiskFreeNumeraire;
+		return _dblFundingIncrement;
 	}
 
 	/**
-	 * Retrieve the Credit Risky Bank Funding Numeraire
+	 * Retrieve the Incremental Amount added to the Cash Account coming from the Counter Party Repo
 	 * 
-	 * @return The Credit Risky Bank Funding Numeraire
+	 * @return The Incremental Amount added to the Cash Account coming from the Counter Party Repo
 	 */
 
-	public org.drip.measure.process.MarginalEvolver bankFundingNumeraire()
+	public double repoIncrement()
 	{
-		return _meBankFundingNumeraire;
+		return _dblRepoIncrement;
 	}
 
 	/**
-	 * Retrieve the Credit Risky Counter Party Funding Numeraire
+	 * Retrieve the Cumulative Increment
 	 * 
-	 * @return The Credit Risky Counter Party Funding Numeraire
+	 * @return The Cumulative Increment
 	 */
 
-	public org.drip.measure.process.MarginalEvolver counterPartyFundingNumeraire()
+	public double cumulative()
 	{
-		return _meCounterPartyFundingNumeraire;
+		return _dblAssetIncrement + _dblFundingIncrement + _dblRepoIncrement;
 	}
 }
