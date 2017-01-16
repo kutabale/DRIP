@@ -116,7 +116,7 @@ public class TwoWayRiskyUniverse {
 	 * @return The Credit Risk Free Trade-able Asset
 	 */
 
-	public org.drip.xva.definition.TradeableAsset creditRiskFreeNumeraire()
+	public org.drip.xva.definition.TradeableAsset creditRiskFreeBond()
 	{
 		return _taCreditRiskFree;
 	}

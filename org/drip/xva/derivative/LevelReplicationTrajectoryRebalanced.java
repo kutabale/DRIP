@@ -1,5 +1,5 @@
 
-package org.drip.xva.bilateral;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,9 @@ package org.drip.xva.bilateral;
  */
 
 /**
- * CashAccountIncrement holds the Increments of the Cash Account Components resulting from the Dynamic
- * 	Replication Process. The References are:
+ * LevelReplicationTrajectoryRebalanced holds the Starting Edge, the Level Cash Account Increment, and the
+ *  Edge Derivative Value for a Trajectory that has just undergone Cash Account Re-balancing, as laid out in
+ *  Burgard and Kjaer (2014). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,76 +69,6 @@ package org.drip.xva.bilateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CashAccountIncrement {
-	private double _dblRepoIncrement = java.lang.Double.NaN;
-	private double _dblAssetIncrement = java.lang.Double.NaN;
-	private double _dblFundingIncrement = java.lang.Double.NaN;
+public class LevelReplicationTrajectoryRebalanced {
 
-	/**
-	 * CashAccountIncrement Constructor
-	 * 
-	 * @param dblAssetIncrement The Incremental Amount added to the Cash Account coming from the Asset
-	 * @param dblFundingIncrement The Incremental Amount added to the Cash Account coming from
-	 * 	Borrowing/Funding
-	 * @param dblRepoIncrement The Incremental Amount added to the Cash Account coming from the Counter Party
-	 * 	Repo
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public CashAccountIncrement (
-		final double dblAssetIncrement,
-		final double dblFundingIncrement,
-		final double dblRepoIncrement)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetIncrement = dblAssetIncrement) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblFundingIncrement = dblFundingIncrement) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblRepoIncrement = dblRepoIncrement))
-			throw new java.lang.Exception ("CashAccountIncrement Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the Incremental Amount added to the Cash Account coming from the Asset
-	 * 
-	 * @return The Incremental Amount added to the Cash Account coming from the Asset
-	 */
-
-	public double assetIncrement()
-	{
-		return _dblAssetIncrement;
-	}
-
-	/**
-	 * Retrieve the Incremental Amount added to the Cash Account coming from Borrowing/Funding
-	 * 
-	 * @return The Incremental Amount added to the Cash Account coming from Borrowing/Funding
-	 */
-
-	public double fundingIncrement()
-	{
-		return _dblFundingIncrement;
-	}
-
-	/**
-	 * Retrieve the Incremental Amount added to the Cash Account coming from the Counter Party Repo
-	 * 
-	 * @return The Incremental Amount added to the Cash Account coming from the Counter Party Repo
-	 */
-
-	public double repoIncrement()
-	{
-		return _dblRepoIncrement;
-	}
-
-	/**
-	 * Retrieve the Cumulative Increment
-	 * 
-	 * @return The Cumulative Increment
-	 */
-
-	public double cumulative()
-	{
-		return _dblAssetIncrement + _dblFundingIncrement + _dblRepoIncrement;
-	}
 }

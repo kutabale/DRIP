@@ -1,5 +1,5 @@
 
-package org.drip.xva.bilateral;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.bilateral;
  */
 
 /**
- * TerminalPayout implements the Pay-out Function on the given Asset, using its Marginal Evolution Process,
- *  at the specified Terminal Time Instance. The References are:
+ * LevelCashAccount holds the Increments of the Cash Account Components resulting from the Dynamic
+ * 	Replication Process. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,47 +68,76 @@ package org.drip.xva.bilateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TerminalPayout {
-	private org.drip.analytics.date.JulianDate _dtPayout = null;
-	private org.drip.function.definition.R1ToR1 _r1RToR1Payout = null;
+public class LevelCashAccount {
+	private double _dblRepoIncrement = java.lang.Double.NaN;
+	private double _dblAssetIncrement = java.lang.Double.NaN;
+	private double _dblFundingIncrement = java.lang.Double.NaN;
 
 	/**
-	 * TerminalPayout Constructor
+	 * LevelCashAccount Constructor
 	 * 
-	 * @param dtPayout The Terminal Pay Out Date
-	 * @param r1RToR1Payout The R^1 -> R^1 Pay-out Function
+	 * @param dblAssetIncrement The Incremental Amount added to the Cash Account coming from the Asset
+	 * @param dblFundingIncrement The Incremental Amount added to the Cash Account coming from
+	 * 	Borrowing/Funding
+	 * @param dblRepoIncrement The Incremental Amount added to the Cash Account coming from the Counter Party
+	 * 	Repo
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TerminalPayout (
-		final org.drip.analytics.date.JulianDate dtPayout,
-		final org.drip.function.definition.R1ToR1 r1RToR1Payout)
+	public LevelCashAccount (
+		final double dblAssetIncrement,
+		final double dblFundingIncrement,
+		final double dblRepoIncrement)
 		throws java.lang.Exception
 	{
-		if (null == (_dtPayout = dtPayout) || null == (_r1RToR1Payout = r1RToR1Payout))
-			throw new java.lang.Exception ("TerminalPayout Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetIncrement = dblAssetIncrement) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblFundingIncrement = dblFundingIncrement) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblRepoIncrement = dblRepoIncrement))
+			throw new java.lang.Exception ("LevelCashAccount Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Terminal Pay Out Date
+	 * Retrieve the Incremental Amount added to the Cash Account coming from the Asset
 	 * 
-	 * @return The Terminal Pay Out Date
+	 * @return The Incremental Amount added to the Cash Account coming from the Asset
 	 */
 
-	public org.drip.analytics.date.JulianDate date()
+	public double assetIncrement()
 	{
-		return _dtPayout;
+		return _dblAssetIncrement;
 	}
 
 	/**
-	 * Retrieve the R^1 -> R^1 Pay-out Function
+	 * Retrieve the Incremental Amount added to the Cash Account coming from Borrowing/Funding
 	 * 
-	 * @return The R^1 -> R^1 Pay-out Function
+	 * @return The Incremental Amount added to the Cash Account coming from Borrowing/Funding
 	 */
 
-	public org.drip.function.definition.R1ToR1 function()
+	public double fundingIncrement()
 	{
-		return _r1RToR1Payout;
+		return _dblFundingIncrement;
+	}
+
+	/**
+	 * Retrieve the Incremental Amount added to the Cash Account coming from the Counter Party Repo
+	 * 
+	 * @return The Incremental Amount added to the Cash Account coming from the Counter Party Repo
+	 */
+
+	public double repoIncrement()
+	{
+		return _dblRepoIncrement;
+	}
+
+	/**
+	 * Retrieve the Cumulative Increment
+	 * 
+	 * @return The Cumulative Increment
+	 */
+
+	public double cumulative()
+	{
+		return _dblAssetIncrement + _dblFundingIncrement + _dblRepoIncrement;
 	}
 }

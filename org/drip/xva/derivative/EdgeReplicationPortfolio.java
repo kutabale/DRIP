@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,8 @@ package org.drip.xva.definition;
  */
 
 /**
- * TradeableAssetEquity describes a Trade-able Equity Asset. The References are:
+ * EdgeReplicationPortfolio contains the Dynamic Replicating Portfolio of the Pay-out using the Assets in the
+ * 	Economy, from the Bank's View Point. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,44 +68,100 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeableAssetEquity extends org.drip.xva.definition.TradeableAsset {
-	private double _dblDividendRate = java.lang.Double.NaN;
+public class EdgeReplicationPortfolio {
+	private double _dblAssetUnits = java.lang.Double.NaN;
+	private double _dblCashAccount = java.lang.Double.NaN;
+	private double _dblBankBondUnits = java.lang.Double.NaN;
+	private double _dblCounterPartyBondUnits = java.lang.Double.NaN;
 
 	/**
-	 * TradeableAsset Constructor
+	 * EdgeReplicationPortfolio Constructor
 	 * 
-	 * @param mePriceNumeraire The Underlier Price Numeraire
-	 * @param dblRepoRate The Underlier Repo Rate
-	 * @param dblDividendRate The Underlier Dividend Rate
+	 * @param dblAssetUnits The Number of Asset Replication Units
+	 * @param dblBankBondUnits The Number of Bank Zero Coupon Bond Replication Units
+	 * @param dblCounterPartyBondUnits The Number of Counter Party Zero Coupon Bond Replication Units
+	 * @param dblCashAccount The Cash Account
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradeableAssetEquity (
-		final org.drip.measure.process.MarginalEvolver mePriceNumeraire,
-		final double dblRepoRate,
-		final double dblDividendRate)
+	public EdgeReplicationPortfolio (
+		final double dblAssetUnits,
+		final double dblBankBondUnits,
+		final double dblCounterPartyBondUnits,
+		final double dblCashAccount)
 		throws java.lang.Exception
 	{
-		super (mePriceNumeraire, dblRepoRate);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDividendRate = dblDividendRate))
-			throw new java.lang.Exception ("TradeableAssetEquity Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetUnits = dblAssetUnits) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankBondUnits = dblBankBondUnits) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyBondUnits =
+					dblCounterPartyBondUnits) || dblCounterPartyBondUnits > 0. ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblCashAccount = dblCashAccount))
+			throw new java.lang.Exception ("EdgeReplicationPortfolio Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Underlier Dividend Rate
+	 * Retrieve the Number of Asset Replication Units
 	 * 
-	 * @return The Underlier Dividend Rate
+	 * @return The Number of Asset Replication Units
 	 */
 
-	public double dividendRate()
+	public double assetUnits()
 	{
-		return _dblDividendRate;
+		return _dblAssetUnits;
 	}
 
-	@Override public double cashAccumulationRate()
+	/**
+	 * Retrieve the Number of Bank Zero Coupon Bond Replication Units
+	 * 
+	 * @return The Number of Bank Zero Coupon Bond Replication Units
+	 */
+
+	public double bankBondUnits()
 	{
-		return _dblDividendRate - repoRate();
+		return _dblBankBondUnits;
+	}
+
+	/**
+	 * Retrieve the Number of Counter Party Zero Coupon Bond Replication Units
+	 * 
+	 * @return The Number of Counter Party Zero Coupon Bond Replication Units
+	 */
+
+	public double counterPartyBondUnits()
+	{
+		return _dblCounterPartyBondUnits;
+	}
+
+	/**
+	 * Retrieve the Cash Account Amount
+	 * 
+	 * @return The Cash Account Amount
+	 */
+
+	public double cashAccount()
+	{
+		return _dblCashAccount;
+	}
+
+	/**
+	 * Compute the Market Value of the Portfolio
+	 * 
+	 * @param us The Trade-able Asset Market Snapshot
+	 * 
+	 * @return The Market Value of the Portfolio
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double value (
+		final org.drip.xva.definition.UniverseSnapshot us)
+		throws java.lang.Exception
+	{
+		if (null == us) throw new java.lang.Exception ("EdgeReplicationPortfolio::value => Invalid Inputs");
+
+		return -1. * (_dblAssetUnits * us.assetNumeraire().nextRandom() + _dblBankBondUnits *
+			us.bankFundingNumeraire().nextRandom() + _dblCounterPartyBondUnits *
+				us.counterPartyFundingNumeraire().nextRandom() + _dblCashAccount);
 	}
 }

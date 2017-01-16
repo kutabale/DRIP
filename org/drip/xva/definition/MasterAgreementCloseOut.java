@@ -1,5 +1,5 @@
 
-package org.drip.xva.bilateral;
+package org.drip.xva.definition;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.bilateral;
  */
 
 /**
- * ReplicationPortfolio maintains the dynamic Replicating Portfolio of the Pay-out using the Assets in the
- * 	Economy, from the Bank's View Point. The References are:
+ * MasterAgreementCloseOut implements the (2002) ISDA Master Agreement Close Out Scheme to be applied to the
+ *  MTM at the Bank/Counter Party Default. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,88 +68,88 @@ package org.drip.xva.bilateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ReplicationPortfolio {
-	private double _dblAssetUnits = java.lang.Double.NaN;
-	private double _dblCashAccount = java.lang.Double.NaN;
-	private double _dblBankBondUnits = java.lang.Double.NaN;
-	private double _dblCounterPartyBondUnits = java.lang.Double.NaN;
+public class MasterAgreementCloseOut {
+	private double _dblBankRecovery = java.lang.Double.NaN;
+	private double _dblCounterPartyRecovery = java.lang.Double.NaN;
 
 	/**
-	 * ReplicationPortfolio Constructor
+	 * MasterAgreementCloseOut Constructor
 	 * 
-	 * @param dblAssetUnits The Number of Asset Replication Units
-	 * @param dblBankBondUnits The Number of Bank Zero Coupon Bond Replication Units
-	 * @param dblCounterPartyBondUnits The Number of Counter Party Zero Coupon Bond Replication Units
-	 * @param dblCashAccount The Cash Account
+	 * @param dblBankRecovery The Bank Recovery Rate
+	 * @param dblCounterPartyRecovery The Counter Party Recovery Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ReplicationPortfolio (
-		final double dblAssetUnits,
-		final double dblBankBondUnits,
-		final double dblCounterPartyBondUnits,
-		final double dblCashAccount)
+	public MasterAgreementCloseOut (
+		final double dblBankRecovery,
+		final double dblCounterPartyRecovery)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetUnits = dblAssetUnits) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankBondUnits = dblBankBondUnits) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyBondUnits =
-					dblCounterPartyBondUnits) || dblCounterPartyBondUnits > 0. ||
-						!org.drip.quant.common.NumberUtil.IsValid (_dblCashAccount = dblCashAccount))
-			throw new java.lang.Exception ("ReplicationPortfolio Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyRecovery = dblCounterPartyRecovery))
+			throw new java.lang.Exception ("MasterAgreementCloseOut Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Number of Asset Replication Units
+	 * Retrieve the Bank Recovery Rate
 	 * 
-	 * @return The Number of Asset Replication Units
+	 * @return The Bank Recovery Rate
 	 */
 
-	public double assetUnits()
+	public double bankRecovery()
 	{
-		return _dblAssetUnits;
+		return _dblBankRecovery;
 	}
 
 	/**
-	 * Retrieve the Number of Bank Zero Coupon Bond Replication Units
+	 * Retrieve the Counter Party Recovery Rate
 	 * 
-	 * @return The Number of Bank Zero Coupon Bond Replication Units
+	 * @return The Counter Party Recovery Rate
 	 */
 
-	public double bankBondUnits()
+	public double counterPartyRecovery()
 	{
-		return _dblBankBondUnits;
+		return _dblCounterPartyRecovery;
 	}
 
 	/**
-	 * Retrieve the Number of Counter Party Zero Coupon Bond Replication Units
+	 * Retrieve the Close-out from the MTM on the Bank Default
 	 * 
-	 * @return The Number of Counter Party Zero Coupon Bond Replication Units
+	 * @param dblMTM The MTM
+	 * 
+	 * @return The Close-out from the MTM on the Bank Default
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double counterPartyBondUnits()
-	{
-		return _dblCounterPartyBondUnits;
-	}
-
-	/**
-	 * Retrieve the Cash Account Amount
-	 * 
-	 * @return The Cash Account Amount
-	 */
-
-	public double cashAccount()
-	{
-		return _dblCashAccount;
-	}
-
-	public double value (
-		final org.drip.xva.definition.UniverseSnapshot us)
+	public double bankDefault (
+		final double dblMTM)
 		throws java.lang.Exception
 	{
-		if (null == us) throw new java.lang.Exception ("ReplicationPortfolio::value => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM))
+			throw new java.lang.Exception ("MasterAgreementCloseOut::bankDefault => Invalid Inputs");
 
-		return -1. * (_dblAssetUnits * us.assetNumeraire().nextRandom());
+		return dblMTM > 0. ? dblMTM : (1. - _dblBankRecovery) * dblMTM;
+	}
+
+	/**
+	 * Retrieve the Close-out from the MTM on the Counter Party Default
+	 * 
+	 * @param dblMTM The MTM
+	 * 
+	 * @return The Close-out from the MTM on the Counter Party Default
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double counterPartyDefault (
+		final double dblMTM)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM))
+			throw new java.lang.Exception ("MasterAgreementCloseOut::counterPartyDefault => Invalid Inputs");
+
+		return dblMTM < 0. ? dblMTM : (1. - _dblCounterPartyRecovery) * dblMTM;
 	}
 }

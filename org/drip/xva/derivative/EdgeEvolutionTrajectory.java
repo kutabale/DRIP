@@ -1,5 +1,5 @@
 
-package org.drip.xva.bilateral;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,9 @@ package org.drip.xva.bilateral;
  */
 
 /**
- * DerivativeTrajectoryNode holds the Snapshot of the Trade-able Prices, the Cash Account, the Replication
- *  Portfolio, and the corresponding Derivative Value, as laid out in Burgard and Kjaer (2014). The
- *  References are:
+ * EdgeEvolutionTrajectory holds the Evolution Snapshot of the Trade-able Prices, the Cash Account, the
+ *  Replication Portfolio, and the corresponding Derivative Value, as laid out in Burgard and Kjaer (2014).
+ *   The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,9 +69,45 @@ package org.drip.xva.bilateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class DerivativeTrajectoryNode {
+public class EdgeEvolutionTrajectory {
+	private double _dblTime = java.lang.Double.NaN;
+	private double _dblDerivativeValue = java.lang.Double.NaN;
 	private org.drip.xva.definition.UniverseSnapshot _us = null;
-	private org.drip.xva.bilateral.ReplicationPortfolio _rp = null;
+	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
+
+	/**
+	 * EdgeEvolutionTrajectory Constructor
+	 * 
+	 * @param dblTime The Evolution Trajectory Edge Time
+	 * @param us Realization of the Trade-able Asset Prices
+	 * @param erp The Edge Replication Portfolio Snapshot
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public EdgeEvolutionTrajectory (
+		final double dblTime,
+		final org.drip.xva.definition.UniverseSnapshot us,
+		final org.drip.xva.derivative.EdgeReplicationPortfolio erp)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_us = us) || null ==
+			(_erp = erp))
+			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
+
+		_dblDerivativeValue = _erp.value (_us);
+	}
+
+	/**
+	 * Retrieve the Time Instant
+	 * 
+	 * @return The Time Instant
+	 */
+
+	public double time()
+	{
+		return _dblTime;
+	}
 
 	/**
 	 * Retrieve the Realization of the Trade-able Asset Prices
@@ -85,13 +121,24 @@ public class DerivativeTrajectoryNode {
 	}
 
 	/**
-	 * Retrieve the Replication Portfolio Snapshot
+	 * Retrieve the Edge Replication Portfolio Snapshot
 	 * 
-	 * @return The Replication Portfolio Snapshot
+	 * @return The Edge Replication Portfolio Snapshot
 	 */
 
-	public org.drip.xva.bilateral.ReplicationPortfolio replicationPortfolio()
+	public org.drip.xva.derivative.EdgeReplicationPortfolio replicationPortfolio()
 	{
-		return _rp;
+		return _erp;
+	}
+
+	/**
+	 * Retrieve the Derivative Value
+	 * 
+	 * @return The Derivative Value
+	 */
+
+	public double derivativeValue()
+	{
+		return _dblDerivativeValue;
 	}
 }

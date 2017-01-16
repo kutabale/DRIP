@@ -145,6 +145,17 @@ public class RealizedIncrement {
 	}
 
 	/**
+	 * Retrieve the Gross Increment
+	 * 
+	 * @return The Gross Increment
+	 */
+
+	public double grossChange()
+	{
+		return _dblDeterministic + _dblStochastic;
+	}
+
+	/**
 	 * Retrieve the Next Random Realization
 	 * 
 	 * @return The Next Random Realization

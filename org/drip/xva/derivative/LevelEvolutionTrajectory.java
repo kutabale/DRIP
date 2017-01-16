@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,9 @@ package org.drip.xva.definition;
  */
 
 /**
- * TradeableAssetEquity describes a Trade-able Equity Asset. The References are:
+ * LevelEvolutionTrajectory holds the Evolution Edges of the Trajectory, the Cash Account, and the Derivative
+ * 	Values evolved in a Dynamically Adaptive Manner, as laid out in Burgard and Kjaer (2014). The References
+ *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,44 +69,61 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeableAssetEquity extends org.drip.xva.definition.TradeableAsset {
-	private double _dblDividendRate = java.lang.Double.NaN;
+public class LevelEvolutionTrajectory {
+	private org.drip.xva.derivative.LevelCashAccount _lca = null;
+	private org.drip.xva.derivative.EdgeEvolutionTrajectory _eetStart = null;
+	private org.drip.xva.derivative.EdgeEvolutionTrajectory _eetFinish = null;
 
 	/**
-	 * TradeableAsset Constructor
+	 * LevelEvolutionTrajectory Constructor
 	 * 
-	 * @param mePriceNumeraire The Underlier Price Numeraire
-	 * @param dblRepoRate The Underlier Repo Rate
-	 * @param dblDividendRate The Underlier Dividend Rate
+	 * @param eetStart The Starting Evolution Trajectory Edge Instance
+	 * @param eetFinish The Finishing Evolution Trajectory Edge Instance
+	 * @param lca The Level Cash Account Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradeableAssetEquity (
-		final org.drip.measure.process.MarginalEvolver mePriceNumeraire,
-		final double dblRepoRate,
-		final double dblDividendRate)
+	public LevelEvolutionTrajectory (
+		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
+		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetFinish,
+		final org.drip.xva.derivative.LevelCashAccount lca)
 		throws java.lang.Exception
 	{
-		super (mePriceNumeraire, dblRepoRate);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDividendRate = dblDividendRate))
-			throw new java.lang.Exception ("TradeableAssetEquity Constructor => Invalid Inputs");
+		if (null == (_eetStart = eetStart) || null == (_eetFinish = eetFinish) || null == (_lca = lca))
+			throw new java.lang.Exception ("LevelEvolutionTrajectory Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Underlier Dividend Rate
+	 * Retrieve the Starting Evolution Trajectory Edge Instance
 	 * 
-	 * @return The Underlier Dividend Rate
+	 * @return The Starting Evolution Trajectory Edge Instance
 	 */
 
-	public double dividendRate()
+	public org.drip.xva.derivative.EdgeEvolutionTrajectory edgeStart()
 	{
-		return _dblDividendRate;
+		return _eetStart;
 	}
 
-	@Override public double cashAccumulationRate()
+	/**
+	 * Retrieve the Finishing Evolution Trajectory Edge Instance
+	 * 
+	 * @return The Finishing Evolution Trajectory Edge Instance
+	 */
+
+	public org.drip.xva.derivative.EdgeEvolutionTrajectory edgeFinish()
 	{
-		return _dblDividendRate - repoRate();
+		return _eetFinish;
+	}
+
+	/**
+	 * Retrieve the Level Cash Account Instance
+	 * 
+	 * @return The Level Cash Account Instance
+	 */
+
+	public org.drip.xva.derivative.LevelCashAccount cashAccount()
+	{
+		return _lca;
 	}
 }

@@ -1,5 +1,5 @@
 
-package org.drip.xva.bilateral;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.bilateral;
  */
 
 /**
- * MasterAgreementMTM implements the (2002) ISDA Master Agreement Mark-To-Market Scheme to be used at the
- *  Bank/Counter Party Default. The References are:
+ * TerminalPayout implements the Pay-out Function on the given Asset, using its Marginal Evolution Process,
+ *  at the specified Terminal Time Instance. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,89 +68,47 @@ package org.drip.xva.bilateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class MasterAgreementMTM {
-	private double _dblBankRecovery = java.lang.Double.NaN;
-	private double _dblCounterPartyRecovery = java.lang.Double.NaN;
+public class TerminalPayout {
+	private org.drip.analytics.date.JulianDate _dtPayout = null;
+	private org.drip.function.definition.R1ToR1 _r1RToR1Payout = null;
 
 	/**
-	 * MasterAgreementMTM Constructor
+	 * TerminalPayout Constructor
 	 * 
-	 * @param dblBankRecovery The Bank Recovery Rate
-	 * @param dblCounterPartyRecovery The Counter Party Recovery Rate
+	 * @param dtPayout The Terminal Pay Out Date
+	 * @param r1RToR1Payout The R^1 -> R^1 Pay-out Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MasterAgreementMTM (
-		final double dblBankRecovery,
-		final double dblCounterPartyRecovery)
+	public TerminalPayout (
+		final org.drip.analytics.date.JulianDate dtPayout,
+		final org.drip.function.definition.R1ToR1 r1RToR1Payout)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyRecovery = dblCounterPartyRecovery))
-			throw new java.lang.Exception ("MasterAgreementMTM Constructor => Invalid Inputs");
+		if (null == (_dtPayout = dtPayout) || null == (_r1RToR1Payout = r1RToR1Payout))
+			throw new java.lang.Exception ("TerminalPayout Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Bank Recovery Rate
+	 * Retrieve the Terminal Pay Out Date
 	 * 
-	 * @return The Bank Recovery Rate
+	 * @return The Terminal Pay Out Date
 	 */
 
-	public double bankRecovery()
+	public org.drip.analytics.date.JulianDate date()
 	{
-		return _dblBankRecovery;
+		return _dtPayout;
 	}
 
 	/**
-	 * Retrieve the Counter Party Recovery Rate
+	 * Retrieve the R^1 -> R^1 Pay-out Function
 	 * 
-	 * @return The Counter Party Recovery Rate
+	 * @return The R^1 -> R^1 Pay-out Function
 	 */
 
-	public double counterPartyRecovery()
+	public org.drip.function.definition.R1ToR1 function()
 	{
-		return _dblCounterPartyRecovery;
-	}
-
-	/**
-	 * Retrieve the MTM from the Close-out Amount on the Bank Default
-	 * 
-	 * @param dblCloseOutAmount The Close-out Amount
-	 * 
-	 * @return The MTM from the Close-out Amount on the Bank Default
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public double bankDefault (
-		final double dblCloseOutAmount)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblCloseOutAmount))
-			throw new java.lang.Exception ("MasterAgreementMTM::bankDefault => Invalid Inputs");
-
-		return dblCloseOutAmount > 0. ? dblCloseOutAmount : (1. - _dblBankRecovery) * dblCloseOutAmount;
-	}
-
-	/**
-	 * Retrieve the MTM from the Close-out Amount on the Counter Party Default
-	 * 
-	 * @param dblCloseOutAmount The Close-out Amount
-	 * 
-	 * @return The MTM from the Close-out Amount on the Counter Party Default
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public double counterPartyDefault (
-		final double dblCloseOutAmount)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblCloseOutAmount))
-			throw new java.lang.Exception ("MasterAgreementMTM::counterPartyDefault => Invalid Inputs");
-
-		return dblCloseOutAmount < 0. ? dblCloseOutAmount : (1. - _dblCounterPartyRecovery) *
-			dblCloseOutAmount;
+		return _r1RToR1Payout;
 	}
 }
