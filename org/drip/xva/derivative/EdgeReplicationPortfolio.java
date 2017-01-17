@@ -160,8 +160,8 @@ public class EdgeReplicationPortfolio {
 	{
 		if (null == us) throw new java.lang.Exception ("EdgeReplicationPortfolio::value => Invalid Inputs");
 
-		return -1. * (_dblAssetUnits * us.assetNumeraire().nextRandom() + _dblBankBondUnits *
-			us.bankFundingNumeraire().nextRandom() + _dblCounterPartyBondUnits *
-				us.counterPartyFundingNumeraire().nextRandom() + _dblCashAccount);
+		return -1. * (_dblAssetUnits * us.assetNumeraire().finish() + _dblBankBondUnits *
+			us.bankBondNumeraire().finish() + _dblCounterPartyBondUnits *
+				us.counterPartyBondNumeraire().finish() + _dblCashAccount);
 	}
 }

@@ -104,11 +104,11 @@ public class OrnsteinUhlenbeckSequence {
 			aMSS[0] = new org.drip.execution.latent.MarketStateSystemic (dblInitialMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.measure.process.RealizedIncrement gi = oup1D.weinerIncrement (new
+				org.drip.measure.process.LevelRealization gi = oup1D.weinerIncrement (new
 					org.drip.measure.process.MarginalSnap (dblTime, aMSS[i].common()), dblGenerationInterval);
 
 				aMSS[i + 1] = new org.drip.execution.latent.MarketStateSystemic (aMSS[i].common() +
-					gi.deterministic() + gi.stochastic());
+					gi.deterministic() + gi.continuousStochastic());
 
 				dblTime += dblGenerationInterval;
 			}
@@ -152,14 +152,14 @@ public class OrnsteinUhlenbeckSequence {
 				dblInitialVolatilityMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.measure.process.RealizedIncrement[] aGI = oup2D.weinerIncrement
+				org.drip.measure.process.LevelRealization[] aGI = oup2D.weinerIncrement
 					(aMSC[i].realization(), dblGenerationInterval);
 
 				if (null == aGI || 2 != aGI.length) return null;
 
 				aMSC[i + 1] = new org.drip.execution.latent.MarketStateCorrelated (aMSC[i].liquidity() +
-					aGI[0].deterministic() + aGI[0].stochastic(), aMSC[i].volatility() +
-						aGI[1].deterministic() + aGI[1].stochastic());
+					aGI[0].deterministic() + aGI[0].continuousStochastic(), aMSC[i].volatility() +
+						aGI[1].deterministic() + aGI[1].continuousStochastic());
 			}
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

@@ -113,7 +113,7 @@ public class MarginalEvolverLogarithmic extends org.drip.measure.process.Margina
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility);
+		super (ldevDrift, ldevVolatility, null);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))

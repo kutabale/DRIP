@@ -69,76 +69,76 @@ package org.drip.xva.definition;
  */
 
 public class UniverseSnapshot {
-	private org.drip.measure.process.RealizedIncrement _riAssetNumeraire = null;
-	private org.drip.measure.process.RealizedIncrement _riBankFundingNumeraire = null;
-	private org.drip.measure.process.RealizedIncrement _riCreditRiskFreeNumeraire = null;
-	private org.drip.measure.process.RealizedIncrement _riCounterPartyFundingNumeraire = null;
+	private org.drip.measure.process.LevelRealization _lrAssetNumeraire = null;
+	private org.drip.measure.process.LevelRealization _lrBankBondNumeraire = null;
+	private org.drip.measure.process.LevelRealization _lrCreditRiskFreeNumeraire = null;
+	private org.drip.measure.process.LevelRealization _lrCounterPartyBondNumeraire = null;
 
 	/**
 	 * UniverseSnapshot Constructor
 	 * 
-	 * @param riAssetNumeraire The Asset Numeraire Realization Increment
-	 * @param riCreditRiskFreeNumeraire The Credit Risk Free Numeraire Realization Increment
-	 * @param riBankFundingNumeraire The Bank Funding Numeraire Realization Increment
-	 * @param riCounterPartyFundingNumeraire The Counter Party Funding Numeraire Realization Increment
+	 * @param lrAssetNumeraire The Asset Numeraire Level Realization
+	 * @param lrCreditRiskFreeNumeraire The Credit Risk Free Numeraire Level Realization
+	 * @param lrBankBondNumeraire The Bank Bond Numeraire Level Realization
+	 * @param lrCounterPartyBondNumeraire The Counter Party Bond Numeraire Level Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public UniverseSnapshot (
-		final org.drip.measure.process.RealizedIncrement riAssetNumeraire,
-		final org.drip.measure.process.RealizedIncrement riCreditRiskFreeNumeraire,
-		final org.drip.measure.process.RealizedIncrement riBankFundingNumeraire,
-		final org.drip.measure.process.RealizedIncrement riCounterPartyFundingNumeraire)
+		final org.drip.measure.process.LevelRealization lrAssetNumeraire,
+		final org.drip.measure.process.LevelRealization lrCreditRiskFreeNumeraire,
+		final org.drip.measure.process.LevelRealization lrBankBondNumeraire,
+		final org.drip.measure.process.LevelRealization lrCounterPartyBondNumeraire)
 		throws java.lang.Exception
 	{
-		if (null == (_riAssetNumeraire = riAssetNumeraire) || null == (_riCreditRiskFreeNumeraire =
-			riCreditRiskFreeNumeraire) || null == (_riBankFundingNumeraire = riBankFundingNumeraire) || null
-				== (_riCounterPartyFundingNumeraire = riCounterPartyFundingNumeraire))
+		if (null == (_lrAssetNumeraire = lrAssetNumeraire) || null == (_lrCreditRiskFreeNumeraire =
+			lrCreditRiskFreeNumeraire) || null == (_lrBankBondNumeraire = lrBankBondNumeraire) || null ==
+				(_lrCounterPartyBondNumeraire = lrCounterPartyBondNumeraire))
 			throw new java.lang.Exception ("UniverseSnapshot Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asset Numeraire Realization Increment
+	 * Retrieve the Asset Numeraire Level Realization
 	 * 
-	 * @return The Asset Numeraire Realization Increment
+	 * @return The Asset Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.RealizedIncrement assetNumeraire()
+	public org.drip.measure.process.LevelRealization assetNumeraire()
 	{
-		return _riAssetNumeraire;
+		return _lrAssetNumeraire;
 	}
 
 	/**
-	 * Retrieve the Credit Risk Free Numeraire Realization Increment
+	 * Retrieve the Credit Risk Free Numeraire Level Realization
 	 * 
-	 * @return The Credit Risk Free Numeraire Realization Increment
+	 * @return The Credit Risk Free Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.RealizedIncrement creditRiskFreeNumeraire()
+	public org.drip.measure.process.LevelRealization creditRiskFreeNumeraire()
 	{
-		return _riCreditRiskFreeNumeraire;
+		return _lrCreditRiskFreeNumeraire;
 	}
 
 	/**
-	 * Retrieve the Bank Funding Numeraire Realization Increment
+	 * Retrieve the Bank Bond Numeraire Level Realization
 	 * 
-	 * @return The Bank Funding Numeraire Realization Increment
+	 * @return The Bank Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.RealizedIncrement bankFundingNumeraire()
+	public org.drip.measure.process.LevelRealization bankBondNumeraire()
 	{
-		return _riBankFundingNumeraire;
+		return _lrBankBondNumeraire;
 	}
 
 	/**
-	 * Retrieve the Counter Party Funding Numeraire Realization Increment
+	 * Retrieve the Counter Party Bond Numeraire Level Realization
 	 * 
-	 * @return The Counter Party Funding Numeraire Realization Increment
+	 * @return The Counter Party Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.RealizedIncrement counterPartyFundingNumeraire()
+	public org.drip.measure.process.LevelRealization counterPartyBondNumeraire()
 	{
-		return _riCounterPartyFundingNumeraire;
+		return _lrCounterPartyBondNumeraire;
 	}
 }

@@ -124,7 +124,7 @@ public abstract class ProcessJoint {
 	 * @return The Array of the Adjacent Increments
 	 */
 
-	public abstract org.drip.measure.process.RealizedIncrement[] increment (
+	public abstract org.drip.measure.process.LevelRealization[] increment (
 		final double[] adblRandomVariate,
 		final double[] adblRandomUnitRealization,
 		final double dblTimeIncrement);

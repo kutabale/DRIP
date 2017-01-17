@@ -48,7 +48,7 @@ package org.drip.measure.process;
  */
 
 /**
- * RealizedIncrement implements the Deterministic and the Stochastic Components of a Random Increment as well
+ * LevelRealization implements the Deterministic and the Stochastic Components of a Random Increment as well
  * 	the Original Random Variate. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
@@ -69,46 +69,56 @@ package org.drip.measure.process;
  * @author Lakshmi Krishnamurthy
  */
 
-public class RealizedIncrement {
-	private double _dblWander = java.lang.Double.NaN;
-	private double _dblPrevious = java.lang.Double.NaN;
-	private double _dblStochastic = java.lang.Double.NaN;
+public class LevelRealization {
+	private double _dblStart = java.lang.Double.NaN;
+	private double _dblJumpWander = java.lang.Double.NaN;
 	private double _dblDeterministic = java.lang.Double.NaN;
+	private double _dblJumpStochastic = java.lang.Double.NaN;
+	private double _dblContinuousWander = java.lang.Double.NaN;
+	private double _dblContinuousStochastic = java.lang.Double.NaN;
 
 	/**
-	 * RealizedIncrement Constructor
+	 * LevelRealization Constructor
 	 * 
-	 * @param dblPrevious The Previous Random Variable Realization
+	 * @param dblStart The Starting Random Variable Realization
 	 * @param dblDeterministic The Deterministic Increment Component
-	 * @param dblStochastic The Stochastic Increment Component
-	 * @param dblWander The Random Wander Realization
+	 * @param dblContinuousStochastic The Continuous Stochastic Increment Component
+	 * @param dblContinuousWander The Continuous Random Wander Realization
+	 * @param dblJumpStochastic The Jump Stochastic Increment Component
+	 * @param dblJumpWander The Jump Random Wander Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public RealizedIncrement (
-		final double dblPrevious,
+	public LevelRealization (
+		final double dblStart,
 		final double dblDeterministic,
-		final double dblStochastic,
-		final double dblWander)
+		final double dblContinuousStochastic,
+		final double dblContinuousWander,
+		final double dblJumpStochastic,
+		final double dblJumpWander)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblPrevious = dblPrevious) ||
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblStart = dblStart) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblStochastic = dblStochastic) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblWander = dblWander))
-			throw new java.lang.Exception ("RealizedIncrement Constructor => Invalid Inputs");
+				!org.drip.quant.common.NumberUtil.IsValid (_dblContinuousStochastic =
+					dblContinuousStochastic) || !org.drip.quant.common.NumberUtil.IsValid
+						(_dblContinuousWander = dblContinuousWander) ||
+							!org.drip.quant.common.NumberUtil.IsValid (_dblJumpStochastic =
+								dblJumpStochastic) || !org.drip.quant.common.NumberUtil.IsValid
+									(_dblJumpWander = dblJumpWander))
+			throw new java.lang.Exception ("LevelRealization Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Previous Random Realization
+	 * Retrieve the Starting Random Realization
 	 * 
-	 * @return The Previous Random Realization
+	 * @return The Starting Random Realization
 	 */
 
-	public double previousRandom()
+	public double start()
 	{
-		return _dblPrevious;
+		return _dblStart;
 	}
 
 	/**
@@ -123,25 +133,47 @@ public class RealizedIncrement {
 	}
 
 	/**
-	 * Retrieve the Stochastic Increment Component
+	 * Retrieve the Continuous Stochastic Increment Component
 	 * 
-	 * @return The Stochastic Increment Component
+	 * @return The Continuous Stochastic Increment Component
 	 */
 
-	public double stochastic()
+	public double continuousStochastic()
 	{
-		return _dblStochastic;
+		return _dblContinuousStochastic;
 	}
 
 	/**
-	 * Retrieve the Random Wander Realization
+	 * Retrieve the Continuous Random Wander Realization
 	 * 
-	 * @return The Random Wander Realization
+	 * @return The Continuous Random Wander Realization
 	 */
 
-	public double wander()
+	public double continuousWander()
 	{
-		return _dblWander;
+		return _dblContinuousWander;
+	}
+
+	/**
+	 * Retrieve the Jump Stochastic Increment Component
+	 * 
+	 * @return The Jump Stochastic Increment Component
+	 */
+
+	public double jumpStochastic()
+	{
+		return _dblJumpStochastic;
+	}
+
+	/**
+	 * Retrieve the Jump Random Wander Realization
+	 * 
+	 * @return The Jump Random Wander Realization
+	 */
+
+	public double jumpWander()
+	{
+		return _dblJumpWander;
 	}
 
 	/**
@@ -152,7 +184,7 @@ public class RealizedIncrement {
 
 	public double grossChange()
 	{
-		return _dblDeterministic + _dblStochastic;
+		return _dblDeterministic + _dblContinuousStochastic + _dblJumpStochastic;
 	}
 
 	/**
@@ -161,8 +193,8 @@ public class RealizedIncrement {
 	 * @return The Next Random Realization
 	 */
 
-	public double nextRandom()
+	public double finish()
 	{
-		return _dblPrevious + _dblDeterministic + _dblStochastic;
+		return _dblStart + _dblDeterministic + _dblContinuousStochastic + _dblJumpStochastic;
 	}
 }

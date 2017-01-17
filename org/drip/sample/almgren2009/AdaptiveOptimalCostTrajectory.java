@@ -103,7 +103,7 @@ public class AdaptiveOptimalCostTrajectory {
 		);
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
-			RealizedIncrement gi = oup1D.weinerIncrement (
+			LevelRealization gi = oup1D.weinerIncrement (
 				new MarginalSnap (
 					dblTime,
 					aMSS[i].common()
@@ -113,7 +113,7 @@ public class AdaptiveOptimalCostTrajectory {
 
 			dblTime += dblTimeInterval;
 
-			aMSS[i + 1] = new MarketStateSystemic (aMSS[i].common() + gi.deterministic() + gi.stochastic());
+			aMSS[i + 1] = new MarketStateSystemic (aMSS[i].common() + gi.deterministic() + gi.continuousStochastic());
 		}
 
 		NonDimensionalCostEvolverSystemic ndces = NonDimensionalCostEvolverSystemic.Standard (oup1D);

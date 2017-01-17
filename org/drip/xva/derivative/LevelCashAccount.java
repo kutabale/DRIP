@@ -69,31 +69,32 @@ package org.drip.xva.derivative;
  */
 
 public class LevelCashAccount {
-	private double _dblRepoIncrement = java.lang.Double.NaN;
-	private double _dblAssetIncrement = java.lang.Double.NaN;
-	private double _dblFundingIncrement = java.lang.Double.NaN;
+	private double _dblBankAccumulation = java.lang.Double.NaN;
+	private double _dblAssetAccumulation = java.lang.Double.NaN;
+	private double _dblCounterPartyAccumulation = java.lang.Double.NaN;
 
 	/**
 	 * LevelCashAccount Constructor
 	 * 
-	 * @param dblAssetIncrement The Incremental Amount added to the Cash Account coming from the Asset
-	 * @param dblFundingIncrement The Incremental Amount added to the Cash Account coming from
+	 * @param dblAssetAccumulation The Incremental Amount added to the Cash Account coming from the Asset
+	 * @param dblBankAccumulation The Incremental Amount added to the Cash Account coming from the Bank
 	 * 	Borrowing/Funding
-	 * @param dblRepoIncrement The Incremental Amount added to the Cash Account coming from the Counter Party
-	 * 	Repo
+	 * @param dblCounterPartyAccumulation The Incremental Amount added to the Cash Account coming from the
+	 *  Counter Party Repo
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public LevelCashAccount (
-		final double dblAssetIncrement,
-		final double dblFundingIncrement,
-		final double dblRepoIncrement)
+		final double dblAssetAccumulation,
+		final double dblBankAccumulation,
+		final double dblCounterPartyAccumulation)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetIncrement = dblAssetIncrement) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblFundingIncrement = dblFundingIncrement) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblRepoIncrement = dblRepoIncrement))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetAccumulation = dblAssetAccumulation) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankAccumulation = dblBankAccumulation) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyAccumulation =
+					dblCounterPartyAccumulation))
 			throw new java.lang.Exception ("LevelCashAccount Constructor => Invalid Inputs");
 	}
 
@@ -103,9 +104,9 @@ public class LevelCashAccount {
 	 * @return The Incremental Amount added to the Cash Account coming from the Asset
 	 */
 
-	public double assetIncrement()
+	public double assetAccumulation()
 	{
-		return _dblAssetIncrement;
+		return _dblAssetAccumulation;
 	}
 
 	/**
@@ -114,9 +115,9 @@ public class LevelCashAccount {
 	 * @return The Incremental Amount added to the Cash Account coming from Borrowing/Funding
 	 */
 
-	public double fundingIncrement()
+	public double bankAccumulation()
 	{
-		return _dblFundingIncrement;
+		return _dblBankAccumulation;
 	}
 
 	/**
@@ -125,9 +126,9 @@ public class LevelCashAccount {
 	 * @return The Incremental Amount added to the Cash Account coming from the Counter Party Repo
 	 */
 
-	public double repoIncrement()
+	public double counterPartyAccumulation()
 	{
-		return _dblRepoIncrement;
+		return _dblCounterPartyAccumulation;
 	}
 
 	/**
@@ -136,8 +137,8 @@ public class LevelCashAccount {
 	 * @return The Cumulative Increment
 	 */
 
-	public double cumulative()
+	public double accumulation()
 	{
-		return _dblAssetIncrement + _dblFundingIncrement + _dblRepoIncrement;
+		return _dblAssetAccumulation + _dblBankAccumulation + _dblCounterPartyAccumulation;
 	}
 }

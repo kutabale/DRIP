@@ -71,11 +71,13 @@ package org.drip.xva.derivative;
 public class TrajectoryEvolutionScheme {
 	private double _dblTimeIncrement = java.lang.Double.NaN;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
+	private org.drip.xva.definition.MasterAgreementCloseOut _maco = null;
 
 	/**
 	 * EvolutionTrajectory Constructor
 	 * 
 	 * @param twru The Universe of Trade-able Assets
+	 * @param maco The Master Agreement Close Out Boundary Conditions
 	 * @param dblTimeIncrement The Time Increment
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -83,11 +85,12 @@ public class TrajectoryEvolutionScheme {
 
 	public TrajectoryEvolutionScheme (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
+		final org.drip.xva.definition.MasterAgreementCloseOut maco,
 		final double dblTimeIncrement)
 		throws java.lang.Exception
 	{
-		if (null == (_twru = twru) || !org.drip.quant.common.NumberUtil.IsValid (_dblTimeIncrement =
-			dblTimeIncrement) || 0. >= _dblTimeIncrement)
+		if (null == (_twru = twru) || null == (_maco = maco) || !org.drip.quant.common.NumberUtil.IsValid
+			(_dblTimeIncrement = dblTimeIncrement))
 			throw new java.lang.Exception ("LevelEvolutionTrajectory Constructor => Invalid Inputs");
 	}
 
@@ -103,6 +106,17 @@ public class TrajectoryEvolutionScheme {
 	}
 
 	/**
+	 * Retrieve the Close Out Boundary Condition
+	 * 
+	 * @return The Close Out Boundary Condition
+	 */
+
+	public org.drip.xva.definition.MasterAgreementCloseOut boundaryCondition()
+	{
+		return _maco;
+	}
+
+	/**
 	 * Retrieve the Evolution Time Increment
 	 * 
 	 * @return The Evolution Time Increment
@@ -113,12 +127,20 @@ public class TrajectoryEvolutionScheme {
 		return _dblTimeIncrement;
 	}
 
-	public org.drip.xva.derivative.LevelEvolutionTrajectory forwardWalk (
-		final org.drip.xva.derivative.TerminalPayout tp,
+	/**
+	 * Re-balance the Cash Account and generate the Derivative Value Update
+	 * 
+	 * @param eetStart The Starting Evolution Trajectory Edge
+	 * @param us The Universe Snap-shot
+	 * 
+	 * @return The LevelEvolutionTrajectoryRebalanced Instance
+	 */
+
+	public org.drip.xva.derivative.CashAccountRebalancer rebalanceCash (
 		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
 		final org.drip.xva.definition.UniverseSnapshot us)
 	{
-		if (null == tp || null == eetStart || null == us) return null;
+		if (null == eetStart || null == us) return null;
 
 		org.drip.xva.derivative.EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
 
@@ -128,34 +150,87 @@ public class TrajectoryEvolutionScheme {
 
 		double dblCounterPartyBondUnitsStart = erpStart.counterPartyBondUnits();
 
-		org.drip.measure.process.RealizedIncrement riAsset = us.assetNumeraire();
+		org.drip.measure.process.LevelRealization lrAsset = us.assetNumeraire();
 
-		org.drip.measure.process.RealizedIncrement riBankBond = us.bankFundingNumeraire();
+		org.drip.measure.process.LevelRealization lrBankBond = us.bankBondNumeraire();
 
-		org.drip.measure.process.RealizedIncrement riCounterPartyBond = us.counterPartyFundingNumeraire();
+		org.drip.measure.process.LevelRealization lrCounterPartyBond = us.counterPartyBondNumeraire();
 
-		double dblAssetCashRate = dblAssetUnitsStart * _twru.referenceUnderlier().cashAccumulationRate() *
-			riAsset.nextRandom();
+		double dblLevelAssetCash = dblAssetUnitsStart * _twru.referenceUnderlier().cashAccumulationRate() *
+			lrAsset.finish() * _dblTimeIncrement;
 
-		double dblCounterPartyCashRate = dblCounterPartyBondUnitsStart *
-			_twru.zeroCouponCounterPartyBond().cashAccumulationRate() * riCounterPartyBond.nextRandom();
+		double dblLevelCounterPartyCash = dblCounterPartyBondUnitsStart *
+			_twru.zeroCouponCounterPartyBond().cashAccumulationRate() * lrCounterPartyBond.finish() *
+				_dblTimeIncrement;
 
-		double dblCashAccountBalance = -1. * eetStart.derivativeValue() - dblBankBondUnitsStart *
-			riBankBond.nextRandom();
+		double dblCashAccountBalance = -1. * eetStart.derivativeXVAValue() - dblBankBondUnitsStart *
+			lrBankBond.finish();
 
-		double dblBankCashRate = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
+		double dblLevelBankCash = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
 			_twru.creditRiskFreeBond().cashAccumulationRate() :
-				_twru.zeroCouponBankBond().cashAccumulationRate());
+				_twru.zeroCouponBankBond().cashAccumulationRate()) * _dblTimeIncrement;
 
-		double dblCashAccountChange = (dblAssetCashRate + dblCounterPartyCashRate + dblBankCashRate) *
+		double dblLevelCashAccount = (dblLevelAssetCash + dblLevelCounterPartyCash + dblLevelBankCash) *
 			_dblTimeIncrement;
 
-		double dblDerivativeValueChange = -1. * (dblAssetUnitsStart * riAsset.grossChange() +
-			dblBankBondUnitsStart * riBankBond.grossChange() + dblCounterPartyBondUnitsStart *
-				riCounterPartyBond.grossChange() + dblCashAccountChange);
+		double dblLevelDerivativeXVAValue = -1. * (dblAssetUnitsStart * lrAsset.grossChange() +
+			dblBankBondUnitsStart * lrBankBond.grossChange() + dblCounterPartyBondUnitsStart *
+				lrCounterPartyBond.grossChange() + dblLevelCashAccount);
 
 		try {
-			// return new org.drip.xva.derivative.LevelEvolutionTrajectoryRebalanced (us, null);
+			return new org.drip.xva.derivative.CashAccountRebalancer (new
+				org.drip.xva.derivative.LevelCashAccount (dblLevelAssetCash, dblLevelBankCash *
+					 _dblTimeIncrement, dblLevelCounterPartyCash * _dblTimeIncrement),
+					 	dblLevelDerivativeXVAValue);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Re-balance AND move the Cash Account and generate the Updated Derivative Value/Replication Portfolio
+	 * 
+	 * @param eetStart The Starting Evolution Trajectory Edge
+	 * @param us The Universe Snap-shot
+	 * @param dblDerivativeXVAValueDelta The XVA Based Derivative Value Delta
+	 * 
+	 * @return The LevelEvolutionTrajectory Instance
+	 */
+
+	public org.drip.xva.derivative.LevelEvolutionTrajectory move (
+		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
+		final org.drip.xva.definition.UniverseSnapshot us,
+		final double dblDerivativeXVAValueDelta)
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblDerivativeXVAValueDelta)) return null;
+
+		double dblAssetUnits = dblDerivativeXVAValueDelta;
+
+		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (eetStart, us);
+
+		if (null == car) return null;
+
+		org.drip.xva.derivative.LevelCashAccount lca = car.cashAccount();
+
+		double dblDerivativeXVAValue = eetStart.derivativeXVAValue() + car.levelDerivativeXVAValue();
+
+		try {
+			double dblBankBondUnits = -1. * (dblDerivativeXVAValue - _maco.bankDefault
+				(dblDerivativeXVAValue)) / us.bankBondNumeraire().finish();
+
+			double dblCounterPartyBondUnits = -1. * (dblDerivativeXVAValue - _maco.counterPartyDefault
+				(dblDerivativeXVAValue)) / us.counterPartyBondNumeraire().finish();
+
+			org.drip.xva.derivative.EdgeReplicationPortfolio erp = new
+				org.drip.xva.derivative.EdgeReplicationPortfolio (dblAssetUnits, dblBankBondUnits,
+					dblCounterPartyBondUnits, eetStart.replicationPortfolio().cashAccount() +
+						lca.accumulation());
+
+			return new org.drip.xva.derivative.LevelEvolutionTrajectory (eetStart, new
+				org.drip.xva.derivative.EdgeEvolutionTrajectory (eetStart.time() + _dblTimeIncrement, us,
+					erp), lca);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

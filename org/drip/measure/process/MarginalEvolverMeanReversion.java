@@ -115,7 +115,7 @@ public class MarginalEvolverMeanReversion extends org.drip.measure.process.Margi
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility);
+		super (ldevDrift, ldevVolatility, null);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionRate = dblMeanReversionRate) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||

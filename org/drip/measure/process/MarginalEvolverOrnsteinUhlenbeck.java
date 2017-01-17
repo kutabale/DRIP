@@ -152,7 +152,7 @@ public class MarginalEvolverOrnsteinUhlenbeck extends org.drip.measure.process.M
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility);
+		super (ldevDrift, ldevVolatility, null);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) || 0. >=

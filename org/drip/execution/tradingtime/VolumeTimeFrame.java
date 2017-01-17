@@ -69,7 +69,7 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class VolumeTimeFrame extends org.drip.measure.process.RealizedIncrement {
+public class VolumeTimeFrame extends org.drip.measure.process.LevelRealization {
 	private double _dblHoldings = java.lang.Double.NaN;
 	private double _dblTradeRate = java.lang.Double.NaN;
 
@@ -96,7 +96,7 @@ public class VolumeTimeFrame extends org.drip.measure.process.RealizedIncrement 
 		throws java.lang.Exception
 	{
 		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian,
-			dblBrownian);
+			dblBrownian, 0., 0.);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *
@@ -143,7 +143,7 @@ public class VolumeTimeFrame extends org.drip.measure.process.RealizedIncrement 
 		if (null == cv)
 			throw new java.lang.Exception ("VolumeTimeFrame::transactionCostIncrement => Invalid Inputs");
 
-		return _dblHoldings * stochastic() + cv.invariant() * _dblTradeRate * _dblTradeRate *
+		return _dblHoldings * continuousStochastic() + cv.invariant() * _dblTradeRate * _dblTradeRate *
 			deterministic();
 	}
 }

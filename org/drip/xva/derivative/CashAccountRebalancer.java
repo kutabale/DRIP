@@ -47,9 +47,9 @@ package org.drip.xva.derivative;
  */
 
 /**
- * LevelReplicationTrajectoryRebalanced holds the Starting Edge, the Level Cash Account Increment, and the
- *  Edge Derivative Value for a Trajectory that has just undergone Cash Account Re-balancing, as laid out in
- *  Burgard and Kjaer (2014). The References are:
+ * CashAccountRebalancer holds the Level Cash Account Increment and the Level Derivative Value Update for a
+ *  Trajectory that has just undergone Cash Account Re-balancing, as laid out in Burgard and Kjaer (2014).
+ *  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,6 +69,48 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LevelReplicationTrajectoryRebalanced {
+public class CashAccountRebalancer {
+	private org.drip.xva.derivative.LevelCashAccount _lca = null;
+	private double _dblLevelDerivativeXVAValue = java.lang.Double.NaN;
 
+	/**
+	 * CashAccountRebalancer Constructor
+	 * 
+	 * @param lca The Level Cash Account Instance
+	 * @param dblLevelDerivativeXVAValue The Level XVA Derivative Value
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public CashAccountRebalancer (
+		final org.drip.xva.derivative.LevelCashAccount lca,
+		final double dblLevelDerivativeXVAValue)
+		throws java.lang.Exception
+	{
+		if (null == (_lca = lca) || !org.drip.quant.common.NumberUtil.IsValid (_dblLevelDerivativeXVAValue =
+			dblLevelDerivativeXVAValue))
+			throw new java.lang.Exception ("CashAccountRebalancer Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Level Cash Account Instance
+	 * 
+	 * @return The Level Cash Account Instance
+	 */
+
+	public org.drip.xva.derivative.LevelCashAccount cashAccount()
+	{
+		return _lca;
+	}
+
+	/**
+	 * Retrieve the Level Derivative XVA Value Increment
+	 * 
+	 * @return The Level Derivative XVA Value Increment
+	 */
+
+	public double levelDerivativeXVAValue()
+	{
+		return _dblLevelDerivativeXVAValue;
+	}
 }

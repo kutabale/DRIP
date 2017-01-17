@@ -55,23 +55,29 @@ package org.drip.measure.process;
 
 public class MarginalEvolver {
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDrift = null;
+	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevIntensity = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
 	/**
 	 * MarginalEvolver Constructor
 	 * 
 	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
-	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process
+	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process Continuous Component
+	 * @param ldevIntensity The LDEV Intensity Function of the Marginal Process Jump Component
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public MarginalEvolver (
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevIntensity)
 		throws java.lang.Exception
 	{
-		if (null == (_ldevDrift = ldevDrift) || null == (_ldevVolatility = ldevVolatility))
+		_ldevIntensity = ldevIntensity;
+		_ldevVolatility = ldevVolatility;
+
+		if (null == (_ldevDrift = ldevDrift) || (null == _ldevVolatility && null == _ldevIntensity))
 			throw new java.lang.Exception ("MarginalEvolver Constructor => Invalid Inputs");
 	}
 
@@ -87,9 +93,9 @@ public class MarginalEvolver {
 	}
 
 	/**
-	 * Retrieve the LDEV Volatility Function of the Marginal Process
+	 * Retrieve the LDEV Volatility Function of the Marginal Process Continuous Component
 	 * 
-	 * @return The LDEV Volatility Function of the Marginal Process
+	 * @return The LDEV Volatility Function of the Marginal Process Continuous Component
 	 */
 
 	public org.drip.measure.process.LocalDeterministicEvolutionFunction volatilityLDEV()
@@ -98,28 +104,44 @@ public class MarginalEvolver {
 	}
 
 	/**
+	 * Retrieve the LDEV Intensity Function of the Marginal Process Jump Component
+	 * 
+	 * @return The LDEV Intensity Function of the Marginal Process Jump Component
+	 */
+
+	public org.drip.measure.process.LocalDeterministicEvolutionFunction intensityLDEV()
+	{
+		return _ldevIntensity;
+	}
+
+	/**
 	 * Generate the Adjacent Increment from the specified Random Variate
 	 * 
 	 * @param ms The Random Variate Marginal Snap
-	 * @param dblRandomUnitRealization The Random Stochastic Realization Variate Unit
+	 * @param dblContinuousRandomUnitRealization The Continuous Random Stochastic Realization Variate Unit
+	 * @param dblJumpRandomUnitRealization The Jump Random Stochastic Realization Variate Unit
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.process.RealizedIncrement increment (
+	public org.drip.measure.process.LevelRealization increment (
 		final org.drip.measure.process.MarginalSnap ms,
-		final double dblRandomUnitRealization,
+		final double dblContinuousRandomUnitRealization,
+		final double dblJumpRandomUnitRealization,
 		final double dblTimeIncrement)
 	{
-		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblRandomUnitRealization) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
+		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblContinuousRandomUnitRealization) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblJumpRandomUnitRealization) ||
+				!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
 			return null;
 
 		try {
-			return new org.drip.measure.process.RealizedIncrement (ms.value(), _ldevDrift.value (ms) *
-				dblTimeIncrement, _ldevVolatility.value (ms) * dblRandomUnitRealization * java.lang.Math.sqrt
-					(dblTimeIncrement), dblRandomUnitRealization);
+			return new org.drip.measure.process.LevelRealization (ms.value(), _ldevDrift.value (ms) *
+				dblTimeIncrement, null == _ldevVolatility ? 0. : _ldevVolatility.value (ms) *
+					dblContinuousRandomUnitRealization * java.lang.Math.sqrt (dblTimeIncrement),
+						dblContinuousRandomUnitRealization, 0.5 >= dblJumpRandomUnitRealization || null ==
+							_ldevIntensity ? 0. : _ldevIntensity.value (ms), dblJumpRandomUnitRealization);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -136,12 +158,51 @@ public class MarginalEvolver {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.process.RealizedIncrement weinerIncrement (
+	public org.drip.measure.process.LevelRealization weinerIncrement (
 		final org.drip.measure.process.MarginalSnap ms,
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (ms, org.drip.measure.gaussian.NormalQuadrature.Random(), dblTimeIncrement);
+			return increment (ms, org.drip.measure.gaussian.NormalQuadrature.Random(), 0., dblTimeIncrement);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate the Adjacent Increment from the specified Random Variate and a Jump Driver
+	 * 
+	 * @param ms The Random Variate Marginal Snap
+	 * @param dblTimeIncrement The Time Increment Evolution Unit
+	 * 
+	 * @return The Adjacent Increment
+	 */
+
+	public org.drip.measure.process.LevelRealization jumpIncrement (
+		final org.drip.measure.process.MarginalSnap ms,
+		final double dblTimeIncrement)
+	{
+		return increment (ms, 0., java.lang.Math.random(), dblTimeIncrement);
+	}
+
+	/**
+	 * Generate the Adjacent Increment from the specified Random Variate and Jump/Weiner Drivers
+	 * 
+	 * @param ms The Random Variate Marginal Snap
+	 * @param dblTimeIncrement The Time Increment Evolution Unit
+	 * 
+	 * @return The Adjacent Increment
+	 */
+
+	public org.drip.measure.process.LevelRealization jumpWeinerIncrement (
+		final org.drip.measure.process.MarginalSnap ms,
+		final double dblTimeIncrement)
+	{
+		try {
+			return increment (ms, org.drip.measure.gaussian.NormalQuadrature.Random(),
+				java.lang.Math.random(), dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

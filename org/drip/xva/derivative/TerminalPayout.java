@@ -69,24 +69,24 @@ package org.drip.xva.derivative;
  */
 
 public class TerminalPayout {
-	private org.drip.analytics.date.JulianDate _dtPayout = null;
-	private org.drip.function.definition.R1ToR1 _r1RToR1Payout = null;
+	private org.drip.analytics.date.JulianDate _dt = null;
+	private org.drip.function.definition.R1ToR1 _r1ToR1Payout = null;
 
 	/**
 	 * TerminalPayout Constructor
 	 * 
-	 * @param dtPayout The Terminal Pay Out Date
-	 * @param r1RToR1Payout The R^1 -> R^1 Pay-out Function
+	 * @param dt The Terminal Pay Out Date
+	 * @param r1ToR1Payout The R^1 -> R^1 Pay-out Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public TerminalPayout (
-		final org.drip.analytics.date.JulianDate dtPayout,
-		final org.drip.function.definition.R1ToR1 r1RToR1Payout)
+		final org.drip.analytics.date.JulianDate dt,
+		final org.drip.function.definition.R1ToR1 r1ToR1Payout)
 		throws java.lang.Exception
 	{
-		if (null == (_dtPayout = dtPayout) || null == (_r1RToR1Payout = r1RToR1Payout))
+		if (null == (_dt = dt) || null == (_r1ToR1Payout = r1ToR1Payout))
 			throw new java.lang.Exception ("TerminalPayout Constructor => Invalid Inputs");
 	}
 
@@ -98,7 +98,7 @@ public class TerminalPayout {
 
 	public org.drip.analytics.date.JulianDate date()
 	{
-		return _dtPayout;
+		return _dt;
 	}
 
 	/**
@@ -109,6 +109,6 @@ public class TerminalPayout {
 
 	public org.drip.function.definition.R1ToR1 function()
 	{
-		return _r1RToR1Payout;
+		return _r1ToR1Payout;
 	}
 }

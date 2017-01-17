@@ -71,7 +71,7 @@ package org.drip.xva.derivative;
 
 public class EdgeEvolutionTrajectory {
 	private double _dblTime = java.lang.Double.NaN;
-	private double _dblDerivativeValue = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValue = java.lang.Double.NaN;
 	private org.drip.xva.definition.UniverseSnapshot _us = null;
 	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
 
@@ -95,7 +95,7 @@ public class EdgeEvolutionTrajectory {
 			(_erp = erp))
 			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
 
-		_dblDerivativeValue = _erp.value (_us);
+		_dblDerivativeXVAValue = _erp.value (_us);
 	}
 
 	/**
@@ -132,13 +132,13 @@ public class EdgeEvolutionTrajectory {
 	}
 
 	/**
-	 * Retrieve the Derivative Value
+	 * Retrieve the Derivative XVA Value
 	 * 
-	 * @return The Derivative Value
+	 * @return The Derivative XVA Value
 	 */
 
-	public double derivativeValue()
+	public double derivativeXVAValue()
 	{
-		return _dblDerivativeValue;
+		return _dblDerivativeXVAValue;
 	}
 }
