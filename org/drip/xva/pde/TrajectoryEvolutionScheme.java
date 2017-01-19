@@ -1,5 +1,5 @@
 
-package org.drip.xva.derivative;
+package org.drip.xva.pde;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -69,6 +69,20 @@ package org.drip.xva.derivative;
  */
 
 public class TrajectoryEvolutionScheme {
+
+	/**
+	 * Set the Close-out to the Derivative MTM according to Li and Tang (2007) or Gregory (2009) 
+	 */
+
+	public static final int CLOSEOUT_GREGORY_LI_TANG = 1;
+
+	/**
+	 * Set the Close-out to the Derivative XVA MTM according to Burgard and Kjaer (2014)
+	 */
+
+	public static final int CLOSEOUT_BURGARD_KJAER = 2;
+
+	private int _iCloseOutScheme = CLOSEOUT_GREGORY_LI_TANG;
 	private double _dblTimeIncrement = java.lang.Double.NaN;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
 	private org.drip.xva.definition.MasterAgreementCloseOut _maco = null;
@@ -78,6 +92,7 @@ public class TrajectoryEvolutionScheme {
 	 * 
 	 * @param twru The Universe of Trade-able Assets
 	 * @param maco The Master Agreement Close Out Boundary Conditions
+	 * @param iCloseOutScheme The Close Out Scheme
 	 * @param dblTimeIncrement The Time Increment
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -86,11 +101,13 @@ public class TrajectoryEvolutionScheme {
 	public TrajectoryEvolutionScheme (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
 		final org.drip.xva.definition.MasterAgreementCloseOut maco,
+		final int iCloseOutScheme,
 		final double dblTimeIncrement)
 		throws java.lang.Exception
 	{
-		if (null == (_twru = twru) || null == (_maco = maco) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblTimeIncrement = dblTimeIncrement))
+		if (null == (_twru = twru) || null == (_maco = maco) || (CLOSEOUT_GREGORY_LI_TANG !=
+			(_iCloseOutScheme = iCloseOutScheme) && CLOSEOUT_BURGARD_KJAER != _iCloseOutScheme) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblTimeIncrement = dblTimeIncrement))
 			throw new java.lang.Exception ("LevelEvolutionTrajectory Constructor => Invalid Inputs");
 	}
 
@@ -114,6 +131,17 @@ public class TrajectoryEvolutionScheme {
 	public org.drip.xva.definition.MasterAgreementCloseOut boundaryCondition()
 	{
 		return _maco;
+	}
+
+	/**
+	 * Retrieve the Close-out Scheme
+	 * 
+	 * @return The Close-out Scheme
+	 */
+
+	public int closeOutScheme()
+	{
+		return _iCloseOutScheme;
 	}
 
 	/**
@@ -163,8 +191,8 @@ public class TrajectoryEvolutionScheme {
 			_twru.zeroCouponCounterPartyBond().cashAccumulationRate() * lrCounterPartyBond.finish() *
 				_dblTimeIncrement;
 
-		double dblCashAccountBalance = -1. * eetStart.derivativeXVAValue() - dblBankBondUnitsStart *
-			lrBankBond.finish();
+		double dblCashAccountBalance = -1. * eetStart.edgeReferenceUnderlierGreek().derivativeXVAValue() -
+			dblBankBondUnitsStart * lrBankBond.finish();
 
 		double dblLevelBankCash = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
 			_twru.creditRiskFreeBond().cashAccumulationRate() :
@@ -194,7 +222,7 @@ public class TrajectoryEvolutionScheme {
 	 * 
 	 * @param eetStart The Starting Evolution Trajectory Edge
 	 * @param us The Universe Snap-shot
-	 * @param dblDerivativeXVAValueDelta The XVA Based Derivative Value Delta
+	 * @param erugFinish The Period End EdgeReferenceUnderlierGreek Instance
 	 * 
 	 * @return The LevelEvolutionTrajectory Instance
 	 */
@@ -202,11 +230,9 @@ public class TrajectoryEvolutionScheme {
 	public org.drip.xva.derivative.LevelEvolutionTrajectory move (
 		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
 		final org.drip.xva.definition.UniverseSnapshot us,
-		final double dblDerivativeXVAValueDelta)
+		final org.drip.xva.derivative.EdgeReferenceUnderlierGreek erugFinish)
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblDerivativeXVAValueDelta)) return null;
-
-		double dblAssetUnits = dblDerivativeXVAValueDelta;
+		if (null == erugFinish) return null;
 
 		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (eetStart, us);
 
@@ -214,23 +240,31 @@ public class TrajectoryEvolutionScheme {
 
 		org.drip.xva.derivative.LevelCashAccount lca = car.cashAccount();
 
-		double dblDerivativeXVAValue = eetStart.derivativeXVAValue() + car.levelDerivativeXVAValue();
+		double dblDerivativeXVAValue = erugFinish.derivativeXVAValue();
+
+		double dblCloseOutMTM = CLOSEOUT_GREGORY_LI_TANG == _iCloseOutScheme ? erugFinish.derivativeValue() :
+			dblDerivativeXVAValue;
 
 		try {
-			double dblBankBondUnits = -1. * (dblDerivativeXVAValue - _maco.bankDefault
-				(dblDerivativeXVAValue)) / us.bankBondNumeraire().finish();
+			double dblBankDefaultCloseOut = -1. * (dblDerivativeXVAValue - _maco.bankDefault
+				(dblCloseOutMTM));
 
-			double dblCounterPartyBondUnits = -1. * (dblDerivativeXVAValue - _maco.counterPartyDefault
-				(dblDerivativeXVAValue)) / us.counterPartyBondNumeraire().finish();
+			double dblBankBondUnits = dblBankDefaultCloseOut / us.bankBondNumeraire().finish();
+
+			double dblCounterPartyDefaultCloseOut = -1. * (dblDerivativeXVAValue - _maco.counterPartyDefault
+				(dblCloseOutMTM));
+
+			double dblCounterPartyBondUnits = dblCounterPartyDefaultCloseOut /
+				us.counterPartyBondNumeraire().finish();
 
 			org.drip.xva.derivative.EdgeReplicationPortfolio erp = new
-				org.drip.xva.derivative.EdgeReplicationPortfolio (dblAssetUnits, dblBankBondUnits,
-					dblCounterPartyBondUnits, eetStart.replicationPortfolio().cashAccount() +
-						lca.accumulation());
+				org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * erugFinish.derivativeXVAValueDelta(),
+					dblBankBondUnits, dblCounterPartyBondUnits, eetStart.replicationPortfolio().cashAccount()
+						+ lca.accumulation());
 
 			return new org.drip.xva.derivative.LevelEvolutionTrajectory (eetStart, new
 				org.drip.xva.derivative.EdgeEvolutionTrajectory (eetStart.time() + _dblTimeIncrement, us,
-					erp), lca);
+					erp, erugFinish, dblBankDefaultCloseOut, dblCounterPartyDefaultCloseOut), lca);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

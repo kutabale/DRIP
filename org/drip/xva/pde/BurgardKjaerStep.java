@@ -1,5 +1,5 @@
 
-package org.drip.xva.derivative;
+package org.drip.xva.pde;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,8 @@ package org.drip.xva.derivative;
  */
 
 /**
- * EdgeEvolutionTrajectory holds the Evolution Snapshot of the Trade-able Prices, the Cash Account, the
- *  Replication Portfolio, and the corresponding Derivative Value, as laid out in Burgard and Kjaer (2014).
- *   The References are:
+ * BurgardKjaerStep collects the Results of the Burgard Kjaer PDE based on the Risk-Neutral Ito Evolution
+ *  of the Derivative, as laid out in Burgard and Kjaer (2014). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,107 +68,65 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EdgeEvolutionTrajectory {
-	private double _dblTime = java.lang.Double.NaN;
-	private org.drip.xva.definition.UniverseSnapshot _us = null;
-	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
-	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReferenceUnderlierGreek _erug = null;
+public class BurgardKjaerStep {
+	private double _dblDerivativeFundingGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeRiskFreeGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeStochasticGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeBankDefaultGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeCounterPartyDefaultGrowth = java.lang.Double.NaN;
 
 	/**
-	 * EdgeEvolutionTrajectory Constructor
+	 * Retrieve the Stochastic Component of the Derivative Value Growth
 	 * 
-	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param us Realization of the Trade-able Asset Prices
-	 * @param erp The Edge Replication Portfolio Snapshot
-	 * @param erug The Edge Reference Underlier Greek Instance
-	 * @param dblBankDefaultCloseOut Bank Default Close Amount
-	 * @param dblCounterPartyDefaultCloseOut Counter Party Default Close Amount
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Stochastic Component of the Derivative Value Growth
 	 */
 
-	public EdgeEvolutionTrajectory (
-		final double dblTime,
-		final org.drip.xva.definition.UniverseSnapshot us,
-		final org.drip.xva.derivative.EdgeReplicationPortfolio erp,
-		final org.drip.xva.derivative.EdgeReferenceUnderlierGreek erug,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut)
-		throws java.lang.Exception
+	public double derivativeStochasticGrowth()
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_us = us) || null ==
-			(_erp = erp) || null == (_erug = erug) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
-						dblCounterPartyDefaultCloseOut))
-			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
+		return _dblDerivativeStochasticGrowth;
 	}
 
 	/**
-	 * Retrieve the Time Instant
+	 * Retrieve the Funding Component of the Derivative Value Growth
 	 * 
-	 * @return The Time Instant
+	 * @return The Funding Component of the Derivative Value Growth
 	 */
 
-	public double time()
+	public double derivativeFundingGrowth()
 	{
-		return _dblTime;
+		return _dblDerivativeFundingGrowth;
 	}
 
 	/**
-	 * Retrieve the Realization of the Trade-able Asset Prices
+	 * Retrieve the Credit Risk Free Component of the Derivative Value Growth
 	 * 
-	 * @return Realization of the Trade-able Asset Prices
+	 * @return The Credit Risk Free Component of the Derivative Value Growth
 	 */
 
-	public org.drip.xva.definition.UniverseSnapshot tradeableAssetSnapshot()
+	public double derivativeRiskFreeGrowth()
 	{
-		return _us;
+		return _dblDerivativeRiskFreeGrowth;
 	}
 
 	/**
-	 * Retrieve the Edge Replication Portfolio Snapshot
+	 * Retrieve the Bank Default Component of the Derivative Value Growth
 	 * 
-	 * @return The Edge Replication Portfolio Snapshot
+	 * @return The Bank Default Component of the Derivative Value Growth
 	 */
 
-	public org.drip.xva.derivative.EdgeReplicationPortfolio replicationPortfolio()
+	public double derivativeBankDefaultGrowth()
 	{
-		return _erp;
+		return _dblDerivativeBankDefaultGrowth;
 	}
 
 	/**
-	 * Retrieve the EdgeReferenceUnderlierGreek Instance
+	 * Retrieve the Counter Party Default Component of the Derivative Value Growth
 	 * 
-	 * @return The EdgeReferenceUnderlierGreek Instance
+	 * @return The Counter Party Default Component of the Derivative Value Growth
 	 */
 
-	public org.drip.xva.derivative.EdgeReferenceUnderlierGreek edgeReferenceUnderlierGreek()
+	public double derivativeCounterPartyDefaultGrowth()
 	{
-		return _erug;
-	}
-
-	/**
-	 * Retrieve the Bank Default Close-out Amount
-	 * 
-	 * @return The Bank Default Close-out Amount
-	 */
-
-	public double bankDefaultCloseOut()
-	{
-		return _dblBankDefaultCloseOut;
-	}
-
-	/**
-	 * Retrieve the Counter Party Default Close-out Amount
-	 * 
-	 * @return The Counter Party Default Close-out Amount
-	 */
-
-	public double counterPartyDefaultCloseOut()
-	{
-		return _dblCounterPartyDefaultCloseOut;
+		return _dblDerivativeCounterPartyDefaultGrowth;
 	}
 }

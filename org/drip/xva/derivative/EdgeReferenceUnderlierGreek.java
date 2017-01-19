@@ -47,9 +47,8 @@ package org.drip.xva.derivative;
  */
 
 /**
- * EdgeEvolutionTrajectory holds the Evolution Snapshot of the Trade-able Prices, the Cash Account, the
- *  Replication Portfolio, and the corresponding Derivative Value, as laid out in Burgard and Kjaer (2014).
- *   The References are:
+ * EdgeReferenceUnderlierGreek holds the Derivative XVA Value, its Delta, and its Gamma to the Reference
+ * 	Underlier. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,107 +68,80 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EdgeEvolutionTrajectory {
-	private double _dblTime = java.lang.Double.NaN;
-	private org.drip.xva.definition.UniverseSnapshot _us = null;
-	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
-	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReferenceUnderlierGreek _erug = null;
+public class EdgeReferenceUnderlierGreek {
+	private double _dblDerivativeValue = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValue = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValueDelta = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValueGamma = java.lang.Double.NaN;
 
 	/**
-	 * EdgeEvolutionTrajectory Constructor
+	 * EdgeReferenceUnderlierGreek Constructor
 	 * 
-	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param us Realization of the Trade-able Asset Prices
-	 * @param erp The Edge Replication Portfolio Snapshot
-	 * @param erug The Edge Reference Underlier Greek Instance
-	 * @param dblBankDefaultCloseOut Bank Default Close Amount
-	 * @param dblCounterPartyDefaultCloseOut Counter Party Default Close Amount
+	 * @param dblDerivativeXVAValue The Derivative XVA Value
+	 * @param dblDerivativeXVAValueDelta The Derivative XVA Value Delta
+	 * @param dblDerivativeXVAValueGamma The Derivative XVA Value Gamma
+	 * @param dblDerivativeValue The Derivative Value
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public EdgeEvolutionTrajectory (
-		final double dblTime,
-		final org.drip.xva.definition.UniverseSnapshot us,
-		final org.drip.xva.derivative.EdgeReplicationPortfolio erp,
-		final org.drip.xva.derivative.EdgeReferenceUnderlierGreek erug,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut)
+	public EdgeReferenceUnderlierGreek (
+		final double dblDerivativeXVAValue,
+		final double dblDerivativeXVAValueDelta,
+		final double dblDerivativeXVAValueGamma,
+		final double dblDerivativeValue)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_us = us) || null ==
-			(_erp = erp) || null == (_erug = erug) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
-						dblCounterPartyDefaultCloseOut))
-			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValue = dblDerivativeXVAValue) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValueDelta =
+				dblDerivativeXVAValueDelta) || !org.drip.quant.common.NumberUtil.IsValid
+					(_dblDerivativeXVAValueGamma = dblDerivativeXVAValueGamma))
+			throw new java.lang.Exception ("EdgeReferenceUnderlierGreek Constructor => Invalid Inputs");
+
+		_dblDerivativeValue = dblDerivativeValue;
 	}
 
 	/**
-	 * Retrieve the Time Instant
+	 * Retrieve the Derivative XVA Value
 	 * 
-	 * @return The Time Instant
+	 * @return The Derivative XVA Value
 	 */
 
-	public double time()
+	public double derivativeXVAValue()
 	{
-		return _dblTime;
+		return _dblDerivativeXVAValue;
 	}
 
 	/**
-	 * Retrieve the Realization of the Trade-able Asset Prices
+	 * Retrieve the Derivative XVA Value Delta
 	 * 
-	 * @return Realization of the Trade-able Asset Prices
+	 * @return The Derivative XVA Value Delta
 	 */
 
-	public org.drip.xva.definition.UniverseSnapshot tradeableAssetSnapshot()
+	public double derivativeXVAValueDelta()
 	{
-		return _us;
+		return _dblDerivativeXVAValueDelta;
 	}
 
 	/**
-	 * Retrieve the Edge Replication Portfolio Snapshot
+	 * Retrieve the Derivative XVA Value Gamma
 	 * 
-	 * @return The Edge Replication Portfolio Snapshot
+	 * @return The Derivative XVA Value Gamma
 	 */
 
-	public org.drip.xva.derivative.EdgeReplicationPortfolio replicationPortfolio()
+	public double derivativeXVAValueGamma()
 	{
-		return _erp;
+		return _dblDerivativeXVAValueGamma;
 	}
 
 	/**
-	 * Retrieve the EdgeReferenceUnderlierGreek Instance
+	 * Retrieve the Derivative Non XVA Value
 	 * 
-	 * @return The EdgeReferenceUnderlierGreek Instance
+	 * @return The Derivative Non XVA Value
 	 */
 
-	public org.drip.xva.derivative.EdgeReferenceUnderlierGreek edgeReferenceUnderlierGreek()
+	public double derivativeValue()
 	{
-		return _erug;
-	}
-
-	/**
-	 * Retrieve the Bank Default Close-out Amount
-	 * 
-	 * @return The Bank Default Close-out Amount
-	 */
-
-	public double bankDefaultCloseOut()
-	{
-		return _dblBankDefaultCloseOut;
-	}
-
-	/**
-	 * Retrieve the Counter Party Default Close-out Amount
-	 * 
-	 * @return The Counter Party Default Close-out Amount
-	 */
-
-	public double counterPartyDefaultCloseOut()
-	{
-		return _dblCounterPartyDefaultCloseOut;
+		return _dblDerivativeValue;
 	}
 }

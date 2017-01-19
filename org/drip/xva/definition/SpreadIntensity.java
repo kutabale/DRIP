@@ -1,5 +1,5 @@
 
-package org.drip.xva.derivative;
+package org.drip.xva.definition;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,8 @@ package org.drip.xva.derivative;
  */
 
 /**
- * EdgeEvolutionTrajectory holds the Evolution Snapshot of the Trade-able Prices, the Cash Account, the
- *  Replication Portfolio, and the corresponding Derivative Value, as laid out in Burgard and Kjaer (2014).
- *   The References are:
+ * SpreadIntensity holds the Funding Spreads and the Bank/Counter Party Intensities, as laid out in Burgard
+ *  and Kjaer (2014). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,107 +68,64 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EdgeEvolutionTrajectory {
-	private double _dblTime = java.lang.Double.NaN;
-	private org.drip.xva.definition.UniverseSnapshot _us = null;
-	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
-	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReferenceUnderlierGreek _erug = null;
+public class SpreadIntensity {
+	private double _dblBankFundingSpread = java.lang.Double.NaN;
+	private double _dblBankDefaultIntensity = java.lang.Double.NaN;
+	private double _dblCounterPartyDefaultIntensity = java.lang.Double.NaN;
 
 	/**
-	 * EdgeEvolutionTrajectory Constructor
+	 * SpreadIntensity Constructor
 	 * 
-	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param us Realization of the Trade-able Asset Prices
-	 * @param erp The Edge Replication Portfolio Snapshot
-	 * @param erug The Edge Reference Underlier Greek Instance
-	 * @param dblBankDefaultCloseOut Bank Default Close Amount
-	 * @param dblCounterPartyDefaultCloseOut Counter Party Default Close Amount
+	 * @param dblBankFundingSpread The Bank Funding Spread
+	 * @param dblBankDefaultIntensity The Bank Default Intensity
+	 * @param dblCounterPartyDefaultIntensity The Counter Party Default Intensity
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @throws java.lang.Exception Throw if the Inputs are Invalid
 	 */
 
-	public EdgeEvolutionTrajectory (
-		final double dblTime,
-		final org.drip.xva.definition.UniverseSnapshot us,
-		final org.drip.xva.derivative.EdgeReplicationPortfolio erp,
-		final org.drip.xva.derivative.EdgeReferenceUnderlierGreek erug,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut)
+	public SpreadIntensity (
+		final double dblBankFundingSpread,
+		final double dblBankDefaultIntensity,
+		final double dblCounterPartyDefaultIntensity)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_us = us) || null ==
-			(_erp = erp) || null == (_erug = erug) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
-						dblCounterPartyDefaultCloseOut))
-			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankFundingSpread = dblBankFundingSpread) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultIntensity = dblBankDefaultIntensity) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultIntensity =
+					dblCounterPartyDefaultIntensity))
+			throw new java.lang.Exception ("SpreadIntensity Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Time Instant
+	 * Retrieve the Bank Funding Spread
 	 * 
-	 * @return The Time Instant
+	 * @return The Bank Funding Spread
 	 */
 
-	public double time()
+	public double bankFundingSpread()
 	{
-		return _dblTime;
+		return _dblBankFundingSpread;
 	}
 
 	/**
-	 * Retrieve the Realization of the Trade-able Asset Prices
+	 * Retrieve the Bank Default Intensity
 	 * 
-	 * @return Realization of the Trade-able Asset Prices
+	 * @return The Bank Default Intensity
 	 */
 
-	public org.drip.xva.definition.UniverseSnapshot tradeableAssetSnapshot()
+	public double bankDefaultIntensity()
 	{
-		return _us;
+		return _dblBankDefaultIntensity;
 	}
 
 	/**
-	 * Retrieve the Edge Replication Portfolio Snapshot
+	 * Retrieve the Counter Party Default Intensity
 	 * 
-	 * @return The Edge Replication Portfolio Snapshot
+	 * @return The Counter Party Default Intensity
 	 */
 
-	public org.drip.xva.derivative.EdgeReplicationPortfolio replicationPortfolio()
+	public double counterPartyDefaultIntensity()
 	{
-		return _erp;
-	}
-
-	/**
-	 * Retrieve the EdgeReferenceUnderlierGreek Instance
-	 * 
-	 * @return The EdgeReferenceUnderlierGreek Instance
-	 */
-
-	public org.drip.xva.derivative.EdgeReferenceUnderlierGreek edgeReferenceUnderlierGreek()
-	{
-		return _erug;
-	}
-
-	/**
-	 * Retrieve the Bank Default Close-out Amount
-	 * 
-	 * @return The Bank Default Close-out Amount
-	 */
-
-	public double bankDefaultCloseOut()
-	{
-		return _dblBankDefaultCloseOut;
-	}
-
-	/**
-	 * Retrieve the Counter Party Default Close-out Amount
-	 * 
-	 * @return The Counter Party Default Close-out Amount
-	 */
-
-	public double counterPartyDefaultCloseOut()
-	{
-		return _dblCounterPartyDefaultCloseOut;
+		return _dblCounterPartyDefaultIntensity;
 	}
 }

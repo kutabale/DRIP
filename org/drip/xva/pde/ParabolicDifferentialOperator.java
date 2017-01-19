@@ -1,5 +1,5 @@
 
-package org.drip.xva.derivative;
+package org.drip.xva.pde;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,9 @@ package org.drip.xva.derivative;
  */
 
 /**
- * EdgeEvolutionTrajectory holds the Evolution Snapshot of the Trade-able Prices, the Cash Account, the
- *  Replication Portfolio, and the corresponding Derivative Value, as laid out in Burgard and Kjaer (2014).
- *   The References are:
+ * ParabolicDifferentialOperator sets up the Parabolic Differential Equation based on the Ito Evolution
+ * 	Differential for the Reference Underlier Asset, as laid out in Burgard and Kjaer (2014). The References
+ * 	are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,107 +69,63 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EdgeEvolutionTrajectory {
-	private double _dblTime = java.lang.Double.NaN;
-	private org.drip.xva.definition.UniverseSnapshot _us = null;
-	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
-	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReferenceUnderlierGreek _erug = null;
+public class ParabolicDifferentialOperator {
+	private org.drip.xva.definition.TradeableAsset _taReferenceUnderlier = null;
 
 	/**
-	 * EdgeEvolutionTrajectory Constructor
+	 * ParabolicDifferentialOperator Constructor
 	 * 
-	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param us Realization of the Trade-able Asset Prices
-	 * @param erp The Edge Replication Portfolio Snapshot
-	 * @param erug The Edge Reference Underlier Greek Instance
-	 * @param dblBankDefaultCloseOut Bank Default Close Amount
-	 * @param dblCounterPartyDefaultCloseOut Counter Party Default Close Amount
+	 * @param taReferenceUnderlier The Reference Underlier Trade-able Asset
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public EdgeEvolutionTrajectory (
-		final double dblTime,
-		final org.drip.xva.definition.UniverseSnapshot us,
-		final org.drip.xva.derivative.EdgeReplicationPortfolio erp,
-		final org.drip.xva.derivative.EdgeReferenceUnderlierGreek erug,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut)
+	public ParabolicDifferentialOperator (
+		final org.drip.xva.definition.TradeableAsset taReferenceUnderlier)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_us = us) || null ==
-			(_erp = erp) || null == (_erug = erug) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
-						dblCounterPartyDefaultCloseOut))
-			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
+		if (null == (_taReferenceUnderlier = taReferenceUnderlier))
+			throw new java.lang.Exception ("ParabolicDifferentialOperator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Time Instant
+	 * Retrieve the Reference Underlier Trade-able Asset
 	 * 
-	 * @return The Time Instant
+	 * @return The Reference Underlier Trade-able Asset
 	 */
 
-	public double time()
+	public org.drip.xva.definition.TradeableAsset referenceUnderlier()
 	{
-		return _dblTime;
+		return _taReferenceUnderlier;
 	}
 
 	/**
-	 * Retrieve the Realization of the Trade-able Asset Prices
+	 * Compute the Apply The Operator for the Derivative from the Reference Underlier Edge Value
 	 * 
-	 * @return Realization of the Trade-able Asset Prices
+	 * @param eet The Derivative's EdgeEvolutionTrajectory Instance
+	 * @param dblReferenceUnderlier The Reference Underlier Edge Value
+	 * 
+	 * @return The Result of the Application
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public org.drip.xva.definition.UniverseSnapshot tradeableAssetSnapshot()
+	public double apply (
+		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet,
+		final double dblReferenceUnderlier)
+		throws java.lang.Exception
 	{
-		return _us;
-	}
+		if (null == eet || !org.drip.quant.common.NumberUtil.IsValid (dblReferenceUnderlier))
+			throw new java.lang.Exception ("ParabolicDifferentialOperator::apply => Invalid Inputs");
 
-	/**
-	 * Retrieve the Edge Replication Portfolio Snapshot
-	 * 
-	 * @return The Edge Replication Portfolio Snapshot
-	 */
+		org.drip.xva.derivative.EdgeReferenceUnderlierGreek erugDerivative =
+			eet.edgeReferenceUnderlierGreek();
 
-	public org.drip.xva.derivative.EdgeReplicationPortfolio replicationPortfolio()
-	{
-		return _erp;
-	}
+		double dblVolatility = _taReferenceUnderlier.priceNumeraire().volatilityLDEV().value (new
+			org.drip.measure.process.MarginalSnap (eet.time(), dblReferenceUnderlier));
 
-	/**
-	 * Retrieve the EdgeReferenceUnderlierGreek Instance
-	 * 
-	 * @return The EdgeReferenceUnderlierGreek Instance
-	 */
-
-	public org.drip.xva.derivative.EdgeReferenceUnderlierGreek edgeReferenceUnderlierGreek()
-	{
-		return _erug;
-	}
-
-	/**
-	 * Retrieve the Bank Default Close-out Amount
-	 * 
-	 * @return The Bank Default Close-out Amount
-	 */
-
-	public double bankDefaultCloseOut()
-	{
-		return _dblBankDefaultCloseOut;
-	}
-
-	/**
-	 * Retrieve the Counter Party Default Close-out Amount
-	 * 
-	 * @return The Counter Party Default Close-out Amount
-	 */
-
-	public double counterPartyDefaultCloseOut()
-	{
-		return _dblCounterPartyDefaultCloseOut;
+		return 0.5 * dblVolatility * dblVolatility * dblReferenceUnderlier * dblReferenceUnderlier *
+			erugDerivative.derivativeXVAValueGamma() - _taReferenceUnderlier.cashAccumulationRate() *
+				dblReferenceUnderlier * erugDerivative.derivativeXVAValueDelta();
 	}
 }
