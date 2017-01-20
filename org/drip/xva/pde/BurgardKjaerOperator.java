@@ -74,6 +74,24 @@ public class BurgardKjaerOperator {
 	private org.drip.xva.pde.ParabolicDifferentialOperator _pdo = null;
 
 	/**
+	 * BurgardKjaerOperator Constructor
+	 * 
+	 * @param twru The Universe of Trade-able Assets
+	 * @param pdo The Parabolic Differential Operator
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public BurgardKjaerOperator (
+		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
+		final org.drip.xva.pde.ParabolicDifferentialOperator pdo)
+		throws java.lang.Exception
+	{
+		if (null == (_twru = twru) || null == (_pdo = pdo))
+			throw new java.lang.Exception ("BurgardKjaerOperator Constructor => Invalid Inputs");
+	}
+
+	/**
 	 * Retrieve the Universe of Trade-able Assets
 	 * 
 	 * @return The Universe of Trade-able Assets
@@ -85,9 +103,9 @@ public class BurgardKjaerOperator {
 	}
 
 	/**
-	 * Retrieve the Parabolic Differential Operator Instance
+	 * Retrieve the Parabolic Differential Operator
 	 * 
-	 * @return The Parabolic Differential Operator Instance
+	 * @return The Parabolic Differential Operator
 	 */
 
 	public org.drip.xva.pde.ParabolicDifferentialOperator parabolicDifferentialOperator()
@@ -95,22 +113,106 @@ public class BurgardKjaerOperator {
 		return _pdo;
 	}
 
-	public double apply (
+	/**
+	 * Generate the Time Increment using the Burgard Kjaer Scheme
+	 * 
+	 * @param si The Spread Intensity Instance
+	 * @param us The Universe Snap Shot
+	 * @param eet The Edge Evolution Trajectory Instance
+	 * 
+	 * @return The Time Increment using the Burgard Kjaer Scheme
+	 */
+
+	public org.drip.xva.pde.LevelBurgardKjaerRun timeIncrementRun (
 		final org.drip.xva.definition.SpreadIntensity si,
 		final org.drip.xva.definition.UniverseSnapshot us,
 		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet)
-		throws java.lang.Exception
 	{
-		if (null == si || null == us || null == eet)
-			throw new java.lang.Exception ("BurgardKjaerOperator::apply => Invalid Inputs");
+		if (null == si || null == us || null == eet) return null;
 
 		double dblTime = eet.time();
 
+		double dblBankDefaultCloseOut = eet.bankDefaultCloseOut();
+
 		double dblDerivativeXVAValue = eet.edgeReferenceUnderlierGreek().derivativeXVAValue();
 
-		return -1. * _pdo.apply (eet, us.assetNumeraire().finish()) +
-			_twru.creditRiskFreeBond().priceNumeraire().driftLDEV().value (new
-				org.drip.measure.process.MarginalSnap (dblTime, us.creditRiskFreeNumeraire().finish())) *
-					dblDerivativeXVAValue;
+		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblBankDefaultCloseOut;
+
+		try {
+			return new org.drip.xva.pde.LevelBurgardKjaerRun (
+				-1. * _pdo.apply (
+					eet,
+					us.assetNumeraire().finish()
+				),
+				_twru.creditRiskFreeBond().priceNumeraire().driftLDEV().value (
+					new org.drip.measure.process.MarginalSnap (
+						dblTime,
+						us.creditRiskFreeNumeraire().finish()
+					)
+				) * dblDerivativeXVAValue,
+				si.bankFundingSpread() * (
+					dblBankDefaultDerivativeValue > 0. ? dblBankDefaultDerivativeValue : 0.
+				),
+				-1. * si.bankDefaultIntensity() * dblBankDefaultCloseOut,
+				-1. * si.counterPartyDefaultIntensity() * eet.counterPartyDefaultCloseOut()
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate the Time Increment Run Attribution using the Burgard Kjaer Scheme
+	 * 
+	 * @param si The Spread Intensity Instance
+	 * @param us The Universe Snap Shot
+	 * @param eet The Edge Evolution Trajectory Instance
+	 * 
+	 * @return The Time Increment Run Attribution using the Burgard Kjaer Scheme
+	 */
+
+	public org.drip.xva.pde.LevelBurgardKjaerAttribution timeIncrementRunAttribution (
+		final org.drip.xva.definition.SpreadIntensity si,
+		final org.drip.xva.definition.UniverseSnapshot us,
+		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet)
+	{
+		if (null == si || null == us || null == eet) return null;
+
+		double dblTime = eet.time();
+
+		double dblBankDefaultCloseOut = eet.bankDefaultCloseOut();
+
+		double dblBankDefaultIntensity = si.bankDefaultIntensity();
+
+		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
+
+		double dblDerivativeXVAValue = eet.edgeReferenceUnderlierGreek().derivativeXVAValue();
+
+		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblBankDefaultCloseOut;
+
+		try {
+			return new org.drip.xva.pde.LevelBurgardKjaerAttribution (
+				-1. * _pdo.apply (
+					eet,
+					us.assetNumeraire().finish()
+				),
+				_twru.creditRiskFreeBond().priceNumeraire().driftLDEV().value (
+					new org.drip.measure.process.MarginalSnap (
+						dblTime,
+						us.creditRiskFreeNumeraire().finish()
+					)
+				) * dblDerivativeXVAValue,
+				(dblBankDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
+				si.bankFundingSpread(),
+				-1. * dblBankDefaultIntensity,
+				-1. * dblCounterPartyDefaultIntensity
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

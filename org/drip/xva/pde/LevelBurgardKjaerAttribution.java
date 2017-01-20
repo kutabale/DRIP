@@ -47,8 +47,9 @@ package org.drip.xva.pde;
  */
 
 /**
- * BurgardKjaerStep collects the Results of the Burgard Kjaer PDE based on the Risk-Neutral Ito Evolution
- *  of the Derivative, as laid out in Burgard and Kjaer (2014). The References are:
+ * LevelBurgardKjaerAttribution collects the Attribution Components of the Burgard Kjaer PDE based on the
+ *  Risk-Neutral Ito Evolution of the Derivative, as laid out in Burgard and Kjaer (2014). The References
+ *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,22 +69,57 @@ package org.drip.xva.pde;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BurgardKjaerStep {
+public class LevelBurgardKjaerAttribution extends org.drip.xva.pde.LevelBurgardKjaer {
 	private double _dblDerivativeFundingGrowth = java.lang.Double.NaN;
-	private double _dblDerivativeRiskFreeGrowth = java.lang.Double.NaN;
-	private double _dblDerivativeStochasticGrowth = java.lang.Double.NaN;
 	private double _dblDerivativeBankDefaultGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeEarlyTerminationGrowth = java.lang.Double.NaN;
 	private double _dblDerivativeCounterPartyDefaultGrowth = java.lang.Double.NaN;
 
 	/**
-	 * Retrieve the Stochastic Component of the Derivative Value Growth
+	 * LevelBurgardKjaerAttribution Constructor
 	 * 
-	 * @return The Stochastic Component of the Derivative Value Growth
+	 * @param dblDerivativeStochasticGrowth The Stochastic Component of the Derivative Value Growth
+	 * @param dblDerivativeRiskFreeGrowth The Credit Risk Free Component of the Derivative Value Growth
+	 * @param dblDerivativeEarlyTerminationGrowth The Early Termination Component of the Derivative Value
+	 * 		Growth
+	 * @param dblDerivativeFundingGrowth The Funding Component of the Derivative Value Growth
+	 * @param dblDerivativeBankDefaultGrowth The Bank Default Component of the Derivative Value Growth
+	 * @param dblDerivativeCounterPartyDefaultGrowth The Counter Party Default Component of the Derivative
+	 * 		Value Growth
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double derivativeStochasticGrowth()
+	public LevelBurgardKjaerAttribution (
+		final double dblDerivativeStochasticGrowth,
+		final double dblDerivativeRiskFreeGrowth,
+		final double dblDerivativeEarlyTerminationGrowth,
+		final double dblDerivativeFundingGrowth,
+		final double dblDerivativeBankDefaultGrowth,
+		final double dblDerivativeCounterPartyDefaultGrowth)
+		throws java.lang.Exception
 	{
-		return _dblDerivativeStochasticGrowth;
+		super (dblDerivativeStochasticGrowth, dblDerivativeRiskFreeGrowth);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeEarlyTerminationGrowth =
+			dblDerivativeEarlyTerminationGrowth) || !org.drip.quant.common.NumberUtil.IsValid
+				(_dblDerivativeFundingGrowth = dblDerivativeFundingGrowth) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeBankDefaultGrowth =
+						dblDerivativeBankDefaultGrowth) || !org.drip.quant.common.NumberUtil.IsValid
+							(_dblDerivativeCounterPartyDefaultGrowth =
+								dblDerivativeCounterPartyDefaultGrowth))
+			throw new java.lang.Exception ("LevelBurgardKjaerAttribution Constructor => Invalod Inputs");
+	}
+
+	/**
+	 * Retrieve the Early Termination Component of the Derivative Value Growth
+	 * 
+	 * @return The Early Termination Component of the Derivative Value Growth
+	 */
+
+	public double derivativeEarlyTerminationGrowth()
+	{
+		return _dblDerivativeEarlyTerminationGrowth;
 	}
 
 	/**
@@ -95,17 +131,6 @@ public class BurgardKjaerStep {
 	public double derivativeFundingGrowth()
 	{
 		return _dblDerivativeFundingGrowth;
-	}
-
-	/**
-	 * Retrieve the Credit Risk Free Component of the Derivative Value Growth
-	 * 
-	 * @return The Credit Risk Free Component of the Derivative Value Growth
-	 */
-
-	public double derivativeRiskFreeGrowth()
-	{
-		return _dblDerivativeRiskFreeGrowth;
 	}
 
 	/**
@@ -128,5 +153,12 @@ public class BurgardKjaerStep {
 	public double derivativeCounterPartyDefaultGrowth()
 	{
 		return _dblDerivativeCounterPartyDefaultGrowth;
+	}
+
+	@Override public double gross()
+	{
+		return super.derivativeStochasticGrowth() + super.derivativeRiskFreeGrowth() +
+			_dblDerivativeEarlyTerminationGrowth + _dblDerivativeFundingGrowth +
+				_dblDerivativeBankDefaultGrowth + _dblDerivativeCounterPartyDefaultGrowth;
 	}
 }
