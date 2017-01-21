@@ -1,5 +1,5 @@
 
-package org.drip.xva.pde;
+package org.drip.xva.custom;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.pde;
  */
 
 /**
- * CloseOutDeterminant is used to decide the MTM that determines the actual Termination Close Out, as laid
- *  out in Burgard and Kjaer (2014). The References are:
+ * Settings is used to Customize the XVE Estimation, e.g., determine the MTM Mechanism that determines the
+ *  actual Termination Close Out, as laid out in Burgard and Kjaer (2014). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,7 +68,7 @@ package org.drip.xva.pde;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CloseOutDeterminant {
+public class Settings {
 
 	/**
 	 * Set the Close-out to the Derivative MTM according to Li and Tang (2007) or Gregory (2009) 
@@ -84,4 +84,31 @@ public class CloseOutDeterminant {
 
 	private int _iCloseOutScheme = CLOSEOUT_GREGORY_LI_TANG;
 
+	/**
+	 * Settings Constructor
+	 * 
+	 * @param iCloseOutScheme The Close Out Scheme
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public Settings (
+		final int iCloseOutScheme)
+		throws java.lang.Exception
+	{
+		if (CLOSEOUT_GREGORY_LI_TANG != (_iCloseOutScheme = iCloseOutScheme) && CLOSEOUT_BURGARD_KJAER !=
+			_iCloseOutScheme)
+			throw new java.lang.Exception ("Settings Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Close-out Scheme
+	 * 
+	 * @return The Close-out Scheme
+	 */
+
+	public int closeOutScheme()
+	{
+		return _iCloseOutScheme;
+	}
 }

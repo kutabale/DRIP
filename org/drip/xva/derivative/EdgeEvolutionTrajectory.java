@@ -71,10 +71,10 @@ package org.drip.xva.derivative;
 
 public class EdgeEvolutionTrajectory {
 	private double _dblTime = java.lang.Double.NaN;
+	private double _dblGainOnBankDefault = java.lang.Double.NaN;
 	private org.drip.xva.definition.UniverseSnapshot _us = null;
-	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
+	private double _dblGainOnCounterPartyDefault = java.lang.Double.NaN;
 	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
-	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
 	private org.drip.xva.derivative.EdgeReferenceUnderlierGreek _erug = null;
 
 	/**
@@ -84,8 +84,8 @@ public class EdgeEvolutionTrajectory {
 	 * @param us Realization of the Trade-able Asset Prices
 	 * @param erp The Edge Replication Portfolio Snapshot
 	 * @param erug The Edge Reference Underlier Greek Instance
-	 * @param dblBankDefaultCloseOut Bank Default Close Amount
-	 * @param dblCounterPartyDefaultCloseOut Counter Party Default Close Amount
+	 * @param dblGainOnBankDefault The Counter Party Gain On Bank Default
+	 * @param dblGainOnCounterPartyDefault The Bank Gain On Counter Party Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -95,15 +95,14 @@ public class EdgeEvolutionTrajectory {
 		final org.drip.xva.definition.UniverseSnapshot us,
 		final org.drip.xva.derivative.EdgeReplicationPortfolio erp,
 		final org.drip.xva.derivative.EdgeReferenceUnderlierGreek erug,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut)
+		final double dblGainOnBankDefault,
+		final double dblGainOnCounterPartyDefault)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_us = us) || null ==
 			(_erp = erp) || null == (_erug = erug) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
-						dblCounterPartyDefaultCloseOut))
+				(_dblGainOnBankDefault = dblGainOnBankDefault) || !org.drip.quant.common.NumberUtil.IsValid
+					(_dblGainOnCounterPartyDefault = dblGainOnCounterPartyDefault))
 			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
 	}
 
@@ -152,24 +151,24 @@ public class EdgeEvolutionTrajectory {
 	}
 
 	/**
-	 * Retrieve the Bank Default Close-out Amount
+	 * Retrieve the Counter Party Gain On Bank Default
 	 * 
-	 * @return The Bank Default Close-out Amount
+	 * @return The Counter Party Gain On Bank Default
 	 */
 
-	public double bankDefaultCloseOut()
+	public double gainOnBankDefault()
 	{
-		return _dblBankDefaultCloseOut;
+		return _dblGainOnBankDefault;
 	}
 
 	/**
-	 * Retrieve the Counter Party Default Close-out Amount
+	 * Retrieve the Bank Gain On Counter Party Default
 	 * 
-	 * @return The Counter Party Default Close-out Amount
+	 * @return The Bank Gain On Counter Party Default
 	 */
 
-	public double counterPartyDefaultCloseOut()
+	public double gainOnCounterPartyDefault()
 	{
-		return _dblCounterPartyDefaultCloseOut;
+		return _dblGainOnCounterPartyDefault;
 	}
 }

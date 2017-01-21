@@ -69,30 +69,17 @@ package org.drip.xva.pde;
  */
 
 public class TrajectoryEvolutionScheme {
-
-	/**
-	 * Set the Close-out to the Derivative MTM according to Li and Tang (2007) or Gregory (2009) 
-	 */
-
-	public static final int CLOSEOUT_GREGORY_LI_TANG = 1;
-
-	/**
-	 * Set the Close-out to the Derivative XVA MTM according to Burgard and Kjaer (2014)
-	 */
-
-	public static final int CLOSEOUT_BURGARD_KJAER = 2;
-
-	private int _iCloseOutScheme = CLOSEOUT_GREGORY_LI_TANG;
+	private org.drip.xva.custom.Settings _settings = null;
 	private double _dblTimeIncrement = java.lang.Double.NaN;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
 	private org.drip.xva.definition.MasterAgreementCloseOut _maco = null;
 
 	/**
-	 * EvolutionTrajectory Constructor
+	 * TrajectoryEvolutionScheme Constructor
 	 * 
 	 * @param twru The Universe of Trade-able Assets
 	 * @param maco The Master Agreement Close Out Boundary Conditions
-	 * @param iCloseOutScheme The Close Out Scheme
+	 * @param settings The XVA Control Settings
 	 * @param dblTimeIncrement The Time Increment
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -101,14 +88,13 @@ public class TrajectoryEvolutionScheme {
 	public TrajectoryEvolutionScheme (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
 		final org.drip.xva.definition.MasterAgreementCloseOut maco,
-		final int iCloseOutScheme,
+		final org.drip.xva.custom.Settings settings,
 		final double dblTimeIncrement)
 		throws java.lang.Exception
 	{
-		if (null == (_twru = twru) || null == (_maco = maco) || (CLOSEOUT_GREGORY_LI_TANG !=
-			(_iCloseOutScheme = iCloseOutScheme) && CLOSEOUT_BURGARD_KJAER != _iCloseOutScheme) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblTimeIncrement = dblTimeIncrement))
-			throw new java.lang.Exception ("LevelEvolutionTrajectory Constructor => Invalid Inputs");
+		if (null == (_twru = twru) || null == (_maco = maco) || null == (_settings = settings) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblTimeIncrement = dblTimeIncrement))
+			throw new java.lang.Exception ("TrajectoryEvolutionScheme Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -134,14 +120,14 @@ public class TrajectoryEvolutionScheme {
 	}
 
 	/**
-	 * Retrieve the Close-out Scheme
+	 * Retrieve the XVA Control Settings
 	 * 
-	 * @return The Close-out Scheme
+	 * @return The XVA Control Settings
 	 */
 
-	public int closeOutScheme()
+	public org.drip.xva.custom.Settings settings()
 	{
-		return _iCloseOutScheme;
+		return _settings;
 	}
 
 	/**
@@ -242,19 +228,18 @@ public class TrajectoryEvolutionScheme {
 
 		double dblDerivativeXVAValue = erugFinish.derivativeXVAValue();
 
-		double dblCloseOutMTM = CLOSEOUT_GREGORY_LI_TANG == _iCloseOutScheme ? erugFinish.derivativeValue() :
-			dblDerivativeXVAValue;
+		double dblCloseOutMTM = org.drip.xva.custom.Settings.CLOSEOUT_GREGORY_LI_TANG ==
+			_settings.closeOutScheme() ? erugFinish.derivativeValue() : dblDerivativeXVAValue;
 
 		try {
-			double dblBankDefaultCloseOut = -1. * (dblDerivativeXVAValue - _maco.bankDefault
+			double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - _maco.bankDefault (dblCloseOutMTM));
+
+			double dblBankBondUnits = dblGainOnBankDefault / us.bankBondNumeraire().finish();
+
+			double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - _maco.counterPartyDefault
 				(dblCloseOutMTM));
 
-			double dblBankBondUnits = dblBankDefaultCloseOut / us.bankBondNumeraire().finish();
-
-			double dblCounterPartyDefaultCloseOut = -1. * (dblDerivativeXVAValue - _maco.counterPartyDefault
-				(dblCloseOutMTM));
-
-			double dblCounterPartyBondUnits = dblCounterPartyDefaultCloseOut /
+			double dblCounterPartyBondUnits = dblGainOnCounterPartyDefault /
 				us.counterPartyBondNumeraire().finish();
 
 			org.drip.xva.derivative.EdgeReplicationPortfolio erp = new
@@ -264,7 +249,7 @@ public class TrajectoryEvolutionScheme {
 
 			return new org.drip.xva.derivative.LevelEvolutionTrajectory (eetStart, new
 				org.drip.xva.derivative.EdgeEvolutionTrajectory (eetStart.time() + _dblTimeIncrement, us,
-					erp, erugFinish, dblBankDefaultCloseOut, dblCounterPartyDefaultCloseOut), lca);
+					erp, erugFinish, dblGainOnBankDefault, dblGainOnCounterPartyDefault), lca);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

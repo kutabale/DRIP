@@ -130,7 +130,7 @@ public class MasterAgreementCloseOut {
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM))
 			throw new java.lang.Exception ("MasterAgreementCloseOut::bankDefault => Invalid Inputs");
 
-		return dblMTM > 0. ? dblMTM : (1. - _dblBankRecovery) * dblMTM;
+		return dblMTM > 0. ? dblMTM : _dblBankRecovery * dblMTM;
 	}
 
 	/**
@@ -150,6 +150,6 @@ public class MasterAgreementCloseOut {
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM))
 			throw new java.lang.Exception ("MasterAgreementCloseOut::counterPartyDefault => Invalid Inputs");
 
-		return dblMTM < 0. ? dblMTM : (1. - _dblCounterPartyRecovery) * dblMTM;
+		return dblMTM < 0. ? dblMTM : _dblCounterPartyRecovery * dblMTM;
 	}
 }
