@@ -100,23 +100,23 @@ public class ParabolicDifferentialOperator {
 	}
 
 	/**
-	 * Compute the Apply The Operator for the Derivative from the Reference Underlier Edge Value
+	 * Compute the Theta for the Derivative from the Reference Underlier Edge Value
 	 * 
 	 * @param eet The Derivative's EdgeEvolutionTrajectory Instance
 	 * @param dblReferenceUnderlier The Reference Underlier Edge Value
 	 * 
-	 * @return The Result of the Application
+	 * @return The Theta
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double apply (
+	public double theta (
 		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet,
 		final double dblReferenceUnderlier)
 		throws java.lang.Exception
 	{
 		if (null == eet || !org.drip.quant.common.NumberUtil.IsValid (dblReferenceUnderlier))
-			throw new java.lang.Exception ("ParabolicDifferentialOperator::apply => Invalid Inputs");
+			throw new java.lang.Exception ("ParabolicDifferentialOperator::theta => Invalid Inputs");
 
 		org.drip.xva.derivative.EdgeReferenceUnderlierGreek erugDerivative =
 			eet.edgeReferenceUnderlierGreek();
@@ -127,5 +127,53 @@ public class ParabolicDifferentialOperator {
 		return 0.5 * dblVolatility * dblVolatility * dblReferenceUnderlier * dblReferenceUnderlier *
 			erugDerivative.derivativeXVAValueGamma() - _taReferenceUnderlier.cashAccumulationRate() *
 				dblReferenceUnderlier * erugDerivative.derivativeXVAValueDelta();
+	}
+
+	/**
+	 * Compute the Up/Down Thetas
+	 *  
+	 * @param eet The Derivative's EdgeEvolutionTrajectory Instance
+	 * @param dblReferenceUnderlier The Reference Underlier Edge Value
+	 * @param dblShift The Amount to Shift the Reference Underlier Numeraire By
+	 * 
+	 * @return The Array of the Up/Down Thetas
+	 */
+
+	public double[] thetaUpDown (
+		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet,
+		final double dblReferenceUnderlier,
+		final double dblShift)
+	{
+		if (null == eet || !org.drip.quant.common.NumberUtil.IsValid (dblReferenceUnderlier) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblShift))
+			return null;
+
+		org.drip.xva.derivative.EdgeReferenceUnderlierGreek erugDerivative =
+			eet.edgeReferenceUnderlierGreek();
+
+		double dblReferenceUnderlierDown = dblReferenceUnderlier - dblShift;
+		double dblReferenceUnderlierUp = dblReferenceUnderlier + dblShift;
+		double dblVolatility = java.lang.Double.NaN;
+
+		try {
+			dblVolatility = _taReferenceUnderlier.priceNumeraire().volatilityLDEV().value (new
+				org.drip.measure.process.MarginalSnap (eet.time(), dblReferenceUnderlier));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		double dblGammaCoefficient = 0.5 * dblVolatility * dblVolatility *
+			erugDerivative.derivativeXVAValueGamma();
+
+		double dblDeltaCoefficient = -1. * _taReferenceUnderlier.cashAccumulationRate() *
+			erugDerivative.derivativeXVAValueDelta();
+
+		return new double[] {dblGammaCoefficient * dblReferenceUnderlierDown * dblReferenceUnderlierDown +
+			dblDeltaCoefficient * dblReferenceUnderlierDown, dblGammaCoefficient * dblReferenceUnderlier *
+				dblReferenceUnderlier + dblDeltaCoefficient * dblReferenceUnderlier, dblGammaCoefficient *
+					dblReferenceUnderlierUp * dblReferenceUnderlierUp + dblDeltaCoefficient *
+						dblReferenceUnderlierUp};
 	}
 }

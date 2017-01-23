@@ -166,9 +166,10 @@ public class TrajectoryEvolutionScheme {
 
 		org.drip.measure.process.LevelRealization lrAsset = us.assetNumeraire();
 
-		org.drip.measure.process.LevelRealization lrBankBond = us.bankBondNumeraire();
+		org.drip.measure.process.LevelRealization lrBankBond = us.zeroCouponBankBondNumeraire();
 
-		org.drip.measure.process.LevelRealization lrCounterPartyBond = us.counterPartyBondNumeraire();
+		org.drip.measure.process.LevelRealization lrCounterPartyBond =
+			us.zeroCouponCounterPartyBondNumeraire();
 
 		double dblLevelAssetCash = dblAssetUnitsStart * _twru.referenceUnderlier().cashAccumulationRate() *
 			lrAsset.finish() * _dblTimeIncrement;
@@ -234,13 +235,13 @@ public class TrajectoryEvolutionScheme {
 		try {
 			double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - _maco.bankDefault (dblCloseOutMTM));
 
-			double dblBankBondUnits = dblGainOnBankDefault / us.bankBondNumeraire().finish();
+			double dblBankBondUnits = dblGainOnBankDefault / us.zeroCouponBankBondNumeraire().finish();
 
 			double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - _maco.counterPartyDefault
 				(dblCloseOutMTM));
 
 			double dblCounterPartyBondUnits = dblGainOnCounterPartyDefault /
-				us.counterPartyBondNumeraire().finish();
+				us.zeroCouponCounterPartyBondNumeraire().finish();
 
 			org.drip.xva.derivative.EdgeReplicationPortfolio erp = new
 				org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * erugFinish.derivativeXVAValueDelta(),

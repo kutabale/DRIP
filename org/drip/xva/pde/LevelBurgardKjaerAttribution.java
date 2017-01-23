@@ -70,95 +70,117 @@ package org.drip.xva.pde;
  */
 
 public class LevelBurgardKjaerAttribution extends org.drip.xva.pde.LevelBurgardKjaer {
-	private double _dblDerivativeFundingGrowth = java.lang.Double.NaN;
-	private double _dblDerivativeBankDefaultGrowth = java.lang.Double.NaN;
-	private double _dblDerivativeEarlyTerminationGrowth = java.lang.Double.NaN;
-	private double _dblDerivativeCounterPartyDefaultGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVAFundingGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVABankDefaultGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVAEarlyTerminationGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVACounterPartyDefaultGrowth = java.lang.Double.NaN;
 
 	/**
 	 * LevelBurgardKjaerAttribution Constructor
 	 * 
-	 * @param dblDerivativeStochasticGrowth The Stochastic Component of the Derivative Value Growth
-	 * @param dblDerivativeRiskFreeGrowth The Credit Risk Free Component of the Derivative Value Growth
-	 * @param dblDerivativeEarlyTerminationGrowth The Early Termination Component of the Derivative Value
+	 * @param dblDerivativeXVAStochasticGrowthDown The Stochastic Down Component of the Derivative XVA Value
 	 * 		Growth
-	 * @param dblDerivativeFundingGrowth The Funding Component of the Derivative Value Growth
-	 * @param dblDerivativeBankDefaultGrowth The Bank Default Component of the Derivative Value Growth
-	 * @param dblDerivativeCounterPartyDefaultGrowth The Counter Party Default Component of the Derivative
+	 * @param dblDerivativeXVAStochasticGrowth The Stochastic Component of the Derivative XVA Value Growth
+	 * @param dblDerivativeXVAStochasticGrowthUp The Stochastic Up Component of the Derivative XVA Value
+	 * 		Growth
+	 * @param dblDerivativeXVARiskFreeGrowth The Credit Risk Free Component of the Derivative XVA Value
+	 * 		Growth
+	 * @param dblDerivativeXVAEarlyTerminationGrowth The Early Termination Component of the Derivative XVA
 	 * 		Value Growth
+	 * @param dblDerivativeXVAFundingGrowth The Funding Component of the Derivative XVA Value Growth
+	 * @param dblDerivativeXVABankDefaultGrowth The Bank Default Component of the Derivative Value XVA Growth
+	 * @param dblDerivativeXVACounterPartyDefaultGrowth The Counter Party Default Component of the Derivative
+	 * 		XVA Value Growth
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public LevelBurgardKjaerAttribution (
-		final double dblDerivativeStochasticGrowth,
-		final double dblDerivativeRiskFreeGrowth,
-		final double dblDerivativeEarlyTerminationGrowth,
-		final double dblDerivativeFundingGrowth,
-		final double dblDerivativeBankDefaultGrowth,
-		final double dblDerivativeCounterPartyDefaultGrowth)
+		final double dblDerivativeXVAStochasticGrowthDown,
+		final double dblDerivativeXVAStochasticGrowth,
+		final double dblDerivativeXVAStochasticGrowthUp,
+		final double dblDerivativeXVARiskFreeGrowth,
+		final double dblDerivativeXVAEarlyTerminationGrowth,
+		final double dblDerivativeXVAFundingGrowth,
+		final double dblDerivativeXVABankDefaultGrowth,
+		final double dblDerivativeXVACounterPartyDefaultGrowth)
 		throws java.lang.Exception
 	{
-		super (dblDerivativeStochasticGrowth, dblDerivativeRiskFreeGrowth);
+		super (dblDerivativeXVAStochasticGrowthDown, dblDerivativeXVAStochasticGrowth,
+			dblDerivativeXVAStochasticGrowthUp, dblDerivativeXVARiskFreeGrowth);
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeEarlyTerminationGrowth =
-			dblDerivativeEarlyTerminationGrowth) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblDerivativeFundingGrowth = dblDerivativeFundingGrowth) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeBankDefaultGrowth =
-						dblDerivativeBankDefaultGrowth) || !org.drip.quant.common.NumberUtil.IsValid
-							(_dblDerivativeCounterPartyDefaultGrowth =
-								dblDerivativeCounterPartyDefaultGrowth))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAEarlyTerminationGrowth =
+			dblDerivativeXVAEarlyTerminationGrowth) || !org.drip.quant.common.NumberUtil.IsValid
+				(_dblDerivativeXVAFundingGrowth = dblDerivativeXVAFundingGrowth) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVABankDefaultGrowth =
+						dblDerivativeXVABankDefaultGrowth) || !org.drip.quant.common.NumberUtil.IsValid
+							(_dblDerivativeXVACounterPartyDefaultGrowth =
+								dblDerivativeXVACounterPartyDefaultGrowth))
 			throw new java.lang.Exception ("LevelBurgardKjaerAttribution Constructor => Invalod Inputs");
 	}
 
 	/**
-	 * Retrieve the Early Termination Component of the Derivative Value Growth
+	 * Retrieve the Early Termination Component of the Derivative XVA Value Growth
 	 * 
-	 * @return The Early Termination Component of the Derivative Value Growth
+	 * @return The Early Termination Component of the Derivative XVA Value Growth
 	 */
 
-	public double derivativeEarlyTerminationGrowth()
+	public double derivativeXVAEarlyTerminationGrowth()
 	{
-		return _dblDerivativeEarlyTerminationGrowth;
+		return _dblDerivativeXVAEarlyTerminationGrowth;
 	}
 
 	/**
-	 * Retrieve the Funding Component of the Derivative Value Growth
+	 * Retrieve the Funding Component of the Derivative XVA Value Growth
 	 * 
-	 * @return The Funding Component of the Derivative Value Growth
+	 * @return The Funding Component of the Derivative XVA Value Growth
 	 */
 
-	public double derivativeFundingGrowth()
+	public double derivativeXVAFundingGrowth()
 	{
-		return _dblDerivativeFundingGrowth;
+		return _dblDerivativeXVAFundingGrowth;
 	}
 
 	/**
-	 * Retrieve the Bank Default Component of the Derivative Value Growth
+	 * Retrieve the Bank Default Component of the Derivative XVA Value Growth
 	 * 
-	 * @return The Bank Default Component of the Derivative Value Growth
+	 * @return The Bank Default Component of the Derivative XVA Value Growth
 	 */
 
-	public double derivativeBankDefaultGrowth()
+	public double derivativeXVABankDefaultGrowth()
 	{
-		return _dblDerivativeBankDefaultGrowth;
+		return _dblDerivativeXVABankDefaultGrowth;
 	}
 
 	/**
-	 * Retrieve the Counter Party Default Component of the Derivative Value Growth
+	 * Retrieve the Counter Party Default Component of the Derivative XVA Value Growth
 	 * 
-	 * @return The Counter Party Default Component of the Derivative Value Growth
+	 * @return The Counter Party Default Component of the Derivative XVA Value Growth
 	 */
 
-	public double derivativeCounterPartyDefaultGrowth()
+	public double derivativeXVACounterPartyDefaultGrowth()
 	{
-		return _dblDerivativeCounterPartyDefaultGrowth;
+		return _dblDerivativeXVACounterPartyDefaultGrowth;
 	}
 
-	@Override public double gross()
+	@Override public double thetaDown()
 	{
-		return super.derivativeStochasticGrowth() + super.derivativeRiskFreeGrowth() +
-			_dblDerivativeEarlyTerminationGrowth + _dblDerivativeFundingGrowth +
-				_dblDerivativeBankDefaultGrowth + _dblDerivativeCounterPartyDefaultGrowth;
+		return super.derivativeXVAStochasticGrowthDown() + super.derivativeXVARiskFreeGrowth() +
+			_dblDerivativeXVAEarlyTerminationGrowth + _dblDerivativeXVAFundingGrowth +
+				_dblDerivativeXVABankDefaultGrowth + _dblDerivativeXVACounterPartyDefaultGrowth;
+	}
+
+	@Override public double theta()
+	{
+		return super.derivativeXVAStochasticGrowth() + super.derivativeXVARiskFreeGrowth() +
+			_dblDerivativeXVAEarlyTerminationGrowth + _dblDerivativeXVAFundingGrowth +
+				_dblDerivativeXVABankDefaultGrowth + _dblDerivativeXVACounterPartyDefaultGrowth;
+	}
+
+	@Override public double thetaUp()
+	{
+		return super.derivativeXVAStochasticGrowthUp() + super.derivativeXVARiskFreeGrowth() +
+			_dblDerivativeXVAEarlyTerminationGrowth + _dblDerivativeXVAFundingGrowth +
+				_dblDerivativeXVABankDefaultGrowth + _dblDerivativeXVACounterPartyDefaultGrowth;
 	}
 }

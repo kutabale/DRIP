@@ -69,47 +69,92 @@ package org.drip.xva.pde;
  */
 
 public abstract class LevelBurgardKjaer {
-	private double _dblDerivativeRiskFreeGrowth = java.lang.Double.NaN;
-	private double _dblDerivativeStochasticGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVARiskFreeGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVAStochasticGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVAStochasticGrowthUp = java.lang.Double.NaN;
+	private double _dblDerivativeXVAStochasticGrowthDown = java.lang.Double.NaN;
 
 	protected LevelBurgardKjaer (
-		final double dblDerivativeStochasticGrowth,
-		final double dblDerivativeRiskFreeGrowth)
+		final double dblDerivativeXVAStochasticGrowthDown,
+		final double dblDerivativeXVAStochasticGrowth,
+		final double dblDerivativeXVAStochasticGrowthUp,
+		final double dblDerivativeXVARiskFreeGrowth)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeStochasticGrowth =
-			dblDerivativeStochasticGrowth) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblDerivativeRiskFreeGrowth = dblDerivativeRiskFreeGrowth))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthDown =
+			dblDerivativeXVAStochasticGrowthDown) || !org.drip.quant.common.NumberUtil.IsValid
+				(_dblDerivativeXVAStochasticGrowth = dblDerivativeXVAStochasticGrowth) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthUp =
+						dblDerivativeXVAStochasticGrowthUp) || !org.drip.quant.common.NumberUtil.IsValid
+							(_dblDerivativeXVARiskFreeGrowth = dblDerivativeXVARiskFreeGrowth))
 			throw new java.lang.Exception ("LevelBurgardKjaer Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Stochastic Component of the Derivative Value Growth
+	 * Retrieve the Stochastic Down Component of the Derivative XVA Value
 	 * 
-	 * @return The Stochastic Component of the Derivative Value Growth
+	 * @return The Stochastic Down Component of the Derivative XVA Value
 	 */
 
-	public double derivativeStochasticGrowth()
+	public double derivativeXVAStochasticGrowthDown()
 	{
-		return _dblDerivativeStochasticGrowth;
+		return _dblDerivativeXVAStochasticGrowthDown;
 	}
 
 	/**
-	 * Retrieve the Credit Risk Free Component of the Derivative Value Growth
+	 * Retrieve the Stochastic Component of the Derivative XVA Value Growth
 	 * 
-	 * @return The Credit Risk Free Component of the Derivative Value Growth
+	 * @return The Stochastic Component of the Derivative XVA Value Growth
 	 */
 
-	public double derivativeRiskFreeGrowth()
+	public double derivativeXVAStochasticGrowth()
 	{
-		return _dblDerivativeRiskFreeGrowth;
+		return _dblDerivativeXVAStochasticGrowth;
 	}
 
 	/**
-	 * Compute the Gross Time Change
+	 * Retrieve the Stochastic Up Component of the Derivative XVA Value
 	 * 
-	 * @return The Gross Time Change
+	 * @return The Stochastic Up Component of the Derivative XVA Value
 	 */
 
-	public abstract double gross();
+	public double derivativeXVAStochasticGrowthUp()
+	{
+		return _dblDerivativeXVAStochasticGrowthUp;
+	}
+
+	/**
+	 * Retrieve the Credit Risk Free Component of the Derivative XVA Value Growth
+	 * 
+	 * @return The Credit Risk Free Component of the Derivative XVA Value Growth
+	 */
+
+	public double derivativeXVARiskFreeGrowth()
+	{
+		return _dblDerivativeXVARiskFreeGrowth;
+	}
+
+	/**
+	 * Compute the Gross Time Change Asset Down Theta
+	 * 
+	 * @return The Gross Time Change Asset Down Theta
+	 */
+
+	public abstract double thetaDown();
+
+	/**
+	 * Compute the Gross Time Change Asset Base Line Theta
+	 * 
+	 * @return The Gross Time Change Asset Base Line Theta
+	 */
+
+	public abstract double theta();
+
+	/**
+	 * Compute the Gross Time Change Asset Up Theta
+	 * 
+	 * @return The Gross Time Change Asset Up Theta
+	 */
+
+	public abstract double thetaUp();
 }

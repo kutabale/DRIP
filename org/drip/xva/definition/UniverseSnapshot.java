@@ -70,31 +70,33 @@ package org.drip.xva.definition;
 
 public class UniverseSnapshot {
 	private org.drip.measure.process.LevelRealization _lrAssetNumeraire = null;
-	private org.drip.measure.process.LevelRealization _lrBankBondNumeraire = null;
-	private org.drip.measure.process.LevelRealization _lrCreditRiskFreeNumeraire = null;
-	private org.drip.measure.process.LevelRealization _lrCounterPartyBondNumeraire = null;
+	private org.drip.measure.process.LevelRealization _lrZeroCouponBondBankNumeraire = null;
+	private org.drip.measure.process.LevelRealization _lrZeroCouponBondCollateralNumeraire = null;
+	private org.drip.measure.process.LevelRealization _lrZeroCouponBondCounterPartyNumeraire = null;
 
 	/**
 	 * UniverseSnapshot Constructor
 	 * 
 	 * @param lrAssetNumeraire The Asset Numeraire Level Realization
-	 * @param lrCreditRiskFreeNumeraire The Credit Risk Free Numeraire Level Realization
-	 * @param lrBankBondNumeraire The Bank Bond Numeraire Level Realization
-	 * @param lrCounterPartyBondNumeraire The Counter Party Bond Numeraire Level Realization
+	 * @param lrZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level Realization
+	 * @param lrZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
+	 * @param lrZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
+	 * 		Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public UniverseSnapshot (
 		final org.drip.measure.process.LevelRealization lrAssetNumeraire,
-		final org.drip.measure.process.LevelRealization lrCreditRiskFreeNumeraire,
-		final org.drip.measure.process.LevelRealization lrBankBondNumeraire,
-		final org.drip.measure.process.LevelRealization lrCounterPartyBondNumeraire)
+		final org.drip.measure.process.LevelRealization lrZeroCouponBondCollateralNumeraire,
+		final org.drip.measure.process.LevelRealization lrZeroCouponBondBankNumeraire,
+		final org.drip.measure.process.LevelRealization lrZeroCouponBondCounterPartyNumeraire)
 		throws java.lang.Exception
 	{
-		if (null == (_lrAssetNumeraire = lrAssetNumeraire) || null == (_lrCreditRiskFreeNumeraire =
-			lrCreditRiskFreeNumeraire) || null == (_lrBankBondNumeraire = lrBankBondNumeraire) || null ==
-				(_lrCounterPartyBondNumeraire = lrCounterPartyBondNumeraire))
+		if (null == (_lrAssetNumeraire = lrAssetNumeraire) || null == (_lrZeroCouponBondCollateralNumeraire =
+			lrZeroCouponBondCollateralNumeraire) || null == (_lrZeroCouponBondBankNumeraire =
+				lrZeroCouponBondBankNumeraire) || null == (_lrZeroCouponBondCounterPartyNumeraire =
+					lrZeroCouponBondCounterPartyNumeraire))
 			throw new java.lang.Exception ("UniverseSnapshot Constructor => Invalid Inputs");
 	}
 
@@ -110,35 +112,35 @@ public class UniverseSnapshot {
 	}
 
 	/**
-	 * Retrieve the Credit Risk Free Numeraire Level Realization
+	 * Retrieve the Zero Coupon Collateral Bond Numeraire Level Realization
 	 * 
-	 * @return The Credit Risk Free Numeraire Level Realization
+	 * @return The Zero Coupon Collateral Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.LevelRealization creditRiskFreeNumeraire()
+	public org.drip.measure.process.LevelRealization zeroCouponBondCollateralNumeraire()
 	{
-		return _lrCreditRiskFreeNumeraire;
+		return _lrZeroCouponBondCollateralNumeraire;
 	}
 
 	/**
-	 * Retrieve the Bank Bond Numeraire Level Realization
+	 * Retrieve the Zero Coupon Bank Bond Numeraire Level Realization
 	 * 
-	 * @return The Bank Bond Numeraire Level Realization
+	 * @return The Zero Coupon Bank Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.LevelRealization bankBondNumeraire()
+	public org.drip.measure.process.LevelRealization zeroCouponBankBondNumeraire()
 	{
-		return _lrBankBondNumeraire;
+		return _lrZeroCouponBondBankNumeraire;
 	}
 
 	/**
-	 * Retrieve the Counter Party Bond Numeraire Level Realization
+	 * Retrieve the Zero Coupon Counter Party Bond Numeraire Level Realization
 	 * 
-	 * @return The Counter Party Bond Numeraire Level Realization
+	 * @return The Zero Coupon Counter Party Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.LevelRealization counterPartyBondNumeraire()
+	public org.drip.measure.process.LevelRealization zeroCouponCounterPartyBondNumeraire()
 	{
-		return _lrCounterPartyBondNumeraire;
+		return _lrZeroCouponBondCounterPartyNumeraire;
 	}
 }

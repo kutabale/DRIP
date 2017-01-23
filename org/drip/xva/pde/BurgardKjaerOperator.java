@@ -144,24 +144,30 @@ public class BurgardKjaerOperator {
 
 		double dblTime = eet.time();
 
+		org.drip.xva.definition.UniverseSnapshot us = eet.tradeableAssetSnapshot();
+
 		double dblBankDefaultCloseOut = eet.gainOnBankDefault();
 
-		org.drip.xva.definition.UniverseSnapshot us = eet.tradeableAssetSnapshot();
+		double dblAssetNumeraire = us.assetNumeraire().finish();
 
 		double dblDerivativeXVAValue = eet.edgeReferenceUnderlierGreek().derivativeXVAValue();
 
 		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblBankDefaultCloseOut;
 
 		try {
+			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
+				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetNumeraire, 0.01 * dblAssetNumeraire);
+
+			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
+
 			return new org.drip.xva.pde.LevelBurgardKjaerRun (
-				-1. * new org.drip.xva.pde.ParabolicDifferentialOperator (_twru.referenceUnderlier()).apply (
-					eet,
-					us.assetNumeraire().finish()
-				),
+				-1. * adblBumpedTheta[0],
+				-1. * adblBumpedTheta[1],
+				-1. * adblBumpedTheta[2],
 				_twru.creditRiskFreeBond().priceNumeraire().driftLDEV().value (
 					new org.drip.measure.process.MarginalSnap (
 						dblTime,
-						us.creditRiskFreeNumeraire().finish()
+						us.zeroCouponBondCollateralNumeraire().finish()
 					)
 				) * dblDerivativeXVAValue,
 				si.bankFundingSpread() * (
@@ -208,16 +214,22 @@ public class BurgardKjaerOperator {
 		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _maco.bankRecovery() *
 			dblCloseOutMTM;
 
+		double dblAssetNumeraire = us.assetNumeraire().finish();
+
 		try {
+			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
+				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetNumeraire, 0.01 * dblAssetNumeraire);
+
+			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
+
 			return new org.drip.xva.pde.LevelBurgardKjaerAttribution (
-				-1. * new org.drip.xva.pde.ParabolicDifferentialOperator (_twru.referenceUnderlier()).apply (
-					eet,
-					us.assetNumeraire().finish()
-				),
+				-1. * adblBumpedTheta[0],
+				-1. * adblBumpedTheta[1],
+				-1. * adblBumpedTheta[2],
 				_twru.creditRiskFreeBond().priceNumeraire().driftLDEV().value (
 					new org.drip.measure.process.MarginalSnap (
 						dblTime,
-						us.creditRiskFreeNumeraire().finish()
+						us.zeroCouponBondCollateralNumeraire().finish()
 					)
 				) * dblDerivativeXVAValue,
 				(dblBankDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
