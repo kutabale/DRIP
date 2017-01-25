@@ -154,13 +154,16 @@ public class BurgardKjaerOperator {
 
 		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblBankDefaultCloseOut;
 
+		double dblAssetNumeraireChange = _settings.sensitivityShiftFactor() * dblAssetNumeraire;
+
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetNumeraire, 0.01 * dblAssetNumeraire);
+				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetNumeraire, dblAssetNumeraireChange);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
 			return new org.drip.xva.pde.LevelBurgardKjaerRun (
+				dblAssetNumeraireChange,
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
@@ -216,13 +219,16 @@ public class BurgardKjaerOperator {
 
 		double dblAssetNumeraire = us.assetNumeraire().finish();
 
+		double dblAssetNumeraireChange = _settings.sensitivityShiftFactor() * dblAssetNumeraire;
+
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetNumeraire, 0.01 * dblAssetNumeraire);
+				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetNumeraire, dblAssetNumeraireChange);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
 			return new org.drip.xva.pde.LevelBurgardKjaerAttribution (
+				dblAssetNumeraireChange,
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],

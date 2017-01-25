@@ -69,25 +69,39 @@ package org.drip.xva.pde;
  */
 
 public abstract class LevelBurgardKjaer {
+	private double _dblAssetNumeraireChange = java.lang.Double.NaN;
 	private double _dblDerivativeXVARiskFreeGrowth = java.lang.Double.NaN;
 	private double _dblDerivativeXVAStochasticGrowth = java.lang.Double.NaN;
 	private double _dblDerivativeXVAStochasticGrowthUp = java.lang.Double.NaN;
 	private double _dblDerivativeXVAStochasticGrowthDown = java.lang.Double.NaN;
 
 	protected LevelBurgardKjaer (
+		final double dblAssetNumeraireChange,
 		final double dblDerivativeXVAStochasticGrowthDown,
 		final double dblDerivativeXVAStochasticGrowth,
 		final double dblDerivativeXVAStochasticGrowthUp,
 		final double dblDerivativeXVARiskFreeGrowth)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthDown =
-			dblDerivativeXVAStochasticGrowthDown) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblDerivativeXVAStochasticGrowth = dblDerivativeXVAStochasticGrowth) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthUp =
-						dblDerivativeXVAStochasticGrowthUp) || !org.drip.quant.common.NumberUtil.IsValid
-							(_dblDerivativeXVARiskFreeGrowth = dblDerivativeXVARiskFreeGrowth))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetNumeraireChange = dblAssetNumeraireChange) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthDown =
+				dblDerivativeXVAStochasticGrowthDown) || !org.drip.quant.common.NumberUtil.IsValid
+					(_dblDerivativeXVAStochasticGrowth = dblDerivativeXVAStochasticGrowth) ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthUp =
+							dblDerivativeXVAStochasticGrowthUp) || !org.drip.quant.common.NumberUtil.IsValid
+								(_dblDerivativeXVARiskFreeGrowth = dblDerivativeXVARiskFreeGrowth))
 			throw new java.lang.Exception ("LevelBurgardKjaer Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Change in Value of the Asset Numeraire
+	 * 
+	 * @return The Change in Value of the Asset Numeraire
+	 */
+
+	public double assetNumeraireChange()
+	{
+		return _dblAssetNumeraireChange;
 	}
 
 	/**
@@ -135,26 +149,26 @@ public abstract class LevelBurgardKjaer {
 	}
 
 	/**
-	 * Compute the Gross Time Change Asset Down Theta
+	 * Compute the Gross Theta from Asset Numeraire Down
 	 * 
-	 * @return The Gross Time Change Asset Down Theta
+	 * @return The Gross Theta from Asset Numeraire Down
 	 */
 
-	public abstract double thetaDown();
+	public abstract double thetaAssetNumeraireDown();
 
 	/**
-	 * Compute the Gross Time Change Asset Base Line Theta
+	 * Compute the Gross Theta from Asset Numeraire Base
 	 * 
-	 * @return The Gross Time Change Asset Base Line Theta
+	 * @return The Gross Theta from Asset Numeraire Base
 	 */
 
 	public abstract double theta();
 
 	/**
-	 * Compute the Gross Time Change Asset Up Theta
+	 * Compute the Gross Theta from Asset Numeraire Up
 	 * 
-	 * @return The Gross Time Change Asset Up Theta
+	 * @return The Gross Theta from Asset Numeraire Up
 	 */
 
-	public abstract double thetaUp();
+	public abstract double thetaAssetNumeraireUp();
 }

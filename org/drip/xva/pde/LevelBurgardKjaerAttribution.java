@@ -78,6 +78,7 @@ public class LevelBurgardKjaerAttribution extends org.drip.xva.pde.LevelBurgardK
 	/**
 	 * LevelBurgardKjaerAttribution Constructor
 	 * 
+	 * @param dblAssetNumeraireChange The Change in the Asset Numeraire Value
 	 * @param dblDerivativeXVAStochasticGrowthDown The Stochastic Down Component of the Derivative XVA Value
 	 * 		Growth
 	 * @param dblDerivativeXVAStochasticGrowth The Stochastic Component of the Derivative XVA Value Growth
@@ -96,6 +97,7 @@ public class LevelBurgardKjaerAttribution extends org.drip.xva.pde.LevelBurgardK
 	 */
 
 	public LevelBurgardKjaerAttribution (
+		final double dblAssetNumeraireChange,
 		final double dblDerivativeXVAStochasticGrowthDown,
 		final double dblDerivativeXVAStochasticGrowth,
 		final double dblDerivativeXVAStochasticGrowthUp,
@@ -106,8 +108,9 @@ public class LevelBurgardKjaerAttribution extends org.drip.xva.pde.LevelBurgardK
 		final double dblDerivativeXVACounterPartyDefaultGrowth)
 		throws java.lang.Exception
 	{
-		super (dblDerivativeXVAStochasticGrowthDown, dblDerivativeXVAStochasticGrowth,
-			dblDerivativeXVAStochasticGrowthUp, dblDerivativeXVARiskFreeGrowth);
+		super (dblAssetNumeraireChange, dblDerivativeXVAStochasticGrowthDown,
+			dblDerivativeXVAStochasticGrowth, dblDerivativeXVAStochasticGrowthUp,
+				dblDerivativeXVARiskFreeGrowth);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAEarlyTerminationGrowth =
 			dblDerivativeXVAEarlyTerminationGrowth) || !org.drip.quant.common.NumberUtil.IsValid
@@ -163,7 +166,7 @@ public class LevelBurgardKjaerAttribution extends org.drip.xva.pde.LevelBurgardK
 		return _dblDerivativeXVACounterPartyDefaultGrowth;
 	}
 
-	@Override public double thetaDown()
+	@Override public double thetaAssetNumeraireDown()
 	{
 		return super.derivativeXVAStochasticGrowthDown() + super.derivativeXVARiskFreeGrowth() +
 			_dblDerivativeXVAEarlyTerminationGrowth + _dblDerivativeXVAFundingGrowth +
@@ -177,7 +180,7 @@ public class LevelBurgardKjaerAttribution extends org.drip.xva.pde.LevelBurgardK
 				_dblDerivativeXVABankDefaultGrowth + _dblDerivativeXVACounterPartyDefaultGrowth;
 	}
 
-	@Override public double thetaUp()
+	@Override public double thetaAssetNumeraireUp()
 	{
 		return super.derivativeXVAStochasticGrowthUp() + super.derivativeXVARiskFreeGrowth() +
 			_dblDerivativeXVAEarlyTerminationGrowth + _dblDerivativeXVAFundingGrowth +

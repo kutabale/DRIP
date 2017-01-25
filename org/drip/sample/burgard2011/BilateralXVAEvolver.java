@@ -81,38 +81,30 @@ public class BilateralXVAEvolver {
 	private static final void RunStep (
 		final MasterAgreementCloseOut maco,
 		final SpreadIntensity si,
-		final double dblXVADerivativeValue,
-		final double dblXVADerivativeValueDelta,
-		final double dblXVADerivativeValueGamma,
-		final double dblDerivativeValue,
-		final double dblAssetUnits,
-		final double dblBankBondUnits,
-		final double dblCounterPartyUnits,
-		final double dblCashAccount,
+		final BurgardKjaerOperator bko,
 		final MarginalEvolver meAsset,
 		final MarginalEvolver meZeroCouponCreditRiskFreeBond,
 		final MarginalEvolver meZeroCouponBankBond,
 		final MarginalEvolver meZeroCouponCounterPartyBond,
-		final BurgardKjaerOperator bko,
+		final double dblTimeWidth,
+		final double dblTime,
+		final EdgeReferenceUnderlierGreek erugIn,
+		final double dblAssetUnits,
+		final double dblBankBondUnits,
+		final double dblCounterPartyUnits,
+		final double dblCashAccount,
 		final double dblZeroCouponCreditRiskFreeBondNumeraire,
 		final double dblZeroCouponBankBondNumeraire,
-		final double dblZeroCouponCounterPartyBondNumeraire,
-		final double dblTime,
-		final double dblTimeWidth)
+		final double dblZeroCouponCounterPartyBondNumeraire)
 		throws Exception
 	{
-		double dblGainOnBankDefault = -1. * (dblXVADerivativeValue - maco.bankDefault
-			(dblXVADerivativeValue));
+		double dblDerivativeXVAValue = erugIn.derivativeXVAValue();
 
-		double dblGainOnCounterPartyDefault = -1. * (dblXVADerivativeValue - maco.counterPartyDefault
-			(dblXVADerivativeValue));
+		double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - maco.bankDefault
+			(dblDerivativeXVAValue));
 
-		EdgeReferenceUnderlierGreek erug = new EdgeReferenceUnderlierGreek (
-			dblXVADerivativeValue,
-			dblXVADerivativeValueDelta,
-			dblXVADerivativeValueGamma,
-			dblDerivativeValue
-		);
+		double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault
+			(dblDerivativeXVAValue));
 
 		EdgeReplicationPortfolio erp = new EdgeReplicationPortfolio (
 			dblAssetUnits,
@@ -124,7 +116,7 @@ public class BilateralXVAEvolver {
 		LevelRealization lrAsset = meAsset.weinerIncrement (
 			new MarginalSnap (
 				dblTime,
-				dblXVADerivativeValue
+				dblDerivativeXVAValue
 			),
 			dblTimeWidth
 		);
@@ -164,24 +156,47 @@ public class BilateralXVAEvolver {
 			dblTime,
 			us,
 			erp,
-			erug,
+			erugIn,
 			dblGainOnBankDefault,
 			dblGainOnCounterPartyDefault
 		);
 
-		LevelBurgardKjaerRun lbkrBase = bko.timeIncrementRun (
+		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (
 			si,
 			eet
 		);
 
+		double dblTheta = lbkr.theta();
+
+		double dblAssetNumeraireChange = lbkr.assetNumeraireChange();
+
+		double dblThetaAssetNumeraireUp = lbkr.thetaAssetNumeraireUp();
+
+		double dblThetaAssetNumeraireDown = lbkr.thetaAssetNumeraireDown();
+
+		double dblDerivativeXVADeltaNew = 0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth /
+			dblAssetNumeraireChange;
+
+		double dblDerivativeXVAGammaNew = (dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
+			(dblAssetNumeraireChange * dblAssetNumeraireChange);
+
+		double dblDerivativeXVAValueNew = dblDerivativeXVAValue - dblTheta * dblTimeWidth;
+
 		System.out.println ("\t||" +
+			FormatUtil.FormatDouble (dblTime - dblTimeWidth, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAValueNew, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblGainOnBankDefault, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblGainOnCounterPartyDefault, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lbkrBase.derivativeXVAStochasticGrowth(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lbkrBase.derivativeXVARiskFreeGrowth(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lbkrBase.derivativeXVAFundingGrowth(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lbkrBase.derivativeXVABankDefaultGrowth(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lbkrBase.derivativeXVACounterPartyDefaultGrowth(), 1, 6, 1.) + " ||"
+			FormatUtil.FormatDouble (lbkr.derivativeXVAStochasticGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVARiskFreeGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVAFundingGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVABankDefaultGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVACounterPartyDefaultGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblThetaAssetNumeraireDown, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblTheta, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblThetaAssetNumeraireUp, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVADeltaNew, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAGammaNew, 1, 6, 1.) + " ||"
 		);
 	}
 
@@ -191,6 +206,7 @@ public class BilateralXVAEvolver {
 	{
 		EnvManager.InitEnv ("");
 
+		double dblSensitivityShiftFactor = 0.001;
 		double dblBankRecovery = 0.4;
 		double dblCounterPartyRecovery = 0.4;
 		double dblAssetDrift = 0.06;
@@ -210,7 +226,10 @@ public class BilateralXVAEvolver {
 		double dblTime = 1.;
 		double dblTerminalXVADerivativeValue = 1.;
 
-		Settings settings = new Settings (Settings.CLOSEOUT_GREGORY_LI_TANG);
+		Settings settings = new Settings (
+			Settings.CLOSEOUT_GREGORY_LI_TANG,
+			dblSensitivityShiftFactor
+		);
 
 		MasterAgreementCloseOut maco = new MasterAgreementCloseOut (
 			dblBankRecovery,
@@ -278,29 +297,50 @@ public class BilateralXVAEvolver {
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
-		double dblXVADerivativeValue = dblTerminalXVADerivativeValue;
+		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
+
+		EdgeReferenceUnderlierGreek erug = new EdgeReferenceUnderlierGreek (
+			dblDerivativeXVAValue,
+			-1.,
+			0.,
+			dblDerivativeValue
+		);
+
+		System.out.println ("\t||" +
+			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAValue, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (-1. * (dblDerivativeXVAValue - maco.bankDefault (dblDerivativeXVAValue)), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (-1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue)), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erug.derivativeXVAValueDelta(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erug.derivativeXVAValueGamma(), 1, 6, 1.) + " ||"
+		);
 
 		RunStep (
 			maco,
 			si,
-			dblXVADerivativeValue,
-			1.,
-			0.,
-			dblDerivativeValue,
-			1.,
-			0.,
-			0.,
-			0.,
+			bko,
 			meAsset,
 			meZeroCouponCreditRiskFreeBond,
 			meZeroCouponBankBond,
 			meZeroCouponCounterPartyBond,
-			bko,
-			1.,
-			1.,
-			1.,
+			dblTimeWidth,
 			dblTime,
-			dblTimeWidth
+			erug,
+			1.,
+			0.,
+			0.,
+			0.,
+			1.,
+			1.,
+			1.
 		);
 	}
 }

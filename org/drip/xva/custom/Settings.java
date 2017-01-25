@@ -83,21 +83,25 @@ public class Settings {
 	public static final int CLOSEOUT_BURGARD_KJAER = 2;
 
 	private int _iCloseOutScheme = CLOSEOUT_GREGORY_LI_TANG;
+	private double _dblSensitivityShiftFactor = java.lang.Double.NaN;
 
 	/**
 	 * Settings Constructor
 	 * 
 	 * @param iCloseOutScheme The Close Out Scheme
+	 * @param dblSensitivityShiftFactor The Factor needed to evaluate Sensitivity Shifts
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public Settings (
-		final int iCloseOutScheme)
+		final int iCloseOutScheme,
+		final double dblSensitivityShiftFactor)
 		throws java.lang.Exception
 	{
 		if (CLOSEOUT_GREGORY_LI_TANG != (_iCloseOutScheme = iCloseOutScheme) && CLOSEOUT_BURGARD_KJAER !=
-			_iCloseOutScheme)
+			_iCloseOutScheme || !org.drip.quant.common.NumberUtil.IsValid (_dblSensitivityShiftFactor =
+				dblSensitivityShiftFactor))
 			throw new java.lang.Exception ("Settings Constructor => Invalid Inputs");
 	}
 
@@ -110,5 +114,16 @@ public class Settings {
 	public int closeOutScheme()
 	{
 		return _iCloseOutScheme;
+	}
+
+	/**
+	 * Retrieve the Factor needed to evaluate Sensitivity Shifts
+	 * 
+	 * @return The Factor needed to evaluate Sensitivity Shifts
+	 */
+
+	public double sensitivityShiftFactor()
+	{
+		return _dblSensitivityShiftFactor;
 	}
 }
