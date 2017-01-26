@@ -55,8 +55,8 @@ import org.drip.xva.pde.*;
  */
 
 /**
- * BilateralXVAEvolver demonstrates the Bank and Counter-Party Default Based Derivative Price Evolution. The
- *  References are:
+ * BilateralXVAGreeks demonstrates the Bank and Counter-Party Default Based Derivative Evolution of the XVA
+ *  Greeks and their Components. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -76,7 +76,7 @@ import org.drip.xva.pde.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BilateralXVAEvolver {
+public class BilateralXVAGreeks {
 
 	private static final EdgeEvolutionTrajectory RunStep (
 		final TrajectoryEvolutionScheme tes,
@@ -85,27 +85,23 @@ public class BilateralXVAEvolver {
 		final EdgeEvolutionTrajectory eetStart)
 		throws Exception
 	{
-		EdgeReferenceUnderlierGreek erugIn = eetStart.edgeReferenceUnderlierGreek();
+		EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
 
-		EdgeReplicationPortfolio erp = eetStart.replicationPortfolio();
+		EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
 
-		double dblDerivativeXVAValue = erugIn.derivativeXVAValue();
-
-		MasterAgreementCloseOut maco = tes.boundaryCondition();
-
-		double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - maco.bankDefault
-			(dblDerivativeXVAValue));
-
-		double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault
-			(dblDerivativeXVAValue));
-
-		TwoWayRiskyUniverse twru = tes.universe();
+		double dblDerivativeXVAValueStart = eagStart.derivativeXVAValue();
 
 		double dblTimeWidth = tes.timeIncrement();
 
-		double dblTime = eetStart.time() - dblTimeWidth;
+		double dblTimeStart = eetStart.time();
+
+		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
 		UniverseSnapshot usStart = eetStart.tradeableAssetSnapshot();
+
+		TwoWayRiskyUniverse twru = tes.universe();
+
+		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
 
 		UniverseSnapshot usFinish = new UniverseSnapshot (
 			twru.referenceUnderlier().priceNumeraire().weinerIncrement (
@@ -115,10 +111,10 @@ public class BilateralXVAEvolver {
 				),
 				dblTimeWidth
 			),
-			twru.creditRiskFreeBond().priceNumeraire().weinerIncrement (
+			twru.zeroCouponCollateralBond().priceNumeraire().weinerIncrement (
 				new MarginalSnap (
 					dblTime,
-					usStart.zeroCouponBondCollateralNumeraire().finish()
+					dblCollateralBondNumeraire
 				),
 				dblTimeWidth
 			),
@@ -138,44 +134,45 @@ public class BilateralXVAEvolver {
 			)
 		);
 
+		MasterAgreementCloseOut maco = tes.boundaryCondition();
+
 		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (
 			si,
-			new EdgeEvolutionTrajectory (
-				dblTime,
-				usFinish,
-				erp,
-				erugIn,
-				dblGainOnBankDefault,
-				dblGainOnCounterPartyDefault
-			)
+			eetStart
 		);
 
 		double dblTheta = lbkr.theta();
 
-		double dblAssetNumeraireChange = lbkr.assetNumeraireChange();
+		double dblAssetNumeraireBump = lbkr.assetNumeraireBump();
 
 		double dblThetaAssetNumeraireUp = lbkr.thetaAssetNumeraireUp();
 
 		double dblThetaAssetNumeraireDown = lbkr.thetaAssetNumeraireDown();
 
-		double dblDerivativeXVAValueDeltaNew = erugIn.derivativeXVAValueDelta() +
-			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireChange;
+		double dblDerivativeXVAValueDeltaFinish = eagStart.derivativeXVAValueDelta() +
+			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
-		double dblDerivativeXVAValueGammaNew = erugIn.derivativeXVAValueGamma() +
+		double dblDerivativeXVAValueGammaFinish = eagStart.derivativeXVAValueGamma() +
 			(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
-				(dblAssetNumeraireChange * dblAssetNumeraireChange);
+				(dblAssetNumeraireBump * dblAssetNumeraireBump);
 
-		double dblDerivativeXVAValueNew = dblDerivativeXVAValue - dblTheta * dblTimeWidth;
+		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
+
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.bankDefault
+			(dblDerivativeXVAValueFinish));
+
+		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.counterPartyDefault
+			(dblDerivativeXVAValueFinish));
 
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblDerivativeXVAValueNew, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblDerivativeXVAValueDeltaNew, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblDerivativeXVAValueGammaNew, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblGainOnBankDefault, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblGainOnCounterPartyDefault, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAValueFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAValueDeltaFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAValueGammaFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblGainOnBankDefaultFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblGainOnCounterPartyDefaultFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (lbkr.derivativeXVAStochasticGrowth(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lbkr.derivativeXVARiskFreeGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVACollateralGrowth(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (lbkr.derivativeXVAFundingGrowth(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (lbkr.derivativeXVABankDefaultGrowth(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (lbkr.derivativeXVACounterPartyDefaultGrowth(), 1, 6, 1.) + " | " +
@@ -190,22 +187,29 @@ public class BilateralXVAEvolver {
 		).cashAccount();
 
 		return new EdgeEvolutionTrajectory (
-			dblTime,
+			dblTimeStart - dblTimeWidth,
 			usFinish,
 			new EdgeReplicationPortfolio (
-				-1. * dblDerivativeXVAValueDeltaNew,
-				dblGainOnBankDefault / usFinish.zeroCouponBankBondNumeraire().finish(),
-				dblGainOnCounterPartyDefault / usFinish.zeroCouponCounterPartyBondNumeraire().finish(),
-				erp.cashAccount() + lca.accumulation()
+				-1. * dblDerivativeXVAValueDeltaFinish,
+				dblGainOnBankDefaultFinish / usFinish.zeroCouponBankBondNumeraire().finish(),
+				dblGainOnCounterPartyDefaultFinish / usFinish.zeroCouponCounterPartyBondNumeraire().finish(),
+				erpStart.cashAccount() + lca.accumulation()
 			),
-			new EdgeReferenceUnderlierGreek (
-				dblDerivativeXVAValueNew,
-				dblDerivativeXVAValueDeltaNew,
-				dblDerivativeXVAValueGammaNew,
-				erugIn.derivativeValue()
+			new EdgeAssetGreek (
+				dblDerivativeXVAValueFinish,
+				dblDerivativeXVAValueDeltaFinish,
+				dblDerivativeXVAValueGammaFinish,
+				eagStart.derivativeValue() * Math.exp (
+					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
+						new MarginalSnap (
+							dblTime,
+							dblCollateralBondNumeraire
+						)
+					)
+				)
 			),
-			dblGainOnBankDefault,
-			dblGainOnCounterPartyDefault
+			dblGainOnBankDefaultFinish,
+			dblGainOnCounterPartyDefaultFinish
 		);
 	}
 
@@ -265,32 +269,24 @@ public class BilateralXVAEvolver {
 			dblZeroCouponCounterPartyBondVolatility
 		);
 
-		TradeableAsset taAsset = new TradeableAssetEquity (
-			meAsset,
-			dblAssetRepo,
-			dblAssetDividend
-		);
-
-		TradeableAsset taCreditRiskFree = new TradeableAsset (
-			meZeroCouponCreditRiskFreeBond,
-			dblCreditRiskFreeRepo
-		);
-
-		TradeableAsset taZeroCouponBankBond = new TradeableAsset (
-			meZeroCouponBankBond,
-			dblZeroCouponBankBondRepo
-		);
-
-		TradeableAsset taZeroCouponCounterPartyBond = new TradeableAsset (
-			meZeroCouponCounterPartyBond,
-			dblZeroCouponCounterPartyBondRepo
-		);
-
 		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (
-			taAsset,
-			taCreditRiskFree,
-			taZeroCouponBankBond,
-			taZeroCouponCounterPartyBond
+			new Equity (
+				meAsset,
+				dblAssetRepo,
+				dblAssetDividend
+			),
+			new Tradeable (
+				meZeroCouponCreditRiskFreeBond,
+				dblCreditRiskFreeRepo
+			),
+			new Tradeable (
+				meZeroCouponBankBond,
+				dblZeroCouponBankBondRepo
+			),
+			new Tradeable (
+				meZeroCouponCounterPartyBond,
+				dblZeroCouponCounterPartyBondRepo
+			)
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
@@ -315,12 +311,16 @@ public class BilateralXVAEvolver {
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
 
-		EdgeReferenceUnderlierGreek erug = new EdgeReferenceUnderlierGreek (
+		EdgeAssetGreek erug = new EdgeAssetGreek (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
 			dblDerivativeValue
 		);
+
+		double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - maco.bankDefault (dblDerivativeXVAValue));
+
+		double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue));
 
 		System.out.println();
 
@@ -367,8 +367,8 @@ public class BilateralXVAEvolver {
 			FormatUtil.FormatDouble (erug.derivativeXVAValue(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erug.derivativeXVAValueDelta(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erug.derivativeXVAValueGamma(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (-1. * (dblDerivativeXVAValue - maco.bankDefault (dblDerivativeXVAValue)), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (-1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue)), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblGainOnBankDefault, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblGainOnCounterPartyDefault, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
@@ -379,59 +379,47 @@ public class BilateralXVAEvolver {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
-		EdgeReplicationPortfolio erp = new EdgeReplicationPortfolio (
-			1.,
-			0.,
-			0.,
-			0.
-		);
-
-		LevelRealization lrAsset = meAsset.weinerIncrement (
-			new MarginalSnap (
-				dblTime,
-				dblDerivativeValue
-			),
-			dblTimeWidth
-		);
-
-		LevelRealization lrCounterPartyBond = meZeroCouponCounterPartyBond.weinerIncrement (
-			new MarginalSnap (
-				dblTime,
-				1.
-			),
-			dblTimeWidth
-		);
-
-		LevelRealization lrBankBond = meZeroCouponBankBond.weinerIncrement (
-			new MarginalSnap (
-				dblTime,
-				1.
-			),
-			dblTimeWidth
-		);
-
-		LevelRealization lrCreditRiskFreeBond = meZeroCouponCreditRiskFreeBond.weinerIncrement (
-			new MarginalSnap (
-				dblTime,
-				1.
-			),
-			dblTimeWidth
-		);
-
-		UniverseSnapshot us = new UniverseSnapshot (
-			lrAsset,
-			lrCreditRiskFreeBond,
-			lrBankBond,
-			lrCounterPartyBond
-		);
-
 		EdgeEvolutionTrajectory eet = new EdgeEvolutionTrajectory (
 			dblTime,
-			us,
-			erp,
+			new UniverseSnapshot (
+				meAsset.weinerIncrement (
+					new MarginalSnap (
+						dblTime,
+						dblDerivativeValue
+					),
+					dblTimeWidth
+				),
+				meZeroCouponCreditRiskFreeBond.weinerIncrement (
+					new MarginalSnap (
+						dblTime,
+						1.
+					),
+					dblTimeWidth
+				),
+				meZeroCouponBankBond.weinerIncrement (
+					new MarginalSnap (
+						dblTime,
+						1.
+					),
+					dblTimeWidth
+				),
+				meZeroCouponCounterPartyBond.weinerIncrement (
+					new MarginalSnap (
+						dblTime,
+						1.
+					),
+					dblTimeWidth
+				)
+			),
+			new EdgeReplicationPortfolio (
+				1.,
+				0.,
+				0.,
+				0.
+			),
 			erug,
-			-1. * (dblDerivativeXVAValue - maco.bankDefault (dblDerivativeXVAValue)),
-			-1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue))
+			dblGainOnBankDefault,
+			dblGainOnCounterPartyDefault
 		);
 
 		for (dblTime -= dblTimeWidth; dblTime >= 0.; dblTime -= dblTimeWidth)

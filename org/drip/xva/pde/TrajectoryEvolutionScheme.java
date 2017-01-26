@@ -178,11 +178,11 @@ public class TrajectoryEvolutionScheme {
 			_twru.zeroCouponCounterPartyBond().cashAccumulationRate() * lrCounterPartyBond.finish() *
 				_dblTimeIncrement;
 
-		double dblCashAccountBalance = -1. * eetStart.edgeReferenceUnderlierGreek().derivativeXVAValue() -
+		double dblCashAccountBalance = -1. * eetStart.edgeAssetGreek().derivativeXVAValue() -
 			dblBankBondUnitsStart * lrBankBond.finish();
 
 		double dblLevelBankCash = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
-			_twru.creditRiskFreeBond().cashAccumulationRate() :
+			_twru.zeroCouponCollateralBond().cashAccumulationRate() :
 				_twru.zeroCouponBankBond().cashAccumulationRate()) * _dblTimeIncrement;
 
 		double dblLevelCashAccount = (dblLevelAssetCash + dblLevelCounterPartyCash + dblLevelBankCash) *
@@ -217,7 +217,7 @@ public class TrajectoryEvolutionScheme {
 	public org.drip.xva.derivative.LevelEvolutionTrajectory move (
 		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
 		final org.drip.xva.definition.UniverseSnapshot us,
-		final org.drip.xva.derivative.EdgeReferenceUnderlierGreek erugFinish)
+		final org.drip.xva.derivative.EdgeAssetGreek erugFinish)
 	{
 		if (null == erugFinish) return null;
 

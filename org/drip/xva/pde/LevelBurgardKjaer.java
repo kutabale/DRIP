@@ -69,39 +69,39 @@ package org.drip.xva.pde;
  */
 
 public abstract class LevelBurgardKjaer {
-	private double _dblAssetNumeraireChange = java.lang.Double.NaN;
-	private double _dblDerivativeXVARiskFreeGrowth = java.lang.Double.NaN;
+	private double _dblAssetNumeraireBump = java.lang.Double.NaN;
+	private double _dblDerivativeXVACollateralGrowth = java.lang.Double.NaN;
 	private double _dblDerivativeXVAStochasticGrowth = java.lang.Double.NaN;
 	private double _dblDerivativeXVAStochasticGrowthUp = java.lang.Double.NaN;
 	private double _dblDerivativeXVAStochasticGrowthDown = java.lang.Double.NaN;
 
 	protected LevelBurgardKjaer (
-		final double dblAssetNumeraireChange,
+		final double dblAssetNumeraireBump,
 		final double dblDerivativeXVAStochasticGrowthDown,
 		final double dblDerivativeXVAStochasticGrowth,
 		final double dblDerivativeXVAStochasticGrowthUp,
-		final double dblDerivativeXVARiskFreeGrowth)
+		final double dblDerivativeXVACollateralGrowth)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetNumeraireChange = dblAssetNumeraireChange) ||
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetNumeraireBump = dblAssetNumeraireBump) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthDown =
 				dblDerivativeXVAStochasticGrowthDown) || !org.drip.quant.common.NumberUtil.IsValid
 					(_dblDerivativeXVAStochasticGrowth = dblDerivativeXVAStochasticGrowth) ||
 						!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthUp =
 							dblDerivativeXVAStochasticGrowthUp) || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblDerivativeXVARiskFreeGrowth = dblDerivativeXVARiskFreeGrowth))
+								(_dblDerivativeXVACollateralGrowth = dblDerivativeXVACollateralGrowth))
 			throw new java.lang.Exception ("LevelBurgardKjaer Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Change in Value of the Asset Numeraire
+	 * Retrieve the Asset Numeraire Bump
 	 * 
-	 * @return The Change in Value of the Asset Numeraire
+	 * @return The Asset Numeraire Bump
 	 */
 
-	public double assetNumeraireChange()
+	public double assetNumeraireBump()
 	{
-		return _dblAssetNumeraireChange;
+		return _dblAssetNumeraireBump;
 	}
 
 	/**
@@ -138,14 +138,14 @@ public abstract class LevelBurgardKjaer {
 	}
 
 	/**
-	 * Retrieve the Credit Risk Free Component of the Derivative XVA Value Growth
+	 * Retrieve the Collateral Component of the Derivative XVA Value Growth
 	 * 
-	 * @return The Credit Risk Free Component of the Derivative XVA Value Growth
+	 * @return The Collateral Component of the Derivative XVA Value Growth
 	 */
 
-	public double derivativeXVARiskFreeGrowth()
+	public double derivativeXVACollateralGrowth()
 	{
-		return _dblDerivativeXVARiskFreeGrowth;
+		return _dblDerivativeXVACollateralGrowth;
 	}
 
 	/**

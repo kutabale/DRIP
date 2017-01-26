@@ -71,11 +71,11 @@ package org.drip.xva.derivative;
 
 public class EdgeEvolutionTrajectory {
 	private double _dblTime = java.lang.Double.NaN;
+	private org.drip.xva.derivative.EdgeAssetGreek _eag = null;
 	private double _dblGainOnBankDefault = java.lang.Double.NaN;
 	private org.drip.xva.definition.UniverseSnapshot _us = null;
 	private double _dblGainOnCounterPartyDefault = java.lang.Double.NaN;
 	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
-	private org.drip.xva.derivative.EdgeReferenceUnderlierGreek _erug = null;
 
 	/**
 	 * EdgeEvolutionTrajectory Constructor
@@ -83,7 +83,7 @@ public class EdgeEvolutionTrajectory {
 	 * @param dblTime The Evolution Trajectory Edge Time
 	 * @param us Realization of the Trade-able Asset Prices
 	 * @param erp The Edge Replication Portfolio Snapshot
-	 * @param erug The Edge Reference Underlier Greek Instance
+	 * @param eag The Edge Asset Greek Instance
 	 * @param dblGainOnBankDefault The Counter Party Gain On Bank Default
 	 * @param dblGainOnCounterPartyDefault The Bank Gain On Counter Party Default
 	 * 
@@ -94,13 +94,13 @@ public class EdgeEvolutionTrajectory {
 		final double dblTime,
 		final org.drip.xva.definition.UniverseSnapshot us,
 		final org.drip.xva.derivative.EdgeReplicationPortfolio erp,
-		final org.drip.xva.derivative.EdgeReferenceUnderlierGreek erug,
+		final org.drip.xva.derivative.EdgeAssetGreek eag,
 		final double dblGainOnBankDefault,
 		final double dblGainOnCounterPartyDefault)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_us = us) || null ==
-			(_erp = erp) || null == (_erug = erug) || !org.drip.quant.common.NumberUtil.IsValid
+			(_erp = erp) || null == (_eag = eag) || !org.drip.quant.common.NumberUtil.IsValid
 				(_dblGainOnBankDefault = dblGainOnBankDefault) || !org.drip.quant.common.NumberUtil.IsValid
 					(_dblGainOnCounterPartyDefault = dblGainOnCounterPartyDefault))
 			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
@@ -140,14 +140,14 @@ public class EdgeEvolutionTrajectory {
 	}
 
 	/**
-	 * Retrieve the EdgeReferenceUnderlierGreek Instance
+	 * Retrieve the EdgeAssetGreek Instance
 	 * 
-	 * @return The EdgeReferenceUnderlierGreek Instance
+	 * @return The EdgeAssetGreek Instance
 	 */
 
-	public org.drip.xva.derivative.EdgeReferenceUnderlierGreek edgeReferenceUnderlierGreek()
+	public org.drip.xva.derivative.EdgeAssetGreek edgeAssetGreek()
 	{
-		return _erug;
+		return _eag;
 	}
 
 	/**

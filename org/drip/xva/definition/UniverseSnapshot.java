@@ -117,7 +117,7 @@ public class UniverseSnapshot {
 	 * @return The Zero Coupon Collateral Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.LevelRealization zeroCouponBondCollateralNumeraire()
+	public org.drip.measure.process.LevelRealization zeroCouponCollateralBondNumeraire()
 	{
 		return _lrZeroCouponBondCollateralNumeraire;
 	}

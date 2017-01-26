@@ -47,8 +47,7 @@ package org.drip.xva.definition;
  */
 
 /**
- * TradeableAsset holds Definitions and Parameters that specify a Trade-able Asset in XVA Terms. The
- *  References are:
+ * Equity describes a Trade-able Equity. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,59 +67,44 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeableAsset {
-	private double _dblRepoRate = java.lang.Double.NaN;
-	private org.drip.measure.process.MarginalEvolver _mePriceNumeraire = null;
+public class Equity extends org.drip.xva.definition.Tradeable {
+	private double _dblDividendRate = java.lang.Double.NaN;
 
 	/**
-	 * TradeableAsset Constructor
+	 * Equity Constructor
 	 * 
-	 * @param mePriceNumeraire The Trade-able Asset Price Numeraire
-	 * @param dblRepoRate The Trade-able Asset Repo Rate
+	 * @param mePriceNumeraire The Underlier Price Numeraire
+	 * @param dblRepoRate The Underlier Repo Rate
+	 * @param dblDividendRate The Underlier Dividend Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradeableAsset (
+	public Equity (
 		final org.drip.measure.process.MarginalEvolver mePriceNumeraire,
-		final double dblRepoRate)
+		final double dblRepoRate,
+		final double dblDividendRate)
 		throws java.lang.Exception
 	{
-		if (null == (_mePriceNumeraire = mePriceNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblRepoRate = dblRepoRate))
-			throw new java.lang.Exception ("TradeableAsset Constructor => Invalid Inputs");
+		super (mePriceNumeraire, dblRepoRate);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDividendRate = dblDividendRate))
+			throw new java.lang.Exception ("Equity Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Price Numeraire
+	 * Retrieve the Underlier Dividend Rate
 	 * 
-	 * @return The Trade-able Asset Price Numeraire
+	 * @return The Underlier Dividend Rate
 	 */
 
-	public org.drip.measure.process.MarginalEvolver priceNumeraire()
+	public double dividendRate()
 	{
-		return _mePriceNumeraire;
+		return _dblDividendRate;
 	}
 
-	/**
-	 * Retrieve the Trade-able Asset Repo Rate
-	 * 
-	 * @return The Trade-able Asset Repo Rate
-	 */
-
-	public double repoRate()
+	@Override public double cashAccumulationRate()
 	{
-		return _dblRepoRate;
-	}
-
-	/**
-	 * Retrieve the Trade-able Asset Cash Accumulation Rate
-	 * 
-	 * @return The Trade-able Asset Cash Accumulation Rate
-	 */
-
-	public double cashAccumulationRate()
-	{
-		return -1. * _dblRepoRate;
+		return _dblDividendRate - repoRate();
 	}
 }

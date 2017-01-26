@@ -70,40 +70,40 @@ package org.drip.xva.pde;
  */
 
 public class ParabolicDifferentialOperator {
-	private org.drip.xva.definition.TradeableAsset _taReferenceUnderlier = null;
+	private org.drip.xva.definition.Tradeable _taAsset = null;
 
 	/**
 	 * ParabolicDifferentialOperator Constructor
 	 * 
-	 * @param taReferenceUnderlier The Reference Underlier Trade-able Asset
+	 * @param taAsset The Trade-able Asset
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ParabolicDifferentialOperator (
-		final org.drip.xva.definition.TradeableAsset taReferenceUnderlier)
+		final org.drip.xva.definition.Tradeable taAsset)
 		throws java.lang.Exception
 	{
-		if (null == (_taReferenceUnderlier = taReferenceUnderlier))
+		if (null == (_taAsset = taAsset))
 			throw new java.lang.Exception ("ParabolicDifferentialOperator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Reference Underlier Trade-able Asset
+	 * Retrieve the Reference Trade-able Asset
 	 * 
-	 * @return The Reference Underlier Trade-able Asset
+	 * @return The Reference Trade-able Asset
 	 */
 
-	public org.drip.xva.definition.TradeableAsset referenceUnderlier()
+	public org.drip.xva.definition.Tradeable asset()
 	{
-		return _taReferenceUnderlier;
+		return _taAsset;
 	}
 
 	/**
-	 * Compute the Theta for the Derivative from the Reference Underlier Edge Value
+	 * Compute the Theta for the Derivative from the Asset Edge Value
 	 * 
 	 * @param eet The Derivative's EdgeEvolutionTrajectory Instance
-	 * @param dblReferenceUnderlier The Reference Underlier Edge Value
+	 * @param dblAsset The Asset Edge Value
 	 * 
 	 * @return The Theta
 	 * 
@@ -112,28 +112,27 @@ public class ParabolicDifferentialOperator {
 
 	public double theta (
 		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet,
-		final double dblReferenceUnderlier)
+		final double dblAsset)
 		throws java.lang.Exception
 	{
-		if (null == eet || !org.drip.quant.common.NumberUtil.IsValid (dblReferenceUnderlier))
+		if (null == eet || !org.drip.quant.common.NumberUtil.IsValid (dblAsset))
 			throw new java.lang.Exception ("ParabolicDifferentialOperator::theta => Invalid Inputs");
 
-		org.drip.xva.derivative.EdgeReferenceUnderlierGreek erugDerivative =
-			eet.edgeReferenceUnderlierGreek();
+		org.drip.xva.derivative.EdgeAssetGreek eagDerivative = eet.edgeAssetGreek();
 
-		double dblVolatility = _taReferenceUnderlier.priceNumeraire().volatilityLDEV().value (new
-			org.drip.measure.process.MarginalSnap (eet.time(), dblReferenceUnderlier));
+		double dblVolatility = _taAsset.priceNumeraire().volatilityLDEV().value (new
+			org.drip.measure.process.MarginalSnap (eet.time(), dblAsset));
 
-		return 0.5 * dblVolatility * dblVolatility * dblReferenceUnderlier * dblReferenceUnderlier *
-			erugDerivative.derivativeXVAValueGamma() - _taReferenceUnderlier.cashAccumulationRate() *
-				dblReferenceUnderlier * erugDerivative.derivativeXVAValueDelta();
+		return 0.5 * dblVolatility * dblVolatility * dblAsset * dblAsset *
+			eagDerivative.derivativeXVAValueGamma() - _taAsset.cashAccumulationRate() * dblAsset *
+				eagDerivative.derivativeXVAValueDelta();
 	}
 
 	/**
 	 * Compute the Up/Down Thetas
 	 *  
 	 * @param eet The Derivative's EdgeEvolutionTrajectory Instance
-	 * @param dblReferenceUnderlier The Reference Underlier Edge Value
+	 * @param dblAsset The Asset Edge Value
 	 * @param dblShift The Amount to Shift the Reference Underlier Numeraire By
 	 * 
 	 * @return The Array of the Up/Down Thetas
@@ -141,23 +140,22 @@ public class ParabolicDifferentialOperator {
 
 	public double[] thetaUpDown (
 		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet,
-		final double dblReferenceUnderlier,
+		final double dblAsset,
 		final double dblShift)
 	{
-		if (null == eet || !org.drip.quant.common.NumberUtil.IsValid (dblReferenceUnderlier) ||
+		if (null == eet || !org.drip.quant.common.NumberUtil.IsValid (dblAsset) ||
 			!org.drip.quant.common.NumberUtil.IsValid (dblShift))
 			return null;
 
-		org.drip.xva.derivative.EdgeReferenceUnderlierGreek erugDerivative =
-			eet.edgeReferenceUnderlierGreek();
+		org.drip.xva.derivative.EdgeAssetGreek eagDerivative = eet.edgeAssetGreek();
 
-		double dblReferenceUnderlierDown = dblReferenceUnderlier - dblShift;
-		double dblReferenceUnderlierUp = dblReferenceUnderlier + dblShift;
+		double dblAssetUp = dblAsset + dblShift;
+		double dblAssetDown = dblAsset - dblShift;
 		double dblVolatility = java.lang.Double.NaN;
 
 		try {
-			dblVolatility = _taReferenceUnderlier.priceNumeraire().volatilityLDEV().value (new
-				org.drip.measure.process.MarginalSnap (eet.time(), dblReferenceUnderlier));
+			dblVolatility = _taAsset.priceNumeraire().volatilityLDEV().value (new
+				org.drip.measure.process.MarginalSnap (eet.time(), dblAsset));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
@@ -165,15 +163,13 @@ public class ParabolicDifferentialOperator {
 		}
 
 		double dblGammaCoefficient = 0.5 * dblVolatility * dblVolatility *
-			erugDerivative.derivativeXVAValueGamma();
+			eagDerivative.derivativeXVAValueGamma();
 
-		double dblDeltaCoefficient = -1. * _taReferenceUnderlier.cashAccumulationRate() *
-			erugDerivative.derivativeXVAValueDelta();
+		double dblDeltaCoefficient = -1. * _taAsset.cashAccumulationRate() *
+			eagDerivative.derivativeXVAValueDelta();
 
-		return new double[] {dblGammaCoefficient * dblReferenceUnderlierDown * dblReferenceUnderlierDown +
-			dblDeltaCoefficient * dblReferenceUnderlierDown, dblGammaCoefficient * dblReferenceUnderlier *
-				dblReferenceUnderlier + dblDeltaCoefficient * dblReferenceUnderlier, dblGammaCoefficient *
-					dblReferenceUnderlierUp * dblReferenceUnderlierUp + dblDeltaCoefficient *
-						dblReferenceUnderlierUp};
+		return new double[] {dblGammaCoefficient * dblAssetDown * dblAssetDown + dblDeltaCoefficient *
+			dblAssetDown, dblGammaCoefficient * dblAsset * dblAsset + dblDeltaCoefficient * dblAsset,
+				dblGammaCoefficient * dblAssetUp * dblAssetUp + dblDeltaCoefficient * dblAssetUp};
 	}
 }

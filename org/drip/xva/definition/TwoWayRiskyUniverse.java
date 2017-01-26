@@ -70,16 +70,16 @@ package org.drip.xva.definition;
  */
 
 public class TwoWayRiskyUniverse {
-	private org.drip.xva.definition.TradeableAsset _taCreditRiskFree = null;
-	private org.drip.xva.definition.TradeableAsset _taReferenceUnderlier = null;
-	private org.drip.xva.definition.TradeableAsset _taZeroCouponBankBond = null;
-	private org.drip.xva.definition.TradeableAsset _taZeroCouponCounterPartyBond = null;
+	private org.drip.xva.definition.Tradeable _taZeroCouponCollateralBond = null;
+	private org.drip.xva.definition.Tradeable _taReferenceUnderlier = null;
+	private org.drip.xva.definition.Tradeable _taZeroCouponBankBond = null;
+	private org.drip.xva.definition.Tradeable _taZeroCouponCounterPartyBond = null;
 
 	/**
 	 * TwoWayRiskyUniverse Constructor
 	 * 
 	 * @param taReferenceUnderlier The Reference Underlier Trade-able Asset
-	 * @param taCreditRiskFree The Credit Risk Free Trade-able Asset
+	 * @param taZeroCouponCollateralBond The Zero Coupon Collateral Bond
 	 * @param taZeroCouponBankBond The Zero Coupon Credit Risky Bank Bond
 	 * @param taZeroCouponCounterPartyBond The Zero Coupon Credit Risky Counter Party Bond
 	 * 
@@ -87,14 +87,14 @@ public class TwoWayRiskyUniverse {
 	 */
 
 	public TwoWayRiskyUniverse (
-		final org.drip.xva.definition.TradeableAsset taReferenceUnderlier,
-		final org.drip.xva.definition.TradeableAsset taCreditRiskFree,
-		final org.drip.xva.definition.TradeableAsset taZeroCouponBankBond,
-		final org.drip.xva.definition.TradeableAsset taZeroCouponCounterPartyBond)
+		final org.drip.xva.definition.Tradeable taReferenceUnderlier,
+		final org.drip.xva.definition.Tradeable taZeroCouponCollateralBond,
+		final org.drip.xva.definition.Tradeable taZeroCouponBankBond,
+		final org.drip.xva.definition.Tradeable taZeroCouponCounterPartyBond)
 		throws java.lang.Exception
 	{
-		if (null == (_taReferenceUnderlier = taReferenceUnderlier) || null == (_taCreditRiskFree =
-			taCreditRiskFree) || null == (_taZeroCouponBankBond = taZeroCouponBankBond) || null ==
+		if (null == (_taReferenceUnderlier = taReferenceUnderlier) || null == (_taZeroCouponCollateralBond =
+			taZeroCouponCollateralBond) || null == (_taZeroCouponBankBond = taZeroCouponBankBond) || null ==
 				(_taZeroCouponCounterPartyBond = taZeroCouponCounterPartyBond))
 			throw new java.lang.Exception ("TwoWayRiskyUniverse Constructor => Invalid Inputs");
 	}
@@ -105,20 +105,20 @@ public class TwoWayRiskyUniverse {
 	 * @return The Reference Underlier
 	 */
 
-	public org.drip.xva.definition.TradeableAsset referenceUnderlier()
+	public org.drip.xva.definition.Tradeable referenceUnderlier()
 	{
 		return _taReferenceUnderlier;
 	}
 
 	/**
-	 * Retrieve the Credit Risk Free Trade-able Asset
+	 * Retrieve the Zero Coupon Collateral Bond
 	 * 
-	 * @return The Credit Risk Free Trade-able Asset
+	 * @return The Zero Coupon Collateral Bond
 	 */
 
-	public org.drip.xva.definition.TradeableAsset creditRiskFreeBond()
+	public org.drip.xva.definition.Tradeable zeroCouponCollateralBond()
 	{
-		return _taCreditRiskFree;
+		return _taZeroCouponCollateralBond;
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class TwoWayRiskyUniverse {
 	 * @return The Zero Coupon Credit Risky Bank Bond
 	 */
 
-	public org.drip.xva.definition.TradeableAsset zeroCouponBankBond()
+	public org.drip.xva.definition.Tradeable zeroCouponBankBond()
 	{
 		return _taZeroCouponBankBond;
 	}
@@ -138,7 +138,7 @@ public class TwoWayRiskyUniverse {
 	 * @return The Zero Coupon Credit Risky Counter Party Bond
 	 */
 
-	public org.drip.xva.definition.TradeableAsset zeroCouponCounterPartyBond()
+	public org.drip.xva.definition.Tradeable zeroCouponCounterPartyBond()
 	{
 		return _taZeroCouponCounterPartyBond;
 	}

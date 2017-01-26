@@ -148,29 +148,29 @@ public class BurgardKjaerOperator {
 
 		double dblBankDefaultCloseOut = eet.gainOnBankDefault();
 
-		double dblAssetNumeraire = us.assetNumeraire().finish();
+		double dblAssetValue = us.assetNumeraire().finish();
 
-		double dblDerivativeXVAValue = eet.edgeReferenceUnderlierGreek().derivativeXVAValue();
+		double dblAssetBump = _settings.sensitivityShiftFactor() * dblAssetValue;
+
+		double dblDerivativeXVAValue = eet.edgeAssetGreek().derivativeXVAValue();
 
 		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblBankDefaultCloseOut;
 
-		double dblAssetNumeraireChange = _settings.sensitivityShiftFactor() * dblAssetNumeraire;
-
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetNumeraire, dblAssetNumeraireChange);
+				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetValue, dblAssetBump);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
 			return new org.drip.xva.pde.LevelBurgardKjaerRun (
-				dblAssetNumeraireChange,
+				dblAssetBump,
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
-				_twru.creditRiskFreeBond().priceNumeraire().driftLDEV().value (
+				_twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
 					new org.drip.measure.process.MarginalSnap (
 						dblTime,
-						us.zeroCouponBondCollateralNumeraire().finish()
+						us.zeroCouponCollateralBondNumeraire().finish()
 					)
 				) * dblDerivativeXVAValue,
 				si.bankFundingSpread() * (
@@ -209,7 +209,7 @@ public class BurgardKjaerOperator {
 
 		org.drip.xva.definition.UniverseSnapshot us = eet.tradeableAssetSnapshot();
 
-		double dblDerivativeXVAValue = eet.edgeReferenceUnderlierGreek().derivativeXVAValue();
+		double dblDerivativeXVAValue = eet.edgeAssetGreek().derivativeXVAValue();
 
 		double dblCloseOutMTM = org.drip.xva.custom.Settings.CLOSEOUT_GREGORY_LI_TANG ==
 			_settings.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
@@ -217,25 +217,25 @@ public class BurgardKjaerOperator {
 		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _maco.bankRecovery() *
 			dblCloseOutMTM;
 
-		double dblAssetNumeraire = us.assetNumeraire().finish();
+		double dblAssetValue = us.assetNumeraire().finish();
 
-		double dblAssetNumeraireChange = _settings.sensitivityShiftFactor() * dblAssetNumeraire;
+		double dblAssetBump = _settings.sensitivityShiftFactor() * dblAssetValue;
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetNumeraire, dblAssetNumeraireChange);
+				(_twru.referenceUnderlier()).thetaUpDown (eet, dblAssetValue, dblAssetBump);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
 			return new org.drip.xva.pde.LevelBurgardKjaerAttribution (
-				dblAssetNumeraireChange,
+				dblAssetBump,
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
-				_twru.creditRiskFreeBond().priceNumeraire().driftLDEV().value (
+				_twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
 					new org.drip.measure.process.MarginalSnap (
 						dblTime,
-						us.zeroCouponBondCollateralNumeraire().finish()
+						us.zeroCouponCollateralBondNumeraire().finish()
 					)
 				) * dblDerivativeXVAValue,
 				(dblBankDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,

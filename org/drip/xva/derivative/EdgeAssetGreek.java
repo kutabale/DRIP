@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,8 @@ package org.drip.xva.definition;
  */
 
 /**
- * TradeableAssetEquity describes a Trade-able Equity Asset. The References are:
+ * EdgeAssetGreek holds the Derivative XVA Value, its Delta, and its Gamma to the Asset Value. The References
+ *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,44 +68,80 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeableAssetEquity extends org.drip.xva.definition.TradeableAsset {
-	private double _dblDividendRate = java.lang.Double.NaN;
+public class EdgeAssetGreek {
+	private double _dblDerivativeValue = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValue = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValueDelta = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValueGamma = java.lang.Double.NaN;
 
 	/**
-	 * TradeableAsset Constructor
+	 * EdgeAssetGreek Constructor
 	 * 
-	 * @param mePriceNumeraire The Underlier Price Numeraire
-	 * @param dblRepoRate The Underlier Repo Rate
-	 * @param dblDividendRate The Underlier Dividend Rate
+	 * @param dblDerivativeXVAValue The Derivative XVA Value
+	 * @param dblDerivativeXVAValueDelta The Derivative XVA Value Delta
+	 * @param dblDerivativeXVAValueGamma The Derivative XVA Value Gamma
+	 * @param dblDerivativeValue The Derivative Value
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradeableAssetEquity (
-		final org.drip.measure.process.MarginalEvolver mePriceNumeraire,
-		final double dblRepoRate,
-		final double dblDividendRate)
+	public EdgeAssetGreek (
+		final double dblDerivativeXVAValue,
+		final double dblDerivativeXVAValueDelta,
+		final double dblDerivativeXVAValueGamma,
+		final double dblDerivativeValue)
 		throws java.lang.Exception
 	{
-		super (mePriceNumeraire, dblRepoRate);
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValue = dblDerivativeXVAValue) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValueDelta =
+				dblDerivativeXVAValueDelta) || !org.drip.quant.common.NumberUtil.IsValid
+					(_dblDerivativeXVAValueGamma = dblDerivativeXVAValueGamma))
+			throw new java.lang.Exception ("EdgeAssetGreek Constructor => Invalid Inputs");
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDividendRate = dblDividendRate))
-			throw new java.lang.Exception ("TradeableAssetEquity Constructor => Invalid Inputs");
+		_dblDerivativeValue = dblDerivativeValue;
 	}
 
 	/**
-	 * Retrieve the Underlier Dividend Rate
+	 * Retrieve the Derivative XVA Value
 	 * 
-	 * @return The Underlier Dividend Rate
+	 * @return The Derivative XVA Value
 	 */
 
-	public double dividendRate()
+	public double derivativeXVAValue()
 	{
-		return _dblDividendRate;
+		return _dblDerivativeXVAValue;
 	}
 
-	@Override public double cashAccumulationRate()
+	/**
+	 * Retrieve the Derivative XVA Value Delta
+	 * 
+	 * @return The Derivative XVA Value Delta
+	 */
+
+	public double derivativeXVAValueDelta()
 	{
-		return _dblDividendRate - repoRate();
+		return _dblDerivativeXVAValueDelta;
+	}
+
+	/**
+	 * Retrieve the Derivative XVA Value Gamma
+	 * 
+	 * @return The Derivative XVA Value Gamma
+	 */
+
+	public double derivativeXVAValueGamma()
+	{
+		return _dblDerivativeXVAValueGamma;
+	}
+
+	/**
+	 * Retrieve the Derivative Non XVA Value
+	 * 
+	 * @return The Derivative Non XVA Value
+	 */
+
+	public double derivativeValue()
+	{
+		return _dblDerivativeValue;
 	}
 }
