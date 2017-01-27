@@ -47,53 +47,64 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalSnap holds the Snapshot Values of the Realized Random Variable and Time.
+ * JointLevelRealization implements the Deterministic and the Stochastic Components of a Joint Random
+ *	Increment. The References are:
+ * 
+ * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
+ * 		(2) 5-39.
  *
+ * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
+ * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
+ *
+ * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
+ * 		Financial Mathematics  3 (1) 163-181.
+ * 
+ * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
+ * 		79-96.
+ * 
+ * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
+ * 		Financial Studies 7 (4) 631-651.
+ * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalSnap {
-	private double _dblTime = java.lang.Double.NaN;
-	private double _dblValue = java.lang.Double.NaN;
+public class JointLevelRealization {
+	private org.drip.measure.process.MarginalLevelRealization[] _aMLR = null;
 
 	/**
-	 * MarginalSnap Constructor
+	 * JointLevelRealization Constructor
 	 * 
-	 * @param dblTime The Time Instant
-	 * @param dblValue The Random Variable Value
+	 * @param aMLR Array of the Marginal Level Realizations
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarginalSnap (
-		final double dblTime,
-		final double dblValue)
+	public JointLevelRealization (
+		final org.drip.measure.process.MarginalLevelRealization[] aMLR)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
-			throw new java.lang.Exception ("MarginalSnap Constructor => Invalid Inputs");
+		if (null == (_aMLR = aMLR))
+			throw new java.lang.Exception ("JointLevelRealization Constructor => Invalid Inputs");
+
+		int iNumVariate = _aMLR.length;
+
+		if (0 == iNumVariate)
+			throw new java.lang.Exception ("JointLevelRealization Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumVariate; ++i) {
+			if (null == _aMLR[i])
+				throw new java.lang.Exception ("JointLevelRealization Constructor => Invalid Inputs");
+		}
 	}
 
 	/**
-	 * Retrieve the Evolution Time Instant
+	 * Retrieve the Array of the Marginal Level Realizations
 	 * 
-	 * @return The Evolution Time Instant
+	 * @return The Array of the Marginal Level Realizations
 	 */
 
-	public double time()
+	public org.drip.measure.process.MarginalLevelRealization[] marginal()
 	{
-		return _dblTime;
-	}
-
-	/**
-	 * Retrieve the Realized Random Value
-	 * 
-	 * @return The Realized Random Value
-	 */
-
-	public double value()
-	{
-		return _dblValue;
+		return _aMLR;
 	}
 }

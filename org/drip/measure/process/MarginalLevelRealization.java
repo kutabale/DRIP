@@ -48,8 +48,8 @@ package org.drip.measure.process;
  */
 
 /**
- * LevelRealization implements the Deterministic and the Stochastic Components of a Random Increment as well
- * 	the Original Random Variate. The References are:
+ * MarginalLevelRealization implements the Deterministic and the Stochastic Components of a Marginal Random
+ *	Increment as well the Original Marginal Random Variate. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,7 +69,7 @@ package org.drip.measure.process;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LevelRealization {
+public class MarginalLevelRealization {
 	private double _dblStart = java.lang.Double.NaN;
 	private double _dblJumpWander = java.lang.Double.NaN;
 	private double _dblDeterministic = java.lang.Double.NaN;
@@ -78,7 +78,7 @@ public class LevelRealization {
 	private double _dblContinuousStochastic = java.lang.Double.NaN;
 
 	/**
-	 * LevelRealization Constructor
+	 * MarginalLevelRealization Constructor
 	 * 
 	 * @param dblStart The Starting Random Variable Realization
 	 * @param dblDeterministic The Deterministic Increment Component
@@ -90,7 +90,7 @@ public class LevelRealization {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public LevelRealization (
+	public MarginalLevelRealization (
 		final double dblStart,
 		final double dblDeterministic,
 		final double dblContinuousStochastic,
@@ -107,7 +107,7 @@ public class LevelRealization {
 							!org.drip.quant.common.NumberUtil.IsValid (_dblJumpStochastic =
 								dblJumpStochastic) || !org.drip.quant.common.NumberUtil.IsValid
 									(_dblJumpWander = dblJumpWander))
-			throw new java.lang.Exception ("LevelRealization Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("MarginalLevelRealization Constructor => Invalid Inputs");
 	}
 
 	/**

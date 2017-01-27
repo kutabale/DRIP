@@ -47,17 +47,17 @@ package org.drip.measure.process;
  */
 
 /**
- * ProcessJoint exposes the Functionality that guides the Multi-Factor Random Process Variable Evolution.
+ * JointEvolver exposes the Functionality that guides the Multi-Factor Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class ProcessJoint {
+public abstract class JointEvolver {
 	private double[][] _aadblCorrelation = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction[] _aLDEVDrift = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction[] _aLDEVVolatility = null;
 
-	protected ProcessJoint (
+	protected JointEvolver (
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction[] aLDEVDrift,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction[] aLDEVVolatility,
 		final double[][] aadblCorrelation)
@@ -65,19 +65,19 @@ public abstract class ProcessJoint {
 	{
 		if (null == (_aLDEVDrift = aLDEVDrift) || null == (_aLDEVVolatility = aLDEVVolatility) || null ==
 			(_aadblCorrelation = aadblCorrelation))
-			throw new java.lang.Exception ("ProcessJoint Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("JointEvolver Constructor => Invalid Inputs");
 
 		int iNumFactor = _aLDEVDrift.length;
 
 		if (0 == iNumFactor || iNumFactor != _aLDEVVolatility.length || iNumFactor !=
 			_aadblCorrelation.length)
-			throw new java.lang.Exception ("ProcessJoint Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("JointEvolver Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumFactor; ++i) {
 			if (null == _aLDEVDrift[i] || null == _aLDEVVolatility[i] || null == _aadblCorrelation[i] ||
 				iNumFactor != _aadblCorrelation[i].length || !org.drip.quant.common.NumberUtil.IsValid
 					(_aadblCorrelation[i]))
-				throw new java.lang.Exception ("ProcessJoint Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("JointEvolver Constructor => Invalid Inputs");
 		}
 	}
 
@@ -117,6 +117,7 @@ public abstract class ProcessJoint {
 	/**
 	 * Generate the Array of the Adjacent Increments from the Array of the specified Random Variate
 	 * 
+	 * @param js The Joint Snap
 	 * @param adblRandomVariate The Array of Random Variates
 	 * @param adblRandomUnitRealization The Array of Random Stochastic Realization Variate Units
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
@@ -124,7 +125,23 @@ public abstract class ProcessJoint {
 	 * @return The Array of the Adjacent Increments
 	 */
 
-	public abstract org.drip.measure.process.LevelRealization[] increment (
+	public abstract org.drip.measure.process.MarginalLevelRealization[] increment (
+		final org.drip.measure.process.JointSnap js,
+		final double[] adblRandomVariate,
+		final double[] adblRandomUnitRealization,
+		final double dblTimeIncrement);
+
+	/**
+	 * Generate the Array of the Adjacent Increments from the Array of the specified Random Variate
+	 * 
+	 * @param adblRandomVariate The Array of Random Variates
+	 * @param adblRandomUnitRealization The Array of Random Stochastic Realization Variate Units
+	 * @param dblTimeIncrement The Time Increment Evolution Unit
+	 * 
+	 * @return The Array of the Adjacent Increments
+	 */
+
+	public abstract org.drip.measure.process.MarginalLevelRealization[][] incrementSequence (
 		final double[] adblRandomVariate,
 		final double[] adblRandomUnitRealization,
 		final double dblTimeIncrement);

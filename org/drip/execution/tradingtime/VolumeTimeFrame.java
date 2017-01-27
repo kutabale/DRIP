@@ -69,7 +69,7 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class VolumeTimeFrame extends org.drip.measure.process.LevelRealization {
+public class VolumeTimeFrame extends org.drip.measure.process.MarginalLevelRealization {
 	private double _dblHoldings = java.lang.Double.NaN;
 	private double _dblTradeRate = java.lang.Double.NaN;
 

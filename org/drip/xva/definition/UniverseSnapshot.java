@@ -69,10 +69,10 @@ package org.drip.xva.definition;
  */
 
 public class UniverseSnapshot {
-	private org.drip.measure.process.LevelRealization _lrAssetNumeraire = null;
-	private org.drip.measure.process.LevelRealization _lrZeroCouponBondBankNumeraire = null;
-	private org.drip.measure.process.LevelRealization _lrZeroCouponBondCollateralNumeraire = null;
-	private org.drip.measure.process.LevelRealization _lrZeroCouponBondCounterPartyNumeraire = null;
+	private org.drip.measure.process.MarginalLevelRealization _lrAssetNumeraire = null;
+	private org.drip.measure.process.MarginalLevelRealization _lrZeroCouponBondBankNumeraire = null;
+	private org.drip.measure.process.MarginalLevelRealization _lrZeroCouponBondCollateralNumeraire = null;
+	private org.drip.measure.process.MarginalLevelRealization _lrZeroCouponBondCounterPartyNumeraire = null;
 
 	/**
 	 * UniverseSnapshot Constructor
@@ -87,10 +87,10 @@ public class UniverseSnapshot {
 	 */
 
 	public UniverseSnapshot (
-		final org.drip.measure.process.LevelRealization lrAssetNumeraire,
-		final org.drip.measure.process.LevelRealization lrZeroCouponBondCollateralNumeraire,
-		final org.drip.measure.process.LevelRealization lrZeroCouponBondBankNumeraire,
-		final org.drip.measure.process.LevelRealization lrZeroCouponBondCounterPartyNumeraire)
+		final org.drip.measure.process.MarginalLevelRealization lrAssetNumeraire,
+		final org.drip.measure.process.MarginalLevelRealization lrZeroCouponBondCollateralNumeraire,
+		final org.drip.measure.process.MarginalLevelRealization lrZeroCouponBondBankNumeraire,
+		final org.drip.measure.process.MarginalLevelRealization lrZeroCouponBondCounterPartyNumeraire)
 		throws java.lang.Exception
 	{
 		if (null == (_lrAssetNumeraire = lrAssetNumeraire) || null == (_lrZeroCouponBondCollateralNumeraire =
@@ -106,7 +106,7 @@ public class UniverseSnapshot {
 	 * @return The Asset Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.LevelRealization assetNumeraire()
+	public org.drip.measure.process.MarginalLevelRealization assetNumeraire()
 	{
 		return _lrAssetNumeraire;
 	}
@@ -117,7 +117,7 @@ public class UniverseSnapshot {
 	 * @return The Zero Coupon Collateral Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.LevelRealization zeroCouponCollateralBondNumeraire()
+	public org.drip.measure.process.MarginalLevelRealization zeroCouponCollateralBondNumeraire()
 	{
 		return _lrZeroCouponBondCollateralNumeraire;
 	}
@@ -128,7 +128,7 @@ public class UniverseSnapshot {
 	 * @return The Zero Coupon Bank Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.LevelRealization zeroCouponBankBondNumeraire()
+	public org.drip.measure.process.MarginalLevelRealization zeroCouponBankBondNumeraire()
 	{
 		return _lrZeroCouponBondBankNumeraire;
 	}
@@ -139,7 +139,7 @@ public class UniverseSnapshot {
 	 * @return The Zero Coupon Counter Party Bond Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.LevelRealization zeroCouponCounterPartyBondNumeraire()
+	public org.drip.measure.process.MarginalLevelRealization zeroCouponCounterPartyBondNumeraire()
 	{
 		return _lrZeroCouponBondCounterPartyNumeraire;
 	}

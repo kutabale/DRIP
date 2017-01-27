@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.discretemarginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,6 +7,8 @@ package org.drip.measure.process;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
+ * Copyright (C) 2016 Lakshmi Krishnamurthy
+ * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -47,53 +49,101 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalSnap holds the Snapshot Values of the Realized Random Variable and Time.
+ * SequenceGenerator generates the specified Univariate Sequence of the Given Distribution Type.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalSnap {
-	private double _dblTime = java.lang.Double.NaN;
-	private double _dblValue = java.lang.Double.NaN;
+public class SequenceGenerator {
 
 	/**
-	 * MarginalSnap Constructor
+	 * Generate a Sequence of Uniform Random Numbers
 	 * 
-	 * @param dblTime The Time Instant
-	 * @param dblValue The Random Variable Value
+	 * @param iCount The Count in the Sequence
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Sequence of Uniform Random Numbers
 	 */
 
-	public MarginalSnap (
-		final double dblTime,
-		final double dblValue)
-		throws java.lang.Exception
+	public static final double[] Uniform (
+		final int iCount)
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
-			throw new java.lang.Exception ("MarginalSnap Constructor => Invalid Inputs");
+		if (0 >= iCount) return null;
+
+		double[] adblRandom = new double[iCount];
+
+		for (int i = 0; i < iCount; ++i)
+			adblRandom[i] = java.lang.Math.random();
+
+		return adblRandom;
 	}
 
 	/**
-	 * Retrieve the Evolution Time Instant
+	 * Generate a Sequence of Gaussian Random Numbers
 	 * 
-	 * @return The Evolution Time Instant
+	 * @param iCount The Count in the Sequence
+	 * 
+	 * @return The Sequence of Gaussian Random Numbers
 	 */
 
-	public double time()
+	public static final double[] Gaussian (
+		final int iCount)
 	{
-		return _dblTime;
+		if (0 >= iCount) return null;
+
+		double[] adblRandom = new double[iCount];
+
+		for (int i = 0; i < iCount; ++i) {
+			try {
+				adblRandom[i] = org.drip.measure.gaussian.NormalQuadrature.Random();
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return adblRandom;
 	}
 
 	/**
-	 * Retrieve the Realized Random Value
+	 * Generate a Sequence of R^d Correlated Gaussian Random Numbers
 	 * 
-	 * @return The Realized Random Value
+	 * @param iCount The Count in the Sequence
+	 * 
+	 * @return The Sequence of R^d Correlated Gaussian Random Numbers
 	 */
 
-	public double value()
+	public static final double[][] GaussianJoint (
+		final int iCount,
+		final double[][] aadblCorrelation)
 	{
-		return _dblValue;
+		if (0 >= iCount) return null;
+
+		double[][] aadblCholesky = org.drip.quant.linearalgebra.Matrix.CholeskyBanachiewiczFactorization
+			(aadblCorrelation);
+
+		if (null == aadblCholesky) return null;
+
+		int iDimension = aadblCholesky.length;
+		double[][] aadblRandom = new double[iCount][];
+
+		for (int k = 0; k < iCount; ++k) {
+			double[] adblUncorrelatedRandom = Gaussian (iDimension);
+
+			if (null == adblUncorrelatedRandom || iDimension != adblUncorrelatedRandom.length) return null;
+
+			double[] adblCorrelatedRandom = new double[iDimension];
+
+			for (int i = 0; i < iDimension; ++i) {
+				adblCorrelatedRandom[i] = 0.;
+
+				for (int j = 0; j < iDimension; ++j)
+					adblCorrelatedRandom[i] += aadblCholesky[i][j] * adblUncorrelatedRandom[j];
+			}
+
+			aadblRandom[k] = adblCorrelatedRandom;
+		}
+
+		return aadblRandom;
 	}
 }

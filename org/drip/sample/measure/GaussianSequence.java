@@ -1,5 +1,9 @@
 
-package org.drip.measure.process;
+package org.drip.sample.measure;
+
+import org.drip.measure.discretemarginal.SequenceGenerator;
+import org.drip.quant.common.FormatUtil;
+import org.drip.service.env.EnvManager;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,6 +11,8 @@ package org.drip.measure.process;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
+ * Copyright (C) 2016 Lakshmi Krishnamurthy
+ * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -47,53 +53,77 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalSnap holds the Snapshot Values of the Realized Random Variable and Time.
+ * GaussianSequence demonstrates the Generation of R^1 and Correlated/Uncorrelated R^d Gaussian Random
+ *  Number Sequence.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalSnap {
-	private double _dblTime = java.lang.Double.NaN;
-	private double _dblValue = java.lang.Double.NaN;
+public class GaussianSequence {
 
-	/**
-	 * MarginalSnap Constructor
-	 * 
-	 * @param dblTime The Time Instant
-	 * @param dblValue The Random Variable Value
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public MarginalSnap (
-		final double dblTime,
-		final double dblValue)
-		throws java.lang.Exception
+	private static final void CorrelatedSequence (
+		final int iCount,
+		final double[][] aadblCorrelation,
+		final String strHeader)
+		throws Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
-			throw new java.lang.Exception ("MarginalSnap Constructor => Invalid Inputs");
+		double[][] aadblGaussianJoint = SequenceGenerator.GaussianJoint (
+			iCount,
+			aadblCorrelation
+		);
+
+		System.out.println();
+
+		System.out.println ("\t||----------------------------------------------------||");
+
+		System.out.println (strHeader);
+
+		System.out.println ("\t||----------------------------------------------------||");
+
+		for (int i = 0; i < iCount; ++i) {
+			String strDump = "\t||" + FormatUtil.FormatDouble (i, 2, 0, 1.) + " |";
+
+			for (int j = 0; j < aadblCorrelation.length; ++j)
+				strDump = strDump + " " + FormatUtil.FormatDouble (aadblGaussianJoint[i][j], 1, 6, 1.) + " |";
+
+			System.out.println (strDump + "|");
+		}
+
+		System.out.println ("\t||----------------------------------------------------||");
+
+		System.out.println();
 	}
 
-	/**
-	 * Retrieve the Evolution Time Instant
-	 * 
-	 * @return The Evolution Time Instant
-	 */
-
-	public double time()
+	public static final void main (
+		final String[] astrArgs)
+		throws Exception
 	{
-		return _dblTime;
-	}
+		EnvManager.InitEnv ("");
 
-	/**
-	 * Retrieve the Realized Random Value
-	 * 
-	 * @return The Realized Random Value
-	 */
+		int iCount = 50;
+		double[][] aadblCorrelation1 = new double[][] {
+			{1.00, 0.70, 0.25, 0.05},
+			{0.70, 1.00, 0.13, 0.01},
+			{0.25, 0.13, 1.00, 0.00},
+			{0.05, 0.01, 0.00, 1.00}
+		};
+		double[][] aadblCorrelation2 = new double[][] {
+			{1.00, 0.00, 0.00, 0.00},
+			{0.00, 1.00, 0.00, 0.00},
+			{0.00, 0.00, 1.00, 0.00},
+			{0.00, 0.00, 0.00, 1.00}
+		};
 
-	public double value()
-	{
-		return _dblValue;
+		CorrelatedSequence (
+			iCount,
+			aadblCorrelation1,
+			"\t||            CORRELATED GAUSSIAN SEQUENCE            ||"
+		);
+
+		CorrelatedSequence (
+			iCount,
+			aadblCorrelation2,
+			"\t||           UNCORRELATED GAUSSIAN SEQUENCE           ||"
+		);
 	}
 }

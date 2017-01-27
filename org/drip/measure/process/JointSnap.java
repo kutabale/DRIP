@@ -47,32 +47,32 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalSnap holds the Snapshot Values of the Realized Random Variable and Time.
+ * JointSnap holds the Snapshot Joint Values of the Realized R^d Variate and Time.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalSnap {
+public class JointSnap {
+	private double[] _adblValue = null;
 	private double _dblTime = java.lang.Double.NaN;
-	private double _dblValue = java.lang.Double.NaN;
 
 	/**
-	 * MarginalSnap Constructor
+	 * JointSnap Constructor
 	 * 
 	 * @param dblTime The Time Instant
-	 * @param dblValue The Random Variable Value
+	 * @param adblValue The Realized R^d Variate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarginalSnap (
+	public JointSnap (
 		final double dblTime,
-		final double dblValue)
+		final double[] adblValue)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
-			throw new java.lang.Exception ("MarginalSnap Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_adblValue =
+			adblValue) || 0 == _adblValue.length || !org.drip.quant.common.NumberUtil.IsValid (_adblValue))
+			throw new java.lang.Exception ("JointSnap Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -87,13 +87,13 @@ public class MarginalSnap {
 	}
 
 	/**
-	 * Retrieve the Realized Random Value
+	 * Retrieve the Realized R^d Variate
 	 * 
-	 * @return The Realized Random Value
+	 * @return The Realized R^d Variate
 	 */
 
-	public double value()
+	public double[] value()
 	{
-		return _dblValue;
+		return _adblValue;
 	}
 }

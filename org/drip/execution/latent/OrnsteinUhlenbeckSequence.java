@@ -104,7 +104,7 @@ public class OrnsteinUhlenbeckSequence {
 			aMSS[0] = new org.drip.execution.latent.MarketStateSystemic (dblInitialMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.measure.process.LevelRealization gi = oup1D.weinerIncrement (new
+				org.drip.measure.process.MarginalLevelRealization gi = oup1D.weinerIncrement (new
 					org.drip.measure.process.MarginalSnap (dblTime, aMSS[i].common()), dblGenerationInterval);
 
 				aMSS[i + 1] = new org.drip.execution.latent.MarketStateSystemic (aMSS[i].common() +
@@ -152,7 +152,7 @@ public class OrnsteinUhlenbeckSequence {
 				dblInitialVolatilityMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.measure.process.LevelRealization[] aGI = oup2D.weinerIncrement
+				org.drip.measure.process.MarginalLevelRealization[] aGI = oup2D.weinerIncrement
 					(aMSC[i].realization(), dblGenerationInterval);
 
 				if (null == aGI || 2 != aGI.length) return null;

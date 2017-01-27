@@ -139,7 +139,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 * @return The Adjacent Ornstein Uhlenbeck Increment Set
 	 */
 
-	public org.drip.measure.process.LevelRealization[] increment (
+	public org.drip.measure.process.MarginalLevelRealization[] increment (
 		final double[] adblOrnsteinUhlenbeckVariate,
 		final double[] adblRandomRealization,
 		final double dblTimeIncrement)
@@ -156,8 +156,8 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 		double dblRelaxationTime1 = _oupDerived.relaxationTime();
 
 		try {
-			return new org.drip.measure.process.LevelRealization[] {
-				new org.drip.measure.process.LevelRealization (
+			return new org.drip.measure.process.MarginalLevelRealization[] {
+				new org.drip.measure.process.MarginalLevelRealization (
 					adblOrnsteinUhlenbeckVariate[0],
 					-1. * adblOrnsteinUhlenbeckVariate[0] / dblRelaxationTime0 * dblTimeIncrement,
 					_oupReference.burstiness() * adblRandomRealization[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
@@ -165,7 +165,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 					0.,
 					0.
 				),
-				new org.drip.measure.process.LevelRealization (
+				new org.drip.measure.process.MarginalLevelRealization (
 					adblOrnsteinUhlenbeckVariate[1],
 					-1. * adblOrnsteinUhlenbeckVariate[1] / dblRelaxationTime1 * dblTimeIncrement,
 					_oupDerived.burstiness() * adblRandomRealization[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
@@ -190,7 +190,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 * @return The Weiner Based Increment Sequence from the Current Ornstein Uhlenbeck Random Variate
 	 */
 
-	public org.drip.measure.process.LevelRealization[] weinerIncrement (
+	public org.drip.measure.process.MarginalLevelRealization[] weinerIncrement (
 		final double[] adblOrnsteinUhlenbeckVariate,
 		final double dblTimeIncrement)
 	{

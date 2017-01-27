@@ -2,7 +2,7 @@
 package org.drip.sample.almgren2009;
 
 import org.drip.execution.tradingtime.*;
-import org.drip.measure.process.LevelRealization;
+import org.drip.measure.process.MarginalLevelRealization;
 import org.drip.measure.process.MarginalSnap;
 import org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck;
 import org.drip.quant.common.FormatUtil;
@@ -140,7 +140,7 @@ public class CoordinatedMarketStateTrajectory {
 		);
 
 		for (int i = 0; i < iNumSimulation; ++i) {
-			LevelRealization gi = oup1D.weinerIncrement (
+			MarginalLevelRealization gi = oup1D.weinerIncrement (
 				new MarginalSnap (
 					dblTime,
 					dblMarketState
