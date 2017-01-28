@@ -7,7 +7,7 @@ import org.drip.execution.latent.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
-import org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck;
+import org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -121,7 +121,7 @@ public class AdaptiveZeroInitialHoldings {
 			dblReferenceLiquidity
 		);
 
-		MarginalEvolverOrnsteinUhlenbeck oup1D = MarginalEvolverOrnsteinUhlenbeck.ZeroMean (
+		R1EvolverOrnsteinUhlenbeck oup1D = R1EvolverOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);

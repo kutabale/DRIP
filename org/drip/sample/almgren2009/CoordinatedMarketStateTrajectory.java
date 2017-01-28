@@ -2,9 +2,9 @@
 package org.drip.sample.almgren2009;
 
 import org.drip.execution.tradingtime.*;
-import org.drip.measure.process.MarginalLevelRealization;
-import org.drip.measure.process.MarginalSnap;
-import org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck;
+import org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck;
+import org.drip.measure.marginal.R1LevelRealization;
+import org.drip.measure.marginal.R1Snap;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -96,7 +96,7 @@ public class CoordinatedMarketStateTrajectory {
 		double dblMarketState = dblInitialMarketState;
 		double dblTimeInterval = dblSimulationTime / iNumSimulation;
 
-		MarginalEvolverOrnsteinUhlenbeck oup1D = MarginalEvolverOrnsteinUhlenbeck.ZeroMean (
+		R1EvolverOrnsteinUhlenbeck oup1D = R1EvolverOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
@@ -140,8 +140,8 @@ public class CoordinatedMarketStateTrajectory {
 		);
 
 		for (int i = 0; i < iNumSimulation; ++i) {
-			MarginalLevelRealization gi = oup1D.weinerIncrement (
-				new MarginalSnap (
+			R1LevelRealization gi = oup1D.weinerIncrement (
+				new R1Snap (
 					dblTime,
 					dblMarketState
 				),

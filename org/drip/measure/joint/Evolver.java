@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.joint;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,17 +47,17 @@ package org.drip.measure.process;
  */
 
 /**
- * JointEvolver exposes the Functionality that guides the Multi-Factor Random Process Variable Evolution.
+ * Evolver exposes the Functionality that guides the Multi-Factor Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class JointEvolver {
+public abstract class Evolver {
 	private double[][] _aadblCorrelation = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction[] _aLDEVDrift = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction[] _aLDEVVolatility = null;
 
-	protected JointEvolver (
+	protected Evolver (
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction[] aLDEVDrift,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction[] aLDEVVolatility,
 		final double[][] aadblCorrelation)
@@ -65,19 +65,19 @@ public abstract class JointEvolver {
 	{
 		if (null == (_aLDEVDrift = aLDEVDrift) || null == (_aLDEVVolatility = aLDEVVolatility) || null ==
 			(_aadblCorrelation = aadblCorrelation))
-			throw new java.lang.Exception ("JointEvolver Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("Evolver Constructor => Invalid Inputs");
 
 		int iNumFactor = _aLDEVDrift.length;
 
 		if (0 == iNumFactor || iNumFactor != _aLDEVVolatility.length || iNumFactor !=
 			_aadblCorrelation.length)
-			throw new java.lang.Exception ("JointEvolver Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("Evolver Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumFactor; ++i) {
 			if (null == _aLDEVDrift[i] || null == _aLDEVVolatility[i] || null == _aadblCorrelation[i] ||
 				iNumFactor != _aadblCorrelation[i].length || !org.drip.quant.common.NumberUtil.IsValid
 					(_aadblCorrelation[i]))
-				throw new java.lang.Exception ("JointEvolver Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("Evolver Constructor => Invalid Inputs");
 		}
 	}
 
@@ -115,18 +115,18 @@ public abstract class JointEvolver {
 	}
 
 	/**
-	 * Generate the Array of the Adjacent Increments from the Array of the specified Random Variate
+	 * Generate the Adjacent Increment from the Array of the specified Random Variate
 	 * 
 	 * @param js The Joint Snap
 	 * @param adblRandomVariate The Array of Random Variates
 	 * @param adblRandomUnitRealization The Array of Random Stochastic Realization Variate Units
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Array of the Adjacent Increments
+	 * @return The Joint Level Realization
 	 */
 
-	public abstract org.drip.measure.process.MarginalLevelRealization[] increment (
-		final org.drip.measure.process.JointSnap js,
+	public abstract org.drip.measure.joint.LevelRealization increment (
+		final org.drip.measure.joint.Snap js,
 		final double[] adblRandomVariate,
 		final double[] adblRandomUnitRealization,
 		final double dblTimeIncrement);
@@ -134,15 +134,17 @@ public abstract class JointEvolver {
 	/**
 	 * Generate the Array of the Adjacent Increments from the Array of the specified Random Variate
 	 * 
-	 * @param adblRandomVariate The Array of Random Variates
-	 * @param adblRandomUnitRealization The Array of Random Stochastic Realization Variate Units
+	 * @param aJS Array of Joint Snap Instances
+	 * @param aadblRandomVariate Array of R^d Variates
+	 * @param aadblRandomUnitRealization Array of R^d Stochastic Realization Units
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Array of the Adjacent Increments
+	 * @return Array of the Joint Level Realization
 	 */
 
-	public abstract org.drip.measure.process.MarginalLevelRealization[][] incrementSequence (
-		final double[] adblRandomVariate,
-		final double[] adblRandomUnitRealization,
+	public abstract org.drip.measure.joint.LevelRealization[][] incrementSequence (
+		final org.drip.measure.joint.Snap[] aJS,
+		final double[][] aadblRandomVariate,
+		final double[][] aadblRandomUnitRealization,
 		final double dblTimeIncrement);
 }

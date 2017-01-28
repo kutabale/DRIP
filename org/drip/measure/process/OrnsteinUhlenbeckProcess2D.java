@@ -71,8 +71,8 @@ package org.drip.measure.process;
 
 public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.OrnsteinUhlenbeck {
 	private double _dblCorrelation = java.lang.Double.NaN;
-	private org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck _oupDerived = null;
-	private org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck _oupReference = null;
+	private org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck _oupDerived = null;
+	private org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck _oupReference = null;
 
 	/**
 	 * OrnsteinUhlenbeckProcess2D Constructor
@@ -85,8 +85,8 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 */
 
 	public OrnsteinUhlenbeckProcess2D (
-		final org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck oupReference,
-		final org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck oupDerived,
+		final org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck oupReference,
+		final org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck oupDerived,
 		final double dblCorrelation)
 		throws java.lang.Exception
 	{
@@ -102,7 +102,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 * @return The Reference 1D Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck reference()
+	public org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck reference()
 	{
 		return _oupReference;
 	}
@@ -113,7 +113,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 * @return The Derived 1D Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.measure.process.MarginalEvolverOrnsteinUhlenbeck derived()
+	public org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck derived()
 	{
 		return _oupDerived;
 	}
@@ -139,7 +139,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 * @return The Adjacent Ornstein Uhlenbeck Increment Set
 	 */
 
-	public org.drip.measure.process.MarginalLevelRealization[] increment (
+	public org.drip.measure.marginal.R1LevelRealization[] increment (
 		final double[] adblOrnsteinUhlenbeckVariate,
 		final double[] adblRandomRealization,
 		final double dblTimeIncrement)
@@ -156,21 +156,21 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 		double dblRelaxationTime1 = _oupDerived.relaxationTime();
 
 		try {
-			return new org.drip.measure.process.MarginalLevelRealization[] {
-				new org.drip.measure.process.MarginalLevelRealization (
+			return new org.drip.measure.marginal.R1LevelRealization[] {
+				new org.drip.measure.marginal.R1LevelRealization (
 					adblOrnsteinUhlenbeckVariate[0],
 					-1. * adblOrnsteinUhlenbeckVariate[0] / dblRelaxationTime0 * dblTimeIncrement,
 					_oupReference.burstiness() * adblRandomRealization[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
 					adblRandomRealization[0],
-					0.,
+					null,
 					0.
 				),
-				new org.drip.measure.process.MarginalLevelRealization (
+				new org.drip.measure.marginal.R1LevelRealization (
 					adblOrnsteinUhlenbeckVariate[1],
 					-1. * adblOrnsteinUhlenbeckVariate[1] / dblRelaxationTime1 * dblTimeIncrement,
 					_oupDerived.burstiness() * adblRandomRealization[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
 					adblRandomRealization[1],
-					0.,
+					null,
 					0.
 				)
 			};
@@ -190,7 +190,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 * @return The Weiner Based Increment Sequence from the Current Ornstein Uhlenbeck Random Variate
 	 */
 
-	public org.drip.measure.process.MarginalLevelRealization[] weinerIncrement (
+	public org.drip.measure.marginal.R1LevelRealization[] weinerIncrement (
 		final double[] adblOrnsteinUhlenbeckVariate,
 		final double dblTimeIncrement)
 	{

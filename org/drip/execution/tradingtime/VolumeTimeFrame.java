@@ -69,7 +69,7 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class VolumeTimeFrame extends org.drip.measure.process.MarginalLevelRealization {
+public class VolumeTimeFrame extends org.drip.measure.marginal.R1LevelRealization {
 	private double _dblHoldings = java.lang.Double.NaN;
 	private double _dblTradeRate = java.lang.Double.NaN;
 
@@ -96,7 +96,7 @@ public class VolumeTimeFrame extends org.drip.measure.process.MarginalLevelReali
 		throws java.lang.Exception
 	{
 		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian,
-			dblBrownian, 0., 0.);
+			dblBrownian, null, 0.);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *

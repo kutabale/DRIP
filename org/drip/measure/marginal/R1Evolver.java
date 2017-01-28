@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.marginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,38 +47,38 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalEvolver implements the Functionality that guides the Single Factor Random Process Variable
+ * R1Evolver implements the Functionality that guides the Single Factor R^1 Random Process Variable
  *  Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalEvolver {
-	private org.drip.measure.process.PointEvent _pe = null;
+public class R1Evolver {
+	private org.drip.measure.process.EventIndicatorFunction _eif = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDrift = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
 	/**
-	 * MarginalEvolver Constructor
+	 * R1Evolver Constructor
 	 * 
 	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
 	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process Continuous Component
-	 * @param pe The Point Event Instance
+	 * @param eif The Point Event Indicator Function Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarginalEvolver (
+	public R1Evolver (
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
-		final org.drip.measure.process.PointEvent pe)
+		final org.drip.measure.process.EventIndicatorFunction eif)
 		throws java.lang.Exception
 	{
-		_pe = pe;
+		_eif = eif;
 		_ldevVolatility = ldevVolatility;
 
-		if (null == (_ldevDrift = ldevDrift) || (null == _ldevVolatility && null == _pe))
-			throw new java.lang.Exception ("MarginalEvolver Constructor => Invalid Inputs");
+		if (null == (_ldevDrift = ldevDrift) || (null == _ldevVolatility && null == _eif))
+			throw new java.lang.Exception ("R1Evolver Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -104,50 +104,55 @@ public class MarginalEvolver {
 	}
 
 	/**
-	 * Retrieve the Point Event Instance
+	 * Retrieve the Point Event Indicator Instance
 	 * 
-	 * @return The Point Event Instance
+	 * @return The Point Event Indicator Instance
 	 */
 
-	public org.drip.measure.process.PointEvent pointEvent()
+	public org.drip.measure.process.EventIndicatorFunction eventIndicatorFunction()
 	{
-		return _pe;
+		return _eif;
 	}
 
 	/**
 	 * Generate the Adjacent Increment from the specified Random Variate
 	 * 
-	 * @param ms The Random Variate Marginal Snap
-	 * @param dblContinuousRandomUnitRealization The Continuous Random Stochastic Realization Variate Unit
-	 * @param dblJumpRandomUnitRealization The Jump Random Stochastic Realization Variate Unit
+	 * @param r1s The Random Variate Marginal Snap
+	 * @param r1ur The R^1 Unit Realization
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.process.MarginalLevelRealization increment (
-		final org.drip.measure.process.MarginalSnap ms,
-		final double dblContinuousRandomUnitRealization,
-		final double dblJumpRandomUnitRealization,
+	public org.drip.measure.marginal.R1LevelRealization increment (
+		final org.drip.measure.marginal.R1Snap r1s,
+		final org.drip.measure.marginal.R1UnitRealization r1ur,
 		final double dblTimeIncrement)
 	{
-		if (null == ms || !org.drip.quant.common.NumberUtil.IsValid (dblContinuousRandomUnitRealization) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblJumpRandomUnitRealization) ||
-				!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
+		if (null == r1s || null == r1ur || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0.
+			>= dblTimeIncrement)
 			return null;
 
+		double dblJumpRandomUnitRealization = r1ur.jump();
+
+		double dblContinuousRandomUnitRealization = r1ur.continuous();
+
 		try {
-			double dblJumpIntensityMagnitude = 0.;
+			org.drip.measure.process.EventIndicator eie = null;
 
-			if (null != _pe)
-				dblJumpIntensityMagnitude = _pe.densityLDEV().value (ms) >= dblJumpRandomUnitRealization ?
-					_pe.magnitudeLDEV().value (ms) : 0.;
+			if (null != _eif) {
+				double dblEventDensity = _eif.densityLDEV().value (r1s);
 
-			return new org.drip.measure.process.MarginalLevelRealization (ms.value(), _ldevDrift.value (ms) *
-				dblTimeIncrement, null == _ldevVolatility ? 0. : _ldevVolatility.value (ms) *
+				boolean bEventOccurrence = dblEventDensity >= dblJumpRandomUnitRealization;
+
+				eie = new org.drip.measure.process.EventIndicator (bEventOccurrence, dblEventDensity,
+					bEventOccurrence ? _eif.magnitudeLDEV().value (r1s) : 0.);
+			}
+
+			return new org.drip.measure.marginal.R1LevelRealization (r1s.value(), _ldevDrift.value (r1s) *
+				dblTimeIncrement, null == _ldevVolatility ? 0. : _ldevVolatility.value (r1s) *
 					dblContinuousRandomUnitRealization * java.lang.Math.sqrt (dblTimeIncrement),
-						dblContinuousRandomUnitRealization, dblJumpIntensityMagnitude,
-							dblJumpRandomUnitRealization);
+						dblContinuousRandomUnitRealization, eie, dblJumpRandomUnitRealization);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -158,38 +163,32 @@ public class MarginalEvolver {
 	/**
 	 * Generate the Array of Adjacent Increments from the specified Random Variate Array
 	 * 
-	 * @param ms The Random Variate Marginal Snap
-	 * @param adblContinuousRandomUnitRealization Array of Continuous Random Stochastic Realization Variate
-	 * 		Units
-	 * @param adblJumpRandomUnitRealization Array of Jump Random Stochastic Realization Variate Units
+	 * @param r1s The Random Variate Marginal Snap
+	 * @param r1ur The R^1 Unit Realization
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Array of Adjacent Increment
 	 */
 
-	public org.drip.measure.process.MarginalLevelRealization[] incrementSequence (
-		final org.drip.measure.process.MarginalSnap ms,
-		final double[] adblContinuousRandomUnitRealization,
-		final double[] adblJumpRandomUnitRealization,
+	public org.drip.measure.marginal.R1LevelRealization[] incrementSequence (
+		final org.drip.measure.marginal.R1Snap r1s,
+		final org.drip.measure.marginal.R1UnitRealization[] aR1UR,
 		final double dblTimeIncrement)
 	{
-		if (null == adblContinuousRandomUnitRealization || null == adblJumpRandomUnitRealization)
-			return null;
+		if (null == aR1UR) return null;
 
-		org.drip.measure.process.MarginalSnap msLoop = ms;
-		int iNumTimeStep = adblJumpRandomUnitRealization.length;
-		org.drip.measure.process.MarginalLevelRealization[] aLR = 0 == iNumTimeStep ? null : new
-			org.drip.measure.process.MarginalLevelRealization[iNumTimeStep];
+		int iNumTimeStep = aR1UR.length;
+		org.drip.measure.marginal.R1Snap r1sLoop = r1s;
+		org.drip.measure.marginal.R1LevelRealization[] aLR = 0 == iNumTimeStep ? null : new
+			org.drip.measure.marginal.R1LevelRealization[iNumTimeStep];
 
-		if (0 == iNumTimeStep || adblContinuousRandomUnitRealization.length != iNumTimeStep) return null;
+		if (0 == iNumTimeStep) return null;
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			if (null == (aLR[i] = increment (msLoop, adblContinuousRandomUnitRealization[i],
-				adblJumpRandomUnitRealization[i], dblTimeIncrement)))
-				return null;
+			if (null == (aLR[i] = increment (r1sLoop, aR1UR[i], dblTimeIncrement))) return null;
 
 			try {
-				msLoop = new org.drip.measure.process.MarginalSnap (msLoop.time() + dblTimeIncrement,
+				r1sLoop = new org.drip.measure.marginal.R1Snap (r1sLoop.time() + dblTimeIncrement,
 					aLR[i].finish());
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
@@ -204,18 +203,19 @@ public class MarginalEvolver {
 	/**
 	 * Generate the Adjacent Increment from the specified Random Variate and a Weiner Driver
 	 * 
-	 * @param ms The Random Variate Marginal Snap
+	 * @param r1s The Random Variate Marginal Snap
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.process.MarginalLevelRealization weinerIncrement (
-		final org.drip.measure.process.MarginalSnap ms,
+	public org.drip.measure.marginal.R1LevelRealization weinerIncrement (
+		final org.drip.measure.marginal.R1Snap r1s,
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (ms, org.drip.measure.gaussian.NormalQuadrature.Random(), 0., dblTimeIncrement);
+			return increment (r1s, org.drip.measure.marginal.R1UnitRealization.ContinuousGaussian(),
+				dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -226,35 +226,60 @@ public class MarginalEvolver {
 	/**
 	 * Generate the Adjacent Increment from the specified Random Variate and a Jump Driver
 	 * 
-	 * @param ms The Random Variate Marginal Snap
+	 * @param r1s The Random Variate Marginal Snap
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.process.MarginalLevelRealization jumpIncrement (
-		final org.drip.measure.process.MarginalSnap ms,
+	public org.drip.measure.marginal.R1LevelRealization jumpIncrement (
+		final org.drip.measure.marginal.R1Snap r1s,
 		final double dblTimeIncrement)
 	{
-		return increment (ms, 0., java.lang.Math.random(), dblTimeIncrement);
+		return increment (r1s, org.drip.measure.marginal.R1UnitRealization.JumpUniform(), dblTimeIncrement);
 	}
 
 	/**
 	 * Generate the Adjacent Increment from the specified Random Variate and Jump/Weiner Drivers
 	 * 
-	 * @param ms The Random Variate Marginal Snap
+	 * @param r1s The Random Variate Marginal Snap
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.process.MarginalLevelRealization jumpWeinerIncrement (
-		final org.drip.measure.process.MarginalSnap ms,
+	public org.drip.measure.marginal.R1LevelRealization jumpWeinerIncrement (
+		final org.drip.measure.marginal.R1Snap r1s,
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (ms, org.drip.measure.gaussian.NormalQuadrature.Random(),
-				java.lang.Math.random(), dblTimeIncrement);
+			return increment (r1s, new org.drip.measure.marginal.R1UnitRealization
+				(org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
+					dblTimeIncrement);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate the Adjacent Increment from the specified Random Variate and Weiner/Jump Drivers
+	 * 
+	 * @param r1s The Random Variate Marginal Snap
+	 * @param dblTimeIncrement The Time Increment Evolution Unit
+	 * 
+	 * @return The Adjacent Increment
+	 */
+
+	public org.drip.measure.marginal.R1LevelRealization weinerJumpIncrement (
+		final org.drip.measure.marginal.R1Snap r1s,
+		final double dblTimeIncrement)
+	{
+		try {
+			return increment (r1s, new org.drip.measure.marginal.R1UnitRealization
+				(org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
+					dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

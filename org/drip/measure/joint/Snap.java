@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.joint;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,64 +47,53 @@ package org.drip.measure.process;
  */
 
 /**
- * JointLevelRealization implements the Deterministic and the Stochastic Components of a Joint Random
- *	Increment. The References are:
- * 
- * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
- * 		(2) 5-39.
+ * Snap holds the Snapshot Joint Values of the Realized Joint R^1 Variate and Time.
  *
- * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
- * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
- *
- * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
- * 		Financial Mathematics  3 (1) 163-181.
- * 
- * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
- * 		79-96.
- * 
- * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies 7 (4) 631-651.
- * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class JointLevelRealization {
-	private org.drip.measure.process.MarginalLevelRealization[] _aMLR = null;
+public class Snap {
+	private double[] _adblValue = null;
+	private double _dblTime = java.lang.Double.NaN;
 
 	/**
-	 * JointLevelRealization Constructor
+	 * Snap Constructor
 	 * 
-	 * @param aMLR Array of the Marginal Level Realizations
+	 * @param dblTime The Time Instant
+	 * @param adblValue The Realized R^d Variate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public JointLevelRealization (
-		final org.drip.measure.process.MarginalLevelRealization[] aMLR)
+	public Snap (
+		final double dblTime,
+		final double[] adblValue)
 		throws java.lang.Exception
 	{
-		if (null == (_aMLR = aMLR))
-			throw new java.lang.Exception ("JointLevelRealization Constructor => Invalid Inputs");
-
-		int iNumVariate = _aMLR.length;
-
-		if (0 == iNumVariate)
-			throw new java.lang.Exception ("JointLevelRealization Constructor => Invalid Inputs");
-
-		for (int i = 0; i < iNumVariate; ++i) {
-			if (null == _aMLR[i])
-				throw new java.lang.Exception ("JointLevelRealization Constructor => Invalid Inputs");
-		}
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_adblValue =
+			adblValue) || 0 == _adblValue.length || !org.drip.quant.common.NumberUtil.IsValid (_adblValue))
+			throw new java.lang.Exception ("Snap Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Array of the Marginal Level Realizations
+	 * Retrieve the Evolution Time Instant
 	 * 
-	 * @return The Array of the Marginal Level Realizations
+	 * @return The Evolution Time Instant
 	 */
 
-	public org.drip.measure.process.MarginalLevelRealization[] marginal()
+	public double time()
 	{
-		return _aMLR;
+		return _dblTime;
+	}
+
+	/**
+	 * Retrieve the Realized R^d Variate
+	 * 
+	 * @return The Realized R^d Variate
+	 */
+
+	public double[] value()
+	{
+		return _adblValue;
 	}
 }

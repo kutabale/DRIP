@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.measure.joint;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,80 +47,64 @@ package org.drip.xva.definition;
  */
 
 /**
- * Tradeable holds Definitions and Parameters that specify a Trade-able Entity in XVA Terms. The References
- *  are:
- *  
- *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
- *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
- *  
- *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
- *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
- *  
- *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
+ * LevelRealization implements the Deterministic and the Stochastic Components of a Joint R^1 Random
+ *	Increment. The References are:
  * 
- *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
- *  	21 (2) 97-102.
+ * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
+ * 		(2) 5-39.
+ *
+ * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
+ * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
+ *
+ * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
+ * 		Financial Mathematics  3 (1) 163-181.
+ * 
+ * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
+ * 		79-96.
+ * 
+ * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
+ * 		Financial Studies 7 (4) 631-651.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class Tradeable {
-	private double _dblRepoRate = java.lang.Double.NaN;
-	private org.drip.measure.marginal.R1Evolver _mePriceNumeraire = null;
+public class LevelRealization {
+	private org.drip.measure.marginal.R1LevelRealization[] _aMLR = null;
 
 	/**
-	 * Tradeable Constructor
+	 * LevelRealization Constructor
 	 * 
-	 * @param mePriceNumeraire The Trade-able Asset Price Numeraire
-	 * @param dblRepoRate The Trade-able Asset Repo Rate
+	 * @param aMLR Array of the Marginal Level Realizations
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public Tradeable (
-		final org.drip.measure.marginal.R1Evolver mePriceNumeraire,
-		final double dblRepoRate)
+	public LevelRealization (
+		final org.drip.measure.marginal.R1LevelRealization[] aMLR)
 		throws java.lang.Exception
 	{
-		if (null == (_mePriceNumeraire = mePriceNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblRepoRate = dblRepoRate))
-			throw new java.lang.Exception ("Tradeable Constructor => Invalid Inputs");
+		if (null == (_aMLR = aMLR))
+			throw new java.lang.Exception ("LevelRealization Constructor => Invalid Inputs");
+
+		int iNumVariate = _aMLR.length;
+
+		if (0 == iNumVariate)
+			throw new java.lang.Exception ("LevelRealization Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumVariate; ++i) {
+			if (null == _aMLR[i])
+				throw new java.lang.Exception ("LevelRealization Constructor => Invalid Inputs");
+		}
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Price Numeraire
+	 * Retrieve the Array of the Marginal Level Realizations
 	 * 
-	 * @return The Trade-able Asset Price Numeraire
+	 * @return The Array of the Marginal Level Realizations
 	 */
 
-	public org.drip.measure.marginal.R1Evolver priceNumeraire()
+	public org.drip.measure.marginal.R1LevelRealization[] marginal()
 	{
-		return _mePriceNumeraire;
-	}
-
-	/**
-	 * Retrieve the Trade-able Asset Repo Rate
-	 * 
-	 * @return The Trade-able Asset Repo Rate
-	 */
-
-	public double repoRate()
-	{
-		return _dblRepoRate;
-	}
-
-	/**
-	 * Retrieve the Trade-able Asset Cash Accumulation Rate
-	 * 
-	 * @return The Trade-able Asset Cash Accumulation Rate
-	 */
-
-	public double cashAccumulationRate()
-	{
-		return -1. * _dblRepoRate;
+		return _aMLR;
 	}
 }

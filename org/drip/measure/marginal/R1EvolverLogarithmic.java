@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.marginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,25 +47,25 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalEvolverLogarithmic guides the Random Variable Evolution according to 1D Logarithmic Process.
+ * R1EvolverLogarithmic guides the Random Variable Evolution according to R^1 Logarithmic Process.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalEvolverLogarithmic extends org.drip.measure.process.MarginalEvolver {
+public class R1EvolverLogarithmic extends org.drip.measure.marginal.R1Evolver {
 	private double _dblDrift = java.lang.Double.NaN;
 	private double _dblVolatility = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of MarginalEvolverLogarithmic
+	 * Generate a Standard Instance of R1EvolverLogarithmic
 	 * 
 	 * @param dblDrift The Drift
 	 * @param dblVolatility The Volatility
 	 * 
-	 * @return The Standard Instance of MarginalEvolverLogarithmic
+	 * @return The Standard Instance of R1EvolverLogarithmic
 	 */
 
-	public static final MarginalEvolverLogarithmic Standard (
+	public static final R1EvolverLogarithmic Standard (
 		final double dblDrift,
 		final double dblVolatility)
 	{
@@ -73,12 +73,12 @@ public class MarginalEvolverLogarithmic extends org.drip.measure.process.Margina
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.process.MarginalSnap ms)
+					final org.drip.measure.marginal.R1Snap ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("MarginalEvolverLogarithmic::DriftLDEV::value => Invalid Inputs");
+							("R1EvolverLogarithmic::DriftLDEV::value => Invalid Inputs");
 
 					return ms.value() * dblDrift;
 				}
@@ -87,18 +87,18 @@ public class MarginalEvolverLogarithmic extends org.drip.measure.process.Margina
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.process.MarginalSnap ms)
+					final org.drip.measure.marginal.R1Snap ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("MarginalEvolverLogarithmic::VolatilityLDEV::value => Invalid Inputs");
+							("R1EvolverLogarithmic::VolatilityLDEV::value => Invalid Inputs");
 
 					return ms.value() * dblVolatility;
 				}
 			};
 
-			return new MarginalEvolverLogarithmic (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
+			return new R1EvolverLogarithmic (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -106,7 +106,7 @@ public class MarginalEvolverLogarithmic extends org.drip.measure.process.Margina
 		return null;
 	}
 
-	private MarginalEvolverLogarithmic (
+	private R1EvolverLogarithmic (
 		final double dblDrift,
 		final double dblVolatility,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
@@ -117,7 +117,7 @@ public class MarginalEvolverLogarithmic extends org.drip.measure.process.Margina
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("MarginalEvolverLogarithmic Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("R1EvolverLogarithmic Constructor => Invalid Inputs");
 	}
 
 	/**

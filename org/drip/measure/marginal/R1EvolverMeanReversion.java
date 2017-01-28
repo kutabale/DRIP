@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.marginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,28 +47,27 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalEvolverMeanReversion guides the Random Variable Evolution according to the 1D Mean Reversion
- *  Process.
+ * R1EvolverMeanReversion guides the Random Variable Evolution according to the R^1 Mean Reversion Process.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalEvolverMeanReversion extends org.drip.measure.process.MarginalEvolver {
+public class R1EvolverMeanReversion extends org.drip.measure.marginal.R1Evolver {
 	private double _dblVolatility = java.lang.Double.NaN;
 	private double _dblMeanReversionRate = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of MarginalEvolverMeanReversion
+	 * Generate a Standard Instance of R1EvolverMeanReversion
 	 * 
 	 * @param dblMeanReversionRate The Mean Reversion Rate
 	 * @param dblMeanReversionLevel The Mean Reversion Level
 	 * @param dblVolatility The Volatility
 	 * 
-	 * @return The Standard Instance of MarginalEvolverMeanReversion
+	 * @return The Standard Instance of R1EvolverMeanReversion
 	 */
 
-	public static final MarginalEvolverMeanReversion Standard (
+	public static final R1EvolverMeanReversion Standard (
 		final double dblMeanReversionRate,
 		final double dblMeanReversionLevel,
 		final double dblVolatility)
@@ -77,12 +76,12 @@ public class MarginalEvolverMeanReversion extends org.drip.measure.process.Margi
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.process.MarginalSnap ms)
+					final org.drip.measure.marginal.R1Snap ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
 						throw new java.lang.Exception
-							("MarginalEvolverMeanReversion::DriftLDEV::value => Invalid Inputs");
+							("R1EvolverMeanReversion::DriftLDEV::value => Invalid Inputs");
 
 					return -1. * dblMeanReversionRate * (dblMeanReversionLevel - ms.value());
 				}
@@ -91,14 +90,14 @@ public class MarginalEvolverMeanReversion extends org.drip.measure.process.Margi
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.process.MarginalSnap ms)
+					final org.drip.measure.marginal.R1Snap ms)
 					throws java.lang.Exception
 				{
 					return dblVolatility;
 				}
 			};
 
-			return new MarginalEvolverMeanReversion (dblMeanReversionRate, dblMeanReversionLevel,
+			return new R1EvolverMeanReversion (dblMeanReversionRate, dblMeanReversionLevel,
 				dblVolatility, ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -107,7 +106,7 @@ public class MarginalEvolverMeanReversion extends org.drip.measure.process.Margi
 		return null;
 	}
 
-	private MarginalEvolverMeanReversion (
+	private R1EvolverMeanReversion (
 		final double dblMeanReversionRate,
 		final double dblMeanReversionLevel,
 		final double dblVolatility,
@@ -120,7 +119,7 @@ public class MarginalEvolverMeanReversion extends org.drip.measure.process.Margi
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionRate = dblMeanReversionRate) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("MarginalEvolverMeanReversion Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("R1EvolverMeanReversion Constructor => Invalid Inputs");
 	}
 
 	/**

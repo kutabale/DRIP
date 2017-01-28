@@ -1,7 +1,7 @@
 
 package org.drip.sample.piterbarg2010;
 
-import org.drip.measure.process.*;
+import org.drip.measure.marginal.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.FundingBasisEvolver;
@@ -116,12 +116,12 @@ public class CSAFundingRelativeForward {
 			{ 0.0592,  0.0391,  0.0194,  0.0000, -0.0190}
 		};
 
-		MarginalEvolverLogarithmic pmlUnderlying = MarginalEvolverLogarithmic.Standard (
+		R1EvolverLogarithmic pmlUnderlying = R1EvolverLogarithmic.Standard (
 			0.,
 			dblUnderlyingVolatility
 		);
 
-		MarginalEvolverMeanReversion pmmrFundingSpread = MarginalEvolverMeanReversion.Standard (
+		R1EvolverMeanReversion pmmrFundingSpread = R1EvolverMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility

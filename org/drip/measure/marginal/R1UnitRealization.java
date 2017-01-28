@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.measure.marginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,64 +47,121 @@ package org.drip.xva.definition;
  */
 
 /**
- * Equity describes a Trade-able Equity. The References are:
- *  
- *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
- *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
- *  
- *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
- *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
- *  
- *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
- * 
- *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
- *  	21 (2) 97-102.
- * 
+ * R1UnitRealization holds the Continuous and the Jump R^1 Unit Edge Realizations.
+ *
  * @author Lakshmi Krishnamurthy
  */
 
-public class Equity extends org.drip.xva.definition.Tradeable {
-	private double _dblDividendRate = java.lang.Double.NaN;
+public class R1UnitRealization {
+	private double _dblJump = java.lang.Double.NaN;
+	private double _dblContinuous = java.lang.Double.NaN;
 
 	/**
-	 * Equity Constructor
+	 * Generate a R^1 Continuous Uniform Realization
 	 * 
-	 * @param mePriceNumeraire The Underlier Price Numeraire
-	 * @param dblRepoRate The Underlier Repo Rate
-	 * @param dblDividendRate The Underlier Dividend Rate
+	 * @return The R^1 Continuous Uniform Realization
+	 */
+
+	public static final R1UnitRealization ContinuousUniform()
+	{
+		try {
+			return new R1UnitRealization (java.lang.Math.random(), 0.);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate a R^1 Continuous Gaussian Realization
+	 * 
+	 * @return The R^1 Continuous Gaussian Realization
+	 */
+
+	public static final R1UnitRealization ContinuousGaussian()
+	{
+		try {
+			return new R1UnitRealization (org.drip.measure.gaussian.NormalQuadrature.Random(), 0.);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate a R^1 Jump Uniform Realization
+	 * 
+	 * @return The R^1 Jump Uniform Realization
+	 */
+
+	public static final R1UnitRealization JumpUniform()
+	{
+		try {
+			return new R1UnitRealization (0., java.lang.Math.random());
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate a R^1 Jump Gaussian Realization
+	 * 
+	 * @return The R^1 Jump Gaussian Realization
+	 */
+
+	public static final R1UnitRealization JumpGaussian()
+	{
+		try {
+			return new R1UnitRealization (0., org.drip.measure.gaussian.NormalQuadrature.Random());
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * R1UnitRealization Constructor
+	 * 
+	 * @param dblContinuous The Continuous Random Variable
+	 * @param dblJump The Jump Random Variable
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public Equity (
-		final org.drip.measure.marginal.R1Evolver mePriceNumeraire,
-		final double dblRepoRate,
-		final double dblDividendRate)
+	public R1UnitRealization (
+		final double dblContinuous,
+		final double dblJump)
 		throws java.lang.Exception
 	{
-		super (mePriceNumeraire, dblRepoRate);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDividendRate = dblDividendRate))
-			throw new java.lang.Exception ("Equity Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblContinuous = dblContinuous) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblJump = dblJump))
+			throw new java.lang.Exception ("R1UnitRealization Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Underlier Dividend Rate
+	 * Retrieve the Continuous Random Variable
 	 * 
-	 * @return The Underlier Dividend Rate
+	 * @return The Continuous Random Variable
 	 */
 
-	public double dividendRate()
+	public double continuous()
 	{
-		return _dblDividendRate;
+		return _dblContinuous;
 	}
 
-	@Override public double cashAccumulationRate()
+	/**
+	 * Retrieve the Jump Random Variable
+	 * 
+	 * @return The Jump Random Variable
+	 */
+
+	public double jump()
 	{
-		return _dblDividendRate - repoRate();
+		return _dblJump;
 	}
 }

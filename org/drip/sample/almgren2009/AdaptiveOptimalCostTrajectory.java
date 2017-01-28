@@ -3,7 +3,7 @@ package org.drip.sample.almgren2009;
 
 import org.drip.execution.hjb.*;
 import org.drip.execution.latent.MarketStateSystemic;
-import org.drip.measure.process.*;
+import org.drip.measure.marginal.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -97,14 +97,14 @@ public class AdaptiveOptimalCostTrajectory {
 
 		aMSS[0] = new MarketStateSystemic (dblInitialMarketState);
 
-		MarginalEvolverOrnsteinUhlenbeck oup1D = MarginalEvolverOrnsteinUhlenbeck.ZeroMean (
+		R1EvolverOrnsteinUhlenbeck oup1D = R1EvolverOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
-			MarginalLevelRealization gi = oup1D.weinerIncrement (
-				new MarginalSnap (
+			R1LevelRealization gi = oup1D.weinerIncrement (
+				new R1Snap (
 					dblTime,
 					aMSS[i].common()
 				),

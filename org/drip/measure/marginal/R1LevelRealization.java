@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.marginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalLevelRealization implements the Deterministic and the Stochastic Components of a Marginal Random
+ * R1LevelRealization implements the Deterministic and the Stochastic Components of a R^1 Marginal Random
  *	Increment as well the Original Marginal Random Variate. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
@@ -69,33 +69,33 @@ package org.drip.measure.process;
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalLevelRealization {
+public class R1LevelRealization {
 	private double _dblStart = java.lang.Double.NaN;
 	private double _dblJumpWander = java.lang.Double.NaN;
 	private double _dblDeterministic = java.lang.Double.NaN;
-	private double _dblJumpStochastic = java.lang.Double.NaN;
 	private double _dblContinuousWander = java.lang.Double.NaN;
 	private double _dblContinuousStochastic = java.lang.Double.NaN;
+	private org.drip.measure.process.EventIndicator _eiJumpStochastic = null;
 
 	/**
-	 * MarginalLevelRealization Constructor
+	 * R1LevelRealization Constructor
 	 * 
 	 * @param dblStart The Starting Random Variable Realization
 	 * @param dblDeterministic The Deterministic Increment Component
 	 * @param dblContinuousStochastic The Continuous Stochastic Increment Component
 	 * @param dblContinuousWander The Continuous Random Wander Realization
-	 * @param dblJumpStochastic The Jump Stochastic Increment Component
+	 * @param eiJumpStochastic The Jump Stochastic Event Indicator
 	 * @param dblJumpWander The Jump Random Wander Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarginalLevelRealization (
+	public R1LevelRealization (
 		final double dblStart,
 		final double dblDeterministic,
 		final double dblContinuousStochastic,
 		final double dblContinuousWander,
-		final double dblJumpStochastic,
+		final org.drip.measure.process.EventIndicator eiJumpStochastic,
 		final double dblJumpWander)
 		throws java.lang.Exception
 	{
@@ -104,10 +104,10 @@ public class MarginalLevelRealization {
 				!org.drip.quant.common.NumberUtil.IsValid (_dblContinuousStochastic =
 					dblContinuousStochastic) || !org.drip.quant.common.NumberUtil.IsValid
 						(_dblContinuousWander = dblContinuousWander) ||
-							!org.drip.quant.common.NumberUtil.IsValid (_dblJumpStochastic =
-								dblJumpStochastic) || !org.drip.quant.common.NumberUtil.IsValid
-									(_dblJumpWander = dblJumpWander))
-			throw new java.lang.Exception ("MarginalLevelRealization Constructor => Invalid Inputs");
+							!org.drip.quant.common.NumberUtil.IsValid (_dblJumpWander = dblJumpWander))
+			throw new java.lang.Exception ("R1LevelRealization Constructor => Invalid Inputs");
+
+		_eiJumpStochastic = eiJumpStochastic;
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class MarginalLevelRealization {
 
 	public double jumpStochastic()
 	{
-		return _dblJumpStochastic;
+		return null == _eiJumpStochastic ? 0. : _eiJumpStochastic.magnitude();
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class MarginalLevelRealization {
 
 	public double grossChange()
 	{
-		return _dblDeterministic + _dblContinuousStochastic + _dblJumpStochastic;
+		return _dblDeterministic + _dblContinuousStochastic + jumpStochastic();
 	}
 
 	/**
@@ -195,6 +195,17 @@ public class MarginalLevelRealization {
 
 	public double finish()
 	{
-		return _dblStart + _dblDeterministic + _dblContinuousStochastic + _dblJumpStochastic;
+		return _dblStart + _dblDeterministic + _dblContinuousStochastic + jumpStochastic();
+	}
+
+	/**
+	 * Retrieve the Event Indicator Edge Instance
+	 * 
+	 * @return The Event Indicator Edge Instance
+	 */
+
+	public org.drip.measure.process.EventIndicator jumpStochasticEventIndicator()
+	{
+		return _eiJumpStochastic;
 	}
 }

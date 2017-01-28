@@ -121,7 +121,7 @@ public class ParabolicDifferentialOperator {
 		org.drip.xva.derivative.EdgeAssetGreek eagDerivative = eet.edgeAssetGreek();
 
 		double dblVolatility = _taAsset.priceNumeraire().volatilityLDEV().value (new
-			org.drip.measure.process.MarginalSnap (eet.time(), dblAsset));
+			org.drip.measure.marginal.R1Snap (eet.time(), dblAsset));
 
 		return 0.5 * dblVolatility * dblVolatility * dblAsset * dblAsset *
 			eagDerivative.derivativeXVAValueGamma() - _taAsset.cashAccumulationRate() * dblAsset *
@@ -155,7 +155,7 @@ public class ParabolicDifferentialOperator {
 
 		try {
 			dblVolatility = _taAsset.priceNumeraire().volatilityLDEV().value (new
-				org.drip.measure.process.MarginalSnap (eet.time(), dblAsset));
+				org.drip.measure.marginal.R1Snap (eet.time(), dblAsset));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 

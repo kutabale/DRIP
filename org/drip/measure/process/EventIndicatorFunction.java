@@ -47,53 +47,53 @@ package org.drip.measure.process;
  */
 
 /**
- * MarginalSnap holds the Snapshot Values of the Realized Random Variable and Time.
+ * EventIndicatorFunction implements the Point Event Indicator Functional that guides the Single Factor
+ *  Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginalSnap {
-	private double _dblTime = java.lang.Double.NaN;
-	private double _dblValue = java.lang.Double.NaN;
+public class EventIndicatorFunction {
+	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDensity = null;
+	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevMagnitude = null;
 
 	/**
-	 * MarginalSnap Constructor
+	 * EventIndicatorFunction Constructor
 	 * 
-	 * @param dblTime The Time Instant
-	 * @param dblValue The Random Variable Value
+	 * @param ldevDensity The LDEV Event Density Function of the Marginal Process Jump Component
+	 * @param ldevMagnitude The LDEV Event Magnitude Function of the Marginal Process Jump Component
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarginalSnap (
-		final double dblTime,
-		final double dblValue)
+	public EventIndicatorFunction (
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
-			throw new java.lang.Exception ("MarginalSnap Constructor => Invalid Inputs");
+		if (null == (_ldevDensity = ldevDensity) || null == (_ldevMagnitude = ldevMagnitude))
+			throw new java.lang.Exception ("EventIndicatorFunction Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Evolution Time Instant
+	 * Retrieve the LDEV Event Density Function of the Marginal Process Jump Component
 	 * 
-	 * @return The Evolution Time Instant
+	 * @return The LDEV Event Density Function of the Marginal Process Jump Component
 	 */
 
-	public double time()
+	public org.drip.measure.process.LocalDeterministicEvolutionFunction densityLDEV()
 	{
-		return _dblTime;
+		return _ldevDensity;
 	}
 
 	/**
-	 * Retrieve the Realized Random Value
+	 * Retrieve the LDEV Event Magnitude Function of the Marginal Process Jump Component
 	 * 
-	 * @return The Realized Random Value
+	 * @return The LDEV Event Magnitude Function of the Marginal Process Jump Component
 	 */
 
-	public double value()
+	public org.drip.measure.process.LocalDeterministicEvolutionFunction magnitudeLDEV()
 	{
-		return _dblValue;
+		return _ldevMagnitude;
 	}
 }

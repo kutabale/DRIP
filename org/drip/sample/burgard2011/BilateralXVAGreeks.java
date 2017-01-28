@@ -1,7 +1,7 @@
 
 package org.drip.sample.burgard2011;
 
-import org.drip.measure.process.*;
+import org.drip.measure.marginal.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.custom.Settings;
@@ -105,28 +105,28 @@ public class BilateralXVAGreeks {
 
 		UniverseSnapshot usFinish = new UniverseSnapshot (
 			twru.referenceUnderlier().priceNumeraire().weinerIncrement (
-				new MarginalSnap (
+				new R1Snap (
 					dblTime,
 					usStart.assetNumeraire().finish()
 				),
 				dblTimeWidth
 			),
 			twru.zeroCouponCollateralBond().priceNumeraire().weinerIncrement (
-				new MarginalSnap (
+				new R1Snap (
 					dblTime,
 					dblCollateralBondNumeraire
 				),
 				dblTimeWidth
 			),
 			twru.zeroCouponBankBond().priceNumeraire().weinerIncrement (
-				new MarginalSnap (
+				new R1Snap (
 					dblTime,
 					usStart.zeroCouponBankBondNumeraire().finish()
 				),
 				dblTimeWidth
 			),
 			twru.zeroCouponCounterPartyBond().priceNumeraire().weinerIncrement (
-				new MarginalSnap (
+				new R1Snap (
 					dblTime,
 					usStart.zeroCouponCounterPartyBondNumeraire().finish()
 				),
@@ -201,7 +201,7 @@ public class BilateralXVAGreeks {
 				dblDerivativeXVAValueGammaFinish,
 				eagStart.derivativeValue() * Math.exp (
 					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
-						new MarginalSnap (
+						new R1Snap (
 							dblTime,
 							dblCollateralBondNumeraire
 						)
@@ -249,22 +249,22 @@ public class BilateralXVAGreeks {
 			dblCounterPartyRecovery
 		);
 
-		MarginalEvolver meAsset = MarginalEvolverLogarithmic.Standard (
+		R1Evolver meAsset = R1EvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility
 		);
 
-		MarginalEvolver meZeroCouponCreditRiskFreeBond = MarginalEvolverLogarithmic.Standard (
+		R1Evolver meZeroCouponCreditRiskFreeBond = R1EvolverLogarithmic.Standard (
 			dblCreditRiskFreeDrift,
 			dblCreditRiskFreeVolatility
 		);
 
-		MarginalEvolver meZeroCouponBankBond = MarginalEvolverLogarithmic.Standard (
+		R1Evolver meZeroCouponBankBond = R1EvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
 			dblZeroCouponBankBondVolatility
 		);
 
-		MarginalEvolver meZeroCouponCounterPartyBond = MarginalEvolverLogarithmic.Standard (
+		R1Evolver meZeroCouponCounterPartyBond = R1EvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
 			dblZeroCouponCounterPartyBondVolatility
 		);
@@ -383,28 +383,28 @@ public class BilateralXVAGreeks {
 			dblTime,
 			new UniverseSnapshot (
 				meAsset.weinerIncrement (
-					new MarginalSnap (
+					new R1Snap (
 						dblTime,
 						dblDerivativeValue
 					),
 					dblTimeWidth
 				),
 				meZeroCouponCreditRiskFreeBond.weinerIncrement (
-					new MarginalSnap (
+					new R1Snap (
 						dblTime,
 						1.
 					),
 					dblTimeWidth
 				),
 				meZeroCouponBankBond.weinerIncrement (
-					new MarginalSnap (
+					new R1Snap (
 						dblTime,
 						1.
 					),
 					dblTimeWidth
 				),
 				meZeroCouponCounterPartyBond.weinerIncrement (
-					new MarginalSnap (
+					new R1Snap (
 						dblTime,
 						1.
 					),

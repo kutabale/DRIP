@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.drip.analytics.date.*;
 import org.drip.function.r1tor1.FlatUnivariate;
-import org.drip.measure.process.*;
+import org.drip.measure.marginal.*;
 import org.drip.param.valuation.ValuationParams;
 import org.drip.pricer.option.BlackScholesAlgorithm;
 import org.drip.product.option.EuropeanCallPut;
@@ -13,8 +13,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
-import org.drip.xva.collateral.CSAInducedMeasureShift;
-import org.drip.xva.collateral.FundingBasisEvolver;
+import org.drip.xva.collateral.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -253,7 +252,7 @@ public class CSAImpliedMeasureDifference {
 		double[][] aadblNoCSAForward = new double[adblCorrelation.length][adblStrike.length];
 		double[][] aadblMeasureShiftScale = new double[adblCorrelation.length][adblStrike.length];
 
-		MarginalEvolverMeanReversion pmmrFundingSpread = MarginalEvolverMeanReversion.Standard (
+		R1EvolverMeanReversion pmmrFundingSpread = R1EvolverMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility
@@ -279,7 +278,7 @@ public class CSAImpliedMeasureDifference {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (adblCorrelation[j], 2, 0, 100.) + "% => ";
 
 			for (int i = 0; i < adblStrike.length; ++i) {
-				MarginalEvolverLogarithmic pmlUnderlying = MarginalEvolverLogarithmic.Standard (
+				R1EvolverLogarithmic pmlUnderlying = R1EvolverLogarithmic.Standard (
 					0.,
 					adblCSAImpliedVolatility[i]
 				);

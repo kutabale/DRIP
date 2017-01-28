@@ -47,53 +47,69 @@ package org.drip.measure.process;
  */
 
 /**
- * JointSnap holds the Snapshot Joint Values of the Realized R^d Variate and Time.
+ * EventIndicator holds the Outcome of the Event Indicator Step Function Value.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class JointSnap {
-	private double[] _adblValue = null;
-	private double _dblTime = java.lang.Double.NaN;
+public class EventIndicator {
+	private boolean _bOccurred = false;
+	private double _dblDensity = java.lang.Double.NaN;
+	private double _dblMagnitude = java.lang.Double.NaN;
 
 	/**
-	 * JointSnap Constructor
+	 * EventIndicator Constructor
 	 * 
-	 * @param dblTime The Time Instant
-	 * @param adblValue The Realized R^d Variate
+	 * @param bOccurred TRUE => The Event Occurred
+	 * @param dblDensity The Event Occurrence Probability Density
+	 * @param dblMagnitude The Event Magnitude
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public JointSnap (
-		final double dblTime,
-		final double[] adblValue)
+	public EventIndicator (
+		final boolean bOccurred,
+		final double dblDensity,
+		final double dblMagnitude)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_adblValue =
-			adblValue) || 0 == _adblValue.length || !org.drip.quant.common.NumberUtil.IsValid (_adblValue))
-			throw new java.lang.Exception ("JointSnap Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDensity = dblDensity) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblMagnitude = dblMagnitude))
+			throw new java.lang.Exception ("EventIndicator Constructor => Invalid Inputs");
+
+		_bOccurred = bOccurred;
 	}
 
 	/**
-	 * Retrieve the Evolution Time Instant
+	 * Retrieve the "Event Occurred" Flag
 	 * 
-	 * @return The Evolution Time Instant
+	 * @return The "Event Occurred" Flag
 	 */
 
-	public double time()
+	public final boolean occurred()
 	{
-		return _dblTime;
+		return _bOccurred;
 	}
 
 	/**
-	 * Retrieve the Realized R^d Variate
+	 * Retrieve the Event Occurrence Probability Density
 	 * 
-	 * @return The Realized R^d Variate
+	 * @return The Event Occurrence Probability Density
 	 */
 
-	public double[] value()
+	public final double density()
 	{
-		return _adblValue;
+		return _dblDensity;
+	}
+
+	/**
+	 * Retrieve the Event Magnitude
+	 * 
+	 * @return The Event Magnitude
+	 */
+
+	public final double magnitude()
+	{
+		return _dblMagnitude;
 	}
 }
