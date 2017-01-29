@@ -53,63 +53,89 @@ package org.drip.measure.process;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EventIndicator {
-	private boolean _bTerminalJump = false;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDensity = null;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevMagnitude = null;
+public class EventIndicatorLinear extends org.drip.measure.process.EventIndicator {
+	private double _dblDrift = java.lang.Double.NaN;
+	private double _dblVolatility = java.lang.Double.NaN;
 
 	/**
-	 * EventIndicator Constructor
+	 * Generate a Standard Instance of EventIndicatorLinear
 	 * 
 	 * @param bTerminalJump TRUE - The Jump is Terminal
-	 * @param ldevDensity The LDEV Event Density Function of the Marginal Process Jump Component
-	 * @param ldevMagnitude The LDEV Event Magnitude Function of the Marginal Process Jump Component
+	 * @param dblDrift The Drift
+	 * @param dblVolatility The Volatility
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Standard Instance of EventIndicatorLinear
 	 */
 
-	public EventIndicator (
+	public static final EventIndicatorLinear Standard (
 		final boolean bTerminalJump,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude)
+		final double dblDrift,
+		final double dblVolatility)
+	{
+		try {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.measure.marginal.R1Snap ms)
+					throws java.lang.Exception
+				{
+					return dblDrift;
+				}
+			};
+
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.measure.marginal.R1Snap ms)
+					throws java.lang.Exception
+				{
+					return dblVolatility;
+				}
+			};
+
+			return new EventIndicatorLinear (bTerminalJump, dblDrift, dblVolatility, ldevDrift,
+				ldevVolatility);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private EventIndicatorLinear (
+		final boolean bTerminalJump,
+		final double dblDrift,
+		final double dblVolatility,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
-		if (null == (_ldevDensity = ldevDensity) || null == (_ldevMagnitude = ldevMagnitude))
-			throw new java.lang.Exception ("EventIndicator Constructor => Invalid Inputs");
+		super (bTerminalJump, ldevDrift, ldevVolatility);
 
-		_bTerminalJump = bTerminalJump;
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
+			throw new java.lang.Exception ("EventIndicatorLinear Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Indicate if the Jump is Terminal
+	 * Retrieve the Density
 	 * 
-	 * @return TRUE - The Jump is Terminal
+	 * @return The Density
 	 */
 
-	public boolean isJumpTerminal()
+	public double density()
 	{
-		return _bTerminalJump;
+		return _dblDrift;
 	}
 
 	/**
-	 * Retrieve the LDEV Event Density Function of the Marginal Process Jump Component
+	 * Retrieve the Magnitude
 	 * 
-	 * @return The LDEV Event Density Function of the Marginal Process Jump Component
+	 * @return The Magnitude
 	 */
 
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction densityLDEV()
+	public double magnitude()
 	{
-		return _ldevDensity;
-	}
-
-	/**
-	 * Retrieve the LDEV Event Magnitude Function of the Marginal Process Jump Component
-	 * 
-	 * @return The LDEV Event Magnitude Function of the Marginal Process Jump Component
-	 */
-
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction magnitudeLDEV()
-	{
-		return _ldevMagnitude;
+		return _dblVolatility;
 	}
 }

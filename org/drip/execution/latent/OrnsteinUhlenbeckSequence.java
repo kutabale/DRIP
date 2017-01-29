@@ -105,7 +105,8 @@ public class OrnsteinUhlenbeckSequence {
 
 			for (int i = 0; i < iCount - 1; ++i) {
 				org.drip.measure.marginal.R1LevelRealization gi = oup1D.weinerIncrement (new
-					org.drip.measure.marginal.R1Snap (dblTime, aMSS[i].common()), dblGenerationInterval);
+					org.drip.measure.marginal.R1Snap (dblTime, aMSS[i].common(), false),
+						dblGenerationInterval);
 
 				aMSS[i + 1] = new org.drip.execution.latent.MarketStateSystemic (aMSS[i].common() +
 					gi.deterministic() + gi.continuousStochastic());

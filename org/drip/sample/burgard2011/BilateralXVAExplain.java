@@ -107,28 +107,32 @@ public class BilateralXVAExplain {
 			twru.referenceUnderlier().priceNumeraire().weinerIncrement (
 				new R1Snap (
 					dblTime,
-					usStart.assetNumeraire().finish()
+					usStart.assetNumeraire().finish(),
+					false
 				),
 				dblTimeWidth
 			),
 			twru.zeroCouponCollateralBond().priceNumeraire().weinerIncrement (
 				new R1Snap (
 					dblTime,
-					dblCollateralBondNumeraire
+					dblCollateralBondNumeraire,
+					false
 				),
 				dblTimeWidth
 			),
 			twru.zeroCouponBankBond().priceNumeraire().weinerIncrement (
 				new R1Snap (
 					dblTime,
-					usStart.zeroCouponBankBondNumeraire().finish()
+					usStart.zeroCouponBankBondNumeraire().finish(),
+					false
 				),
 				dblTimeWidth
 			),
 			twru.zeroCouponCounterPartyBond().priceNumeraire().weinerIncrement (
 				new R1Snap (
 					dblTime,
-					usStart.zeroCouponCounterPartyBondNumeraire().finish()
+					usStart.zeroCouponCounterPartyBondNumeraire().finish(),
+					false
 				),
 				dblTimeWidth
 			)
@@ -213,7 +217,8 @@ public class BilateralXVAExplain {
 					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
 						new R1Snap (
 							dblTime,
-							dblCollateralBondNumeraire
+							dblCollateralBondNumeraire,
+							false
 						)
 					)
 				)
@@ -261,22 +266,26 @@ public class BilateralXVAExplain {
 
 		R1Evolver meAsset = R1EvolverLogarithmic.Standard (
 			dblAssetDrift,
-			dblAssetVolatility
+			dblAssetVolatility,
+			null
 		);
 
 		R1Evolver meZeroCouponCollateralBond = R1EvolverLogarithmic.Standard (
 			dblZeroCouponCollateralBondDrift,
-			dblZeroCouponCollateralBondVolatility
+			dblZeroCouponCollateralBondVolatility,
+			null
 		);
 
 		R1Evolver meZeroCouponBankBond = R1EvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
-			dblZeroCouponBankBondVolatility
+			dblZeroCouponBankBondVolatility,
+			null
 		);
 
 		R1Evolver meZeroCouponCounterPartyBond = R1EvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
-			dblZeroCouponCounterPartyBondVolatility
+			dblZeroCouponCounterPartyBondVolatility,
+			null
 		);
 
 		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (
@@ -402,28 +411,32 @@ public class BilateralXVAExplain {
 				meAsset.weinerIncrement (
 					new R1Snap (
 						dblTime,
-						dblDerivativeValue
+						dblDerivativeValue,
+						false
 					),
 					dblTimeWidth
 				),
 				meZeroCouponCollateralBond.weinerIncrement (
 					new R1Snap (
 						dblTime,
-						1.
+						1.,
+						false
 					),
 					dblTimeWidth
 				),
 				meZeroCouponBankBond.weinerIncrement (
 					new R1Snap (
 						dblTime,
-						1.
+						1.,
+						false
 					),
 					dblTimeWidth
 				),
 				meZeroCouponCounterPartyBond.weinerIncrement (
 					new R1Snap (
 						dblTime,
-						1.
+						1.,
+						false
 					),
 					dblTimeWidth
 				)

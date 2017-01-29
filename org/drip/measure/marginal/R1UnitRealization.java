@@ -125,6 +125,97 @@ public class R1UnitRealization {
 	}
 
 	/**
+	 * Generate an Array of R^1 Continuous Realizations
+	 * 
+	 * @param adblContinuousRealization The Array of Continuous Realizations
+	 * 
+	 * @return Array of R^1 Continuous Realizations
+	 */
+
+	public static final R1UnitRealization[] Continuous (
+		final double[] adblContinuousRealization)
+	{
+		if (null == adblContinuousRealization) return null;
+
+		int iSize = adblContinuousRealization.length;
+		R1UnitRealization[] aR1UR = 0 == iSize ? null : new R1UnitRealization[iSize];
+
+		for (int i = 0; i < iSize; ++i) {
+			try {
+				aR1UR[i] = new R1UnitRealization (adblContinuousRealization[i], 0.);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return aR1UR;
+	}
+
+	/**
+	 * Generate an Array of R^1 Jump Realizations
+	 * 
+	 * @param adblJumpRealization The Array of Jump Realizations
+	 * 
+	 * @return Array of R^1 Jump Realizations
+	 */
+
+	public static final R1UnitRealization[] Jump (
+		final double[] adblJumpRealization)
+	{
+		if (null == adblJumpRealization) return null;
+
+		int iSize = adblJumpRealization.length;
+		R1UnitRealization[] aR1UR = 0 == iSize ? null : new R1UnitRealization[iSize];
+
+		for (int i = 0; i < iSize; ++i) {
+			try {
+				aR1UR[i] = new R1UnitRealization (0., adblJumpRealization[i]);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return aR1UR;
+	}
+
+	/**
+	 * Generate an Array of R^1 Continuous/Jump Realizations
+	 * 
+	 * @param adblContinuousRealization The Array of Continuous Realizations
+	 * @param adblJumpRealization The Array of Jump Realizations
+	 * 
+	 * @return Array of R^1 Continuous/Jump Realizations
+	 */
+
+	public static final R1UnitRealization[] ContinuousJump (
+		final double[] adblContinuousRealization,
+		final double[] adblJumpRealization)
+	{
+		if (null == adblJumpRealization || null == adblJumpRealization) return null;
+
+		int iSize = adblContinuousRealization.length;
+		R1UnitRealization[] aR1UR = 0 == iSize ? null : new R1UnitRealization[iSize];
+
+		if (0 == iSize || iSize != adblJumpRealization.length) return null;
+
+		for (int i = 0; i < iSize; ++i) {
+			try {
+				aR1UR[i] = new R1UnitRealization (adblContinuousRealization[i], adblJumpRealization[i]);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return aR1UR;
+	}
+
+	/**
 	 * R1UnitRealization Constructor
 	 * 
 	 * @param dblContinuous The Continuous Random Variable

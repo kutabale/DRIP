@@ -47,69 +47,69 @@ package org.drip.measure.process;
  */
 
 /**
- * EventIndicator implements the Point Event Indicator Functional that guides the Single Factor Random
- *  Process Variable Evolution.
+ * LevelEventIndicator holds the Outcome of the Event Indicator Step Function Value.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class EventIndicator {
-	private boolean _bTerminalJump = false;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDensity = null;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevMagnitude = null;
+public class LevelEventIndicator {
+	private boolean _bOccurred = false;
+	private double _dblDensity = java.lang.Double.NaN;
+	private double _dblMagnitude = java.lang.Double.NaN;
 
 	/**
-	 * EventIndicator Constructor
+	 * LevelEventIndicator Constructor
 	 * 
-	 * @param bTerminalJump TRUE - The Jump is Terminal
-	 * @param ldevDensity The LDEV Event Density Function of the Marginal Process Jump Component
-	 * @param ldevMagnitude The LDEV Event Magnitude Function of the Marginal Process Jump Component
+	 * @param bOccurred TRUE - The Event Occurred
+	 * @param dblDensity The Event Occurrence Probability Density
+	 * @param dblMagnitude The Event Magnitude
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public EventIndicator (
-		final boolean bTerminalJump,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude)
+	public LevelEventIndicator (
+		final boolean bOccurred,
+		final double dblDensity,
+		final double dblMagnitude)
 		throws java.lang.Exception
 	{
-		if (null == (_ldevDensity = ldevDensity) || null == (_ldevMagnitude = ldevMagnitude))
-			throw new java.lang.Exception ("EventIndicator Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDensity = dblDensity) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblMagnitude = dblMagnitude))
+			throw new java.lang.Exception ("LevelEventIndicator Constructor => Invalid Inputs");
 
-		_bTerminalJump = bTerminalJump;
+		_bOccurred = bOccurred;
 	}
 
 	/**
-	 * Indicate if the Jump is Terminal
+	 * Retrieve the "Event Occurred" Flag
 	 * 
-	 * @return TRUE - The Jump is Terminal
+	 * @return The "Event Occurred" Flag
 	 */
 
-	public boolean isJumpTerminal()
+	public final boolean occurred()
 	{
-		return _bTerminalJump;
+		return _bOccurred;
 	}
 
 	/**
-	 * Retrieve the LDEV Event Density Function of the Marginal Process Jump Component
+	 * Retrieve the Event Occurrence Probability Density
 	 * 
-	 * @return The LDEV Event Density Function of the Marginal Process Jump Component
+	 * @return The Event Occurrence Probability Density
 	 */
 
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction densityLDEV()
+	public final double density()
 	{
-		return _ldevDensity;
+		return _dblDensity;
 	}
 
 	/**
-	 * Retrieve the LDEV Event Magnitude Function of the Marginal Process Jump Component
+	 * Retrieve the Event Magnitude
 	 * 
-	 * @return The LDEV Event Magnitude Function of the Marginal Process Jump Component
+	 * @return The Event Magnitude
 	 */
 
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction magnitudeLDEV()
+	public final double magnitude()
 	{
-		return _ldevMagnitude;
+		return _dblMagnitude;
 	}
 }

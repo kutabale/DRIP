@@ -170,7 +170,8 @@ public class BurgardKjaerOperator {
 				_twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
 					new org.drip.measure.marginal.R1Snap (
 						dblTime,
-						us.zeroCouponCollateralBondNumeraire().finish()
+						us.zeroCouponCollateralBondNumeraire().finish(),
+						false
 					)
 				) * dblDerivativeXVAValue,
 				si.bankFundingSpread() * (
@@ -235,7 +236,8 @@ public class BurgardKjaerOperator {
 				_twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
 					new org.drip.measure.marginal.R1Snap (
 						dblTime,
-						us.zeroCouponCollateralBondNumeraire().finish()
+						us.zeroCouponCollateralBondNumeraire().finish(),
+						false
 					)
 				) * dblDerivativeXVAValue,
 				(dblBankDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,

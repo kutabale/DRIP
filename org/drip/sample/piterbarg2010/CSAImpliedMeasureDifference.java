@@ -280,7 +280,8 @@ public class CSAImpliedMeasureDifference {
 			for (int i = 0; i < adblStrike.length; ++i) {
 				R1EvolverLogarithmic pmlUnderlying = R1EvolverLogarithmic.Standard (
 					0.,
-					adblCSAImpliedVolatility[i]
+					adblCSAImpliedVolatility[i],
+					null
 				);
 
 				FundingBasisEvolver sftf = new FundingBasisEvolver (

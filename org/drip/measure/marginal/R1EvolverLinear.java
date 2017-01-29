@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.marginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,53 +47,90 @@ package org.drip.measure.process;
  */
 
 /**
- * EventIndicatorFunction implements the Point Event Indicator Functional that guides the Single Factor
- *  Random Process Variable Evolution.
+ * R1EvolverLinear guides the Random Variable Evolution according to R^1 Linear Process.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class EventIndicatorFunction {
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDensity = null;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevMagnitude = null;
+public class R1EvolverLinear extends org.drip.measure.marginal.R1Evolver {
+	private double _dblDrift = java.lang.Double.NaN;
+	private double _dblVolatility = java.lang.Double.NaN;
 
 	/**
-	 * EventIndicatorFunction Constructor
+	 * Generate a Standard Instance of R1EvolverLinear
 	 * 
-	 * @param ldevDensity The LDEV Event Density Function of the Marginal Process Jump Component
-	 * @param ldevMagnitude The LDEV Event Magnitude Function of the Marginal Process Jump Component
+	 * @param dblDrift The Drift
+	 * @param dblVolatility The Volatility
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Standard Instance of R1EvolverLinear
 	 */
 
-	public EventIndicatorFunction (
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude)
+	public static final R1EvolverLinear Standard (
+		final double dblDrift,
+		final double dblVolatility)
+	{
+		try {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.measure.marginal.R1Snap ms)
+					throws java.lang.Exception
+				{
+					return dblDrift;
+				}
+			};
+
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.measure.marginal.R1Snap ms)
+					throws java.lang.Exception
+				{
+					return dblVolatility;
+				}
+			};
+
+			return new R1EvolverLinear (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private R1EvolverLinear (
+		final double dblDrift,
+		final double dblVolatility,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
-		if (null == (_ldevDensity = ldevDensity) || null == (_ldevMagnitude = ldevMagnitude))
-			throw new java.lang.Exception ("EventIndicatorFunction Constructor => Invalid Inputs");
+		super (ldevDrift, ldevVolatility, null);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
+			throw new java.lang.Exception ("R1EvolverLinear Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the LDEV Event Density Function of the Marginal Process Jump Component
+	 * Retrieve the Drift
 	 * 
-	 * @return The LDEV Event Density Function of the Marginal Process Jump Component
+	 * @return The Drift
 	 */
 
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction densityLDEV()
+	public double drift()
 	{
-		return _ldevDensity;
+		return _dblDrift;
 	}
 
 	/**
-	 * Retrieve the LDEV Event Magnitude Function of the Marginal Process Jump Component
+	 * Retrieve the Volatility
 	 * 
-	 * @return The LDEV Event Magnitude Function of the Marginal Process Jump Component
+	 * @return The Volatility
 	 */
 
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction magnitudeLDEV()
+	public double volatility()
 	{
-		return _ldevMagnitude;
+		return _dblVolatility;
 	}
 }

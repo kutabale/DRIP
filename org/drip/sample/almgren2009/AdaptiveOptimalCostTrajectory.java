@@ -106,7 +106,8 @@ public class AdaptiveOptimalCostTrajectory {
 			R1LevelRealization gi = oup1D.weinerIncrement (
 				new R1Snap (
 					dblTime,
-					aMSS[i].common()
+					aMSS[i].common(),
+					false
 				),
 				dblTimeInterval
 			);

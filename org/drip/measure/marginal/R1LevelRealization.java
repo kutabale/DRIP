@@ -75,7 +75,7 @@ public class R1LevelRealization {
 	private double _dblDeterministic = java.lang.Double.NaN;
 	private double _dblContinuousWander = java.lang.Double.NaN;
 	private double _dblContinuousStochastic = java.lang.Double.NaN;
-	private org.drip.measure.process.EventIndicator _eiJumpStochastic = null;
+	private org.drip.measure.process.LevelEventIndicator _eiJumpStochastic = null;
 
 	/**
 	 * R1LevelRealization Constructor
@@ -95,7 +95,7 @@ public class R1LevelRealization {
 		final double dblDeterministic,
 		final double dblContinuousStochastic,
 		final double dblContinuousWander,
-		final org.drip.measure.process.EventIndicator eiJumpStochastic,
+		final org.drip.measure.process.LevelEventIndicator eiJumpStochastic,
 		final double dblJumpWander)
 		throws java.lang.Exception
 	{
@@ -204,7 +204,7 @@ public class R1LevelRealization {
 	 * @return The Event Indicator Edge Instance
 	 */
 
-	public org.drip.measure.process.EventIndicator jumpStochasticEventIndicator()
+	public org.drip.measure.process.LevelEventIndicator jumpStochasticEventIndicator()
 	{
 		return _eiJumpStochastic;
 	}

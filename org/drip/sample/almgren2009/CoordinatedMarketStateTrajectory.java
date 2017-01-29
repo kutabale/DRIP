@@ -143,7 +143,8 @@ public class CoordinatedMarketStateTrajectory {
 			R1LevelRealization gi = oup1D.weinerIncrement (
 				new R1Snap (
 					dblTime,
-					dblMarketState
+					dblMarketState,
+					false
 				),
 				dblTimeInterval
 			);

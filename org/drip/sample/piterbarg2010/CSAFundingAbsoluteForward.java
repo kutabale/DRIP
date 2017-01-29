@@ -106,7 +106,8 @@ public class CSAFundingAbsoluteForward {
 
 		R1EvolverLogarithmic pmlUnderlying = R1EvolverLogarithmic.Standard (
 			0.,
-			dblUnderlyingVolatility
+			dblUnderlyingVolatility,
+			null
 		);
 
 		R1EvolverMeanReversion pmmrFundingSpread = R1EvolverMeanReversion.Standard (

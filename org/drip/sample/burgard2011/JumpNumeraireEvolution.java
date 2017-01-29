@@ -2,10 +2,8 @@
 package org.drip.sample.burgard2011;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
-import org.drip.measure.marginal.R1Evolver;
-import org.drip.measure.marginal.R1EvolverLogarithmic;
+import org.drip.measure.marginal.*;
 import org.drip.quant.common.FormatUtil;
-import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 
 /*
@@ -54,8 +52,7 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * NumeraireEvolution demonstrates the Joint Evolution of the Bank, the Counter-Party involved in the Dynamic
- *  XVA Replication Portfolio of the Burgard and Kjaer (2011) Methodology. The References are:
+ * JumpNumeraireEvolution demonstrates the Jump Evolution of a Default-able Asset. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -75,42 +72,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NumeraireEvolution {
-
-	private static final double[][] NumeraireSequence (
-		final int iCount,
-		final double[][] aadblCorrelation,
-		final String strHeader)
-		throws Exception
-	{
-		double[][] aadblGaussianJoint = SequenceGenerator.GaussianJoint (
-			iCount,
-			aadblCorrelation
-		);
-
-		System.out.println();
-
-		System.out.println ("\t||----------------------------------------------------||");
-
-		System.out.println (strHeader);
-
-		System.out.println ("\t||----------------------------------------------------||");
-
-		for (int i = 0; i < iCount; ++i) {
-			String strDump = "\t||" + FormatUtil.FormatDouble (i, 2, 0, 1.) + " |";
-
-			for (int j = 0; j < aadblCorrelation.length; ++j)
-				strDump = strDump + " " + FormatUtil.FormatDouble (aadblGaussianJoint[i][j], 1, 6, 1.) + " |";
-
-			System.out.println (strDump + "|");
-		}
-
-		System.out.println ("\t||----------------------------------------------------||");
-
-		System.out.println();
-
-		return Matrix.Transpose (aadblGaussianJoint);
-	}
+public class JumpNumeraireEvolution {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -120,12 +82,6 @@ public class NumeraireEvolution {
 
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
-		double[][] aadblCorrelation = new double[][] {
-			{1.00, 0.20, 0.15, 0.05}, // #1 ASSET
-			{0.20, 1.00, 0.13, 0.25}, // #2 COLLATERAL
-			{0.15, 0.13, 1.00, 0.00}, // #3 BANK
-			{0.05, 0.25, 0.00, 1.00}  // #4 COUNTER PARTY
-		};
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
 		double dblTerminalAssetNumeraire = 1.;
@@ -134,20 +90,41 @@ public class NumeraireEvolution {
 
 		R1Evolver meAsset = R1EvolverLogarithmic.Standard (
 			dblAssetDrift,
-			dblAssetVolatility
+			dblAssetVolatility,
+			null
 		);
 
-		double[][] aadblNumeraireTimeSeries = NumeraireSequence (
-			iNumTimeStep,
-			aadblCorrelation,
-			"\t|| ASSET, COLLATERAL, BANK, COUNTER PARTY REALIZATION ||"
+		double[] adblAssetNumeraireTimeSeries = SequenceGenerator.Gaussian (iNumTimeStep);
+
+		double[] adblDefaultIndicatorTimeSeries = SequenceGenerator.Gaussian (iNumTimeStep);
+
+		R1LevelRealization[] aR1AssetLR = meAsset.incrementSequence (
+			new R1Snap (
+				dblTime,
+				dblTerminalAssetNumeraire,
+				false
+			),
+			R1UnitRealization.ContinuousJump (
+				adblAssetNumeraireTimeSeries,
+				adblDefaultIndicatorTimeSeries
+			),
+			-1. * dblTimeWidth
 		);
 
-		for (int i = 0; i < iNumTimeStep; ++i);
-		/* meAsset.incrementSequence (
-			r1s,
-			aR1UR,
-			dblTimeWidth
-		); */
+		System.out.println();
+
+		for (int i = 0; i < iNumTimeStep; ++i) {
+			dblTime = dblTime - dblTimeWidth;
+
+			System.out.println (
+				"\t|| " +
+				FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " => " +
+				FormatUtil.FormatDouble (aR1AssetLR[i].start(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (aR1AssetLR[i].finish(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (aR1AssetLR[i].continuousWander(), 1, 4, 1.) + " ||"
+			);
+		}
+
+		System.out.println();
 	}
 }

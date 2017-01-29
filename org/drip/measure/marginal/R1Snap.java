@@ -53,6 +53,7 @@ package org.drip.measure.marginal;
  */
 
 public class R1Snap {
+	private boolean _bTerminationReached = false;
 	private double _dblTime = java.lang.Double.NaN;
 	private double _dblValue = java.lang.Double.NaN;
 
@@ -61,18 +62,33 @@ public class R1Snap {
 	 * 
 	 * @param dblTime The Time Instant
 	 * @param dblValue The Random Variable Value
+	 * @param bTerminationReached TRUE - Termination Reached
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public R1Snap (
 		final double dblTime,
-		final double dblValue)
+		final double dblValue,
+		final boolean bTerminationReached)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
 			throw new java.lang.Exception ("R1Snap Constructor => Invalid Inputs");
+
+		_bTerminationReached = bTerminationReached;
+	}
+
+	/**
+	 * Retrieve the Termination Reached Flag
+	 * 
+	 * @return TRUE - Termination Reached
+	 */
+
+	public boolean terminationReached()
+	{
+		return _bTerminationReached;
 	}
 
 	/**

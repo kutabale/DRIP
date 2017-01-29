@@ -61,13 +61,15 @@ public class R1EvolverLogarithmic extends org.drip.measure.marginal.R1Evolver {
 	 * 
 	 * @param dblDrift The Drift
 	 * @param dblVolatility The Volatility
+	 * @param ei The Point Event Indicator Function Instance
 	 * 
 	 * @return The Standard Instance of R1EvolverLogarithmic
 	 */
 
 	public static final R1EvolverLogarithmic Standard (
 		final double dblDrift,
-		final double dblVolatility)
+		final double dblVolatility,
+		final org.drip.measure.process.EventIndicator ei)
 	{
 		try {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
@@ -98,7 +100,7 @@ public class R1EvolverLogarithmic extends org.drip.measure.marginal.R1Evolver {
 				}
 			};
 
-			return new R1EvolverLogarithmic (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
+			return new R1EvolverLogarithmic (dblDrift, dblVolatility, ldevDrift, ldevVolatility, ei);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -110,7 +112,8 @@ public class R1EvolverLogarithmic extends org.drip.measure.marginal.R1Evolver {
 		final double dblDrift,
 		final double dblVolatility,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
+		final org.drip.measure.process.EventIndicator ei)
 		throws java.lang.Exception
 	{
 		super (ldevDrift, ldevVolatility, null);
