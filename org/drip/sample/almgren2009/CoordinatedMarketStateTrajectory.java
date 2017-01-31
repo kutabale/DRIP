@@ -144,6 +144,7 @@ public class CoordinatedMarketStateTrajectory {
 				new R1Snap (
 					dblTime,
 					dblMarketState,
+					0.,
 					false
 				),
 				dblTimeInterval

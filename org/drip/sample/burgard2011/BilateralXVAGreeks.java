@@ -108,6 +108,7 @@ public class BilateralXVAGreeks {
 				new R1Snap (
 					dblTime,
 					usStart.assetNumeraire().finish(),
+					0.,
 					false
 				),
 				dblTimeWidth
@@ -116,6 +117,7 @@ public class BilateralXVAGreeks {
 				new R1Snap (
 					dblTime,
 					dblCollateralBondNumeraire,
+					0.,
 					false
 				),
 				dblTimeWidth
@@ -124,6 +126,7 @@ public class BilateralXVAGreeks {
 				new R1Snap (
 					dblTime,
 					usStart.zeroCouponBankBondNumeraire().finish(),
+					0.,
 					false
 				),
 				dblTimeWidth
@@ -132,6 +135,7 @@ public class BilateralXVAGreeks {
 				new R1Snap (
 					dblTime,
 					usStart.zeroCouponCounterPartyBondNumeraire().finish(),
+					0.,
 					false
 				),
 				dblTimeWidth
@@ -208,6 +212,7 @@ public class BilateralXVAGreeks {
 						new R1Snap (
 							dblTime,
 							dblCollateralBondNumeraire,
+							0.,
 							false
 						)
 					)
@@ -395,6 +400,7 @@ public class BilateralXVAGreeks {
 					new R1Snap (
 						dblTime,
 						dblDerivativeValue,
+						0.,
 						false
 					),
 					dblTimeWidth
@@ -403,6 +409,7 @@ public class BilateralXVAGreeks {
 					new R1Snap (
 						dblTime,
 						1.,
+						0.,
 						false
 					),
 					dblTimeWidth
@@ -411,6 +418,7 @@ public class BilateralXVAGreeks {
 					new R1Snap (
 						dblTime,
 						1.,
+						0.,
 						false
 					),
 					dblTimeWidth
@@ -419,6 +427,7 @@ public class BilateralXVAGreeks {
 					new R1Snap (
 						dblTime,
 						1.,
+						0.,
 						false
 					),
 					dblTimeWidth

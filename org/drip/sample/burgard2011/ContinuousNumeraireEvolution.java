@@ -150,6 +150,7 @@ public class ContinuousNumeraireEvolution {
 			new R1Snap (
 				dblTime,
 				dblTerminalAssetNumeraire,
+				0.,
 				false
 			),
 			R1UnitRealization.Continuous (aadblNumeraireTimeSeries[0]),
@@ -160,6 +161,7 @@ public class ContinuousNumeraireEvolution {
 			new R1Snap (
 				dblTime,
 				dblTerminalCollateralNumeraire,
+				0.,
 				false
 			),
 			R1UnitRealization.Continuous (aadblNumeraireTimeSeries[1]),
@@ -170,6 +172,7 @@ public class ContinuousNumeraireEvolution {
 			new R1Snap (
 				dblTime,
 				dblTerminalBankNumeraire,
+				0.,
 				false
 			),
 			R1UnitRealization.Continuous (aadblNumeraireTimeSeries[2]),
@@ -180,6 +183,7 @@ public class ContinuousNumeraireEvolution {
 			new R1Snap (
 				dblTime,
 				dblTerminalBankNumeraire,
+				0.,
 				false
 			),
 			R1UnitRealization.Continuous (aadblNumeraireTimeSeries[3]),

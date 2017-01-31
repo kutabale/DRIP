@@ -171,6 +171,7 @@ public class BurgardKjaerOperator {
 					new org.drip.measure.marginal.R1Snap (
 						dblTime,
 						us.zeroCouponCollateralBondNumeraire().finish(),
+						0.,
 						false
 					)
 				) * dblDerivativeXVAValue,
@@ -237,6 +238,7 @@ public class BurgardKjaerOperator {
 					new org.drip.measure.marginal.R1Snap (
 						dblTime,
 						us.zeroCouponCollateralBondNumeraire().finish(),
+						0.,
 						false
 					)
 				) * dblDerivativeXVAValue,

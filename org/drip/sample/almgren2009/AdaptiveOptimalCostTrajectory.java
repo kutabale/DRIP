@@ -107,6 +107,7 @@ public class AdaptiveOptimalCostTrajectory {
 				new R1Snap (
 					dblTime,
 					aMSS[i].common(),
+					0.,
 					false
 				),
 				dblTimeInterval

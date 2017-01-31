@@ -69,7 +69,7 @@ public class R1EvolverLogarithmic extends org.drip.measure.marginal.R1Evolver {
 	public static final R1EvolverLogarithmic Standard (
 		final double dblDrift,
 		final double dblVolatility,
-		final org.drip.measure.process.EventIndicator ei)
+		final org.drip.measure.process.EventIndicationEvaluator ei)
 	{
 		try {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
@@ -113,10 +113,10 @@ public class R1EvolverLogarithmic extends org.drip.measure.marginal.R1Evolver {
 		final double dblVolatility,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
-		final org.drip.measure.process.EventIndicator ei)
+		final org.drip.measure.process.EventIndicationEvaluator ei)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility, null);
+		super (ldevDrift, ldevVolatility, ei);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))

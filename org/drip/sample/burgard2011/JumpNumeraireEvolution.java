@@ -3,6 +3,7 @@ package org.drip.sample.burgard2011;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
+import org.drip.measure.process.HazardEventIndicationEvaluator;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -81,47 +82,54 @@ public class JumpNumeraireEvolution {
 		EnvManager.InitEnv ("");
 
 		double dblTimeWidth = 1. / 24.;
-		double dblTime = 1.;
+		double dblTime = 0.;
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
+		double dblAssetHazard = 0.05;
+		double dblAssetDefaultMagnitude = 0.6;
 		double dblTerminalAssetNumeraire = 1.;
 
-		int iNumTimeStep = (int) (dblTime / dblTimeWidth);
+		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
 		R1Evolver meAsset = R1EvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility,
-			null
+			HazardEventIndicationEvaluator.Standard (
+				dblAssetHazard,
+				dblAssetDefaultMagnitude
+			)
 		);
 
 		double[] adblAssetNumeraireTimeSeries = SequenceGenerator.Gaussian (iNumTimeStep);
 
-		double[] adblDefaultIndicatorTimeSeries = SequenceGenerator.Gaussian (iNumTimeStep);
+		double[] adblDefaultIndicatorTimeSeries = SequenceGenerator.Uniform (iNumTimeStep);
 
 		R1LevelRealization[] aR1AssetLR = meAsset.incrementSequence (
 			new R1Snap (
-				dblTime,
+				0.,
 				dblTerminalAssetNumeraire,
+				0.,
 				false
 			),
 			R1UnitRealization.ContinuousJump (
 				adblAssetNumeraireTimeSeries,
 				adblDefaultIndicatorTimeSeries
 			),
-			-1. * dblTimeWidth
+			dblTimeWidth
 		);
 
 		System.out.println();
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			dblTime = dblTime - dblTimeWidth;
+			dblTime = dblTime + dblTimeWidth;
 
 			System.out.println (
 				"\t|| " +
 				FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " => " +
 				FormatUtil.FormatDouble (aR1AssetLR[i].start(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1AssetLR[i].finish(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (aR1AssetLR[i].continuousWander(), 1, 4, 1.) + " ||"
+				FormatUtil.FormatDouble (aR1AssetLR[i].continuousWander(), 1, 4, 1.) + " | " +
+				aR1AssetLR[i].jumpStochasticEventIndicator().occurred() + " ||"
 			);
 		}
 

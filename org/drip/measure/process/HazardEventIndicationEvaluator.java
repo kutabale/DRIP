@@ -47,54 +47,60 @@ package org.drip.measure.process;
  */
 
 /**
- * EventIndicator implements the Point Event Indicator Functional that guides the Single Factor Random
- *  Process Variable Evolution.
+ * HazardEventIndicationEvaluator implements the Hazard Process Point Event Indication Evaluator that guides
+ *  the Single Factor Jump-Termination Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class EventIndicatorLinear extends org.drip.measure.process.EventIndicator {
-	private double _dblDrift = java.lang.Double.NaN;
-	private double _dblVolatility = java.lang.Double.NaN;
+public class HazardEventIndicationEvaluator extends org.drip.measure.process.EventIndicationEvaluator {
+	private double _dblMagnitude = java.lang.Double.NaN;
+	private double _dblHazardRate = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of EventIndicatorLinear
+	 * Generate a Standard Instance of HazardEventIndicationEvaluator
 	 * 
-	 * @param bTerminalJump TRUE - The Jump is Terminal
-	 * @param dblDrift The Drift
-	 * @param dblVolatility The Volatility
+	 * @param dblHazardRate The Hazard Rate
+	 * @param dblMagnitude The Magnitude
 	 * 
-	 * @return The Standard Instance of EventIndicatorLinear
+	 * @return The Standard Instance of HazardEventIndicationEvaluator
 	 */
 
-	public static final EventIndicatorLinear Standard (
-		final boolean bTerminalJump,
-		final double dblDrift,
-		final double dblVolatility)
+	public static final HazardEventIndicationEvaluator Standard (
+		final double dblHazardRate,
+		final double dblMagnitude)
 	{
 		try {
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
 					final org.drip.measure.marginal.R1Snap ms)
 					throws java.lang.Exception
 				{
-					return dblDrift;
+					if (null == ms)
+						throw new java.lang.Exception
+							("HazardEventIndicationEvaluator::DensityLDEV::value => Invalid Inputs");
+
+					return -1. * dblHazardRate * java.lang.Math.exp (-1. * dblHazardRate);
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
 					final org.drip.measure.marginal.R1Snap ms)
 					throws java.lang.Exception
 				{
-					return dblVolatility;
+					if (null == ms)
+						throw new java.lang.Exception
+							("HazardEventIndicationEvaluator::MagnitudeLDEV::value => Invalid Inputs");
+
+					return dblMagnitude;
 				}
 			};
 
-			return new EventIndicatorLinear (bTerminalJump, dblDrift, dblVolatility, ldevDrift,
-				ldevVolatility);
+			return new HazardEventIndicationEvaluator (dblHazardRate, dblMagnitude, ldevDensity,
+				ldevMagnitude);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -102,30 +108,30 @@ public class EventIndicatorLinear extends org.drip.measure.process.EventIndicato
 		return null;
 	}
 
-	private EventIndicatorLinear (
-		final boolean bTerminalJump,
-		final double dblDrift,
-		final double dblVolatility,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
+	private HazardEventIndicationEvaluator (
+		final double dblHazardRate,
+		final double dblMagnitude,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude)
 		throws java.lang.Exception
 	{
-		super (bTerminalJump, ldevDrift, ldevVolatility);
+		super (true, ldevDensity, ldevMagnitude);
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("EventIndicatorLinear Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) || 0. > _dblHazardRate
+			|| !org.drip.quant.common.NumberUtil.IsValid (_dblMagnitude = dblMagnitude) || 0. >
+				_dblMagnitude)
+			throw new java.lang.Exception ("HazardEventIndicationEvaluator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Density
+	 * Retrieve the Hazard Rate
 	 * 
-	 * @return The Density
+	 * @return The Hazard Rate
 	 */
 
-	public double density()
+	public double hazardRate()
 	{
-		return _dblDrift;
+		return _dblHazardRate;
 	}
 
 	/**
@@ -136,6 +142,6 @@ public class EventIndicatorLinear extends org.drip.measure.process.EventIndicato
 
 	public double magnitude()
 	{
-		return _dblVolatility;
+		return _dblMagnitude;
 	}
 }

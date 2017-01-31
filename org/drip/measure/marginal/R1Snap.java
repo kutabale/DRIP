@@ -56,12 +56,14 @@ public class R1Snap {
 	private boolean _bTerminationReached = false;
 	private double _dblTime = java.lang.Double.NaN;
 	private double _dblValue = java.lang.Double.NaN;
+	private double _dblCumulativeHazardIntegral = java.lang.Double.NaN;
 
 	/**
 	 * R1Snap Constructor
 	 * 
 	 * @param dblTime The Time Instant
 	 * @param dblValue The Random Variable Value
+	 * @param dblCumulativeHazardIntegral The Event Occurrence Cumulative Hazard Integral
 	 * @param bTerminationReached TRUE - Termination Reached
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -70,11 +72,14 @@ public class R1Snap {
 	public R1Snap (
 		final double dblTime,
 		final double dblValue,
+		final double dblCumulativeHazardIntegral,
 		final boolean bTerminationReached)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
+			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCumulativeHazardIntegral =
+					dblCumulativeHazardIntegral))
 			throw new java.lang.Exception ("R1Snap Constructor => Invalid Inputs");
 
 		_bTerminationReached = bTerminationReached;
@@ -111,5 +116,16 @@ public class R1Snap {
 	public double value()
 	{
 		return _dblValue;
+	}
+
+	/**
+	 * Retrieve the Event Occurrence Cumulative Hazard Integral
+	 * 
+	 * @return The Event Occurrence Cumulative Hazard Integral
+	 */
+
+	public final double cumulativeHazardIntegral()
+	{
+		return _dblCumulativeHazardIntegral;
 	}
 }
