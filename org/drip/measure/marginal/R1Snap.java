@@ -47,7 +47,8 @@ package org.drip.measure.marginal;
  */
 
 /**
- * R1Snap holds the Snapshot Values of the R^1 Realized Random Variable and Time.
+ * R1Snap holds the Snapshot Values of the Realized R^1 Variable - its Value, whether it has terminated, and
+ * 	the Cumulative Hazard Integral - and Time.
  *
  * @author Lakshmi Krishnamurthy
  */

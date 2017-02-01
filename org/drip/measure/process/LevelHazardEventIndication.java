@@ -54,8 +54,8 @@ package org.drip.measure.process;
 
 public class LevelHazardEventIndication {
 	private boolean _bOccurred = false;
-	private double _dblMagnitude = java.lang.Double.NaN;
 	private double _dblHazardRate = java.lang.Double.NaN;
+	private double _dblTerminalValue = java.lang.Double.NaN;
 	private double _dblHazardIntegral = java.lang.Double.NaN;
 
 	/**
@@ -64,7 +64,7 @@ public class LevelHazardEventIndication {
 	 * @param bOccurred TRUE - The Event Occurred
 	 * @param dblHazardRate The Hazard Rate
 	 * @param dblHazardIntegral The Level Hazard Integral
-	 * @param dblMagnitude The Event Magnitude
+	 * @param dblTerminalValue The Event Terminal Value
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -73,12 +73,12 @@ public class LevelHazardEventIndication {
 		final boolean bOccurred,
 		final double dblHazardRate,
 		final double dblHazardIntegral,
-		final double dblMagnitude)
+		final double dblTerminalValue)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblHazardIntegral = dblHazardIntegral) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblMagnitude = dblMagnitude))
+				!org.drip.quant.common.NumberUtil.IsValid (_dblTerminalValue = dblTerminalValue))
 			throw new java.lang.Exception ("LevelHazardEventIndication Constructor => Invalid Inputs");
 
 		_bOccurred = bOccurred;
@@ -118,13 +118,13 @@ public class LevelHazardEventIndication {
 	}
 
 	/**
-	 * Retrieve the Event Magnitude
+	 * Retrieve the Terminal Event Value
 	 * 
-	 * @return The Event Magnitude
+	 * @return The Terminal Event Value
 	 */
 
-	public final double magnitude()
+	public final double terminalValue()
 	{
-		return _dblMagnitude;
+		return _dblTerminalValue;
 	}
 }

@@ -74,10 +74,10 @@ public class HazardEventIndicationEvaluator extends org.drip.measure.process.Eve
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.marginal.R1Snap r1s)
 					throws java.lang.Exception
 				{
-					if (null == ms)
+					if (null == r1s)
 						throw new java.lang.Exception
 							("HazardEventIndicationEvaluator::DensityLDEV::value => Invalid Inputs");
 
@@ -88,10 +88,10 @@ public class HazardEventIndicationEvaluator extends org.drip.measure.process.Eve
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.marginal.R1Snap r1s)
 					throws java.lang.Exception
 				{
-					if (null == ms)
+					if (null == r1s)
 						throw new java.lang.Exception
 							("HazardEventIndicationEvaluator::MagnitudeLDEV::value => Invalid Inputs");
 

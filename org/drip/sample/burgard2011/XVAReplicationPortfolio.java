@@ -76,7 +76,7 @@ import org.drip.xva.pde.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BilateralXVAReplicationPortfolio {
+public class XVAReplicationPortfolio {
 
 	private static final EdgeEvolutionTrajectory RunStep (
 		final TrajectoryEvolutionScheme tes,

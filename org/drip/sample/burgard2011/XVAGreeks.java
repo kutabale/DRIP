@@ -55,8 +55,8 @@ import org.drip.xva.pde.*;
  */
 
 /**
- * BilateralXVAExplain demonstrates the Trajectory Attribtuion of the Bank and Counter-Party Default Based
- *  Derivative Evolution of the Dynamic XVA Replication Porfolio. The References are:
+ * XVAGreeks demonstrates the Bank and Counter-Party Default Based Derivative Evolution of the XVA Greeks and
+ *  their Components. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -76,7 +76,7 @@ import org.drip.xva.pde.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BilateralXVAExplain {
+public class XVAGreeks {
 
 	private static final EdgeEvolutionTrajectory RunStep (
 		final TrajectoryEvolutionScheme tes,
@@ -172,47 +172,37 @@ public class BilateralXVAExplain {
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.counterPartyDefault
 			(dblDerivativeXVAValueFinish));
 
+		System.out.println ("\t||" +
+			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAValueFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAValueDeltaFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblDerivativeXVAValueGammaFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblGainOnBankDefaultFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblGainOnCounterPartyDefaultFinish, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVAStochasticGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVACollateralGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVAFundingGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVABankDefaultGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (lbkr.derivativeXVACounterPartyDefaultGrowth(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblThetaAssetNumeraireDown, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblTheta, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblThetaAssetNumeraireUp, 1, 6, 1.) + " ||"
+		);
+
 		org.drip.xva.derivative.LevelCashAccount lca = tes.rebalanceCash (
 			eetStart,
 			usFinish
 		).cashAccount();
 
-		double dblCashAccountAccumulationFinish = lca.accumulation();
-
-		double dblAssetPriceFinish = usFinish.assetNumeraire().finish();
-
-		double dblZeroCouponBankPriceFinish = usFinish.zeroCouponBankBondNumeraire().finish();
-
-		double dblZeroCouponCounterPartyPriceFinish = usFinish.zeroCouponCounterPartyBondNumeraire().finish();
-
-		EdgeReplicationPortfolio erpFinish = new EdgeReplicationPortfolio (
-			-1. * dblDerivativeXVAValueDeltaFinish,
-			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
-			dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
-			erpStart.cashAccount() + dblCashAccountAccumulationFinish
-		);
-
-		System.out.println ("\t||" +
-			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblDerivativeXVAValueFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblAssetPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (usFinish.zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.counterPartyBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.cashAccount(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.assetAccumulation(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.bankAccumulation(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.counterPartyAccumulation(), 1, 6, 1.) + " ||"
-		);
-
 		return new EdgeEvolutionTrajectory (
 			dblTimeStart - dblTimeWidth,
 			usFinish,
-			erpFinish,
+			new EdgeReplicationPortfolio (
+				-1. * dblDerivativeXVAValueDeltaFinish,
+				dblGainOnBankDefaultFinish / usFinish.zeroCouponBankBondNumeraire().finish(),
+				dblGainOnCounterPartyDefaultFinish / usFinish.zeroCouponCounterPartyBondNumeraire().finish(),
+				erpStart.cashAccount() + lca.accumulation()
+			),
 			new EdgeAssetGreek (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
@@ -246,9 +236,9 @@ public class BilateralXVAExplain {
 		double dblAssetVolatility = 0.15;
 		double dblAssetRepo = 0.03;
 		double dblAssetDividend = 0.02;
-		double dblZeroCouponCollateralBondDrift = 0.01;
-		double dblZeroCouponCollateralBondVolatility = 0.05;
-		double dblZeroCouponCollateralBondRepo = 0.005;
+		double dblCreditRiskFreeDrift = 0.01;
+		double dblCreditRiskFreeVolatility = 0.05;
+		double dblCreditRiskFreeRepo = 0.005;
 		double dblZeroCouponBankBondDrift = 0.03;
 		double dblZeroCouponBankBondVolatility = 0.10;
 		double dblZeroCouponBankBondRepo = 0.028;
@@ -275,9 +265,9 @@ public class BilateralXVAExplain {
 			null
 		);
 
-		R1Evolver meZeroCouponCollateralBond = R1EvolverLogarithmic.Standard (
-			dblZeroCouponCollateralBondDrift,
-			dblZeroCouponCollateralBondVolatility,
+		R1Evolver meZeroCouponCreditRiskFreeBond = R1EvolverLogarithmic.Standard (
+			dblCreditRiskFreeDrift,
+			dblCreditRiskFreeVolatility,
 			null
 		);
 
@@ -300,8 +290,8 @@ public class BilateralXVAExplain {
 				dblAssetDividend
 			),
 			new Tradeable (
-				meZeroCouponCollateralBond,
-				dblZeroCouponCollateralBondRepo
+				meZeroCouponCreditRiskFreeBond,
+				dblCreditRiskFreeRepo
 			),
 			new Tradeable (
 				meZeroCouponBankBond,
@@ -327,37 +317,30 @@ public class BilateralXVAExplain {
 		);
 
 		SpreadIntensity si = new SpreadIntensity (
-			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
-			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecovery,
-			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery
+			dblZeroCouponBankBondDrift - dblCreditRiskFreeDrift,
+			(dblZeroCouponBankBondDrift - dblCreditRiskFreeDrift) / dblBankRecovery,
+			(dblZeroCouponCounterPartyBondDrift - dblCreditRiskFreeDrift) / dblCounterPartyRecovery
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
 
-		EdgeAssetGreek erugInitial = new EdgeAssetGreek (
+		EdgeAssetGreek erug = new EdgeAssetGreek (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
 			dblDerivativeValue
 		);
 
-		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue - maco.bankDefault (dblDerivativeXVAValue));
+		double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - maco.bankDefault (dblDerivativeXVAValue));
 
-		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue));
-
-		EdgeReplicationPortfolio erpInitial = new EdgeReplicationPortfolio (
-			1.,
-			dblGainOnBankDefaultInitial,
-			dblGainOnCounterPartyDefaultInitial,
-			0.
-		);
+		double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue));
 
 		System.out.println();
 
 		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                                            BILATERAL XVA EVOLVER - BURGARD & KJAER (2011) REPLICATION PORTFOLIO EVOLUTION                                             ||");
+		System.out.println ("\t||                                                    BILATERAL XVA EVOLVER - BURGARD & KJAER (2011) GREEKS EVOLUTION                                                    ||");
 
 		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
@@ -367,43 +350,43 @@ public class BilateralXVAExplain {
 
 		System.out.println ("\t||            - Derivative XVA Value                                                                                                                                     ||");
 
-		System.out.println ("\t||            - Asset Price Realization                                                                                                                                  ||");
+		System.out.println ("\t||            - Derivative XVA Value Delta                                                                                                                               ||");
 
-		System.out.println ("\t||            - Realization of the Zero Coupon Bank Bond Price                                                                                                           ||");
+		System.out.println ("\t||            - Derivative XVA Value Gamma                                                                                                                               ||");
 
-		System.out.println ("\t||            - Realization of the Zero Coupon Counter Party Bond Price                                                                                                  ||");
+		System.out.println ("\t||            - Gain at Bank Default                                                                                                                                     ||");
 
-		System.out.println ("\t||            - Realization of the Zero Coupon Collateral Bond Price                                                                                                     ||");
+		System.out.println ("\t||            - Gain at Counter Party Default                                                                                                                            ||");
 
-		System.out.println ("\t||            - Derivative XVA Asset Replication Units                                                                                                                   ||");
+		System.out.println ("\t||            - Derivative XVA Asset Growth Theta                                                                                                                        ||");
 
-		System.out.println ("\t||            - Derivative XVA Value Bank Bond Replication Units                                                                                                         ||");
+		System.out.println ("\t||            - Derivative XVA Collateral Numeraire Growth Theta                                                                                                         ||");
 
-		System.out.println ("\t||            - Derivative XVA Value Counter Party Bond Replication Units                                                                                                ||");
+		System.out.println ("\t||            - Derivative XVA Bank Funding Growth Theta                                                                                                                 ||");
 
-		System.out.println ("\t||            - Derivative XVA Value Cash Account Replication Units                                                                                                      ||");
+		System.out.println ("\t||            - Derivative XVA Bank Default Growth Theta                                                                                                                 ||");
 
-		System.out.println ("\t||            - Derivative Cash Account Accumulation Component                                                                                                           ||");
+		System.out.println ("\t||            - Derivative XVA Counter Party Default Growth Theta                                                                                                        ||");
 
-		System.out.println ("\t||            - Asset Cash Account Accumulation Component                                                                                                                ||");
+		System.out.println ("\t||            - Derivative XVA Theta Based on Asset Numeraire Down                                                                                                       ||");
 
-		System.out.println ("\t||            - Bank Cash Account Accumulation Component                                                                                                                 ||");
+		System.out.println ("\t||            - Derivative XVA Theta                                                                                                                                     ||");
 
-		System.out.println ("\t||            - Counter Party Cash Account Accumulation Component                                                                                                        ||");
+		System.out.println ("\t||            - Derivative XVA Theta Based on Asset Numeraire Up                                                                                                         ||");
 
 		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erugInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.counterPartyBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.cashAccount(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erug.derivativeXVAValue(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erug.derivativeXVAValueDelta(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erug.derivativeXVAValueGamma(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblGainOnBankDefault, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (dblGainOnCounterPartyDefault, 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
@@ -422,7 +405,7 @@ public class BilateralXVAExplain {
 					),
 					dblTimeWidth
 				),
-				meZeroCouponCollateralBond.weinerIncrement (
+				meZeroCouponCreditRiskFreeBond.weinerIncrement (
 					new R1Snap (
 						dblTime,
 						1.,
@@ -456,9 +439,9 @@ public class BilateralXVAExplain {
 				0.,
 				0.
 			),
-			erugInitial,
-			dblGainOnBankDefaultInitial,
-			dblGainOnCounterPartyDefaultInitial
+			erug,
+			dblGainOnBankDefault,
+			dblGainOnCounterPartyDefault
 		);
 
 		for (dblTime -= dblTimeWidth; dblTime >= 0.; dblTime -= dblTimeWidth)

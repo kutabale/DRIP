@@ -54,7 +54,7 @@ package org.drip.measure.marginal;
  */
 
 public class R1Evolver {
-	private org.drip.measure.process.EventIndicationEvaluator _ei = null;
+	private org.drip.measure.process.EventIndicationEvaluator _eie = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDrift = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
@@ -63,7 +63,7 @@ public class R1Evolver {
 	 * 
 	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
 	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process Continuous Component
-	 * @param ei The Point Event Indicator Function Instance
+	 * @param eie The Point Event Indicator Function Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -71,13 +71,13 @@ public class R1Evolver {
 	public R1Evolver (
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
-		final org.drip.measure.process.EventIndicationEvaluator ei)
+		final org.drip.measure.process.EventIndicationEvaluator eie)
 		throws java.lang.Exception
 	{
-		_ei = ei;
+		_eie = eie;
 		_ldevVolatility = ldevVolatility;
 
-		if (null == (_ldevDrift = ldevDrift) || (null == _ldevVolatility && null == _ei))
+		if (null == (_ldevDrift = ldevDrift) || (null == _ldevVolatility && null == _eie))
 			throw new java.lang.Exception ("R1Evolver Constructor => Invalid Inputs");
 	}
 
@@ -109,9 +109,9 @@ public class R1Evolver {
 	 * @return The Point Event Indicator Instance
 	 */
 
-	public org.drip.measure.process.EventIndicationEvaluator eventIndicatorFunction()
+	public org.drip.measure.process.EventIndicationEvaluator eventIndicationEvaluator()
 	{
-		return _ei;
+		return _eie;
 	}
 
 	/**
@@ -143,26 +143,26 @@ public class R1Evolver {
 
 			double dblContinuousRandomUnitRealization = r1ur.continuous();
 
-			if (null != _ei) {
+			if (null != _eie) {
 				double dblPreviousValue = r1s.value();
 
-				double dblEventDensity = ((org.drip.measure.process.HazardEventIndicationEvaluator)
-					_ei).hazardRate();
+				double dblHazardRate = ((org.drip.measure.process.HazardEventIndicationEvaluator)
+					_eie).hazardRate();
 
-				double dblEventMagnitude = _ei.magnitudeLDEV().value (r1s);
+				double dblEventMagnitude = _eie.magnitudeLDEV().value (r1s);
 
-				double dblLevelHazardIntegral = dblEventDensity * dblTimeIncrement;
+				double dblLevelHazardIntegral = dblHazardRate * dblTimeIncrement;
 
 				boolean bEventOccurred = java.lang.Math.exp (-1. * (r1s.cumulativeHazardIntegral() +
 					dblLevelHazardIntegral)) <= dblJumpRandomUnitRealization;
 
-				if (bEventOccurred && _ei.isJumpTerminal())
+				if (bEventOccurred && _eie.isJumpTerminal())
 					return new org.drip.measure.marginal.R1LevelRealization (dblPreviousValue, 0., 0., 0.,
-						new org.drip.measure.process.LevelHazardEventIndication (bEventOccurred, dblEventDensity,
-							dblLevelHazardIntegral, dblEventMagnitude - dblPreviousValue),
+						new org.drip.measure.process.LevelHazardEventIndication (bEventOccurred,
+							dblHazardRate, dblLevelHazardIntegral, dblEventMagnitude - dblPreviousValue),
 								dblJumpRandomUnitRealization);
 
-				lei = new org.drip.measure.process.LevelHazardEventIndication (bEventOccurred, dblEventDensity,
+				lei = new org.drip.measure.process.LevelHazardEventIndication (bEventOccurred, dblHazardRate,
 					dblLevelHazardIntegral, bEventOccurred ? dblEventMagnitude : 0.);
 			}
 
@@ -206,15 +206,16 @@ public class R1Evolver {
 			if (null == (aLR[i] = increment (r1sLoop, aR1UR[i], dblTimeIncrement))) return null;
 
 			try {
-				org.drip.measure.process.LevelHazardEventIndication lei = aLR[i].jumpStochasticEventIndicator();
+				org.drip.measure.process.LevelHazardEventIndication lhei =
+					aLR[i].jumpStochasticEventIndicator();
 
 				boolean bJumpOccurred = false;
 				double dblHazardIntegral = 0.;
 
-				if (null != lei) {
-					bJumpOccurred = lei.occurred();
+				if (null != lhei) {
+					bJumpOccurred = lhei.occurred();
 
-					dblHazardIntegral = lei.hazardIntegral();
+					dblHazardIntegral = lhei.hazardIntegral();
 				}
 
 				r1sLoop = new org.drip.measure.marginal.R1Snap (r1sLoop.time() + dblTimeIncrement,
@@ -227,6 +228,61 @@ public class R1Evolver {
 		}
 
 		return aLR;
+	}
+
+	/**
+	 * Generate the Array of R^1 Snaps from the specified Random Variate Array
+	 * 
+	 * @param r1s The Random Variate Marginal Snap
+	 * @param r1ur The R^1 Unit Realization
+	 * @param dblTimeIncrement The Time Increment Evolution Unit
+	 * 
+	 * @return The Array of R^1 Snaps
+	 */
+
+	public org.drip.measure.marginal.R1Snap[] snapSequence (
+		final org.drip.measure.marginal.R1Snap r1s,
+		final org.drip.measure.marginal.R1UnitRealization[] aR1UR,
+		final double dblTimeIncrement)
+	{
+		if (null == aR1UR) return null;
+
+		int iNumTimeStep = aR1UR.length;
+		org.drip.measure.marginal.R1Snap r1sPrev = r1s;
+		org.drip.measure.marginal.R1Snap[] aR1S = 0 == iNumTimeStep ? null : new
+			org.drip.measure.marginal.R1Snap[iNumTimeStep];
+
+		if (0 == iNumTimeStep) return null;
+
+		for (int i = 0; i < iNumTimeStep; ++i) {
+			org.drip.measure.marginal.R1LevelRealization r1LR = increment (r1sPrev, aR1UR[i],
+				dblTimeIncrement);
+
+			if (null == r1LR) return null;
+
+			try {
+				org.drip.measure.process.LevelHazardEventIndication lhei =
+					r1LR.jumpStochasticEventIndicator();
+
+				boolean bJumpOccurred = false;
+				double dblHazardIntegral = 0.;
+
+				if (null != lhei) {
+					bJumpOccurred = lhei.occurred();
+
+					dblHazardIntegral = lhei.hazardIntegral();
+				}
+
+				r1sPrev = aR1S[i] = new org.drip.measure.marginal.R1Snap (r1sPrev.time() + dblTimeIncrement,
+					r1LR.finish(), r1sPrev.cumulativeHazardIntegral() + dblHazardIntegral, bJumpOccurred);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return aR1S;
 	}
 
 	/**

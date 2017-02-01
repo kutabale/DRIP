@@ -75,7 +75,7 @@ public class R1LevelRealization {
 	private double _dblDeterministic = java.lang.Double.NaN;
 	private double _dblContinuousWander = java.lang.Double.NaN;
 	private double _dblContinuousStochastic = java.lang.Double.NaN;
-	private org.drip.measure.process.LevelHazardEventIndication _eiJumpStochastic = null;
+	private org.drip.measure.process.LevelHazardEventIndication _lheiJumpStochastic = null;
 
 	/**
 	 * R1LevelRealization Constructor
@@ -84,7 +84,7 @@ public class R1LevelRealization {
 	 * @param dblDeterministic The Deterministic Increment Component
 	 * @param dblContinuousStochastic The Continuous Stochastic Increment Component
 	 * @param dblContinuousWander The Continuous Random Wander Realization
-	 * @param eiJumpStochastic The Jump Stochastic Event Indicator
+	 * @param lheiJumpStochastic The Jump Stochastic Event Indicator
 	 * @param dblJumpWander The Jump Random Wander Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -95,7 +95,7 @@ public class R1LevelRealization {
 		final double dblDeterministic,
 		final double dblContinuousStochastic,
 		final double dblContinuousWander,
-		final org.drip.measure.process.LevelHazardEventIndication eiJumpStochastic,
+		final org.drip.measure.process.LevelHazardEventIndication lheiJumpStochastic,
 		final double dblJumpWander)
 		throws java.lang.Exception
 	{
@@ -107,7 +107,7 @@ public class R1LevelRealization {
 							!org.drip.quant.common.NumberUtil.IsValid (_dblJumpWander = dblJumpWander))
 			throw new java.lang.Exception ("R1LevelRealization Constructor => Invalid Inputs");
 
-		_eiJumpStochastic = eiJumpStochastic;
+		_lheiJumpStochastic = lheiJumpStochastic;
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class R1LevelRealization {
 
 	public double jumpStochastic()
 	{
-		return null == _eiJumpStochastic ? 0. : _eiJumpStochastic.magnitude();
+		return null == _lheiJumpStochastic ? 0. : _lheiJumpStochastic.terminalValue();
 	}
 
 	/**
@@ -206,6 +206,6 @@ public class R1LevelRealization {
 
 	public org.drip.measure.process.LevelHazardEventIndication jumpStochasticEventIndicator()
 	{
-		return _eiJumpStochastic;
+		return _lheiJumpStochastic;
 	}
 }

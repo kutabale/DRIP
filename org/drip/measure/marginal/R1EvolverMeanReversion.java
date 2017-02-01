@@ -76,21 +76,21 @@ public class R1EvolverMeanReversion extends org.drip.measure.marginal.R1Evolver 
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.marginal.R1Snap r1s)
 					throws java.lang.Exception
 				{
-					if (null == ms)
+					if (null == r1s)
 						throw new java.lang.Exception
 							("R1EvolverMeanReversion::DriftLDEV::value => Invalid Inputs");
 
-					return -1. * dblMeanReversionRate * (dblMeanReversionLevel - ms.value());
+					return -1. * dblMeanReversionRate * (dblMeanReversionLevel - r1s.value());
 				}
 			};
 
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.marginal.R1Snap r1s)
 					throws java.lang.Exception
 				{
 					return dblVolatility;

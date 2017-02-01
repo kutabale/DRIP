@@ -94,24 +94,24 @@ public class R1EvolverOrnsteinUhlenbeck extends org.drip.measure.marginal.R1Evol
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.marginal.R1Snap r1s)
 					throws java.lang.Exception
 				{
-					if (null == ms)
+					if (null == r1s)
 						throw new java.lang.Exception
 							("R1EvolverOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
 
-					return -1. * ms.value() / dblRelaxationTime;
+					return -1. * r1s.value() / dblRelaxationTime;
 				}
 			};
 
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.marginal.R1Snap r1s)
 					throws java.lang.Exception
 				{
-					if (null == ms)
+					if (null == r1s)
 						throw new java.lang.Exception
 							("R1EvolverOrnsteinUhlenbeck::VolatilityLDEV::value => Invalid Inputs");
 

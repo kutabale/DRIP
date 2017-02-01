@@ -66,6 +66,6 @@ public interface LocalDeterministicEvolutionFunction {
 	 */
 
 	public abstract double value (
-		final org.drip.measure.marginal.R1Snap ms)
+		final org.drip.measure.marginal.R1Snap r1s)
 		throws java.lang.Exception;
 }

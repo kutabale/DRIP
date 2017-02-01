@@ -1,5 +1,5 @@
 
-package org.drip.sample.burgard2011;
+package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
@@ -53,7 +53,7 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * JumpNumeraireEvolution demonstrates the Jump Evolution of a Default-able Asset. The References are:
+ * R1Jump demonstrates the Jump Evolution of a Default-able Asset. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -73,7 +73,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpNumeraireEvolution {
+public class R1Jump {
 
 	public static final void main (
 		final String[] astrArgs)

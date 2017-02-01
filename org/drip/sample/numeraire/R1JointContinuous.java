@@ -1,5 +1,5 @@
 
-package org.drip.sample.burgard2011;
+package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
@@ -53,9 +53,9 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * ContinuousNumeraireEvolution demonstrates the Joint Evolution of the Continuous Asset, Collateral, Bank,
- *  and Counter-Party Numeraires involved in the Dynamic XVA Replication Portfolio of the Burgard and Kjaer
- *  (2011) Methodology. The References are:
+ * R1JointContinuous demonstrates the Joint Evolution of R^1 Variates - the Continuous Asset, the Collateral,
+ *  the Bank, and the Counter-Party Numeraires involved in the Dynamic XVA Replication Portfolio of the
+ *  Burgard and Kjaer (2011) Methodology. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -75,7 +75,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ContinuousNumeraireEvolution {
+public class R1JointContinuous {
 
 	private static final double[][] NumeraireSequence (
 		final int iCount,
