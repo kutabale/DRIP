@@ -91,7 +91,7 @@ public class R1Jump {
 
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
-		R1Evolver meAsset = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility,
 			HazardEventIndicationEvaluator.Standard (

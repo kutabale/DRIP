@@ -69,34 +69,35 @@ package org.drip.xva.definition;
  */
 
 public class UniverseSnapshot {
-	private org.drip.measure.marginal.R1LevelRealization _lrAssetNumeraire = null;
-	private org.drip.measure.marginal.R1LevelRealization _lrZeroCouponBondBankNumeraire = null;
-	private org.drip.measure.marginal.R1LevelRealization _lrZeroCouponBondCollateralNumeraire = null;
-	private org.drip.measure.marginal.R1LevelRealization _lrZeroCouponBondCounterPartyNumeraire = null;
+	private org.drip.measure.marginal.R1LevelRealization _r1lrAssetNumeraire = null;
+	private org.drip.measure.marginal.R1LevelRealization _r1lrZeroCouponBondBankNumeraire = null;
+	private org.drip.measure.marginal.R1LevelRealization _r1lrZeroCouponBondCollateralNumeraire = null;
+	private org.drip.measure.marginal.R1LevelRealization _r1lrZeroCouponBondCounterPartyNumeraire = null;
 
 	/**
 	 * UniverseSnapshot Constructor
 	 * 
-	 * @param lrAssetNumeraire The Asset Numeraire Level Realization
-	 * @param lrZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level Realization
-	 * @param lrZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
-	 * @param lrZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
+	 * @param r1lrAssetNumeraire The Asset Numeraire Level Realization
+	 * @param r1lrZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
+	 * 		Realization
+	 * @param r1lrZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
+	 * @param r1lrZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
 	 * 		Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public UniverseSnapshot (
-		final org.drip.measure.marginal.R1LevelRealization lrAssetNumeraire,
-		final org.drip.measure.marginal.R1LevelRealization lrZeroCouponBondCollateralNumeraire,
-		final org.drip.measure.marginal.R1LevelRealization lrZeroCouponBondBankNumeraire,
-		final org.drip.measure.marginal.R1LevelRealization lrZeroCouponBondCounterPartyNumeraire)
+		final org.drip.measure.marginal.R1LevelRealization r1lrAssetNumeraire,
+		final org.drip.measure.marginal.R1LevelRealization r1lrZeroCouponBondCollateralNumeraire,
+		final org.drip.measure.marginal.R1LevelRealization r1lrZeroCouponBondBankNumeraire,
+		final org.drip.measure.marginal.R1LevelRealization r1lrZeroCouponBondCounterPartyNumeraire)
 		throws java.lang.Exception
 	{
-		if (null == (_lrAssetNumeraire = lrAssetNumeraire) || null == (_lrZeroCouponBondCollateralNumeraire =
-			lrZeroCouponBondCollateralNumeraire) || null == (_lrZeroCouponBondBankNumeraire =
-				lrZeroCouponBondBankNumeraire) || null == (_lrZeroCouponBondCounterPartyNumeraire =
-					lrZeroCouponBondCounterPartyNumeraire))
+		if (null == (_r1lrAssetNumeraire = r1lrAssetNumeraire) || null ==
+			(_r1lrZeroCouponBondCollateralNumeraire = r1lrZeroCouponBondCollateralNumeraire) || null ==
+				(_r1lrZeroCouponBondBankNumeraire = r1lrZeroCouponBondBankNumeraire) || null ==
+					(_r1lrZeroCouponBondCounterPartyNumeraire = r1lrZeroCouponBondCounterPartyNumeraire))
 			throw new java.lang.Exception ("UniverseSnapshot Constructor => Invalid Inputs");
 	}
 
@@ -108,7 +109,7 @@ public class UniverseSnapshot {
 
 	public org.drip.measure.marginal.R1LevelRealization assetNumeraire()
 	{
-		return _lrAssetNumeraire;
+		return _r1lrAssetNumeraire;
 	}
 
 	/**
@@ -119,7 +120,7 @@ public class UniverseSnapshot {
 
 	public org.drip.measure.marginal.R1LevelRealization zeroCouponCollateralBondNumeraire()
 	{
-		return _lrZeroCouponBondCollateralNumeraire;
+		return _r1lrZeroCouponBondCollateralNumeraire;
 	}
 
 	/**
@@ -130,7 +131,7 @@ public class UniverseSnapshot {
 
 	public org.drip.measure.marginal.R1LevelRealization zeroCouponBankBondNumeraire()
 	{
-		return _lrZeroCouponBondBankNumeraire;
+		return _r1lrZeroCouponBondBankNumeraire;
 	}
 
 	/**
@@ -141,6 +142,6 @@ public class UniverseSnapshot {
 
 	public org.drip.measure.marginal.R1LevelRealization zeroCouponCounterPartyBondNumeraire()
 	{
-		return _lrZeroCouponBondCounterPartyNumeraire;
+		return _r1lrZeroCouponBondCounterPartyNumeraire;
 	}
 }

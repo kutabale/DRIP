@@ -70,15 +70,15 @@ package org.drip.xva.definition;
  */
 
 public class TwoWayRiskyUniverse {
-	private org.drip.xva.definition.Tradeable _taZeroCouponCollateralBond = null;
-	private org.drip.xva.definition.Tradeable _taReferenceUnderlier = null;
+	private org.drip.xva.definition.Tradeable _taAsset = null;
 	private org.drip.xva.definition.Tradeable _taZeroCouponBankBond = null;
+	private org.drip.xva.definition.Tradeable _taZeroCouponCollateralBond = null;
 	private org.drip.xva.definition.Tradeable _taZeroCouponCounterPartyBond = null;
 
 	/**
 	 * TwoWayRiskyUniverse Constructor
 	 * 
-	 * @param taReferenceUnderlier The Reference Underlier Trade-able Asset
+	 * @param taAsset The Trade-able Asset
 	 * @param taZeroCouponCollateralBond The Zero Coupon Collateral Bond
 	 * @param taZeroCouponBankBond The Zero Coupon Credit Risky Bank Bond
 	 * @param taZeroCouponCounterPartyBond The Zero Coupon Credit Risky Counter Party Bond
@@ -87,27 +87,27 @@ public class TwoWayRiskyUniverse {
 	 */
 
 	public TwoWayRiskyUniverse (
-		final org.drip.xva.definition.Tradeable taReferenceUnderlier,
+		final org.drip.xva.definition.Tradeable taAsset,
 		final org.drip.xva.definition.Tradeable taZeroCouponCollateralBond,
 		final org.drip.xva.definition.Tradeable taZeroCouponBankBond,
 		final org.drip.xva.definition.Tradeable taZeroCouponCounterPartyBond)
 		throws java.lang.Exception
 	{
-		if (null == (_taReferenceUnderlier = taReferenceUnderlier) || null == (_taZeroCouponCollateralBond =
+		if (null == (_taAsset = taAsset) || null == (_taZeroCouponCollateralBond =
 			taZeroCouponCollateralBond) || null == (_taZeroCouponBankBond = taZeroCouponBankBond) || null ==
 				(_taZeroCouponCounterPartyBond = taZeroCouponCounterPartyBond))
 			throw new java.lang.Exception ("TwoWayRiskyUniverse Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Reference Underlier
+	 * Retrieve the Asset
 	 * 
-	 * @return The Reference Underlier
+	 * @return The Asset
 	 */
 
-	public org.drip.xva.definition.Tradeable referenceUnderlier()
+	public org.drip.xva.definition.Tradeable asset()
 	{
-		return _taReferenceUnderlier;
+		return _taAsset;
 	}
 
 	/**

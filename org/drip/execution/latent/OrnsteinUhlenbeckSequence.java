@@ -87,7 +87,7 @@ public class OrnsteinUhlenbeckSequence {
 	 */
 
 	public static final OrnsteinUhlenbeckSequence Systemic (
-		final org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck oup1D,
+		final org.drip.measure.marginal.ContinuousEvolverOrnsteinUhlenbeck oup1D,
 		final double dblGenerationInterval,
 		final double dblInitialMarketState,
 		final int iCount)

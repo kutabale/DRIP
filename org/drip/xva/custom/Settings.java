@@ -99,8 +99,8 @@ public class Settings {
 		final double dblSensitivityShiftFactor)
 		throws java.lang.Exception
 	{
-		if (CLOSEOUT_GREGORY_LI_TANG != (_iCloseOutScheme = iCloseOutScheme) && CLOSEOUT_BURGARD_KJAER !=
-			_iCloseOutScheme || !org.drip.quant.common.NumberUtil.IsValid (_dblSensitivityShiftFactor =
+		if ((CLOSEOUT_GREGORY_LI_TANG != (_iCloseOutScheme = iCloseOutScheme) && CLOSEOUT_BURGARD_KJAER !=
+			_iCloseOutScheme) || !org.drip.quant.common.NumberUtil.IsValid (_dblSensitivityShiftFactor =
 				dblSensitivityShiftFactor))
 			throw new java.lang.Exception ("Settings Constructor => Invalid Inputs");
 	}

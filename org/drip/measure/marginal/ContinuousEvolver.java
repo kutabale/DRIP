@@ -47,38 +47,40 @@ package org.drip.measure.marginal;
  */
 
 /**
- * R1Evolver implements the Functionality that guides the Single Factor R^1 Random Process Variable
- *  Evolution.
+ * ContinuousEvolver implements the Functionality that guides the Single Factor R^1 Continuous Random Process
+ *  Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class R1Evolver {
-	private org.drip.measure.process.EventIndicationEvaluator _eie = null;
+public class ContinuousEvolver {
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDrift = null;
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
+	protected org.drip.measure.process.LevelHazardEventIndication hazardEventIndication (
+		final org.drip.measure.marginal.R1Snap r1s,
+		final org.drip.measure.marginal.R1UnitRealization r1ur,
+		final double dblTimeIncrement)
+	{
+		return null;
+	}
+
 	/**
-	 * R1Evolver Constructor
+	 * ContinuousEvolver Constructor
 	 * 
 	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
 	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process Continuous Component
-	 * @param eie The Point Event Indicator Function Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public R1Evolver (
+	public ContinuousEvolver (
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
-		final org.drip.measure.process.EventIndicationEvaluator eie)
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
-		_eie = eie;
-		_ldevVolatility = ldevVolatility;
-
-		if (null == (_ldevDrift = ldevDrift) || (null == _ldevVolatility && null == _eie))
-			throw new java.lang.Exception ("R1Evolver Constructor => Invalid Inputs");
+		if (null == (_ldevDrift = ldevDrift) || null == (_ldevVolatility = ldevVolatility))
+			throw new java.lang.Exception ("ContinuousEvolver Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -104,17 +106,6 @@ public class R1Evolver {
 	}
 
 	/**
-	 * Retrieve the Point Event Indicator Instance
-	 * 
-	 * @return The Point Event Indicator Instance
-	 */
-
-	public org.drip.measure.process.EventIndicationEvaluator eventIndicationEvaluator()
-	{
-		return _eie;
-	}
-
-	/**
 	 * Generate the Adjacent Increment from the specified Random Variate
 	 * 
 	 * @param r1s The Random Variate Marginal Snap
@@ -137,40 +128,13 @@ public class R1Evolver {
 				return new org.drip.measure.marginal.R1LevelRealization (r1s.value(), 0., 0., 0., new
 					org.drip.measure.process.LevelHazardEventIndication (true, 0., 0., 0.), 0.);
 
-			double dblJumpRandomUnitRealization = r1ur.jump();
-
-			org.drip.measure.process.LevelHazardEventIndication lei = null;
-
 			double dblContinuousRandomUnitRealization = r1ur.continuous();
-
-			if (null != _eie) {
-				double dblPreviousValue = r1s.value();
-
-				double dblHazardRate = ((org.drip.measure.process.HazardEventIndicationEvaluator)
-					_eie).hazardRate();
-
-				double dblEventMagnitude = _eie.magnitudeLDEV().value (r1s);
-
-				double dblLevelHazardIntegral = dblHazardRate * dblTimeIncrement;
-
-				boolean bEventOccurred = java.lang.Math.exp (-1. * (r1s.cumulativeHazardIntegral() +
-					dblLevelHazardIntegral)) <= dblJumpRandomUnitRealization;
-
-				if (bEventOccurred && _eie.isJumpTerminal())
-					return new org.drip.measure.marginal.R1LevelRealization (dblPreviousValue, 0., 0., 0.,
-						new org.drip.measure.process.LevelHazardEventIndication (bEventOccurred,
-							dblHazardRate, dblLevelHazardIntegral, dblEventMagnitude - dblPreviousValue),
-								dblJumpRandomUnitRealization);
-
-				lei = new org.drip.measure.process.LevelHazardEventIndication (bEventOccurred, dblHazardRate,
-					dblLevelHazardIntegral, bEventOccurred ? dblEventMagnitude : 0.);
-			}
 
 			return new org.drip.measure.marginal.R1LevelRealization (r1s.value(), _ldevDrift.value (r1s) *
 				dblTimeIncrement, null == _ldevVolatility ? 0. : _ldevVolatility.value (r1s) *
 					dblContinuousRandomUnitRealization * java.lang.Math.sqrt (java.lang.Math.abs
-						(dblTimeIncrement)), dblContinuousRandomUnitRealization, lei,
-							dblJumpRandomUnitRealization);
+						(dblTimeIncrement)), dblContinuousRandomUnitRealization, hazardEventIndication (r1s,
+							r1ur, dblTimeIncrement), r1ur.jump());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

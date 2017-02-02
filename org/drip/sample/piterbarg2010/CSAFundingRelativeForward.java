@@ -116,13 +116,12 @@ public class CSAFundingRelativeForward {
 			{ 0.0592,  0.0391,  0.0194,  0.0000, -0.0190}
 		};
 
-		R1EvolverLogarithmic pmlUnderlying = R1EvolverLogarithmic.Standard (
+		ContinuousEvolverLogarithmic pmlUnderlying = ContinuousEvolverLogarithmic.Standard (
 			0.,
-			dblUnderlyingVolatility,
-			null
+			dblUnderlyingVolatility
 		);
 
-		R1EvolverMeanReversion pmmrFundingSpread = R1EvolverMeanReversion.Standard (
+		ContinuousEvolverMeanReversion pmmrFundingSpread = ContinuousEvolverMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility

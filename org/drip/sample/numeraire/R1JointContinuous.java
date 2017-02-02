@@ -134,7 +134,7 @@ public class R1JointContinuous {
 
 		int iNumTimeStep = (int) (dblTime / dblTimeWidth);
 
-		R1Evolver meAsset = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility,
 			null

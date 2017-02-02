@@ -48,8 +48,8 @@ package org.drip.measure.marginal;
  */
 
 /**
- * R1EvolverOrnsteinUhlenbeck guides the Random Variable Evolution according to R^1 Ornstein-Uhlenbeck Mean
- *  Reverting Process. The References are:
+ * ContinuousJumpEvolverOrnsteinUhlenbeck guides the Continuous/Jump Random Variable Evolution according to
+ *  R^1 Ornstein-Uhlenbeck Mean Reverting Process. The References are:
  * 
  * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
  * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
@@ -69,26 +69,28 @@ package org.drip.measure.marginal;
  * @author Lakshmi Krishnamurthy
  */
 
-public class R1EvolverOrnsteinUhlenbeck extends org.drip.measure.marginal.R1Evolver implements
-	org.drip.measure.process.OrnsteinUhlenbeck {
+public class ContinuousJumpEvolverOrnsteinUhlenbeck extends org.drip.measure.marginal.ContinuousJumpEvolver
+	implements org.drip.measure.process.OrnsteinUhlenbeck {
 	private double _dblBurstiness = java.lang.Double.NaN;
 	private double _dblRelaxationTime = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Standard Instance of R1EvolverOrnsteinUhlenbeck
+	 * Construct a Standard Instance of ContinuousJumpEvolverOrnsteinUhlenbeck
 	 * 
 	 * @param dblMeanReversionLevel The Mean Reversion Level
 	 * @param dblBurstiness The Burstiness Parameter
 	 * @param dblRelaxationTime The Relaxation Time
+	 * @param heie The Point Hazard Event Indicator Function Instance
 	 * 
-	 * @return The Standard Instance of R1EvolverOrnsteinUhlenbeck
+	 * @return The Standard Instance of ContinuousJumpEvolverOrnsteinUhlenbeck
 	 */
 
-	public static final R1EvolverOrnsteinUhlenbeck Standard (
+	public static final ContinuousJumpEvolverOrnsteinUhlenbeck Standard (
 		final double dblMeanReversionLevel,
 		final double dblBurstiness,
-		final double dblRelaxationTime)
+		final double dblRelaxationTime,
+		final org.drip.measure.process.HazardEventIndicationEvaluator heie)
 	{
 		try {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
@@ -99,7 +101,7 @@ public class R1EvolverOrnsteinUhlenbeck extends org.drip.measure.marginal.R1Evol
 				{
 					if (null == r1s)
 						throw new java.lang.Exception
-							("R1EvolverOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
+							("ContinuousJumpEvolverOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
 
 					return -1. * r1s.value() / dblRelaxationTime;
 				}
@@ -113,14 +115,14 @@ public class R1EvolverOrnsteinUhlenbeck extends org.drip.measure.marginal.R1Evol
 				{
 					if (null == r1s)
 						throw new java.lang.Exception
-							("R1EvolverOrnsteinUhlenbeck::VolatilityLDEV::value => Invalid Inputs");
+							("ContinuousJumpEvolverOrnsteinUhlenbeck::VolatilityLDEV::value => Invalid Inputs");
 
 					return dblBurstiness * java.lang.Math.sqrt (1. / dblRelaxationTime);
 				}
 			};
 
-			return new R1EvolverOrnsteinUhlenbeck (dblMeanReversionLevel, dblBurstiness,
-				dblRelaxationTime, ldevDrift, ldevVolatility);
+			return new ContinuousJumpEvolverOrnsteinUhlenbeck (dblMeanReversionLevel, dblBurstiness,
+				dblRelaxationTime, ldevDrift, ldevVolatility, heie);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -129,36 +131,40 @@ public class R1EvolverOrnsteinUhlenbeck extends org.drip.measure.marginal.R1Evol
 	}
 
 	/**
-	 * Construct a Zero-Mean Instance of MarginalEvolverOrnsteinUhlenbeck
+	 * Construct a Zero-Mean Instance of ContinuousJumpEvolverOrnsteinUhlenbeck
 	 * 
 	 * @param dblBurstiness The Burstiness Parameter
 	 * @param dblRelaxationTime The Relaxation Time
+	 * @param heie The Point Hazard Event Indicator Function Instance
 	 * 
-	 * @return The Zero-Mean Instance of MarginalEvolverOrnsteinUhlenbeck
+	 * @return The Zero-Mean Instance of ContinuousJumpEvolverOrnsteinUhlenbeck
 	 */
 
-	public static final R1EvolverOrnsteinUhlenbeck ZeroMean (
+	public static final ContinuousJumpEvolverOrnsteinUhlenbeck ZeroMean (
 		final double dblBurstiness,
-		final double dblRelaxationTime)
+		final double dblRelaxationTime,
+		final org.drip.measure.process.HazardEventIndicationEvaluator heie)
 	{
-		return R1EvolverOrnsteinUhlenbeck.Standard (0., dblBurstiness, dblRelaxationTime);
+		return ContinuousJumpEvolverOrnsteinUhlenbeck.Standard (0., dblBurstiness, dblRelaxationTime, heie);
 	}
 
-	private R1EvolverOrnsteinUhlenbeck (
+	private ContinuousJumpEvolverOrnsteinUhlenbeck (
 		final double dblMeanReversionLevel,
 		final double dblBurstiness,
 		final double dblRelaxationTime,
 		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
+		final org.drip.measure.process.HazardEventIndicationEvaluator heie)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility, null);
+		super (ldevDrift, ldevVolatility, heie);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) || 0. >=
 				_dblBurstiness || !org.drip.quant.common.NumberUtil.IsValid (_dblRelaxationTime =
 					dblRelaxationTime) || 0. >= _dblRelaxationTime)
-			throw new java.lang.Exception ("R1EvolverOrnsteinUhlenbeck Constructor => Invalid Inputs");
+			throw new java.lang.Exception
+				("ContinuousJumpEvolverOrnsteinUhlenbeck Constructor => Invalid Inputs");
 	}
 
 	/**

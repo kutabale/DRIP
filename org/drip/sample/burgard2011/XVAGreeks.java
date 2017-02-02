@@ -104,7 +104,7 @@ public class XVAGreeks {
 		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
 
 		UniverseSnapshot usFinish = new UniverseSnapshot (
-			twru.referenceUnderlier().priceNumeraire().weinerIncrement (
+			twru.asset().priceNumeraire().weinerIncrement (
 				new R1Snap (
 					dblTime,
 					usStart.assetNumeraire().finish(),
@@ -259,25 +259,25 @@ public class XVAGreeks {
 			dblCounterPartyRecovery
 		);
 
-		R1Evolver meAsset = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility,
 			null
 		);
 
-		R1Evolver meZeroCouponCreditRiskFreeBond = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCreditRiskFreeBond = ContinuousJumpEvolverLogarithmic.Standard (
 			dblCreditRiskFreeDrift,
 			dblCreditRiskFreeVolatility,
 			null
 		);
 
-		R1Evolver meZeroCouponBankBond = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponBankBond = ContinuousJumpEvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
 			dblZeroCouponBankBondVolatility,
 			null
 		);
 
-		R1Evolver meZeroCouponCounterPartyBond = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousJumpEvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
 			dblZeroCouponCounterPartyBondVolatility,
 			null

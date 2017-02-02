@@ -171,7 +171,7 @@ public class TrajectoryEvolutionScheme {
 		org.drip.measure.marginal.R1LevelRealization lrCounterPartyBond =
 			us.zeroCouponCounterPartyBondNumeraire();
 
-		double dblLevelAssetCash = dblAssetUnitsStart * _twru.referenceUnderlier().cashAccumulationRate() *
+		double dblLevelAssetCash = dblAssetUnitsStart * _twru.asset().cashAccumulationRate() *
 			lrAsset.finish() * _dblTimeIncrement;
 
 		double dblLevelCounterPartyCash = dblCounterPartyBondUnitsStart *

@@ -80,7 +80,7 @@ public class SpreadIntensity {
 	 * @param dblBankDefaultIntensity The Bank Default Intensity
 	 * @param dblCounterPartyDefaultIntensity The Counter Party Default Intensity
 	 * 
-	 * @throws java.lang.Exception Throw if the Inputs are Invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public SpreadIntensity (

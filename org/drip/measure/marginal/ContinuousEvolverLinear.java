@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.measure.marginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,80 +47,90 @@ package org.drip.xva.definition;
  */
 
 /**
- * Tradeable holds Definitions and Parameters that specify a Trade-able Entity in XVA Terms. The References
- *  are:
- *  
- *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
- *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
- *  
- *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
- *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
- *  
- *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
- * 
- *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
- *  	21 (2) 97-102.
- * 
+ * ContinuousEvolverLinear guides the Continuous Random Variable Evolution according to Linear R^1 Process.
+ *
  * @author Lakshmi Krishnamurthy
  */
 
-public class Tradeable {
-	private double _dblRepoRate = java.lang.Double.NaN;
-	private org.drip.measure.marginal.ContinuousEvolver _r1ePriceNumeraire = null;
+public class ContinuousEvolverLinear extends org.drip.measure.marginal.ContinuousEvolver {
+	private double _dblDrift = java.lang.Double.NaN;
+	private double _dblVolatility = java.lang.Double.NaN;
 
 	/**
-	 * Tradeable Constructor
+	 * Generate a Standard Instance of ContinuousEvolverLinear
 	 * 
-	 * @param r1ePriceNumeraire The Trade-able Asset Price Numeraire
-	 * @param dblRepoRate The Trade-able Asset Repo Rate
+	 * @param dblDrift The Drift
+	 * @param dblVolatility The Volatility
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Standard Instance of ContinuousEvolverLinear
 	 */
 
-	public Tradeable (
-		final org.drip.measure.marginal.ContinuousEvolver r1ePriceNumeraire,
-		final double dblRepoRate)
+	public static final ContinuousEvolverLinear Standard (
+		final double dblDrift,
+		final double dblVolatility)
+	{
+		try {
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.measure.marginal.R1Snap r1s)
+					throws java.lang.Exception
+				{
+					return dblDrift;
+				}
+			};
+
+			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+				@Override public double value (
+					final org.drip.measure.marginal.R1Snap r1s)
+					throws java.lang.Exception
+				{
+					return dblVolatility;
+				}
+			};
+
+			return new ContinuousEvolverLinear (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private ContinuousEvolverLinear (
+		final double dblDrift,
+		final double dblVolatility,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
+		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
 		throws java.lang.Exception
 	{
-		if (null == (_r1ePriceNumeraire = r1ePriceNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblRepoRate = dblRepoRate))
-			throw new java.lang.Exception ("Tradeable Constructor => Invalid Inputs");
+		super (ldevDrift, ldevVolatility);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
+			throw new java.lang.Exception ("ContinuousEvolverLinear Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Price Numeraire
+	 * Retrieve the Drift
 	 * 
-	 * @return The Trade-able Asset Price Numeraire
+	 * @return The Drift
 	 */
 
-	public org.drip.measure.marginal.ContinuousEvolver priceNumeraire()
+	public double drift()
 	{
-		return _r1ePriceNumeraire;
+		return _dblDrift;
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Repo Rate
+	 * Retrieve the Volatility
 	 * 
-	 * @return The Trade-able Asset Repo Rate
+	 * @return The Volatility
 	 */
 
-	public double repoRate()
+	public double volatility()
 	{
-		return _dblRepoRate;
-	}
-
-	/**
-	 * Retrieve the Trade-able Asset Cash Accumulation Rate
-	 * 
-	 * @return The Trade-able Asset Cash Accumulation Rate
-	 */
-
-	public double cashAccumulationRate()
-	{
-		return -1. * _dblRepoRate;
+		return _dblVolatility;
 	}
 }

@@ -97,7 +97,7 @@ public class AdaptiveOptimalCostTrajectory {
 
 		aMSS[0] = new MarketStateSystemic (dblInitialMarketState);
 
-		R1EvolverOrnsteinUhlenbeck oup1D = R1EvolverOrnsteinUhlenbeck.ZeroMean (
+		ContinuousEvolverOrnsteinUhlenbeck oup1D = ContinuousEvolverOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);

@@ -71,8 +71,8 @@ package org.drip.measure.process;
 
 public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.OrnsteinUhlenbeck {
 	private double _dblCorrelation = java.lang.Double.NaN;
-	private org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck _oupDerived = null;
-	private org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck _oupReference = null;
+	private org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck _oupDerived = null;
+	private org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck _oupReference = null;
 
 	/**
 	 * OrnsteinUhlenbeckProcess2D Constructor
@@ -85,8 +85,8 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 */
 
 	public OrnsteinUhlenbeckProcess2D (
-		final org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck oupReference,
-		final org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck oupDerived,
+		final org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck oupReference,
+		final org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck oupDerived,
 		final double dblCorrelation)
 		throws java.lang.Exception
 	{
@@ -102,7 +102,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 * @return The Reference 1D Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck reference()
+	public org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck reference()
 	{
 		return _oupReference;
 	}
@@ -113,7 +113,7 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	 * @return The Derived 1D Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.measure.marginal.R1EvolverOrnsteinUhlenbeck derived()
+	public org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck derived()
 	{
 		return _oupDerived;
 	}

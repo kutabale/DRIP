@@ -73,7 +73,7 @@ public class Equity extends org.drip.xva.definition.Tradeable {
 	/**
 	 * Equity Constructor
 	 * 
-	 * @param mePriceNumeraire The Underlier Price Numeraire
+	 * @param r1ePriceNumeraire The Underlier Price Numeraire
 	 * @param dblRepoRate The Underlier Repo Rate
 	 * @param dblDividendRate The Underlier Dividend Rate
 	 * 
@@ -81,12 +81,12 @@ public class Equity extends org.drip.xva.definition.Tradeable {
 	 */
 
 	public Equity (
-		final org.drip.measure.marginal.R1Evolver mePriceNumeraire,
+		final org.drip.measure.marginal.ContinuousEvolver r1ePriceNumeraire,
 		final double dblRepoRate,
 		final double dblDividendRate)
 		throws java.lang.Exception
 	{
-		super (mePriceNumeraire, dblRepoRate);
+		super (r1ePriceNumeraire, dblRepoRate);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDividendRate = dblDividendRate))
 			throw new java.lang.Exception ("Equity Constructor => Invalid Inputs");

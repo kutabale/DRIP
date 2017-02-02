@@ -149,19 +149,19 @@ public class R1JointJumpContinuous {
 
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
-		R1Evolver meAsset = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility,
 			null
 		);
 
-		R1Evolver meZeroCouponCollateralBond = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCollateralBond = ContinuousJumpEvolverLogarithmic.Standard (
 			dblZeroCouponCollateralBondDrift,
 			dblZeroCouponCollateralBondVolatility,
 			null
 		);
 
-		R1Evolver meZeroCouponBankBond = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponBankBond = ContinuousJumpEvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
 			dblZeroCouponBankBondVolatility,
 			HazardEventIndicationEvaluator.Standard (
@@ -170,7 +170,7 @@ public class R1JointJumpContinuous {
 			)
 		);
 
-		R1Evolver meZeroCouponCounterPartyBond = R1EvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousJumpEvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
 			dblZeroCouponCounterPartyBondVolatility,
 			HazardEventIndicationEvaluator.Standard (
