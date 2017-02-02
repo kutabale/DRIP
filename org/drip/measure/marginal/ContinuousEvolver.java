@@ -58,8 +58,8 @@ public class ContinuousEvolver {
 	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevVolatility = null;
 
 	protected org.drip.measure.process.LevelHazardEventIndication hazardEventIndication (
-		final org.drip.measure.marginal.R1Snap r1s,
-		final org.drip.measure.marginal.R1UnitRealization r1ur,
+		final org.drip.measure.realization.JumpDiffusionVertex r1s,
+		final org.drip.measure.realization.JumpDiffusionUnit r1ur,
 		final double dblTimeIncrement)
 	{
 		return null;
@@ -115,9 +115,9 @@ public class ContinuousEvolver {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.marginal.R1LevelRealization increment (
-		final org.drip.measure.marginal.R1Snap r1s,
-		final org.drip.measure.marginal.R1UnitRealization r1ur,
+	public org.drip.measure.realization.JumpDiffusionLevel increment (
+		final org.drip.measure.realization.JumpDiffusionVertex r1s,
+		final org.drip.measure.realization.JumpDiffusionUnit r1ur,
 		final double dblTimeIncrement)
 	{
 		if (null == r1s || null == r1ur || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
@@ -125,16 +125,18 @@ public class ContinuousEvolver {
 
 		try {
 			if (r1s.terminationReached())
-				return new org.drip.measure.marginal.R1LevelRealization (r1s.value(), 0., 0., 0., new
-					org.drip.measure.process.LevelHazardEventIndication (true, 0., 0., 0.), 0.);
+				return new org.drip.measure.realization.JumpDiffusionLevel (r1s.value(), 0., 0., new
+					org.drip.measure.process.LevelHazardEventIndication (true, 0., 0., 0.), new
+						org.drip.measure.realization.JumpDiffusionUnit (0., 0.));
 
-			double dblContinuousRandomUnitRealization = r1ur.continuous();
+			double dblContinuousRandomUnitRealization = r1ur.diffusion();
 
-			return new org.drip.measure.marginal.R1LevelRealization (r1s.value(), _ldevDrift.value (r1s) *
+			return new org.drip.measure.realization.JumpDiffusionLevel (r1s.value(), _ldevDrift.value (r1s) *
 				dblTimeIncrement, null == _ldevVolatility ? 0. : _ldevVolatility.value (r1s) *
 					dblContinuousRandomUnitRealization * java.lang.Math.sqrt (java.lang.Math.abs
-						(dblTimeIncrement)), dblContinuousRandomUnitRealization, hazardEventIndication (r1s,
-							r1ur, dblTimeIncrement), r1ur.jump());
+						(dblTimeIncrement)), hazardEventIndication (r1s, r1ur, dblTimeIncrement), new
+							org.drip.measure.realization.JumpDiffusionUnit
+								(dblContinuousRandomUnitRealization, r1ur.jump()));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -152,17 +154,17 @@ public class ContinuousEvolver {
 	 * @return The Array of Adjacent Increment
 	 */
 
-	public org.drip.measure.marginal.R1LevelRealization[] incrementSequence (
-		final org.drip.measure.marginal.R1Snap r1s,
-		final org.drip.measure.marginal.R1UnitRealization[] aR1UR,
+	public org.drip.measure.realization.JumpDiffusionLevel[] incrementSequence (
+		final org.drip.measure.realization.JumpDiffusionVertex r1s,
+		final org.drip.measure.realization.JumpDiffusionUnit[] aR1UR,
 		final double dblTimeIncrement)
 	{
 		if (null == aR1UR) return null;
 
 		int iNumTimeStep = aR1UR.length;
-		org.drip.measure.marginal.R1Snap r1sLoop = r1s;
-		org.drip.measure.marginal.R1LevelRealization[] aLR = 0 == iNumTimeStep ? null : new
-			org.drip.measure.marginal.R1LevelRealization[iNumTimeStep];
+		org.drip.measure.realization.JumpDiffusionVertex r1sLoop = r1s;
+		org.drip.measure.realization.JumpDiffusionLevel[] aLR = 0 == iNumTimeStep ? null : new
+			org.drip.measure.realization.JumpDiffusionLevel[iNumTimeStep];
 
 		if (0 == iNumTimeStep) return null;
 
@@ -182,7 +184,7 @@ public class ContinuousEvolver {
 					dblHazardIntegral = lhei.hazardIntegral();
 				}
 
-				r1sLoop = new org.drip.measure.marginal.R1Snap (r1sLoop.time() + dblTimeIncrement,
+				r1sLoop = new org.drip.measure.realization.JumpDiffusionVertex (r1sLoop.time() + dblTimeIncrement,
 					aLR[i].finish(), r1sLoop.cumulativeHazardIntegral() + dblHazardIntegral, bJumpOccurred);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
@@ -204,22 +206,22 @@ public class ContinuousEvolver {
 	 * @return The Array of R^1 Snaps
 	 */
 
-	public org.drip.measure.marginal.R1Snap[] snapSequence (
-		final org.drip.measure.marginal.R1Snap r1s,
-		final org.drip.measure.marginal.R1UnitRealization[] aR1UR,
+	public org.drip.measure.realization.JumpDiffusionVertex[] snapSequence (
+		final org.drip.measure.realization.JumpDiffusionVertex r1s,
+		final org.drip.measure.realization.JumpDiffusionUnit[] aR1UR,
 		final double dblTimeIncrement)
 	{
 		if (null == aR1UR) return null;
 
 		int iNumTimeStep = aR1UR.length;
-		org.drip.measure.marginal.R1Snap r1sPrev = r1s;
-		org.drip.measure.marginal.R1Snap[] aR1S = 0 == iNumTimeStep ? null : new
-			org.drip.measure.marginal.R1Snap[iNumTimeStep];
+		org.drip.measure.realization.JumpDiffusionVertex r1sPrev = r1s;
+		org.drip.measure.realization.JumpDiffusionVertex[] aR1S = 0 == iNumTimeStep ? null : new
+			org.drip.measure.realization.JumpDiffusionVertex[iNumTimeStep];
 
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			org.drip.measure.marginal.R1LevelRealization r1LR = increment (r1sPrev, aR1UR[i],
+			org.drip.measure.realization.JumpDiffusionLevel r1LR = increment (r1sPrev, aR1UR[i],
 				dblTimeIncrement);
 
 			if (null == r1LR) return null;
@@ -237,7 +239,7 @@ public class ContinuousEvolver {
 					dblHazardIntegral = lhei.hazardIntegral();
 				}
 
-				r1sPrev = aR1S[i] = new org.drip.measure.marginal.R1Snap (r1sPrev.time() + dblTimeIncrement,
+				r1sPrev = aR1S[i] = new org.drip.measure.realization.JumpDiffusionVertex (r1sPrev.time() + dblTimeIncrement,
 					r1LR.finish(), r1sPrev.cumulativeHazardIntegral() + dblHazardIntegral, bJumpOccurred);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
@@ -258,12 +260,12 @@ public class ContinuousEvolver {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.marginal.R1LevelRealization weinerIncrement (
-		final org.drip.measure.marginal.R1Snap r1s,
+	public org.drip.measure.realization.JumpDiffusionLevel weinerIncrement (
+		final org.drip.measure.realization.JumpDiffusionVertex r1s,
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (r1s, org.drip.measure.marginal.R1UnitRealization.ContinuousGaussian(),
+			return increment (r1s, org.drip.measure.realization.JumpDiffusionUnit.GaussianDiffusion(),
 				dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -281,11 +283,12 @@ public class ContinuousEvolver {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.marginal.R1LevelRealization jumpIncrement (
-		final org.drip.measure.marginal.R1Snap r1s,
+	public org.drip.measure.realization.JumpDiffusionLevel jumpIncrement (
+		final org.drip.measure.realization.JumpDiffusionVertex r1s,
 		final double dblTimeIncrement)
 	{
-		return increment (r1s, org.drip.measure.marginal.R1UnitRealization.JumpUniform(), dblTimeIncrement);
+		return increment (r1s, org.drip.measure.realization.JumpDiffusionUnit.UniformJump(),
+			dblTimeIncrement);
 	}
 
 	/**
@@ -297,12 +300,12 @@ public class ContinuousEvolver {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.marginal.R1LevelRealization jumpWeinerIncrement (
-		final org.drip.measure.marginal.R1Snap r1s,
+	public org.drip.measure.realization.JumpDiffusionLevel jumpWeinerIncrement (
+		final org.drip.measure.realization.JumpDiffusionVertex r1s,
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (r1s, new org.drip.measure.marginal.R1UnitRealization
+			return increment (r1s, new org.drip.measure.realization.JumpDiffusionUnit
 				(org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
 					dblTimeIncrement);
 		} catch (java.lang.Exception e) {
@@ -321,12 +324,12 @@ public class ContinuousEvolver {
 	 * @return The Adjacent Increment
 	 */
 
-	public org.drip.measure.marginal.R1LevelRealization weinerJumpIncrement (
-		final org.drip.measure.marginal.R1Snap r1s,
+	public org.drip.measure.realization.JumpDiffusionLevel weinerJumpIncrement (
+		final org.drip.measure.realization.JumpDiffusionVertex r1s,
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (r1s, new org.drip.measure.marginal.R1UnitRealization
+			return increment (r1s, new org.drip.measure.realization.JumpDiffusionUnit
 				(org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
 					dblTimeIncrement);
 		} catch (java.lang.Exception e) {

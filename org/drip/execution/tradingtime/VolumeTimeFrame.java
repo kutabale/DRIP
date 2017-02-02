@@ -69,7 +69,7 @@ package org.drip.execution.tradingtime;
  * @author Lakshmi Krishnamurthy
  */
 
-public class VolumeTimeFrame extends org.drip.measure.marginal.R1LevelRealization {
+public class VolumeTimeFrame extends org.drip.measure.realization.JumpDiffusionLevel {
 	private double _dblHoldings = java.lang.Double.NaN;
 	private double _dblTradeRate = java.lang.Double.NaN;
 
@@ -95,8 +95,8 @@ public class VolumeTimeFrame extends org.drip.measure.marginal.R1LevelRealizatio
 		final double dblTradeRate)
 		throws java.lang.Exception
 	{
-		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian,
-			dblBrownian, null, 0.);
+		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian, null,
+			new org.drip.measure.realization.JumpDiffusionUnit (dblBrownian, 0.));
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *
@@ -143,7 +143,7 @@ public class VolumeTimeFrame extends org.drip.measure.marginal.R1LevelRealizatio
 		if (null == cv)
 			throw new java.lang.Exception ("VolumeTimeFrame::transactionCostIncrement => Invalid Inputs");
 
-		return _dblHoldings * continuousStochastic() + cv.invariant() * _dblTradeRate * _dblTradeRate *
+		return _dblHoldings * diffusionStochastic() + cv.invariant() * _dblTradeRate * _dblTradeRate *
 			deterministic();
 	}
 }

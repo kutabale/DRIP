@@ -2,6 +2,7 @@
 package org.drip.sample.burgard2011;
 
 import org.drip.measure.marginal.*;
+import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.custom.Settings;
@@ -105,7 +106,7 @@ public class XVAGreeks {
 
 		UniverseSnapshot usFinish = new UniverseSnapshot (
 			twru.asset().priceNumeraire().weinerIncrement (
-				new R1Snap (
+				new JumpDiffusionVertex (
 					dblTime,
 					usStart.assetNumeraire().finish(),
 					0.,
@@ -114,7 +115,7 @@ public class XVAGreeks {
 				dblTimeWidth
 			),
 			twru.zeroCouponCollateralBond().priceNumeraire().weinerIncrement (
-				new R1Snap (
+				new JumpDiffusionVertex (
 					dblTime,
 					dblCollateralBondNumeraire,
 					0.,
@@ -123,7 +124,7 @@ public class XVAGreeks {
 				dblTimeWidth
 			),
 			twru.zeroCouponBankBond().priceNumeraire().weinerIncrement (
-				new R1Snap (
+				new JumpDiffusionVertex (
 					dblTime,
 					usStart.zeroCouponBankBondNumeraire().finish(),
 					0.,
@@ -132,7 +133,7 @@ public class XVAGreeks {
 				dblTimeWidth
 			),
 			twru.zeroCouponCounterPartyBond().priceNumeraire().weinerIncrement (
-				new R1Snap (
+				new JumpDiffusionVertex (
 					dblTime,
 					usStart.zeroCouponCounterPartyBondNumeraire().finish(),
 					0.,
@@ -209,7 +210,7 @@ public class XVAGreeks {
 				dblDerivativeXVAValueGammaFinish,
 				eagStart.derivativeValue() * Math.exp (
 					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
-						new R1Snap (
+						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
 							0.,
@@ -259,28 +260,24 @@ public class XVAGreeks {
 			dblCounterPartyRecovery
 		);
 
-		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
 			dblAssetDrift,
-			dblAssetVolatility,
-			null
+			dblAssetVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCreditRiskFreeBond = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCreditRiskFreeBond = ContinuousEvolverLogarithmic.Standard (
 			dblCreditRiskFreeDrift,
-			dblCreditRiskFreeVolatility,
-			null
+			dblCreditRiskFreeVolatility
 		);
 
-		ContinuousEvolver meZeroCouponBankBond = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponBankBond = ContinuousEvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
-			dblZeroCouponBankBondVolatility,
-			null
+			dblZeroCouponBankBondVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousEvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
-			dblZeroCouponCounterPartyBondVolatility,
-			null
+			dblZeroCouponCounterPartyBondVolatility
 		);
 
 		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (
@@ -397,7 +394,7 @@ public class XVAGreeks {
 			dblTime,
 			new UniverseSnapshot (
 				meAsset.weinerIncrement (
-					new R1Snap (
+					new JumpDiffusionVertex (
 						dblTime,
 						dblDerivativeValue,
 						0.,
@@ -406,7 +403,7 @@ public class XVAGreeks {
 					dblTimeWidth
 				),
 				meZeroCouponCreditRiskFreeBond.weinerIncrement (
-					new R1Snap (
+					new JumpDiffusionVertex (
 						dblTime,
 						1.,
 						0.,
@@ -415,7 +412,7 @@ public class XVAGreeks {
 					dblTimeWidth
 				),
 				meZeroCouponBankBond.weinerIncrement (
-					new R1Snap (
+					new JumpDiffusionVertex (
 						dblTime,
 						1.,
 						0.,
@@ -424,7 +421,7 @@ public class XVAGreeks {
 					dblTimeWidth
 				),
 				meZeroCouponCounterPartyBond.weinerIncrement (
-					new R1Snap (
+					new JumpDiffusionVertex (
 						dblTime,
 						1.,
 						0.,

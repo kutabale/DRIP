@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.realization;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,90 +47,62 @@ package org.drip.measure.marginal;
  */
 
 /**
- * ContinuousEvolverLinear guides the Continuous Random Variable Evolution according to Linear R^1 Process.
+ * JumpDiffusionVertex holds the Snapshot Values of the Realized R^1 Variable - its Value, whether it has
+ *  terminated, and the Cumulative Hazard Integral - and Time.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class ContinuousEvolverLinear extends org.drip.measure.marginal.ContinuousEvolver {
-	private double _dblDrift = java.lang.Double.NaN;
-	private double _dblVolatility = java.lang.Double.NaN;
+public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionVertex {
+	private boolean _bTerminationReached = false;
+	private double _dblCumulativeHazardIntegral = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of ContinuousEvolverLinear
+	 * JumpDiffusionVertex Constructor
 	 * 
-	 * @param dblDrift The Drift
-	 * @param dblVolatility The Volatility
+	 * @param dblTime The Time Instant
+	 * @param dblValue The Random Variable Value
+	 * @param dblCumulativeHazardIntegral The Event Occurrence Cumulative Hazard Integral
+	 * @param bTerminationReached TRUE - Termination Reached
 	 * 
-	 * @return The Standard Instance of ContinuousEvolverLinear
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public static final ContinuousEvolverLinear Standard (
-		final double dblDrift,
-		final double dblVolatility)
-	{
-		try {
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
-				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex r1s)
-					throws java.lang.Exception
-				{
-					return dblDrift;
-				}
-			};
-
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
-				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex r1s)
-					throws java.lang.Exception
-				{
-					return dblVolatility;
-				}
-			};
-
-			return new ContinuousEvolverLinear (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	private ContinuousEvolverLinear (
-		final double dblDrift,
-		final double dblVolatility,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
+	public JumpDiffusionVertex (
+		final double dblTime,
+		final double dblValue,
+		final double dblCumulativeHazardIntegral,
+		final boolean bTerminationReached)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility);
+		super (dblTime, dblValue);
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("ContinuousEvolverLinear Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCumulativeHazardIntegral =
+			dblCumulativeHazardIntegral))
+			throw new java.lang.Exception ("JumpDiffusionVertex Constructor => Invalid Inputs");
+
+		_bTerminationReached = bTerminationReached;
 	}
 
 	/**
-	 * Retrieve the Drift
+	 * Retrieve the Termination Reached Flag
 	 * 
-	 * @return The Drift
+	 * @return TRUE - Termination Reached
 	 */
 
-	public double drift()
+	public boolean terminationReached()
 	{
-		return _dblDrift;
+		return _bTerminationReached;
 	}
 
 	/**
-	 * Retrieve the Volatility
+	 * Retrieve the Event Occurrence Cumulative Hazard Integral
 	 * 
-	 * @return The Volatility
+	 * @return The Event Occurrence Cumulative Hazard Integral
 	 */
 
-	public double volatility()
+	public final double cumulativeHazardIntegral()
 	{
-		return _dblVolatility;
+		return _dblCumulativeHazardIntegral;
 	}
 }

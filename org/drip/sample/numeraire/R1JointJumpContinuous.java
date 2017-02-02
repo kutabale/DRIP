@@ -4,6 +4,9 @@ package org.drip.sample.numeraire;
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
 import org.drip.measure.process.HazardEventIndicationEvaluator;
+import org.drip.measure.realization.JumpDiffusionLevel;
+import org.drip.measure.realization.JumpDiffusionVertex;
+import org.drip.measure.realization.JumpDiffusionUnit;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
@@ -149,16 +152,14 @@ public class R1JointJumpContinuous {
 
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
-		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
 			dblAssetDrift,
-			dblAssetVolatility,
-			null
+			dblAssetVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCollateralBond = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCollateralBond = ContinuousEvolverLogarithmic.Standard (
 			dblZeroCouponCollateralBondDrift,
-			dblZeroCouponCollateralBondVolatility,
-			null
+			dblZeroCouponCollateralBondVolatility
 		);
 
 		ContinuousEvolver meZeroCouponBankBond = ContinuousJumpEvolverLogarithmic.Standard (
@@ -189,50 +190,50 @@ public class R1JointJumpContinuous {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
-		R1LevelRealization[] aR1AssetLR = meAsset.incrementSequence (
-			new R1Snap (
+		JumpDiffusionLevel[] aR1AssetLR = meAsset.incrementSequence (
+			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialAssetNumeraire,
 				0.,
 				false
 			),
-			R1UnitRealization.Continuous (aadblNumeraireTimeSeries[0]),
+			JumpDiffusionUnit.Diffusion (aadblNumeraireTimeSeries[0]),
 			dblTimeWidth
 		);
 
-		R1LevelRealization[] aR1CollateralLR = meZeroCouponCollateralBond.incrementSequence (
-			new R1Snap (
+		JumpDiffusionLevel[] aR1CollateralLR = meZeroCouponCollateralBond.incrementSequence (
+			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialCollateralNumeraire,
 				0.,
 				false
 			),
-			R1UnitRealization.Continuous (aadblNumeraireTimeSeries[1]),
+			JumpDiffusionUnit.Diffusion (aadblNumeraireTimeSeries[1]),
 			dblTimeWidth
 		);
 
-		R1LevelRealization[] aR1BankLR = meZeroCouponBankBond.incrementSequence (
-			new R1Snap (
+		JumpDiffusionLevel[] aR1BankLR = meZeroCouponBankBond.incrementSequence (
+			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialBankNumeraire,
 				0.,
 				false
 			),
-			R1UnitRealization.ContinuousJump (
+			JumpDiffusionUnit.JumpDiffusion (
 				aadblNumeraireTimeSeries[2],
 				adblBankDefaultIndicator
 			),
 			dblTimeWidth
 		);
 
-		R1LevelRealization[] aR1CounterPartyLR = meZeroCouponCounterPartyBond.incrementSequence (
-			new R1Snap (
+		JumpDiffusionLevel[] aR1CounterPartyLR = meZeroCouponCounterPartyBond.incrementSequence (
+			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialCounterPartyNumeraire,
 				0.,
 				false
 			),
-			R1UnitRealization.ContinuousJump (
+			JumpDiffusionUnit.JumpDiffusion (
 				aadblNumeraireTimeSeries[3],
 				adblCounterPartyDefaultIndicator
 			),
@@ -285,16 +286,16 @@ public class R1JointJumpContinuous {
 				FormatUtil.FormatDouble (dblTime, 1, 4, 1.) + " => " +
 				FormatUtil.FormatDouble (aR1AssetLR[i].start(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1AssetLR[i].finish(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (aR1AssetLR[i].continuousWander(), 1, 4, 1.) + " ||" +
+				FormatUtil.FormatDouble (aR1AssetLR[i].diffusionWander(), 1, 4, 1.) + " ||" +
 				FormatUtil.FormatDouble (aR1CollateralLR[i].start(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1CollateralLR[i].finish(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (aR1CollateralLR[i].continuousWander(), 1, 4, 1.) + " ||" +
+				FormatUtil.FormatDouble (aR1CollateralLR[i].diffusionWander(), 1, 4, 1.) + " ||" +
 				FormatUtil.FormatDouble (aR1BankLR[i].start(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1BankLR[i].finish(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (aR1BankLR[i].continuousWander(), 1, 4, 1.) + " ||" +
+				FormatUtil.FormatDouble (aR1BankLR[i].diffusionWander(), 1, 4, 1.) + " ||" +
 				FormatUtil.FormatDouble (aR1CounterPartyLR[i].start(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1CounterPartyLR[i].finish(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (aR1CounterPartyLR[i].continuousWander(), 1, 4, 1.) + " ||"
+				FormatUtil.FormatDouble (aR1CounterPartyLR[i].diffusionWander(), 1, 4, 1.) + " ||"
 			);
 		}
 

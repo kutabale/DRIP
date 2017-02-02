@@ -79,7 +79,7 @@ public class ContinuousJumpEvolverMeanReversion extends org.drip.measure.margina
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap r1s)
+					final org.drip.measure.realization.JumpDiffusionVertex r1s)
 					throws java.lang.Exception
 				{
 					if (null == r1s)
@@ -93,7 +93,7 @@ public class ContinuousJumpEvolverMeanReversion extends org.drip.measure.margina
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap r1s)
+					final org.drip.measure.realization.JumpDiffusionVertex r1s)
 					throws java.lang.Exception
 				{
 					return dblVolatility;

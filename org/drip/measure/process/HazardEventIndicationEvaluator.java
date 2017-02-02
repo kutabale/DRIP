@@ -74,7 +74,7 @@ public class HazardEventIndicationEvaluator extends org.drip.measure.process.Eve
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap r1s)
+					final org.drip.measure.realization.JumpDiffusionVertex r1s)
 					throws java.lang.Exception
 				{
 					if (null == r1s)
@@ -88,7 +88,7 @@ public class HazardEventIndicationEvaluator extends org.drip.measure.process.Eve
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap r1s)
+					final org.drip.measure.realization.JumpDiffusionVertex r1s)
 					throws java.lang.Exception
 				{
 					if (null == r1s)

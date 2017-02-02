@@ -138,7 +138,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
 				{
 					return 0.;
@@ -148,7 +148,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
@@ -192,7 +192,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
 				{
 					return 0.;
@@ -202,7 +202,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)
@@ -246,7 +246,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
 				{
 					return 0.;
@@ -256,7 +256,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
 				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
 				@Override public double value (
-					final org.drip.measure.marginal.R1Snap ms)
+					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
 				{
 					if (null == ms)

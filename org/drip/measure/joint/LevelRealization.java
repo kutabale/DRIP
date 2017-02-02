@@ -69,7 +69,7 @@ package org.drip.measure.joint;
  */
 
 public class LevelRealization {
-	private org.drip.measure.marginal.R1LevelRealization[] _aMLR = null;
+	private org.drip.measure.realization.JumpDiffusionLevel[] _aMLR = null;
 
 	/**
 	 * LevelRealization Constructor
@@ -80,7 +80,7 @@ public class LevelRealization {
 	 */
 
 	public LevelRealization (
-		final org.drip.measure.marginal.R1LevelRealization[] aMLR)
+		final org.drip.measure.realization.JumpDiffusionLevel[] aMLR)
 		throws java.lang.Exception
 	{
 		if (null == (_aMLR = aMLR))
@@ -103,7 +103,7 @@ public class LevelRealization {
 	 * @return The Array of the Marginal Level Realizations
 	 */
 
-	public org.drip.measure.marginal.R1LevelRealization[] marginal()
+	public org.drip.measure.realization.JumpDiffusionLevel[] marginal()
 	{
 		return _aMLR;
 	}

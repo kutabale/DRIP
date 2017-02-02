@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.realization;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.measure.marginal;
  */
 
 /**
- * R1LevelRealization implements the Deterministic and the Stochastic Components of a R^1 Marginal Random
+ * JumpDiffusionLevel implements the Deterministic and the Stochastic Components of a R^1 Marginal Random
  *	Increment as well the Original Marginal Random Variate. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
@@ -69,43 +69,38 @@ package org.drip.measure.marginal;
  * @author Lakshmi Krishnamurthy
  */
 
-public class R1LevelRealization {
+public class JumpDiffusionLevel {
 	private double _dblStart = java.lang.Double.NaN;
-	private double _dblJumpWander = java.lang.Double.NaN;
 	private double _dblDeterministic = java.lang.Double.NaN;
-	private double _dblContinuousWander = java.lang.Double.NaN;
-	private double _dblContinuousStochastic = java.lang.Double.NaN;
+	private double _dblDiffusionStochastic = java.lang.Double.NaN;
+	private org.drip.measure.realization.JumpDiffusionUnit _jdu = null;
 	private org.drip.measure.process.LevelHazardEventIndication _lheiJumpStochastic = null;
 
 	/**
-	 * R1LevelRealization Constructor
+	 * JumpDiffusionLevel Constructor
 	 * 
 	 * @param dblStart The Starting Random Variable Realization
 	 * @param dblDeterministic The Deterministic Increment Component
-	 * @param dblContinuousStochastic The Continuous Stochastic Increment Component
-	 * @param dblContinuousWander The Continuous Random Wander Realization
+	 * @param dblDiffusionStochastic The Diffusion Stochastic Increment Component
 	 * @param lheiJumpStochastic The Jump Stochastic Event Indicator
-	 * @param dblJumpWander The Jump Random Wander Realization
+	 * @param jdu The Jump Diffusion Unit Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public R1LevelRealization (
+	public JumpDiffusionLevel (
 		final double dblStart,
 		final double dblDeterministic,
-		final double dblContinuousStochastic,
-		final double dblContinuousWander,
+		final double dblDiffusionStochastic,
 		final org.drip.measure.process.LevelHazardEventIndication lheiJumpStochastic,
-		final double dblJumpWander)
+		final org.drip.measure.realization.JumpDiffusionUnit jdu)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblStart = dblStart) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblContinuousStochastic =
-					dblContinuousStochastic) || !org.drip.quant.common.NumberUtil.IsValid
-						(_dblContinuousWander = dblContinuousWander) ||
-							!org.drip.quant.common.NumberUtil.IsValid (_dblJumpWander = dblJumpWander))
-			throw new java.lang.Exception ("R1LevelRealization Constructor => Invalid Inputs");
+				!org.drip.quant.common.NumberUtil.IsValid (_dblDiffusionStochastic = dblDiffusionStochastic)
+					|| null == (_jdu = jdu))
+			throw new java.lang.Exception ("JumpDiffusionLevel Constructor => Invalid Inputs");
 
 		_lheiJumpStochastic = lheiJumpStochastic;
 	}
@@ -133,25 +128,25 @@ public class R1LevelRealization {
 	}
 
 	/**
-	 * Retrieve the Continuous Stochastic Increment Component
+	 * Retrieve the Diffusion Stochastic Increment Component
 	 * 
-	 * @return The Continuous Stochastic Increment Component
+	 * @return The Diffusion Stochastic Increment Component
 	 */
 
-	public double continuousStochastic()
+	public double diffusionStochastic()
 	{
-		return _dblContinuousStochastic;
+		return _dblDiffusionStochastic;
 	}
 
 	/**
-	 * Retrieve the Continuous Random Wander Realization
+	 * Retrieve the Diffusion Random Wander Realization
 	 * 
-	 * @return The Continuous Random Wander Realization
+	 * @return The Diffusion Random Wander Realization
 	 */
 
-	public double continuousWander()
+	public double diffusionWander()
 	{
-		return _dblContinuousWander;
+		return _jdu.diffusion();
 	}
 
 	/**
@@ -173,7 +168,7 @@ public class R1LevelRealization {
 
 	public double jumpWander()
 	{
-		return _dblJumpWander;
+		return _jdu.jump();
 	}
 
 	/**
@@ -184,7 +179,7 @@ public class R1LevelRealization {
 
 	public double grossChange()
 	{
-		return _dblDeterministic + _dblContinuousStochastic + jumpStochastic();
+		return _dblDeterministic + _dblDiffusionStochastic + jumpStochastic();
 	}
 
 	/**
@@ -195,7 +190,7 @@ public class R1LevelRealization {
 
 	public double finish()
 	{
-		return _dblStart + _dblDeterministic + _dblContinuousStochastic + jumpStochastic();
+		return _dblStart + _dblDeterministic + _dblDiffusionStochastic + jumpStochastic();
 	}
 
 	/**

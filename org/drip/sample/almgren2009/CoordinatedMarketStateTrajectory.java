@@ -3,6 +3,8 @@ package org.drip.sample.almgren2009;
 
 import org.drip.execution.tradingtime.*;
 import org.drip.measure.marginal.*;
+import org.drip.measure.realization.JumpDiffusionLevel;
+import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -138,8 +140,8 @@ public class CoordinatedMarketStateTrajectory {
 		);
 
 		for (int i = 0; i < iNumSimulation; ++i) {
-			R1LevelRealization gi = oup1D.weinerIncrement (
-				new R1Snap (
+			JumpDiffusionLevel gi = oup1D.weinerIncrement (
+				new JumpDiffusionVertex (
 					dblTime,
 					dblMarketState,
 					0.,
@@ -150,7 +152,7 @@ public class CoordinatedMarketStateTrajectory {
 
 			dblTime += dblTimeInterval;
 
-			dblMarketState += gi.deterministic() + gi.continuousStochastic();
+			dblMarketState += gi.deterministic() + gi.diffusionStochastic();
 
 			dblLiquidity = cms.liquidity (dblMarketState);
 

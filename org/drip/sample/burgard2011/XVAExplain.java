@@ -2,6 +2,7 @@
 package org.drip.sample.burgard2011;
 
 import org.drip.measure.marginal.*;
+import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.custom.Settings;
@@ -105,7 +106,7 @@ public class XVAExplain {
 
 		UniverseSnapshot usFinish = new UniverseSnapshot (
 			twru.asset().priceNumeraire().weinerIncrement (
-				new R1Snap (
+				new JumpDiffusionVertex (
 					dblTime,
 					usStart.assetNumeraire().finish(),
 					0.,
@@ -114,7 +115,7 @@ public class XVAExplain {
 				dblTimeWidth
 			),
 			twru.zeroCouponCollateralBond().priceNumeraire().weinerIncrement (
-				new R1Snap (
+				new JumpDiffusionVertex (
 					dblTime,
 					dblCollateralBondNumeraire,
 					0.,
@@ -123,7 +124,7 @@ public class XVAExplain {
 				dblTimeWidth
 			),
 			twru.zeroCouponBankBond().priceNumeraire().weinerIncrement (
-				new R1Snap (
+				new JumpDiffusionVertex (
 					dblTime,
 					usStart.zeroCouponBankBondNumeraire().finish(),
 					0.,
@@ -132,7 +133,7 @@ public class XVAExplain {
 				dblTimeWidth
 			),
 			twru.zeroCouponCounterPartyBond().priceNumeraire().weinerIncrement (
-				new R1Snap (
+				new JumpDiffusionVertex (
 					dblTime,
 					usStart.zeroCouponCounterPartyBondNumeraire().finish(),
 					0.,
@@ -219,7 +220,7 @@ public class XVAExplain {
 				dblDerivativeXVAValueGammaFinish,
 				eagStart.derivativeValue() * Math.exp (
 					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
-						new R1Snap (
+						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
 							0.,
@@ -269,28 +270,24 @@ public class XVAExplain {
 			dblCounterPartyRecovery
 		);
 
-		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
 			dblAssetDrift,
-			dblAssetVolatility,
-			null
+			dblAssetVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCollateralBond = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCollateralBond = ContinuousEvolverLogarithmic.Standard (
 			dblZeroCouponCollateralBondDrift,
-			dblZeroCouponCollateralBondVolatility,
-			null
+			dblZeroCouponCollateralBondVolatility
 		);
 
-		ContinuousEvolver meZeroCouponBankBond = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponBankBond = ContinuousEvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
-			dblZeroCouponBankBondVolatility,
-			null
+			dblZeroCouponBankBondVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousEvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
-			dblZeroCouponCounterPartyBondVolatility,
-			null
+			dblZeroCouponCounterPartyBondVolatility
 		);
 
 		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (
@@ -414,7 +411,7 @@ public class XVAExplain {
 			dblTime,
 			new UniverseSnapshot (
 				meAsset.weinerIncrement (
-					new R1Snap (
+					new JumpDiffusionVertex (
 						dblTime,
 						dblDerivativeValue,
 						0.,
@@ -423,7 +420,7 @@ public class XVAExplain {
 					dblTimeWidth
 				),
 				meZeroCouponCollateralBond.weinerIncrement (
-					new R1Snap (
+					new JumpDiffusionVertex (
 						dblTime,
 						1.,
 						0.,
@@ -432,7 +429,7 @@ public class XVAExplain {
 					dblTimeWidth
 				),
 				meZeroCouponBankBond.weinerIncrement (
-					new R1Snap (
+					new JumpDiffusionVertex (
 						dblTime,
 						1.,
 						0.,
@@ -441,7 +438,7 @@ public class XVAExplain {
 					dblTimeWidth
 				),
 				meZeroCouponCounterPartyBond.weinerIncrement (
-					new R1Snap (
+					new JumpDiffusionVertex (
 						dblTime,
 						1.,
 						0.,

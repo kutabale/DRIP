@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.realization;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,25 +47,25 @@ package org.drip.measure.marginal;
  */
 
 /**
- * R1UnitRealization holds the Continuous and the Jump R^1 Unit Edge Realizations.
+ * JumpDiffusionUnit holds the Jump Diffusion R^1 Unit Edge Realizations.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class R1UnitRealization {
+public class JumpDiffusionUnit {
 	private double _dblJump = java.lang.Double.NaN;
-	private double _dblContinuous = java.lang.Double.NaN;
+	private double _dblDiffusion = java.lang.Double.NaN;
 
 	/**
-	 * Generate a R^1 Continuous Uniform Realization
+	 * Generate a R^1 Uniform Diffusion Realization
 	 * 
-	 * @return The R^1 Continuous Uniform Realization
+	 * @return The R^1 Uniform Diffusion Realization
 	 */
 
-	public static final R1UnitRealization ContinuousUniform()
+	public static final JumpDiffusionUnit UniformDiffusion()
 	{
 		try {
-			return new R1UnitRealization (java.lang.Math.random(), 0.);
+			return new JumpDiffusionUnit (java.lang.Math.random(), 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -74,15 +74,15 @@ public class R1UnitRealization {
 	}
 
 	/**
-	 * Generate a R^1 Continuous Gaussian Realization
+	 * Generate a R^1 Gaussian Diffusion Realization
 	 * 
-	 * @return The R^1 Continuous Gaussian Realization
+	 * @return The R^1 Gaussian Diffusion Realization
 	 */
 
-	public static final R1UnitRealization ContinuousGaussian()
+	public static final JumpDiffusionUnit GaussianDiffusion()
 	{
 		try {
-			return new R1UnitRealization (org.drip.measure.gaussian.NormalQuadrature.Random(), 0.);
+			return new JumpDiffusionUnit (org.drip.measure.gaussian.NormalQuadrature.Random(), 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -91,15 +91,15 @@ public class R1UnitRealization {
 	}
 
 	/**
-	 * Generate a R^1 Jump Uniform Realization
+	 * Generate a R^1 Uniform Jump Realization
 	 * 
-	 * @return The R^1 Jump Uniform Realization
+	 * @return The R^1 Uniform Jump Realization
 	 */
 
-	public static final R1UnitRealization JumpUniform()
+	public static final JumpDiffusionUnit UniformJump()
 	{
 		try {
-			return new R1UnitRealization (0., java.lang.Math.random());
+			return new JumpDiffusionUnit (0., java.lang.Math.random());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -108,15 +108,15 @@ public class R1UnitRealization {
 	}
 
 	/**
-	 * Generate a R^1 Jump Gaussian Realization
+	 * Generate a R^1 Gaussian Jump Realization
 	 * 
-	 * @return The R^1 Jump Gaussian Realization
+	 * @return The R^1 Gaussian Jump Realization
 	 */
 
-	public static final R1UnitRealization JumpGaussian()
+	public static final JumpDiffusionUnit GaussianJump()
 	{
 		try {
-			return new R1UnitRealization (0., org.drip.measure.gaussian.NormalQuadrature.Random());
+			return new JumpDiffusionUnit (0., org.drip.measure.gaussian.NormalQuadrature.Random());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -125,24 +125,24 @@ public class R1UnitRealization {
 	}
 
 	/**
-	 * Generate an Array of R^1 Continuous Realizations
+	 * Generate an Array of R^1 Diffusion Realizations
 	 * 
-	 * @param adblContinuousRealization The Array of Continuous Realizations
+	 * @param adblDiffusionRealization The Array of Diffusion Realizations
 	 * 
-	 * @return Array of R^1 Continuous Realizations
+	 * @return Array of R^1 Diffusion Realizations
 	 */
 
-	public static final R1UnitRealization[] Continuous (
-		final double[] adblContinuousRealization)
+	public static final JumpDiffusionUnit[] Diffusion (
+		final double[] adblDiffusionRealization)
 	{
-		if (null == adblContinuousRealization) return null;
+		if (null == adblDiffusionRealization) return null;
 
-		int iSize = adblContinuousRealization.length;
-		R1UnitRealization[] aR1UR = 0 == iSize ? null : new R1UnitRealization[iSize];
+		int iSize = adblDiffusionRealization.length;
+		JumpDiffusionUnit[] aJDU = 0 == iSize ? null : new JumpDiffusionUnit[iSize];
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aR1UR[i] = new R1UnitRealization (adblContinuousRealization[i], 0.);
+				aJDU[i] = new JumpDiffusionUnit (adblDiffusionRealization[i], 0.);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -150,7 +150,7 @@ public class R1UnitRealization {
 			}
 		}
 
-		return aR1UR;
+		return aJDU;
 	}
 
 	/**
@@ -161,17 +161,17 @@ public class R1UnitRealization {
 	 * @return Array of R^1 Jump Realizations
 	 */
 
-	public static final R1UnitRealization[] Jump (
+	public static final JumpDiffusionUnit[] Jump (
 		final double[] adblJumpRealization)
 	{
 		if (null == adblJumpRealization) return null;
 
 		int iSize = adblJumpRealization.length;
-		R1UnitRealization[] aR1UR = 0 == iSize ? null : new R1UnitRealization[iSize];
+		JumpDiffusionUnit[] aJDU = 0 == iSize ? null : new JumpDiffusionUnit[iSize];
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aR1UR[i] = new R1UnitRealization (0., adblJumpRealization[i]);
+				aJDU[i] = new JumpDiffusionUnit (0., adblJumpRealization[i]);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -179,32 +179,32 @@ public class R1UnitRealization {
 			}
 		}
 
-		return aR1UR;
+		return aJDU;
 	}
 
 	/**
-	 * Generate an Array of R^1 Continuous/Jump Realizations
+	 * Generate an Array of R^1 Jump Diffusion Realizations
 	 * 
-	 * @param adblContinuousRealization The Array of Continuous Realizations
+	 * @param adblDiffusionRealization The Array of Diffusion Realizations
 	 * @param adblJumpRealization The Array of Jump Realizations
 	 * 
-	 * @return Array of R^1 Continuous/Jump Realizations
+	 * @return Array of R^1 Jump Diffusion Realizations
 	 */
 
-	public static final R1UnitRealization[] ContinuousJump (
-		final double[] adblContinuousRealization,
+	public static final JumpDiffusionUnit[] JumpDiffusion (
+		final double[] adblDiffusionRealization,
 		final double[] adblJumpRealization)
 	{
-		if (null == adblJumpRealization || null == adblJumpRealization) return null;
+		if (null == adblDiffusionRealization || null == adblJumpRealization) return null;
 
-		int iSize = adblContinuousRealization.length;
-		R1UnitRealization[] aR1UR = 0 == iSize ? null : new R1UnitRealization[iSize];
+		int iSize = adblDiffusionRealization.length;
+		JumpDiffusionUnit[] aJDU = 0 == iSize ? null : new JumpDiffusionUnit[iSize];
 
 		if (0 == iSize || iSize != adblJumpRealization.length) return null;
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aR1UR[i] = new R1UnitRealization (adblContinuousRealization[i], adblJumpRealization[i]);
+				aJDU[i] = new JumpDiffusionUnit (adblDiffusionRealization[i], adblJumpRealization[i]);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -212,37 +212,37 @@ public class R1UnitRealization {
 			}
 		}
 
-		return aR1UR;
+		return aJDU;
 	}
 
 	/**
-	 * R1UnitRealization Constructor
+	 * JumpDiffusionUnit Constructor
 	 * 
-	 * @param dblContinuous The Continuous Random Variable
+	 * @param dblDiffusion The Diffusion Random Variable
 	 * @param dblJump The Jump Random Variable
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public R1UnitRealization (
-		final double dblContinuous,
+	public JumpDiffusionUnit (
+		final double dblDiffusion,
 		final double dblJump)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblContinuous = dblContinuous) ||
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDiffusion = dblDiffusion) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblJump = dblJump))
-			throw new java.lang.Exception ("R1UnitRealization Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("JumpDiffusionUnit Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Continuous Random Variable
+	 * Retrieve the Diffusion Random Variable
 	 * 
-	 * @return The Continuous Random Variable
+	 * @return The Diffusion Random Variable
 	 */
 
-	public double continuous()
+	public double diffusion()
 	{
-		return _dblContinuous;
+		return _dblDiffusion;
 	}
 
 	/**

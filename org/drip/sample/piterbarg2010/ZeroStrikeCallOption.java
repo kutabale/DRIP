@@ -81,13 +81,13 @@ public class ZeroStrikeCallOption {
 	{
 		String[] astrDepositMaturityTenor = new String[] {
 			"1D",
-			"2D",
+			// "2D",
 			"3D"
 		};
 
 		double[] adblDepositQuote = new double[] {
 			0.0004,		// 1D
-			0.0004,		// 2D
+			// 0.0004,		// 2D
 			0.0004		// 3D
 		};
 

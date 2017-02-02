@@ -168,7 +168,7 @@ public class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
 				_twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
-					new org.drip.measure.marginal.R1Snap (
+					new org.drip.measure.realization.JumpDiffusionVertex (
 						dblTime,
 						us.zeroCouponCollateralBondNumeraire().finish(),
 						0.,
@@ -235,7 +235,7 @@ public class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
 				_twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
-					new org.drip.measure.marginal.R1Snap (
+					new org.drip.measure.realization.JumpDiffusionVertex (
 						dblTime,
 						us.zeroCouponCollateralBondNumeraire().finish(),
 						0.,

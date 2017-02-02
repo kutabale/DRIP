@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.realization;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,54 +47,32 @@ package org.drip.measure.marginal;
  */
 
 /**
- * R1Snap holds the Snapshot Values of the Realized R^1 Variable - its Value, whether it has terminated, and
- * 	the Cumulative Hazard Integral - and Time.
+ * DiffusionVertex holds the Vertex Values of the Realized R^1 Diffusion Variable - its Value and Time.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class R1Snap {
-	private boolean _bTerminationReached = false;
+public class DiffusionVertex {
 	private double _dblTime = java.lang.Double.NaN;
 	private double _dblValue = java.lang.Double.NaN;
-	private double _dblCumulativeHazardIntegral = java.lang.Double.NaN;
 
 	/**
-	 * R1Snap Constructor
+	 * DiffusionVertex Constructor
 	 * 
 	 * @param dblTime The Time Instant
 	 * @param dblValue The Random Variable Value
-	 * @param dblCumulativeHazardIntegral The Event Occurrence Cumulative Hazard Integral
-	 * @param bTerminationReached TRUE - Termination Reached
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public R1Snap (
+	public DiffusionVertex (
 		final double dblTime,
-		final double dblValue,
-		final double dblCumulativeHazardIntegral,
-		final boolean bTerminationReached)
+		final double dblValue)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCumulativeHazardIntegral =
-					dblCumulativeHazardIntegral))
-			throw new java.lang.Exception ("R1Snap Constructor => Invalid Inputs");
-
-		_bTerminationReached = bTerminationReached;
-	}
-
-	/**
-	 * Retrieve the Termination Reached Flag
-	 * 
-	 * @return TRUE - Termination Reached
-	 */
-
-	public boolean terminationReached()
-	{
-		return _bTerminationReached;
+			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue))
+			throw new java.lang.Exception ("DiffusionVertex Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -117,16 +95,5 @@ public class R1Snap {
 	public double value()
 	{
 		return _dblValue;
-	}
-
-	/**
-	 * Retrieve the Event Occurrence Cumulative Hazard Integral
-	 * 
-	 * @return The Event Occurrence Cumulative Hazard Integral
-	 */
-
-	public final double cumulativeHazardIntegral()
-	{
-		return _dblCumulativeHazardIntegral;
 	}
 }

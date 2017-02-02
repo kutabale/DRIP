@@ -4,6 +4,8 @@ package org.drip.sample.burgard2011;
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
 import org.drip.measure.process.HazardEventIndicationEvaluator;
+import org.drip.measure.realization.JumpDiffusionVertex;
+import org.drip.measure.realization.JumpDiffusionUnit;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
@@ -87,10 +89,10 @@ public class CorrelatedNumeraireXVAExplain {
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
 		final EdgeEvolutionTrajectory eetStart,
-		final R1Snap r1sAsset,
-		final R1Snap r1sCollateral,
-		final R1Snap r1sBank,
-		final R1Snap r1sCounterParty)
+		final JumpDiffusionVertex r1sAsset,
+		final JumpDiffusionVertex r1sCollateral,
+		final JumpDiffusionVertex r1sBank,
+		final JumpDiffusionVertex r1sCounterParty)
 		throws Exception
 	{
 		EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
@@ -209,7 +211,7 @@ public class CorrelatedNumeraireXVAExplain {
 				dblDerivativeXVAValueGammaFinish,
 				eagStart.derivativeValue() * Math.exp (
 					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
-						new R1Snap (
+						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
 							0.,
@@ -280,16 +282,14 @@ public class CorrelatedNumeraireXVAExplain {
 			dblCounterPartyRecoveryRate
 		);
 
-		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
 			dblAssetDrift,
-			dblAssetVolatility,
-			null
+			dblAssetVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCollateralBond = ContinuousJumpEvolverLogarithmic.Standard (
+		ContinuousEvolver meZeroCouponCollateralBond = ContinuousEvolverLogarithmic.Standard (
 			dblZeroCouponCollateralBondDrift,
-			dblZeroCouponCollateralBondVolatility,
-			null
+			dblZeroCouponCollateralBondVolatility
 		);
 
 		ContinuousEvolver meZeroCouponBankBond = ContinuousJumpEvolverLogarithmic.Standard (
@@ -360,50 +360,50 @@ public class CorrelatedNumeraireXVAExplain {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
-		R1Snap[] aR1SAsset = meAsset.snapSequence (
-			new R1Snap (
+		JumpDiffusionVertex[] aR1SAsset = meAsset.snapSequence (
+			new JumpDiffusionVertex (
 				0.,
 				dblInitialAssetNumeraire,
 				0.,
 				false
 			),
-			R1UnitRealization.Continuous (aadblNumeraireTimeSeries[0]),
+			JumpDiffusionUnit.Diffusion (aadblNumeraireTimeSeries[0]),
 			dblTimeWidth
 		);
 
-		R1Snap[] aR1SCollateral = meZeroCouponCollateralBond.snapSequence (
-			new R1Snap (
+		JumpDiffusionVertex[] aR1SCollateral = meZeroCouponCollateralBond.snapSequence (
+			new JumpDiffusionVertex (
 				0.,
 				dblInitialCollateralNumeraire,
 				0.,
 				false
 			),
-			R1UnitRealization.Continuous (aadblNumeraireTimeSeries[1]),
+			JumpDiffusionUnit.Diffusion (aadblNumeraireTimeSeries[1]),
 			dblTimeWidth
 		);
 
-		R1Snap[] aR1SBank = meZeroCouponBankBond.snapSequence (
-			new R1Snap (
+		JumpDiffusionVertex[] aR1SBank = meZeroCouponBankBond.snapSequence (
+			new JumpDiffusionVertex (
 				0.,
 				dblInitialBankNumeraire,
 				0.,
 				false
 			),
-			R1UnitRealization.ContinuousJump (
+			JumpDiffusionUnit.JumpDiffusion (
 				aadblNumeraireTimeSeries[2],
 				adblBankDefaultIndicator
 			),
 			dblTimeWidth
 		);
 
-		R1Snap[] aR1SCounterParty = meZeroCouponCounterPartyBond.snapSequence (
-			new R1Snap (
+		JumpDiffusionVertex[] aR1SCounterParty = meZeroCouponCounterPartyBond.snapSequence (
+			new JumpDiffusionVertex (
 				0.,
 				dblInitialCounterPartyNumeraire,
 				0.,
 				false
 			),
-			R1UnitRealization.ContinuousJump (
+			JumpDiffusionUnit.JumpDiffusion (
 				aadblNumeraireTimeSeries[3],
 				adblCounterPartyDefaultIndicator
 			),
