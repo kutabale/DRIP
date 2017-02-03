@@ -47,69 +47,24 @@ package org.drip.measure.process;
  */
 
 /**
- * EventIndicationEvaluator implements the Point Event Indication Evaluator that guides the Single Factor
- *  Random Process Variable Evolution.
+ * LocalDeterministicEvaluator exposes the Random Evolution's Local/Deterministic Drift/Volatility Function.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class EventIndicationEvaluator {
-	private boolean _bIsJumpTerminal = false;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevDensity = null;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction _ldevMagnitude = null;
+public interface LocalDeterministicEvaluator {
 
 	/**
-	 * EventIndicationEvaluator Constructor
+	 * Determine the Value of the Evolution Function from the given Random Variate and Time
 	 * 
-	 * @param bIsJumpTerminal TRUE - The Jump is Terminal
-	 * @param ldevDensity The LDEV Event Density Function of the Marginal Process Jump Component
-	 * @param ldevMagnitude The LDEV Event Magnitude Function of the Marginal Process Jump Component
+	 * @param jdv The Random Variate Marginal Snap
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Value of the Evolution Function
+	 * 
+	 * @throws java.lang.Exception Thworn if the Value cannot be evaluated
 	 */
 
-	public EventIndicationEvaluator (
-		final boolean bIsJumpTerminal,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude)
-		throws java.lang.Exception
-	{
-		if (null == (_ldevDensity = ldevDensity) || null == (_ldevMagnitude = ldevMagnitude))
-			throw new java.lang.Exception ("EventIndicationEvaluator Constructor => Invalid Inputs");
-
-		_bIsJumpTerminal = bIsJumpTerminal;
-	}
-
-	/**
-	 * Indicate if the Jump is Terminal
-	 * 
-	 * @return TRUE - The Jump is Terminal
-	 */
-
-	public boolean isJumpTerminal()
-	{
-		return _bIsJumpTerminal;
-	}
-
-	/**
-	 * Retrieve the LDEV Event Density Function of the Marginal Process Jump Component
-	 * 
-	 * @return The LDEV Event Density Function of the Marginal Process Jump Component
-	 */
-
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction densityLDEV()
-	{
-		return _ldevDensity;
-	}
-
-	/**
-	 * Retrieve the LDEV Event Magnitude Function of the Marginal Process Jump Component
-	 * 
-	 * @return The LDEV Event Magnitude Function of the Marginal Process Jump Component
-	 */
-
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction magnitudeLDEV()
-	{
-		return _ldevMagnitude;
-	}
+	public abstract double value (
+		final org.drip.measure.realization.JumpDiffusionVertex jdv)
+		throws java.lang.Exception;
 }

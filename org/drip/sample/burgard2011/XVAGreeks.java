@@ -260,22 +260,22 @@ public class XVAGreeks {
 			dblCounterPartyRecovery
 		);
 
-		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCreditRiskFreeBond = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponCreditRiskFreeBond = DiffusionEvolverLogarithmic.Standard (
 			dblCreditRiskFreeDrift,
 			dblCreditRiskFreeVolatility
 		);
 
-		ContinuousEvolver meZeroCouponBankBond = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponBankBond = DiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
 			dblZeroCouponBankBondVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponCounterPartyBond = DiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
 			dblZeroCouponCounterPartyBondVolatility
 		);

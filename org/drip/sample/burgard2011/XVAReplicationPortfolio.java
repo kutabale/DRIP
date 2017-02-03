@@ -270,22 +270,22 @@ public class XVAReplicationPortfolio {
 			dblCounterPartyRecovery
 		);
 
-		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCollateralBond = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponCollateralBond = DiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponCollateralBondDrift,
 			dblZeroCouponCollateralBondVolatility
 		);
 
-		ContinuousEvolver meZeroCouponBankBond = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponBankBond = DiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
 			dblZeroCouponBankBondVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponCounterPartyBond = DiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
 			dblZeroCouponCounterPartyBondVolatility
 		);

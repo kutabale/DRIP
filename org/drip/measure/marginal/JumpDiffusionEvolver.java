@@ -47,17 +47,17 @@ package org.drip.measure.marginal;
  */
 
 /**
- * ContinuousJumpEvolver implements the Functionality that guides the Single Factor R^1 Continuous Jump
- *  Random Process Variable Evolution.
+ * JumpDiffusionEvolver implements the Functionality that guides the Single Factor R^1 Jump Diffusion Random
+ *  Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class ContinuousJumpEvolver extends org.drip.measure.marginal.ContinuousEvolver {
-	private org.drip.measure.process.HazardEventIndicationEvaluator _heie = null;
+public class JumpDiffusionEvolver extends org.drip.measure.marginal.DiffusionEvolver {
+	private org.drip.measure.process.HazardJumpIndicationEvaluator _heie = null;
 
 	/**
-	 * ContinuousJumpEvolver Constructor
+	 * JumpDiffusionEvolver Constructor
 	 * 
 	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
 	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process Continuous Component
@@ -66,16 +66,16 @@ public class ContinuousJumpEvolver extends org.drip.measure.marginal.ContinuousE
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ContinuousJumpEvolver (
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
-		final org.drip.measure.process.HazardEventIndicationEvaluator heie)
+	public JumpDiffusionEvolver (
+		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
+		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility,
+		final org.drip.measure.process.HazardJumpIndicationEvaluator heie)
 		throws java.lang.Exception
 	{
 		super (ldevDrift, ldevVolatility);
 
 		if (null == (_heie = heie))
-			throw new java.lang.Exception ("ContinuousJumpEvolver Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("JumpDiffusionEvolver Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -84,28 +84,26 @@ public class ContinuousJumpEvolver extends org.drip.measure.marginal.ContinuousE
 	 * @return The Hazard Point Event Indicator Instance
 	 */
 
-	public org.drip.measure.process.HazardEventIndicationEvaluator eventIndicationEvaluator()
+	public org.drip.measure.process.HazardJumpIndicationEvaluator eventIndicationEvaluator()
 	{
 		return _heie;
 	}
 
-	protected org.drip.measure.process.LevelHazardEventIndication hazardEventIndication (
-		final org.drip.measure.realization.JumpDiffusionVertex r1s,
-		final org.drip.measure.realization.JumpDiffusionUnit r1ur,
+	@Override protected org.drip.measure.realization.JumpIndicationEdge eventIndicationDAG (
+		final org.drip.measure.realization.JumpDiffusionVertex jdv,
+		final org.drip.measure.realization.JumpDiffusionUnit jdu,
 		final double dblTimeIncrement)
 	{
 		double dblHazardRate = _heie.hazardRate();
 
-		double dblJumpRandomUnitRealization = r1ur.jump();
-
 		double dblLevelHazardIntegral = dblHazardRate * dblTimeIncrement;
 
-		boolean bEventOccurred = java.lang.Math.exp (-1. * (r1s.cumulativeHazardIntegral() +
-			dblLevelHazardIntegral)) <= dblJumpRandomUnitRealization;
+		boolean bEventOccurred = java.lang.Math.exp (-1. * (jdv.cumulativeHazardIntegral() +
+			dblLevelHazardIntegral)) <= jdu.jump();
 
 		try {
-			return new org.drip.measure.process.LevelHazardEventIndication (bEventOccurred, dblHazardRate,
-				dblLevelHazardIntegral, bEventOccurred ? _heie.magnitudeLDEV().value (r1s) : 0.);
+			return new org.drip.measure.realization.JumpIndicationEdge (bEventOccurred, dblHazardRate,
+				dblLevelHazardIntegral, bEventOccurred ? _heie.magnitudeEvaluator().value (jdv) : 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -113,43 +111,31 @@ public class ContinuousJumpEvolver extends org.drip.measure.marginal.ContinuousE
 		return null;
 	}
 
-	/**
-	 * Generate the Adjacent Increment from the specified Random Variate
-	 * 
-	 * @param r1s The Random Variate Marginal Snap
-	 * @param r1ur The R^1 Unit Realization
-	 * @param dblTimeIncrement The Time Increment Evolution Unit
-	 * 
-	 * @return The Adjacent Increment
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionLevel increment (
-		final org.drip.measure.realization.JumpDiffusionVertex r1s,
-		final org.drip.measure.realization.JumpDiffusionUnit r1ur,
+	@Override public org.drip.measure.realization.JumpDiffusionEdge increment (
+		final org.drip.measure.realization.JumpDiffusionVertex jdv,
+		final org.drip.measure.realization.JumpDiffusionUnit jdu,
 		final double dblTimeIncrement)
 	{
-		if (null == r1s || null == r1ur || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
+		if (null == jdv || null == jdu || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
 			return null;
 
-		double dblPreviousValue = r1s.value();
+		double dblPreviousValue = jdv.value();
 
 		double dblHazardRate = _heie.hazardRate();
 
-		double dblJumpRandomUnitRealization = r1ur.jump();
+		double dblJumpRandomUnitRealization = jdu.jump();
 
 		double dblLevelHazardIntegral = dblHazardRate * dblTimeIncrement;
 
-		boolean bEventOccurred = java.lang.Math.exp (-1. * (r1s.cumulativeHazardIntegral() +
+		boolean bEventOccurred = java.lang.Math.exp (-1. * (jdv.cumulativeHazardIntegral() +
 			dblLevelHazardIntegral)) <= dblJumpRandomUnitRealization;
 
 		try {
-			return bEventOccurred && _heie.isJumpTerminal() ? new
-				org.drip.measure.realization.JumpDiffusionLevel (dblPreviousValue, 0., 0., new
-					org.drip.measure.process.LevelHazardEventIndication (bEventOccurred, dblHazardRate,
-						dblLevelHazardIntegral, _heie.magnitudeLDEV().value (r1s) - dblPreviousValue), new
-							org.drip.measure.realization.JumpDiffusionUnit (0.,
-								dblJumpRandomUnitRealization)) : super.increment (r1s, r1ur,
-									dblTimeIncrement);
+			return bEventOccurred ? new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue, 0.,
+				0., new org.drip.measure.realization.JumpIndicationEdge (bEventOccurred, dblHazardRate,
+					dblLevelHazardIntegral, _heie.magnitudeEvaluator().value (jdv) - dblPreviousValue), new
+						org.drip.measure.realization.JumpDiffusionUnit (0., dblJumpRandomUnitRealization)) :
+							super.increment (jdv, jdu, dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

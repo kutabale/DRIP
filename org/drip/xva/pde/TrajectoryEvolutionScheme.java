@@ -164,11 +164,11 @@ public class TrajectoryEvolutionScheme {
 
 		double dblCounterPartyBondUnitsStart = erpStart.counterPartyBondUnits();
 
-		org.drip.measure.realization.JumpDiffusionLevel lrAsset = us.assetNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge lrAsset = us.assetNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionLevel lrBankBond = us.zeroCouponBankBondNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge lrBankBond = us.zeroCouponBankBondNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionLevel lrCounterPartyBond =
+		org.drip.measure.realization.JumpDiffusionEdge lrCounterPartyBond =
 			us.zeroCouponCounterPartyBondNumeraire();
 
 		double dblLevelAssetCash = dblAssetUnitsStart * _twru.asset().cashAccumulationRate() *

@@ -3,8 +3,8 @@ package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
-import org.drip.measure.process.HazardEventIndicationEvaluator;
-import org.drip.measure.realization.JumpDiffusionLevel;
+import org.drip.measure.process.HazardJumpIndicationEvaluator;
+import org.drip.measure.realization.JumpDiffusionEdge;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.measure.realization.JumpDiffusionUnit;
 import org.drip.quant.common.FormatUtil;
@@ -152,29 +152,29 @@ public class R1JointJumpContinuous {
 
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
-		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCollateralBond = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponCollateralBond = DiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponCollateralBondDrift,
 			dblZeroCouponCollateralBondVolatility
 		);
 
-		ContinuousEvolver meZeroCouponBankBond = ContinuousJumpEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponBankBond = JumpDiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
 			dblZeroCouponBankBondVolatility,
-			HazardEventIndicationEvaluator.Standard (
+			HazardJumpIndicationEvaluator.Standard (
 				dblBankHazardRate,
 				dblBankRecoveryRate
 			)
 		);
 
-		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousJumpEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponCounterPartyBond = JumpDiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
 			dblZeroCouponCounterPartyBondVolatility,
-			HazardEventIndicationEvaluator.Standard (
+			HazardJumpIndicationEvaluator.Standard (
 				dblCounterPartyHazardRate,
 				dblCounterPartyRecoveryRate
 			)
@@ -190,7 +190,7 @@ public class R1JointJumpContinuous {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
-		JumpDiffusionLevel[] aR1AssetLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1AssetLR = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialAssetNumeraire,
@@ -201,7 +201,7 @@ public class R1JointJumpContinuous {
 			dblTimeWidth
 		);
 
-		JumpDiffusionLevel[] aR1CollateralLR = meZeroCouponCollateralBond.incrementSequence (
+		JumpDiffusionEdge[] aR1CollateralLR = meZeroCouponCollateralBond.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialCollateralNumeraire,
@@ -212,7 +212,7 @@ public class R1JointJumpContinuous {
 			dblTimeWidth
 		);
 
-		JumpDiffusionLevel[] aR1BankLR = meZeroCouponBankBond.incrementSequence (
+		JumpDiffusionEdge[] aR1BankLR = meZeroCouponBankBond.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialBankNumeraire,
@@ -226,7 +226,7 @@ public class R1JointJumpContinuous {
 			dblTimeWidth
 		);
 
-		JumpDiffusionLevel[] aR1CounterPartyLR = meZeroCouponCounterPartyBond.incrementSequence (
+		JumpDiffusionEdge[] aR1CounterPartyLR = meZeroCouponCounterPartyBond.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialCounterPartyNumeraire,

@@ -4,7 +4,7 @@ package org.drip.sample.almgren2009;
 import org.drip.execution.hjb.*;
 import org.drip.execution.latent.MarketStateSystemic;
 import org.drip.measure.marginal.*;
-import org.drip.measure.realization.JumpDiffusionLevel;
+import org.drip.measure.realization.JumpDiffusionEdge;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -99,13 +99,13 @@ public class AdaptiveOptimalCostTrajectory {
 
 		aMSS[0] = new MarketStateSystemic (dblInitialMarketState);
 
-		ContinuousEvolverOrnsteinUhlenbeck oup1D = ContinuousEvolverOrnsteinUhlenbeck.ZeroMean (
+		DiffusionEvolverOrnsteinUhlenbeck oup1D = DiffusionEvolverOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
-			JumpDiffusionLevel gi = oup1D.weinerIncrement (
+			JumpDiffusionEdge gi = oup1D.weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
 					aMSS[i].common(),

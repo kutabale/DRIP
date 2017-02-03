@@ -70,7 +70,7 @@ package org.drip.xva.definition;
 
 public class Tradeable {
 	private double _dblRepoRate = java.lang.Double.NaN;
-	private org.drip.measure.marginal.ContinuousEvolver _r1ePriceNumeraire = null;
+	private org.drip.measure.marginal.DiffusionEvolver _r1ePriceNumeraire = null;
 
 	/**
 	 * Tradeable Constructor
@@ -82,7 +82,7 @@ public class Tradeable {
 	 */
 
 	public Tradeable (
-		final org.drip.measure.marginal.ContinuousEvolver r1ePriceNumeraire,
+		final org.drip.measure.marginal.DiffusionEvolver r1ePriceNumeraire,
 		final double dblRepoRate)
 		throws java.lang.Exception
 	{
@@ -97,7 +97,7 @@ public class Tradeable {
 	 * @return The Trade-able Asset Price Numeraire
 	 */
 
-	public org.drip.measure.marginal.ContinuousEvolver priceNumeraire()
+	public org.drip.measure.marginal.DiffusionEvolver priceNumeraire()
 	{
 		return _r1ePriceNumeraire;
 	}

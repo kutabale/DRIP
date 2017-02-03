@@ -68,8 +68,8 @@ package org.drip.xva.collateral;
 
 public class FundingBasisEvolver {
 	private double _dblCorrelation = java.lang.Double.NaN;
-	private org.drip.measure.marginal.ContinuousEvolverLogarithmic _pmlUnderlying = null;
-	private org.drip.measure.marginal.ContinuousEvolverMeanReversion _pmmrFundingSpread = null;
+	private org.drip.measure.marginal.DiffusionEvolverLogarithmic _pmlUnderlying = null;
+	private org.drip.measure.marginal.DiffusionEvolverMeanReversion _pmmrFundingSpread = null;
 
 	/**
 	 * FundingBasisEvolver Constructor
@@ -82,8 +82,8 @@ public class FundingBasisEvolver {
 	 */
 
 	public FundingBasisEvolver (
-		final org.drip.measure.marginal.ContinuousEvolverLogarithmic pmlUnderlying,
-		final org.drip.measure.marginal.ContinuousEvolverMeanReversion pmmrFundingSpread,
+		final org.drip.measure.marginal.DiffusionEvolverLogarithmic pmlUnderlying,
+		final org.drip.measure.marginal.DiffusionEvolverMeanReversion pmmrFundingSpread,
 		final double dblCorrelation)
 		throws java.lang.Exception
 	{
@@ -99,7 +99,7 @@ public class FundingBasisEvolver {
 	 * @return The Underlying Dynamics Stochastic Process
 	 */
 
-	public org.drip.measure.marginal.ContinuousEvolverLogarithmic underlyingProcess()
+	public org.drip.measure.marginal.DiffusionEvolverLogarithmic underlyingProcess()
 	{
 		return _pmlUnderlying;
 	}
@@ -110,7 +110,7 @@ public class FundingBasisEvolver {
 	 * @return The Funding Spread Dynamics Stochastic Process
 	 */
 
-	public org.drip.measure.marginal.ContinuousEvolverMeanReversion fundingSpreadProcess()
+	public org.drip.measure.marginal.DiffusionEvolverMeanReversion fundingSpreadProcess()
 	{
 		return _pmmrFundingSpread;
 	}
@@ -132,11 +132,11 @@ public class FundingBasisEvolver {
 	 * @return The Dynamics of the Marginal Process for the CSA Forward
 	 */
 
-	public org.drip.measure.marginal.ContinuousEvolver csaForwardProcess()
+	public org.drip.measure.marginal.DiffusionEvolver csaForwardProcess()
 	{
 		try {
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
 					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
@@ -145,8 +145,8 @@ public class FundingBasisEvolver {
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
 					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
@@ -159,7 +159,7 @@ public class FundingBasisEvolver {
 				}
 			};
 
-			return new org.drip.measure.marginal.ContinuousEvolver (ldevDrift, ldevVolatility);
+			return new org.drip.measure.marginal.DiffusionEvolver (ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -175,7 +175,7 @@ public class FundingBasisEvolver {
 	 * @return The Dynamics of the Marginal Process for the Funding Numeraire
 	 */
 
-	public org.drip.measure.marginal.ContinuousEvolver fundingNumeraireProcess (
+	public org.drip.measure.marginal.DiffusionEvolver fundingNumeraireProcess (
 		final java.lang.String strTenor)
 	{
 		try {
@@ -189,8 +189,8 @@ public class FundingBasisEvolver {
 
 			final double dblPiterbarg2010BFactor = dblB;
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
 					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
@@ -199,8 +199,8 @@ public class FundingBasisEvolver {
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
 					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
@@ -213,7 +213,7 @@ public class FundingBasisEvolver {
 				}
 			};
 
-			return new org.drip.measure.marginal.ContinuousEvolver (ldevDrift, ldevVolatility);
+			return new org.drip.measure.marginal.DiffusionEvolver (ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -229,7 +229,7 @@ public class FundingBasisEvolver {
 	 * @return The Dynamics of the Marginal Process for the Funding Spread Numeraire
 	 */
 
-	public org.drip.measure.marginal.ContinuousEvolver fundingSpreadNumeraireProcess (
+	public org.drip.measure.marginal.DiffusionEvolver fundingSpreadNumeraireProcess (
 		final java.lang.String strTenor)
 	{
 		try {
@@ -243,8 +243,8 @@ public class FundingBasisEvolver {
 
 			final double dblPiterbarg2010BFactor = dblB;
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
 					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
@@ -253,8 +253,8 @@ public class FundingBasisEvolver {
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
 					final org.drip.measure.realization.JumpDiffusionVertex ms)
 					throws java.lang.Exception
@@ -267,7 +267,7 @@ public class FundingBasisEvolver {
 				}
 			};
 
-			return new org.drip.measure.marginal.ContinuousEvolver (ldevDrift, ldevVolatility);
+			return new org.drip.measure.marginal.DiffusionEvolver (ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

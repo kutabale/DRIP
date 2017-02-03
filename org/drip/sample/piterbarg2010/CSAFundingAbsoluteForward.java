@@ -104,12 +104,12 @@ public class CSAFundingAbsoluteForward {
 			30
 		};
 
-		ContinuousEvolverLogarithmic pmlUnderlying = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolverLogarithmic pmlUnderlying = DiffusionEvolverLogarithmic.Standard (
 			0.,
 			dblUnderlyingVolatility
 		);
 
-		ContinuousEvolverMeanReversion pmmrFundingSpread = ContinuousEvolverMeanReversion.Standard (
+		DiffusionEvolverMeanReversion pmmrFundingSpread = DiffusionEvolverMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility

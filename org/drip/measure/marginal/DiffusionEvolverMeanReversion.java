@@ -47,62 +47,59 @@ package org.drip.measure.marginal;
  */
 
 /**
- * ContinuousJumpEvolverLogarithmic guides the Continuous/Jump Random Variable Evolution according to R^1
- *  Logarithmic Process.
+ * DiffusionEvolverMeanReversion guides the Diffusion Random Variable Evolution according to the R^1 Mean
+ *  Reversion Process.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class ContinuousJumpEvolverLogarithmic extends org.drip.measure.marginal.ContinuousJumpEvolver {
-	private double _dblDrift = java.lang.Double.NaN;
+public class DiffusionEvolverMeanReversion extends org.drip.measure.marginal.DiffusionEvolver {
 	private double _dblVolatility = java.lang.Double.NaN;
+	private double _dblMeanReversionRate = java.lang.Double.NaN;
+	private double _dblMeanReversionLevel = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of ContinuousJumpEvolverLogarithmic
+	 * Generate a Standard Instance of DiffusionEvolverMeanReversion
 	 * 
-	 * @param dblDrift The Drift
+	 * @param dblMeanReversionRate The Mean Reversion Rate
+	 * @param dblMeanReversionLevel The Mean Reversion Level
 	 * @param dblVolatility The Volatility
-	 * @param heie The Point Hazard Event Indicator Function Instance
 	 * 
-	 * @return The Standard Instance of ContinuousJumpEvolverLogarithmic
+	 * @return The Standard Instance of DiffusionEvolverMeanReversion
 	 */
 
-	public static final ContinuousJumpEvolverLogarithmic Standard (
-		final double dblDrift,
-		final double dblVolatility,
-		final org.drip.measure.process.HazardEventIndicationEvaluator heie)
+	public static final DiffusionEvolverMeanReversion Standard (
+		final double dblMeanReversionRate,
+		final double dblMeanReversionLevel,
+		final double dblVolatility)
 	{
 		try {
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex r1s)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
-					if (null == r1s)
+					if (null == jdv)
 						throw new java.lang.Exception
-							("ContinuousJumpEvolverLogarithmic::DriftLDEV::value => Invalid Inputs");
+							("DiffusionEvolverMeanReversion::DriftLDEV::value => Invalid Inputs");
 
-					return r1s.value() * dblDrift;
+					return -1. * dblMeanReversionRate * (dblMeanReversionLevel - jdv.value());
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex r1s)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
-					if (null == r1s)
-						throw new java.lang.Exception
-							("ContinuousJumpEvolverLogarithmic::VolatilityLDEV::value => Invalid Inputs");
-
-					return r1s.value() * dblVolatility;
+					return dblVolatility;
 				}
 			};
 
-			return new ContinuousJumpEvolverLogarithmic (dblDrift, dblVolatility, ldevDrift, ldevVolatility,
-				heie);
+			return new DiffusionEvolverMeanReversion (dblMeanReversionRate, dblMeanReversionLevel,
+				dblVolatility, ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -110,36 +107,48 @@ public class ContinuousJumpEvolverLogarithmic extends org.drip.measure.marginal.
 		return null;
 	}
 
-	private ContinuousJumpEvolverLogarithmic (
-		final double dblDrift,
+	private DiffusionEvolverMeanReversion (
+		final double dblMeanReversionRate,
+		final double dblMeanReversionLevel,
 		final double dblVolatility,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility,
-		final org.drip.measure.process.HazardEventIndicationEvaluator heie)
+		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
+		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility, heie);
+		super (ldevDrift, ldevVolatility);
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("ContinuousJumpEvolverLogarithmic Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionRate = dblMeanReversionRate) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
+			throw new java.lang.Exception ("DiffusionJumpEvolverMeanReversion Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Drift
+	 * Retrieve the Mean Reversion Speed
 	 * 
-	 * @return The Drift
+	 * @return The Mean Reversion Speed
 	 */
 
-	public double drift()
+	public double meanReversionRate()
 	{
-		return _dblDrift;
+		return _dblMeanReversionRate;
 	}
 
 	/**
-	 * Retrieve the Volatility
+	 * Retrieve the Mean Reversion Level
 	 * 
-	 * @return The Volatility
+	 * @return The Mean Reversion Level
+	 */
+
+	public double meanReversionLevel()
+	{
+		return _dblMeanReversionLevel;
+	}
+
+	/**
+	 * Retrieve the Volatility of the Log Process
+	 * 
+	 * @return Volatility of the Log Process
 	 */
 
 	public double volatility()

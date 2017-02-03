@@ -48,8 +48,8 @@ package org.drip.measure.realization;
  */
 
 /**
- * JumpDiffusionLevel implements the Deterministic and the Stochastic Components of a R^1 Marginal Random
- *	Increment as well the Original Marginal Random Variate. The References are:
+ * JumpDiffusionEdge implements the Deterministic and the Stochastic Components of a R^1 Marginal Random
+ *	Increment Edge as well the Original Marginal Random Variate. The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,30 +69,30 @@ package org.drip.measure.realization;
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpDiffusionLevel {
+public class JumpDiffusionEdge {
 	private double _dblStart = java.lang.Double.NaN;
 	private double _dblDeterministic = java.lang.Double.NaN;
 	private double _dblDiffusionStochastic = java.lang.Double.NaN;
 	private org.drip.measure.realization.JumpDiffusionUnit _jdu = null;
-	private org.drip.measure.process.LevelHazardEventIndication _lheiJumpStochastic = null;
+	private org.drip.measure.realization.JumpIndicationEdge _jie = null;
 
 	/**
-	 * JumpDiffusionLevel Constructor
+	 * JumpDiffusionEdge Constructor
 	 * 
 	 * @param dblStart The Starting Random Variable Realization
 	 * @param dblDeterministic The Deterministic Increment Component
 	 * @param dblDiffusionStochastic The Diffusion Stochastic Increment Component
-	 * @param lheiJumpStochastic The Jump Stochastic Event Indicator
+	 * @param jie The Jump Stochastic Event Indication Edge
 	 * @param jdu The Jump Diffusion Unit Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public JumpDiffusionLevel (
+	public JumpDiffusionEdge (
 		final double dblStart,
 		final double dblDeterministic,
 		final double dblDiffusionStochastic,
-		final org.drip.measure.process.LevelHazardEventIndication lheiJumpStochastic,
+		final org.drip.measure.realization.JumpIndicationEdge jie,
 		final org.drip.measure.realization.JumpDiffusionUnit jdu)
 		throws java.lang.Exception
 	{
@@ -100,9 +100,9 @@ public class JumpDiffusionLevel {
 			!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblDiffusionStochastic = dblDiffusionStochastic)
 					|| null == (_jdu = jdu))
-			throw new java.lang.Exception ("JumpDiffusionLevel Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("JumpDiffusionEdge Constructor => Invalid Inputs");
 
-		_lheiJumpStochastic = lheiJumpStochastic;
+		_jie = jie;
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class JumpDiffusionLevel {
 
 	public double jumpStochastic()
 	{
-		return null == _lheiJumpStochastic ? 0. : _lheiJumpStochastic.terminalValue();
+		return null == _jie ? 0. : _jie.terminalValue();
 	}
 
 	/**
@@ -194,13 +194,13 @@ public class JumpDiffusionLevel {
 	}
 
 	/**
-	 * Retrieve the Event Indicator Edge Instance
+	 * Retrieve the Jump Event Indication Edge Instance
 	 * 
-	 * @return The Event Indicator Edge Instance
+	 * @return The Jump Event Indication Edge Instance
 	 */
 
-	public org.drip.measure.process.LevelHazardEventIndication jumpStochasticEventIndicator()
+	public org.drip.measure.realization.JumpIndicationEdge jumpIndicationEdge()
 	{
-		return _lheiJumpStochastic;
+		return _jie;
 	}
 }

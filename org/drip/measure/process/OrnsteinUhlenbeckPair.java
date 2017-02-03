@@ -48,7 +48,7 @@ package org.drip.measure.process;
  */
 
 /**
- * OrnsteinUhlenbeckProcess2D guides the Random Variable Evolution according to 2D Ornstein-Uhlenbeck Mean
+ * OrnsteinUhlenbeckPair guides the Random Variable Evolution according to 2D Ornstein-Uhlenbeck Mean
  *  Reverting Process. The References are:
  * 
  * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
@@ -69,53 +69,53 @@ package org.drip.measure.process;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.OrnsteinUhlenbeck {
+public class OrnsteinUhlenbeckPair implements org.drip.measure.process.OrnsteinUhlenbeck {
 	private double _dblCorrelation = java.lang.Double.NaN;
-	private org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck _oupDerived = null;
-	private org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck _oupReference = null;
+	private org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck _deouDerived = null;
+	private org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck _deouReference = null;
 
 	/**
-	 * OrnsteinUhlenbeckProcess2D Constructor
+	 * OrnsteinUhlenbeckPair Constructor
 	 * 
-	 * @param oupReference The Reference 1D Ornstein-Uhlenbeck Process
-	 * @param oupDerived The Derived 1D Ornstein-Uhlenbeck Process
+	 * @param deouReference The Reference R^1 Ornstein-Uhlenbeck Process
+	 * @param deouDerived The Derived R^1 Ornstein-Uhlenbeck Process
 	 * @param dblCorrelation The Correlation between the Two Ornstein-Uhlenbeck Processes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public OrnsteinUhlenbeckProcess2D (
-		final org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck oupReference,
-		final org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck oupDerived,
+	public OrnsteinUhlenbeckPair (
+		final org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck deouReference,
+		final org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck deouDerived,
 		final double dblCorrelation)
 		throws java.lang.Exception
 	{
-		if (null == (_oupReference = oupReference) || null == (_oupDerived = oupDerived) ||
+		if (null == (_deouReference = deouReference) || null == (_deouDerived = deouDerived) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblCorrelation = dblCorrelation) || _dblCorrelation <
 				-1. || _dblCorrelation > 1.)
-			throw new java.lang.Exception ("OrnsteinUhlenbeckProcess2D Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("OrnsteinUhlenbeckPair Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Reference 1D Ornstein-Uhlenbeck Process
+	 * Retrieve the Reference R^1 Ornstein-Uhlenbeck Process
 	 * 
-	 * @return The Reference 1D Ornstein-Uhlenbeck Process
+	 * @return The Reference R^1 Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck reference()
+	public org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck reference()
 	{
-		return _oupReference;
+		return _deouReference;
 	}
 
 	/**
-	 * Retrieve the Derived 1D Ornstein-Uhlenbeck Process
+	 * Retrieve the Derived R^1 Ornstein-Uhlenbeck Process
 	 * 
-	 * @return The Derived 1D Ornstein-Uhlenbeck Process
+	 * @return The Derived R^1 Ornstein-Uhlenbeck Process
 	 */
 
-	public org.drip.measure.marginal.ContinuousJumpEvolverOrnsteinUhlenbeck derived()
+	public org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck derived()
 	{
-		return _oupDerived;
+		return _deouDerived;
 	}
 
 	/**
@@ -130,50 +130,51 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	}
 
 	/**
-	 * Generate the Adjacent Increment Set from the specified Ornstein Uhlenbeck Random Variate Pair
+	 * Generate the Adjacent JumpDiffusionEdge Increment Array from the specified Ornstein Uhlenbeck Random
+	 * 		Variate Pair
 	 * 
 	 * @param adblOrnsteinUhlenbeckVariate The Array of the Ornstein Uhlenbeck Random Variates
-	 * @param adblRandomRealization The Array of the Random Stochastic Realization Variates
+	 * @param adblDiffusionRealization The Array of the Diffusion Realizations
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Adjacent Ornstein Uhlenbeck Increment Set
+	 * @return The Adjacent JumpDiffusionEdge Increment Array
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionLevel[] increment (
+	public org.drip.measure.realization.JumpDiffusionEdge[] increment (
 		final double[] adblOrnsteinUhlenbeckVariate,
-		final double[] adblRandomRealization,
+		final double[] adblDiffusionRealization,
 		final double dblTimeIncrement)
 	{
 		if (null == adblOrnsteinUhlenbeckVariate || 2 != adblOrnsteinUhlenbeckVariate.length ||
 			!org.drip.quant.common.NumberUtil.IsValid (adblOrnsteinUhlenbeckVariate) || null ==
-				adblRandomRealization || 2 != adblRandomRealization.length ||
-					!org.drip.quant.common.NumberUtil.IsValid (adblRandomRealization) ||
+				adblDiffusionRealization || 2 != adblDiffusionRealization.length ||
+					!org.drip.quant.common.NumberUtil.IsValid (adblDiffusionRealization) ||
 						!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
 			return null;
 
-		double dblRelaxationTime0 = _oupReference.relaxationTime();
+		double dblRelaxationTime0 = _deouReference.relaxationTime();
 
-		double dblRelaxationTime1 = _oupDerived.relaxationTime();
+		double dblRelaxationTime1 = _deouDerived.relaxationTime();
 
 		try {
-			return new org.drip.measure.realization.JumpDiffusionLevel[] {
-				new org.drip.measure.realization.JumpDiffusionLevel (
+			return new org.drip.measure.realization.JumpDiffusionEdge[] {
+				new org.drip.measure.realization.JumpDiffusionEdge (
 					adblOrnsteinUhlenbeckVariate[0],
 					-1. * adblOrnsteinUhlenbeckVariate[0] / dblRelaxationTime0 * dblTimeIncrement,
-					_oupReference.burstiness() * adblRandomRealization[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
+					_deouReference.burstiness() * adblDiffusionRealization[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
 					null,
 					new org.drip.measure.realization.JumpDiffusionUnit (
-						adblRandomRealization[0],
+						adblDiffusionRealization[0],
 						0.
 					)
 				),
-				new org.drip.measure.realization.JumpDiffusionLevel (
+				new org.drip.measure.realization.JumpDiffusionEdge (
 					adblOrnsteinUhlenbeckVariate[1],
 					-1. * adblOrnsteinUhlenbeckVariate[1] / dblRelaxationTime1 * dblTimeIncrement,
-					_oupDerived.burstiness() * adblRandomRealization[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
+					_deouDerived.burstiness() * adblDiffusionRealization[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
 					null,
 					new org.drip.measure.realization.JumpDiffusionUnit (
-						adblRandomRealization[1],
+						adblDiffusionRealization[1],
 						0.
 					)
 				)
@@ -186,15 +187,17 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 	}
 
 	/**
-	 * Generate the Weiner Based Increment Sequence from the Current Ornstein Uhlenbeck Random Variate
+	 * Generate the Weiner Based JumpDiffusionEdge Increment Sequence from the Current Ornstein Uhlenbeck
+	 * 		Random Variate
 	 * 
 	 * @param adblOrnsteinUhlenbeckVariate The Current Ornstein Uhlenbeck Random Variate
 	 * @param dblTimeIncrement The Time Increment
 	 * 
-	 * @return The Weiner Based Increment Sequence from the Current Ornstein Uhlenbeck Random Variate
+	 * @return The Weiner Based JumpDiffusionEdge Increment Sequence from the Current Ornstein Uhlenbeck
+	 * 		Random Variate
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionLevel[] weinerIncrement (
+	public org.drip.measure.realization.JumpDiffusionEdge[] weinerIncrement (
 		final double[] adblOrnsteinUhlenbeckVariate,
 		final double dblTimeIncrement)
 	{
@@ -213,16 +216,16 @@ public class OrnsteinUhlenbeckProcess2D implements org.drip.measure.process.Orns
 
 	@Override public double referenceRelaxationTime()
 	{
-		return _oupReference.relaxationTime();
+		return _deouReference.relaxationTime();
 	}
 
 	@Override public double referenceBurstiness()
 	{
-		return _oupReference.burstiness();
+		return _deouReference.burstiness();
 	}
 
 	@Override public double referenceMeanReversionLevel()
 	{
-		return _oupReference.meanReversionLevel();
+		return _deouReference.meanReversionLevel();
 	}
 }

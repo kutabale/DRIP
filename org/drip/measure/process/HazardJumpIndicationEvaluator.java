@@ -47,60 +47,60 @@ package org.drip.measure.process;
  */
 
 /**
- * HazardEventIndicationEvaluator implements the Hazard Process Point Event Indication Evaluator that guides
- *  the Single Factor Jump-Termination Random Process Variable Evolution.
+ * HazardJumpIndicationEvaluator implements the Hazard Jump Process Point Event Indication Evaluator that
+ *  guides the Single Factor Jump-Termination Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class HazardEventIndicationEvaluator extends org.drip.measure.process.EventIndicationEvaluator {
+public class HazardJumpIndicationEvaluator extends org.drip.measure.process.SingleJumpIndicationEvaluator {
 	private double _dblMagnitude = java.lang.Double.NaN;
 	private double _dblHazardRate = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of HazardEventIndicationEvaluator
+	 * Generate a Standard Instance of HazardJumpIndicationEvaluator
 	 * 
 	 * @param dblHazardRate The Hazard Rate
 	 * @param dblMagnitude The Magnitude
 	 * 
-	 * @return The Standard Instance of HazardEventIndicationEvaluator
+	 * @return The Standard Instance of HazardJumpIndicationEvaluator
 	 */
 
-	public static final HazardEventIndicationEvaluator Standard (
+	public static final HazardJumpIndicationEvaluator Standard (
 		final double dblHazardRate,
 		final double dblMagnitude)
 	{
 		try {
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldeDensity = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
 					final org.drip.measure.realization.JumpDiffusionVertex r1s)
 					throws java.lang.Exception
 				{
 					if (null == r1s)
 						throw new java.lang.Exception
-							("HazardEventIndicationEvaluator::DensityLDEV::value => Invalid Inputs");
+							("HazardJumpIndicationEvaluator::densityEvaluator::value => Invalid Inputs");
 
 					return -1. * dblHazardRate * java.lang.Math.exp (-1. * dblHazardRate);
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldeMagnitude = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
 					final org.drip.measure.realization.JumpDiffusionVertex r1s)
 					throws java.lang.Exception
 				{
 					if (null == r1s)
 						throw new java.lang.Exception
-							("HazardEventIndicationEvaluator::MagnitudeLDEV::value => Invalid Inputs");
+							("HazardJumpIndicationEvaluator::magnitudeEvaluator::value => Invalid Inputs");
 
 					return dblMagnitude;
 				}
 			};
 
-			return new HazardEventIndicationEvaluator (dblHazardRate, dblMagnitude, ldevDensity,
-				ldevMagnitude);
+			return new HazardJumpIndicationEvaluator (dblHazardRate, dblMagnitude, ldeDensity,
+				ldeMagnitude);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -108,19 +108,19 @@ public class HazardEventIndicationEvaluator extends org.drip.measure.process.Eve
 		return null;
 	}
 
-	private HazardEventIndicationEvaluator (
+	private HazardJumpIndicationEvaluator (
 		final double dblHazardRate,
 		final double dblMagnitude,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDensity,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevMagnitude)
+		final org.drip.measure.process.LocalDeterministicEvaluator ldeDensity,
+		final org.drip.measure.process.LocalDeterministicEvaluator ldeMagnitude)
 		throws java.lang.Exception
 	{
-		super (true, ldevDensity, ldevMagnitude);
+		super (ldeDensity, ldeMagnitude);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) || 0. > _dblHazardRate
 			|| !org.drip.quant.common.NumberUtil.IsValid (_dblMagnitude = dblMagnitude) || 0. >
 				_dblMagnitude)
-			throw new java.lang.Exception ("HazardEventIndicationEvaluator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("HazardJumpIndicationEvaluator Constructor => Invalid Inputs");
 	}
 
 	/**

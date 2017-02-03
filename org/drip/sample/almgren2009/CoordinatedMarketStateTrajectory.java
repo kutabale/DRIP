@@ -3,7 +3,7 @@ package org.drip.sample.almgren2009;
 
 import org.drip.execution.tradingtime.*;
 import org.drip.measure.marginal.*;
-import org.drip.measure.realization.JumpDiffusionLevel;
+import org.drip.measure.realization.JumpDiffusionEdge;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -96,7 +96,7 @@ public class CoordinatedMarketStateTrajectory {
 		double dblMarketState = dblInitialMarketState;
 		double dblTimeInterval = dblSimulationTime / iNumSimulation;
 
-		ContinuousEvolverOrnsteinUhlenbeck oup1D = ContinuousEvolverOrnsteinUhlenbeck.ZeroMean (
+		DiffusionEvolverOrnsteinUhlenbeck oup1D = DiffusionEvolverOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
@@ -140,7 +140,7 @@ public class CoordinatedMarketStateTrajectory {
 		);
 
 		for (int i = 0; i < iNumSimulation; ++i) {
-			JumpDiffusionLevel gi = oup1D.weinerIncrement (
+			JumpDiffusionEdge gi = oup1D.weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblMarketState,

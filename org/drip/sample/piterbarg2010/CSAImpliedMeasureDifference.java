@@ -252,7 +252,7 @@ public class CSAImpliedMeasureDifference {
 		double[][] aadblNoCSAForward = new double[adblCorrelation.length][adblStrike.length];
 		double[][] aadblMeasureShiftScale = new double[adblCorrelation.length][adblStrike.length];
 
-		ContinuousEvolverMeanReversion pmmrFundingSpread = ContinuousEvolverMeanReversion.Standard (
+		DiffusionEvolverMeanReversion pmmrFundingSpread = DiffusionEvolverMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility
@@ -278,7 +278,7 @@ public class CSAImpliedMeasureDifference {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (adblCorrelation[j], 2, 0, 100.) + "% => ";
 
 			for (int i = 0; i < adblStrike.length; ++i) {
-				ContinuousEvolverLogarithmic pmlUnderlying = ContinuousEvolverLogarithmic.Standard (
+				DiffusionEvolverLogarithmic pmlUnderlying = DiffusionEvolverLogarithmic.Standard (
 					0.,
 					adblCSAImpliedVolatility[i]
 				);

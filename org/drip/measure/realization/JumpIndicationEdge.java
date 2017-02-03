@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.realization;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,25 +47,84 @@ package org.drip.measure.process;
  */
 
 /**
- * LocalDeterministicEvolutionFunction exposes the Random Evolution's Local/Deterministic Drift/Volatility
- * 	Function.
+ * JumpIndicationEdge holds the Edge of the Jump Event Indication Evaluator Outcome.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public interface LocalDeterministicEvolutionFunction {
+public class JumpIndicationEdge {
+	private boolean _bOccurred = false;
+	private double _dblHazardRate = java.lang.Double.NaN;
+	private double _dblTerminalValue = java.lang.Double.NaN;
+	private double _dblHazardIntegral = java.lang.Double.NaN;
 
 	/**
-	 * Determine the Value of the Evolution Function from the given Random Variate and Time
+	 * JumpIndicationEdge Constructor
 	 * 
-	 * @param ms The Random Variate Marginal Snap
+	 * @param bOccurred TRUE - The Event Occurred
+	 * @param dblHazardRate The Hazard Rate
+	 * @param dblHazardIntegral The Level Hazard Integral
+	 * @param dblTerminalValue The Event Terminal Value
 	 * 
-	 * @return Value of the Evolution Function
-	 * 
-	 * @throws java.lang.Exception Thworn if the Value cannot be evaluated
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double value (
-		final org.drip.measure.realization.JumpDiffusionVertex r1s)
-		throws java.lang.Exception;
+	public JumpIndicationEdge (
+		final boolean bOccurred,
+		final double dblHazardRate,
+		final double dblHazardIntegral,
+		final double dblTerminalValue)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblHazardIntegral = dblHazardIntegral) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblTerminalValue = dblTerminalValue))
+			throw new java.lang.Exception ("JumpIndicationEdge Constructor => Invalid Inputs");
+
+		_bOccurred = bOccurred;
+	}
+
+	/**
+	 * Retrieve the "Event Occurred" Flag
+	 * 
+	 * @return The "Event Occurred" Flag
+	 */
+
+	public final boolean eventOccurred()
+	{
+		return _bOccurred;
+	}
+
+	/**
+	 * Retrieve the Event Occurrence Probability Density
+	 * 
+	 * @return The Event Occurrence Probability Density
+	 */
+
+	public final double hazardRate()
+	{
+		return _dblHazardRate;
+	}
+
+	/**
+	 * Retrieve the Event Occurrence Hazard Integral
+	 * 
+	 * @return The Event Occurrence Hazard Integral
+	 */
+
+	public final double hazardIntegral()
+	{
+		return _dblHazardIntegral;
+	}
+
+	/**
+	 * Retrieve the Terminal Event Value
+	 * 
+	 * @return The Terminal Event Value
+	 */
+
+	public final double terminalValue()
+	{
+		return _dblTerminalValue;
+	}
 }

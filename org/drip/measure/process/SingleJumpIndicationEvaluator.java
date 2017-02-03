@@ -47,84 +47,53 @@ package org.drip.measure.process;
  */
 
 /**
- * LevelHazardEventIndication holds the Outcome of the Hazard Event Indication Evaluator.
+ * SingleJumpIndicationEvaluator implements the Single Point Jump Event Indication Evaluator that guides the
+ *  One Factor Jump Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class LevelHazardEventIndication {
-	private boolean _bOccurred = false;
-	private double _dblHazardRate = java.lang.Double.NaN;
-	private double _dblTerminalValue = java.lang.Double.NaN;
-	private double _dblHazardIntegral = java.lang.Double.NaN;
+public class SingleJumpIndicationEvaluator {
+	private org.drip.measure.process.LocalDeterministicEvaluator _ldeDensity = null;
+	private org.drip.measure.process.LocalDeterministicEvaluator _ldeMagnitude = null;
 
 	/**
-	 * LevelHazardEventIndication Constructor
+	 * SingleJumpIndicationEvaluator Constructor
 	 * 
-	 * @param bOccurred TRUE - The Event Occurred
-	 * @param dblHazardRate The Hazard Rate
-	 * @param dblHazardIntegral The Level Hazard Integral
-	 * @param dblTerminalValue The Event Terminal Value
+	 * @param ldeDensity The LDE Event Density Evaluator of the Marginal Process Jump Component
+	 * @param ldeMagnitude The LDE Event Magnitude Evaluator of the Marginal Process Jump Component
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public LevelHazardEventIndication (
-		final boolean bOccurred,
-		final double dblHazardRate,
-		final double dblHazardIntegral,
-		final double dblTerminalValue)
+	public SingleJumpIndicationEvaluator (
+		final org.drip.measure.process.LocalDeterministicEvaluator ldeDensity,
+		final org.drip.measure.process.LocalDeterministicEvaluator ldeMagnitude)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblHazardIntegral = dblHazardIntegral) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblTerminalValue = dblTerminalValue))
-			throw new java.lang.Exception ("LevelHazardEventIndication Constructor => Invalid Inputs");
-
-		_bOccurred = bOccurred;
+		if (null == (_ldeDensity = ldeDensity) || null == (_ldeMagnitude = ldeMagnitude))
+			throw new java.lang.Exception ("SingleJumpIndicationEvaluator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the "Event Occurred" Flag
+	 * Retrieve the LDEV Event Density Evaluator of the Marginal Process Jump Component
 	 * 
-	 * @return The "Event Occurred" Flag
+	 * @return The LDEV Event Density Evaluator of the Marginal Process Jump Component
 	 */
 
-	public final boolean occurred()
+	public org.drip.measure.process.LocalDeterministicEvaluator densityEvaluator()
 	{
-		return _bOccurred;
+		return _ldeDensity;
 	}
 
 	/**
-	 * Retrieve the Event Occurrence Probability Density
+	 * Retrieve the LDE Event Magnitude Function of the Marginal Process Jump Component
 	 * 
-	 * @return The Event Occurrence Probability Density
+	 * @return The LDE Event Magnitude Function of the Marginal Process Jump Component
 	 */
 
-	public final double hazardRate()
+	public org.drip.measure.process.LocalDeterministicEvaluator magnitudeEvaluator()
 	{
-		return _dblHazardRate;
-	}
-
-	/**
-	 * Retrieve the Event Occurrence Hazard Integral
-	 * 
-	 * @return The Event Occurrence Hazard Integral
-	 */
-
-	public final double hazardIntegral()
-	{
-		return _dblHazardIntegral;
-	}
-
-	/**
-	 * Retrieve the Terminal Event Value
-	 * 
-	 * @return The Terminal Event Value
-	 */
-
-	public final double terminalValue()
-	{
-		return _dblTerminalValue;
+		return _ldeMagnitude;
 	}
 }

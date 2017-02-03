@@ -87,7 +87,7 @@ public class OrnsteinUhlenbeckSequence {
 	 */
 
 	public static final OrnsteinUhlenbeckSequence Systemic (
-		final org.drip.measure.marginal.ContinuousEvolverOrnsteinUhlenbeck oup1D,
+		final org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck oup1D,
 		final double dblGenerationInterval,
 		final double dblInitialMarketState,
 		final int iCount)
@@ -104,7 +104,7 @@ public class OrnsteinUhlenbeckSequence {
 			aMSS[0] = new org.drip.execution.latent.MarketStateSystemic (dblInitialMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.measure.realization.JumpDiffusionLevel gi = oup1D.weinerIncrement (new
+				org.drip.measure.realization.JumpDiffusionEdge gi = oup1D.weinerIncrement (new
 					org.drip.measure.realization.JumpDiffusionVertex (dblTime, aMSS[i].common(), 0., false),
 						dblGenerationInterval);
 
@@ -135,7 +135,7 @@ public class OrnsteinUhlenbeckSequence {
 	 */
 
 	public static final OrnsteinUhlenbeckSequence Correlated (
-		final org.drip.measure.process.OrnsteinUhlenbeckProcess2D oup2D,
+		final org.drip.measure.process.OrnsteinUhlenbeckPair oup2D,
 		final double dblGenerationInterval,
 		final double dblInitialLiquidityMarketState,
 		final double dblInitialVolatilityMarketState,
@@ -153,7 +153,7 @@ public class OrnsteinUhlenbeckSequence {
 				dblInitialVolatilityMarketState);
 
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.measure.realization.JumpDiffusionLevel[] aGI = oup2D.weinerIncrement
+				org.drip.measure.realization.JumpDiffusionEdge[] aGI = oup2D.weinerIncrement
 					(aMSC[i].realization(), dblGenerationInterval);
 
 				if (null == aGI || 2 != aGI.length) return null;

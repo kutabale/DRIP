@@ -3,7 +3,7 @@ package org.drip.sample.burgard2011;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
-import org.drip.measure.process.HazardEventIndicationEvaluator;
+import org.drip.measure.process.HazardJumpIndicationEvaluator;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.measure.realization.JumpDiffusionUnit;
 import org.drip.quant.common.FormatUtil;
@@ -282,29 +282,29 @@ public class CorrelatedNumeraireXVAExplain {
 			dblCounterPartyRecoveryRate
 		);
 
-		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility
 		);
 
-		ContinuousEvolver meZeroCouponCollateralBond = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponCollateralBond = DiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponCollateralBondDrift,
 			dblZeroCouponCollateralBondVolatility
 		);
 
-		ContinuousEvolver meZeroCouponBankBond = ContinuousJumpEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponBankBond = JumpDiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponBankBondDrift,
 			dblZeroCouponBankBondVolatility,
-			HazardEventIndicationEvaluator.Standard (
+			HazardJumpIndicationEvaluator.Standard (
 				dblBankHazardRate,
 				dblBankRecoveryRate
 			)
 		);
 
-		ContinuousEvolver meZeroCouponCounterPartyBond = ContinuousJumpEvolverLogarithmic.Standard (
+		DiffusionEvolver meZeroCouponCounterPartyBond = JumpDiffusionEvolverLogarithmic.Standard (
 			dblZeroCouponCounterPartyBondDrift,
 			dblZeroCouponCounterPartyBondVolatility,
-			HazardEventIndicationEvaluator.Standard (
+			HazardJumpIndicationEvaluator.Standard (
 				dblCounterPartyHazardRate,
 				dblCounterPartyRecoveryRate
 			)
@@ -360,7 +360,7 @@ public class CorrelatedNumeraireXVAExplain {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
-		JumpDiffusionVertex[] aR1SAsset = meAsset.snapSequence (
+		JumpDiffusionVertex[] aR1SAsset = meAsset.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialAssetNumeraire,
@@ -371,7 +371,7 @@ public class CorrelatedNumeraireXVAExplain {
 			dblTimeWidth
 		);
 
-		JumpDiffusionVertex[] aR1SCollateral = meZeroCouponCollateralBond.snapSequence (
+		JumpDiffusionVertex[] aR1SCollateral = meZeroCouponCollateralBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCollateralNumeraire,
@@ -382,7 +382,7 @@ public class CorrelatedNumeraireXVAExplain {
 			dblTimeWidth
 		);
 
-		JumpDiffusionVertex[] aR1SBank = meZeroCouponBankBond.snapSequence (
+		JumpDiffusionVertex[] aR1SBank = meZeroCouponBankBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialBankNumeraire,
@@ -396,7 +396,7 @@ public class CorrelatedNumeraireXVAExplain {
 			dblTimeWidth
 		);
 
-		JumpDiffusionVertex[] aR1SCounterParty = meZeroCouponCounterPartyBond.snapSequence (
+		JumpDiffusionVertex[] aR1SCounterParty = meZeroCouponCounterPartyBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCounterPartyNumeraire,

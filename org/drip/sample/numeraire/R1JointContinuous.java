@@ -3,7 +3,7 @@ package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
-import org.drip.measure.realization.JumpDiffusionLevel;
+import org.drip.measure.realization.JumpDiffusionEdge;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.measure.realization.JumpDiffusionUnit;
 import org.drip.quant.common.FormatUtil;
@@ -137,7 +137,7 @@ public class R1JointContinuous {
 
 		int iNumTimeStep = (int) (dblTime / dblTimeWidth);
 
-		ContinuousEvolver meAsset = ContinuousEvolverLogarithmic.Standard (
+		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility
 		);
@@ -148,7 +148,7 @@ public class R1JointContinuous {
 			"\t|| ASSET, COLLATERAL, BANK, COUNTER PARTY REALIZATION ||"
 		);
 
-		JumpDiffusionLevel[] aR1AssetLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1AssetLR = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblTerminalAssetNumeraire,
@@ -159,7 +159,7 @@ public class R1JointContinuous {
 			-1. * dblTimeWidth
 		);
 
-		JumpDiffusionLevel[] aR1CollateralLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1CollateralLR = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblTerminalCollateralNumeraire,
@@ -170,7 +170,7 @@ public class R1JointContinuous {
 			-1. * dblTimeWidth
 		);
 
-		JumpDiffusionLevel[] aR1BankLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1BankLR = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblTerminalBankNumeraire,
@@ -181,7 +181,7 @@ public class R1JointContinuous {
 			-1. * dblTimeWidth
 		);
 
-		JumpDiffusionLevel[] aR1CounterPartyLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1CounterPartyLR = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblTerminalBankNumeraire,

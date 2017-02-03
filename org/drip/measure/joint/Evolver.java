@@ -54,12 +54,12 @@ package org.drip.measure.joint;
 
 public abstract class Evolver {
 	private double[][] _aadblCorrelation = null;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction[] _aLDEVDrift = null;
-	private org.drip.measure.process.LocalDeterministicEvolutionFunction[] _aLDEVVolatility = null;
+	private org.drip.measure.process.LocalDeterministicEvaluator[] _aLDEVDrift = null;
+	private org.drip.measure.process.LocalDeterministicEvaluator[] _aLDEVVolatility = null;
 
 	protected Evolver (
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction[] aLDEVDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction[] aLDEVVolatility,
+		final org.drip.measure.process.LocalDeterministicEvaluator[] aLDEVDrift,
+		final org.drip.measure.process.LocalDeterministicEvaluator[] aLDEVVolatility,
 		final double[][] aadblCorrelation)
 		throws java.lang.Exception
 	{
@@ -87,7 +87,7 @@ public abstract class Evolver {
 	 * @return The Array of the LDEV Drift Function of the Individual Marginal Processes
 	 */
 
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction[] driftLDEV()
+	public org.drip.measure.process.LocalDeterministicEvaluator[] driftLDEV()
 	{
 		return _aLDEVDrift;
 	}
@@ -98,7 +98,7 @@ public abstract class Evolver {
 	 * @return The Array of the LDEV Volatility Function of the Individual Marginal Processes
 	 */
 
-	public org.drip.measure.process.LocalDeterministicEvolutionFunction[] volatilityLDEV()
+	public org.drip.measure.process.LocalDeterministicEvaluator[] volatilityLDEV()
 	{
 		return _aLDEVVolatility;
 	}

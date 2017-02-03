@@ -47,59 +47,50 @@ package org.drip.measure.marginal;
  */
 
 /**
- * ContinuousEvolverLogarithmic guides the Continuous/Jump Random Variable Evolution according to R^1
- *  Logarithmic Process.
+ * DiffusionEvolverLinear guides the Diffusion Random Variable Evolution according to Linear R^1 Process.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class ContinuousEvolverLogarithmic extends org.drip.measure.marginal.ContinuousEvolver {
+public class DiffusionEvolverLinear extends org.drip.measure.marginal.DiffusionEvolver {
 	private double _dblDrift = java.lang.Double.NaN;
 	private double _dblVolatility = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of ContinuousEvolverLogarithmic
+	 * Generate a Standard Instance of DiffusionEvolverLinear
 	 * 
 	 * @param dblDrift The Drift
 	 * @param dblVolatility The Volatility
 	 * 
-	 * @return The Standard Instance of ContinuousEvolverLogarithmic
+	 * @return The Standard Instance of DiffusionEvolverLinear
 	 */
 
-	public static final ContinuousEvolverLogarithmic Standard (
+	public static final DiffusionEvolverLinear Standard (
 		final double dblDrift,
 		final double dblVolatility)
 	{
 		try {
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex r1s)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
-					if (null == r1s)
-						throw new java.lang.Exception
-							("ContinuousEvolverLogarithmic::DriftLDEV::value => Invalid Inputs");
-
-					return r1s.value() * dblDrift;
+					return dblDrift;
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvolutionFunction() {
+			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
+				org.drip.measure.process.LocalDeterministicEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex r1s)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
-					if (null == r1s)
-						throw new java.lang.Exception
-							("ContinuousEvolverLogarithmic::VolatilityLDEV::value => Invalid Inputs");
-
-					return r1s.value() * dblVolatility;
+					return dblVolatility;
 				}
 			};
 
-			return new ContinuousEvolverLogarithmic (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
+			return new DiffusionEvolverLinear (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -107,18 +98,18 @@ public class ContinuousEvolverLogarithmic extends org.drip.measure.marginal.Cont
 		return null;
 	}
 
-	private ContinuousEvolverLogarithmic (
+	private DiffusionEvolverLinear (
 		final double dblDrift,
 		final double dblVolatility,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvolutionFunction ldevVolatility)
+		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
+		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility)
 		throws java.lang.Exception
 	{
 		super (ldevDrift, ldevVolatility);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("ContinuousEvolverLogarithmic Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("DiffusionEvolverLinear Constructor => Invalid Inputs");
 	}
 
 	/**

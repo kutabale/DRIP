@@ -3,8 +3,8 @@ package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
 import org.drip.measure.marginal.*;
-import org.drip.measure.process.HazardEventIndicationEvaluator;
-import org.drip.measure.realization.JumpDiffusionLevel;
+import org.drip.measure.process.HazardJumpIndicationEvaluator;
+import org.drip.measure.realization.JumpDiffusionEdge;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.measure.realization.JumpDiffusionUnit;
 import org.drip.quant.common.FormatUtil;
@@ -94,10 +94,10 @@ public class R1Jump {
 
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
-		ContinuousEvolver meAsset = ContinuousJumpEvolverLogarithmic.Standard (
+		DiffusionEvolver meAsset = JumpDiffusionEvolverLogarithmic.Standard (
 			dblAssetDrift,
 			dblAssetVolatility,
-			HazardEventIndicationEvaluator.Standard (
+			HazardJumpIndicationEvaluator.Standard (
 				dblAssetHazard,
 				dblAssetDefaultMagnitude
 			)
@@ -107,7 +107,7 @@ public class R1Jump {
 
 		double[] adblDefaultIndicatorTimeSeries = SequenceGenerator.Uniform (iNumTimeStep);
 
-		JumpDiffusionLevel[] aR1AssetLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1AssetLR = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblTerminalAssetNumeraire,
@@ -132,7 +132,7 @@ public class R1Jump {
 				FormatUtil.FormatDouble (aR1AssetLR[i].start(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1AssetLR[i].finish(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1AssetLR[i].diffusionWander(), 1, 4, 1.) + " | " +
-				aR1AssetLR[i].jumpStochasticEventIndicator().occurred() + " ||"
+				aR1AssetLR[i].jumpIndicationEdge().eventOccurred() + " ||"
 			);
 		}
 
