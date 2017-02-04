@@ -122,23 +122,23 @@ public class DiffusionEvaluatorLogarithmic extends org.drip.measure.dynamics.Dif
 	}
 
 	/**
-	 * Retrieve the Drift
+	 * Retrieve the Logarithmic Drift Value
 	 * 
-	 * @return The Drift
+	 * @return The Logarithmic Drift Value
 	 */
 
-	public double drift()
+	public double driftValue()
 	{
 		return _dblDrift;
 	}
 
 	/**
-	 * Retrieve the Volatility
+	 * Retrieve the Logarithmic Volatility Value
 	 * 
-	 * @return The Volatility
+	 * @return The Logarithmic Volatility Value
 	 */
 
-	public double volatility()
+	public double volatilityValue()
 	{
 		return _dblVolatility;
 	}

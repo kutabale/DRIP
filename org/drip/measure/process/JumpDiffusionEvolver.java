@@ -87,7 +87,7 @@ public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvol
 		return _heie;
 	}
 
-	@Override protected org.drip.measure.realization.JumpIndicationEdge jumpIndicationEdge (
+	@Override protected org.drip.measure.realization.JumpStochasticEdge jumpIndicationEdge (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
 		final org.drip.measure.realization.JumpDiffusionUnit jdu,
 		final double dblTimeIncrement)
@@ -100,7 +100,7 @@ public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvol
 			dblLevelHazardIntegral)) <= jdu.jump();
 
 		try {
-			return new org.drip.measure.realization.JumpIndicationEdge (bEventOccurred, dblHazardRate,
+			return new org.drip.measure.realization.JumpStochasticEdge (bEventOccurred, dblHazardRate,
 				dblLevelHazardIntegral, bEventOccurred ? _heie.magnitudeEvaluator().value (jdv) : 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -130,7 +130,7 @@ public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvol
 
 		try {
 			return bEventOccurred ? new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue, 0.,
-				0., new org.drip.measure.realization.JumpIndicationEdge (bEventOccurred, dblHazardRate,
+				0., new org.drip.measure.realization.JumpStochasticEdge (bEventOccurred, dblHazardRate,
 					dblLevelHazardIntegral, _heie.magnitudeEvaluator().value (jdv) - dblPreviousValue), new
 						org.drip.measure.realization.JumpDiffusionUnit (0., dblJumpRandomUnitRealization)) :
 							super.increment (jdv, jdu, dblTimeIncrement);

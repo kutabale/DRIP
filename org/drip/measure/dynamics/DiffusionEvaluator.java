@@ -80,7 +80,7 @@ public class DiffusionEvaluator {
 	 * @return The Drift Evaluator
 	 */
 
-	public org.drip.measure.dynamics.LocalEvaluator driftEvaluator()
+	public org.drip.measure.dynamics.LocalEvaluator drift()
 	{
 		return _leDrift;
 	}
@@ -91,7 +91,7 @@ public class DiffusionEvaluator {
 	 * @return The Volatility Evaluator
 	 */
 
-	public org.drip.measure.dynamics.LocalEvaluator volatilityEvaluator()
+	public org.drip.measure.dynamics.LocalEvaluator volatility()
 	{
 		return _leVolatility;
 	}

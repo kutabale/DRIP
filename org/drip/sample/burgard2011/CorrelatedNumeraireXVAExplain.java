@@ -209,7 +209,7 @@ public class CorrelatedNumeraireXVAExplain {
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				eagStart.derivativeValue() * Math.exp (
-					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().evaluator().driftEvaluator().value (
+					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,

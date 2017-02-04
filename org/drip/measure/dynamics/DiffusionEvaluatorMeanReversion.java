@@ -146,12 +146,12 @@ public class DiffusionEvaluatorMeanReversion extends org.drip.measure.dynamics.D
 	}
 
 	/**
-	 * Retrieve the Volatility of the Log Process
+	 * Retrieve the Logarithmic Volatility Value
 	 * 
-	 * @return Volatility of the Log Process
+	 * @return The Logarithmic Volatility Value
 	 */
 
-	public double volatility()
+	public double volatilityValue()
 	{
 		return _dblVolatility;
 	}

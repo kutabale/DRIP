@@ -56,7 +56,7 @@ package org.drip.measure.process;
 public class DiffusionEvolver {
 	private org.drip.measure.dynamics.DiffusionEvaluator _de = null;
 
-	protected org.drip.measure.realization.JumpIndicationEdge jumpIndicationEdge (
+	protected org.drip.measure.realization.JumpStochasticEdge jumpIndicationEdge (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
 		final org.drip.measure.realization.JumpDiffusionUnit jdu,
 		final double dblTimeIncrement)
@@ -114,15 +114,15 @@ public class DiffusionEvolver {
 		try {
 			if (jdv.jumpOccurred())
 				return new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue, 0., 0., new
-					org.drip.measure.realization.JumpIndicationEdge (true, 0., 0., 0.), new
+					org.drip.measure.realization.JumpStochasticEdge (true, 0., 0., 0.), new
 						org.drip.measure.realization.JumpDiffusionUnit (0., 0.));
 
-			org.drip.measure.dynamics.LocalEvaluator leVolatility = _de.volatilityEvaluator();
+			org.drip.measure.dynamics.LocalEvaluator leVolatility = _de.volatility();
 
-			return new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue,
-				_de.driftEvaluator().value (jdv) * dblTimeIncrement, null == leVolatility ? 0. :
-					leVolatility.value (jdv) * jdu.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs
-						(dblTimeIncrement)), jumpIndicationEdge (jdv, jdu, dblTimeIncrement), jdu);
+			return new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue, _de.drift().value
+				(jdv) * dblTimeIncrement, null == leVolatility ? 0. : leVolatility.value (jdv) *
+					jdu.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs (dblTimeIncrement)),
+						jumpIndicationEdge (jdv, jdu, dblTimeIncrement), jdu);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -161,7 +161,7 @@ public class DiffusionEvolver {
 				boolean bJumpOccurred = false;
 				double dblHazardIntegral = 0.;
 
-				org.drip.measure.realization.JumpIndicationEdge jie = aJDE[i].jumpIndicationEdge();
+				org.drip.measure.realization.JumpStochasticEdge jie = aJDE[i].jumpIndicationEdge();
 
 				if (null != jie) {
 					bJumpOccurred = jie.eventOccurred();
@@ -213,7 +213,7 @@ public class DiffusionEvolver {
 			if (null == jdDAG) return null;
 
 			try {
-				org.drip.measure.realization.JumpIndicationEdge eiDAG = jdDAG.jumpIndicationEdge();
+				org.drip.measure.realization.JumpStochasticEdge eiDAG = jdDAG.jumpIndicationEdge();
 
 				boolean bJumpOccurred = false;
 				double dblHazardIntegral = 0.;

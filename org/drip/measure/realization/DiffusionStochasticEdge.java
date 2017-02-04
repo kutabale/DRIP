@@ -47,84 +47,22 @@ package org.drip.measure.realization;
  */
 
 /**
- * JumpIndicationEdge holds the Edge of the Jump Event Indication Evaluator Outcome.
+ * DiffusionStochasticEdge holds the Edge of the Diffusion Stochastic Evaluator Outcome.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpIndicationEdge {
-	private boolean _bOccurred = false;
-	private double _dblTarget = java.lang.Double.NaN;
-	private double _dblHazardRate = java.lang.Double.NaN;
-	private double _dblHazardIntegral = java.lang.Double.NaN;
+public class DiffusionStochasticEdge {
+	private double _dblChange = java.lang.Double.NaN;
 
 	/**
-	 * JumpIndicationEdge Constructor
+	 * Retrieve the Diffusion Stochastic Edge Change Amount
 	 * 
-	 * @param bOccurred TRUE - The Jump Event Occurred
-	 * @param dblHazardRate The Hazard Rate
-	 * @param dblHazardIntegral The Level Hazard Integral
-	 * @param dblTarget The Jump Target
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Diffusion Stochastic Edge Change Amount
 	 */
 
-	public JumpIndicationEdge (
-		final boolean bOccurred,
-		final double dblHazardRate,
-		final double dblHazardIntegral,
-		final double dblTarget)
-		throws java.lang.Exception
+	public double change()
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblHazardIntegral = dblHazardIntegral) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblTarget = dblTarget))
-			throw new java.lang.Exception ("JumpIndicationEdge Constructor => Invalid Inputs");
-
-		_bOccurred = bOccurred;
-	}
-
-	/**
-	 * Retrieve the "Event Occurred" Flag
-	 * 
-	 * @return The "Event Occurred" Flag
-	 */
-
-	public final boolean eventOccurred()
-	{
-		return _bOccurred;
-	}
-
-	/**
-	 * Retrieve the Event Occurrence Probability Density
-	 * 
-	 * @return The Event Occurrence Probability Density
-	 */
-
-	public final double hazardRate()
-	{
-		return _dblHazardRate;
-	}
-
-	/**
-	 * Retrieve the Event Occurrence Hazard Integral
-	 * 
-	 * @return The Event Occurrence Hazard Integral
-	 */
-
-	public final double hazardIntegral()
-	{
-		return _dblHazardIntegral;
-	}
-
-	/**
-	 * Retrieve the Jump Target Value
-	 * 
-	 * @return The Jump Target Value
-	 */
-
-	public final double target()
-	{
-		return _dblTarget;
+		return _dblChange;
 	}
 }

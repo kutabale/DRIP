@@ -1,5 +1,5 @@
 
-package org.drip.measure.dynamics;
+package org.drip.measure.realization;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,91 +47,38 @@ package org.drip.measure.dynamics;
  */
 
 /**
- * DiffusionEvaluatorLinear implements the Linear Drift and Volatility Evaluators for R^1 Random Diffusion
- *  Process.
+ * DiffusionUnit holds the Diffusion R^1 Unit Realizations.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class DiffusionEvaluatorLinear extends org.drip.measure.dynamics.DiffusionEvaluator {
-	private double _dblDrift = java.lang.Double.NaN;
-	private double _dblVolatility = java.lang.Double.NaN;
+public class DiffusionUnit {
+	private double _dblDiffusion = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of DiffusionEvaluatorLinear
+	 * DiffusionUnit Constructor
 	 * 
-	 * @param dblDrift The Drift
-	 * @param dblVolatility The Volatility
+	 * @param dblDiffusion The Diffusion Random Variable
 	 * 
-	 * @return The Standard Instance of DiffusionEvaluatorLinear
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public static final DiffusionEvaluatorLinear Standard (
-		final double dblDrift,
-		final double dblVolatility)
-	{
-		try {
-			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
-			{
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					return dblDrift;
-				}
-			};
-
-			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
-				org.drip.measure.dynamics.LocalEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					return dblVolatility;
-				}
-			};
-
-			return new DiffusionEvaluatorLinear (dblDrift, dblVolatility, leDrift, leVolatility);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	private DiffusionEvaluatorLinear (
-		final double dblDrift,
-		final double dblVolatility,
-		final org.drip.measure.dynamics.LocalEvaluator leDrift,
-		final org.drip.measure.dynamics.LocalEvaluator leVolatility)
+	public DiffusionUnit (
+		final double dblDiffusion)
 		throws java.lang.Exception
 	{
-		super (leDrift, leVolatility);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("DiffusionEvaluatorLinear Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDiffusion = dblDiffusion))
+			throw new java.lang.Exception ("DiffusionUnit Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Linear Drift Value
+	 * Retrieve the Diffusion Random Variable
 	 * 
-	 * @return The Linear Drift Value
+	 * @return The Diffusion Random Variable
 	 */
 
-	public double driftValue()
+	public double diffusion()
 	{
-		return _dblDrift;
-	}
-
-	/**
-	 * Retrieve the Linear Volatility Value
-	 * 
-	 * @return The Linear Volatility Value
-	 */
-
-	public double volatilityValue()
-	{
-		return _dblVolatility;
+		return _dblDiffusion;
 	}
 }

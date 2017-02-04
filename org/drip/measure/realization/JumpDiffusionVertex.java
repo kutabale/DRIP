@@ -62,7 +62,7 @@ public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionV
 	 * 
 	 * @param dblTime The Time Instant
 	 * @param dblValue The Random Variable Value
-	 * @param dblCumulativeHazardIntegral The Event Occurrence Cumulative Hazard Integral
+	 * @param dblCumulativeHazardIntegral The Jump Occurrence Cumulative Hazard Integral
 	 * @param bJumpOccurred TRUE - Jump Occurred
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -96,9 +96,9 @@ public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionV
 	}
 
 	/**
-	 * Retrieve the Event Occurrence Cumulative Hazard Integral
+	 * Retrieve the Jump Occurrence Cumulative Hazard Integral
 	 * 
-	 * @return The Event Occurrence Cumulative Hazard Integral
+	 * @return The Jump Occurrence Cumulative Hazard Integral
 	 */
 
 	public final double cumulativeHazardIntegral()

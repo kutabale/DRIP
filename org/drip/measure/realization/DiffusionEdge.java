@@ -7,7 +7,6 @@ package org.drip.measure.realization;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -48,8 +47,9 @@ package org.drip.measure.realization;
  */
 
 /**
- * JumpDiffusionEdge implements the Deterministic and the Stochastic Components of a R^1 Marginal Random
- *	Increment Edge as well the Original Marginal Random Variate. The References are:
+ * DiffusionEdge implements the Deterministic and the Stochastic Components of a R^1 Marginal Random
+ *	Increment Edge as well the Original Marginal Random Variate for a Variable following a Diffusion Process.
+ *	The References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -69,46 +69,41 @@ package org.drip.measure.realization;
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpDiffusionEdge {
+public class DiffusionEdge {
 	private double _dblStart = java.lang.Double.NaN;
 	private double _dblDeterministic = java.lang.Double.NaN;
 	private double _dblDiffusionStochastic = java.lang.Double.NaN;
-	private org.drip.measure.realization.JumpDiffusionUnit _jdu = null;
-	private org.drip.measure.realization.JumpStochasticEdge _jie = null;
+	private org.drip.measure.realization.DiffusionUnit _du = null;
 
 	/**
-	 * JumpDiffusionEdge Constructor
+	 * DiffusionEdge Constructor
 	 * 
 	 * @param dblStart The Starting Random Variable Realization
 	 * @param dblDeterministic The Deterministic Increment Component
 	 * @param dblDiffusionStochastic The Diffusion Stochastic Increment Component
-	 * @param jie The Jump Stochastic Event Indication Edge
-	 * @param jdu The Jump Diffusion Unit Realization
+	 * @param du The Diffusion Unit Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public JumpDiffusionEdge (
+	public DiffusionEdge (
 		final double dblStart,
 		final double dblDeterministic,
 		final double dblDiffusionStochastic,
-		final org.drip.measure.realization.JumpStochasticEdge jie,
-		final org.drip.measure.realization.JumpDiffusionUnit jdu)
+		final org.drip.measure.realization.DiffusionUnit du)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblStart = dblStart) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblDeterministic = dblDeterministic) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblDiffusionStochastic = dblDiffusionStochastic)
-					|| null == (_jdu = jdu))
-			throw new java.lang.Exception ("JumpDiffusionEdge Constructor => Invalid Inputs");
-
-		_jie = jie;
+					|| null == (_du = du))
+			throw new java.lang.Exception ("DiffusionEdge Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Starting Random Realization
+	 * Retrieve the Start Realization
 	 * 
-	 * @return The Starting Random Realization
+	 * @return The Start Realization
 	 */
 
 	public double start()
@@ -146,29 +141,7 @@ public class JumpDiffusionEdge {
 
 	public double diffusionWander()
 	{
-		return _jdu.diffusion();
-	}
-
-	/**
-	 * Retrieve the Jump Stochastic Increment Component
-	 * 
-	 * @return The Jump Stochastic Increment Component
-	 */
-
-	public double jumpStochastic()
-	{
-		return null == _jie ? 0. : _jie.target();
-	}
-
-	/**
-	 * Retrieve the Jump Random Wander Realization
-	 * 
-	 * @return The Jump Random Wander Realization
-	 */
-
-	public double jumpWander()
-	{
-		return _jdu.jump();
+		return _du.diffusion();
 	}
 
 	/**
@@ -179,28 +152,17 @@ public class JumpDiffusionEdge {
 
 	public double grossChange()
 	{
-		return _dblDeterministic + _dblDiffusionStochastic + jumpStochastic();
+		return _dblDeterministic + _dblDiffusionStochastic;
 	}
 
 	/**
-	 * Retrieve the Next Random Realization
+	 * Retrieve the Finish Realization
 	 * 
-	 * @return The Next Random Realization
+	 * @return The Finish Realization
 	 */
 
 	public double finish()
 	{
-		return _dblStart + _dblDeterministic + _dblDiffusionStochastic + jumpStochastic();
-	}
-
-	/**
-	 * Retrieve the Jump Event Indication Edge Instance
-	 * 
-	 * @return The Jump Event Indication Edge Instance
-	 */
-
-	public org.drip.measure.realization.JumpStochasticEdge jumpIndicationEdge()
-	{
-		return _jie;
+		return _dblStart + _dblDeterministic + _dblDiffusionStochastic;
 	}
 }

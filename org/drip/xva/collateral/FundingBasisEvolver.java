@@ -155,7 +155,7 @@ public class FundingBasisEvolver {
 						throw new java.lang.Exception
 							("FundingBasisEvolver::CSAForwardVolatility::Evaluator::value => Invalid Inputs");
 
-					return dv.value() * _delUnderlying.volatility();
+					return dv.value() * _delUnderlying.volatilityValue();
 				}
 			};
 
@@ -210,7 +210,7 @@ public class FundingBasisEvolver {
 						throw new java.lang.Exception
 							("FundingBasisEvolver::CSAFundingNumeraireVolatility::Evaluator::value => Invalid Inputs");
 
-					return -1. * dv.value() * dblPiterbarg2010BFactor * _demrFundingSpread.volatility();
+					return -1. * dv.value() * dblPiterbarg2010BFactor * _demrFundingSpread.volatilityValue();
 				}
 			};
 
@@ -265,7 +265,7 @@ public class FundingBasisEvolver {
 						throw new java.lang.Exception
 							("FundingBasisEvolver::CSAFundingSpreadNumeraireVolatility::Evaluator::value => Invalid Inputs");
 
-					return -1. * dv.value() * dblPiterbarg2010BFactor * _demrFundingSpread.volatility();
+					return -1. * dv.value() * dblPiterbarg2010BFactor * _demrFundingSpread.volatilityValue();
 				}
 			};
 
@@ -292,11 +292,11 @@ public class FundingBasisEvolver {
 		final java.lang.String strTenor)
 		throws java.lang.Exception
 	{
-		double dblUnderlyingVolatility = _delUnderlying.volatility();
-
-		double dblFundingSpreadVolatility = _demrFundingSpread.volatility();
+		double dblUnderlyingVolatility = _delUnderlying.volatilityValue();
 
 		double dblMeanReversionSpeed = _demrFundingSpread.meanReversionRate();
+
+		double dblFundingSpreadVolatility = _demrFundingSpread.volatilityValue();
 
 		double dblMaturity = org.drip.analytics.support.Helper.TenorToYearFraction (strTenor);
 

@@ -52,9 +52,8 @@ package org.drip.measure.realization;
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpDiffusionUnit {
+public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUnit {
 	private double _dblJump = java.lang.Double.NaN;
-	private double _dblDiffusion = java.lang.Double.NaN;
 
 	/**
 	 * Generate a R^1 Uniform Diffusion Realization
@@ -229,20 +228,10 @@ public class JumpDiffusionUnit {
 		final double dblJump)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDiffusion = dblDiffusion) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblJump = dblJump))
+		super (dblDiffusion);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblJump = dblJump))
 			throw new java.lang.Exception ("JumpDiffusionUnit Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the Diffusion Random Variable
-	 * 
-	 * @return The Diffusion Random Variable
-	 */
-
-	public double diffusion()
-	{
-		return _dblDiffusion;
 	}
 
 	/**

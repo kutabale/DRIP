@@ -1,5 +1,5 @@
 
-package org.drip.measure.dynamics;
+package org.drip.measure.realization;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,91 +47,84 @@ package org.drip.measure.dynamics;
  */
 
 /**
- * DiffusionEvaluatorLinear implements the Linear Drift and Volatility Evaluators for R^1 Random Diffusion
- *  Process.
+ * JumpStochasticEdge holds the Edge of the Jump Stochastic Evaluator Outcome.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class DiffusionEvaluatorLinear extends org.drip.measure.dynamics.DiffusionEvaluator {
-	private double _dblDrift = java.lang.Double.NaN;
-	private double _dblVolatility = java.lang.Double.NaN;
+public class JumpStochasticEdge {
+	private boolean _bOccurred = false;
+	private double _dblTarget = java.lang.Double.NaN;
+	private double _dblHazardRate = java.lang.Double.NaN;
+	private double _dblHazardIntegral = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of DiffusionEvaluatorLinear
+	 * JumpStochasticEdge Constructor
 	 * 
-	 * @param dblDrift The Drift
-	 * @param dblVolatility The Volatility
+	 * @param bOccurred TRUE - The Jump Occurred in this Edge Period
+	 * @param dblHazardRate The Hazard Rate
+	 * @param dblHazardIntegral The Level Hazard Integral
+	 * @param dblTarget The Jump Target
 	 * 
-	 * @return The Standard Instance of DiffusionEvaluatorLinear
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public static final DiffusionEvaluatorLinear Standard (
-		final double dblDrift,
-		final double dblVolatility)
-	{
-		try {
-			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
-			{
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					return dblDrift;
-				}
-			};
-
-			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
-				org.drip.measure.dynamics.LocalEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					return dblVolatility;
-				}
-			};
-
-			return new DiffusionEvaluatorLinear (dblDrift, dblVolatility, leDrift, leVolatility);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	private DiffusionEvaluatorLinear (
-		final double dblDrift,
-		final double dblVolatility,
-		final org.drip.measure.dynamics.LocalEvaluator leDrift,
-		final org.drip.measure.dynamics.LocalEvaluator leVolatility)
+	public JumpStochasticEdge (
+		final boolean bOccurred,
+		final double dblHazardRate,
+		final double dblHazardIntegral,
+		final double dblTarget)
 		throws java.lang.Exception
 	{
-		super (leDrift, leVolatility);
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblHazardIntegral = dblHazardIntegral) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblTarget = dblTarget))
+			throw new java.lang.Exception ("JumpStochasticEdge Constructor => Invalid Inputs");
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("DiffusionEvaluatorLinear Constructor => Invalid Inputs");
+		_bOccurred = bOccurred;
 	}
 
 	/**
-	 * Retrieve the Linear Drift Value
+	 * Retrieve the "Jump Occurred in this Level Period" Flag
 	 * 
-	 * @return The Linear Drift Value
+	 * @return The "Jump Occurred in this Level Period" Flag
 	 */
 
-	public double driftValue()
+	public final boolean eventOccurred()
 	{
-		return _dblDrift;
+		return _bOccurred;
 	}
 
 	/**
-	 * Retrieve the Linear Volatility Value
+	 * Retrieve the Jump Occurrence Probability Density
 	 * 
-	 * @return The Linear Volatility Value
+	 * @return The Jump Occurrence Probability Density
 	 */
 
-	public double volatilityValue()
+	public final double hazardRate()
 	{
-		return _dblVolatility;
+		return _dblHazardRate;
+	}
+
+	/**
+	 * Retrieve the Jump Occurrence Hazard Integral
+	 * 
+	 * @return The Jump Occurrence Hazard Integral
+	 */
+
+	public final double hazardIntegral()
+	{
+		return _dblHazardIntegral;
+	}
+
+	/**
+	 * Retrieve the Jump Target Value
+	 * 
+	 * @return The Jump Target Value
+	 */
+
+	public final double target()
+	{
+		return _dblTarget;
 	}
 }
