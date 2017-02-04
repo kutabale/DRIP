@@ -71,27 +71,26 @@ public class HazardJumpEvaluator extends org.drip.measure.dynamics.SingleJumpEva
 		final double dblHazardRate,
 		final double dblMagnitude)
 	{
+		org.drip.measure.dynamics.LocalEvaluator leDensity = new org.drip.measure.dynamics.LocalEvaluator() {
+			@Override public double value (
+				final org.drip.measure.realization.JumpDiffusionVertex jdv)
+				throws java.lang.Exception
+			{
+				return -1. * dblHazardRate * java.lang.Math.exp (-1. * dblHazardRate);
+			}
+		};
+
+		org.drip.measure.dynamics.LocalEvaluator leMagnitude = new org.drip.measure.dynamics.LocalEvaluator()
+		{
+			@Override public double value (
+				final org.drip.measure.realization.JumpDiffusionVertex jdv)
+				throws java.lang.Exception
+			{
+				return dblMagnitude;
+			}
+		};
+
 		try {
-			org.drip.measure.dynamics.LocalEvaluator leDensity = new
-				org.drip.measure.dynamics.LocalEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					return -1. * dblHazardRate * java.lang.Math.exp (-1. * dblHazardRate);
-				}
-			};
-
-			org.drip.measure.dynamics.LocalEvaluator leMagnitude = new
-				org.drip.measure.dynamics.LocalEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					return dblMagnitude;
-				}
-			};
-
 			return new HazardJumpEvaluator (dblHazardRate, dblMagnitude, leDensity, leMagnitude);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

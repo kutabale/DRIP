@@ -157,22 +157,22 @@ public class OrnsteinUhlenbeckPair implements org.drip.measure.process.OrnsteinU
 
 		try {
 			return new org.drip.measure.realization.JumpDiffusionEdge[] {
-				new org.drip.measure.realization.JumpDiffusionEdge (
+				org.drip.measure.realization.JumpDiffusionEdge.Standard (
 					adblVariatePair[0],
 					-1. * adblVariatePair[0] / dblRelaxationTime0 * dblTimeIncrement,
 					_deouReference.burstiness() * adblDiffusionPair[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
 					null,
-					new org.drip.measure.realization.JumpDiffusionUnit (
+					new org.drip.measure.realization.UnitRandom (
 						adblDiffusionPair[0],
 						0.
 					)
 				),
-				new org.drip.measure.realization.JumpDiffusionEdge (
+				org.drip.measure.realization.JumpDiffusionEdge.Standard (
 					adblVariatePair[1],
 					-1. * adblVariatePair[1] / dblRelaxationTime1 * dblTimeIncrement,
 					_deouDerived.burstiness() * adblDiffusionPair[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
 					null,
-					new org.drip.measure.realization.JumpDiffusionUnit (
+					new org.drip.measure.realization.UnitRandom (
 						adblDiffusionPair[1],
 						0.
 					)

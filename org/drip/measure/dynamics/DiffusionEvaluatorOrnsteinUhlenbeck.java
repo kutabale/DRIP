@@ -74,31 +74,30 @@ public class DiffusionEvaluatorOrnsteinUhlenbeck extends org.drip.measure.dynami
 		final double dblBurstiness,
 		final double dblRelaxationTime)
 	{
-		try {
-			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
+		org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator() {
+			@Override public double value (
+				final org.drip.measure.realization.JumpDiffusionVertex jdv)
+				throws java.lang.Exception
 			{
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					if (null == dv)
-						throw new java.lang.Exception
-							("DiffusionEvaluatorOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
+				if (null == jdv)
+					throw new java.lang.Exception
+						("DiffusionEvaluatorOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
 
-					return -1. * dv.value() / dblRelaxationTime;
-				}
-			};
+				return -1. * jdv.value() / dblRelaxationTime;
+			}
+		};
 
-			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
-				org.drip.measure.dynamics.LocalEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					return dblBurstiness * java.lang.Math.sqrt (1. / dblRelaxationTime);
-				}
-			};
+		org.drip.measure.dynamics.LocalEvaluator leVolatility = new
+			org.drip.measure.dynamics.LocalEvaluator() {
+			@Override public double value (
+				final org.drip.measure.realization.JumpDiffusionVertex jdv)
+				throws java.lang.Exception
+			{
+				return dblBurstiness * java.lang.Math.sqrt (1. / dblRelaxationTime);
+			}
+		};
 
+		try {
 			return new DiffusionEvaluatorOrnsteinUhlenbeck (dblMeanReversionLevel, dblBurstiness,
 				dblRelaxationTime, leDrift, leVolatility);
 		} catch (java.lang.Exception e) {

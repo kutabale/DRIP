@@ -53,8 +53,10 @@ package org.drip.measure.realization;
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionVertex {
+public class JumpDiffusionVertex {
 	private boolean _bJumpOccurred = false;
+	private double _dblTime = java.lang.Double.NaN;
+	private double _dblValue = java.lang.Double.NaN;
 	private double _dblCumulativeHazardIntegral = java.lang.Double.NaN;
 
 	/**
@@ -75,13 +77,35 @@ public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionV
 		final boolean bJumpOccurred)
 		throws java.lang.Exception
 	{
-		super (dblTime, dblValue);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCumulativeHazardIntegral =
-			dblCumulativeHazardIntegral))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblValue = dblValue) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCumulativeHazardIntegral =
+					dblCumulativeHazardIntegral))
 			throw new java.lang.Exception ("JumpDiffusionVertex Constructor => Invalid Inputs");
 
 		_bJumpOccurred = bJumpOccurred;
+	}
+
+	/**
+	 * Retrieve the Evolution Time Instant
+	 * 
+	 * @return The Evolution Time Instant
+	 */
+
+	public double time()
+	{
+		return _dblTime;
+	}
+
+	/**
+	 * Retrieve the Realized Random Value
+	 * 
+	 * @return The Realized Random Value
+	 */
+
+	public double value()
+	{
+		return _dblValue;
 	}
 
 	/**

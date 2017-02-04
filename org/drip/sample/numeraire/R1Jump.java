@@ -114,7 +114,7 @@ public class R1Jump {
 				0.,
 				false
 			),
-			JumpDiffusionUnit.JumpDiffusion (
+			UnitRandom.JumpDiffusion (
 				adblAssetNumeraireTimeSeries,
 				adblDefaultIndicatorTimeSeries
 			),
@@ -132,7 +132,7 @@ public class R1Jump {
 				FormatUtil.FormatDouble (aR1AssetLR[i].start(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1AssetLR[i].finish(), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (aR1AssetLR[i].diffusionWander(), 1, 4, 1.) + " | " +
-				aR1AssetLR[i].jumpIndicationEdge().eventOccurred() + " ||"
+				aR1AssetLR[i].stochasticJumpEdge().jumpOccurred() + " ||"
 			);
 		}
 

@@ -47,84 +47,38 @@ package org.drip.measure.realization;
  */
 
 /**
- * JumpStochasticEdge holds the Edge of the Jump Stochastic Evaluator Outcome.
+ * StochasticEdgeDiffusion holds the Edge of the Diffusion Stochastic Evaluator Outcome.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpStochasticEdge {
-	private boolean _bOccurred = false;
-	private double _dblTarget = java.lang.Double.NaN;
-	private double _dblHazardRate = java.lang.Double.NaN;
-	private double _dblHazardIntegral = java.lang.Double.NaN;
+public class StochasticEdgeDiffusion {
+	private double _dblChange = java.lang.Double.NaN;
 
 	/**
-	 * JumpStochasticEdge Constructor
+	 * StochasticEdgeDiffusion Constructor
 	 * 
-	 * @param bOccurred TRUE - The Jump Occurred in this Edge Period
-	 * @param dblHazardRate The Hazard Rate
-	 * @param dblHazardIntegral The Level Hazard Integral
-	 * @param dblTarget The Jump Target
+	 * @param dblChange The Diffusion Stochastic Edge Change Amount
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public JumpStochasticEdge (
-		final boolean bOccurred,
-		final double dblHazardRate,
-		final double dblHazardIntegral,
-		final double dblTarget)
+	public StochasticEdgeDiffusion (
+		final double dblChange)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblHazardIntegral = dblHazardIntegral) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblTarget = dblTarget))
-			throw new java.lang.Exception ("JumpStochasticEdge Constructor => Invalid Inputs");
-
-		_bOccurred = bOccurred;
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblChange = dblChange))
+			throw new java.lang.Exception ("StochasticEdgeDiffusion Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the "Jump Occurred in this Level Period" Flag
+	 * Retrieve the Diffusion Stochastic Edge Change Amount
 	 * 
-	 * @return The "Jump Occurred in this Level Period" Flag
+	 * @return The Diffusion Stochastic Edge Change Amount
 	 */
 
-	public final boolean eventOccurred()
+	public double change()
 	{
-		return _bOccurred;
-	}
-
-	/**
-	 * Retrieve the Jump Occurrence Probability Density
-	 * 
-	 * @return The Jump Occurrence Probability Density
-	 */
-
-	public final double hazardRate()
-	{
-		return _dblHazardRate;
-	}
-
-	/**
-	 * Retrieve the Jump Occurrence Hazard Integral
-	 * 
-	 * @return The Jump Occurrence Hazard Integral
-	 */
-
-	public final double hazardIntegral()
-	{
-		return _dblHazardIntegral;
-	}
-
-	/**
-	 * Retrieve the Jump Target Value
-	 * 
-	 * @return The Jump Target Value
-	 */
-
-	public final double target()
-	{
-		return _dblTarget;
+		return _dblChange;
 	}
 }

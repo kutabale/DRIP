@@ -73,31 +73,30 @@ public class DiffusionEvaluatorMeanReversion extends org.drip.measure.dynamics.D
 		final double dblMeanReversionLevel,
 		final double dblVolatility)
 	{
-		try {
-			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
+		org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator() {
+			@Override public double value (
+				final org.drip.measure.realization.JumpDiffusionVertex jdv)
+				throws java.lang.Exception
 			{
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					if (null == dv)
-						throw new java.lang.Exception
-							("DiffusionEvaluatorMeanReversion::driftEvaluator::value => Invalid Inputs");
+				if (null == jdv)
+					throw new java.lang.Exception
+						("DiffusionEvaluatorMeanReversion::driftEvaluator::value => Invalid Inputs");
 
-					return -1. * dblMeanReversionRate * (dblMeanReversionLevel - dv.value());
-				}
-			};
+				return -1. * dblMeanReversionRate * (dblMeanReversionLevel - jdv.value());
+			}
+		};
 
-			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
-				org.drip.measure.dynamics.LocalEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					return dblVolatility;
-				}
-			};
+		org.drip.measure.dynamics.LocalEvaluator leVolatility = new
+			org.drip.measure.dynamics.LocalEvaluator() {
+			@Override public double value (
+				final org.drip.measure.realization.JumpDiffusionVertex jdv)
+				throws java.lang.Exception
+			{
+				return dblVolatility;
+			}
+		};
 
+		try {
 			return new DiffusionEvaluatorMeanReversion (dblMeanReversionRate, dblMeanReversionLevel,
 				dblVolatility, leDrift, leVolatility);
 		} catch (java.lang.Exception e) {

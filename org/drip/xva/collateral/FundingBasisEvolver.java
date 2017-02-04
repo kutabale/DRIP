@@ -138,7 +138,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
 			{
 				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
 					return 0.;
@@ -148,14 +148,14 @@ public class FundingBasisEvolver {
 			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
 				org.drip.measure.dynamics.LocalEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
-					if (null == dv)
+					if (null == jdv)
 						throw new java.lang.Exception
 							("FundingBasisEvolver::CSAForwardVolatility::Evaluator::value => Invalid Inputs");
 
-					return dv.value() * _delUnderlying.volatilityValue();
+					return jdv.value() * _delUnderlying.volatilityValue();
 				}
 			};
 
@@ -193,7 +193,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
 			{
 				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
 					return 0.;
@@ -203,14 +203,14 @@ public class FundingBasisEvolver {
 			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
 				org.drip.measure.dynamics.LocalEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
-					if (null == dv)
+					if (null == jdv)
 						throw new java.lang.Exception
 							("FundingBasisEvolver::CSAFundingNumeraireVolatility::Evaluator::value => Invalid Inputs");
 
-					return -1. * dv.value() * dblPiterbarg2010BFactor * _demrFundingSpread.volatilityValue();
+					return -1. * jdv.value() * dblPiterbarg2010BFactor * _demrFundingSpread.volatilityValue();
 				}
 			};
 
@@ -248,7 +248,7 @@ public class FundingBasisEvolver {
 			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
 			{
 				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex ms)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
 					return 0.;
@@ -258,14 +258,14 @@ public class FundingBasisEvolver {
 			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
 				org.drip.measure.dynamics.LocalEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
+					final org.drip.measure.realization.JumpDiffusionVertex jdv)
 					throws java.lang.Exception
 				{
-					if (null == dv)
+					if (null == jdv)
 						throw new java.lang.Exception
 							("FundingBasisEvolver::CSAFundingSpreadNumeraireVolatility::Evaluator::value => Invalid Inputs");
 
-					return -1. * dv.value() * dblPiterbarg2010BFactor * _demrFundingSpread.volatilityValue();
+					return -1. * jdv.value() * dblPiterbarg2010BFactor * _demrFundingSpread.volatilityValue();
 				}
 			};
 

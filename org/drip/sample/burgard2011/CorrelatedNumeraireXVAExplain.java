@@ -374,7 +374,7 @@ public class CorrelatedNumeraireXVAExplain {
 				0.,
 				false
 			),
-			JumpDiffusionUnit.Diffusion (aadblNumeraireTimeSeries[0]),
+			UnitRandom.Diffusion (aadblNumeraireTimeSeries[0]),
 			dblTimeWidth
 		);
 
@@ -385,7 +385,7 @@ public class CorrelatedNumeraireXVAExplain {
 				0.,
 				false
 			),
-			JumpDiffusionUnit.Diffusion (aadblNumeraireTimeSeries[1]),
+			UnitRandom.Diffusion (aadblNumeraireTimeSeries[1]),
 			dblTimeWidth
 		);
 
@@ -396,7 +396,7 @@ public class CorrelatedNumeraireXVAExplain {
 				0.,
 				false
 			),
-			JumpDiffusionUnit.JumpDiffusion (
+			UnitRandom.JumpDiffusion (
 				aadblNumeraireTimeSeries[2],
 				adblBankDefaultIndicator
 			),
@@ -410,7 +410,7 @@ public class CorrelatedNumeraireXVAExplain {
 				0.,
 				false
 			),
-			JumpDiffusionUnit.JumpDiffusion (
+			UnitRandom.JumpDiffusion (
 				aadblNumeraireTimeSeries[3],
 				adblCounterPartyDefaultIndicator
 			),

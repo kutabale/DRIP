@@ -47,13 +47,14 @@ package org.drip.measure.realization;
  */
 
 /**
- * JumpDiffusionUnit holds the Jump Diffusion R^1 Unit Edge Realizations.
+ * UnitRandom holds the Jump Diffusion R^1 Unit Edge Realizations.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUnit {
+public class UnitRandom {
 	private double _dblJump = java.lang.Double.NaN;
+	private double _dblDiffusion = java.lang.Double.NaN;
 
 	/**
 	 * Generate a R^1 Uniform Diffusion Realization
@@ -61,10 +62,10 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	 * @return The R^1 Uniform Diffusion Realization
 	 */
 
-	public static final JumpDiffusionUnit UniformDiffusion()
+	public static final UnitRandom UniformDiffusion()
 	{
 		try {
-			return new JumpDiffusionUnit (java.lang.Math.random(), 0.);
+			return new UnitRandom (java.lang.Math.random(), 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -78,10 +79,10 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	 * @return The R^1 Gaussian Diffusion Realization
 	 */
 
-	public static final JumpDiffusionUnit GaussianDiffusion()
+	public static final UnitRandom GaussianDiffusion()
 	{
 		try {
-			return new JumpDiffusionUnit (org.drip.measure.gaussian.NormalQuadrature.Random(), 0.);
+			return new UnitRandom (org.drip.measure.gaussian.NormalQuadrature.Random(), 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -95,10 +96,10 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	 * @return The R^1 Uniform Jump Realization
 	 */
 
-	public static final JumpDiffusionUnit UniformJump()
+	public static final UnitRandom UniformJump()
 	{
 		try {
-			return new JumpDiffusionUnit (0., java.lang.Math.random());
+			return new UnitRandom (0., java.lang.Math.random());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -112,10 +113,10 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	 * @return The R^1 Gaussian Jump Realization
 	 */
 
-	public static final JumpDiffusionUnit GaussianJump()
+	public static final UnitRandom GaussianJump()
 	{
 		try {
-			return new JumpDiffusionUnit (0., org.drip.measure.gaussian.NormalQuadrature.Random());
+			return new UnitRandom (0., org.drip.measure.gaussian.NormalQuadrature.Random());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -131,17 +132,17 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	 * @return Array of R^1 Diffusion Realizations
 	 */
 
-	public static final JumpDiffusionUnit[] Diffusion (
+	public static final UnitRandom[] Diffusion (
 		final double[] adblDiffusionRealization)
 	{
 		if (null == adblDiffusionRealization) return null;
 
 		int iSize = adblDiffusionRealization.length;
-		JumpDiffusionUnit[] aJDU = 0 == iSize ? null : new JumpDiffusionUnit[iSize];
+		UnitRandom[] aJDU = 0 == iSize ? null : new UnitRandom[iSize];
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aJDU[i] = new JumpDiffusionUnit (adblDiffusionRealization[i], 0.);
+				aJDU[i] = new UnitRandom (adblDiffusionRealization[i], 0.);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -160,17 +161,17 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	 * @return Array of R^1 Jump Realizations
 	 */
 
-	public static final JumpDiffusionUnit[] Jump (
+	public static final UnitRandom[] Jump (
 		final double[] adblJumpRealization)
 	{
 		if (null == adblJumpRealization) return null;
 
 		int iSize = adblJumpRealization.length;
-		JumpDiffusionUnit[] aJDU = 0 == iSize ? null : new JumpDiffusionUnit[iSize];
+		UnitRandom[] aJDU = 0 == iSize ? null : new UnitRandom[iSize];
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aJDU[i] = new JumpDiffusionUnit (0., adblJumpRealization[i]);
+				aJDU[i] = new UnitRandom (0., adblJumpRealization[i]);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -190,20 +191,20 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	 * @return Array of R^1 Jump Diffusion Realizations
 	 */
 
-	public static final JumpDiffusionUnit[] JumpDiffusion (
+	public static final UnitRandom[] JumpDiffusion (
 		final double[] adblDiffusionRealization,
 		final double[] adblJumpRealization)
 	{
 		if (null == adblDiffusionRealization || null == adblJumpRealization) return null;
 
 		int iSize = adblDiffusionRealization.length;
-		JumpDiffusionUnit[] aJDU = 0 == iSize ? null : new JumpDiffusionUnit[iSize];
+		UnitRandom[] aJDU = 0 == iSize ? null : new UnitRandom[iSize];
 
 		if (0 == iSize || iSize != adblJumpRealization.length) return null;
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aJDU[i] = new JumpDiffusionUnit (adblDiffusionRealization[i], adblJumpRealization[i]);
+				aJDU[i] = new UnitRandom (adblDiffusionRealization[i], adblJumpRealization[i]);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -215,7 +216,7 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	}
 
 	/**
-	 * JumpDiffusionUnit Constructor
+	 * UnitRandom Constructor
 	 * 
 	 * @param dblDiffusion The Diffusion Random Variable
 	 * @param dblJump The Jump Random Variable
@@ -223,21 +224,31 @@ public class JumpDiffusionUnit extends org.drip.measure.realization.DiffusionUni
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public JumpDiffusionUnit (
+	public UnitRandom (
 		final double dblDiffusion,
 		final double dblJump)
 		throws java.lang.Exception
 	{
-		super (dblDiffusion);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblJump = dblJump))
-			throw new java.lang.Exception ("JumpDiffusionUnit Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDiffusion = dblDiffusion) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblJump = dblJump))
+			throw new java.lang.Exception ("UnitRandom Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Jump Random Variable
+	 * Retrieve the Diffusion Unit Random Variable
 	 * 
-	 * @return The Jump Random Variable
+	 * @return The Diffusion Unit Random Variable
+	 */
+
+	public double diffusion()
+	{
+		return _dblDiffusion;
+	}
+
+	/**
+	 * Retrieve the Jump Unit Random Variable
+	 * 
+	 * @return The Jump Unit Random Variable
 	 */
 
 	public double jump()

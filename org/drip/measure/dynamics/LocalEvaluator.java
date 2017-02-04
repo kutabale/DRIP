@@ -57,7 +57,7 @@ public interface LocalEvaluator {
 	/**
 	 * Determine the Value of the Evolution Function from the given Random Variate and Time
 	 * 
-	 * @param dv The Realized Diffusion Vertex
+	 * @param jdv The Realized Diffusion Vertex
 	 * 
 	 * @return The Value of the Evolution Function
 	 * 
@@ -65,6 +65,6 @@ public interface LocalEvaluator {
 	 */
 
 	public abstract double value (
-		final org.drip.measure.realization.DiffusionVertex dv)
+		final org.drip.measure.realization.JumpDiffusionVertex jdv)
 		throws java.lang.Exception;
 }

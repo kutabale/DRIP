@@ -95,8 +95,9 @@ public class VolumeTimeFrame extends org.drip.measure.realization.JumpDiffusionE
 		final double dblTradeRate)
 		throws java.lang.Exception
 	{
-		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, dblVolatility * dblBrownian, null,
-			new org.drip.measure.realization.JumpDiffusionUnit (dblBrownian, 0.));
+		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, new
+			org.drip.measure.realization.StochasticEdgeDiffusion (dblVolatility * dblBrownian), null, new
+				org.drip.measure.realization.UnitRandom (dblBrownian, 0.));
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *

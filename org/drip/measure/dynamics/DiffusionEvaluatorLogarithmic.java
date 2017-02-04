@@ -70,35 +70,34 @@ public class DiffusionEvaluatorLogarithmic extends org.drip.measure.dynamics.Dif
 		final double dblDrift,
 		final double dblVolatility)
 	{
-		try {
-			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
+		org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator() {
+			@Override public double value (
+				final org.drip.measure.realization.JumpDiffusionVertex jdv)
+				throws java.lang.Exception
 			{
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					if (null == dv)
-						throw new java.lang.Exception
-							("DiffusionEvaluatorLogarithmic::DriftEvaluator::value => Invalid Inputs");
+				if (null == jdv)
+					throw new java.lang.Exception
+						("DiffusionEvaluatorLogarithmic::DriftEvaluator::value => Invalid Inputs");
 
-					return dv.value() * dblDrift;
-				}
-			};
+				return jdv.value() * dblDrift;
+			}
+		};
 
-			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
-				org.drip.measure.dynamics.LocalEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.DiffusionVertex dv)
-					throws java.lang.Exception
-				{
-					if (null == dv)
-						throw new java.lang.Exception
-							("DiffusionEvaluatorLogarithmic::volatilityEvaluator::value => Invalid Inputs");
+		org.drip.measure.dynamics.LocalEvaluator leVolatility = new
+			org.drip.measure.dynamics.LocalEvaluator() {
+			@Override public double value (
+				final org.drip.measure.realization.JumpDiffusionVertex jdv)
+				throws java.lang.Exception
+			{
+				if (null == jdv)
+					throw new java.lang.Exception
+						("DiffusionEvaluatorLogarithmic::volatilityEvaluator::value => Invalid Inputs");
 
-					return dv.value() * dblVolatility;
-				}
-			};
+				return jdv.value() * dblVolatility;
+			}
+		};
 
+		try {
 			return new DiffusionEvaluatorLogarithmic (dblDrift, dblVolatility, leDrift, leVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

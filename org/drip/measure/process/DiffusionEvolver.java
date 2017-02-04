@@ -56,9 +56,9 @@ package org.drip.measure.process;
 public class DiffusionEvolver {
 	private org.drip.measure.dynamics.DiffusionEvaluator _de = null;
 
-	protected org.drip.measure.realization.JumpStochasticEdge jumpIndicationEdge (
+	protected org.drip.measure.realization.StochasticEdgeJump jumpIndicationEdge (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.JumpDiffusionUnit jdu,
+		final org.drip.measure.realization.UnitRandom ur,
 		final double dblTimeIncrement)
 	{
 		return null;
@@ -95,7 +95,7 @@ public class DiffusionEvolver {
 	 * Generate the JumpDiffusionEdge Instance from the specified Jump Diffusion Instance
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
-	 * @param jdu The JumpDiffusionUnit Instance
+	 * @param ur The Random Unit Realization
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The JumpDiffusionEdge Instance
@@ -103,26 +103,26 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionEdge increment (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.JumpDiffusionUnit jdu,
+		final org.drip.measure.realization.UnitRandom ur,
 		final double dblTimeIncrement)
 	{
-		if (null == jdv || null == jdu || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
+		if (null == jdv || null == ur || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
 			return null;
 
 		double dblPreviousValue = jdv.value();
 
 		try {
 			if (jdv.jumpOccurred())
-				return new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue, 0., 0., new
-					org.drip.measure.realization.JumpStochasticEdge (true, 0., 0., 0.), new
-						org.drip.measure.realization.JumpDiffusionUnit (0., 0.));
+				return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue, 0., 0., new
+					org.drip.measure.realization.StochasticEdgeJump (true, 0., 0., 0.), new
+						org.drip.measure.realization.UnitRandom (0., 0.));
 
 			org.drip.measure.dynamics.LocalEvaluator leVolatility = _de.volatility();
 
-			return new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue, _de.drift().value
-				(jdv) * dblTimeIncrement, null == leVolatility ? 0. : leVolatility.value (jdv) *
-					jdu.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs (dblTimeIncrement)),
-						jumpIndicationEdge (jdv, jdu, dblTimeIncrement), jdu);
+			return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue,
+				_de.drift().value (jdv) * dblTimeIncrement, null == leVolatility ? 0. : leVolatility.value
+					(jdv) * ur.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs (dblTimeIncrement)),
+						jumpIndicationEdge (jdv, ur, dblTimeIncrement), ur);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -134,7 +134,7 @@ public class DiffusionEvolver {
 	 * Generate the Array of Adjacent JumpDiffusionEdge from the specified Random Variate Array
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
-	 * @param aJDU Array of JumpDiffusionUnit Instances
+	 * @param aUR Array of Random Unit Realizations
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Array of Adjacent JumpDiffusionEdge
@@ -142,12 +142,12 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionEdge[] incrementSequence (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.JumpDiffusionUnit[] aJDU,
+		final org.drip.measure.realization.UnitRandom[] aUR,
 		final double dblTimeIncrement)
 	{
-		if (null == aJDU) return null;
+		if (null == aUR) return null;
 
-		int iNumTimeStep = aJDU.length;
+		int iNumTimeStep = aUR.length;
 		org.drip.measure.realization.JumpDiffusionVertex jdvIter = jdv;
 		org.drip.measure.realization.JumpDiffusionEdge[] aJDE = 0 == iNumTimeStep ? null : new
 			org.drip.measure.realization.JumpDiffusionEdge[iNumTimeStep];
@@ -155,18 +155,18 @@ public class DiffusionEvolver {
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			if (null == (aJDE[i] = increment (jdvIter, aJDU[i], dblTimeIncrement))) return null;
+			if (null == (aJDE[i] = increment (jdvIter, aUR[i], dblTimeIncrement))) return null;
 
 			try {
 				boolean bJumpOccurred = false;
 				double dblHazardIntegral = 0.;
 
-				org.drip.measure.realization.JumpStochasticEdge jie = aJDE[i].jumpIndicationEdge();
+				org.drip.measure.realization.StochasticEdgeJump sej = aJDE[i].stochasticJumpEdge();
 
-				if (null != jie) {
-					bJumpOccurred = jie.eventOccurred();
+				if (null != sej) {
+					bJumpOccurred = sej.jumpOccurred();
 
-					dblHazardIntegral = jie.hazardIntegral();
+					dblHazardIntegral = sej.hazardIntegral();
 				}
 
 				jdvIter = new org.drip.measure.realization.JumpDiffusionVertex (jdvIter.time() +
@@ -186,7 +186,7 @@ public class DiffusionEvolver {
 	 * Generate the Array of JumpDiffusionVertex Snaps from the specified Random Variate Array
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
-	 * @param aJDU The Array of JumpDiffusionUnit Instances
+	 * @param aUR Array of Random Unit Realizations
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Array of JumpDiffusionVertex Snaps
@@ -194,12 +194,12 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionVertex[] vertexSequence (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.JumpDiffusionUnit[] aJDU,
+		final org.drip.measure.realization.UnitRandom[] aUR,
 		final double dblTimeIncrement)
 	{
-		if (null == aJDU) return null;
+		if (null == aUR) return null;
 
-		int iNumTimeStep = aJDU.length;
+		int iNumTimeStep = aUR.length;
 		org.drip.measure.realization.JumpDiffusionVertex jdvPrev = jdv;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDV = 0 == iNumTimeStep ? null : new
 			org.drip.measure.realization.JumpDiffusionVertex[iNumTimeStep];
@@ -207,25 +207,25 @@ public class DiffusionEvolver {
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			org.drip.measure.realization.JumpDiffusionEdge jdDAG = increment (jdvPrev, aJDU[i],
+			org.drip.measure.realization.JumpDiffusionEdge jde = increment (jdvPrev, aUR[i],
 				dblTimeIncrement);
 
-			if (null == jdDAG) return null;
+			if (null == jde) return null;
 
 			try {
-				org.drip.measure.realization.JumpStochasticEdge eiDAG = jdDAG.jumpIndicationEdge();
+				org.drip.measure.realization.StochasticEdgeJump sej = jde.stochasticJumpEdge();
 
 				boolean bJumpOccurred = false;
 				double dblHazardIntegral = 0.;
 
-				if (null != eiDAG) {
-					bJumpOccurred = eiDAG.eventOccurred();
+				if (null != sej) {
+					bJumpOccurred = sej.jumpOccurred();
 
-					dblHazardIntegral = eiDAG.hazardIntegral();
+					dblHazardIntegral = sej.hazardIntegral();
 				}
 
 				jdvPrev = aJDV[i] = new org.drip.measure.realization.JumpDiffusionVertex (jdvPrev.time() +
-					dblTimeIncrement, jdDAG.finish(), jdvPrev.cumulativeHazardIntegral() + dblHazardIntegral,
+					dblTimeIncrement, jde.finish(), jdvPrev.cumulativeHazardIntegral() + dblHazardIntegral,
 						bJumpOccurred);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
@@ -251,7 +251,7 @@ public class DiffusionEvolver {
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (jdv, org.drip.measure.realization.JumpDiffusionUnit.GaussianDiffusion(),
+			return increment (jdv, org.drip.measure.realization.UnitRandom.GaussianDiffusion(),
 				dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -273,8 +273,7 @@ public class DiffusionEvolver {
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
 		final double dblTimeIncrement)
 	{
-		return increment (jdv, org.drip.measure.realization.JumpDiffusionUnit.UniformJump(),
-			dblTimeIncrement);
+		return increment (jdv, org.drip.measure.realization.UnitRandom.UniformJump(), dblTimeIncrement);
 	}
 
 	/**
@@ -292,7 +291,7 @@ public class DiffusionEvolver {
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (jdv, new org.drip.measure.realization.JumpDiffusionUnit
+			return increment (jdv, new org.drip.measure.realization.UnitRandom
 				(org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
 					dblTimeIncrement);
 		} catch (java.lang.Exception e) {
@@ -317,7 +316,7 @@ public class DiffusionEvolver {
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (jdv, new org.drip.measure.realization.JumpDiffusionUnit
+			return increment (jdv, new org.drip.measure.realization.UnitRandom
 				(org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
 					dblTimeIncrement);
 		} catch (java.lang.Exception e) {
