@@ -157,7 +157,7 @@ public class JumpDiffusionEdge {
 
 	public double jumpStochastic()
 	{
-		return null == _jie ? 0. : _jie.terminalValue();
+		return null == _jie ? 0. : _jie.target();
 	}
 
 	/**

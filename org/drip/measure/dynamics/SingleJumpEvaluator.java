@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.dynamics;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,90 +47,53 @@ package org.drip.measure.marginal;
  */
 
 /**
- * DiffusionEvolverLinear guides the Diffusion Random Variable Evolution according to Linear R^1 Process.
+ * SingleJumpEvaluator implements the Single Point Jump Event Indication Evaluator that guides the One Factor
+ *  Jump Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class DiffusionEvolverLinear extends org.drip.measure.marginal.DiffusionEvolver {
-	private double _dblDrift = java.lang.Double.NaN;
-	private double _dblVolatility = java.lang.Double.NaN;
+public class SingleJumpEvaluator {
+	private org.drip.measure.dynamics.LocalEvaluator _leDensity = null;
+	private org.drip.measure.dynamics.LocalEvaluator _leMagnitude = null;
 
 	/**
-	 * Generate a Standard Instance of DiffusionEvolverLinear
+	 * SingleJumpEvaluator Constructor
 	 * 
-	 * @param dblDrift The Drift
-	 * @param dblVolatility The Volatility
+	 * @param leDensity The Jump Density Evaluator
+	 * @param leMagnitude The Jump Magnitude Evaluator
 	 * 
-	 * @return The Standard Instance of DiffusionEvolverLinear
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public static final DiffusionEvolverLinear Standard (
-		final double dblDrift,
-		final double dblVolatility)
-	{
-		try {
-			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex jdv)
-					throws java.lang.Exception
-				{
-					return dblDrift;
-				}
-			};
-
-			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvaluator() {
-				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex jdv)
-					throws java.lang.Exception
-				{
-					return dblVolatility;
-				}
-			};
-
-			return new DiffusionEvolverLinear (dblDrift, dblVolatility, ldevDrift, ldevVolatility);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	private DiffusionEvolverLinear (
-		final double dblDrift,
-		final double dblVolatility,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility)
+	public SingleJumpEvaluator (
+		final org.drip.measure.dynamics.LocalEvaluator leDensity,
+		final org.drip.measure.dynamics.LocalEvaluator leMagnitude)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility);
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("DiffusionEvolverLinear Constructor => Invalid Inputs");
+		if (null == (_leDensity = leDensity) || null == (_leMagnitude = leMagnitude))
+			throw new java.lang.Exception ("SingleJumpEvaluator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Drift
+	 * Retrieve the Jump Density Evaluator
 	 * 
-	 * @return The Drift
+	 * @return The Jump Density Evaluator
 	 */
 
-	public double drift()
+	public org.drip.measure.dynamics.LocalEvaluator densityEvaluator()
 	{
-		return _dblDrift;
+		return _leDensity;
 	}
 
 	/**
-	 * Retrieve the Volatility
+	 * Retrieve the Jump Magnitude Evaluator
 	 * 
-	 * @return The Volatility
+	 * @return The Jump Magnitude Evaluator
 	 */
 
-	public double volatility()
+	public org.drip.measure.dynamics.LocalEvaluator magnitudeEvaluator()
 	{
-		return _dblVolatility;
+		return _leMagnitude;
 	}
 }

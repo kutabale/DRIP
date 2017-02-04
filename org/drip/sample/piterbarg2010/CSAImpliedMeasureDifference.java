@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.drip.analytics.date.*;
 import org.drip.function.r1tor1.FlatUnivariate;
-import org.drip.measure.marginal.*;
+import org.drip.measure.dynamics.*;
 import org.drip.param.valuation.ValuationParams;
 import org.drip.pricer.option.BlackScholesAlgorithm;
 import org.drip.product.option.EuropeanCallPut;
@@ -252,7 +252,7 @@ public class CSAImpliedMeasureDifference {
 		double[][] aadblNoCSAForward = new double[adblCorrelation.length][adblStrike.length];
 		double[][] aadblMeasureShiftScale = new double[adblCorrelation.length][adblStrike.length];
 
-		DiffusionEvolverMeanReversion pmmrFundingSpread = DiffusionEvolverMeanReversion.Standard (
+		DiffusionEvaluatorMeanReversion demrFundingSpread = DiffusionEvaluatorMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility
@@ -278,14 +278,14 @@ public class CSAImpliedMeasureDifference {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (adblCorrelation[j], 2, 0, 100.) + "% => ";
 
 			for (int i = 0; i < adblStrike.length; ++i) {
-				DiffusionEvolverLogarithmic pmlUnderlying = DiffusionEvolverLogarithmic.Standard (
+				DiffusionEvaluatorLogarithmic delUnderlying = DiffusionEvaluatorLogarithmic.Standard (
 					0.,
 					adblCSAImpliedVolatility[i]
 				);
 
 				FundingBasisEvolver sftf = new FundingBasisEvolver (
-					pmlUnderlying,
-					pmmrFundingSpread,
+					delUnderlying,
+					demrFundingSpread,
 					adblCorrelation[j]
 				);
 

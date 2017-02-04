@@ -2,11 +2,9 @@
 package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
-import org.drip.measure.marginal.*;
-import org.drip.measure.process.HazardJumpIndicationEvaluator;
-import org.drip.measure.realization.JumpDiffusionEdge;
-import org.drip.measure.realization.JumpDiffusionVertex;
-import org.drip.measure.realization.JumpDiffusionUnit;
+import org.drip.measure.dynamics.*;
+import org.drip.measure.process.JumpDiffusionEvolver;
+import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -94,10 +92,12 @@ public class R1Jump {
 
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
-		DiffusionEvolver meAsset = JumpDiffusionEvolverLogarithmic.Standard (
-			dblAssetDrift,
-			dblAssetVolatility,
-			HazardJumpIndicationEvaluator.Standard (
+		JumpDiffusionEvolver meAsset = new JumpDiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblAssetDrift,
+				dblAssetVolatility
+			),
+			HazardJumpEvaluator.Standard (
 				dblAssetHazard,
 				dblAssetDefaultMagnitude
 			)

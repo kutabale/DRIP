@@ -2,10 +2,9 @@
 package org.drip.sample.burgard2011;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
-import org.drip.measure.marginal.*;
-import org.drip.measure.process.HazardJumpIndicationEvaluator;
-import org.drip.measure.realization.JumpDiffusionVertex;
-import org.drip.measure.realization.JumpDiffusionUnit;
+import org.drip.measure.dynamics.*;
+import org.drip.measure.process.*;
+import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
@@ -197,8 +196,8 @@ public class CorrelatedNumeraireXVAExplain {
 			FormatUtil.FormatDouble (lca.assetAccumulation(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (lca.bankAccumulation(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (lca.counterPartyAccumulation(), 1, 6, 1.) + " | " +
-			(r1sBank.terminationReached() ? "BANK DEFAULT" : "BANK SURVIVE") + " | " +
-			(r1sCounterParty.terminationReached() ? "CP DEFAULT" : "CP SURVIVE") + " ||"
+			(r1sBank.jumpOccurred() ? "BANK DEFAULT" : "BANK SURVIVE") + " | " +
+			(r1sCounterParty.jumpOccurred() ? "CP DEFAULT" : "CP SURVIVE") + " ||"
 		);
 
 		return new EdgeEvolutionTrajectory (
@@ -210,7 +209,7 @@ public class CorrelatedNumeraireXVAExplain {
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				eagStart.derivativeValue() * Math.exp (
-					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
+					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().evaluator().driftEvaluator().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -282,29 +281,37 @@ public class CorrelatedNumeraireXVAExplain {
 			dblCounterPartyRecoveryRate
 		);
 
-		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
-			dblAssetDrift,
-			dblAssetVolatility
+		DiffusionEvolver meAsset = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblAssetDrift,
+				dblAssetVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponCollateralBond = DiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponCollateralBondDrift,
-			dblZeroCouponCollateralBondVolatility
+		DiffusionEvolver meZeroCouponCollateralBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCollateralBondDrift,
+				dblZeroCouponCollateralBondVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponBankBond = JumpDiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponBankBondDrift,
-			dblZeroCouponBankBondVolatility,
-			HazardJumpIndicationEvaluator.Standard (
+		DiffusionEvolver meZeroCouponBankBond = new JumpDiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponBankBondDrift,
+				dblZeroCouponBankBondVolatility
+			),
+			HazardJumpEvaluator.Standard (
 				dblBankHazardRate,
 				dblBankRecoveryRate
 			)
 		);
 
-		DiffusionEvolver meZeroCouponCounterPartyBond = JumpDiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponCounterPartyBondDrift,
-			dblZeroCouponCounterPartyBondVolatility,
-			HazardJumpIndicationEvaluator.Standard (
+		DiffusionEvolver meZeroCouponCounterPartyBond = new JumpDiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCounterPartyBondDrift,
+				dblZeroCouponCounterPartyBondVolatility
+			),
+			HazardJumpEvaluator.Standard (
 				dblCounterPartyHazardRate,
 				dblCounterPartyRecoveryRate
 			)

@@ -7,7 +7,7 @@ import org.drip.execution.latent.*;
 import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
-import org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck;
+import org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -163,13 +163,13 @@ public class AdaptiveOptimalHJBTrajectory {
 			dblReferenceLiquidity
 		);
 
-		DiffusionEvolverOrnsteinUhlenbeck oup1D = DiffusionEvolverOrnsteinUhlenbeck.ZeroMean (
+		DiffusionEvaluatorOrnsteinUhlenbeck deou = DiffusionEvaluatorOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
 
 		MarketState[] aMS = OrnsteinUhlenbeckSequence.Systemic (
-			oup1D,
+			deou,
 			dblNonDimensionalTimeInterval * dblRelaxationTime,
 			dblInitialMarketState,
 			iNumTimeNode
@@ -179,7 +179,7 @@ public class AdaptiveOptimalHJBTrajectory {
 			os,
 			cv,
 			new MeanVarianceObjectiveUtility (dblRiskAversion),
-			NonDimensionalCostEvolverSystemic.Standard (oup1D),
+			NonDimensionalCostEvolverSystemic.Standard (deou),
 			CoordinatedVariationTrajectoryGenerator.TRADE_RATE_STATIC_INITIALIZATION
 		).adaptive (aMS);
 

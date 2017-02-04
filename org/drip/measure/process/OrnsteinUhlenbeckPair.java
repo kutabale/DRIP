@@ -71,22 +71,22 @@ package org.drip.measure.process;
 
 public class OrnsteinUhlenbeckPair implements org.drip.measure.process.OrnsteinUhlenbeck {
 	private double _dblCorrelation = java.lang.Double.NaN;
-	private org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck _deouDerived = null;
-	private org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck _deouReference = null;
+	private org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck _deouDerived = null;
+	private org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck _deouReference = null;
 
 	/**
 	 * OrnsteinUhlenbeckPair Constructor
 	 * 
-	 * @param deouReference The Reference R^1 Ornstein-Uhlenbeck Process
-	 * @param deouDerived The Derived R^1 Ornstein-Uhlenbeck Process
+	 * @param deouReference The Reference R^1 Ornstein-Uhlenbeck Evaluator
+	 * @param deouDerived The Derived R^1 Ornstein-Uhlenbeck Evaluator
 	 * @param dblCorrelation The Correlation between the Two Ornstein-Uhlenbeck Processes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public OrnsteinUhlenbeckPair (
-		final org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck deouReference,
-		final org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck deouDerived,
+		final org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck deouReference,
+		final org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck deouDerived,
 		final double dblCorrelation)
 		throws java.lang.Exception
 	{
@@ -97,23 +97,23 @@ public class OrnsteinUhlenbeckPair implements org.drip.measure.process.OrnsteinU
 	}
 
 	/**
-	 * Retrieve the Reference R^1 Ornstein-Uhlenbeck Process
+	 * Retrieve the Reference R^1 Ornstein-Uhlenbeck Evaluator
 	 * 
-	 * @return The Reference R^1 Ornstein-Uhlenbeck Process
+	 * @return The Reference R^1 Ornstein-Uhlenbeck Evaluator
 	 */
 
-	public org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck reference()
+	public org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck reference()
 	{
 		return _deouReference;
 	}
 
 	/**
-	 * Retrieve the Derived R^1 Ornstein-Uhlenbeck Process
+	 * Retrieve the Derived R^1 Ornstein-Uhlenbeck Evaluator
 	 * 
-	 * @return The Derived R^1 Ornstein-Uhlenbeck Process
+	 * @return The Derived R^1 Ornstein-Uhlenbeck Evaluator
 	 */
 
-	public org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck derived()
+	public org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck derived()
 	{
 		return _deouDerived;
 	}
@@ -133,23 +133,22 @@ public class OrnsteinUhlenbeckPair implements org.drip.measure.process.OrnsteinU
 	 * Generate the Adjacent JumpDiffusionEdge Increment Array from the specified Ornstein Uhlenbeck Random
 	 * 		Variate Pair
 	 * 
-	 * @param adblOrnsteinUhlenbeckVariate The Array of the Ornstein Uhlenbeck Random Variates
-	 * @param adblDiffusionRealization The Array of the Diffusion Realizations
+	 * @param adblVariatePair The Pair of the Ornstein Uhlenbeck Random Variates
+	 * @param adblDiffusionPair The Pair of Diffusion Realizations
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Adjacent JumpDiffusionEdge Increment Array
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge[] increment (
-		final double[] adblOrnsteinUhlenbeckVariate,
-		final double[] adblDiffusionRealization,
+		final double[] adblVariatePair,
+		final double[] adblDiffusionPair,
 		final double dblTimeIncrement)
 	{
-		if (null == adblOrnsteinUhlenbeckVariate || 2 != adblOrnsteinUhlenbeckVariate.length ||
-			!org.drip.quant.common.NumberUtil.IsValid (adblOrnsteinUhlenbeckVariate) || null ==
-				adblDiffusionRealization || 2 != adblDiffusionRealization.length ||
-					!org.drip.quant.common.NumberUtil.IsValid (adblDiffusionRealization) ||
-						!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
+		if (null == adblVariatePair || 2 != adblVariatePair.length ||
+			!org.drip.quant.common.NumberUtil.IsValid (adblVariatePair) || null == adblDiffusionPair || 2 !=
+				adblDiffusionPair.length || !org.drip.quant.common.NumberUtil.IsValid (adblDiffusionPair) ||
+					!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. >= dblTimeIncrement)
 			return null;
 
 		double dblRelaxationTime0 = _deouReference.relaxationTime();
@@ -159,22 +158,22 @@ public class OrnsteinUhlenbeckPair implements org.drip.measure.process.OrnsteinU
 		try {
 			return new org.drip.measure.realization.JumpDiffusionEdge[] {
 				new org.drip.measure.realization.JumpDiffusionEdge (
-					adblOrnsteinUhlenbeckVariate[0],
-					-1. * adblOrnsteinUhlenbeckVariate[0] / dblRelaxationTime0 * dblTimeIncrement,
-					_deouReference.burstiness() * adblDiffusionRealization[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
+					adblVariatePair[0],
+					-1. * adblVariatePair[0] / dblRelaxationTime0 * dblTimeIncrement,
+					_deouReference.burstiness() * adblDiffusionPair[0] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime0),
 					null,
 					new org.drip.measure.realization.JumpDiffusionUnit (
-						adblDiffusionRealization[0],
+						adblDiffusionPair[0],
 						0.
 					)
 				),
 				new org.drip.measure.realization.JumpDiffusionEdge (
-					adblOrnsteinUhlenbeckVariate[1],
-					-1. * adblOrnsteinUhlenbeckVariate[1] / dblRelaxationTime1 * dblTimeIncrement,
-					_deouDerived.burstiness() * adblDiffusionRealization[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
+					adblVariatePair[1],
+					-1. * adblVariatePair[1] / dblRelaxationTime1 * dblTimeIncrement,
+					_deouDerived.burstiness() * adblDiffusionPair[1] * java.lang.Math.sqrt (dblTimeIncrement / dblRelaxationTime1),
 					null,
 					new org.drip.measure.realization.JumpDiffusionUnit (
-						adblDiffusionRealization[1],
+						adblDiffusionPair[1],
 						0.
 					)
 				)
@@ -190,7 +189,7 @@ public class OrnsteinUhlenbeckPair implements org.drip.measure.process.OrnsteinU
 	 * Generate the Weiner Based JumpDiffusionEdge Increment Sequence from the Current Ornstein Uhlenbeck
 	 * 		Random Variate
 	 * 
-	 * @param adblOrnsteinUhlenbeckVariate The Current Ornstein Uhlenbeck Random Variate
+	 * @param adblVariatePair The Ornstein Uhlenbeck Random Variate Pair
 	 * @param dblTimeIncrement The Time Increment
 	 * 
 	 * @return The Weiner Based JumpDiffusionEdge Increment Sequence from the Current Ornstein Uhlenbeck
@@ -198,15 +197,15 @@ public class OrnsteinUhlenbeckPair implements org.drip.measure.process.OrnsteinU
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge[] weinerIncrement (
-		final double[] adblOrnsteinUhlenbeckVariate,
+		final double[] adblVariatePair,
 		final double dblTimeIncrement)
 	{
 		try {
 			double dblFirstWeiner = org.drip.measure.gaussian.NormalQuadrature.Random();
 
-			return increment (adblOrnsteinUhlenbeckVariate, new double[] {dblFirstWeiner, dblFirstWeiner *
-				_dblCorrelation + org.drip.measure.gaussian.NormalQuadrature.Random() * java.lang.Math.sqrt
-					(1. - _dblCorrelation * _dblCorrelation)}, dblTimeIncrement);
+			return increment (adblVariatePair, new double[] {dblFirstWeiner, dblFirstWeiner * _dblCorrelation
+				+ org.drip.measure.gaussian.NormalQuadrature.Random() * java.lang.Math.sqrt (1. -
+					_dblCorrelation * _dblCorrelation)}, dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

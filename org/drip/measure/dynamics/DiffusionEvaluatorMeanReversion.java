@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.dynamics;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,59 +47,59 @@ package org.drip.measure.marginal;
  */
 
 /**
- * DiffusionEvolverMeanReversion guides the Diffusion Random Variable Evolution according to the R^1 Mean
- *  Reversion Process.
+ * DiffusionEvaluatorMeanReversion evaluates the Drift/Volatility of the Diffusion Random Variable Evolution
+ *  according to R^1 Mean Reversion Process.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class DiffusionEvolverMeanReversion extends org.drip.measure.marginal.DiffusionEvolver {
+public class DiffusionEvaluatorMeanReversion extends org.drip.measure.dynamics.DiffusionEvaluator {
 	private double _dblVolatility = java.lang.Double.NaN;
 	private double _dblMeanReversionRate = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of DiffusionEvolverMeanReversion
+	 * Generate a Standard Instance of DiffusionEvaluatorMeanReversion
 	 * 
 	 * @param dblMeanReversionRate The Mean Reversion Rate
 	 * @param dblMeanReversionLevel The Mean Reversion Level
 	 * @param dblVolatility The Volatility
 	 * 
-	 * @return The Standard Instance of DiffusionEvolverMeanReversion
+	 * @return The Standard Instance of DiffusionEvaluatorMeanReversion
 	 */
 
-	public static final DiffusionEvolverMeanReversion Standard (
+	public static final DiffusionEvaluatorMeanReversion Standard (
 		final double dblMeanReversionRate,
 		final double dblMeanReversionLevel,
 		final double dblVolatility)
 	{
 		try {
-			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvaluator() {
+			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
+			{
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex jdv)
+					final org.drip.measure.realization.DiffusionVertex dv)
 					throws java.lang.Exception
 				{
-					if (null == jdv)
+					if (null == dv)
 						throw new java.lang.Exception
-							("DiffusionEvolverMeanReversion::DriftLDEV::value => Invalid Inputs");
+							("DiffusionEvaluatorMeanReversion::driftEvaluator::value => Invalid Inputs");
 
-					return -1. * dblMeanReversionRate * (dblMeanReversionLevel - jdv.value());
+					return -1. * dblMeanReversionRate * (dblMeanReversionLevel - dv.value());
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvaluator() {
+			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
+				org.drip.measure.dynamics.LocalEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex jdv)
+					final org.drip.measure.realization.DiffusionVertex dv)
 					throws java.lang.Exception
 				{
 					return dblVolatility;
 				}
 			};
 
-			return new DiffusionEvolverMeanReversion (dblMeanReversionRate, dblMeanReversionLevel,
-				dblVolatility, ldevDrift, ldevVolatility);
+			return new DiffusionEvaluatorMeanReversion (dblMeanReversionRate, dblMeanReversionLevel,
+				dblVolatility, leDrift, leVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -107,20 +107,20 @@ public class DiffusionEvolverMeanReversion extends org.drip.measure.marginal.Dif
 		return null;
 	}
 
-	private DiffusionEvolverMeanReversion (
+	private DiffusionEvaluatorMeanReversion (
 		final double dblMeanReversionRate,
 		final double dblMeanReversionLevel,
 		final double dblVolatility,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility)
+		final org.drip.measure.dynamics.LocalEvaluator leDrift,
+		final org.drip.measure.dynamics.LocalEvaluator leVolatility)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility);
+		super (leDrift, leVolatility);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionRate = dblMeanReversionRate) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("DiffusionJumpEvolverMeanReversion Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("DiffusionEvaluatorMeanReversion Constructor => Invalid Inputs");
 	}
 
 	/**

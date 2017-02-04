@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -53,26 +53,24 @@ package org.drip.measure.marginal;
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpDiffusionEvolver extends org.drip.measure.marginal.DiffusionEvolver {
-	private org.drip.measure.process.HazardJumpIndicationEvaluator _heie = null;
+public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvolver {
+	private org.drip.measure.dynamics.HazardJumpEvaluator _heie = null;
 
 	/**
 	 * JumpDiffusionEvolver Constructor
 	 * 
-	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
-	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process Continuous Component
+	 * @param de The Diffusion Evaluator Instance
 	 * @param heie The Hazard Point Event Indicator Function Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public JumpDiffusionEvolver (
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility,
-		final org.drip.measure.process.HazardJumpIndicationEvaluator heie)
+		final org.drip.measure.dynamics.DiffusionEvaluator de,
+		final org.drip.measure.dynamics.HazardJumpEvaluator heie)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility);
+		super (de);
 
 		if (null == (_heie = heie))
 			throw new java.lang.Exception ("JumpDiffusionEvolver Constructor => Invalid Inputs");
@@ -84,12 +82,12 @@ public class JumpDiffusionEvolver extends org.drip.measure.marginal.DiffusionEvo
 	 * @return The Hazard Point Event Indicator Instance
 	 */
 
-	public org.drip.measure.process.HazardJumpIndicationEvaluator eventIndicationEvaluator()
+	public org.drip.measure.dynamics.HazardJumpEvaluator eventIndicationEvaluator()
 	{
 		return _heie;
 	}
 
-	@Override protected org.drip.measure.realization.JumpIndicationEdge eventIndicationDAG (
+	@Override protected org.drip.measure.realization.JumpIndicationEdge jumpIndicationEdge (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
 		final org.drip.measure.realization.JumpDiffusionUnit jdu,
 		final double dblTimeIncrement)

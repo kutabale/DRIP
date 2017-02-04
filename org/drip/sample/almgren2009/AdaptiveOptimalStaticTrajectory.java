@@ -8,7 +8,7 @@ import org.drip.execution.risk.MeanVarianceObjectiveUtility;
 import org.drip.execution.strategy.OrderSpecification;
 import org.drip.execution.tradingtime.CoordinatedVariation;
 import org.drip.function.definition.R1ToR1;
-import org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck;
+import org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -162,7 +162,7 @@ public class AdaptiveOptimalStaticTrajectory {
 			dblReferenceLiquidity
 		);
 
-		DiffusionEvolverOrnsteinUhlenbeck oup1D = DiffusionEvolverOrnsteinUhlenbeck.ZeroMean (
+		DiffusionEvaluatorOrnsteinUhlenbeck oup1D = DiffusionEvaluatorOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);

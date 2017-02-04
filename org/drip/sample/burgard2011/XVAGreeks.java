@@ -1,7 +1,8 @@
 
 package org.drip.sample.burgard2011;
 
-import org.drip.measure.marginal.*;
+import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
+import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -209,7 +210,7 @@ public class XVAGreeks {
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				eagStart.derivativeValue() * Math.exp (
-					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
+					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().evaluator().driftEvaluator().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -237,9 +238,9 @@ public class XVAGreeks {
 		double dblAssetVolatility = 0.15;
 		double dblAssetRepo = 0.03;
 		double dblAssetDividend = 0.02;
-		double dblCreditRiskFreeDrift = 0.01;
-		double dblCreditRiskFreeVolatility = 0.05;
-		double dblCreditRiskFreeRepo = 0.005;
+		double dblZeroCouponCollateralBondDrift = 0.01;
+		double dblZeroCouponCollateralBondVolatility = 0.05;
+		double dblZeroCouponCollateralBondRepo = 0.005;
 		double dblZeroCouponBankBondDrift = 0.03;
 		double dblZeroCouponBankBondVolatility = 0.10;
 		double dblZeroCouponBankBondRepo = 0.028;
@@ -260,24 +261,32 @@ public class XVAGreeks {
 			dblCounterPartyRecovery
 		);
 
-		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
-			dblAssetDrift,
-			dblAssetVolatility
+		DiffusionEvolver meAsset = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblAssetDrift,
+				dblAssetVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponCreditRiskFreeBond = DiffusionEvolverLogarithmic.Standard (
-			dblCreditRiskFreeDrift,
-			dblCreditRiskFreeVolatility
+		DiffusionEvolver meZeroCouponCollateralBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCollateralBondDrift,
+				dblZeroCouponCollateralBondVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponBankBond = DiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponBankBondDrift,
-			dblZeroCouponBankBondVolatility
+		DiffusionEvolver meZeroCouponBankBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponBankBondDrift,
+				dblZeroCouponBankBondVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponCounterPartyBond = DiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponCounterPartyBondDrift,
-			dblZeroCouponCounterPartyBondVolatility
+		DiffusionEvolver meZeroCouponCounterPartyBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCounterPartyBondDrift,
+				dblZeroCouponCounterPartyBondVolatility
+			)
 		);
 
 		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (
@@ -287,8 +296,8 @@ public class XVAGreeks {
 				dblAssetDividend
 			),
 			new Tradeable (
-				meZeroCouponCreditRiskFreeBond,
-				dblCreditRiskFreeRepo
+				meZeroCouponCollateralBond,
+				dblZeroCouponCollateralBondRepo
 			),
 			new Tradeable (
 				meZeroCouponBankBond,
@@ -314,9 +323,9 @@ public class XVAGreeks {
 		);
 
 		SpreadIntensity si = new SpreadIntensity (
-			dblZeroCouponBankBondDrift - dblCreditRiskFreeDrift,
-			(dblZeroCouponBankBondDrift - dblCreditRiskFreeDrift) / dblBankRecovery,
-			(dblZeroCouponCounterPartyBondDrift - dblCreditRiskFreeDrift) / dblCounterPartyRecovery
+			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
+			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecovery,
+			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
@@ -402,7 +411,7 @@ public class XVAGreeks {
 					),
 					dblTimeWidth
 				),
-				meZeroCouponCreditRiskFreeBond.weinerIncrement (
+				meZeroCouponCollateralBond.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
 						1.,

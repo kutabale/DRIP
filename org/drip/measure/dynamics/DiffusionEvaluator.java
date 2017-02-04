@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.dynamics;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,24 +47,52 @@ package org.drip.measure.process;
  */
 
 /**
- * LocalDeterministicEvaluator exposes the Random Evolution's Local/Deterministic Drift/Volatility Function.
+ * DiffusionEvaluator implements the Drift/Volatility Evaluators for R^1 Random Diffusion Process.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public interface LocalDeterministicEvaluator {
+public class DiffusionEvaluator {
+	private org.drip.measure.dynamics.LocalEvaluator _leDrift = null;
+	private org.drip.measure.dynamics.LocalEvaluator _leVolatility = null;
 
 	/**
-	 * Determine the Value of the Evolution Function from the given Random Variate and Time
+	 * DiffusionEvaluator Constructor
 	 * 
-	 * @param jdv The Random Variate Marginal Snap
+	 * @param leDrift The Drift Evaluator
+	 * @param leVolatility The Volatility Evaluator
 	 * 
-	 * @return The Value of the Evolution Function
-	 * 
-	 * @throws java.lang.Exception Thworn if the Value cannot be evaluated
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double value (
-		final org.drip.measure.realization.JumpDiffusionVertex jdv)
-		throws java.lang.Exception;
+	public DiffusionEvaluator (
+		final org.drip.measure.dynamics.LocalEvaluator leDrift,
+		final org.drip.measure.dynamics.LocalEvaluator leVolatility)
+		throws java.lang.Exception
+	{
+		if (null == (_leDrift = leDrift) || null == (_leVolatility = leVolatility))
+			throw new java.lang.Exception ("DiffusionEvaluator Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Drift Evaluator
+	 * 
+	 * @return The Drift Evaluator
+	 */
+
+	public org.drip.measure.dynamics.LocalEvaluator driftEvaluator()
+	{
+		return _leDrift;
+	}
+
+	/**
+	 * Retrieve the Volatility Evaluator
+	 * 
+	 * @return The Volatility Evaluator
+	 */
+
+	public org.drip.measure.dynamics.LocalEvaluator volatilityEvaluator()
+	{
+		return _leVolatility;
+	}
 }

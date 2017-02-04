@@ -1,5 +1,5 @@
 
-package org.drip.measure.process;
+package org.drip.measure.dynamics;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,53 +47,24 @@ package org.drip.measure.process;
  */
 
 /**
- * SingleJumpIndicationEvaluator implements the Single Point Jump Event Indication Evaluator that guides the
- *  One Factor Jump Random Process Variable Evolution.
+ * LocalEvaluator exposes the Random Evolution's Local/Deterministic Evaluators.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class SingleJumpIndicationEvaluator {
-	private org.drip.measure.process.LocalDeterministicEvaluator _ldeDensity = null;
-	private org.drip.measure.process.LocalDeterministicEvaluator _ldeMagnitude = null;
+public interface LocalEvaluator {
 
 	/**
-	 * SingleJumpIndicationEvaluator Constructor
+	 * Determine the Value of the Evolution Function from the given Random Variate and Time
 	 * 
-	 * @param ldeDensity The LDE Event Density Evaluator of the Marginal Process Jump Component
-	 * @param ldeMagnitude The LDE Event Magnitude Evaluator of the Marginal Process Jump Component
+	 * @param dv The Realized Diffusion Vertex
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Value of the Evolution Function
+	 * 
+	 * @throws java.lang.Exception Thrown if the Value cannot be evaluated
 	 */
 
-	public SingleJumpIndicationEvaluator (
-		final org.drip.measure.process.LocalDeterministicEvaluator ldeDensity,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldeMagnitude)
-		throws java.lang.Exception
-	{
-		if (null == (_ldeDensity = ldeDensity) || null == (_ldeMagnitude = ldeMagnitude))
-			throw new java.lang.Exception ("SingleJumpIndicationEvaluator Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the LDEV Event Density Evaluator of the Marginal Process Jump Component
-	 * 
-	 * @return The LDEV Event Density Evaluator of the Marginal Process Jump Component
-	 */
-
-	public org.drip.measure.process.LocalDeterministicEvaluator densityEvaluator()
-	{
-		return _ldeDensity;
-	}
-
-	/**
-	 * Retrieve the LDE Event Magnitude Function of the Marginal Process Jump Component
-	 * 
-	 * @return The LDE Event Magnitude Function of the Marginal Process Jump Component
-	 */
-
-	public org.drip.measure.process.LocalDeterministicEvaluator magnitudeEvaluator()
-	{
-		return _ldeMagnitude;
-	}
+	public abstract double value (
+		final org.drip.measure.realization.DiffusionVertex dv)
+		throws java.lang.Exception;
 }

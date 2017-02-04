@@ -54,17 +54,17 @@ package org.drip.measure.realization;
 
 public class JumpIndicationEdge {
 	private boolean _bOccurred = false;
+	private double _dblTarget = java.lang.Double.NaN;
 	private double _dblHazardRate = java.lang.Double.NaN;
-	private double _dblTerminalValue = java.lang.Double.NaN;
 	private double _dblHazardIntegral = java.lang.Double.NaN;
 
 	/**
 	 * JumpIndicationEdge Constructor
 	 * 
-	 * @param bOccurred TRUE - The Event Occurred
+	 * @param bOccurred TRUE - The Jump Event Occurred
 	 * @param dblHazardRate The Hazard Rate
 	 * @param dblHazardIntegral The Level Hazard Integral
-	 * @param dblTerminalValue The Event Terminal Value
+	 * @param dblTarget The Jump Target
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -73,12 +73,12 @@ public class JumpIndicationEdge {
 		final boolean bOccurred,
 		final double dblHazardRate,
 		final double dblHazardIntegral,
-		final double dblTerminalValue)
+		final double dblTarget)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblHazardIntegral = dblHazardIntegral) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblTerminalValue = dblTerminalValue))
+				!org.drip.quant.common.NumberUtil.IsValid (_dblTarget = dblTarget))
 			throw new java.lang.Exception ("JumpIndicationEdge Constructor => Invalid Inputs");
 
 		_bOccurred = bOccurred;
@@ -118,13 +118,13 @@ public class JumpIndicationEdge {
 	}
 
 	/**
-	 * Retrieve the Terminal Event Value
+	 * Retrieve the Jump Target Value
 	 * 
-	 * @return The Terminal Event Value
+	 * @return The Jump Target Value
 	 */
 
-	public final double terminalValue()
+	public final double target()
 	{
-		return _dblTerminalValue;
+		return _dblTarget;
 	}
 }

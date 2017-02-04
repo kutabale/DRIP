@@ -2,11 +2,9 @@
 package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
-import org.drip.measure.marginal.*;
-import org.drip.measure.process.HazardJumpIndicationEvaluator;
-import org.drip.measure.realization.JumpDiffusionEdge;
-import org.drip.measure.realization.JumpDiffusionVertex;
-import org.drip.measure.realization.JumpDiffusionUnit;
+import org.drip.measure.dynamics.*;
+import org.drip.measure.process.*;
+import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
@@ -152,29 +150,37 @@ public class R1JointJumpContinuous {
 
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
-		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
-			dblAssetDrift,
-			dblAssetVolatility
+		DiffusionEvolver meAsset = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblAssetDrift,
+				dblAssetVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponCollateralBond = DiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponCollateralBondDrift,
-			dblZeroCouponCollateralBondVolatility
+		DiffusionEvolver meZeroCouponCollateralBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCollateralBondDrift,
+				dblZeroCouponCollateralBondVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponBankBond = JumpDiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponBankBondDrift,
-			dblZeroCouponBankBondVolatility,
-			HazardJumpIndicationEvaluator.Standard (
+		JumpDiffusionEvolver meZeroCouponBankBond = new JumpDiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponBankBondDrift,
+				dblZeroCouponBankBondVolatility
+			),
+			HazardJumpEvaluator.Standard (
 				dblBankHazardRate,
 				dblBankRecoveryRate
 			)
 		);
 
-		DiffusionEvolver meZeroCouponCounterPartyBond = JumpDiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponCounterPartyBondDrift,
-			dblZeroCouponCounterPartyBondVolatility,
-			HazardJumpIndicationEvaluator.Standard (
+		JumpDiffusionEvolver meZeroCouponCounterPartyBond = new JumpDiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCounterPartyBondDrift,
+				dblZeroCouponCounterPartyBondVolatility
+			),
+			HazardJumpEvaluator.Standard (
 				dblCounterPartyHazardRate,
 				dblCounterPartyRecoveryRate
 			)

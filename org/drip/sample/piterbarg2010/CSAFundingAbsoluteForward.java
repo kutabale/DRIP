@@ -1,7 +1,7 @@
 
 package org.drip.sample.piterbarg2010;
 
-import org.drip.measure.marginal.*;
+import org.drip.measure.dynamics.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.FundingBasisEvolver;
@@ -104,12 +104,12 @@ public class CSAFundingAbsoluteForward {
 			30
 		};
 
-		DiffusionEvolverLogarithmic pmlUnderlying = DiffusionEvolverLogarithmic.Standard (
+		DiffusionEvaluatorLogarithmic delUnderlying = DiffusionEvaluatorLogarithmic.Standard (
 			0.,
 			dblUnderlyingVolatility
 		);
 
-		DiffusionEvolverMeanReversion pmmrFundingSpread = DiffusionEvolverMeanReversion.Standard (
+		DiffusionEvaluatorMeanReversion demrFundingSpread = DiffusionEvaluatorMeanReversion.Standard (
 			dblFundingSpreadMeanReversionRate,
 			0.,
 			dblFundingSpreadVolatility
@@ -137,8 +137,8 @@ public class CSAFundingAbsoluteForward {
 
 			for (double dblCorrelation : adblCorrelation) {
 				FundingBasisEvolver sftf = new FundingBasisEvolver (
-					pmlUnderlying,
-					pmmrFundingSpread,
+					delUnderlying,
+					demrFundingSpread,
 					dblCorrelation
 				);
 

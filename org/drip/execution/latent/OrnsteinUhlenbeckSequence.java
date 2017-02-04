@@ -78,7 +78,7 @@ public class OrnsteinUhlenbeckSequence {
 	/**
 	 * Construct a Standard Systemic Instance of OrnsteinUhlenbeckSequence
 	 * 
-	 * @param oup1D The 1D Ornstein-Uhlenbeck Generator Scheme
+	 * @param deou The 1D Ornstein-Uhlenbeck Generator Scheme
 	 * @param dblGenerationInterval The Generation Interval
 	 * @param dblInitialMarketState The Initial Market State
 	 * @param iCount Count of the Number of States to be generated
@@ -87,12 +87,12 @@ public class OrnsteinUhlenbeckSequence {
 	 */
 
 	public static final OrnsteinUhlenbeckSequence Systemic (
-		final org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck oup1D,
+		final org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck deou,
 		final double dblGenerationInterval,
 		final double dblInitialMarketState,
 		final int iCount)
 	{
-		if (null == oup1D || !org.drip.quant.common.NumberUtil.IsValid (dblGenerationInterval) || 0 >=
+		if (null == deou || !org.drip.quant.common.NumberUtil.IsValid (dblGenerationInterval) || 0 >=
 			dblGenerationInterval || 1 >= iCount)
 			return null;
 
@@ -103,8 +103,11 @@ public class OrnsteinUhlenbeckSequence {
 		try {
 			aMSS[0] = new org.drip.execution.latent.MarketStateSystemic (dblInitialMarketState);
 
+			org.drip.measure.process.DiffusionEvolver de = new org.drip.measure.process.DiffusionEvolver
+				(deou);
+
 			for (int i = 0; i < iCount - 1; ++i) {
-				org.drip.measure.realization.JumpDiffusionEdge gi = oup1D.weinerIncrement (new
+				org.drip.measure.realization.JumpDiffusionEdge gi = de.weinerIncrement (new
 					org.drip.measure.realization.JumpDiffusionVertex (dblTime, aMSS[i].common(), 0., false),
 						dblGenerationInterval);
 
@@ -119,7 +122,7 @@ public class OrnsteinUhlenbeckSequence {
 			return null;
 		}
 
-		return new OrnsteinUhlenbeckSequence (oup1D, aMSS, dblGenerationInterval);
+		return new OrnsteinUhlenbeckSequence (deou, aMSS, dblGenerationInterval);
 	}
 
 	/**

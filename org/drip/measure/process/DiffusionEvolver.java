@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.process;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -54,10 +54,9 @@ package org.drip.measure.marginal;
  */
 
 public class DiffusionEvolver {
-	private org.drip.measure.process.LocalDeterministicEvaluator _ldevDrift = null;
-	private org.drip.measure.process.LocalDeterministicEvaluator _ldevVolatility = null;
+	private org.drip.measure.dynamics.DiffusionEvaluator _de = null;
 
-	protected org.drip.measure.realization.JumpIndicationEdge eventIndicationDAG (
+	protected org.drip.measure.realization.JumpIndicationEdge jumpIndicationEdge (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
 		final org.drip.measure.realization.JumpDiffusionUnit jdu,
 		final double dblTimeIncrement)
@@ -68,51 +67,38 @@ public class DiffusionEvolver {
 	/**
 	 * DiffusionEvolver Constructor
 	 * 
-	 * @param ldevDrift The LDEV Drift Function of the Marginal Process
-	 * @param ldevVolatility The LDEV Volatility Function of the Marginal Process Continuous Component
+	 * @param de The Diffusion Evaluator Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public DiffusionEvolver (
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility)
+		final org.drip.measure.dynamics.DiffusionEvaluator de)
 		throws java.lang.Exception
 	{
-		if (null == (_ldevDrift = ldevDrift) || null == (_ldevVolatility = ldevVolatility))
+		if (null == (_de = de))
 			throw new java.lang.Exception ("DiffusionEvolver Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the LDEV Drift Function of the Marginal Process
+	 * Retrieve the Diffusion Evaluator
 	 * 
-	 * @return The LDEV Drift Function of the Marginal Process
+	 * @return The Diffusion Evaluator
 	 */
 
-	public org.drip.measure.process.LocalDeterministicEvaluator driftLDEV()
+	public org.drip.measure.dynamics.DiffusionEvaluator evaluator()
 	{
-		return _ldevDrift;
+		return _de;
 	}
 
 	/**
-	 * Retrieve the LDEV Volatility Function of the Marginal Process Continuous Component
-	 * 
-	 * @return The LDEV Volatility Function of the Marginal Process Continuous Component
-	 */
-
-	public org.drip.measure.process.LocalDeterministicEvaluator volatilityLDEV()
-	{
-		return _ldevVolatility;
-	}
-
-	/**
-	 * Generate the JumpDiffusionDAG Increment Instance from the specified Jump Diffusion Instance
+	 * Generate the JumpDiffusionEdge Instance from the specified Jump Diffusion Instance
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
 	 * @param jdu The JumpDiffusionUnit Instance
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The JumpDiffusionDAG Increment Instance
+	 * @return The JumpDiffusionEdge Instance
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge increment (
@@ -123,20 +109,20 @@ public class DiffusionEvolver {
 		if (null == jdv || null == jdu || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
 			return null;
 
+		double dblPreviousValue = jdv.value();
+
 		try {
-			if (jdv.terminationReached())
-				return new org.drip.measure.realization.JumpDiffusionEdge (jdv.value(), 0., 0., new
+			if (jdv.jumpOccurred())
+				return new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue, 0., 0., new
 					org.drip.measure.realization.JumpIndicationEdge (true, 0., 0., 0.), new
 						org.drip.measure.realization.JumpDiffusionUnit (0., 0.));
 
-			double dblDiffusionUnitRealization = jdu.diffusion();
+			org.drip.measure.dynamics.LocalEvaluator leVolatility = _de.volatilityEvaluator();
 
-			return new org.drip.measure.realization.JumpDiffusionEdge (jdv.value(), _ldevDrift.value (jdv) *
-				dblTimeIncrement, null == _ldevVolatility ? 0. : _ldevVolatility.value (jdv) *
-					dblDiffusionUnitRealization * java.lang.Math.sqrt (java.lang.Math.abs
-						(dblTimeIncrement)), eventIndicationDAG (jdv, jdu, dblTimeIncrement), new
-							org.drip.measure.realization.JumpDiffusionUnit (dblDiffusionUnitRealization,
-								jdu.jump()));
+			return new org.drip.measure.realization.JumpDiffusionEdge (dblPreviousValue,
+				_de.driftEvaluator().value (jdv) * dblTimeIncrement, null == leVolatility ? 0. :
+					leVolatility.value (jdv) * jdu.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs
+						(dblTimeIncrement)), jumpIndicationEdge (jdv, jdu, dblTimeIncrement), jdu);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -145,13 +131,13 @@ public class DiffusionEvolver {
 	}
 
 	/**
-	 * Generate the Array of Adjacent JumpDiffusionDAG Increments from the specified Random Variate Array
+	 * Generate the Array of Adjacent JumpDiffusionEdge from the specified Random Variate Array
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
-	 * @param jdu The JumpDiffusionUnit Instance
+	 * @param aJDU Array of JumpDiffusionUnit Instances
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Array of Adjacent JumpDiffusionDAG Increments
+	 * @return The Array of Adjacent JumpDiffusionEdge
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge[] incrementSequence (
@@ -162,29 +148,29 @@ public class DiffusionEvolver {
 		if (null == aJDU) return null;
 
 		int iNumTimeStep = aJDU.length;
-		org.drip.measure.realization.JumpDiffusionVertex jdvLoop = jdv;
-		org.drip.measure.realization.JumpDiffusionEdge[] aJDDAG = 0 == iNumTimeStep ? null : new
+		org.drip.measure.realization.JumpDiffusionVertex jdvIter = jdv;
+		org.drip.measure.realization.JumpDiffusionEdge[] aJDE = 0 == iNumTimeStep ? null : new
 			org.drip.measure.realization.JumpDiffusionEdge[iNumTimeStep];
 
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			if (null == (aJDDAG[i] = increment (jdvLoop, aJDU[i], dblTimeIncrement))) return null;
+			if (null == (aJDE[i] = increment (jdvIter, aJDU[i], dblTimeIncrement))) return null;
 
 			try {
-				org.drip.measure.realization.JumpIndicationEdge eiDAG = aJDDAG[i].jumpIndicationEdge();
-
 				boolean bJumpOccurred = false;
 				double dblHazardIntegral = 0.;
 
-				if (null != eiDAG) {
-					bJumpOccurred = eiDAG.eventOccurred();
+				org.drip.measure.realization.JumpIndicationEdge jie = aJDE[i].jumpIndicationEdge();
 
-					dblHazardIntegral = eiDAG.hazardIntegral();
+				if (null != jie) {
+					bJumpOccurred = jie.eventOccurred();
+
+					dblHazardIntegral = jie.hazardIntegral();
 				}
 
-				jdvLoop = new org.drip.measure.realization.JumpDiffusionVertex (jdvLoop.time() +
-					dblTimeIncrement, aJDDAG[i].finish(), jdvLoop.cumulativeHazardIntegral() +
+				jdvIter = new org.drip.measure.realization.JumpDiffusionVertex (jdvIter.time() +
+					dblTimeIncrement, aJDE[i].finish(), jdvIter.cumulativeHazardIntegral() +
 						dblHazardIntegral, bJumpOccurred);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
@@ -193,7 +179,7 @@ public class DiffusionEvolver {
 			}
 		}
 
-		return aJDDAG;
+		return aJDE;
 	}
 
 	/**

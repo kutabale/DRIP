@@ -47,7 +47,7 @@ package org.drip.measure.realization;
  */
 
 /**
- * DiffusionVertex holds the Vertex Values of the Realized R^1 Diffusion Variable - its Value and Time.
+ * DiffusionVertex holds the Vertex Value of the Realized R^1 Diffusion Variable - its Value and Time.
  *
  * @author Lakshmi Krishnamurthy
  */

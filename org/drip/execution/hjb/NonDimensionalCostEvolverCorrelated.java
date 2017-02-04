@@ -87,9 +87,9 @@ public class NonDimensionalCostEvolverCorrelated extends
 		org.drip.measure.process.OrnsteinUhlenbeckPair oup2D =
 			(org.drip.measure.process.OrnsteinUhlenbeckPair) ornsteinUnlenbeckProcess();
 
-		org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck oup1DLiquidity = oup2D.reference();
+		org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck oup1DLiquidity = oup2D.reference();
 
-		org.drip.measure.marginal.DiffusionEvolverOrnsteinUhlenbeck oup1DVolatility = oup2D.derived();
+		org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck oup1DVolatility = oup2D.derived();
 
 		double dblVolatilityMarketState = ms.volatility() + adblMarketStateTweak[1];
 

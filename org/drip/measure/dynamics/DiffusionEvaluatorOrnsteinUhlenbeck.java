@@ -1,5 +1,5 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.dynamics;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,7 +7,6 @@ package org.drip.measure.marginal;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -48,81 +47,60 @@ package org.drip.measure.marginal;
  */
 
 /**
- * JumpDiffusionEvolverOrnsteinUhlenbeck guides the Jump Diffusion Random Variable Evolution according to R^1
- *  Ornstein-Uhlenbeck Mean Reverting Process. The References are:
- * 
- * 	- Almgren, R. F. (2009): Optimal Trading in a Dynamic Market
- * 		https://www.math.nyu.edu/financial_mathematics/content/02_financial/2009-2.pdf.
- *
- * 	- Almgren, R. F. (2012): Optimal Trading with Stochastic Liquidity and Volatility, SIAM Journal of
- * 		Financial Mathematics  3 (1) 163-181.
- * 
- * 	- Geman, H., D. B. Madan, and M. Yor (2001): Time Changes for Levy Processes, Mathematical Finance 11 (1)
- * 		79-96.
- * 
- * 	- Jones, C. M., G. Kaul, and M. L. Lipson (1994): Transactions, Volume, and Volatility, Review of
- * 		Financial Studies 7 (4) 631-651.
- * 
- * 	- Walia, N. (2006): Optimal Trading - Dynamic Stock Liquidation Strategies, Senior Thesis, Princeton
- * 		University.
+ * DiffusionEvaluatorOrnsteinUhlenbeck evaluates the Drift/Volatility of the Diffusion Random Variable
+ *  Evolution according to R^1 Ornstein Uhlenbeck Process.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpDiffusionEvolverOrnsteinUhlenbeck extends org.drip.measure.marginal.JumpDiffusionEvolver
+public class DiffusionEvaluatorOrnsteinUhlenbeck extends org.drip.measure.dynamics.DiffusionEvaluator
 	implements org.drip.measure.process.OrnsteinUhlenbeck {
 	private double _dblBurstiness = java.lang.Double.NaN;
 	private double _dblRelaxationTime = java.lang.Double.NaN;
 	private double _dblMeanReversionLevel = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Standard Instance of JumpDiffusionEvolverOrnsteinUhlenbeck
+	 * Construct a Standard Instance of DiffusionEvaluatorOrnsteinUhlenbeck
 	 * 
 	 * @param dblMeanReversionLevel The Mean Reversion Level
 	 * @param dblBurstiness The Burstiness Parameter
 	 * @param dblRelaxationTime The Relaxation Time
-	 * @param heie The Point Hazard Event Indicator Function Instance
 	 * 
-	 * @return The Standard Instance of JumpDiffusionEvolverOrnsteinUhlenbeck
+	 * @return The Standard Instance of DiffusionEvaluatorOrnsteinUhlenbeck
 	 */
 
-	public static final JumpDiffusionEvolverOrnsteinUhlenbeck Standard (
+	public static final DiffusionEvaluatorOrnsteinUhlenbeck Standard (
 		final double dblMeanReversionLevel,
 		final double dblBurstiness,
-		final double dblRelaxationTime,
-		final org.drip.measure.process.HazardJumpIndicationEvaluator heie)
+		final double dblRelaxationTime)
 	{
 		try {
-			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvaluator() {
+			org.drip.measure.dynamics.LocalEvaluator leDrift = new org.drip.measure.dynamics.LocalEvaluator()
+			{
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex jdv)
+					final org.drip.measure.realization.DiffusionVertex dv)
 					throws java.lang.Exception
 				{
-					if (null == jdv)
+					if (null == dv)
 						throw new java.lang.Exception
-							("JumpDiffusionEvolverOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
+							("DiffusionEvaluatorOrnsteinUhlenbeck::DriftLDEV::value => Invalid Inputs");
 
-					return -1. * jdv.value() / dblRelaxationTime;
+					return -1. * dv.value() / dblRelaxationTime;
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvaluator() {
+			org.drip.measure.dynamics.LocalEvaluator leVolatility = new
+				org.drip.measure.dynamics.LocalEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex jdv)
+					final org.drip.measure.realization.DiffusionVertex dv)
 					throws java.lang.Exception
 				{
-					if (null == jdv)
-						throw new java.lang.Exception
-							("JumpDiffusionEvolverOrnsteinUhlenbeck::VolatilityLDEV::value => Invalid Inputs");
-
 					return dblBurstiness * java.lang.Math.sqrt (1. / dblRelaxationTime);
 				}
 			};
 
-			return new JumpDiffusionEvolverOrnsteinUhlenbeck (dblMeanReversionLevel, dblBurstiness,
-				dblRelaxationTime, ldevDrift, ldevVolatility, heie);
+			return new DiffusionEvaluatorOrnsteinUhlenbeck (dblMeanReversionLevel, dblBurstiness,
+				dblRelaxationTime, leDrift, leVolatility);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -131,40 +109,37 @@ public class JumpDiffusionEvolverOrnsteinUhlenbeck extends org.drip.measure.marg
 	}
 
 	/**
-	 * Construct a Zero-Mean Instance of JumpDiffusionEvolverOrnsteinUhlenbeck
+	 * Construct a Zero-Mean Instance of DiffusionEvaluatorOrnsteinUhlenbeck
 	 * 
 	 * @param dblBurstiness The Burstiness Parameter
 	 * @param dblRelaxationTime The Relaxation Time
-	 * @param heie The Point Hazard Event Indicator Function Instance
 	 * 
-	 * @return The Zero-Mean Instance of JumpDiffusionEvolverOrnsteinUhlenbeck
+	 * @return The Zero-Mean Instance of DiffusionEvaluatorOrnsteinUhlenbeck
 	 */
 
-	public static final JumpDiffusionEvolverOrnsteinUhlenbeck ZeroMean (
+	public static final DiffusionEvaluatorOrnsteinUhlenbeck ZeroMean (
 		final double dblBurstiness,
-		final double dblRelaxationTime,
-		final org.drip.measure.process.HazardJumpIndicationEvaluator heie)
+		final double dblRelaxationTime)
 	{
-		return JumpDiffusionEvolverOrnsteinUhlenbeck.Standard (0., dblBurstiness, dblRelaxationTime, heie);
+		return Standard (0., dblBurstiness, dblRelaxationTime);
 	}
 
-	private JumpDiffusionEvolverOrnsteinUhlenbeck (
+	private DiffusionEvaluatorOrnsteinUhlenbeck (
 		final double dblMeanReversionLevel,
 		final double dblBurstiness,
 		final double dblRelaxationTime,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility,
-		final org.drip.measure.process.HazardJumpIndicationEvaluator heie)
+		final org.drip.measure.dynamics.LocalEvaluator leDrift,
+		final org.drip.measure.dynamics.LocalEvaluator leVolatility)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility, heie);
+		super (leDrift, leVolatility);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMeanReversionLevel = dblMeanReversionLevel) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBurstiness = dblBurstiness) || 0. >=
 				_dblBurstiness || !org.drip.quant.common.NumberUtil.IsValid (_dblRelaxationTime =
 					dblRelaxationTime) || 0. >= _dblRelaxationTime)
 			throw new java.lang.Exception
-				("JumpDiffusionEvolverOrnsteinUhlenbeck Constructor => Invalid Inputs");
+				("DiffusionEvaluatorOrnsteinUhlenbeck Constructor => Invalid Inputs");
 	}
 
 	/**

@@ -3,9 +3,9 @@ package org.drip.sample.almgren2009;
 
 import org.drip.execution.hjb.*;
 import org.drip.execution.latent.MarketStateSystemic;
-import org.drip.measure.marginal.*;
-import org.drip.measure.realization.JumpDiffusionEdge;
-import org.drip.measure.realization.JumpDiffusionVertex;
+import org.drip.measure.dynamics.DiffusionEvaluatorOrnsteinUhlenbeck;
+import org.drip.measure.process.DiffusionEvolver;
+import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -99,10 +99,12 @@ public class AdaptiveOptimalCostTrajectory {
 
 		aMSS[0] = new MarketStateSystemic (dblInitialMarketState);
 
-		DiffusionEvolverOrnsteinUhlenbeck oup1D = DiffusionEvolverOrnsteinUhlenbeck.ZeroMean (
+		DiffusionEvaluatorOrnsteinUhlenbeck deou = DiffusionEvaluatorOrnsteinUhlenbeck.ZeroMean (
 			dblBurstiness,
 			dblRelaxationTime
 		);
+
+		DiffusionEvolver oup1D = new DiffusionEvolver (deou);
 
 		for (int i = 0; i < iNumTimeNode; ++i) {
 			JumpDiffusionEdge gi = oup1D.weinerIncrement (
@@ -120,7 +122,7 @@ public class AdaptiveOptimalCostTrajectory {
 			aMSS[i + 1] = new MarketStateSystemic (aMSS[i].common() + gi.deterministic() + gi.diffusionStochastic());
 		}
 
-		NonDimensionalCostEvolverSystemic ndces = NonDimensionalCostEvolverSystemic.Standard (oup1D);
+		NonDimensionalCostEvolverSystemic ndces = NonDimensionalCostEvolverSystemic.Standard (deou);
 
 		NonDimensionalCostSystemic ndcs = NonDimensionalCostSystemic.Zero();
 

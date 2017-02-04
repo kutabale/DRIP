@@ -54,7 +54,7 @@ package org.drip.measure.realization;
  */
 
 public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionVertex {
-	private boolean _bTerminationReached = false;
+	private boolean _bJumpOccurred = false;
 	private double _dblCumulativeHazardIntegral = java.lang.Double.NaN;
 
 	/**
@@ -63,7 +63,7 @@ public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionV
 	 * @param dblTime The Time Instant
 	 * @param dblValue The Random Variable Value
 	 * @param dblCumulativeHazardIntegral The Event Occurrence Cumulative Hazard Integral
-	 * @param bTerminationReached TRUE - Termination Reached
+	 * @param bJumpOccurred TRUE - Jump Occurred
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -72,7 +72,7 @@ public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionV
 		final double dblTime,
 		final double dblValue,
 		final double dblCumulativeHazardIntegral,
-		final boolean bTerminationReached)
+		final boolean bJumpOccurred)
 		throws java.lang.Exception
 	{
 		super (dblTime, dblValue);
@@ -81,18 +81,18 @@ public class JumpDiffusionVertex extends org.drip.measure.realization.DiffusionV
 			dblCumulativeHazardIntegral))
 			throw new java.lang.Exception ("JumpDiffusionVertex Constructor => Invalid Inputs");
 
-		_bTerminationReached = bTerminationReached;
+		_bJumpOccurred = bJumpOccurred;
 	}
 
 	/**
-	 * Retrieve the Termination Reached Flag
+	 * Retrieve the Jump Occurred Flag
 	 * 
-	 * @return TRUE - Termination Reached
+	 * @return TRUE - Jump Occurred
 	 */
 
-	public boolean terminationReached()
+	public boolean jumpOccurred()
 	{
-		return _bTerminationReached;
+		return _bJumpOccurred;
 	}
 
 	/**

@@ -2,10 +2,9 @@
 package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
-import org.drip.measure.marginal.*;
-import org.drip.measure.realization.JumpDiffusionEdge;
-import org.drip.measure.realization.JumpDiffusionVertex;
-import org.drip.measure.realization.JumpDiffusionUnit;
+import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
+import org.drip.measure.process.DiffusionEvolver;
+import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
@@ -137,9 +136,11 @@ public class R1JointContinuous {
 
 		int iNumTimeStep = (int) (dblTime / dblTimeWidth);
 
-		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
-			dblAssetDrift,
-			dblAssetVolatility
+		DiffusionEvolver meAsset = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblAssetDrift,
+				dblAssetVolatility
+			)
 		);
 
 		double[][] aadblNumeraireTimeSeries = NumeraireSequence (

@@ -1,7 +1,8 @@
 
 package org.drip.sample.burgard2011;
 
-import org.drip.measure.marginal.*;
+import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
+import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -219,7 +220,7 @@ public class XVAExplain {
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				eagStart.derivativeValue() * Math.exp (
-					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().driftLDEV().value (
+					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().evaluator().driftEvaluator().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -270,24 +271,32 @@ public class XVAExplain {
 			dblCounterPartyRecovery
 		);
 
-		DiffusionEvolver meAsset = DiffusionEvolverLogarithmic.Standard (
-			dblAssetDrift,
-			dblAssetVolatility
+		DiffusionEvolver meAsset = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblAssetDrift,
+				dblAssetVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponCollateralBond = DiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponCollateralBondDrift,
-			dblZeroCouponCollateralBondVolatility
+		DiffusionEvolver meZeroCouponCollateralBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCollateralBondDrift,
+				dblZeroCouponCollateralBondVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponBankBond = DiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponBankBondDrift,
-			dblZeroCouponBankBondVolatility
+		DiffusionEvolver meZeroCouponBankBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponBankBondDrift,
+				dblZeroCouponBankBondVolatility
+			)
 		);
 
-		DiffusionEvolver meZeroCouponCounterPartyBond = DiffusionEvolverLogarithmic.Standard (
-			dblZeroCouponCounterPartyBondDrift,
-			dblZeroCouponCounterPartyBondVolatility
+		DiffusionEvolver meZeroCouponCounterPartyBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCounterPartyBondDrift,
+				dblZeroCouponCounterPartyBondVolatility
+			)
 		);
 
 		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (

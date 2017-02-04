@@ -1,5 +1,6 @@
 
-package org.drip.measure.marginal;
+package org.drip.measure.dynamics;
+
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,54 +48,51 @@ package org.drip.measure.marginal;
  */
 
 /**
- * JumpDiffusionEvolverLinear guides the Jump Diffusion Random Variable Evolution according to Linear R^1
- *  Process.
+ * HazardJumpEvaluator implements the Hazard Jump Process Point Event Indication Evaluator that guides the
+ *  Single Factor Jump-Termination Random Process Variable Evolution.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class JumpDiffusionEvolverLinear extends org.drip.measure.marginal.JumpDiffusionEvolver {
-	private double _dblDrift = java.lang.Double.NaN;
-	private double _dblVolatility = java.lang.Double.NaN;
+public class HazardJumpEvaluator extends org.drip.measure.dynamics.SingleJumpEvaluator {
+	private double _dblMagnitude = java.lang.Double.NaN;
+	private double _dblHazardRate = java.lang.Double.NaN;
 
 	/**
-	 * Generate a Standard Instance of JumpDiffusionEvolverLinear
+	 * Generate a Standard Instance of HazardJumpEvaluator
 	 * 
-	 * @param dblDrift The Drift
-	 * @param dblVolatility The Volatility
-	 * @param heie The Point Event Hazard Indicator Function Instance
+	 * @param dblHazardRate The Hazard Rate
+	 * @param dblMagnitude The Magnitude
 	 * 
-	 * @return The Standard Instance of JumpDiffusionEvolverLinear
+	 * @return The Standard Instance of HazardJumpEvaluator
 	 */
 
-	public static final JumpDiffusionEvolverLinear Standard (
-		final double dblDrift,
-		final double dblVolatility,
-		final org.drip.measure.process.HazardJumpIndicationEvaluator heie)
+	public static final HazardJumpEvaluator Standard (
+		final double dblHazardRate,
+		final double dblMagnitude)
 	{
 		try {
-			org.drip.measure.process.LocalDeterministicEvaluator ldevDrift = new
-				org.drip.measure.process.LocalDeterministicEvaluator() {
+			org.drip.measure.dynamics.LocalEvaluator leDensity = new
+				org.drip.measure.dynamics.LocalEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex jdv)
+					final org.drip.measure.realization.DiffusionVertex dv)
 					throws java.lang.Exception
 				{
-					return dblDrift;
+					return -1. * dblHazardRate * java.lang.Math.exp (-1. * dblHazardRate);
 				}
 			};
 
-			org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility = new
-				org.drip.measure.process.LocalDeterministicEvaluator() {
+			org.drip.measure.dynamics.LocalEvaluator leMagnitude = new
+				org.drip.measure.dynamics.LocalEvaluator() {
 				@Override public double value (
-					final org.drip.measure.realization.JumpDiffusionVertex jdv)
+					final org.drip.measure.realization.DiffusionVertex dv)
 					throws java.lang.Exception
 				{
-					return dblVolatility;
+					return dblMagnitude;
 				}
 			};
 
-			return new JumpDiffusionEvolverLinear (dblDrift, dblVolatility, ldevDrift, ldevVolatility,
-				heie);
+			return new HazardJumpEvaluator (dblHazardRate, dblMagnitude, leDensity, leMagnitude);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -102,40 +100,40 @@ public class JumpDiffusionEvolverLinear extends org.drip.measure.marginal.JumpDi
 		return null;
 	}
 
-	private JumpDiffusionEvolverLinear (
-		final double dblDrift,
-		final double dblVolatility,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevDrift,
-		final org.drip.measure.process.LocalDeterministicEvaluator ldevVolatility,
-		final org.drip.measure.process.HazardJumpIndicationEvaluator heie)
+	private HazardJumpEvaluator (
+		final double dblHazardRate,
+		final double dblMagnitude,
+		final org.drip.measure.dynamics.LocalEvaluator leDensity,
+		final org.drip.measure.dynamics.LocalEvaluator leMagnitude)
 		throws java.lang.Exception
 	{
-		super (ldevDrift, ldevVolatility, heie);
+		super (leDensity, leMagnitude);
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDrift = dblDrift) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblVolatility = dblVolatility))
-			throw new java.lang.Exception ("JumpDiffusionEvolverLinear Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) || 0. > _dblHazardRate
+			|| !org.drip.quant.common.NumberUtil.IsValid (_dblMagnitude = dblMagnitude) || 0. >
+				_dblMagnitude)
+			throw new java.lang.Exception ("HazardJumpEvaluator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Drift
+	 * Retrieve the Hazard Rate
 	 * 
-	 * @return The Drift
+	 * @return The Hazard Rate
 	 */
 
-	public double drift()
+	public double hazardRate()
 	{
-		return _dblDrift;
+		return _dblHazardRate;
 	}
 
 	/**
-	 * Retrieve the Volatility
+	 * Retrieve the Magnitude
 	 * 
-	 * @return The Volatility
+	 * @return The Magnitude
 	 */
 
-	public double volatility()
+	public double magnitude()
 	{
-		return _dblVolatility;
+		return _dblMagnitude;
 	}
 }
