@@ -69,35 +69,35 @@ package org.drip.xva.definition;
  */
 
 public class UniverseSnapshot {
-	private org.drip.measure.realization.JumpDiffusionEdge _r1lrAssetNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _r1lrZeroCouponBondBankNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _r1lrZeroCouponBondCollateralNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _r1lrZeroCouponBondCounterPartyNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondBankNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCollateralNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCounterPartyNumeraire = null;
 
 	/**
 	 * UniverseSnapshot Constructor
 	 * 
-	 * @param r1lrAssetNumeraire The Asset Numeraire Level Realization
-	 * @param r1lrZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
+	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
+	 * @param jdeZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
 	 * 		Realization
-	 * @param r1lrZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
-	 * @param r1lrZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
+	 * @param jdeZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
+	 * @param jdeZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
 	 * 		Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public UniverseSnapshot (
-		final org.drip.measure.realization.JumpDiffusionEdge r1lrAssetNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge r1lrZeroCouponBondCollateralNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge r1lrZeroCouponBondBankNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge r1lrZeroCouponBondCounterPartyNumeraire)
+		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCollateralNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCounterPartyNumeraire)
 		throws java.lang.Exception
 	{
-		if (null == (_r1lrAssetNumeraire = r1lrAssetNumeraire) || null ==
-			(_r1lrZeroCouponBondCollateralNumeraire = r1lrZeroCouponBondCollateralNumeraire) || null ==
-				(_r1lrZeroCouponBondBankNumeraire = r1lrZeroCouponBondBankNumeraire) || null ==
-					(_r1lrZeroCouponBondCounterPartyNumeraire = r1lrZeroCouponBondCounterPartyNumeraire))
+		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null ==
+			(_jdeZeroCouponBondCollateralNumeraire = jdeZeroCouponBondCollateralNumeraire) || null ==
+				(_jdeZeroCouponBondBankNumeraire = jdeZeroCouponBondBankNumeraire) || null ==
+					(_jdeZeroCouponBondCounterPartyNumeraire = jdeZeroCouponBondCounterPartyNumeraire))
 			throw new java.lang.Exception ("UniverseSnapshot Constructor => Invalid Inputs");
 	}
 
@@ -109,7 +109,7 @@ public class UniverseSnapshot {
 
 	public org.drip.measure.realization.JumpDiffusionEdge assetNumeraire()
 	{
-		return _r1lrAssetNumeraire;
+		return _jdeAssetNumeraire;
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class UniverseSnapshot {
 
 	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCollateralBondNumeraire()
 	{
-		return _r1lrZeroCouponBondCollateralNumeraire;
+		return _jdeZeroCouponBondCollateralNumeraire;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class UniverseSnapshot {
 
 	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponBankBondNumeraire()
 	{
-		return _r1lrZeroCouponBondBankNumeraire;
+		return _jdeZeroCouponBondBankNumeraire;
 	}
 
 	/**
@@ -142,6 +142,6 @@ public class UniverseSnapshot {
 
 	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCounterPartyBondNumeraire()
 	{
-		return _r1lrZeroCouponBondCounterPartyNumeraire;
+		return _jdeZeroCouponBondCounterPartyNumeraire;
 	}
 }

@@ -70,36 +70,36 @@ package org.drip.xva.definition;
 
 public class Tradeable {
 	private double _dblRepoRate = java.lang.Double.NaN;
-	private org.drip.measure.process.DiffusionEvolver _r1ePriceNumeraire = null;
+	private org.drip.measure.process.DiffusionEvolver _dePriceNumeraire = null;
 
 	/**
-	 * Tradeable Constructor
+	 * Trade-able Constructor
 	 * 
-	 * @param r1ePriceNumeraire The Trade-able Asset Price Numeraire
+	 * @param dePriceNumeraire The Trade-able Asset Price Numeraire Evolver
 	 * @param dblRepoRate The Trade-able Asset Repo Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public Tradeable (
-		final org.drip.measure.process.DiffusionEvolver r1ePriceNumeraire,
+		final org.drip.measure.process.DiffusionEvolver dePriceNumeraire,
 		final double dblRepoRate)
 		throws java.lang.Exception
 	{
-		if (null == (_r1ePriceNumeraire = r1ePriceNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
+		if (null == (_dePriceNumeraire = dePriceNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
 			(_dblRepoRate = dblRepoRate))
 			throw new java.lang.Exception ("Tradeable Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Price Numeraire
+	 * Retrieve the Trade-able Asset Price Numeraire Evolver
 	 * 
-	 * @return The Trade-able Asset Price Numeraire
+	 * @return The Trade-able Asset Price Numeraire Evolver
 	 */
 
 	public org.drip.measure.process.DiffusionEvolver priceNumeraire()
 	{
-		return _r1ePriceNumeraire;
+		return _dePriceNumeraire;
 	}
 
 	/**

@@ -70,21 +70,21 @@ package org.drip.xva.pde;
  */
 
 public class ParabolicDifferentialOperator {
-	private org.drip.xva.definition.Tradeable _taAsset = null;
+	private org.drip.xva.definition.Tradeable _tAsset = null;
 
 	/**
 	 * ParabolicDifferentialOperator Constructor
 	 * 
-	 * @param taAsset The Trade-able Asset
+	 * @param tAsset The Trade-able Asset
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ParabolicDifferentialOperator (
-		final org.drip.xva.definition.Tradeable taAsset)
+		final org.drip.xva.definition.Tradeable tAsset)
 		throws java.lang.Exception
 	{
-		if (null == (_taAsset = taAsset))
+		if (null == (_tAsset = tAsset))
 			throw new java.lang.Exception ("ParabolicDifferentialOperator Constructor => Invalid Inputs");
 	}
 
@@ -96,7 +96,7 @@ public class ParabolicDifferentialOperator {
 
 	public org.drip.xva.definition.Tradeable asset()
 	{
-		return _taAsset;
+		return _tAsset;
 	}
 
 	/**
@@ -120,11 +120,11 @@ public class ParabolicDifferentialOperator {
 
 		org.drip.xva.derivative.EdgeAssetGreek eagDerivative = eet.edgeAssetGreek();
 
-		double dblVolatility = _taAsset.priceNumeraire().evaluator().volatility().value (new
+		double dblVolatility = _tAsset.priceNumeraire().evaluator().volatility().value (new
 			org.drip.measure.realization.JumpDiffusionVertex (eet.time(), dblAsset, 0., false));
 
 		return 0.5 * dblVolatility * dblVolatility * dblAsset * dblAsset *
-			eagDerivative.derivativeXVAValueGamma() - _taAsset.cashAccumulationRate() * dblAsset *
+			eagDerivative.derivativeXVAValueGamma() - _tAsset.cashAccumulationRate() * dblAsset *
 				eagDerivative.derivativeXVAValueDelta();
 	}
 
@@ -154,7 +154,7 @@ public class ParabolicDifferentialOperator {
 		double dblVolatility = java.lang.Double.NaN;
 
 		try {
-			dblVolatility = _taAsset.priceNumeraire().evaluator().volatility().value (new
+			dblVolatility = _tAsset.priceNumeraire().evaluator().volatility().value (new
 				org.drip.measure.realization.JumpDiffusionVertex (eet.time(), dblAsset, 0., false));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -165,7 +165,7 @@ public class ParabolicDifferentialOperator {
 		double dblGammaCoefficient = 0.5 * dblVolatility * dblVolatility *
 			eagDerivative.derivativeXVAValueGamma();
 
-		double dblDeltaCoefficient = -1. * _taAsset.cashAccumulationRate() *
+		double dblDeltaCoefficient = -1. * _tAsset.cashAccumulationRate() *
 			eagDerivative.derivativeXVAValueDelta();
 
 		return new double[] {dblGammaCoefficient * dblAssetDown * dblAssetDown + dblDeltaCoefficient *

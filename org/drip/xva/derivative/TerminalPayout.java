@@ -76,7 +76,7 @@ public class TerminalPayout {
 	 * TerminalPayout Constructor
 	 * 
 	 * @param dt The Terminal Pay Out Date
-	 * @param r1ToR1Payout The R^1 -> R^1 Pay-out Function
+	 * @param r1ToR1Payout The R^1 To R^1 Pay-out Function
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -102,9 +102,9 @@ public class TerminalPayout {
 	}
 
 	/**
-	 * Retrieve the R^1 -> R^1 Pay-out Function
+	 * Retrieve the R^1 To R^1 Pay-out Function
 	 * 
-	 * @return The R^1 -> R^1 Pay-out Function
+	 * @return The R^1 To R^1 Pay-out Function
 	 */
 
 	public org.drip.function.definition.R1ToR1 function()

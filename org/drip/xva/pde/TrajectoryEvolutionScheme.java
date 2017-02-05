@@ -164,22 +164,22 @@ public class TrajectoryEvolutionScheme {
 
 		double dblCounterPartyBondUnitsStart = erpStart.counterPartyBondUnits();
 
-		org.drip.measure.realization.JumpDiffusionEdge lrAsset = us.assetNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeAsset = us.assetNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge lrBankBond = us.zeroCouponBankBondNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankBond = us.zeroCouponBankBondNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge lrCounterPartyBond =
+		org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyBond =
 			us.zeroCouponCounterPartyBondNumeraire();
 
 		double dblLevelAssetCash = dblAssetUnitsStart * _twru.asset().cashAccumulationRate() *
-			lrAsset.finish() * _dblTimeIncrement;
+			jdeAsset.finish() * _dblTimeIncrement;
 
 		double dblLevelCounterPartyCash = dblCounterPartyBondUnitsStart *
-			_twru.zeroCouponCounterPartyBond().cashAccumulationRate() * lrCounterPartyBond.finish() *
+			_twru.zeroCouponCounterPartyBond().cashAccumulationRate() * jdeCounterPartyBond.finish() *
 				_dblTimeIncrement;
 
 		double dblCashAccountBalance = -1. * eetStart.edgeAssetGreek().derivativeXVAValue() -
-			dblBankBondUnitsStart * lrBankBond.finish();
+			dblBankBondUnitsStart * jdeBankBond.finish();
 
 		double dblLevelBankCash = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
 			_twru.zeroCouponCollateralBond().cashAccumulationRate() :
@@ -188,9 +188,9 @@ public class TrajectoryEvolutionScheme {
 		double dblLevelCashAccount = (dblLevelAssetCash + dblLevelCounterPartyCash + dblLevelBankCash) *
 			_dblTimeIncrement;
 
-		double dblLevelDerivativeXVAValue = -1. * (dblAssetUnitsStart * lrAsset.grossChange() +
-			dblBankBondUnitsStart * lrBankBond.grossChange() + dblCounterPartyBondUnitsStart *
-				lrCounterPartyBond.grossChange() + dblLevelCashAccount);
+		double dblLevelDerivativeXVAValue = -1. * (dblAssetUnitsStart * jdeAsset.grossChange() +
+			dblBankBondUnitsStart * jdeBankBond.grossChange() + dblCounterPartyBondUnitsStart *
+				jdeCounterPartyBond.grossChange() + dblLevelCashAccount);
 
 		try {
 			return new org.drip.xva.derivative.CashAccountRebalancer (new
@@ -209,7 +209,7 @@ public class TrajectoryEvolutionScheme {
 	 * 
 	 * @param eetStart The Starting Evolution Trajectory Edge
 	 * @param us The Universe Snap-shot
-	 * @param erugFinish The Period End EdgeReferenceUnderlierGreek Instance
+	 * @param eagFinish The Period End EdgeAssetGreek Instance
 	 * 
 	 * @return The LevelEvolutionTrajectory Instance
 	 */
@@ -217,9 +217,9 @@ public class TrajectoryEvolutionScheme {
 	public org.drip.xva.derivative.LevelEvolutionTrajectory move (
 		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
 		final org.drip.xva.definition.UniverseSnapshot us,
-		final org.drip.xva.derivative.EdgeAssetGreek erugFinish)
+		final org.drip.xva.derivative.EdgeAssetGreek eagFinish)
 	{
-		if (null == erugFinish) return null;
+		if (null == eagFinish) return null;
 
 		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (eetStart, us);
 
@@ -227,10 +227,10 @@ public class TrajectoryEvolutionScheme {
 
 		org.drip.xva.derivative.LevelCashAccount lca = car.cashAccount();
 
-		double dblDerivativeXVAValue = erugFinish.derivativeXVAValue();
+		double dblDerivativeXVAValue = eagFinish.derivativeXVAValue();
 
 		double dblCloseOutMTM = org.drip.xva.custom.Settings.CLOSEOUT_GREGORY_LI_TANG ==
-			_settings.closeOutScheme() ? erugFinish.derivativeValue() : dblDerivativeXVAValue;
+			_settings.closeOutScheme() ? eagFinish.derivativeValue() : dblDerivativeXVAValue;
 
 		try {
 			double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - _maco.bankDefault (dblCloseOutMTM));
@@ -244,13 +244,13 @@ public class TrajectoryEvolutionScheme {
 				us.zeroCouponCounterPartyBondNumeraire().finish();
 
 			org.drip.xva.derivative.EdgeReplicationPortfolio erp = new
-				org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * erugFinish.derivativeXVAValueDelta(),
+				org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * eagFinish.derivativeXVAValueDelta(),
 					dblBankBondUnits, dblCounterPartyBondUnits, eetStart.replicationPortfolio().cashAccount()
 						+ lca.accumulation());
 
 			return new org.drip.xva.derivative.LevelEvolutionTrajectory (eetStart, new
 				org.drip.xva.derivative.EdgeEvolutionTrajectory (eetStart.time() + _dblTimeIncrement, us,
-					erp, erugFinish, dblGainOnBankDefault, dblGainOnCounterPartyDefault), lca);
+					erp, eagFinish, dblGainOnBankDefault, dblGainOnCounterPartyDefault), lca);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

@@ -112,11 +112,6 @@ public class DiffusionEvolver {
 		double dblPreviousValue = jdv.value();
 
 		try {
-			if (jdv.jumpOccurred())
-				return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue, 0., 0., new
-					org.drip.measure.realization.StochasticEdgeJump (true, 0., 0., 0.), new
-						org.drip.measure.realization.UnitRandom (0., 0.));
-
 			org.drip.measure.dynamics.LocalEvaluator leVolatility = _de.volatility();
 
 			return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue,

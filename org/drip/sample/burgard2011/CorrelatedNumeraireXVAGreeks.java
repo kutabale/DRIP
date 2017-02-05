@@ -59,9 +59,9 @@ import org.drip.xva.pde.*;
  */
 
 /**
- * CorrelatedNumeraireXVAExplain constructs the XVA PnL Explain arising out of the Joint Evolution of
- * 	Numeraires - the Continuous Asset, the Collateral, the Bank, and the Counter-Party Numeraires involved in
- *  the Dynamic XVA Replication Portfolio of the Burgard and Kjaer (2011) Methodology. The References are:
+ * CorrelatedNumeraireXVAGreeks constructs the XVA Greeks arising out of the Joint Evolution of Numeraires -
+ *  the Continuous Asset, the Collateral, the Bank, and the Counter-Party Numeraires involved in the Dynamic
+ *  XVA Replication Portfolio of the Burgard and Kjaer (2011) Methodology. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -81,7 +81,7 @@ import org.drip.xva.pde.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CorrelatedNumeraireXVAExplain {
+public class CorrelatedNumeraireXVAGreeks {
 
 	private static final EdgeEvolutionTrajectory RunStep (
 		final TrajectoryEvolutionScheme tes,
@@ -228,12 +228,12 @@ public class CorrelatedNumeraireXVAExplain {
 		double dblAssetVolatility = 0.15;
 		double dblAssetRepo = 0.03;
 		double dblAssetDividend = 0.02;
-		double dblInitialAssetNumeraire = 1.;
+		double dblTerminalAssetNumeraire = 1.;
 
 		double dblZeroCouponCollateralBondDrift = 0.01;
 		double dblZeroCouponCollateralBondVolatility = 0.05;
 		double dblZeroCouponCollateralBondRepo = 0.005;
-		double dblInitialCollateralNumeraire = 1.;
+		double dblTerminalCollateralNumeraire = 1.;
 
 		double dblZeroCouponBankBondDrift = 0.03;
 		double dblZeroCouponBankBondVolatility = 0.10;
@@ -327,7 +327,7 @@ public class CorrelatedNumeraireXVAExplain {
 			twru,
 			maco,
 			settings,
-			dblTimeWidth
+			-1. * dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new BurgardKjaerOperator (
@@ -356,7 +356,7 @@ public class CorrelatedNumeraireXVAExplain {
 		JumpDiffusionEdge[] aJDEAsset = deAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
-				dblInitialAssetNumeraire,
+				dblTerminalAssetNumeraire,
 				0.,
 				false
 			),
@@ -367,7 +367,7 @@ public class CorrelatedNumeraireXVAExplain {
 		JumpDiffusionEdge[] aJDECollateral = deZeroCouponCollateralBond.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
-				dblInitialCollateralNumeraire,
+				dblTerminalCollateralNumeraire,
 				0.,
 				false
 			),
@@ -464,10 +464,10 @@ public class CorrelatedNumeraireXVAExplain {
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (eagInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aJDEAsset[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aJDEBank[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aJDECounterParty[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aJDECollateral[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpInitial.assetUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpInitial.bankBondUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpInitial.counterPartyBondUnits(), 1, 6, 1.) + " | " +

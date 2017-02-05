@@ -2,8 +2,8 @@
 package org.drip.sample.numeraire;
 
 import org.drip.measure.discretemarginal.SequenceGenerator;
-import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
-import org.drip.measure.process.DiffusionEvolver;
+import org.drip.measure.dynamics.*;
+import org.drip.measure.process.*;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
@@ -55,9 +55,9 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * R1JointContinuous demonstrates the Joint Evolution of R^1 Variates - the Continuous Asset, the Collateral,
- *  the Bank, and the Counter-Party Numeraires involved in the Dynamic XVA Replication Portfolio of the
- *  Burgard and Kjaer (2011) Methodology. The References are:
+ * R1JointJumpDiffusion demonstrates the Joint Evolution of R^1 Jump Diffusion Variates - the Continuous
+ *  Asset, the Collateral, the Bank, and the Counter-Party Numeraires involved in the Dynamic XVA Replication
+ *  Portfolio of the Burgard and Kjaer (2011) Methodology. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -77,7 +77,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class R1JointContinuous {
+public class R1JointJumpDiffusion {
 
 	private static final double[][] NumeraireSequence (
 		final int iCount,
@@ -121,7 +121,7 @@ public class R1JointContinuous {
 		EnvManager.InitEnv ("");
 
 		double dblTimeWidth = 1. / 24.;
-		double dblTime = 1.;
+		double dblTime = 0.;
 		double[][] aadblCorrelation = new double[][] {
 			{1.00, 0.20, 0.15, 0.05}, // #0 ASSET
 			{0.20, 1.00, 0.13, 0.25}, // #1 COLLATERAL
@@ -130,16 +130,59 @@ public class R1JointContinuous {
 		};
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
-		double dblTerminalBankNumeraire = 1.;
-		double dblTerminalAssetNumeraire = 1.;
-		double dblTerminalCollateralNumeraire = 1.;
+		double dblInitialAssetNumeraire = 1.;
 
-		int iNumTimeStep = (int) (dblTime / dblTimeWidth);
+		double dblZeroCouponBankBondDrift = 0.03;
+		double dblZeroCouponBankBondVolatility = 0.10;
+		double dblBankHazardRate = 0.03;
+		double dblBankRecoveryRate = 0.45;
+		double dblInitialBankNumeraire = 1.;
+
+		double dblZeroCouponCollateralBondDrift = 0.01;
+		double dblZeroCouponCollateralBondVolatility = 0.05;
+		double dblInitialCollateralNumeraire = 1.;
+
+		double dblZeroCouponCounterPartyBondDrift = 0.03;
+		double dblZeroCouponCounterPartyBondVolatility = 0.10;
+		double dblCounterPartyHazardRate = 0.05;
+		double dblCounterPartyRecoveryRate = 0.30;
+		double dblInitialCounterPartyNumeraire = 1.;
+
+		int iNumTimeStep = (int) (1. / dblTimeWidth);
 
 		DiffusionEvolver meAsset = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblAssetDrift,
 				dblAssetVolatility
+			)
+		);
+
+		DiffusionEvolver meZeroCouponCollateralBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCollateralBondDrift,
+				dblZeroCouponCollateralBondVolatility
+			)
+		);
+
+		JumpDiffusionEvolver meZeroCouponBankBond = new JumpDiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponBankBondDrift,
+				dblZeroCouponBankBondVolatility
+			),
+			HazardJumpEvaluator.Standard (
+				dblBankHazardRate,
+				dblBankRecoveryRate
+			)
+		);
+
+		JumpDiffusionEvolver meZeroCouponCounterPartyBond = new JumpDiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponCounterPartyBondDrift,
+				dblZeroCouponCounterPartyBondVolatility
+			),
+			HazardJumpEvaluator.Standard (
+				dblCounterPartyHazardRate,
+				dblCounterPartyRecoveryRate
 			)
 		);
 
@@ -149,48 +192,58 @@ public class R1JointContinuous {
 			"\t|| ASSET, COLLATERAL, BANK, COUNTER PARTY REALIZATION ||"
 		);
 
+		double[] adblBankDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
+
+		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
+
 		JumpDiffusionEdge[] aR1AssetLR = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
-				dblTerminalAssetNumeraire,
+				dblInitialAssetNumeraire,
 				0.,
 				false
 			),
 			UnitRandom.Diffusion (aadblNumeraireTimeSeries[0]),
-			-1. * dblTimeWidth
+			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aR1CollateralLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1CollateralLR = meZeroCouponCollateralBond.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
-				dblTerminalCollateralNumeraire,
+				dblInitialCollateralNumeraire,
 				0.,
 				false
 			),
 			UnitRandom.Diffusion (aadblNumeraireTimeSeries[1]),
-			-1. * dblTimeWidth
+			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aR1BankLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1BankLR = meZeroCouponBankBond.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
-				dblTerminalBankNumeraire,
+				dblInitialBankNumeraire,
 				0.,
 				false
 			),
-			UnitRandom.Diffusion (aadblNumeraireTimeSeries[2]),
-			-1. * dblTimeWidth
+			UnitRandom.JumpDiffusion (
+				aadblNumeraireTimeSeries[2],
+				adblBankDefaultIndicator
+			),
+			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aR1CounterPartyLR = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aR1CounterPartyLR = meZeroCouponCounterPartyBond.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
-				dblTerminalBankNumeraire,
+				dblInitialCounterPartyNumeraire,
 				0.,
 				false
 			),
-			UnitRandom.Diffusion (aadblNumeraireTimeSeries[3]),
-			-1. * dblTimeWidth
+			UnitRandom.JumpDiffusion (
+				aadblNumeraireTimeSeries[3],
+				adblCounterPartyDefaultIndicator
+			),
+			dblTimeWidth
 		);
 
 		System.out.println();
@@ -232,7 +285,7 @@ public class R1JointContinuous {
 		System.out.println("\t||----------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			dblTime = dblTime - dblTimeWidth;
+			dblTime = dblTime + dblTimeWidth;
 
 			System.out.println (
 				"\t|| " +

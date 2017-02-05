@@ -101,7 +101,7 @@ public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvol
 
 		try {
 			return new org.drip.measure.realization.StochasticEdgeJump (bEventOccurred, dblHazardRate,
-				dblLevelHazardIntegral, bEventOccurred ? _heie.magnitudeEvaluator().value (jdv) : 0.);
+				dblLevelHazardIntegral, _heie.magnitudeEvaluator().value (jdv));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -117,23 +117,34 @@ public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvol
 		if (null == jdv || null == jdu || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
 			return null;
 
+		double dblJumpUnit = jdu.jump();
+
 		double dblPreviousValue = jdv.value();
 
-		double dblHazardRate = _heie.hazardRate();
+		try {
+			if (jdv.jumpOccurred())
+				return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue, 0., 0., new
+					org.drip.measure.realization.StochasticEdgeJump (true, 0., 0., dblPreviousValue), new
+						org.drip.measure.realization.UnitRandom (0., 0.));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
 
-		double dblJumpRandomUnitRealization = jdu.jump();
+			return null;
+		}
+
+		double dblHazardRate = _heie.hazardRate();
 
 		double dblLevelHazardIntegral = dblHazardRate * dblTimeIncrement;
 
 		boolean bEventOccurred = java.lang.Math.exp (-1. * (jdv.cumulativeHazardIntegral() +
-			dblLevelHazardIntegral)) <= dblJumpRandomUnitRealization;
+			dblLevelHazardIntegral)) <= dblJumpUnit;
 
 		try {
 			return bEventOccurred ? org.drip.measure.realization.JumpDiffusionEdge.Standard
 				(dblPreviousValue, 0., 0., new org.drip.measure.realization.StochasticEdgeJump
 					(bEventOccurred, dblHazardRate, dblLevelHazardIntegral, _heie.magnitudeEvaluator().value
-						(jdv) - dblPreviousValue), new org.drip.measure.realization.UnitRandom (0.,
-							dblJumpRandomUnitRealization)) : super.increment (jdv, jdu, dblTimeIncrement);
+						(jdv)), new org.drip.measure.realization.UnitRandom (0., dblJumpUnit)) :
+							super.increment (jdv, jdu, dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

@@ -70,32 +70,32 @@ package org.drip.xva.definition;
  */
 
 public class TwoWayRiskyUniverse {
-	private org.drip.xva.definition.Tradeable _taAsset = null;
-	private org.drip.xva.definition.Tradeable _taZeroCouponBankBond = null;
-	private org.drip.xva.definition.Tradeable _taZeroCouponCollateralBond = null;
-	private org.drip.xva.definition.Tradeable _taZeroCouponCounterPartyBond = null;
+	private org.drip.xva.definition.Tradeable _tAsset = null;
+	private org.drip.xva.definition.Tradeable _tZeroCouponBankBond = null;
+	private org.drip.xva.definition.Tradeable _tZeroCouponCollateralBond = null;
+	private org.drip.xva.definition.Tradeable _tZeroCouponCounterPartyBond = null;
 
 	/**
 	 * TwoWayRiskyUniverse Constructor
 	 * 
-	 * @param taAsset The Trade-able Asset
-	 * @param taZeroCouponCollateralBond The Zero Coupon Collateral Bond
-	 * @param taZeroCouponBankBond The Zero Coupon Credit Risky Bank Bond
-	 * @param taZeroCouponCounterPartyBond The Zero Coupon Credit Risky Counter Party Bond
+	 * @param tAsset The Trade-able Asset
+	 * @param tZeroCouponCollateralBond The Zero Coupon Collateral Bond
+	 * @param tZeroCouponBankBond The Zero Coupon Credit Risky Bank Bond
+	 * @param tZeroCouponCounterPartyBond The Zero Coupon Credit Risky Counter Party Bond
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public TwoWayRiskyUniverse (
-		final org.drip.xva.definition.Tradeable taAsset,
-		final org.drip.xva.definition.Tradeable taZeroCouponCollateralBond,
-		final org.drip.xva.definition.Tradeable taZeroCouponBankBond,
-		final org.drip.xva.definition.Tradeable taZeroCouponCounterPartyBond)
+		final org.drip.xva.definition.Tradeable tAsset,
+		final org.drip.xva.definition.Tradeable tZeroCouponCollateralBond,
+		final org.drip.xva.definition.Tradeable tZeroCouponBankBond,
+		final org.drip.xva.definition.Tradeable tZeroCouponCounterPartyBond)
 		throws java.lang.Exception
 	{
-		if (null == (_taAsset = taAsset) || null == (_taZeroCouponCollateralBond =
-			taZeroCouponCollateralBond) || null == (_taZeroCouponBankBond = taZeroCouponBankBond) || null ==
-				(_taZeroCouponCounterPartyBond = taZeroCouponCounterPartyBond))
+		if (null == (_tAsset = tAsset) || null == (_tZeroCouponCollateralBond = tZeroCouponCollateralBond) ||
+			null == (_tZeroCouponBankBond = tZeroCouponBankBond) || null == (_tZeroCouponCounterPartyBond =
+				tZeroCouponCounterPartyBond))
 			throw new java.lang.Exception ("TwoWayRiskyUniverse Constructor => Invalid Inputs");
 	}
 
@@ -107,7 +107,7 @@ public class TwoWayRiskyUniverse {
 
 	public org.drip.xva.definition.Tradeable asset()
 	{
-		return _taAsset;
+		return _tAsset;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class TwoWayRiskyUniverse {
 
 	public org.drip.xva.definition.Tradeable zeroCouponCollateralBond()
 	{
-		return _taZeroCouponCollateralBond;
+		return _tZeroCouponCollateralBond;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class TwoWayRiskyUniverse {
 
 	public org.drip.xva.definition.Tradeable zeroCouponBankBond()
 	{
-		return _taZeroCouponBankBond;
+		return _tZeroCouponBankBond;
 	}
 
 	/**
@@ -140,6 +140,6 @@ public class TwoWayRiskyUniverse {
 
 	public org.drip.xva.definition.Tradeable zeroCouponCounterPartyBond()
 	{
-		return _taZeroCouponCounterPartyBond;
+		return _tZeroCouponCounterPartyBond;
 	}
 }
