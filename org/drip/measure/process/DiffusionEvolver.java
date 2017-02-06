@@ -56,14 +56,6 @@ package org.drip.measure.process;
 public class DiffusionEvolver {
 	private org.drip.measure.dynamics.DiffusionEvaluator _de = null;
 
-	protected org.drip.measure.realization.StochasticEdgeJump jumpIndicationEdge (
-		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.UnitRandom ur,
-		final double dblTimeIncrement)
-	{
-		return null;
-	}
-
 	/**
 	 * DiffusionEvolver Constructor
 	 * 
@@ -117,7 +109,7 @@ public class DiffusionEvolver {
 			return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue,
 				_de.drift().value (jdv) * dblTimeIncrement, null == leVolatility ? 0. : leVolatility.value
 					(jdv) * ur.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs (dblTimeIncrement)),
-						jumpIndicationEdge (jdv, ur, dblTimeIncrement), ur);
+						null, ur);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -166,7 +158,7 @@ public class DiffusionEvolver {
 
 				jdvIter = new org.drip.measure.realization.JumpDiffusionVertex (jdvIter.time() +
 					dblTimeIncrement, aJDE[i].finish(), jdvIter.cumulativeHazardIntegral() +
-						dblHazardIntegral, bJumpOccurred);
+						dblHazardIntegral, bJumpOccurred || jdvIter.jumpOccurred());
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -221,7 +213,7 @@ public class DiffusionEvolver {
 
 				jdvPrev = aJDV[i] = new org.drip.measure.realization.JumpDiffusionVertex (jdvPrev.time() +
 					dblTimeIncrement, jde.finish(), jdvPrev.cumulativeHazardIntegral() + dblHazardIntegral,
-						bJumpOccurred);
+						bJumpOccurred || jdvPrev.jumpOccurred());
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 

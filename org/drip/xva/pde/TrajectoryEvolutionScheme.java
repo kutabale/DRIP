@@ -257,4 +257,111 @@ public class TrajectoryEvolutionScheme {
 
 		return null;
 	}
+
+	public org.drip.xva.derivative.LevelEvolutionTrajectory eulerWalk (
+		final org.drip.xva.definition.SpreadIntensity si,
+		final org.drip.xva.definition.UniverseSnapshot us,
+		final org.drip.xva.pde.BurgardKjaerOperator bko,
+		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart)
+	{
+		if (null == si || null == us || null == bko || null == eetStart) return null;
+
+		double dblTimeStart = eetStart.time();
+
+		double dblTimeWidth = timeIncrement();
+
+		double dblGainOnBankDefaultFinish = java.lang.Double.NaN;
+		double dblGainOnCounterPartyDefaultFinish = java.lang.Double.NaN;
+
+		org.drip.xva.definition.TwoWayRiskyUniverse twru = universe();
+
+		org.drip.xva.definition.MasterAgreementCloseOut maco = boundaryCondition();
+
+		org.drip.xva.derivative.EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
+
+		org.drip.xva.definition.UniverseSnapshot usStart = eetStart.tradeableAssetSnapshot();
+
+		double dblDerivativeXVAValueStart = eagStart.derivativeXVAValue();
+
+		org.drip.xva.derivative.EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
+
+		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (si, eetStart);
+
+		if (null == lbkr) return null;
+
+		double dblTheta = lbkr.theta();
+
+		double dblAssetNumeraireBump = lbkr.assetNumeraireBump();
+
+		double dblThetaAssetNumeraireUp = lbkr.thetaAssetNumeraireUp();
+
+		double dblThetaAssetNumeraireDown = lbkr.thetaAssetNumeraireDown();
+
+		double dblDerivativeXVAValueDeltaFinish = eagStart.derivativeXVAValueDelta() +
+			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
+
+		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
+
+		try {
+			dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.bankDefault
+				(dblDerivativeXVAValueFinish));
+
+			dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.counterPartyDefault
+				(dblDerivativeXVAValueFinish));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (eetStart, us);
+
+		if (null == car) return null;
+
+		double dblCashAccountAccumulationFinish = car.cashAccount().accumulation();
+
+		double dblZeroCouponBankPriceFinish = us.zeroCouponBankBondNumeraire().finish();
+
+		double dblZeroCouponCounterPartyPriceFinish = us.zeroCouponCounterPartyBondNumeraire().finish();
+
+		try {
+			org.drip.xva.derivative.EdgeReplicationPortfolio erpFinish = new
+				org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * dblDerivativeXVAValueDeltaFinish,
+					dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
+						dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
+							erpStart.cashAccount() + dblCashAccountAccumulationFinish
+			);
+
+			new org.drip.xva.derivative.EdgeEvolutionTrajectory (
+				dblTimeStart - dblTimeWidth,
+				us,
+				erpFinish,
+				new org.drip.xva.derivative.EdgeAssetGreek (
+					dblDerivativeXVAValueFinish,
+					dblDerivativeXVAValueDeltaFinish,
+					eagStart.derivativeXVAValueGamma() +
+						(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
+							(dblAssetNumeraireBump * dblAssetNumeraireBump),
+					eagStart.derivativeValue() * Math.exp (
+						-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
+							new org.drip.measure.realization.JumpDiffusionVertex (
+								dblTimeStart - 0.5 * dblTimeWidth,
+								usStart.zeroCouponCollateralBondNumeraire().finish(),
+								0.,
+								false
+							)
+						)
+					)
+				),
+				dblGainOnBankDefaultFinish,
+				dblGainOnCounterPartyDefaultFinish
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		return null;
+	}
 }

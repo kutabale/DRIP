@@ -248,8 +248,8 @@ public class JumpDiffusionEdge {
 
 	public double finish()
 	{
-		return null == _sej || !_sej.jumpOccurred() ? _dblStart + _dblDeterministic + diffusionStochastic() +
-			jumpStochastic() : _sej.target();
+		return null == _sej || !_sej.jumpOccurred() ? _dblStart + _dblDeterministic + diffusionStochastic() :
+			_sej.target();
 	}
 
 	/**

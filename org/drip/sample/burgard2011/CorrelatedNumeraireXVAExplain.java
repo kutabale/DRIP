@@ -88,10 +88,7 @@ public class CorrelatedNumeraireXVAExplain {
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
 		final EdgeEvolutionTrajectory eetStart,
-		final JumpDiffusionEdge jdeAsset,
-		final JumpDiffusionEdge jdeCollateral,
-		final JumpDiffusionEdge jdeBank,
-		final JumpDiffusionEdge jdeCounterParty)
+		final UniverseSnapshot us)
 		throws Exception
 	{
 		EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
@@ -111,13 +108,6 @@ public class CorrelatedNumeraireXVAExplain {
 		TwoWayRiskyUniverse twru = tes.universe();
 
 		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
-
-		UniverseSnapshot usFinish = new UniverseSnapshot (
-			jdeAsset,
-			jdeCollateral,
-			jdeBank,
-			jdeCounterParty
-		);
 
 		MasterAgreementCloseOut maco = tes.boundaryCondition();
 
@@ -151,16 +141,16 @@ public class CorrelatedNumeraireXVAExplain {
 
 		org.drip.xva.derivative.LevelCashAccount lca = tes.rebalanceCash (
 			eetStart,
-			usFinish
+			us
 		).cashAccount();
 
 		double dblCashAccountAccumulationFinish = lca.accumulation();
 
-		double dblAssetPriceFinish = jdeAsset.finish();
+		double dblAssetPriceFinish = us.assetNumeraire().finish();
 
-		double dblZeroCouponBankPriceFinish = jdeBank.finish();
+		double dblZeroCouponBankPriceFinish = us.zeroCouponBankBondNumeraire().finish();
 
-		double dblZeroCouponCounterPartyPriceFinish = jdeCounterParty.finish();
+		double dblZeroCouponCounterPartyPriceFinish = us.zeroCouponCounterPartyBondNumeraire().finish();
 
 		EdgeReplicationPortfolio erpFinish = new EdgeReplicationPortfolio (
 			-1. * dblDerivativeXVAValueDeltaFinish,
@@ -175,7 +165,7 @@ public class CorrelatedNumeraireXVAExplain {
 			FormatUtil.FormatDouble (dblAssetPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (usFinish.zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (us.zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpFinish.assetUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpFinish.bankBondUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpFinish.counterPartyBondUnits(), 1, 6, 1.) + " | " +
@@ -188,7 +178,7 @@ public class CorrelatedNumeraireXVAExplain {
 
 		return new EdgeEvolutionTrajectory (
 			dblTimeStart - dblTimeWidth,
-			usFinish,
+			us,
 			erpFinish,
 			new EdgeAssetGreek (
 				dblDerivativeXVAValueFinish,
@@ -240,14 +230,14 @@ public class CorrelatedNumeraireXVAExplain {
 		double dblZeroCouponBankBondRepo = 0.028;
 		double dblBankHazardRate = 0.03;
 		double dblBankRecoveryRate = 0.45;
-		double dblTerminalBankNumeraire = 1.;
+		double dblInitialBankNumeraire = 1.;
 
 		double dblZeroCouponCounterPartyBondDrift = 0.03;
 		double dblZeroCouponCounterPartyBondVolatility = 0.10;
 		double dblZeroCouponCounterPartyBondRepo = 0.028;
 		double dblCounterPartyHazardRate = 0.05;
 		double dblCounterPartyRecoveryRate = 0.30;
-		double dblTerminalCounterPartyNumeraire = 1.;
+		double dblInitialCounterPartyNumeraire = 1.;
 
 		double dblTerminalXVADerivativeValue = 1.;
 
@@ -378,7 +368,7 @@ public class CorrelatedNumeraireXVAExplain {
 		JumpDiffusionEdge[] aJDEBank = deZeroCouponBankBond.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
-				dblTerminalBankNumeraire,
+				dblInitialBankNumeraire,
 				0.,
 				false
 			),
@@ -392,7 +382,7 @@ public class CorrelatedNumeraireXVAExplain {
 		JumpDiffusionEdge[] aJDECounterParty = deZeroCouponCounterPartyBond.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
-				dblTerminalCounterPartyNumeraire,
+				dblInitialCounterPartyNumeraire,
 				0.,
 				false
 			),
@@ -503,10 +493,12 @@ public class CorrelatedNumeraireXVAExplain {
 				si,
 				bko,
 				eet,
-				aJDEAsset[i],
-				aJDECollateral[i],
-				aJDEBank[i],
-				aJDECounterParty[i]
+				new UniverseSnapshot (
+					aJDEAsset[i],
+					aJDECollateral[i],
+					aJDEBank[i],
+					aJDECounterParty[i]
+				)
 			);
 
 		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");

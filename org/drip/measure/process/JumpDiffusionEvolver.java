@@ -87,45 +87,20 @@ public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvol
 		return _heie;
 	}
 
-	@Override protected org.drip.measure.realization.StochasticEdgeJump jumpIndicationEdge (
-		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.UnitRandom jdu,
-		final double dblTimeIncrement)
-	{
-		double dblHazardRate = _heie.hazardRate();
-
-		double dblLevelHazardIntegral = dblHazardRate * dblTimeIncrement;
-
-		boolean bEventOccurred = java.lang.Math.exp (-1. * (jdv.cumulativeHazardIntegral() +
-			dblLevelHazardIntegral)) <= jdu.jump();
-
-		try {
-			return new org.drip.measure.realization.StochasticEdgeJump (bEventOccurred, dblHazardRate,
-				dblLevelHazardIntegral, _heie.magnitudeEvaluator().value (jdv));
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
 	@Override public org.drip.measure.realization.JumpDiffusionEdge increment (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.UnitRandom jdu,
+		final org.drip.measure.realization.UnitRandom ur,
 		final double dblTimeIncrement)
 	{
-		if (null == jdv || null == jdu || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
+		if (null == jdv || null == ur || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
 			return null;
-
-		double dblJumpUnit = jdu.jump();
 
 		double dblPreviousValue = jdv.value();
 
 		try {
 			if (jdv.jumpOccurred())
 				return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue, 0., 0., new
-					org.drip.measure.realization.StochasticEdgeJump (true, 0., 0., dblPreviousValue), new
-						org.drip.measure.realization.UnitRandom (0., 0.));
+					org.drip.measure.realization.StochasticEdgeJump (false, 0., 0., dblPreviousValue), ur);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
@@ -134,17 +109,28 @@ public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvol
 
 		double dblHazardRate = _heie.hazardRate();
 
+		org.drip.measure.dynamics.DiffusionEvaluator de = evaluator();
+
 		double dblLevelHazardIntegral = dblHazardRate * dblTimeIncrement;
 
 		boolean bEventOccurred = java.lang.Math.exp (-1. * (jdv.cumulativeHazardIntegral() +
-			dblLevelHazardIntegral)) <= dblJumpUnit;
+			dblLevelHazardIntegral)) <= ur.jump();
 
 		try {
-			return bEventOccurred ? org.drip.measure.realization.JumpDiffusionEdge.Standard
-				(dblPreviousValue, 0., 0., new org.drip.measure.realization.StochasticEdgeJump
-					(bEventOccurred, dblHazardRate, dblLevelHazardIntegral, _heie.magnitudeEvaluator().value
-						(jdv)), new org.drip.measure.realization.UnitRandom (0., dblJumpUnit)) :
-							super.increment (jdv, jdu, dblTimeIncrement);
+			org.drip.measure.realization.StochasticEdgeJump sej = new
+				org.drip.measure.realization.StochasticEdgeJump (bEventOccurred, dblHazardRate,
+					dblLevelHazardIntegral, _heie.magnitudeEvaluator().value (jdv));
+
+			if (bEventOccurred)
+				return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue, 0., 0.,
+					sej, ur);
+
+			org.drip.measure.dynamics.LocalEvaluator leVolatility = de.volatility();
+
+			return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue,
+				de.drift().value (jdv) * dblTimeIncrement, null == leVolatility ? 0. : leVolatility.value
+					(jdv) * ur.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs (dblTimeIncrement)),
+						sej, ur);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
