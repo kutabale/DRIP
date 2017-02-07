@@ -258,6 +258,17 @@ public class TrajectoryEvolutionScheme {
 		return null;
 	}
 
+	/**
+	 * Execute a Single Euler Time Step Walk
+	 * 
+	 * @param si The Spread Intensity Instance
+	 * @param us The Universe Snapshot
+	 * @param bko The Burgard Kjaer Operator Instance
+	 * @param eetStart The Starting EET Instance
+	 * 
+	 * @return The LevelEvolutionTrajectory Instance
+	 */
+
 	public org.drip.xva.derivative.LevelEvolutionTrajectory eulerWalk (
 		final org.drip.xva.definition.SpreadIntensity si,
 		final org.drip.xva.definition.UniverseSnapshot us,
@@ -266,26 +277,13 @@ public class TrajectoryEvolutionScheme {
 	{
 		if (null == si || null == us || null == bko || null == eetStart) return null;
 
+		org.drip.xva.derivative.EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
+
+		org.drip.xva.pde.LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (si, eetStart);
+
 		double dblTimeStart = eetStart.time();
 
 		double dblTimeWidth = timeIncrement();
-
-		double dblGainOnBankDefaultFinish = java.lang.Double.NaN;
-		double dblGainOnCounterPartyDefaultFinish = java.lang.Double.NaN;
-
-		org.drip.xva.definition.TwoWayRiskyUniverse twru = universe();
-
-		org.drip.xva.definition.MasterAgreementCloseOut maco = boundaryCondition();
-
-		org.drip.xva.derivative.EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
-
-		org.drip.xva.definition.UniverseSnapshot usStart = eetStart.tradeableAssetSnapshot();
-
-		double dblDerivativeXVAValueStart = eagStart.derivativeXVAValue();
-
-		org.drip.xva.derivative.EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
-
-		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (si, eetStart);
 
 		if (null == lbkr) return null;
 
@@ -297,17 +295,19 @@ public class TrajectoryEvolutionScheme {
 
 		double dblThetaAssetNumeraireDown = lbkr.thetaAssetNumeraireDown();
 
-		double dblDerivativeXVAValueDeltaFinish = eagStart.derivativeXVAValueDelta() +
-			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
+		double dblDerivativeXVAValueDeltaFinish = eagStart.derivativeXVAValueDelta() + 0.5 *
+			(dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
-		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
+		double dblGainOnBankDefaultFinish = java.lang.Double.NaN;
+		double dblGainOnCounterPartyDefaultFinish = java.lang.Double.NaN;
+		double dblDerivativeXVAValueFinish = eagStart.derivativeXVAValue() - dblTheta * dblTimeWidth;
 
 		try {
-			dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.bankDefault
+			dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - _maco.bankDefault
 				(dblDerivativeXVAValueFinish));
 
-			dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.counterPartyDefault
-				(dblDerivativeXVAValueFinish));
+			dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
+				_maco.counterPartyDefault (dblDerivativeXVAValueFinish));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
@@ -318,50 +318,72 @@ public class TrajectoryEvolutionScheme {
 
 		if (null == car) return null;
 
-		double dblCashAccountAccumulationFinish = car.cashAccount().accumulation();
-
-		double dblZeroCouponBankPriceFinish = us.zeroCouponBankBondNumeraire().finish();
-
-		double dblZeroCouponCounterPartyPriceFinish = us.zeroCouponCounterPartyBondNumeraire().finish();
+		org.drip.xva.derivative.LevelCashAccount lca = car.cashAccount();
 
 		try {
-			org.drip.xva.derivative.EdgeReplicationPortfolio erpFinish = new
-				org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * dblDerivativeXVAValueDeltaFinish,
-					dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
-						dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
-							erpStart.cashAccount() + dblCashAccountAccumulationFinish
-			);
+			org.drip.xva.derivative.EdgeEvolutionTrajectory eetFinish = new
+				org.drip.xva.derivative.EdgeEvolutionTrajectory (dblTimeStart - dblTimeWidth, us, new
+					org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * dblDerivativeXVAValueDeltaFinish,
+						dblGainOnBankDefaultFinish / us.zeroCouponBankBondNumeraire().finish(),
+							dblGainOnCounterPartyDefaultFinish /
+								us.zeroCouponCounterPartyBondNumeraire().finish(),
+									eetStart.replicationPortfolio().cashAccount() + lca.accumulation()), new
+										org.drip.xva.derivative.EdgeAssetGreek (dblDerivativeXVAValueFinish,
+											dblDerivativeXVAValueDeltaFinish,
+												eagStart.derivativeXVAValueGamma() +
+													(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown -
+														2. * dblTheta) * dblTimeWidth /
+															(dblAssetNumeraireBump * dblAssetNumeraireBump),
+																eagStart.derivativeValue() * Math.exp (-1. *
+																	dblTimeWidth *
+																		_twru.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value
+																		(new
+																			org.drip.measure.realization.JumpDiffusionVertex
+																			(dblTimeStart - 0.5 * dblTimeWidth,
+				eetStart.tradeableAssetSnapshot().zeroCouponCollateralBondNumeraire().finish(), 0.,
+					false)))), dblGainOnBankDefaultFinish, dblGainOnCounterPartyDefaultFinish);
 
-			new org.drip.xva.derivative.EdgeEvolutionTrajectory (
-				dblTimeStart - dblTimeWidth,
-				us,
-				erpFinish,
-				new org.drip.xva.derivative.EdgeAssetGreek (
-					dblDerivativeXVAValueFinish,
-					dblDerivativeXVAValueDeltaFinish,
-					eagStart.derivativeXVAValueGamma() +
-						(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
-							(dblAssetNumeraireBump * dblAssetNumeraireBump),
-					eagStart.derivativeValue() * Math.exp (
-						-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
-							new org.drip.measure.realization.JumpDiffusionVertex (
-								dblTimeStart - 0.5 * dblTimeWidth,
-								usStart.zeroCouponCollateralBondNumeraire().finish(),
-								0.,
-								false
-							)
-						)
-					)
-				),
-				dblGainOnBankDefaultFinish,
-				dblGainOnCounterPartyDefaultFinish
-			);
+			return new org.drip.xva.derivative.LevelEvolutionTrajectory (eetStart, eetFinish, lca);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
-
-			return null;
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * Execute a Sequential Array of Euler Time Step Walks
+	 * 
+	 * @param si The Spread Intensity Instance
+	 * @param aUS Array of Universe Snapshot
+	 * @param bko The Burgard Kjaer Operator Instance
+	 * @param eetStart The Starting EET Instance
+	 * 
+	 * @return Array of LevelEvolutionTrajectory Instances
+	 */
+
+	public org.drip.xva.derivative.LevelEvolutionTrajectory[] eulerWalk (
+		final org.drip.xva.definition.SpreadIntensity si,
+		final org.drip.xva.definition.UniverseSnapshot[] aUS,
+		final org.drip.xva.pde.BurgardKjaerOperator bko,
+		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart)
+	{
+		if (null == aUS) return null;
+
+		int iNumTimeStep = aUS.length;
+		org.drip.xva.derivative.EdgeEvolutionTrajectory eet = eetStart;
+		org.drip.xva.derivative.LevelEvolutionTrajectory[] aLET = 1 >= iNumTimeStep ? null : new
+			org.drip.xva.derivative.LevelEvolutionTrajectory[iNumTimeStep - 1];
+
+		if (0 == iNumTimeStep) return null;
+
+		for (int i = iNumTimeStep - 2; i >= 0; --i) {
+			if (null == (aLET[i] = eulerWalk (si, aUS[i], bko, eet))) return null;
+
+			eet = aLET[i].edgeFinish();
+		}
+
+		return aLET;
 	}
 }

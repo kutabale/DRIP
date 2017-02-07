@@ -1,5 +1,5 @@
 
-package org.drip.sample.burgard2011;
+package org.drip.sample.burgard2012;
 
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
@@ -50,9 +50,9 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * CounterPartyHazardHigh estimates the CVA Relative to V for a Call Option bought by the Bank for different
+ * CounterPartyHazardLow estimates the CVA Relative to V for a Call Option bought by the Bank for different
  * 	Close Outs and Funding Spreads using the Burgard and Kjaer (2011) Methodology for the Case where the
- * 	Counter Party Hazard is High (5%). The References are:
+ * 	Counter Party Hazard is Low (Zero). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -72,7 +72,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyHazardHigh {
+public class CounterPartyHazardLow {
 
 	private static final void CVA (
 		final double dblT,
@@ -109,7 +109,7 @@ public class CounterPartyHazardHigh {
 	{
 		EnvManager.InitEnv ("");
 
-		double dblLambdaC = 0.05;
+		double dblLambdaC = 0.00;
 
 		double dblRB = 0.4;
 		double dblRC = 0.4;
@@ -131,23 +131,23 @@ public class CounterPartyHazardHigh {
 
 		System.out.println();
 
-		System.out.println ("\t||------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------------||");
 
-		System.out.println ("\t||       CVA UNDER HIGH COUNTER PARTY HAZARD      ||");
+		System.out.println ("\t||        CVA UNDER LOW COUNTER PARTY HAZARD        ||");
 
-		System.out.println ("\t||------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------------||");
 
-		System.out.println ("\t|| L -> R:                                        ||");
+		System.out.println ("\t|| L -> R:                                          ||");
 
-		System.out.println ("\t||        - Close Out      => MTM XVA             ||");
+		System.out.println ("\t||        - Close Out      => MTM XVA               ||");
 
-		System.out.println ("\t||        - Funding Spread => None                ||");
+		System.out.println ("\t||        - Funding Spread => None                  ||");
 
-		System.out.println ("\t||        - Close Out      => MTM Fair Value      ||");
+		System.out.println ("\t||        - Close Out      => MTM Fair Value        ||");
 
-		System.out.println ("\t||        - Funding Spread => Bank                ||");
+		System.out.println ("\t||        - Funding Spread => Bank                  ||");
 
-		System.out.println ("\t||------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------------||");
 
 		for (double dblLambdaB : adblLambdaB)
 			CVA (
@@ -158,7 +158,7 @@ public class CounterPartyHazardHigh {
 				dblLambdaC
 			);
 
-		System.out.println ("\t||------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------------||");
 
 		System.out.println();
 	}

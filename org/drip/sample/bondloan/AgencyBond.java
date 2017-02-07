@@ -1,5 +1,5 @@
 
-package org.drip.sample.bond;
+package org.drip.sample.bondloan;
 
 import java.util.Map;
 
@@ -8,11 +8,14 @@ import org.drip.analytics.output.BondRVMeasures;
 import org.drip.analytics.support.Helper;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
-import org.drip.param.quote.*;
-import org.drip.param.valuation.*;
+import org.drip.param.quote.MultiSided;
+import org.drip.param.quote.ProductMultiMeasure;
+import org.drip.param.valuation.ValuationParams;
+import org.drip.param.valuation.WorkoutInfo;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
-import org.drip.product.definition.*;
+import org.drip.product.definition.Bond;
+import org.drip.product.definition.Component;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.*;
@@ -25,8 +28,6 @@ import org.drip.state.govvie.GovvieCurve;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
- * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -67,13 +68,12 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * CorporateIssueMetrics demonstrates the Corporate Bond Pricing and Relative Value Measure Generation
- * 	Functionality.
+ * AgencyBond demonstrates Agency Bond Pricing and Relative Value Measure Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CorporateIssueMetrics {
+public class AgencyBond {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -81,24 +81,17 @@ public class CorporateIssueMetrics {
 		throws Exception
 	{
 		String[] astrDepositMaturityTenor = new String[] {
-			"2D",
-			"1W",
-			"1M",
-			"2M",
-			"3M"
+			"2D"
 		};
 
 		double[] adblDepositQuote = new double[] {
-			0.00195, // 2D
-			0.00176, // 1W
-			0.00301, // 1M
-			0.00401, // 2M
-			0.00492  // 3M
+			0.0103456 // 2D
 		};
 
 		double[] adblFuturesQuote = new double[] {
-			0.00609,
-			0.00687
+			0.01070,
+			0.01235,
+			0.01360
 		};
 
 		String[] astrFixFloatMaturityTenor = new String[] {
@@ -123,24 +116,24 @@ public class CorporateIssueMetrics {
 		};
 
 		double[] adblFixFloatQuote = new double[] {
-			0.00762, //  1Y
-			0.01055, //  2Y
-			0.01300, //  3Y
-			0.01495, //  4Y
-			0.01651, //  5Y
-			0.01787, //  6Y
-			0.01904, //  7Y
-			0.02005, //  8Y
-			0.02090, //  9Y
-			0.02166, // 10Y
-			0.02231, // 11Y
-			0.02289, // 12Y
-			0.02414, // 15Y
-			0.02570, // 20Y
-			0.02594, // 25Y
-			0.02627, // 30Y
-			0.02648, // 40Y
-			0.02632  // 50Y
+			0.012484, //  1Y
+			0.014987, //  2Y
+			0.017036, //  3Y
+			0.018624, //  4Y
+			0.019868, //  5Y
+			0.020921, //  6Y
+			0.021788, //  7Y
+			0.022530, //  8Y
+			0.023145, //  9Y
+			0.023685, // 10Y
+			0.024153, // 11Y
+			0.024562, // 12Y
+			0.025389, // 15Y
+			0.026118, // 20Y
+			0.026368, // 25Y
+			0.026432, // 30Y
+			0.026339, // 40Y
+			0.026122  // 50Y
 		};
 
 		MergedDiscountForwardCurve dcFunding = LatentMarketStateBuilder.SmoothFundingCurve (
@@ -193,11 +186,13 @@ public class CorporateIssueMetrics {
 			null
 		);
 
-		System.out.println ("\n\n\t|------------------------------------||");
+		System.out.println();
 
-		System.out.println ("\t|       DEPOSIT INPUT vs. CALC       ||");
+		System.out.println ("\t|-------------------------------------||");
 
-		System.out.println ("\t|------------------------------------||");
+		System.out.println ("\t|        DEPOSIT INPUT vs. CALC       ||");
+
+		System.out.println ("\t|-------------------------------------||");
 
 		for (int i = 0; i < aDepositComp.length; ++i)
 			System.out.println ("\t| [" + aDepositComp[i].maturityDate() + "] =" +
@@ -211,13 +206,15 @@ public class CorporateIssueMetrics {
 				FormatUtil.FormatDouble (adblDepositQuote[i], 1, 6, 1.) + " ||"
 			);
 
-		System.out.println ("\t|------------------------------------||");
+		System.out.println ("\t|-------------------------------------||");
 
-		System.out.println ("\n\t|------------------------------------||");
+		System.out.println();
 
-		System.out.println ("\t|       FUTURES INPUT vs. CALC       ||");
+		System.out.println ("\t|-------------------------------------||");
 
-		System.out.println ("\t|------------------------------------||");
+		System.out.println ("\t|        FUTURES INPUT vs. CALC       ||");
+
+		System.out.println ("\t|-------------------------------------||");
 
 		for (int i = 0; i < aFuturesComp.length; ++i)
 			System.out.println ("\t| [" + aFuturesComp[i].maturityDate() + "] =" +
@@ -231,13 +228,15 @@ public class CorporateIssueMetrics {
 				FormatUtil.FormatDouble (adblFuturesQuote[i], 1, 6, 1.) + " ||"
 			);
 
-		System.out.println ("\t|------------------------------------||");
+		System.out.println ("\t|-------------------------------------||");
 
-		System.out.println ("\n\t|-----------------------------------------------|| ");
+		System.out.println();
 
-		System.out.println ("\t|         FIX-FLOAT INPUTS vs CALIB             ||");
+		System.out.println ("\t|------------------------------------------------|| ");
 
-		System.out.println ("\t|-----------------------------------------------|| ");
+		System.out.println ("\t|          FIX-FLOAT INPUTS vs CALIB             ||");
+
+		System.out.println ("\t|------------------------------------------------|| ");
 
 		for (int i = 0; i < aFixFloatComp.length; ++i)
 			System.out.println ("\t| [" + aFixFloatComp[i].maturityDate() + "] =" +
@@ -258,34 +257,11 @@ public class CorporateIssueMetrics {
 				), 1, 6, 1.) + " ||"
 			);
 
-		System.out.println ("\t|-----------------------------------------------|| \n");
+		System.out.println ("\t|------------------------------------------------||");
+
+		System.out.println();
 
 		return dcFunding;
-	}
-
-	private static final void AccumulateBondMarketQuote (
-		final CurveSurfaceQuoteContainer csqc,
-		final String[] astrOnTheRunCode,
-		final double[] adblYield)
-		throws Exception
-	{
-		for (int i = 0; i < astrOnTheRunCode.length; ++i) {
-			ProductMultiMeasure pmmq = new ProductMultiMeasure();
-
-			pmmq.addQuote (
-				"Yield",
-				new MultiSided (
-					"mid",
-					adblYield[i]
-				),
-				true
-			);
-
-			csqc.setProductQuote (
-				astrOnTheRunCode[i],
-				pmmq
-			);
-		}
 	}
 
 	private static final Map<String, GovvieCurve> GovvieCurve (
@@ -302,6 +278,7 @@ public class CorporateIssueMetrics {
 			dtSpot,
 			dtSpot,
 			dtSpot,
+			dtSpot,
 			dtSpot
 		};
 
@@ -312,6 +289,7 @@ public class CorporateIssueMetrics {
 			dtSpot.addTenor ("5Y"),
 			dtSpot.addTenor ("7Y"),
 			dtSpot.addTenor ("10Y"),
+			dtSpot.addTenor ("20Y"),
 			dtSpot.addTenor ("30Y")
 		};
 
@@ -341,11 +319,13 @@ public class CorporateIssueMetrics {
 
 		csqc.setGovvieState (mapGovvieCurve.get ("BASE"));
 
-		System.out.println ("\n\t|------------------------------------------||");
+		System.out.println();
 
-		System.out.println ("\t|      TREASURY INPUT vs CALIB YIELD       ||");
+		System.out.println ("\t|-------------------------------------------||");
 
-		System.out.println ("\t|------------------------------------------||");
+		System.out.println ("\t|       TREASURY INPUT vs CALIB YIELD       ||");
+
+		System.out.println ("\t|-------------------------------------------||");
 
 		for (int i = 0; i < aComp.length; ++i)
 			System.out.println ("\t| " + aComp[i].name() + " | " +
@@ -365,19 +345,44 @@ public class CorporateIssueMetrics {
 				), 1, 3, 100.) + "% ||"
 			);
 
-		System.out.println ("\t|------------------------------------------||");
+		System.out.println ("\t|-------------------------------------------||");
 
 		return mapGovvieCurve;
 	}
 
-	private static final Bond USDCorporate (
+	private static final void AccumulateBondMarketQuote (
+		final CurveSurfaceQuoteContainer csqc,
+		final String[] astrOnTheRunCode,
+		final double[] adblYield)
+		throws Exception
+	{
+		for (int i = 0; i < astrOnTheRunCode.length; ++i) {
+			ProductMultiMeasure pmmq = new ProductMultiMeasure();
+
+			pmmq.addQuote (
+				"Yield",
+				new MultiSided (
+					"mid",
+					adblYield[i]
+				),
+				true
+			);
+
+			csqc.setProductQuote (
+				astrOnTheRunCode[i],
+				pmmq
+			);
+		}
+	}
+
+	private static final Bond Agency (
 		final JulianDate dtEffective,
 		final JulianDate dtMaturity,
 		final double dblCoupon)
 		throws Exception
 	{
 		return BondBuilder.CreateSimpleFixed (
-			"JPM " + FormatUtil.FormatDouble (dblCoupon, 1, 4, 100.) + " " + dtMaturity,
+			"AGENCY " + FormatUtil.FormatDouble (dblCoupon, 1, 4, 100.) + " " + dtMaturity,
 			"USD",
 			"",
 			dblCoupon,
@@ -408,13 +413,17 @@ public class CorporateIssueMetrics {
 			aBond[0].currency()
 		);
 
-		System.out.println ("\n\t|-------------------------------||");
+		System.out.println();
+
+		System.out.println ("\t|--------------------------------||");
 
 		System.out.println ("\t| Trade Date       : " + dtValue + " ||");
 
 		System.out.println ("\t| Cash Settle Date : " + dtSettle + " ||");
 
-		System.out.println ("\t|-------------------------------||\n");
+		System.out.println ("\t|--------------------------------||");
+
+		System.out.println();
 
 		String strCurveMetrics = "";
 		String strSecularMetrics = "";
@@ -485,25 +494,25 @@ public class CorporateIssueMetrics {
 				) + "  ||" + "\n";
 		}
 
-		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t|           BOND         | EFFECTIVE  |  MATURITY  | FIRST COUPON |  PRICE  | YIELD | MAC DUR | MOD DUR | YIELD 01 | DV01 | CONV | BOND BASIS ||");
+		System.out.println ("\t|             BOND           |  EFFECTIVE  |   MATURITY  |  FIRST COUPON |  PRICE  | YIELD | MAC DUR | MOD DUR | YIELD 01 | DV01 | CONV | BOND BASIS ||");
 
-		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.print (strSecularMetrics);
 
-		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------||\n");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||\n");
 
-		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t|           BOND         |  PRICE  | YIELD | Z SPREAD | OAS | OAS DUR |  OAS CONV | ASW | G SPREAD | I SPREAD | TSY SPREAD | TSY BMK ||");
+		System.out.println ("\t|             BOND           |  PRICE  | YIELD | Z SPREAD | OAS | OAS DUR |  OAS CONV | ASW | G SPREAD | I SPREAD | TSY SPREAD | TSY BMK ||");
 
-		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.print (strCurveMetrics);
 
-		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
 
 		return adblOAS;
 	}
@@ -515,9 +524,9 @@ public class CorporateIssueMetrics {
 		EnvManager.InitEnv ("");
 
 		JulianDate dtSpot = DateUtil.CreateFromYMD (
-			2015,
-			DateUtil.DECEMBER,
-			8
+			2017,
+			DateUtil.FEBRUARY,
+			2
 		);
 
 		String strCurrency = "USD";
@@ -535,17 +544,19 @@ public class CorporateIssueMetrics {
 			0.0150,
 			0.0200,
 			0.0225,
+			0.0250,
 			0.0300
 		};
 
 		double[] adblTreasuryYield = new double[] {
-			0.00692,
-			0.00945,
-			0.01257,
-			0.01678,
-			0.02025,
-			0.02235,
-			0.02972
+			0.0083,	//  1Y
+			0.0122, //  2Y
+			0.0149, //  3Y
+			0.0193, //  5Y
+			0.0227, //  7Y
+			0.0248, // 10Y
+			0.0280, // 20Y
+			0.0308  // 30Y
 		};
 
 		Map<String, GovvieCurve> mapGovvieCurve = GovvieCurve (
@@ -576,35 +587,48 @@ public class CorporateIssueMetrics {
 				"05YON",
 				"07YON",
 				"10YON",
+				"20YON",
 				"30YON"
 			},
 			adblTreasuryYield
 		);
 
-		Bond[] aCorporateBond = new Bond[] {
-			USDCorporate (DateUtil.CreateFromYMD (2007, 12, 20), DateUtil.CreateFromYMD (2018,  1, 15), 0.06000),
-			USDCorporate (DateUtil.CreateFromYMD (1996,  7, 25), DateUtil.CreateFromYMD (2025,  7, 15), 0.07750),
-			USDCorporate (DateUtil.CreateFromYMD (1996, 10, 29), DateUtil.CreateFromYMD (2026, 10, 15), 0.07625),
-			USDCorporate (DateUtil.CreateFromYMD (2014, 12,  9), DateUtil.CreateFromYMD (2026, 12, 15), 0.04125),
-			USDCorporate (DateUtil.CreateFromYMD (1997,  4, 29), DateUtil.CreateFromYMD (2027,  4, 29), 0.08000),
-			USDCorporate (DateUtil.CreateFromYMD (2014,  9, 25), DateUtil.CreateFromYMD (2027, 10,  1), 0.04250),
-			USDCorporate (DateUtil.CreateFromYMD (2008,  5, 22), DateUtil.CreateFromYMD (2038,  5, 15), 0.06400),
-			// USDCorporate (DateUtil.CreateFromYMD (2011,  7, 21), DateUtil.CreateFromYMD (2041,  7, 15), 0.05600)
+		Bond[] aAgencyBond = new Bond[] {
+			Agency (DateUtil.CreateFromYMD (2016,  1, 12), DateUtil.CreateFromYMD (2026,  1, 12), 0.03020),
+			Agency (DateUtil.CreateFromYMD (2014,  4, 11), DateUtil.CreateFromYMD (2029,  4, 11), 0.04000),
+			Agency (DateUtil.CreateFromYMD (2015, 11, 27), DateUtil.CreateFromYMD (2030, 11, 27), 0.03300),
+			Agency (DateUtil.CreateFromYMD (2016,  1, 27), DateUtil.CreateFromYMD (2031,  1, 27), 0.03390),
+			Agency (DateUtil.CreateFromYMD (2016,  3, 10), DateUtil.CreateFromYMD (2031,  3, 10), 0.03100),
+			Agency (DateUtil.CreateFromYMD (2015,  7, 20), DateUtil.CreateFromYMD (2032,  7, 20), 0.03500),
+			Agency (DateUtil.CreateFromYMD (2016,  2,  1), DateUtil.CreateFromYMD (2033,  2,  1), 0.03330),
+			Agency (DateUtil.CreateFromYMD (2015, 11, 12), DateUtil.CreateFromYMD (2035, 11, 13), 0.03315),
+			Agency (DateUtil.CreateFromYMD (2016,  2,  8), DateUtil.CreateFromYMD (2036,  2,  8), 0.03500),
+			Agency (DateUtil.CreateFromYMD (2016,  2, 22), DateUtil.CreateFromYMD (2036,  2, 22), 0.03440),
+			Agency (DateUtil.CreateFromYMD (2016,  4, 18), DateUtil.CreateFromYMD (2036,  4, 18), 0.03140),
+			Agency (DateUtil.CreateFromYMD (2016,  4, 29), DateUtil.CreateFromYMD (2036,  4, 29), 0.03000),
+			Agency (DateUtil.CreateFromYMD (2016,  8, 22), DateUtil.CreateFromYMD (2036,  8, 22), 0.02700),
+			Agency (DateUtil.CreateFromYMD (2015,  7,  6), DateUtil.CreateFromYMD (2037,  8,  6), 0.03950),
 		};
 
 		double[] adblCleanPrice = new double[] {
-			1.08529,
-			1.27021,
-			1.27274,
-			1.01235,
-			1.31537,
-			1.02263,
-			1.27570,
-			// 1.17460
+			0.9904951,
+			1.0065050,
+			0.9759851,
+			0.9942566,
+			0.9730267,
+			1.0240540,
+			0.9658405,
+			0.9995269,
+			0.9785613,
+			0.9731897,
+			0.9285945,
+			0.9132757,
+			0.8896572,
+			1.0576060,
 		};
 
 		double[] adblOAS = RVMeasures (
-			aCorporateBond,
+			aAgencyBond,
 			dtSpot,
 			csqc,
 			adblCleanPrice
@@ -619,9 +643,11 @@ public class CorporateIssueMetrics {
 			dcFunding.currency()
 		);
 
-		System.out.println ("\n\t|------------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println();
 
-		System.out.print ("\t|           BOND        ");
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.print ("\t|             BOND          ");
 
 		for (Map.Entry<String, GovvieCurve> meGovvieCurve : mapGovvieCurve.entrySet()) {
 			if ("BASE".equalsIgnoreCase (meGovvieCurve.getKey()) || "BUMP".equalsIgnoreCase (meGovvieCurve.getKey()))
@@ -632,10 +658,10 @@ public class CorporateIssueMetrics {
 
 		System.out.println (" ||");
 
-		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 0; i < adblOAS.length; ++i) {
-			System.out.print ("\t| " + aCorporateBond[i].name());
+			System.out.print ("\t| " + aAgencyBond[i].name());
 
 			for (Map.Entry<String, GovvieCurve> meGovvieCurve : mapGovvieCurve.entrySet()) {
 				if ("BASE".equalsIgnoreCase (meGovvieCurve.getKey()) || "BUMP".equalsIgnoreCase (meGovvieCurve.getKey()))
@@ -643,9 +669,9 @@ public class CorporateIssueMetrics {
 
 				csqc.setGovvieState (meGovvieCurve.getValue());
 
-				System.out.print (" |     " +
+				System.out.print (" |      " +
 					FormatUtil.FormatDouble (
-						(adblCleanPrice[i] - aCorporateBond[i].priceFromOAS (
+						(adblCleanPrice[i] - aAgencyBond[i].priceFromOAS (
 							valParams,
 							csqc,
 							null,
@@ -658,6 +684,8 @@ public class CorporateIssueMetrics {
 			System.out.println (" ||");
 		}
 
-		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println();
 	}
 }
