@@ -74,7 +74,7 @@ public class DC30E_360_ISDA implements org.drip.analytics.daycount.DCFCalculator
 
 	@Override public java.lang.String[] alternateNames()
 	{
-		return new java.lang.String[] {"30E/360 ISDA", "30E/360 (ISDA)", "DC30E_360_ISDA"};
+		return new java.lang.String[] {"ISMA-30/360", "30E/360 ISDA", "30E/360 (ISDA)", "DC30E_360_ISDA"};
 	}
 
 	@Override public double yearFraction (
