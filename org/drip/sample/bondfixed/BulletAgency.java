@@ -1,5 +1,5 @@
 
-package org.drip.sample.bondloan;
+package org.drip.sample.bondfixed;
 
 import java.util.Map;
 
@@ -68,13 +68,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * FixedCouponAgency demonstrates Fixed Coupon Agency Bond Pricing and Relative Value Measure Generation
+ * BulletAgency demonstrates Non-EOS Fixed Coupon Agency Bond Pricing and Relative Value Measure Generation
  *  Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class FixedCouponAgency {
+public class BulletAgency {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
