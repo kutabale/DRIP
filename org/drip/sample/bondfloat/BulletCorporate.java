@@ -1,5 +1,5 @@
 
-package org.drip.sample.bondfixed;
+package org.drip.sample.bondfloat;
 
 import java.util.Map;
 
@@ -65,13 +65,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * BulletCorporate5 demonstrates Non-EOS Fixed Coupon Corporate Bond Pricing and Relative Value Measure
+ * BulletCorporate demonstrates Non-EOS Floating Coupon Corporate Bond Pricing and Relative Value Measure
  *  Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class BulletCorporate5 {
+public class BulletCorporate {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -374,21 +374,20 @@ public class BulletCorporate5 {
 	}
 
 	private static final Bond Corporate (
-		final String strName,
+		final String strRateIndex,
 		final JulianDate dtEffective,
 		final JulianDate dtMaturity,
-		final double dblCoupon,
-		final int iFreq,
-		final String strDayCount)
+		final double dblSpread)
 		throws Exception
 	{
-		return BondBuilder.CreateSimpleFixed (
-			strName + FormatUtil.FormatDouble (dblCoupon, 1, 4, 100.) + " " + dtMaturity,
+		return BondBuilder.CreateSimpleFloater (
+			strRateIndex + " +" + FormatUtil.FormatDouble (dblSpread, 3, 0, 10000.) + " bp " + dtMaturity,
 			"USD",
+			strRateIndex,
 			"",
-			dblCoupon,
-			iFreq,
-			strDayCount,
+			dblSpread,
+			2,
+			"30/360",
 			dtEffective,
 			dtMaturity,
 			null,
@@ -431,7 +430,7 @@ public class BulletCorporate5 {
 		double[] adblOAS = new double[aBond.length];
 
 		for (int i = 0; i < aBond.length; ++i) {
-			System.out.println ("Doing " + aBond[i].name());
+			// System.out.println ("Doing " + aBond[i].name());
 
 			WorkoutInfo wi = aBond[i].exerciseYieldFromPrice (
 				valParams,
@@ -482,8 +481,7 @@ public class BulletCorporate5 {
 			strCurveMetrics += "\t| " +
 				aBond[i].name() + " |" +
 				FormatUtil.FormatDouble (adblCleanPrice[i], 3, 3, 100.) + " |" +
-				FormatUtil.FormatDouble (wi.yield(), 1, 2, 100.) + "% |   " +
-				FormatUtil.FormatDouble (rvm.zSpread(), 3, 0, 10000.) + "   |" +
+				FormatUtil.FormatDouble (wi.yield(), 1, 2, 100.) + "% |" +
 				FormatUtil.FormatDouble (adblOAS[i], 3, 0, 10000.) + " | " +
 				FormatUtil.FormatDouble (0.5 * (dblCleanPriceOASDown - dblCleanPriceOASUp) / adblCleanPrice[i], 2, 2, 10000.) + "  |  " +
 				FormatUtil.FormatDouble ((dblCleanPriceOASDown + dblCleanPriceOASUp - 2. * adblCleanPrice[i]) / adblCleanPrice[i], 2, 2, 1000000.) + "   |" +
@@ -497,25 +495,25 @@ public class BulletCorporate5 {
 				) + "  ||" + "\n";
 		}
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|-----------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t|             BOND           |  EFFECTIVE  |   MATURITY  |  FIRST COUPON |  PRICE  | YIELD | MAC DUR | MOD DUR | YIELD 01 | DV01 | CONV | BOND BASIS ||");
+		System.out.println ("\t|             BOND            |  EFFECTIVE  |   MATURITY  |  FIRST COUPON |  PRICE  | YIELD | MAC DUR | MOD DUR | YIELD 01 | DV01 | CONV | BOND BASIS ||");
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|-----------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.print (strSecularMetrics);
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||\n");
+		System.out.println ("\t|-----------------------------------------------------------------------------------------------------------------------------------------------------||\n");
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t|             BOND           |  PRICE  | YIELD | Z SPREAD | OAS | OAS DUR |  OAS CONV | ASW | G SPREAD | I SPREAD | TSY SPREAD | TSY BMK ||");
+		System.out.println ("\t|             BOND            |  PRICE  | YIELD | OAS | OAS DUR |  OAS CONV | ASW | G SPREAD | I SPREAD | TSY SPREAD | TSY BMK ||");
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.print (strCurveMetrics);
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------||");
 
 		return adblOAS;
 	}
@@ -596,130 +594,57 @@ public class BulletCorporate5 {
 			adblTreasuryYield
 		);
 
-		Bond[] aCorporateBond = new Bond[] {
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  2, 25), DateUtil.CreateFromYMD (2017,  2, 25), 0.00900, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013,  1, 14), DateUtil.CreateFromYMD (2017,  6,  5), 0.02250, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (1997,  7, 14), DateUtil.CreateFromYMD (2017,  7, 15), 0.07450, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  3,  5), DateUtil.CreateFromYMD (2017,  9,  5), 0.05125, 2, "ISMA-30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013,  7, 15), DateUtil.CreateFromYMD (2018,  4, 15), 0.03625, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2011, 11, 21), DateUtil.CreateFromYMD (2018, 11,  1), 0.06250, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2008, 11, 14), DateUtil.CreateFromYMD (2018, 11, 15), 0.07750, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2011, 11,  9), DateUtil.CreateFromYMD (2018, 11, 15), 0.09000, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  1, 30), DateUtil.CreateFromYMD (2019,  2,  1), 0.07125, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  5, 15), DateUtil.CreateFromYMD (2019,  6,  1), 0.08125, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  6, 17), DateUtil.CreateFromYMD (2019,  6, 15), 0.09875, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  6, 30), DateUtil.CreateFromYMD (2019,  6, 15), 0.09500, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  8, 13), DateUtil.CreateFromYMD (2019,  8, 13), 0.07625, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  9, 14), DateUtil.CreateFromYMD (2019,  9, 15), 0.07375, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  9, 15), DateUtil.CreateFromYMD (2019, 10, 30), 0.06250, 4, "30/360 NON-EOM"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  5, 14), DateUtil.CreateFromYMD (2020,  2, 15), 0.06850, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  3,  4), DateUtil.CreateFromYMD (2020,  3,  4), 0.06700, 2, "ISMA-30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  3, 19), DateUtil.CreateFromYMD (2020,  3, 19), 0.06775, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  3, 23), DateUtil.CreateFromYMD (2020,  6,  1), 0.05875, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  9, 15), DateUtil.CreateFromYMD (2020,  9, 15), 0.05625, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  9, 16), DateUtil.CreateFromYMD (2020,  9, 15), 0.05375, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  6, 28), DateUtil.CreateFromYMD (2021,  4, 15), 0.06875, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2011,  4,  6), DateUtil.CreateFromYMD (2021,  5,  1), 0.05800, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  4, 16), DateUtil.CreateFromYMD (2021, 10, 17), 0.04890, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2011, 11,  7), DateUtil.CreateFromYMD (2021, 11, 15), 0.04875, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  3, 12), DateUtil.CreateFromYMD (2022,  3, 15), 0.04700, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012, 10,  5), DateUtil.CreateFromYMD (2022, 10, 15), 0.04700, 2, "ISMA-30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2002,  4, 30), DateUtil.CreateFromYMD (2023,  1,  2), 0.06718, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013, 11, 19), DateUtil.CreateFromYMD (2023, 11, 20), 0.03700, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013, 11, 29), DateUtil.CreateFromYMD (2023, 12,  1), 0.04625, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  3, 12), DateUtil.CreateFromYMD (2024,  3, 14), 0.04250, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (1994,  5, 11), DateUtil.CreateFromYMD (2024,  5,  1), 0.08625, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  8, 29), DateUtil.CreateFromYMD (2024,  9,  3), 0.05750, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015,  9, 15), DateUtil.CreateFromYMD (2025,  9, 15), 0.04750, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2016,  1, 27), DateUtil.CreateFromYMD (2026,  1, 27), 0.04650, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  8, 11), DateUtil.CreateFromYMD (2026,  9,  3), 0.03750, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  9, 16), DateUtil.CreateFromYMD (2026, 10,  1), 0.03700, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014, 11, 25), DateUtil.CreateFromYMD (2026, 11, 25), 0.04270, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015, 12, 14), DateUtil.CreateFromYMD (2027, 12, 15), 0.03750, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (1998,  7, 10), DateUtil.CreateFromYMD (2028,  7, 15), 0.07050, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2016, 10,  3), DateUtil.CreateFromYMD (2028, 10, 15), 0.03250, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2000,  3,  6), DateUtil.CreateFromYMD (2029,  3,  1), 0.06927, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (1999,  3,  1), DateUtil.CreateFromYMD (2029,  3,  1), 0.06625, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  3,  1), DateUtil.CreateFromYMD (2030, 12, 15), 0.05380, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2000, 12, 15), DateUtil.CreateFromYMD (2030, 12, 15), 0.08600, 2, "ISMA-30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2001,  8, 15), DateUtil.CreateFromYMD (2031,  8, 15), 0.07300, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2003,  3,  4), DateUtil.CreateFromYMD (2032, 10, 15), 0.05900, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2003,  9, 25), DateUtil.CreateFromYMD (2033,  3, 15), 0.06550, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2003, 10,  1), DateUtil.CreateFromYMD (2033, 10,  1), 0.07450, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2008, 12, 11), DateUtil.CreateFromYMD (2038, 12, 15), 0.06375, 2, "ISMA-30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  6,  1), DateUtil.CreateFromYMD (2039,  6,  1), 0.08875, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009, 12, 16), DateUtil.CreateFromYMD (2039, 12, 16), 0.06850, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  7,  1), DateUtil.CreateFromYMD (2040,  6, 15), 0.07625, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2008, 11,  4), DateUtil.CreateFromYMD (2046,  3, 15), 0.05780, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  8,  1), DateUtil.CreateFromYMD (2050,  8,  1), 0.05300, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2006, 11, 13), DateUtil.CreateFromYMD (2051, 12,  1), 0.05595, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2007,  2,  1), DateUtil.CreateFromYMD (2052,  2, 15), 0.05815, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  3, 18), DateUtil.CreateFromYMD (2057,  3, 15), 0.06750, 2, "30/360"),
+		double dblUSD3MLIBOR = dcFunding.libor (
+			dtSpot,
+			"3M"
+		);
+
+		Bond[] aAgencyBond = new Bond[] {
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2014,  3, 24), DateUtil.CreateFromYMD (2017,  3, 24), 0.0178706 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2015,  8,  3), DateUtil.CreateFromYMD (2017,  8,  3), 0.0150904 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  6,  9), DateUtil.CreateFromYMD (2017, 12,  8), 0.0160083 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2013,  4, 30), DateUtil.CreateFromYMD (2018,  4, 30), 0.0208733 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016, 10, 19), DateUtil.CreateFromYMD (2018, 10, 19), 0.0169483 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2015, 12, 14), DateUtil.CreateFromYMD (2018, 12, 14), 0.0179872 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  1, 14), DateUtil.CreateFromYMD (2019,  1, 14), 0.0180317 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  1, 15), DateUtil.CreateFromYMD (2019,  1, 15), 0.0220317 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  1, 22), DateUtil.CreateFromYMD (2019,  1, 22), 0.0204122 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  1, 27), DateUtil.CreateFromYMD (2019,  2,  1), 0.0226094 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  2, 23), DateUtil.CreateFromYMD (2019,  2, 22), 0.0173983 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  3,  4), DateUtil.CreateFromYMD (2019,  3, 14), 0.0243872 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  3, 15), DateUtil.CreateFromYMD (2019,  3, 15), 0.0165344 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  5, 13), DateUtil.CreateFromYMD (2019,  5, 13), 0.0161206 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  6,  2), DateUtil.CreateFromYMD (2019,  5, 24), 0.0153011 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  6, 14), DateUtil.CreateFromYMD (2019,  6, 14), 0.0161872 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  9,  8), DateUtil.CreateFromYMD (2019,  9,  6), 0.0152639 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016,  9, 30), DateUtil.CreateFromYMD (2019,  9, 30), 0.0161817 - dblUSD3MLIBOR),
+			Corporate ("USD-3M", DateUtil.CreateFromYMD (2016, 10, 18), DateUtil.CreateFromYMD (2019, 10, 18), 0.0193372 - dblUSD3MLIBOR),
 		};
 
 		double[] adblCleanPrice = new double[] {
-			0.9997787,	// (2017,  2, 25)
-			1.0033310,	// (2017,  6,  5)
-			1.0278170,	// (2017,  7, 15)
-			1.0172200,	// (2017,  9,  5)
-			1.0135930,	// (2018,  4, 15)
-			1.0562500,	// (2018, 11,  1)
-			1.0975070,	// (2018, 11, 15)
-			1.0973010,	// (2018, 11, 15)
-			1.0976260,	// (2019,  2,  1)
-			1.1243420,	// (2019,  6,  1)
-			1.1716120,	// (2019,  6, 15)
-			1.1584940,	// (2019,  6, 15)
-			1.1199700,	// (2019,  8, 13)
-			1.1160530,	// (2019,  9, 15)
-			0.9841736,	// (2019, 10, 30)
-			1.1216150,	// (2020,  2, 15)
-			1.1174650,	// (2020,  3,  4)
-			1.1262290,	// (2020,  3, 19)
-			1.1012410,	// (2020,  6,  1)
-			1.0949670,	// (2020,  9, 15)
-			1.0831400,	// (2020,  9, 15)
-			1.1349120,	// (2021,  4, 15)
-			1.1107220,	// (2021,  5,  1)
-			1.0216740,	// (2021, 10, 17)
-			1.0693220,	// (2021, 11, 15)
-			1.0685770,	// (2022,  3, 15)
-			1.0456960,	// (2022, 10, 15)
-			1.1312500,	// (2023,  1,  2)
-			1.0453750,	// (2023, 11, 20)
-			1.0542780,	// (2023, 12,  1)
-			1.0100730,	// (2024,  3, 14)
-			1.2260200,	// (2024,  5,  1)
-			0.9529315,	// (2024,  9,  3)
-			0.9868410,	// (2025,  9, 15)
-			1.0594940,	// (2026,  1, 27)
-			1.0098560,	// (2026,  9,  3)
-			1.0025000,	// (2026, 10,  1)
-			1.0202100,	// (2026, 11, 25)
-			1.0093360,	// (2027, 12, 25)
-			1.1575970,	// (2028,  7, 15)
-			0.9596740,	// (2028, 10, 15)
-			1.3272900,	// (2029,  3,  1)
-			1.2673600,	// (2029,  3,  1)
-			1.0724490,	// (2030, 12, 15)
-			1.3656760,	// (2030, 12, 15)
-			1.1686390,	// (2031,  8, 15)
-			1.1678330,	// (2032, 10, 15)
-			1.2210150,	// (2033,  3, 15)
-			1.2038020,	// (2033, 10,  1)
-			1.2909820,	// (2038, 12, 15)
-			1.5222220,	// (2039,  6,  1)
-			1.3022560,	// (2039, 12, 16)
-			1.2955540,	// (2040,  6, 15)
-			// 1.1743430,	// (2046,  3, 15)
-			// 0.9253630,	// (2050,  8,  1)
-			// 1.0570930,	// (2051, 12,  1)
-			// 0.9831220,	// (2052,  2, 15)
-			// 1.3153640,	// (2057,  3, 15)
+			1.0006750,	// (2017,  3, 24)
+			1.0027220,	// (2017,  8,  3)
+			1.0050000,	// (2017, 12,  8)
+			1.0091000,	// (2018,  4, 30)
+			1.0016000,	// (2018, 10, 19)
+			1.0053430,	// (2018, 12, 14)
+			1.0051600,	// (2019,  1, 14)
+			1.0075900,	// (2019,  1, 15)
+			1.0085700,	// (2019,  1, 22)
+			1.0174100,	// (2019,  2,  1)
+			1.0144650,	// (2019,  2, 22)
+			1.0152950,	// (2019,  3, 14)
+			1.0106700,	// (2019,  3, 15)
+			1.0045400,	// (2019,  5, 13)
+			1.0025140,	// (2019,  5, 24)
+			1.0027120,	// (2019,  6, 14)
+			1.0012000,	// (2019,  9,  6)
+			1.0022590,	// (2019,  9, 30)
+			1.0003480,	// (2019, 10, 18)
 		};
 
 		double[] adblOAS = RVMeasures (
-			aCorporateBond,
+			aAgencyBond,
 			dtSpot,
 			csqc,
 			adblCleanPrice
@@ -736,9 +661,9 @@ public class BulletCorporate5 {
 
 		System.out.println();
 
-		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.print ("\t|             BOND          ");
+		System.out.print ("\t|             BOND           ");
 
 		for (Map.Entry<String, GovvieCurve> meGovvieCurve : mapGovvieCurve.entrySet()) {
 			if ("BASE".equalsIgnoreCase (meGovvieCurve.getKey()) || "BUMP".equalsIgnoreCase (meGovvieCurve.getKey()))
@@ -749,10 +674,10 @@ public class BulletCorporate5 {
 
 		System.out.println (" ||");
 
-		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 0; i < adblOAS.length; ++i) {
-			System.out.print ("\t| " + aCorporateBond[i].name());
+			System.out.print ("\t| " + aAgencyBond[i].name());
 
 			for (Map.Entry<String, GovvieCurve> meGovvieCurve : mapGovvieCurve.entrySet()) {
 				if ("BASE".equalsIgnoreCase (meGovvieCurve.getKey()) || "BUMP".equalsIgnoreCase (meGovvieCurve.getKey()))
@@ -762,7 +687,7 @@ public class BulletCorporate5 {
 
 				System.out.print (" |      " +
 					FormatUtil.FormatDouble (
-						(adblCleanPrice[i] - aCorporateBond[i].priceFromOAS (
+						(adblCleanPrice[i] - aAgencyBond[i].priceFromOAS (
 							valParams,
 							csqc,
 							null,
@@ -775,7 +700,7 @@ public class BulletCorporate5 {
 			System.out.println (" ||");
 		}
 
-		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

@@ -1788,7 +1788,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		if (iValueDate >= iWorkoutDate || null == csqc || !org.drip.quant.common.NumberUtil.IsValid
 			(dblWorkoutFactor) || !org.drip.quant.common.NumberUtil.IsValid (dblBump))
-			throw new java.lang.Exception ("BondComponent::priceFromZeroCurve => Invalid Inputs");
+			throw new java.lang.Exception ("BondComponent::priceFromZeroCurve => Invalid Inputs " + dblBump);
 
 		double dblPV = 0.;
 		boolean bTerminateCouponFlow = false;
@@ -7172,7 +7172,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		final double dblPrice)
 		throws java.lang.Exception
 	{
-		return new BondCalibrator (this).calibrateZSpreadFromPrice (valParams, csqc,
+		return new BondCalibrator (this).calibrateOASFromPrice (valParams, csqc,
 			ZERO_OFF_OF_TREASURIES_DISCOUNT_CURVE, iWorkoutDate, dblWorkoutFactor, dblPrice);
 	}
 
@@ -10764,12 +10764,12 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			} catch (java.lang.Exception e) {
 				if (!s_bSuppressErrors) e.printStackTrace();
 			}
+		}
 
-			try {
-				dblOASpread = oasFromPrice (valParams, csqs, vcp, iWorkoutDate, dblWorkoutFactor, dblPrice);
-			} catch (java.lang.Exception e) {
-				if (!s_bSuppressErrors) e.printStackTrace();
-			}
+		try {
+			dblOASpread = oasFromPrice (valParams, csqs, vcp, iWorkoutDate, dblWorkoutFactor, dblPrice);
+		} catch (java.lang.Exception e) {
+			if (!s_bSuppressErrors) e.printStackTrace();
 		}
 
 		try {
@@ -11777,7 +11777,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 			if (null != _floaterSetting)
 				throw new java.lang.Exception
-					("BondComponent::BondCalibrator::calibZSpreadFromPrice => Z Spread Calculation turned off for floaters!");
+					("BondComponent::BondCalibrator::calibrateZSpreadFromPrice => Z Spread Calculation turned off for floaters!");
 
 			org.drip.function.definition.R1ToR1 ofZSpreadToPrice = new org.drip.function.definition.R1ToR1
 				(null) {
@@ -11806,6 +11806,65 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			if (null == rfop || !rfop.containsRoot())
 				throw new java.lang.Exception
 					("BondComponent::BondCalibrator::calibrateZSpreadFromPrice => Cannot get root!");
+
+			return rfop.getRoot();
+		}
+
+		/**
+		 * Calibrate the Bond OAS from the Market Price using the Root Bracketing Technique.
+		 * 
+		 * @param valParams Valuation Parameters
+		 * @param csqs Bond Market Parameters
+		 * @param iZeroCurveBaseDC The Discount Curve to derive the zero curve off of
+		 * @param iWorkoutDate JulianDate Work-out
+		 * @param dblWorkoutFactor Work-out factor
+		 * @param dblPrice Price to be calibrated to
+		 * 
+		 * @return The Calibrated OAS
+		 * 
+		 * @throws java.lang.Exception Thrown if the OAS cannot be calibrated
+		 */
+
+		public double calibrateOASFromPrice (
+			final org.drip.param.valuation.ValuationParams valParams,
+			final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+			final int iZeroCurveBaseDC,
+			final int iWorkoutDate,
+			final double dblWorkoutFactor,
+			final double dblPrice)
+			throws java.lang.Exception
+		{
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblPrice))
+				throw new java.lang.Exception
+					("BondComponent::BondCalibrator::calibrateOASFromPrice => Invalid Inputs!");
+
+			org.drip.function.definition.R1ToR1 r1ToR1OASToPrice = new org.drip.function.definition.R1ToR1
+				(null) {
+				@Override public double evaluate (
+					final double dblZSpread)
+					throws java.lang.Exception
+				{
+					return _bond.priceFromZeroCurve (valParams, csqs, null, iZeroCurveBaseDC, iWorkoutDate,
+						dblWorkoutFactor, dblZSpread) - dblPrice;
+				}
+			};
+
+			org.drip.function.r1tor1solver.FixedPointFinderOutput rfop = new
+				org.drip.function.r1tor1solver.FixedPointFinderNewton (0., r1ToR1OASToPrice,
+					true).findRoot();
+
+			if (null == rfop || !rfop.containsRoot())
+				rfop = new org.drip.function.r1tor1solver.FixedPointFinderZheng (0., r1ToR1OASToPrice,
+					true).findRoot();
+
+			if (null == rfop || !rfop.containsRoot())
+				rfop = new org.drip.function.r1tor1solver.FixedPointFinderBracketing (0., r1ToR1OASToPrice,
+					null, org.drip.function.r1tor1solver.VariateIteratorPrimitive.FALSE_POSITION,
+						true).findRoot();
+
+			if (null == rfop || !rfop.containsRoot())
+				throw new java.lang.Exception
+					("BondComponent::BondCalibrator::calibrateOASFromPrice => Cannot get root!");
 
 			return rfop.getRoot();
 		}
