@@ -47,8 +47,8 @@ package org.drip.xva.netting;
  */
 
 /**
- * GroupTrajectoryVertexExposure holds the Vertex Exposure of a Projected Path of a Simulation Run of a
- *  Netting Group. The References are:
+ * GroupTrajectoryPathAdjustment holds the Adjustments from the Exposure Sequence in a Single Path Projection
+ *  Run along the Granularity of a Netting Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,71 +67,44 @@ package org.drip.xva.netting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryVertexExposure {
-	private double _dblForwardPV = java.lang.Double.NaN;
-	private double _dblNegative = java.lang.Double.NaN;
-	private double _dblPositive = java.lang.Double.NaN;
+public class GroupTrajectoryPathAdjustment {
+	private org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] _aGTEA = null;
 
 	/**
-	 * GroupTrajectoryVertexExposure Constructor
+	 * GroupTrajectoryPathAdjustment Constructor
 	 * 
-	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
+	 * @param aGTEA Array of Group Trajectory Edge Adjustments
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryVertexExposure (
-		final double dblForwardPV)
+	public GroupTrajectoryPathAdjustment(
+		final org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] aGTEA)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV = dblForwardPV))
-			throw new java.lang.Exception ("GroupTrajectoryVertexExposure Constructor => Invalid Inputs");
+		if (null == (_aGTEA = aGTEA))
+			throw new java.lang.Exception ("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
 
-		_dblPositive = _dblForwardPV > 0. ? _dblForwardPV : 0.;
-		_dblNegative = _dblForwardPV < 0. ? _dblForwardPV : 0.;
+		int iNumEdge = _aGTEA.length;
+
+		if (1 >= iNumEdge)
+			throw new java.lang.Exception ("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumEdge; ++i) {
+			if (null == _aGTEA[i])
+				throw new java.lang.Exception
+					("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
+		}
 	}
 
 	/**
-	 * Retrieve the Forward PV at the Path Vertex Time Node
+	 * Retrieve the Array of Edge Adjustments
 	 * 
-	 * @return The Forward PV at the Path Vertex Time Node
+	 * @return The Array of Edge Adjustments
 	 */
 
-	public double forwardPV()
+	public org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] edgeAdjustments()
 	{
-		return _dblForwardPV;
-	}
-
-	/**
-	 * Retrieve the Total Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Total Exposure at the Path Vertex Time Node
-	 */
-
-	public double gross()
-	{
-		return _dblForwardPV;
-	}
-
-	/**
-	 * Retrieve the Positive Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Positive Exposure at the Path Vertex Time Node
-	 */
-
-	public double positive()
-	{
-		return _dblPositive;
-	}
-
-	/**
-	 * Retrieve the Negative Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Negative Exposure at the Path Vertex Time Node
-	 */
-
-	public double negative()
-	{
-		return _dblNegative;
+		return _aGTEA;
 	}
 }

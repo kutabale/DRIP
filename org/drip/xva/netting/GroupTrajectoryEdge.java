@@ -85,7 +85,8 @@ public class GroupTrajectoryEdge {
 		final org.drip.xva.netting.GroupTrajectoryVertex gtvTail)
 		throws java.lang.Exception
 	{
-		if (null == (_gtvHead = gtvHead) || null == (_gtvTail = gtvTail))
+		if (null == (_gtvHead = gtvHead) || null == (_gtvTail = gtvTail) || _gtvHead.vertex().julian() >=
+			_gtvTail.vertex().julian())
 			throw new java.lang.Exception ("GroupTrajectoryEdge Constructor => Invalid Inputs");
 	}
 
@@ -112,12 +113,12 @@ public class GroupTrajectoryEdge {
 	}
 
 	/**
-	 * Compute the Period Edge CVA
+	 * Compute the Period Edge Credit Adjustment
 	 * 
-	 * @return The Period Edge CVA
+	 * @return The Period Edge Credit Adjustment
 	 */
 
-	public double cva()
+	public double credit()
 	{
 		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnHead = _gtvHead.numeraire();
 
@@ -129,12 +130,12 @@ public class GroupTrajectoryEdge {
 	}
 
 	/**
-	 * Compute the Period Edge DVA
+	 * Compute the Period Edge Debt Adjustment
 	 * 
-	 * @return The Period Edge DVA
+	 * @return The Period Edge Debt Adjustment
 	 */
 
-	public double dva()
+	public double debt()
 	{
 		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnHead = _gtvHead.numeraire();
 
@@ -143,5 +144,82 @@ public class GroupTrajectoryEdge {
 		return 0.5 * (_gtvTail.exposure().negative() * gtvnTail.collateral() + _gtvHead.exposure().negative()
 			* gtvnHead.collateral()) * (gtvnTail.counterPartySurvival() - gtvnHead.counterPartySurvival()) *
 				(1. - 0.5 * (gtvnHead.counterPartyRecovery() + gtvnTail.counterPartyRecovery()));
+	}
+
+	/**
+	 * Compute the Period Edge Funding Adjustment
+	 * 
+	 * @return The Period Edge Funding Adjustment
+	 */
+
+	public double funding()
+	{
+		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnHead = _gtvHead.numeraire();
+
+		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
+
+		return 0.5 * (_gtvTail.exposure().positive() * gtvnTail.collateral() * gtvnTail.bankFundingSpread() +
+			_gtvHead.exposure().positive() * gtvnHead.collateral() * gtvnHead.bankFundingSpread()) *
+				(_gtvTail.vertex().julian() - _gtvHead.vertex().julian()) / 365.25;
+	}
+
+	/**
+	 * Generate the Assorted XVA Adjustment Metrics
+	 * 
+	 * @return The Assorted XVA Adjustment Metrics
+	 */
+
+	public org.drip.xva.netting.GroupTrajectoryEdgeAdjustment generate()
+	{
+		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnHead = _gtvHead.numeraire();
+
+		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
+
+		double dblHeadCollateral = gtvnHead.collateral();
+
+		double dblTailCollateral = gtvnTail.collateral();
+
+		double dblHeadPositiveExposure = _gtvHead.exposure().positive();
+
+		double dblTailPositiveExposure = _gtvTail.exposure().positive();
+
+		double dblHeadNegativeExposure = _gtvHead.exposure().negative();
+
+		double dblTailNegativeExposure = _gtvTail.exposure().negative();
+
+		double dblEdgeBankRecovery = 0.5 * (gtvnHead.bankRecovery() + gtvnTail.bankRecovery());
+
+		double dblEdgeCounterPartyRecovery = 0.5 * (gtvnHead.counterPartyRecovery() +
+			gtvnTail.counterPartyRecovery());
+
+		double dblHeadPositiveExposurePV = dblHeadPositiveExposure * dblHeadCollateral;
+		double dblTailPositiveExposurePV = dblTailPositiveExposure * dblTailCollateral;
+		double dblHeadNegativeExposurePV = dblHeadNegativeExposure * dblHeadCollateral;
+		double dblTailNegativeExposurePV = dblTailNegativeExposure * dblTailCollateral;
+		double dblEdgePositiveExposurePV = 0.5 * (dblTailPositiveExposurePV + dblHeadPositiveExposurePV);
+		double dblEdgeNegativeExposurePV = 0.5 * (dblTailNegativeExposurePV + dblHeadNegativeExposurePV);
+
+		try {
+			return new org.drip.xva.netting.GroupTrajectoryEdgeAdjustment (
+				dblEdgePositiveExposurePV * (gtvnTail.bankSurvival() - gtvnHead.bankSurvival()) *
+					(1. - dblEdgeBankRecovery),
+				dblEdgeNegativeExposurePV * (gtvnTail.counterPartySurvival() - gtvnHead.counterPartySurvival()) *
+					(1. - dblEdgeCounterPartyRecovery),
+				0.5 * (
+					dblTailPositiveExposurePV * gtvnTail.bankFundingSpread() +
+					dblHeadPositiveExposurePV * gtvnHead.bankFundingSpread()
+				) * (_gtvTail.vertex().julian() - _gtvHead.vertex().julian()) / 365.25,
+				0.5 * (dblTailPositiveExposure + dblHeadPositiveExposure),
+				0.5 * (dblTailNegativeExposure + dblHeadNegativeExposure),
+				dblEdgePositiveExposurePV,
+				dblEdgeNegativeExposurePV,
+				dblEdgeBankRecovery,
+				dblEdgeCounterPartyRecovery
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }
