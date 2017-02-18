@@ -68,43 +68,132 @@ package org.drip.xva.netting;
  */
 
 public class GroupTrajectoryPathAdjustment {
-	private org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] _aGTEA = null;
+	private double[] _adblExposure = null;
+	private double[] _adblExposurePV = null;
+	private double[] _adblNegativeExposure = null;
+	private double[] _adblPositiveExposure = null;
+	private double[] _adblNegativeExposurePV = null;
+	private double[] _adblPositiveExposurePV = null;
+	private org.drip.analytics.date.JulianDate[] _adtVertex = null;
 
 	/**
 	 * GroupTrajectoryPathAdjustment Constructor
 	 * 
-	 * @param aGTEA Array of Group Trajectory Edge Adjustments
+	 * @param adtVertex Array of Vertex Dates
+	 * @param adblExposure The Array of Exposures
+	 * @param adblExposurePV The Array of Exposure PVs
+	 * @param adblPositiveExposure The Array of Positive Exposures
+	 * @param adblPositiveExposurePV The Array of Positive Exposure PVs
+	 * @param adblNegativeExposure The Array of Negative Exposures
+	 * @param adblNegativeExposurePV The Array of Negative Exposure PVs
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryPathAdjustment(
-		final org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] aGTEA)
+	public GroupTrajectoryPathAdjustment (
+		final org.drip.analytics.date.JulianDate[] adtVertex,
+		final double[] adblExposure,
+		final double[] adblExposurePV,
+		final double[] adblPositiveExposure,
+		final double[] adblPositiveExposurePV,
+		final double[] adblNegativeExposure,
+		final double[] adblNegativeExposurePV)
 		throws java.lang.Exception
 	{
-		if (null == (_aGTEA = aGTEA))
+		if (null == (_adtVertex = adtVertex) || null == (_adblExposure = adblExposure) || null ==
+			(_adblExposurePV = adblExposurePV) || null == (_adblPositiveExposure = adblPositiveExposure) ||
+				null == (_adblPositiveExposurePV = adblPositiveExposurePV) || null == (_adblNegativeExposure
+					= adblNegativeExposure) || null == (_adblNegativeExposurePV = adblNegativeExposurePV))
 			throw new java.lang.Exception ("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
 
-		int iNumEdge = _aGTEA.length;
+		int iNumEdge = _adtVertex.length;
 
-		if (1 >= iNumEdge)
+		if (0 == iNumEdge || iNumEdge != _adblExposure.length || iNumEdge != _adblExposurePV.length ||
+			iNumEdge != _adblPositiveExposure.length || iNumEdge != _adblPositiveExposurePV.length ||
+				iNumEdge != _adblNegativeExposurePV.length || iNumEdge != _adblNegativeExposurePV.length ||
+					!org.drip.quant.common.NumberUtil.IsValid (_adblExposure) ||
+						!org.drip.quant.common.NumberUtil.IsValid (_adblExposurePV) ||
+							!org.drip.quant.common.NumberUtil.IsValid (_adblPositiveExposure) ||
+								!org.drip.quant.common.NumberUtil.IsValid (_adblPositiveExposurePV) ||
+									!org.drip.quant.common.NumberUtil.IsValid (_adblNegativeExposure) ||
+										!org.drip.quant.common.NumberUtil.IsValid (_adblNegativeExposurePV))
 			throw new java.lang.Exception ("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
-
-		for (int i = 0; i < iNumEdge; ++i) {
-			if (null == _aGTEA[i])
-				throw new java.lang.Exception
-					("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
-		}
 	}
 
 	/**
-	 * Retrieve the Array of Edge Adjustments
+	 * Retrieve the Array of Vertex Dates
 	 * 
-	 * @return The Array of Edge Adjustments
+	 * @return The Array of Vertex Dates
 	 */
 
-	public org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] edgeAdjustments()
+	public org.drip.analytics.date.JulianDate[] vertex()
 	{
-		return _aGTEA;
+		return _adtVertex;
+	}
+
+	/**
+	 * Retrieve the Array of Exposures
+	 * 
+	 * @return The Array of Exposures
+	 */
+
+	public double[] exposure()
+	{
+		return _adblExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Exposure PVs
+	 * 
+	 * @return The Array of Exposure PVs
+	 */
+
+	public double[] exposurePV()
+	{
+		return _adblExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Positive Exposures
+	 * 
+	 * @return The Array of Positive Exposures
+	 */
+
+	public double[] positiveExposure()
+	{
+		return _adblPositiveExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Positive Exposure PVs
+	 * 
+	 * @return The Array of Positive Exposure PVs
+	 */
+
+	public double[] positiveExposurePV()
+	{
+		return _adblPositiveExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Negative Exposures
+	 * 
+	 * @return The Array of Negative Exposures
+	 */
+
+	public double[] negativeExposure()
+	{
+		return _adblNegativeExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Negative Exposure PVs
+	 * 
+	 * @return The Array of Negative Exposure PVs
+	 */
+
+	public double[] negativeExposurePV()
+	{
+		return _adblNegativeExposurePV;
 	}
 }

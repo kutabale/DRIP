@@ -170,9 +170,29 @@ public class GroupTrajectoryPath {
 		double[] adblExposure = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblExposure[i] += _aGTE[i].tail().exposure().gross();
+			adblExposure[i] = _aGTE[i].tail().exposure().gross();
 
 		return adblExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Exposure PVs
+	 * 
+	 * @return The Array of Exposure PVs
+	 */
+
+	public double[] exposurePV()
+	{
+		int iNumEdge = _aGTE.length;
+		double[] adblExposurePV = new double[iNumEdge];
+
+		for (int i = 0; i < iNumEdge; ++i) {
+			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
+
+			adblExposurePV[i] = gtvTail.exposure().gross() * gtvTail.numeraire().collateral();
+		}
+
+		return adblExposurePV;
 	}
 
 	/**
@@ -187,7 +207,7 @@ public class GroupTrajectoryPath {
 		double[] adblPositiveExposure = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblPositiveExposure[i] += _aGTE[i].tail().exposure().positive();
+			adblPositiveExposure[i] = _aGTE[i].tail().exposure().positive();
 
 		return adblPositiveExposure;
 	}
@@ -206,7 +226,7 @@ public class GroupTrajectoryPath {
 		for (int i = 0; i < iNumEdge; ++i) {
 			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
 
-			adblPositiveExposurePV[i] += gtvTail.exposure().positive() * gtvTail.numeraire().collateral();
+			adblPositiveExposurePV[i] = gtvTail.exposure().positive() * gtvTail.numeraire().collateral();
 		}
 
 		return adblPositiveExposurePV;
@@ -224,7 +244,7 @@ public class GroupTrajectoryPath {
 		double[] adblNegativeExposure = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblNegativeExposure[i] += _aGTE[i].tail().exposure().negative();
+			adblNegativeExposure[i] = _aGTE[i].tail().exposure().negative();
 
 		return adblNegativeExposure;
 	}
@@ -243,9 +263,73 @@ public class GroupTrajectoryPath {
 		for (int i = 0; i < iNumEdge; ++i) {
 			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
 
-			adblNegativeExposurePV[i] += gtvTail.exposure().negative() * gtvTail.numeraire().collateral();
+			adblNegativeExposurePV[i] = gtvTail.exposure().negative() * gtvTail.numeraire().collateral();
 		}
 
 		return adblNegativeExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Edge Adjustments
+	 * 
+	 * @return The Array of Edge Adjustments
+	 */
+
+	public org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] edgeAdjustments()
+	{
+		int iNumEdge = _aGTE.length;
+		org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] aGTEA = new
+			org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[iNumEdge];
+
+		for (int i = 0; i < iNumEdge; ++i)
+			aGTEA[i] = _aGTE[i].generate();
+
+		return aGTEA;
+	}
+
+	/**
+	 * Construct the Group Trajectory Path Adjustment Instance
+	 * 
+	 * @return The Group Trajectory Path Adjustment Instance
+	 */
+
+	public org.drip.xva.netting.GroupTrajectoryPathAdjustment adjustment()
+	{
+		int iNumEdge = _aGTE.length;
+		double[] adblExposure = new double[iNumEdge];
+		double[] adblExposurePV = new double[iNumEdge];
+		double[] adblNegativeExposure = new double[iNumEdge];
+		double[] adblPositiveExposure = new double[iNumEdge];
+		double[] adblNegativeExposurePV = new double[iNumEdge];
+		double[] adblPositiveExposurePV = new double[iNumEdge];
+		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumEdge];
+
+		for (int i = 0; i < iNumEdge; ++i) {
+			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail();
+
+			adtVertex[i] = gtvTail.vertex();
+
+			double dblTailCollateralNumeraire = gtvTail.numeraire().collateral();
+
+			org.drip.xva.netting.GroupTrajectoryVertexExposure gtve = gtvTail.exposure();
+
+			adblExposurePV[i] = (adblExposure[i] = gtve.gross()) * dblTailCollateralNumeraire;
+
+			adblNegativeExposurePV[i] = (adblNegativeExposure[i] = gtve.negative()) *
+				dblTailCollateralNumeraire;
+
+			adblPositiveExposurePV[i] = (adblPositiveExposure[i] = gtve.positive()) *
+				dblTailCollateralNumeraire;
+		}
+
+		try {
+			return new org.drip.xva.netting.GroupTrajectoryPathAdjustment (adtVertex, adblExposure,
+				adblExposurePV, adblPositiveExposure, adblPositiveExposurePV, adblNegativeExposure,
+					adblNegativeExposurePV);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }
