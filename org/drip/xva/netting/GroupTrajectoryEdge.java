@@ -124,8 +124,8 @@ public class GroupTrajectoryEdge {
 
 		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
 
-		return 0.5 * (_gtvTail.exposure().positive() * gtvnTail.collateral() + _gtvHead.exposure().positive()
-			* gtvnHead.collateral()) * (gtvnTail.bankSurvival() - gtvnHead.bankSurvival()) * (1. - 0.5 *
+		return 0.5 * (_gtvTail.exposure().positive() / gtvnTail.collateral() + _gtvHead.exposure().positive()
+			/ gtvnHead.collateral()) * (gtvnTail.bankSurvival() - gtvnHead.bankSurvival()) * (1. - 0.5 *
 				(gtvnHead.bankRecovery() + gtvnTail.bankRecovery()));
 	}
 
@@ -141,8 +141,8 @@ public class GroupTrajectoryEdge {
 
 		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
 
-		return 0.5 * (_gtvTail.exposure().negative() * gtvnTail.collateral() + _gtvHead.exposure().negative()
-			* gtvnHead.collateral()) * (gtvnTail.counterPartySurvival() - gtvnHead.counterPartySurvival()) *
+		return 0.5 * (_gtvTail.exposure().negative() / gtvnTail.collateral() + _gtvHead.exposure().negative()
+			/ gtvnHead.collateral()) * (gtvnTail.counterPartySurvival() - gtvnHead.counterPartySurvival()) *
 				(1. - 0.5 * (gtvnHead.counterPartyRecovery() + gtvnTail.counterPartyRecovery()));
 	}
 
@@ -158,8 +158,8 @@ public class GroupTrajectoryEdge {
 
 		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
 
-		return 0.5 * (_gtvTail.exposure().positive() * gtvnTail.collateral() * gtvnTail.bankFundingSpread() +
-			_gtvHead.exposure().positive() * gtvnHead.collateral() * gtvnHead.bankFundingSpread()) *
+		return 0.5 * (_gtvTail.exposure().positive() / gtvnTail.collateral() * gtvnTail.bankFundingSpread() +
+			_gtvHead.exposure().positive() / gtvnHead.collateral() * gtvnHead.bankFundingSpread()) *
 				(_gtvTail.vertex().julian() - _gtvHead.vertex().julian()) / 365.25;
 	}
 
@@ -192,10 +192,10 @@ public class GroupTrajectoryEdge {
 		double dblEdgeCounterPartyRecovery = 0.5 * (gtvnHead.counterPartyRecovery() +
 			gtvnTail.counterPartyRecovery());
 
-		double dblHeadPositiveExposurePV = dblHeadPositiveExposure * dblHeadCollateral;
-		double dblTailPositiveExposurePV = dblTailPositiveExposure * dblTailCollateral;
-		double dblHeadNegativeExposurePV = dblHeadNegativeExposure * dblHeadCollateral;
-		double dblTailNegativeExposurePV = dblTailNegativeExposure * dblTailCollateral;
+		double dblHeadPositiveExposurePV = dblHeadPositiveExposure / dblHeadCollateral;
+		double dblTailPositiveExposurePV = dblTailPositiveExposure / dblTailCollateral;
+		double dblHeadNegativeExposurePV = dblHeadNegativeExposure / dblHeadCollateral;
+		double dblTailNegativeExposurePV = dblTailNegativeExposure / dblTailCollateral;
 		double dblEdgePositiveExposurePV = 0.5 * (dblTailPositiveExposurePV + dblHeadPositiveExposurePV);
 		double dblEdgeNegativeExposurePV = 0.5 * (dblTailNegativeExposurePV + dblHeadNegativeExposurePV);
 

@@ -98,6 +98,27 @@ public class GroupTrajectoryAggregator {
 	}
 
 	/**
+	 * Retrieve the Array of the Vertex Dates
+	 * 
+	 * @return The Array of the Vertex Dates
+	 */
+
+	public org.drip.analytics.date.JulianDate[] vertexes()
+	{
+		org.drip.xva.netting.GroupTrajectoryEdge[] aGTE = _aGTP[0].edges();
+
+		int iNumVertex = aGTE.length + 1;
+		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
+
+		adtVertex[0] = aGTE[0].head().vertex();
+
+		for (int i = 1; i < iNumVertex; ++i)
+			adtVertex[i] = aGTE[i - 1].tail().vertex();
+
+		return adtVertex;
+	}
+
+	/**
 	 * Retrieve the Expected CVA
 	 * 
 	 * @return The Expected CVA
@@ -165,10 +186,10 @@ public class GroupTrajectoryAggregator {
 			adblExpectedExposure[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblExposure = _aGTP[iPathIndex].exposure();
+			double[] adblPathExposure = _aGTP[iPathIndex].exposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedExposure[iEdgeIndex] += adblExposure[iEdgeIndex];
+				adblExpectedExposure[iEdgeIndex] += adblPathExposure[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -194,10 +215,10 @@ public class GroupTrajectoryAggregator {
 			adblExpectedExposurePV[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblExposurePV = _aGTP[iPathIndex].exposurePV();
+			double[] adblPathExposurePV = _aGTP[iPathIndex].exposurePV();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedExposurePV[iEdgeIndex] += adblExposurePV[iEdgeIndex];
+				adblExpectedExposurePV[iEdgeIndex] += adblPathExposurePV[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -223,10 +244,10 @@ public class GroupTrajectoryAggregator {
 			adblExpectedPositiveExposure[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPositiveExposure = _aGTP[iPathIndex].positiveExposure();
+			double[] adblPathPositiveExposure = _aGTP[iPathIndex].positiveExposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedPositiveExposure[iEdgeIndex] += adblPositiveExposure[iEdgeIndex];
+				adblExpectedPositiveExposure[iEdgeIndex] += adblPathPositiveExposure[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -252,10 +273,10 @@ public class GroupTrajectoryAggregator {
 			adblExpectedNegativeExposure[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblNegativeExposure = _aGTP[iPathIndex].negativeExposure();
+			double[] adblPathNegativeExposure = _aGTP[iPathIndex].negativeExposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedNegativeExposure[iEdgeIndex] += adblNegativeExposure[iEdgeIndex];
+				adblExpectedNegativeExposure[iEdgeIndex] += adblPathNegativeExposure[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -281,10 +302,10 @@ public class GroupTrajectoryAggregator {
 			adblExpectedPositiveExposurePV[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPositiveExposurePV = _aGTP[iPathIndex].positiveExposurePV();
+			double[] adblPathPositiveExposurePV = _aGTP[iPathIndex].positiveExposurePV();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedPositiveExposurePV[iEdgeIndex] += adblPositiveExposurePV[iEdgeIndex];
+				adblExpectedPositiveExposurePV[iEdgeIndex] += adblPathPositiveExposurePV[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -310,10 +331,10 @@ public class GroupTrajectoryAggregator {
 			adblExpectedNegativeExposurePV[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblNegativeExposurePV = _aGTP[iPathIndex].negativeExposurePV();
+			double[] adblPathNegativeExposurePV = _aGTP[iPathIndex].negativeExposurePV();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedNegativeExposurePV[iEdgeIndex] += adblNegativeExposurePV[iEdgeIndex];
+				adblExpectedNegativeExposurePV[iEdgeIndex] += adblPathNegativeExposurePV[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)

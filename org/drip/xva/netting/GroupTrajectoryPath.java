@@ -189,7 +189,7 @@ public class GroupTrajectoryPath {
 		for (int i = 0; i < iNumEdge; ++i) {
 			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
 
-			adblExposurePV[i] = gtvTail.exposure().gross() * gtvTail.numeraire().collateral();
+			adblExposurePV[i] = gtvTail.exposure().gross() / gtvTail.numeraire().collateral();
 		}
 
 		return adblExposurePV;
@@ -226,7 +226,7 @@ public class GroupTrajectoryPath {
 		for (int i = 0; i < iNumEdge; ++i) {
 			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
 
-			adblPositiveExposurePV[i] = gtvTail.exposure().positive() * gtvTail.numeraire().collateral();
+			adblPositiveExposurePV[i] = gtvTail.exposure().positive() / gtvTail.numeraire().collateral();
 		}
 
 		return adblPositiveExposurePV;
@@ -263,7 +263,7 @@ public class GroupTrajectoryPath {
 		for (int i = 0; i < iNumEdge; ++i) {
 			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
 
-			adblNegativeExposurePV[i] = gtvTail.exposure().negative() * gtvTail.numeraire().collateral();
+			adblNegativeExposurePV[i] = gtvTail.exposure().negative() / gtvTail.numeraire().collateral();
 		}
 
 		return adblNegativeExposurePV;
@@ -313,12 +313,12 @@ public class GroupTrajectoryPath {
 
 			org.drip.xva.netting.GroupTrajectoryVertexExposure gtve = gtvTail.exposure();
 
-			adblExposurePV[i] = (adblExposure[i] = gtve.gross()) * dblTailCollateralNumeraire;
+			adblExposurePV[i] = (adblExposure[i] = gtve.gross()) / dblTailCollateralNumeraire;
 
-			adblNegativeExposurePV[i] = (adblNegativeExposure[i] = gtve.negative()) *
+			adblNegativeExposurePV[i] = (adblNegativeExposure[i] = gtve.negative()) /
 				dblTailCollateralNumeraire;
 
-			adblPositiveExposurePV[i] = (adblPositiveExposure[i] = gtve.positive()) *
+			adblPositiveExposurePV[i] = (adblPositiveExposure[i] = gtve.positive()) /
 				dblTailCollateralNumeraire;
 		}
 

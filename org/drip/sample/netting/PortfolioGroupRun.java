@@ -8,7 +8,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.netting.GroupTrajectoryVertexExposure;
+import org.drip.xva.netting.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -87,14 +87,29 @@ public class PortfolioGroupRun {
 		double dblTime = 5.;
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
+		double dblInitialAssetValue = 1.;
 		double dblCollateralDrift = 0.01;
-		double dblBankHazardRate = 0.025;
+		double dblBankHazardRate = 0.015;
+		double dblBankRecoveryRate = 0.40;
+		double dblCounterPartyHazardRate = 0.030;
+		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
 		double[] adblCollateral = new double[iNumStep];
 		double[] adblBankSurvival = new double[iNumStep];
+		double[] adblBankRecovery = new double[iNumStep];
+		JulianDate[] adtVertex = new JulianDate[iNumStep];
+		double[] adblBankFundingSpread = new double[iNumStep];
+		double[] adblCounterPartySurvival = new double[iNumStep];
+		double[] adblCounterPartyRecovery = new double[iNumStep];
+		GroupTrajectoryEdge[] aGTE1 = new GroupTrajectoryEdge[iNumStep - 1];
+		GroupTrajectoryEdge[] aGTE2 = new GroupTrajectoryEdge[iNumStep - 1];
+		GroupTrajectoryVertex[] aGTV1 = new GroupTrajectoryVertex[iNumStep];
+		GroupTrajectoryVertex[] aGTV2 = new GroupTrajectoryVertex[iNumStep];
+		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		GroupTrajectoryVertexExposure[] aGTVE1 = new GroupTrajectoryVertexExposure[iNumStep];
 		GroupTrajectoryVertexExposure[] aGTVE2 = new GroupTrajectoryVertexExposure[iNumStep];
+		GroupTrajectoryVertexNumeraire[] aGTVN = new GroupTrajectoryVertexNumeraire[iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -108,7 +123,7 @@ public class PortfolioGroupRun {
 		JumpDiffusionEdge[] aR1Asset1 = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
-				1.,
+				dblInitialAssetValue,
 				0.,
 				false
 			),
@@ -119,7 +134,7 @@ public class PortfolioGroupRun {
 		JumpDiffusionEdge[] aR1Asset2 = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
-				1.,
+				dblInitialAssetValue,
 				0.,
 				false
 			),
@@ -127,7 +142,49 @@ public class PortfolioGroupRun {
 			dblTimeWidth
 		);
 
+		System.out.println();
+
+		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|                                                       PATH VERTEX EXPOSURES AND NUMERAIRE REALIZATIONS                                                       ||");
+
+		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|    L -> R:                                                                                                                                                   ||");
+
+		System.out.println ("\t|            - Path #1 Gross Exposure                                                                                                                          ||");
+
+		System.out.println ("\t|            - Path #1 Positive Exposure                                                                                                                       ||");
+
+		System.out.println ("\t|            - Path #1 Negative Exposure                                                                                                                       ||");
+
+		System.out.println ("\t|            - Path #2 Gross Exposure                                                                                                                          ||");
+
+		System.out.println ("\t|            - Path #2 Positive Exposure                                                                                                                       ||");
+
+		System.out.println ("\t|            - Path #2 Negative Exposure                                                                                                                       ||");
+
+		System.out.println ("\t|            - Collateral Numeraire                                                                                                                            ||");
+
+		System.out.println ("\t|            - Bank Survival Probability                                                                                                                       ||");
+
+		System.out.println ("\t|            - Bank Recovery Rate                                                                                                                              ||");
+
+		System.out.println ("\t|            - Bank Funding Spread                                                                                                                             ||");
+
+		System.out.println ("\t|            - Counter Party Survival Probability                                                                                                              ||");
+
+		System.out.println ("\t|            - Counter Party Recovery Rate                                                                                                                     ||");
+
+		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
 		for (int i = 0; i < aR1Asset1.length; ++i) {
+			adblBankRecovery[i] = dblBankRecoveryRate;
+			adblBankFundingSpread[i] = dblBankFundingSpread;
+			adblCounterPartyRecovery[i] = dblCounterPartyRecoveryRate;
+
+			adtVertex[i] = dtSpot.addMonths (6 * i + 6);
+
 			adblCollateral[i] = Math.exp (0.5 * dblCollateralDrift * (i + 1));
 
 			adblBankSurvival[i] = Math.exp (-0.5 * dblBankHazardRate * (i + 1));
@@ -136,8 +193,31 @@ public class PortfolioGroupRun {
 
 			aGTVE2[i] = new GroupTrajectoryVertexExposure (aR1Asset2[i].finish());
 
+			adblCounterPartySurvival[i] = Math.exp (-0.5 * dblCounterPartyHazardRate * (i + 1));
+
+			aGTVN[i] = new GroupTrajectoryVertexNumeraire (
+				adblCollateral[i],
+				adblBankSurvival[i],
+				adblBankRecovery[i],
+				adblBankFundingSpread[i],
+				adblCounterPartySurvival[i],
+				adblCounterPartyRecovery[i]
+			);
+
+			aGTV1[i] = new GroupTrajectoryVertex (
+				adtVertex[i],
+				aGTVE1[i],
+				aGTVN[i]
+			);
+
+			aGTV2[i] = new GroupTrajectoryVertex (
+				adtVertex[i],
+				aGTVE2[i],
+				aGTVN[i]
+			);
+
 			System.out.println (
-				"\t" + dtSpot.addMonths (6 * i + 6) + " => " +
+				"\t| " + adtVertex[i] + " => " +
 				FormatUtil.FormatDouble (aGTVE1[i].gross(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aGTVE1[i].positive(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aGTVE1[i].negative(), 1, 6, 1.) + " | " +
@@ -145,8 +225,152 @@ public class PortfolioGroupRun {
 				FormatUtil.FormatDouble (aGTVE2[i].positive(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aGTVE2[i].negative(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblCollateral[i], 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (adblBankSurvival[i], 1, 6, 1.) + " ||"
+				FormatUtil.FormatDouble (adblBankSurvival[i], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblBankRecovery[i], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblBankFundingSpread[i], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblCounterPartySurvival[i], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblCounterPartyRecovery[i], 1, 6, 1.) + " ||"
 			);
 		}
+
+		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println();
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|                          PERIOD CREDIT, DEBT, AND FUNDING VALUATION ADJUSTMENTS                          ||");
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|    - Forward Period                                                                                      ||");
+
+		System.out.println ("\t|    - Path #1 Period Credit Adjustments                                                                   ||");
+
+		System.out.println ("\t|    - Path #1 Period Debt Adjustments                                                                     ||");
+
+		System.out.println ("\t|    - Path #1 Period Funding Adjustments                                                                  ||");
+
+		System.out.println ("\t|    - Path #2 Period Credit Adjustments                                                                   ||");
+
+		System.out.println ("\t|    - Path #2 Period Debt Adjustments                                                                     ||");
+
+		System.out.println ("\t|    - Path #2 Period Funding Adjustments                                                                  ||");
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
+
+		for (int i = 1; i < aR1Asset1.length; ++i) {
+			aGTE1[i - 1] = new GroupTrajectoryEdge (
+				aGTV1[i - 1],
+				aGTV1[i]
+			);
+
+			aGTE2[i - 1] = new GroupTrajectoryEdge (
+				aGTV2[i - 1],
+				aGTV2[i]
+			);
+
+			System.out.println ("\t| [" +
+				aGTE1[i - 1].head().vertex() + " -> " + aGTE1[i - 1].tail().vertex() + "] => " +
+				FormatUtil.FormatDouble (aGTE1[i - 1].credit(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aGTE1[i - 1].debt(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aGTE1[i - 1].funding(), 1, 6, 1.) + " || " +
+				FormatUtil.FormatDouble (aGTE2[i - 1].credit(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aGTE2[i - 1].debt(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aGTE2[i - 1].funding(), 1, 6, 1.) + " ||"
+			);
+		}
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
+
+		System.out.println();
+
+		GroupTrajectoryAggregator gta = new GroupTrajectoryAggregator (
+			new GroupTrajectoryPath[] {
+				new GroupTrajectoryPath (aGTE1),
+				new GroupTrajectoryPath (aGTE2)
+			}
+		);
+
+		JulianDate[] adtVertexNode = gta.vertexes();
+
+		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+		String strDump = "\t|         DATE         =>" ;
+
+		for (int i = 0; i < adtVertexNode.length; ++i)
+			strDump = strDump + " " + adtVertexNode[i] + " |";
+
+		System.out.println (strDump);
+
+		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+		double[] adblEE = gta.expectedExposure();
+
+		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
+
+		for (int j = 0; j < adblEE.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEE[j], 1, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		double[] adblEPE = gta.expectedPositiveExposure();
+
+		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
+
+		for (int j = 0; j < adblEPE.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEPE[j], 1, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		double[] adblENE = gta.expectedNegativeExposure();
+
+		strDump = "\t|  NEGATIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
+
+		for (int j = 0; j < adblENE.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (adblENE[j], 1, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		double[] adblEEPV = gta.expectedExposurePV();
+
+		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
+
+		for (int j = 0; j < adblEEPV.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEEPV[j], 1, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		double[] adblEPEPV = gta.expectedPositiveExposurePV();
+
+		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
+
+		for (int j = 0; j < adblEPEPV.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEPEPV[j], 1, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		double[] adblENEPV = gta.expectedNegativeExposurePV();
+
+		strDump = "\t| NEGATIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
+
+		for (int j = 0; j < adblENEPV.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (adblENEPV[j], 1, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+		System.out.println();
+
+		System.out.println ("\t||----------------||");
+
+		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (gta.cva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (gta.dva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (gta.fva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||----------------||");
 	}
 }
