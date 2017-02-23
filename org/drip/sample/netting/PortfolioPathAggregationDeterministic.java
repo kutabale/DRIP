@@ -56,7 +56,8 @@ import org.drip.xva.netting.*;
  */
 
 /**
- * PortfolioGroupRun demonstrates a Set of Netting Group Exposure Simulations. The References are:
+ * PortfolioPathAggregationDeterministic generates an Aggregation of the Portfolio Paths evolved using
+ * 	Deterministic Market Parameters. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -75,7 +76,7 @@ import org.drip.xva.netting.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class PortfolioGroupSimulation {
+public class PortfolioPathAggregationDeterministic {
 
 	private static final JumpDiffusionEdge[][] PortfolioRealization (
 		final DiffusionEvolver mePortfolio,
@@ -111,7 +112,7 @@ public class PortfolioGroupSimulation {
 
 		int iNumStep = 10;
 		double dblTime = 5.;
-		int iNumSimulation = 10000;
+		int iNumSimulation = 50000;
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
 		double dblInitialAssetValue = 1.;
@@ -122,16 +123,9 @@ public class PortfolioGroupSimulation {
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
-		double[] adblCollateral = new double[iNumStep];
-		double[] adblBankSurvival = new double[iNumStep];
-		double[] adblBankRecovery = new double[iNumStep];
 		JulianDate[] adtVertex = new JulianDate[iNumStep];
-		double[] adblBankFundingSpread = new double[iNumStep];
-		double[] adblCounterPartySurvival = new double[iNumStep];
-		double[] adblCounterPartyRecovery = new double[iNumStep];
-		GroupTrajectoryPath[] aGTP = new GroupTrajectoryPath[iNumSimulation];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
-		GroupTrajectoryVertex[][] aaGTV = new GroupTrajectoryVertex[iNumSimulation][iNumStep];
+		GroupTrajectoryVertexNumeraire[] aGTVN = new GroupTrajectoryVertexNumeraire[iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -152,48 +146,23 @@ public class PortfolioGroupSimulation {
 		);
 
 		for (int i = 0; i < iNumStep; ++i) {
-			adblBankRecovery[i] = dblBankRecoveryRate;
-			adblBankFundingSpread[i] = dblBankFundingSpread;
-			adblCounterPartyRecovery[i] = dblCounterPartyRecoveryRate;
-
 			adtVertex[i] = dtSpot.addMonths (6 * i + 6);
 
-			adblCollateral[i] = Math.exp (0.5 * dblCollateralDrift * (i + 1));
-
-			adblBankSurvival[i] = Math.exp (-0.5 * dblBankHazardRate * (i + 1));
-
-			adblCounterPartySurvival[i] = Math.exp (-0.5 * dblCounterPartyHazardRate * (i + 1));
+			aGTVN[i] = new GroupTrajectoryVertexNumeraire (
+				Math.exp (0.5 * dblCollateralDrift * (i + 1)),
+				Math.exp (-0.5 * dblBankHazardRate * (i + 1)),
+				dblBankRecoveryRate,
+				dblBankFundingSpread,
+				Math.exp (-0.5 * dblCounterPartyHazardRate * (i + 1)),
+				dblCounterPartyRecoveryRate
+			);
 		}
 
-		for (int i = 0; i < iNumStep; ++i) {
-			for (int j = 0; j < iNumSimulation; ++j)
-				aaGTV[j][i] = new GroupTrajectoryVertex (
-					adtVertex[i],
-					new GroupTrajectoryVertexExposure (aaJDE[j][i].finish()),
-					new GroupTrajectoryVertexNumeraire (
-						adblCollateral[i],
-						adblBankSurvival[i],
-						adblBankRecovery[i],
-						adblBankFundingSpread[i],
-						adblCounterPartySurvival[i],
-						adblCounterPartyRecovery[i]
-					)
-				);
-		}
-
-		for (int j = 0; j < iNumSimulation; ++j) {
-			GroupTrajectoryEdge[] aGTE = new GroupTrajectoryEdge[iNumStep - 1];
-
-			for (int i = 1; i < iNumStep; ++i)
-				aGTE[i - 1] = new GroupTrajectoryEdge (
-					aaGTV[j][i - 1],
-					aaGTV[j][i]
-				);
-
-			aGTP[j] = new GroupTrajectoryPath (aGTE);
-		}
-
-		GroupTrajectoryPathAggregator gtpa = new GroupTrajectoryPathAggregator (aGTP);
+		GroupTrajectoryPathAggregator gtpa = GroupTrajectoryPathAggregator.Standard (
+			adtVertex,
+			aaJDE,
+			aGTVN
+		);
 
 		JulianDate[] adtVertexNode = gtpa.vertexes();
 

@@ -158,9 +158,20 @@ public class GroupTrajectoryEdge {
 
 		org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
 
-		return 0.5 * (_gtvTail.exposure().positive() / gtvnTail.collateral() * gtvnTail.bankFundingSpread() +
-			_gtvHead.exposure().positive() / gtvnHead.collateral() * gtvnHead.bankFundingSpread()) *
+		return -0.5 * (_gtvTail.exposure().positive() / gtvnTail.collateral() * gtvnTail.bankFundingSpread()
+			+ _gtvHead.exposure().positive() / gtvnHead.collateral() * gtvnHead.bankFundingSpread()) *
 				(_gtvTail.vertex().julian() - _gtvHead.vertex().julian()) / 365.25;
+	}
+
+	/**
+	 * Compute the Period Edge Total Adjustment
+	 * 
+	 * @return The Period Edge Total Adjustment
+	 */
+
+	public double total()
+	{
+		return credit() + debt() + funding();
 	}
 
 	/**

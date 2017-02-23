@@ -1,9 +1,9 @@
 
-package org.drip.sample.netting;
+package org.drip.sample.burgard2012;
 
 import org.drip.analytics.date.*;
 import org.drip.measure.discretemarginal.SequenceGenerator;
-import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
+import org.drip.measure.dynamics.DiffusionEvaluatorLinear;
 import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
@@ -56,7 +56,8 @@ import org.drip.xva.netting.*;
  */
 
 /**
- * PortfolioGroupRun demonstrates a Set of Netting Group Exposure Simulations. The References are:
+ * FixFloatVACounterParty illustrates the Fix-Float Swap Valuation Adjustment Metrics Dependence on the
+ *  Counter Party Spread using the Set of Netting Group Exposure Simulations. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -75,7 +76,7 @@ import org.drip.xva.netting.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class PortfolioGroupSimulation {
+public class FixFloatVACounterParty {
 
 	private static final JumpDiffusionEdge[][] PortfolioRealization (
 		final DiffusionEvolver mePortfolio,
@@ -103,22 +104,19 @@ public class PortfolioGroupSimulation {
 		return aaJDE;
 	}
 
-	public static final void main (
-		final String[] astrArgs)
+	public static final void VA (
+		final double dblCounterPartyHazardRate)
 		throws Exception
 	{
-		EnvManager.InitEnv ("");
-
 		int iNumStep = 10;
 		double dblTime = 5.;
 		int iNumSimulation = 10000;
-		double dblAssetDrift = 0.06;
+		double dblAssetDrift = 0.0;
 		double dblAssetVolatility = 0.15;
-		double dblInitialAssetValue = 1.;
+		double dblInitialAssetValue = 0.;
 		double dblCollateralDrift = 0.01;
 		double dblBankHazardRate = 0.015;
 		double dblBankRecoveryRate = 0.40;
-		double dblCounterPartyHazardRate = 0.030;
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
@@ -136,7 +134,7 @@ public class PortfolioGroupSimulation {
 		JulianDate dtSpot = DateUtil.Today();
 
 		DiffusionEvolver mePortfolio = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
+			DiffusionEvaluatorLinear.Standard (
 				dblAssetDrift,
 				dblAssetVolatility
 			)
@@ -193,90 +191,54 @@ public class PortfolioGroupSimulation {
 			aGTP[j] = new GroupTrajectoryPath (aGTE);
 		}
 
-		GroupTrajectoryPathAggregator gtpa = new GroupTrajectoryPathAggregator (aGTP);
+		GroupTrajectoryPathAggregator gta = new GroupTrajectoryPathAggregator (aGTP);
 
-		JulianDate[] adtVertexNode = gtpa.vertexes();
+		System.out.println ("\t|| " +
+			FormatUtil.FormatDouble (dblCounterPartyHazardRate, 3, 0, 10000.) + " bp => " +
+			FormatUtil.FormatDouble (gta.cva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (gta.dva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (gta.fca(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (gta.total(), 1, 2, 100.) + "% ||"
+		);
+	}
 
-		System.out.println();
+	public static final void main (
+		final String[] astrArgs)
+		throws Exception
+	{
+		EnvManager.InitEnv ("");
 
-		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-
-		String strDump = "\t|         DATE         =>" ;
-
-		for (int i = 0; i < adtVertexNode.length; ++i)
-			strDump = strDump + " " + adtVertexNode[i] + " |";
-
-		System.out.println (strDump);
-
-		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
-
-		double[] adblEE = gtpa.expectedExposure();
-
-		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
-
-		for (int j = 0; j < adblEE.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEE[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblEPE = gtpa.expectedPositiveExposure();
-
-		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
-
-		for (int j = 0; j < adblEPE.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEPE[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblENE = gtpa.expectedNegativeExposure();
-
-		strDump = "\t|  NEGATIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
-
-		for (int j = 0; j < adblENE.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblENE[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblEEPV = gtpa.expectedExposurePV();
-
-		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
-
-		for (int j = 0; j < adblEEPV.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEEPV[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblEPEPV = gtpa.expectedPositiveExposurePV();
-
-		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
-
-		for (int j = 0; j < adblEPEPV.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEPEPV[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblENEPV = gtpa.expectedNegativeExposurePV();
-
-		strDump = "\t| NEGATIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
-
-		for (int j = 0; j < adblENEPV.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblENEPV[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+		double[] adblCounterPartyHazardRate = new double[] {
+			0.0025,
+			0.0050,
+			0.0075,
+			0.0100,
+			0.0125,
+			0.0150,
+			0.0155,
+			0.0200,
+			0.0225,
+			0.0250,
+			0.0275,
+			0.0300
+		};
 
 		System.out.println();
 
-		System.out.println ("\t||----------------||");
+		System.out.println ("\t||----------------------------------------------||");
 
-		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (gtpa.cva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||     VA DEPENDENCE ON COUNTER PARTY HAZARD    ||");
 
-		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (gtpa.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||----------------------------------------------||");
 
-		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (gtpa.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  Hazard =>   CVA  |   DVA  |   FCA  |  Total ||");
 
-		System.out.println ("\t||----------------||");
+		System.out.println ("\t||----------------------------------------------||");
+
+		for (double dblCounterPartyHazardRate : adblCounterPartyHazardRate)
+			VA (dblCounterPartyHazardRate);
+
+		System.out.println ("\t||----------------------------------------------||");
 
 		System.out.println();
 	}

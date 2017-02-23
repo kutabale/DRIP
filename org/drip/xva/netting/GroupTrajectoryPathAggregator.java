@@ -47,7 +47,7 @@ package org.drip.xva.netting;
  */
 
 /**
- * GroupTrajectoryAggregator aggregates across Multiple Path Projection Runs along the Granularity of a
+ * GroupTrajectoryPathAggregator aggregates across Multiple Path Projection Runs along the Granularity of a
  *  Netting Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,23 +67,77 @@ package org.drip.xva.netting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryAggregator {
+public class GroupTrajectoryPathAggregator {
 	private org.drip.xva.netting.GroupTrajectoryPath[] _aGTP = null;
 
 	/**
-	 * GroupTrajectoryAggregator Constructor
+	 * Construct a Standard GroupTrajectoryPathAggregator Instance
+	 * 
+	 * @param adtVertex Array of the Evolution Vertex Dates
+	 * @param aaJDE Array of the Portfolio Date/Path Realizations
+	 * @param aGTVN Array of the GroupTrajectoryVertexNumeraire Realizations
+	 * 
+	 * @return The Standard GroupTrajectoryPathAggregator Instance
+	 */
+
+	public static final GroupTrajectoryPathAggregator Standard (
+		final org.drip.analytics.date.JulianDate[] adtVertex,
+		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
+		final org.drip.xva.netting.GroupTrajectoryVertexNumeraire[] aGTVN)
+	{
+		if (null == adtVertex || null == aaJDE || null == aaJDE[0] || null == aGTVN) return null;
+
+		int iNumSimulation = aaJDE.length;
+		int iNumTimeStep = aaJDE[0].length;
+		org.drip.xva.netting.GroupTrajectoryPath[] aGTP = 0 == iNumSimulation ? null : new
+			org.drip.xva.netting.GroupTrajectoryPath[iNumSimulation];
+		org.drip.xva.netting.GroupTrajectoryVertex[][] aaGTV = 0 == iNumSimulation || 1 >= iNumTimeStep ?
+			null : new org.drip.xva.netting.GroupTrajectoryVertex[iNumSimulation][iNumTimeStep];
+
+		if (0 == iNumSimulation || 1 >= iNumTimeStep || iNumTimeStep != adtVertex.length || iNumTimeStep !=
+			aGTVN.length)
+			return null;
+
+		try {
+			for (int i = 0; i < iNumSimulation; ++i) {
+				for (int j = 0; j < iNumTimeStep; ++j)
+					aaGTV[i][j] = new org.drip.xva.netting.GroupTrajectoryVertex (adtVertex[j], new
+						org.drip.xva.netting.GroupTrajectoryVertexExposure (aaJDE[i][j].finish()), aGTVN[j]);
+			}
+
+			for (int i = 0; i < iNumSimulation; ++i) {
+				org.drip.xva.netting.GroupTrajectoryEdge[] aGTE = new
+					org.drip.xva.netting.GroupTrajectoryEdge[iNumTimeStep - 1];
+
+				for (int j = 1; j < iNumTimeStep; ++j)
+					aGTE[j - 1] = new org.drip.xva.netting.GroupTrajectoryEdge (aaGTV[i][j - 1],
+						aaGTV[i][j]);
+
+				aGTP[i] = new org.drip.xva.netting.GroupTrajectoryPath (aGTE);
+			}
+
+			return new GroupTrajectoryPathAggregator (aGTP);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * GroupTrajectoryPathAggregator Constructor
 	 * 
 	 * @param aGTP The Array of the Group Trajectory Paths
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryAggregator (
+	public GroupTrajectoryPathAggregator (
 		final org.drip.xva.netting.GroupTrajectoryPath[] aGTP)
 		throws java.lang.Exception
 	{
 		if (null == (_aGTP = aGTP) || 0 == _aGTP.length)
-			throw new java.lang.Exception ("GroupTrajectoryAggregator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("GroupTrajectoryPathAggregator Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -153,20 +207,37 @@ public class GroupTrajectoryAggregator {
 	}
 
 	/**
-	 * Retrieve the Expected FVA
+	 * Retrieve the Expected FCA
 	 * 
-	 * @return The Expected FVA
+	 * @return The Expected FCA
 	 */
 
-	public double fva()
+	public double fca()
 	{
-		double dblFVASum = 0.;
+		double dblFCASum = 0.;
 		int iNumPath = _aGTP.length;
 
 		for (int i = 0; i < iNumPath; ++i)
-			dblFVASum += _aGTP[i].funding();
+			dblFCASum += _aGTP[i].funding();
 
-		return dblFVASum / iNumPath;
+		return dblFCASum / iNumPath;
+	}
+
+	/**
+	 * Retrieve the Expected Total VA
+	 * 
+	 * @return The Expected Total VA
+	 */
+
+	public double total()
+	{
+		double dblTotalSum = 0.;
+		int iNumPath = _aGTP.length;
+
+		for (int i = 0; i < iNumPath; ++i)
+			dblTotalSum += _aGTP[i].total();
+
+		return dblTotalSum / iNumPath;
 	}
 
 	/**

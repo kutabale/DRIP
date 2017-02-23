@@ -285,7 +285,7 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		GroupTrajectoryAggregator gta = new GroupTrajectoryAggregator (
+		GroupTrajectoryPathAggregator gta = new GroupTrajectoryPathAggregator (
 			new GroupTrajectoryPath[] {
 				new GroupTrajectoryPath (aGTE1),
 				new GroupTrajectoryPath (aGTE2)
@@ -369,7 +369,7 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (gta.dva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (gta.fva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (gta.fca(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||----------------||");
 	}

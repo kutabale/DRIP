@@ -159,6 +159,22 @@ public class GroupTrajectoryPath {
 	}
 
 	/**
+	 * Retrieve the Path-wise Total Adjustment
+	 * 
+	 * @return The Path-wise Total Adjustment
+	 */
+
+	public double total()
+	{
+		double dblTotal = 0.;
+
+		for (org.drip.xva.netting.GroupTrajectoryEdge gte : _aGTE)
+			dblTotal += gte.total();
+
+		return dblTotal;
+	}
+
+	/**
 	 * Retrieve the Array of Exposures
 	 * 
 	 * @return The Array of Exposures
