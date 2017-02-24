@@ -75,7 +75,7 @@ public class GroupTrajectoryPathAggregator {
 	 * 
 	 * @param adtVertex Array of the Evolution Vertex Dates
 	 * @param aaJDE Array of the Portfolio Date/Path Realizations
-	 * @param aGTVN Array of the GroupTrajectoryVertexNumeraire Realizations
+	 * @param aaGTVN Array of the GroupTrajectoryVertexNumeraire Realizations
 	 * 
 	 * @return The Standard GroupTrajectoryPathAggregator Instance
 	 */
@@ -83,9 +83,10 @@ public class GroupTrajectoryPathAggregator {
 	public static final GroupTrajectoryPathAggregator Standard (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
 		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
-		final org.drip.xva.netting.GroupTrajectoryVertexNumeraire[] aGTVN)
+		final org.drip.xva.netting.GroupTrajectoryVertexNumeraire[][] aaGTVN)
 	{
-		if (null == adtVertex || null == aaJDE || null == aaJDE[0] || null == aGTVN) return null;
+		if (null == adtVertex || null == aaJDE || null == aaJDE[0] || null == aaGTVN || null == aaGTVN[0])
+			return null;
 
 		int iNumSimulation = aaJDE.length;
 		int iNumTimeStep = aaJDE[0].length;
@@ -94,15 +95,16 @@ public class GroupTrajectoryPathAggregator {
 		org.drip.xva.netting.GroupTrajectoryVertex[][] aaGTV = 0 == iNumSimulation || 1 >= iNumTimeStep ?
 			null : new org.drip.xva.netting.GroupTrajectoryVertex[iNumSimulation][iNumTimeStep];
 
-		if (0 == iNumSimulation || 1 >= iNumTimeStep || iNumTimeStep != adtVertex.length || iNumTimeStep !=
-			aGTVN.length)
+		if (0 == iNumSimulation || iNumSimulation != aaGTVN.length || 1 >= iNumTimeStep || iNumTimeStep !=
+			adtVertex.length || iNumTimeStep != aaGTVN[0].length)
 			return null;
 
 		try {
 			for (int i = 0; i < iNumSimulation; ++i) {
 				for (int j = 0; j < iNumTimeStep; ++j)
 					aaGTV[i][j] = new org.drip.xva.netting.GroupTrajectoryVertex (adtVertex[j], new
-						org.drip.xva.netting.GroupTrajectoryVertexExposure (aaJDE[i][j].finish()), aGTVN[j]);
+						org.drip.xva.netting.GroupTrajectoryVertexExposure (aaJDE[i][j].finish()),
+							aaGTVN[i][j]);
 			}
 
 			for (int i = 0; i < iNumSimulation; ++i) {
@@ -122,6 +124,33 @@ public class GroupTrajectoryPathAggregator {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Construct a Standard GroupTrajectoryPathAggregator Instance
+	 * 
+	 * @param adtVertex Array of the Evolution Vertex Dates
+	 * @param aaJDE Array of the Portfolio Date/Path Realizations
+	 * @param aGTVN Array of the GroupTrajectoryVertexNumeraire Realizations
+	 * 
+	 * @return The Standard GroupTrajectoryPathAggregator Instance
+	 */
+
+	public static final GroupTrajectoryPathAggregator Standard (
+		final org.drip.analytics.date.JulianDate[] adtVertex,
+		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
+		final org.drip.xva.netting.GroupTrajectoryVertexNumeraire[] aGTVN)
+	{
+		if (null == aaJDE) return null;
+
+		int iNumSimulation = aaJDE.length;
+		org.drip.xva.netting.GroupTrajectoryVertexNumeraire[][] aaGTVN = 0 == iNumSimulation ? null : new
+			org.drip.xva.netting.GroupTrajectoryVertexNumeraire[iNumSimulation][];
+
+		for (int i = 0; i < iNumSimulation; ++i)
+			aaGTVN[i] = aGTVN;
+
+		return Standard (adtVertex, aaJDE, aaGTVN);
 	}
 
 	/**
