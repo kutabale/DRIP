@@ -297,7 +297,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
-		double[] adblEE = gtpa.expectedExposure();
+		double[] adblEE = gtpa.collateralizedExposure();
 
 		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblPortfolioInitial, 1, 4, 1.) + "   |";
 
@@ -306,7 +306,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblEPE = gtpa.expectedPositiveExposure();
+		double[] adblEPE = gtpa.collateralizedPositiveExposure();
 
 		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblPortfolioInitial, 1, 4, 1.) + "   |";
 
@@ -315,7 +315,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblENE = gtpa.expectedNegativeExposure();
+		double[] adblENE = gtpa.collateralizedNegativeExposure();
 
 		strDump = "\t|  NEGATIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 
@@ -324,7 +324,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblEEPV = gtpa.expectedExposurePV();
+		double[] adblEEPV = gtpa.collateralizedExposurePV();
 
 		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblPortfolioInitial, 1, 4, 1.) + "   |";
 
@@ -333,7 +333,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblEPEPV = gtpa.expectedPositiveExposurePV();
+		double[] adblEPEPV = gtpa.collateralizedPositiveExposurePV();
 
 		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblPortfolioInitial, 1, 4, 1.) + "   |";
 
@@ -342,7 +342,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblENEPV = gtpa.expectedNegativeExposurePV();
+		double[] adblENEPV = gtpa.collateralizedNegativeExposurePV();
 
 		strDump = "\t| NEGATIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 

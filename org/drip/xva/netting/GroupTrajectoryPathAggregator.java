@@ -68,7 +68,7 @@ package org.drip.xva.netting;
  */
 
 public class GroupTrajectoryPathAggregator {
-	private org.drip.xva.netting.GroupTrajectoryPath[] _aGTP = null;
+	private org.drip.xva.netting.CollateralGroupDigest[] _aCGD = null;
 
 	/**
 	 * Construct a Standard GroupTrajectoryPathAggregator Instance
@@ -90,8 +90,8 @@ public class GroupTrajectoryPathAggregator {
 
 		int iNumSimulation = aaJDE.length;
 		int iNumTimeStep = aaJDE[0].length;
-		org.drip.xva.netting.GroupTrajectoryPath[] aGTP = 0 == iNumSimulation ? null : new
-			org.drip.xva.netting.GroupTrajectoryPath[iNumSimulation];
+		org.drip.xva.collateral.GroupTrajectoryPath[] aGTP = 0 == iNumSimulation ? null : new
+			org.drip.xva.collateral.GroupTrajectoryPath[iNumSimulation];
 		org.drip.xva.collateral.GroupTrajectoryVertex[][] aaGTV = 0 == iNumSimulation || 1 >= iNumTimeStep ?
 			null : new org.drip.xva.collateral.GroupTrajectoryVertex[iNumSimulation][iNumTimeStep];
 
@@ -115,10 +115,18 @@ public class GroupTrajectoryPathAggregator {
 					aGTE[j - 1] = new org.drip.xva.collateral.GroupTrajectoryEdge (aaGTV[i][j - 1],
 						aaGTV[i][j]);
 
-				aGTP[i] = new org.drip.xva.netting.GroupTrajectoryPath (aGTE);
+				aGTP[i] = new org.drip.xva.collateral.GroupTrajectoryPath (aGTE);
 			}
 
-			return new GroupTrajectoryPathAggregator (aGTP);
+			if (null == aGTP) return null;
+
+			org.drip.xva.netting.CollateralGroupDigest[] aCGD = new
+				org.drip.xva.netting.CollateralGroupDigest[iNumSimulation];
+
+			for (int i = 0; i < iNumSimulation; ++i)
+				aCGD[i] = org.drip.xva.netting.CollateralGroupDigest.Mono (aGTP[i]);
+
+			return new GroupTrajectoryPathAggregator (aCGD);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -154,30 +162,61 @@ public class GroupTrajectoryPathAggregator {
 	}
 
 	/**
+	 * Construct a Standard GroupTrajectoryPathAggregator Instance
+	 * 
+	 * @param aGTP Array of the GroupTrajectoryPath Realizations
+	 * 
+	 * @return The Standard GroupTrajectoryPathAggregator Instance
+	 */
+
+	public static final GroupTrajectoryPathAggregator Standard (
+		final org.drip.xva.collateral.GroupTrajectoryPath[] aGTP)
+	{
+		if (null == aGTP) return null;
+
+		int iNumNettingGroupPath = aGTP.length;
+		org.drip.xva.netting.CollateralGroupDigest[] aCGD = 0 == iNumNettingGroupPath ? null : new
+			org.drip.xva.netting.CollateralGroupDigest[iNumNettingGroupPath];
+
+		if (0 == iNumNettingGroupPath) return null;
+
+		for (int i = 0; i < iNumNettingGroupPath; ++i)
+			aCGD[i] = org.drip.xva.netting.CollateralGroupDigest.Mono (aGTP[i]);
+
+		try {
+			return new GroupTrajectoryPathAggregator (aCGD);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * GroupTrajectoryPathAggregator Constructor
 	 * 
-	 * @param aGTP The Array of the Group Trajectory Paths
+	 * @param aCGD The Array of Collateral Group Digests
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public GroupTrajectoryPathAggregator (
-		final org.drip.xva.netting.GroupTrajectoryPath[] aGTP)
+		final org.drip.xva.netting.CollateralGroupDigest[] aCGD)
 		throws java.lang.Exception
 	{
-		if (null == (_aGTP = aGTP) || 0 == _aGTP.length)
+		if (null == (_aCGD = aCGD) || 0 == _aCGD.length)
 			throw new java.lang.Exception ("GroupTrajectoryPathAggregator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Array of the Group Trajectory Paths
+	 * Retrieve the Array of the Netting Group Trajectory Paths
 	 * 
-	 * @return The Array of the Group Trajectory Paths
+	 * @return The Array of the Netting Group Trajectory Paths
 	 */
 
-	public org.drip.xva.netting.GroupTrajectoryPath[] paths()
+	public org.drip.xva.netting.CollateralGroupDigest[] nettingGroupTrajectoryPaths()
 	{
-		return _aGTP;
+		return _aCGD;
 	}
 
 	/**
@@ -188,17 +227,7 @@ public class GroupTrajectoryPathAggregator {
 
 	public org.drip.analytics.date.JulianDate[] vertexes()
 	{
-		org.drip.xva.collateral.GroupTrajectoryEdge[] aGTE = _aGTP[0].edges();
-
-		int iNumVertex = aGTE.length + 1;
-		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
-
-		adtVertex[0] = aGTE[0].head().vertex();
-
-		for (int i = 1; i < iNumVertex; ++i)
-			adtVertex[i] = aGTE[i - 1].tail().vertex();
-
-		return adtVertex;
+		return _aCGD[0].vertexes();
 	}
 
 	/**
@@ -210,10 +239,10 @@ public class GroupTrajectoryPathAggregator {
 	public double cva()
 	{
 		double dblCVASum = 0.;
-		int iNumPath = _aGTP.length;
+		int iNumPath = _aCGD.length;
 
 		for (int i = 0; i < iNumPath; ++i)
-			dblCVASum += _aGTP[i].credit();
+			dblCVASum += _aCGD[i].cva();
 
 		return dblCVASum / iNumPath;
 	}
@@ -227,10 +256,10 @@ public class GroupTrajectoryPathAggregator {
 	public double dva()
 	{
 		double dblDVASum = 0.;
-		int iNumPath = _aGTP.length;
+		int iNumPath = _aCGD.length;
 
 		for (int i = 0; i < iNumPath; ++i)
-			dblDVASum += _aGTP[i].debt();
+			dblDVASum += _aCGD[i].dva();
 
 		return dblDVASum / iNumPath;
 	}
@@ -244,10 +273,10 @@ public class GroupTrajectoryPathAggregator {
 	public double fca()
 	{
 		double dblFCASum = 0.;
-		int iNumPath = _aGTP.length;
+		int iNumPath = _aCGD.length;
 
 		for (int i = 0; i < iNumPath; ++i)
-			dblFCASum += _aGTP[i].funding();
+			dblFCASum += _aCGD[i].fca();
 
 		return dblFCASum / iNumPath;
 	}
@@ -261,185 +290,395 @@ public class GroupTrajectoryPathAggregator {
 	public double total()
 	{
 		double dblTotalSum = 0.;
-		int iNumPath = _aGTP.length;
+		int iNumPath = _aCGD.length;
 
 		for (int i = 0; i < iNumPath; ++i)
-			dblTotalSum += _aGTP[i].total();
+			dblTotalSum += _aCGD[i].total();
 
 		return dblTotalSum / iNumPath;
 	}
 
 	/**
-	 * Retrieve the Array of Expected Exposures
+	 * Retrieve the Array of Collateralized Exposures
 	 * 
-	 * @return The Array of Expected Exposures
+	 * @return The Array of Collateralized Exposures
 	 */
 
-	public double[] expectedExposure()
+	public double[] collateralizedExposure()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
 
-		int iNumPath = _aGTP.length;
-		double[] adblExpectedExposure = new double[iNumEdge];
+		int iNumPath = _aCGD.length;
+		double[] adblCollateralizedExposure = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedExposure[j] = 0.;
+			adblCollateralizedExposure[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathExposure = _aGTP[iPathIndex].collateralizedExposure();
+			double[] adblPathCollateralizedExposure = _aCGD[iPathIndex].collateralizedExposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedExposure[iEdgeIndex] += adblPathExposure[iEdgeIndex];
+				adblCollateralizedExposure[iEdgeIndex] += adblPathCollateralizedExposure[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedExposure[j] /= iNumPath;
+			adblCollateralizedExposure[j] /= iNumPath;
 
-		return adblExpectedExposure;
+		return adblCollateralizedExposure;
 	}
 
 	/**
-	 * Retrieve the Array of Expected Exposure PV's
+	 * Retrieve the Array of Uncollateralized Exposures
 	 * 
-	 * @return The Array of Expected Exposure PV's
+	 * @return The Array of Uncollateralized Exposures
 	 */
 
-	public double[] expectedExposurePV()
+	public double[] uncollateralizedExposure()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
 
-		int iNumPath = _aGTP.length;
-		double[] adblExpectedExposurePV = new double[iNumEdge];
+		int iNumPath = _aCGD.length;
+		double[] adblUncollateralizedExposure = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedExposurePV[j] = 0.;
+			adblUncollateralizedExposure[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathExposurePV = _aGTP[iPathIndex].collateralizedExposurePV();
+			double[] adblPathUncollateralizedExposure = _aCGD[iPathIndex].uncollateralizedExposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedExposurePV[iEdgeIndex] += adblPathExposurePV[iEdgeIndex];
+				adblUncollateralizedExposure[iEdgeIndex] += adblPathUncollateralizedExposure[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedExposurePV[j] /= iNumPath;
+			adblUncollateralizedExposure[j] /= iNumPath;
 
-		return adblExpectedExposurePV;
+		return adblUncollateralizedExposure;
 	}
 
 	/**
-	 * Retrieve the Array of Expected Positive Exposures
+	 * Retrieve the Array of Collateralized Exposure PV's
 	 * 
-	 * @return The Array of Expected Positive Exposures
+	 * @return The Array of Collateralized Exposure PV's
 	 */
 
-	public double[] expectedPositiveExposure()
+	public double[] collateralizedExposurePV()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
 
-		int iNumPath = _aGTP.length;
-		double[] adblExpectedPositiveExposure = new double[iNumEdge];
+		int iNumPath = _aCGD.length;
+		double[] adblCollateralizedExposurePV = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedPositiveExposure[j] = 0.;
+			adblCollateralizedExposurePV[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathPositiveExposure = _aGTP[iPathIndex].collateralizedPositiveExposure();
+			double[] adblPathCollateralizedExposurePV = _aCGD[iPathIndex].collateralizedExposurePV();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedPositiveExposure[iEdgeIndex] += adblPathPositiveExposure[iEdgeIndex];
+				adblCollateralizedExposurePV[iEdgeIndex] += adblPathCollateralizedExposurePV[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedPositiveExposure[j] /= iNumPath;
+			adblCollateralizedExposurePV[j] /= iNumPath;
 
-		return adblExpectedPositiveExposure;
+		return adblCollateralizedExposurePV;
 	}
 
 	/**
-	 * Retrieve the Array of Expected Negative Exposures
+	 * Retrieve the Array of Uncollateralized Exposure PV's
 	 * 
-	 * @return The Array of Expected Negative Exposures
+	 * @return The Array of Uncollateralized Exposure PV's
 	 */
 
-	public double[] expectedNegativeExposure()
+	public double[] uncollateralizedExposurePV()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
 
-		int iNumPath = _aGTP.length;
-		double[] adblExpectedNegativeExposure = new double[iNumEdge];
+		int iNumPath = _aCGD.length;
+		double[] adblUncollateralizedExposurePV = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedNegativeExposure[j] = 0.;
+			adblUncollateralizedExposurePV[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathNegativeExposure = _aGTP[iPathIndex].negativeExposure();
+			double[] adblPathUncollateralizedExposurePV = _aCGD[iPathIndex].uncollateralizedExposurePV();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedNegativeExposure[iEdgeIndex] += adblPathNegativeExposure[iEdgeIndex];
+				adblUncollateralizedExposurePV[iEdgeIndex] += adblPathUncollateralizedExposurePV[iEdgeIndex];
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedNegativeExposure[j] /= iNumPath;
+			adblUncollateralizedExposurePV[j] /= iNumPath;
 
-		return adblExpectedNegativeExposure;
+		return adblUncollateralizedExposurePV;
 	}
 
 	/**
-	 * Retrieve the Array of Expected Positive Exposure PVs
+	 * Retrieve the Array of Collateralized Positive Exposures
 	 * 
-	 * @return The Array of Expected Positive Exposure PVs
+	 * @return The Array of Collateralized Positive Exposures
 	 */
 
-	public double[] expectedPositiveExposurePV()
+	public double[] collateralizedPositiveExposure()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
 
-		int iNumPath = _aGTP.length;
-		double[] adblExpectedPositiveExposurePV = new double[iNumEdge];
+		int iNumPath = _aCGD.length;
+		double[] adblCollateralizedPositiveExposure = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedPositiveExposurePV[j] = 0.;
+			adblCollateralizedPositiveExposure[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathPositiveExposurePV = _aGTP[iPathIndex].positiveExposurePV();
+			double[] adblPathCollateralizedExposure = _aCGD[iPathIndex].collateralizedExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedPositiveExposurePV[iEdgeIndex] += adblPathPositiveExposurePV[iEdgeIndex];
+			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
+				double dblPathEdgeCollateralizedExposure = adblPathCollateralizedExposure[iEdgeIndex];
+
+				if (0 < dblPathEdgeCollateralizedExposure)
+					adblCollateralizedPositiveExposure[iEdgeIndex] += dblPathEdgeCollateralizedExposure;
+			}
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedPositiveExposurePV[j] /= iNumPath;
+			adblCollateralizedPositiveExposure[j] /= iNumPath;
 
-		return adblExpectedPositiveExposurePV;
+		return adblCollateralizedPositiveExposure;
 	}
 
 	/**
-	 * Retrieve the Array of Expected Negative Exposure PVs
+	 * Retrieve the Array of Collateralized Positive Exposure PV
 	 * 
-	 * @return The Array of Expected Negative Exposure PVs
+	 * @return The Array of Collateralized Positive Exposure PV
 	 */
 
-	public double[] expectedNegativeExposurePV()
+	public double[] collateralizedPositiveExposurePV()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
 
-		int iNumPath = _aGTP.length;
-		double[] adblExpectedNegativeExposurePV = new double[iNumEdge];
+		int iNumPath = _aCGD.length;
+		double[] adblCollateralizedPositiveExposurePV = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedNegativeExposurePV[j] = 0.;
+			adblCollateralizedPositiveExposurePV[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathNegativeExposurePV = _aGTP[iPathIndex].negativeExposurePV();
+			double[] adblPathCollateralizedExposurePV = _aCGD[iPathIndex].collateralizedExposurePV();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblExpectedNegativeExposurePV[iEdgeIndex] += adblPathNegativeExposurePV[iEdgeIndex];
+			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
+				double dblPathEdgeCollateralizedExposurePV = adblPathCollateralizedExposurePV[iEdgeIndex];
+
+				if (0 < dblPathEdgeCollateralizedExposurePV)
+					adblCollateralizedPositiveExposurePV[iEdgeIndex] += dblPathEdgeCollateralizedExposurePV;
+			}
 		}
 
 		for (int j = 0; j < iNumEdge; ++j)
-			adblExpectedNegativeExposurePV[j] /= iNumPath;
+			adblCollateralizedPositiveExposurePV[j] /= iNumPath;
 
-		return adblExpectedNegativeExposurePV;
+		return adblCollateralizedPositiveExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Positive Exposures
+	 * 
+	 * @return The Array of Uncollateralized Positive Exposures
+	 */
+
+	public double[] uncollateralizedPositiveExposure()
+	{
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
+
+		int iNumPath = _aCGD.length;
+		double[] adblUncollateralizedPositiveExposure = new double[iNumEdge];
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblUncollateralizedPositiveExposure[j] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedExposure = _aCGD[iPathIndex].uncollateralizedExposure();
+
+			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
+				double dblPathEdgeUncollateralizedExposure = adblPathUncollateralizedExposure[iEdgeIndex];
+
+				if (0 < dblPathEdgeUncollateralizedExposure)
+					adblUncollateralizedPositiveExposure[iEdgeIndex] += dblPathEdgeUncollateralizedExposure;
+			}
+		}
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblUncollateralizedPositiveExposure[j] /= iNumPath;
+
+		return adblUncollateralizedPositiveExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Positive Exposure PV
+	 * 
+	 * @return The Array of Uncollateralized Positive Exposure PV
+	 */
+
+	public double[] uncollateralizedPositiveExposurePV()
+	{
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
+
+		int iNumPath = _aCGD.length;
+		double[] adblUncollateralizedPositiveExposurePV = new double[iNumEdge];
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblUncollateralizedPositiveExposurePV[j] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedExposurePV = _aCGD[iPathIndex].uncollateralizedExposurePV();
+
+			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
+				double dblPathEdgeUncollateralizedExposurePV =
+					adblPathUncollateralizedExposurePV[iEdgeIndex];
+
+				if (0 < dblPathEdgeUncollateralizedExposurePV)
+					adblUncollateralizedPositiveExposurePV[iEdgeIndex] +=
+						dblPathEdgeUncollateralizedExposurePV;
+			}
+		}
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblUncollateralizedPositiveExposurePV[j] /= iNumPath;
+
+		return adblUncollateralizedPositiveExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Negative Exposures
+	 * 
+	 * @return The Array of Collateralized Negative Exposures
+	 */
+
+	public double[] collateralizedNegativeExposure()
+	{
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
+
+		int iNumPath = _aCGD.length;
+		double[] adblCollateralizedNegativeExposure = new double[iNumEdge];
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblCollateralizedNegativeExposure[j] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedExposure = _aCGD[iPathIndex].collateralizedExposure();
+
+			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
+				double dblPathEdgeCollateralizedExposure = adblPathCollateralizedExposure[iEdgeIndex];
+
+				if (0 > dblPathEdgeCollateralizedExposure)
+					adblCollateralizedNegativeExposure[iEdgeIndex] += dblPathEdgeCollateralizedExposure;
+			}
+		}
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblCollateralizedNegativeExposure[j] /= iNumPath;
+
+		return adblCollateralizedNegativeExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Negative Exposure PV
+	 * 
+	 * @return The Array of Collateralized Negative Exposure PV
+	 */
+
+	public double[] collateralizedNegativeExposurePV()
+	{
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
+
+		int iNumPath = _aCGD.length;
+		double[] adblCollateralizedNegativeExposurePV = new double[iNumEdge];
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblCollateralizedNegativeExposurePV[j] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedExposurePV = _aCGD[iPathIndex].collateralizedExposurePV();
+
+			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
+				double dblPathEdgeCollateralizedExposurePV = adblPathCollateralizedExposurePV[iEdgeIndex];
+
+				if (0 > dblPathEdgeCollateralizedExposurePV)
+					adblCollateralizedNegativeExposurePV[iEdgeIndex] += dblPathEdgeCollateralizedExposurePV;
+			}
+		}
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblCollateralizedNegativeExposurePV[j] /= iNumPath;
+
+		return adblCollateralizedNegativeExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Negative Exposures
+	 * 
+	 * @return The Array of Uncollateralized Negative Exposures
+	 */
+
+	public double[] uncollateralizedNegativeExposure()
+	{
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
+
+		int iNumPath = _aCGD.length;
+		double[] adblUncollateralizedNegativeExposure = new double[iNumEdge];
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblUncollateralizedNegativeExposure[j] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedExposure = _aCGD[iPathIndex].uncollateralizedExposure();
+
+			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
+				double dblPathEdgeUncollateralizedExposure = adblPathUncollateralizedExposure[iEdgeIndex];
+
+				if (0 > dblPathEdgeUncollateralizedExposure)
+					adblUncollateralizedNegativeExposure[iEdgeIndex] += dblPathEdgeUncollateralizedExposure;
+			}
+		}
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblUncollateralizedNegativeExposure[j] /= iNumPath;
+
+		return adblUncollateralizedNegativeExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Negative Exposure PV
+	 * 
+	 * @return The Array of Uncollateralized Negative Exposure PV
+	 */
+
+	public double[] uncollateralizedNegativeExposurePV()
+	{
+		int iNumEdge = _aCGD[0].vertexes().length - 1;
+
+		int iNumPath = _aCGD.length;
+		double[] adblUncollateralizedNegativeExposurePV = new double[iNumEdge];
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblUncollateralizedNegativeExposurePV[j] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedExposurePV = _aCGD[iPathIndex].uncollateralizedExposurePV();
+
+			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
+				double dblPathEdgeUncollateralizedExposurePV =
+					adblPathUncollateralizedExposurePV[iEdgeIndex];
+
+				if (0 > dblPathEdgeUncollateralizedExposurePV)
+					adblUncollateralizedNegativeExposurePV[iEdgeIndex] +=
+						dblPathEdgeUncollateralizedExposurePV;
+			}
+		}
+
+		for (int j = 0; j < iNumEdge; ++j)
+			adblUncollateralizedNegativeExposurePV[j] /= iNumPath;
+
+		return adblUncollateralizedNegativeExposurePV;
 	}
 }

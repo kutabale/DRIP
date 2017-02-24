@@ -9,6 +9,7 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.GroupTrajectoryEdge;
+import org.drip.xva.collateral.GroupTrajectoryPath;
 import org.drip.xva.collateral.GroupTrajectoryVertex;
 import org.drip.xva.collateral.GroupTrajectoryVertexExposure;
 import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
@@ -295,7 +296,7 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		GroupTrajectoryPathAggregator gta = new GroupTrajectoryPathAggregator (
+		GroupTrajectoryPathAggregator gta = GroupTrajectoryPathAggregator.Standard (
 			new GroupTrajectoryPath[] {
 				new GroupTrajectoryPath (aGTE1),
 				new GroupTrajectoryPath (aGTE2)
@@ -315,7 +316,7 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
-		double[] adblEE = gta.expectedExposure();
+		double[] adblEE = gta.collateralizedExposure();
 
 		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -324,7 +325,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblEPE = gta.expectedPositiveExposure();
+		double[] adblEPE = gta.collateralizedPositiveExposure();
 
 		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -333,7 +334,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblENE = gta.expectedNegativeExposure();
+		double[] adblENE = gta.collateralizedNegativeExposure();
 
 		strDump = "\t|  NEGATIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 
@@ -342,7 +343,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblEEPV = gta.expectedExposurePV();
+		double[] adblEEPV = gta.collateralizedExposurePV();
 
 		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -351,7 +352,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblEPEPV = gta.expectedPositiveExposurePV();
+		double[] adblEPEPV = gta.collateralizedPositiveExposurePV();
 
 		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -360,7 +361,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblENEPV = gta.expectedNegativeExposurePV();
+		double[] adblENEPV = gta.collateralizedNegativeExposurePV();
 
 		strDump = "\t| NEGATIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 

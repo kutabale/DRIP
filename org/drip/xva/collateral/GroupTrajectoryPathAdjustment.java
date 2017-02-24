@@ -1,5 +1,5 @@
 
-package org.drip.xva.netting;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.xva.netting;
 
 /**
  * GroupTrajectoryPathAdjustment holds the Adjustments from the Exposure Sequence in a Single Path Projection
- *  Run along the Granularity of a Netting Group. The References are:
+ *  Run along the Granularity of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,55 +68,50 @@ package org.drip.xva.netting;
  */
 
 public class GroupTrajectoryPathAdjustment {
-	private double[] _adblExposure = null;
-	private double[] _adblExposurePV = null;
-	private double[] _adblNegativeExposure = null;
-	private double[] _adblPositiveExposure = null;
-	private double[] _adblNegativeExposurePV = null;
-	private double[] _adblPositiveExposurePV = null;
+	private double[] _adblCollateralizedExposure = null;
+	private double[] _adblUncollateralizedExposure = null;
+	private double[] _adblCollateralizedExposurePV = null;
+	private double[] _adblUncollateralizedExposurePV = null;
 	private org.drip.analytics.date.JulianDate[] _adtVertex = null;
 
 	/**
 	 * GroupTrajectoryPathAdjustment Constructor
 	 * 
 	 * @param adtVertex Array of Vertex Dates
-	 * @param adblExposure The Array of Exposures
-	 * @param adblExposurePV The Array of Exposure PVs
-	 * @param adblPositiveExposure The Array of Positive Exposures
-	 * @param adblPositiveExposurePV The Array of Positive Exposure PVs
-	 * @param adblNegativeExposure The Array of Negative Exposures
-	 * @param adblNegativeExposurePV The Array of Negative Exposure PVs
+	 * @param adblCollateralizedExposure The Array of Collateralized Exposures
+	 * @param adblUncollateralizedExposure The Array of Uncollateralized Exposures
+	 * @param adblCollateralizedExposurePV The Array of Collateralized Exposure PVs
+	 * @param adblUncollateralizedExposurePV The Array of Uncollateralized Exposure PVs
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public GroupTrajectoryPathAdjustment (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
-		final double[] adblExposure,
-		final double[] adblExposurePV,
-		final double[] adblPositiveExposure,
-		final double[] adblPositiveExposurePV,
-		final double[] adblNegativeExposure,
-		final double[] adblNegativeExposurePV)
+		final double[] adblCollateralizedExposure,
+		final double[] adblUncollateralizedExposure,
+		final double[] adblCollateralizedExposurePV,
+		final double[] adblUncollateralizedExposurePV)
 		throws java.lang.Exception
 	{
-		if (null == (_adtVertex = adtVertex) || null == (_adblExposure = adblExposure) || null ==
-			(_adblExposurePV = adblExposurePV) || null == (_adblPositiveExposure = adblPositiveExposure) ||
-				null == (_adblPositiveExposurePV = adblPositiveExposurePV) || null == (_adblNegativeExposure
-					= adblNegativeExposure) || null == (_adblNegativeExposurePV = adblNegativeExposurePV))
+		if (null == (_adtVertex = adtVertex) ||
+			null == (_adblCollateralizedExposure = adblCollateralizedExposure) ||
+			null == (_adblUncollateralizedExposure = adblUncollateralizedExposure) ||
+			null == (_adblCollateralizedExposurePV = adblCollateralizedExposurePV) ||
+			null == (_adblUncollateralizedExposurePV = adblUncollateralizedExposurePV))
 			throw new java.lang.Exception ("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
 
 		int iNumEdge = _adtVertex.length;
 
-		if (0 == iNumEdge || iNumEdge != _adblExposure.length || iNumEdge != _adblExposurePV.length ||
-			iNumEdge != _adblPositiveExposure.length || iNumEdge != _adblPositiveExposurePV.length ||
-				iNumEdge != _adblNegativeExposurePV.length || iNumEdge != _adblNegativeExposurePV.length ||
-					!org.drip.quant.common.NumberUtil.IsValid (_adblExposure) ||
-						!org.drip.quant.common.NumberUtil.IsValid (_adblExposurePV) ||
-							!org.drip.quant.common.NumberUtil.IsValid (_adblPositiveExposure) ||
-								!org.drip.quant.common.NumberUtil.IsValid (_adblPositiveExposurePV) ||
-									!org.drip.quant.common.NumberUtil.IsValid (_adblNegativeExposure) ||
-										!org.drip.quant.common.NumberUtil.IsValid (_adblNegativeExposurePV))
+		if (0 == iNumEdge ||
+			iNumEdge != _adblCollateralizedExposure.length ||
+			iNumEdge != _adblUncollateralizedExposure.length ||
+			iNumEdge != _adblCollateralizedExposurePV.length ||
+			iNumEdge != _adblUncollateralizedExposurePV.length ||
+			!org.drip.quant.common.NumberUtil.IsValid (_adblCollateralizedExposure) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_adblUncollateralizedExposure) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_adblCollateralizedExposurePV) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_adblUncollateralizedExposurePV))
 			throw new java.lang.Exception ("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
 	}
 
@@ -132,68 +127,46 @@ public class GroupTrajectoryPathAdjustment {
 	}
 
 	/**
-	 * Retrieve the Array of Exposures
+	 * Retrieve the Array of Collateralized Exposures
 	 * 
-	 * @return The Array of Exposures
+	 * @return The Array of Collateralized Exposures
 	 */
 
-	public double[] exposure()
+	public double[] collateralizedExposure()
 	{
-		return _adblExposure;
+		return _adblCollateralizedExposure;
 	}
 
 	/**
-	 * Retrieve the Array of Exposure PVs
+	 * Retrieve the Array of Uncollateralized Exposures
 	 * 
-	 * @return The Array of Exposure PVs
+	 * @return The Array of Uncollateralized Exposures
 	 */
 
-	public double[] exposurePV()
+	public double[] uncollateralizedExposure()
 	{
-		return _adblExposurePV;
+		return _adblUncollateralizedExposure;
 	}
 
 	/**
-	 * Retrieve the Array of Positive Exposures
+	 * Retrieve the Array of Collateralized Exposure PVs
 	 * 
-	 * @return The Array of Positive Exposures
+	 * @return The Array of Collateralized Exposure PVs
 	 */
 
-	public double[] positiveExposure()
+	public double[] collateralizedExposurePV()
 	{
-		return _adblPositiveExposure;
+		return _adblCollateralizedExposurePV;
 	}
 
 	/**
-	 * Retrieve the Array of Positive Exposure PVs
+	 * Retrieve the Array of Uncollateralized Exposure PVs
 	 * 
-	 * @return The Array of Positive Exposure PVs
+	 * @return The Array of Uncollateralized Exposure PVs
 	 */
 
-	public double[] positiveExposurePV()
+	public double[] uncollateralizedExposurePV()
 	{
-		return _adblPositiveExposurePV;
-	}
-
-	/**
-	 * Retrieve the Array of Negative Exposures
-	 * 
-	 * @return The Array of Negative Exposures
-	 */
-
-	public double[] negativeExposure()
-	{
-		return _adblNegativeExposure;
-	}
-
-	/**
-	 * Retrieve the Array of Negative Exposure PVs
-	 * 
-	 * @return The Array of Negative Exposure PVs
-	 */
-
-	public double[] negativeExposurePV()
-	{
-		return _adblNegativeExposurePV;
+		return _adblUncollateralizedExposurePV;
 	}
 }

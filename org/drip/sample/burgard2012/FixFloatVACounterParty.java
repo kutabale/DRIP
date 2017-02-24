@@ -9,6 +9,7 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.GroupTrajectoryEdge;
+import org.drip.xva.collateral.GroupTrajectoryPath;
 import org.drip.xva.collateral.GroupTrajectoryVertex;
 import org.drip.xva.collateral.GroupTrajectoryVertexExposure;
 import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
@@ -198,7 +199,7 @@ public class FixFloatVACounterParty {
 			aGTP[j] = new GroupTrajectoryPath (aGTE);
 		}
 
-		GroupTrajectoryPathAggregator gta = new GroupTrajectoryPathAggregator (aGTP);
+		GroupTrajectoryPathAggregator gta = GroupTrajectoryPathAggregator.Standard (aGTP);
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblCounterPartyHazardRate, 3, 0, 10000.) + " bp => " +

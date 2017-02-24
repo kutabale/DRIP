@@ -197,14 +197,6 @@ public class GroupTrajectoryEdge {
 
 		org.drip.xva.collateral.GroupTrajectoryVertexExposure gtveTail = _gtvTail.exposure();
 
-		double dblHeadUncollateralizedPositiveExposure = gtveHead.uncollateralizedPositive();
-
-		double dblTailUncollateralizedPositiveExposure = gtveTail.uncollateralizedPositive();
-
-		double dblHeadUncollateralizedNegativeExposure = gtveHead.uncollateralizedNegative();
-
-		double dblTailUncollateralizedNegativeExposure = gtveTail.uncollateralizedNegative();
-
 		double dblHeadCollateralizedPositiveExposure = gtveHead.collateralizedPositive();
 
 		double dblTailCollateralizedPositiveExposure = gtveTail.collateralizedPositive();
@@ -228,27 +220,14 @@ public class GroupTrajectoryEdge {
 
 		try {
 			return new org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment (
-				dblEdgeCollateralizedNegativeExposurePV * (gtvnTail.counterPartySurvival() -
+				dblEdgeCollateralizedPositiveExposurePV * (gtvnTail.counterPartySurvival() -
 					gtvnHead.counterPartySurvival()) * (1. - dblEdgeCounterPartyRecovery),
-				dblEdgeCollateralizedPositiveExposurePV * (gtvnTail.bankSurvival() - gtvnHead.bankSurvival())
+				dblEdgeCollateralizedNegativeExposurePV * (gtvnTail.bankSurvival() - gtvnHead.bankSurvival())
 					* (1. - dblEdgeBankRecovery),
 				0.5 * (
 					dblTailCollateralizedPositiveExposurePV * gtvnTail.bankFundingSpread() +
 					dblHeadCollateralizedPositiveExposurePV * gtvnHead.bankFundingSpread()
-				) * (_gtvTail.vertex().julian() - _gtvHead.vertex().julian()) / 365.25,
-				0.5 * (gtveHead.collateralized() + gtveTail.collateralized()),
-				0.5 * (gtveHead.uncollateralized() + gtveTail.uncollateralized()),
-				0.5 * (dblTailCollateralizedPositiveExposure + dblHeadCollateralizedPositiveExposure),
-				0.5 * (dblTailCollateralizedNegativeExposure + dblHeadCollateralizedNegativeExposure),
-				dblEdgeCollateralizedPositiveExposurePV,
-				dblEdgeCollateralizedNegativeExposurePV,
-				0.5 * (dblHeadUncollateralizedPositiveExposure + dblTailUncollateralizedPositiveExposure),
-				0.5 * (dblHeadUncollateralizedNegativeExposure + dblTailUncollateralizedNegativeExposure),
-				0.5 * ((dblHeadUncollateralizedPositiveExposure / dblHeadCSA) + (dblTailUncollateralizedPositiveExposure / dblTailCSA)),
-				0.5 * ((dblHeadUncollateralizedNegativeExposure / dblHeadCSA) + (dblTailUncollateralizedNegativeExposure / dblTailCSA)),
-				0.5 * (gtveHead.collateralBalance() + gtveTail.collateralBalance()),
-				dblEdgeBankRecovery,
-				dblEdgeCounterPartyRecovery
+				) * (_gtvTail.vertex().julian() - _gtvHead.vertex().julian()) / 365.25
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

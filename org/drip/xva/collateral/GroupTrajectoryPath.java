@@ -1,5 +1,5 @@
 
-package org.drip.xva.netting;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.xva.netting;
 
 /**
  * GroupTrajectoryPath accumulates the Vertex Realizations of the Sequence in a Single Path Projection Run
- *  along the Granularity of a Netting Group. The References are:
+ *  along the Granularity of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -220,7 +220,7 @@ public class GroupTrajectoryPath {
 		double[] adblCollateralizedExposurePV = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
+			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail();
 
 			adblCollateralizedExposurePV[i] = gtvTail.exposure().collateralized() /
 				gtvTail.numeraire().csa();
@@ -241,7 +241,7 @@ public class GroupTrajectoryPath {
 		double[] adblUncollateralizedExposurePV = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
+			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail();
 
 			adblUncollateralizedExposurePV[i] = gtvTail.exposure().uncollateralized() /
 				gtvTail.numeraire().csa();
@@ -251,77 +251,20 @@ public class GroupTrajectoryPath {
 	}
 
 	/**
-	 * Retrieve the Array of Collateralized Positive Exposures
+	 * Retrieve the Array of Collateral Balances
 	 * 
-	 * @return The Array of Collateralized Positive Exposures
+	 * @return The Array of Collateral Balances
 	 */
 
-	public double[] collateralizedPositiveExposure()
+	public double[] collateralBalance()
 	{
 		int iNumEdge = _aGTE.length;
-		double[] adblCollateralizedPositiveExposure = new double[iNumEdge];
+		double[] adblCollateralizedBalance = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblCollateralizedPositiveExposure[i] = _aGTE[i].tail().exposure().collateralizedPositive();
+			adblCollateralizedBalance[i] = _aGTE[i].tail().exposure().collateralBalance();
 
-		return adblCollateralizedPositiveExposure;
-	}
-
-	/**
-	 * Retrieve the Array of Positive Exposure PV's
-	 * 
-	 * @return The Array of Positive Exposure PV's
-	 */
-
-	public double[] positiveExposurePV()
-	{
-		int iNumEdge = _aGTE.length;
-		double[] adblPositiveExposurePV = new double[iNumEdge];
-
-		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
-
-			adblPositiveExposurePV[i] = gtvTail.exposure().positive() / gtvTail.numeraire().csa();
-		}
-
-		return adblPositiveExposurePV;
-	}
-
-	/**
-	 * Retrieve the Array of Negative Exposures
-	 * 
-	 * @return The Array of Negative Exposures
-	 */
-
-	public double[] negativeExposure()
-	{
-		int iNumEdge = _aGTE.length;
-		double[] adblNegativeExposure = new double[iNumEdge];
-
-		for (int i = 0; i < iNumEdge; ++i)
-			adblNegativeExposure[i] = _aGTE[i].tail().exposure().negative();
-
-		return adblNegativeExposure;
-	}
-
-	/**
-	 * Retrieve the Array of Negative Exposure PV's
-	 * 
-	 * @return The Array of Negative Exposure PV's
-	 */
-
-	public double[] negativeExposurePV()
-	{
-		int iNumEdge = _aGTE.length;
-		double[] adblNegativeExposurePV = new double[iNumEdge];
-
-		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
-
-			adblNegativeExposurePV[i] = gtvTail.exposure().negative() / gtvTail.numeraire().csa();
-		}
-
-		return adblNegativeExposurePV;
+		return adblCollateralizedBalance;
 	}
 
 	/**
@@ -348,15 +291,13 @@ public class GroupTrajectoryPath {
 	 * @return The Group Trajectory Path Adjustment Instance
 	 */
 
-	public org.drip.xva.netting.GroupTrajectoryPathAdjustment adjustment()
+	public org.drip.xva.collateral.GroupTrajectoryPathAdjustment adjustment()
 	{
 		int iNumEdge = _aGTE.length;
-		double[] adblExposure = new double[iNumEdge];
-		double[] adblExposurePV = new double[iNumEdge];
-		double[] adblNegativeExposure = new double[iNumEdge];
-		double[] adblPositiveExposure = new double[iNumEdge];
-		double[] adblNegativeExposurePV = new double[iNumEdge];
-		double[] adblPositiveExposurePV = new double[iNumEdge];
+		double[] adblCollateralizedExposure = new double[iNumEdge];
+		double[] adblUncollateralizedExposure = new double[iNumEdge];
+		double[] adblCollateralizedExposurePV = new double[iNumEdge];
+		double[] adblUncollateralizedExposurePV = new double[iNumEdge];
 		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
@@ -364,23 +305,27 @@ public class GroupTrajectoryPath {
 
 			adtVertex[i] = gtvTail.vertex();
 
-			double dblTailCollateralNumeraire = gtvTail.numeraire().csa();
+			double dblTailCSANumeraire = gtvTail.numeraire().csa();
 
 			org.drip.xva.collateral.GroupTrajectoryVertexExposure gtve = gtvTail.exposure();
 
-			adblExposurePV[i] = (adblExposure[i] = gtve.net()) / dblTailCollateralNumeraire;
+			adblUncollateralizedExposure[i] = gtve.uncollateralized();
 
-			adblNegativeExposurePV[i] = (adblNegativeExposure[i] = gtve.negative()) /
-				dblTailCollateralNumeraire;
+			adblCollateralizedExposurePV[i] = (adblCollateralizedExposure[i] = gtve.collateralized()) /
+				dblTailCSANumeraire;
 
-			adblPositiveExposurePV[i] = (adblPositiveExposure[i] = gtve.positive()) /
-				dblTailCollateralNumeraire;
+			adblUncollateralizedExposurePV[i] = (adblUncollateralizedExposure[i] = gtve.collateralized()) /
+				dblTailCSANumeraire;
 		}
 
 		try {
-			return new org.drip.xva.netting.GroupTrajectoryPathAdjustment (adtVertex, adblExposure,
-				adblExposurePV, adblPositiveExposure, adblPositiveExposurePV, adblNegativeExposure,
-					adblNegativeExposurePV);
+			return new org.drip.xva.collateral.GroupTrajectoryPathAdjustment (
+				adtVertex,
+				adblCollateralizedExposure,
+				adblUncollateralizedExposure,
+				adblCollateralizedExposurePV,
+				adblUncollateralizedExposurePV
+			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
