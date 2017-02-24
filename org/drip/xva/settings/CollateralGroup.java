@@ -1,5 +1,5 @@
 
-package org.drip.xva.netting;
+package org.drip.xva.settings;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,7 @@ package org.drip.xva.netting;
  */
 
 /**
- * GroupTrajectoryVertexNumeraire holds the Vertex Market Numeraire Realizations of a Projected Path of a
- *  Simulation Run along the Granularity of a Netting Group. The References are:
+ * CollateralGroup specific the Details of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,109 +66,110 @@ package org.drip.xva.netting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryVertexNumeraire {
-	private double _dblCollateral = java.lang.Double.NaN;
-	private double _dblBankRecovery = java.lang.Double.NaN;
-	private double _dblBankSurvival = java.lang.Double.NaN;
-	private double _dblBankFundingSpread = java.lang.Double.NaN;
-	private double _dblCounterPartyRecovery = java.lang.Double.NaN;
-	private double _dblCounterPartySurvival = java.lang.Double.NaN;
+public class CollateralGroup {
+	private java.lang.String _strName = "";
+	private double _dblBankThreshold = java.lang.Double.NaN;
+	private double _dblCounterPartyThreshold = java.lang.Double.NaN;
+	private double _dblMinimumTransferAmount = java.lang.Double.NaN;
 
 	/**
-	 * GroupTrajectoryVertexNumeraire Constructor
+	 * Generate an "Uncollateralized" Instance of the Named Collateral Group
 	 * 
-	 * @param dblCollateral The Realized Collateral Numeraire
-	 * @param dblBankSurvival The Realized Bank Survival Numeraire
-	 * @param dblBankRecovery The Realized Bank Recovery Numeraire
-	 * @param dblBankFundingSpread The Bank Funding Spread Numeraire
-	 * @param dblCounterPartySurvival The Realized Counter Party Survival Numeraire
-	 * @param dblCounterPartyRecovery The Realized Counter Party Recovery Numeraire
+	 * @param strName The Collateral Group Name
+	 * 
+	 * @return The "Uncollateralized" Instance of the Named Collateral Group
+	 */
+
+	public static final CollateralGroup Uncollateralized (
+		final java.lang.String strName)
+	{
+		try {
+			return new CollateralGroup (strName, 0., 0., 0.);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * CollateralGroup Constructor
+	 * 
+	 * @param strName The Collateral Group Name
+	 * @param dblCounterPartyThreshold The Collateral Group Counter Party Threshold
+	 * @param dblBankThreshold The Collateral Group Bank Threshold
+	 * @param dblMinimumTransferAmount The Collateral Group Minimum Transfer Amount
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryVertexNumeraire (
-		final double dblCollateral,
-		final double dblBankSurvival,
-		final double dblBankRecovery,
-		final double dblBankFundingSpread,
-		final double dblCounterPartySurvival,
-		final double dblCounterPartyRecovery)
+	public CollateralGroup (
+		final java.lang.String strName,
+		final double dblCounterPartyThreshold,
+		final double dblBankThreshold,
+		final double dblMinimumTransferAmount)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCollateral = dblCollateral) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankSurvival = dblBankSurvival) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblBankFundingSpread = dblBankFundingSpread)
-						|| !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartySurvival =
-							dblCounterPartySurvival) || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblCounterPartyRecovery = dblCounterPartyRecovery))
-			throw new java.lang.Exception ("GroupTrajectoryVertexNumeraire Constructor => Invalid Inputs");
+		if (null == (_strName = strName) || _strName.isEmpty() || !org.drip.quant.common.NumberUtil.IsValid
+			(_dblCounterPartyThreshold = dblCounterPartyThreshold) || 0. > _dblCounterPartyThreshold ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblBankThreshold = dblBankThreshold) || 0. >
+					_dblBankThreshold || !org.drip.quant.common.NumberUtil.IsValid (_dblMinimumTransferAmount
+						= dblMinimumTransferAmount))
+			throw new java.lang.Exception ("CollateralGroup Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Realized Collateral Numeraire
+	 * Retrieve the Collateral Group Name
 	 * 
-	 * @return The Realized Collateral Numeraire
+	 * @return The Collateral Group Name
 	 */
 
-	public double collateral()
+	public java.lang.String name()
 	{
-		return _dblCollateral;
+		return _strName;
 	}
 
 	/**
-	 * Retrieve the Realized Bank Survival Numeraire
+	 * Retrieve the Collateral Group Counter Party Threshold
 	 * 
-	 * @return The Realized Bank Survival Numeraire
+	 * @return The Collateral Group Counter Party Threshold
 	 */
 
-	public double bankSurvival()
+	public double counterPartyThreshold()
 	{
-		return _dblBankSurvival;
+		return _dblCounterPartyThreshold;
 	}
 
 	/**
-	 * Retrieve the Realized Bank Recovery Numeraire
+	 * Retrieve the Collateral Group Bank Threshold
 	 * 
-	 * @return The Realized Bank Recovery Numeraire
+	 * @return The Collateral Group Bank Threshold
 	 */
 
-	public double bankRecovery()
+	public double bankThreshold()
 	{
-		return _dblBankRecovery;
+		return _dblBankThreshold;
 	}
 
 	/**
-	 * Retrieve the Realized Bank Funding Spread
+	 * Retrieve the Collateral Group Minimum Transfer Amount
 	 * 
-	 * @return The Realized Bank Funding Spread
+	 * @return The Collateral Group Minimum Transfer Amount
 	 */
 
-	public double bankFundingSpread()
+	public double minimumTransferAmount()
 	{
-		return _dblBankFundingSpread;
+		return _dblMinimumTransferAmount;
 	}
 
 	/**
-	 * Retrieve the Realized Counter Party Survival Numeraire
+	 * Retrieve the Flag specifying whether the Collateral Group is Uncollateralized
 	 * 
-	 * @return The Realized Counter Party Survival Numeraire
+	 * @return TRUE - The Collateral Group is Uncollateralized
 	 */
 
-	public double counterPartySurvival()
+	public boolean isUncollateralized()
 	{
-		return _dblCounterPartySurvival;
-	}
-
-	/**
-	 * Retrieve the Realized Counter Party Recovery Numeraire
-	 * 
-	 * @return The Realized Counter Party Recovery Numeraire
-	 */
-
-	public double counterPartyRecovery()
-	{
-		return _dblCounterPartyRecovery;
+		return 0. == _dblCounterPartyThreshold && 0. == _dblBankThreshold;
 	}
 }

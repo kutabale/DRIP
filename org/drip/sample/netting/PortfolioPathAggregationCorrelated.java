@@ -9,8 +9,8 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
 import org.drip.xva.netting.GroupTrajectoryPathAggregator;
-import org.drip.xva.netting.GroupTrajectoryVertexNumeraire;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-

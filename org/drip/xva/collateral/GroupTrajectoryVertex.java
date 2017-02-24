@@ -1,5 +1,5 @@
 
-package org.drip.xva.bundle;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,8 @@ package org.drip.xva.bundle;
  */
 
 /**
- * NettingGroup specifies the Details of a Netting Group. The References are:
+ * GroupTrajectoryVertex holds the Vertex Realizations of a Projected Path of a Single Simulation Run along
+ *  the Granularity of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -66,33 +67,61 @@ package org.drip.xva.bundle;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NettingGroup {
-	private org.drip.xva.bundle.CollateralGroup[] _aCG = null;
+public class GroupTrajectoryVertex {
+	private org.drip.analytics.date.JulianDate _dtVertex = null;
+	private org.drip.xva.collateral.GroupTrajectoryVertexExposure _gtve = null;
+	private org.drip.xva.collateral.GroupTrajectoryVertexNumeraire _gtvn = null;
 
 	/**
-	 * Retrieve the Array of Collateral Groups
+	 * GroupTrajectoryVertex Constructor
 	 * 
-	 * @return The Array of Collateral Groups
+	 * @param dtVertex The Trade Trajectory Vertex Date
+	 * @param gtve The Trade Trajectory Vertex Exposure
+	 * @param gtvn The Trade Trajectory Vertex Numeraire
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public org.drip.xva.bundle.CollateralGroup[] collateralGroups()
+	public GroupTrajectoryVertex (
+		final org.drip.analytics.date.JulianDate dtVertex,
+		final org.drip.xva.collateral.GroupTrajectoryVertexExposure gtve,
+		final org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvn)
+		throws java.lang.Exception
 	{
-		return _aCG;
+		if (null == (_dtVertex = dtVertex) || null == (_gtve = gtve) || null == (_gtvn = gtvn))
+			throw new java.lang.Exception ("GroupTrajectoryVertex Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Gross Collateral Amount across all the Collateral Groups
+	 * Retrieve the Trade Trajectory Vertex Date
 	 * 
-	 * @return The Gross Collateral Amount across all the Collateral Groups
+	 * @return The Trade Trajectory Vertex Date
 	 */
 
-	public double collateralAmount()
+	public org.drip.analytics.date.JulianDate vertex()
 	{
-		double dblCollateralAmount = 0.;
+		return _dtVertex;
+	}
 
-		for (org.drip.xva.bundle.CollateralGroup cg : _aCG)
-			dblCollateralAmount += cg.spotCollateralBalance();
+	/**
+	 * Retrieve the Trade Trajectory Vertex Exposure
+	 * 
+	 * @return The Trade Trajectory Vertex Exposure
+	 */
 
-		return dblCollateralAmount;
+	public org.drip.xva.collateral.GroupTrajectoryVertexExposure exposure()
+	{
+		return _gtve;
+	}
+
+	/**
+	 * Retrieve the Trade Trajectory Vertex Numeraire
+	 * 
+	 * @return The Trade Trajectory Vertex Numeraire
+	 */
+
+	public org.drip.xva.collateral.GroupTrajectoryVertexNumeraire numeraire()
+	{
+		return _gtvn;
 	}
 }

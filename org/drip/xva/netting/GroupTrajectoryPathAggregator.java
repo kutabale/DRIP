@@ -83,7 +83,7 @@ public class GroupTrajectoryPathAggregator {
 	public static final GroupTrajectoryPathAggregator Standard (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
 		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
-		final org.drip.xva.netting.GroupTrajectoryVertexNumeraire[][] aaGTVN)
+		final org.drip.xva.collateral.GroupTrajectoryVertexNumeraire[][] aaGTVN)
 	{
 		if (null == adtVertex || null == aaJDE || null == aaJDE[0] || null == aaGTVN || null == aaGTVN[0])
 			return null;
@@ -92,8 +92,8 @@ public class GroupTrajectoryPathAggregator {
 		int iNumTimeStep = aaJDE[0].length;
 		org.drip.xva.netting.GroupTrajectoryPath[] aGTP = 0 == iNumSimulation ? null : new
 			org.drip.xva.netting.GroupTrajectoryPath[iNumSimulation];
-		org.drip.xva.netting.GroupTrajectoryVertex[][] aaGTV = 0 == iNumSimulation || 1 >= iNumTimeStep ?
-			null : new org.drip.xva.netting.GroupTrajectoryVertex[iNumSimulation][iNumTimeStep];
+		org.drip.xva.collateral.GroupTrajectoryVertex[][] aaGTV = 0 == iNumSimulation || 1 >= iNumTimeStep ?
+			null : new org.drip.xva.collateral.GroupTrajectoryVertex[iNumSimulation][iNumTimeStep];
 
 		if (0 == iNumSimulation || iNumSimulation != aaGTVN.length || 1 >= iNumTimeStep || iNumTimeStep !=
 			adtVertex.length || iNumTimeStep != aaGTVN[0].length)
@@ -102,17 +102,17 @@ public class GroupTrajectoryPathAggregator {
 		try {
 			for (int i = 0; i < iNumSimulation; ++i) {
 				for (int j = 0; j < iNumTimeStep; ++j)
-					aaGTV[i][j] = new org.drip.xva.netting.GroupTrajectoryVertex (adtVertex[j], new
-						org.drip.xva.netting.GroupTrajectoryVertexExposure (aaJDE[i][j].finish()),
+					aaGTV[i][j] = new org.drip.xva.collateral.GroupTrajectoryVertex (adtVertex[j], new
+						org.drip.xva.collateral.GroupTrajectoryVertexExposure (aaJDE[i][j].finish(), 0.),
 							aaGTVN[i][j]);
 			}
 
 			for (int i = 0; i < iNumSimulation; ++i) {
-				org.drip.xva.netting.GroupTrajectoryEdge[] aGTE = new
-					org.drip.xva.netting.GroupTrajectoryEdge[iNumTimeStep - 1];
+				org.drip.xva.collateral.GroupTrajectoryEdge[] aGTE = new
+					org.drip.xva.collateral.GroupTrajectoryEdge[iNumTimeStep - 1];
 
 				for (int j = 1; j < iNumTimeStep; ++j)
-					aGTE[j - 1] = new org.drip.xva.netting.GroupTrajectoryEdge (aaGTV[i][j - 1],
+					aGTE[j - 1] = new org.drip.xva.collateral.GroupTrajectoryEdge (aaGTV[i][j - 1],
 						aaGTV[i][j]);
 
 				aGTP[i] = new org.drip.xva.netting.GroupTrajectoryPath (aGTE);
@@ -139,13 +139,13 @@ public class GroupTrajectoryPathAggregator {
 	public static final GroupTrajectoryPathAggregator Standard (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
 		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
-		final org.drip.xva.netting.GroupTrajectoryVertexNumeraire[] aGTVN)
+		final org.drip.xva.collateral.GroupTrajectoryVertexNumeraire[] aGTVN)
 	{
 		if (null == aaJDE) return null;
 
 		int iNumSimulation = aaJDE.length;
-		org.drip.xva.netting.GroupTrajectoryVertexNumeraire[][] aaGTVN = 0 == iNumSimulation ? null : new
-			org.drip.xva.netting.GroupTrajectoryVertexNumeraire[iNumSimulation][];
+		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire[][] aaGTVN = 0 == iNumSimulation ? null : new
+			org.drip.xva.collateral.GroupTrajectoryVertexNumeraire[iNumSimulation][];
 
 		for (int i = 0; i < iNumSimulation; ++i)
 			aaGTVN[i] = aGTVN;
@@ -188,7 +188,7 @@ public class GroupTrajectoryPathAggregator {
 
 	public org.drip.analytics.date.JulianDate[] vertexes()
 	{
-		org.drip.xva.netting.GroupTrajectoryEdge[] aGTE = _aGTP[0].edges();
+		org.drip.xva.collateral.GroupTrajectoryEdge[] aGTE = _aGTP[0].edges();
 
 		int iNumVertex = aGTE.length + 1;
 		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
@@ -286,7 +286,7 @@ public class GroupTrajectoryPathAggregator {
 			adblExpectedExposure[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathExposure = _aGTP[iPathIndex].exposure();
+			double[] adblPathExposure = _aGTP[iPathIndex].collateralizedExposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
 				adblExpectedExposure[iEdgeIndex] += adblPathExposure[iEdgeIndex];
@@ -315,7 +315,7 @@ public class GroupTrajectoryPathAggregator {
 			adblExpectedExposurePV[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathExposurePV = _aGTP[iPathIndex].exposurePV();
+			double[] adblPathExposurePV = _aGTP[iPathIndex].collateralizedExposurePV();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
 				adblExpectedExposurePV[iEdgeIndex] += adblPathExposurePV[iEdgeIndex];
@@ -344,7 +344,7 @@ public class GroupTrajectoryPathAggregator {
 			adblExpectedPositiveExposure[j] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathPositiveExposure = _aGTP[iPathIndex].positiveExposure();
+			double[] adblPathPositiveExposure = _aGTP[iPathIndex].collateralizedPositiveExposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
 				adblExpectedPositiveExposure[iEdgeIndex] += adblPathPositiveExposure[iEdgeIndex];

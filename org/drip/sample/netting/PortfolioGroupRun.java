@@ -8,6 +8,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.GroupTrajectoryEdge;
+import org.drip.xva.collateral.GroupTrajectoryVertex;
+import org.drip.xva.collateral.GroupTrajectoryVertexExposure;
+import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
 import org.drip.xva.netting.*;
 
 /*
@@ -189,9 +193,15 @@ public class PortfolioGroupRun {
 
 			adblBankSurvival[i] = Math.exp (-0.5 * dblBankHazardRate * (i + 1));
 
-			aGTVE1[i] = new GroupTrajectoryVertexExposure (aR1Asset1[i].finish());
+			aGTVE1[i] = new GroupTrajectoryVertexExposure (
+				aR1Asset1[i].finish(),
+				0.
+			);
 
-			aGTVE2[i] = new GroupTrajectoryVertexExposure (aR1Asset2[i].finish());
+			aGTVE2[i] = new GroupTrajectoryVertexExposure (
+				aR1Asset2[i].finish(),
+				0.
+			);
 
 			adblCounterPartySurvival[i] = Math.exp (-0.5 * dblCounterPartyHazardRate * (i + 1));
 
@@ -218,10 +228,10 @@ public class PortfolioGroupRun {
 
 			System.out.println (
 				"\t| " + adtVertex[i] + " => " +
-				FormatUtil.FormatDouble (aGTVE1[i].gross(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aGTVE1[i].net(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aGTVE1[i].positive(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aGTVE1[i].negative(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTVE2[i].gross(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aGTVE2[i].net(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aGTVE2[i].positive(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aGTVE2[i].negative(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblCollateral[i], 1, 6, 1.) + " | " +

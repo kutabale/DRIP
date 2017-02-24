@@ -68,7 +68,7 @@ package org.drip.xva.netting;
  */
 
 public class GroupTrajectoryPath {
-	private org.drip.xva.netting.GroupTrajectoryEdge[] _aGTE = null;
+	private org.drip.xva.collateral.GroupTrajectoryEdge[] _aGTE = null;
 
 	/**
 	 * GroupTrajectoryPath Constructor
@@ -79,7 +79,7 @@ public class GroupTrajectoryPath {
 	 */
 
 	public GroupTrajectoryPath (
-		final org.drip.xva.netting.GroupTrajectoryEdge[] aGTE)
+		final org.drip.xva.collateral.GroupTrajectoryEdge[] aGTE)
 		throws java.lang.Exception
 	{
 		if (null == (_aGTE = aGTE))
@@ -105,7 +105,7 @@ public class GroupTrajectoryPath {
 	 * @return The Array of Netting Group Trajectory Edges
 	 */
 
-	public org.drip.xva.netting.GroupTrajectoryEdge[] edges()
+	public org.drip.xva.collateral.GroupTrajectoryEdge[] edges()
 	{
 		return _aGTE;
 	}
@@ -120,7 +120,7 @@ public class GroupTrajectoryPath {
 	{
 		double dblCredit = 0.;
 
-		for (org.drip.xva.netting.GroupTrajectoryEdge gte : _aGTE)
+		for (org.drip.xva.collateral.GroupTrajectoryEdge gte : _aGTE)
 			dblCredit += gte.credit();
 
 		return dblCredit;
@@ -136,7 +136,7 @@ public class GroupTrajectoryPath {
 	{
 		double dblDebt = 0.;
 
-		for (org.drip.xva.netting.GroupTrajectoryEdge gte : _aGTE)
+		for (org.drip.xva.collateral.GroupTrajectoryEdge gte : _aGTE)
 			dblDebt += gte.debt();
 
 		return dblDebt;
@@ -152,7 +152,7 @@ public class GroupTrajectoryPath {
 	{
 		double dblFunding = 0.;
 
-		for (org.drip.xva.netting.GroupTrajectoryEdge gte : _aGTE)
+		for (org.drip.xva.collateral.GroupTrajectoryEdge gte : _aGTE)
 			dblFunding += gte.funding();
 
 		return dblFunding;
@@ -168,64 +168,103 @@ public class GroupTrajectoryPath {
 	{
 		double dblTotal = 0.;
 
-		for (org.drip.xva.netting.GroupTrajectoryEdge gte : _aGTE)
+		for (org.drip.xva.collateral.GroupTrajectoryEdge gte : _aGTE)
 			dblTotal += gte.total();
 
 		return dblTotal;
 	}
 
 	/**
-	 * Retrieve the Array of Exposures
+	 * Retrieve the Array of Collateralized Exposures
 	 * 
-	 * @return The Array of Exposures
+	 * @return The Array of Collateralized Exposures
 	 */
 
-	public double[] exposure()
+	public double[] collateralizedExposure()
 	{
 		int iNumEdge = _aGTE.length;
-		double[] adblExposure = new double[iNumEdge];
+		double[] adblCollateralizedExposure = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblExposure[i] = _aGTE[i].tail().exposure().gross();
+			adblCollateralizedExposure[i] = _aGTE[i].tail().exposure().collateralized();
 
-		return adblExposure;
+		return adblCollateralizedExposure;
 	}
 
 	/**
-	 * Retrieve the Array of Exposure PVs
+	 * Retrieve the Array of Uncollateralized Exposures
 	 * 
-	 * @return The Array of Exposure PVs
+	 * @return The Array of Uncollateralized Exposures
 	 */
 
-	public double[] exposurePV()
+	public double[] uncollateralizedExposure()
 	{
 		int iNumEdge = _aGTE.length;
-		double[] adblExposurePV = new double[iNumEdge];
+		double[] adblUncollateralizedExposure = new double[iNumEdge];
+
+		for (int i = 0; i < iNumEdge; ++i)
+			adblUncollateralizedExposure[i] = _aGTE[i].tail().exposure().uncollateralized();
+
+		return adblUncollateralizedExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Exposure PVs
+	 * 
+	 * @return The Array of Collateralized Exposure PVs
+	 */
+
+	public double[] collateralizedExposurePV()
+	{
+		int iNumEdge = _aGTE.length;
+		double[] adblCollateralizedExposurePV = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
+			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
 
-			adblExposurePV[i] = gtvTail.exposure().gross() / gtvTail.numeraire().collateral();
+			adblCollateralizedExposurePV[i] = gtvTail.exposure().collateralized() /
+				gtvTail.numeraire().csa();
 		}
 
-		return adblExposurePV;
+		return adblCollateralizedExposurePV;
 	}
 
 	/**
-	 * Retrieve the Array of Positive Exposures
+	 * Retrieve the Array of Uncollateralized Exposure PVs
 	 * 
-	 * @return The Array of Positive Exposures
+	 * @return The Array of Uncollateralized Exposure PVs
 	 */
 
-	public double[] positiveExposure()
+	public double[] uncollateralizedExposurePV()
 	{
 		int iNumEdge = _aGTE.length;
-		double[] adblPositiveExposure = new double[iNumEdge];
+		double[] adblUncollateralizedExposurePV = new double[iNumEdge];
+
+		for (int i = 0; i < iNumEdge; ++i) {
+			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
+
+			adblUncollateralizedExposurePV[i] = gtvTail.exposure().uncollateralized() /
+				gtvTail.numeraire().csa();
+		}
+
+		return adblUncollateralizedExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Positive Exposures
+	 * 
+	 * @return The Array of Collateralized Positive Exposures
+	 */
+
+	public double[] collateralizedPositiveExposure()
+	{
+		int iNumEdge = _aGTE.length;
+		double[] adblCollateralizedPositiveExposure = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblPositiveExposure[i] = _aGTE[i].tail().exposure().positive();
+			adblCollateralizedPositiveExposure[i] = _aGTE[i].tail().exposure().collateralizedPositive();
 
-		return adblPositiveExposure;
+		return adblCollateralizedPositiveExposure;
 	}
 
 	/**
@@ -240,9 +279,9 @@ public class GroupTrajectoryPath {
 		double[] adblPositiveExposurePV = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
+			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
 
-			adblPositiveExposurePV[i] = gtvTail.exposure().positive() / gtvTail.numeraire().collateral();
+			adblPositiveExposurePV[i] = gtvTail.exposure().positive() / gtvTail.numeraire().csa();
 		}
 
 		return adblPositiveExposurePV;
@@ -277,9 +316,9 @@ public class GroupTrajectoryPath {
 		double[] adblNegativeExposurePV = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
+			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail() ;
 
-			adblNegativeExposurePV[i] = gtvTail.exposure().negative() / gtvTail.numeraire().collateral();
+			adblNegativeExposurePV[i] = gtvTail.exposure().negative() / gtvTail.numeraire().csa();
 		}
 
 		return adblNegativeExposurePV;
@@ -291,11 +330,11 @@ public class GroupTrajectoryPath {
 	 * @return The Array of Edge Adjustments
 	 */
 
-	public org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] edgeAdjustments()
+	public org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment[] edgeAdjustments()
 	{
 		int iNumEdge = _aGTE.length;
-		org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[] aGTEA = new
-			org.drip.xva.netting.GroupTrajectoryEdgeAdjustment[iNumEdge];
+		org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment[] aGTEA = new
+			org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
 			aGTEA[i] = _aGTE[i].generate();
@@ -321,15 +360,15 @@ public class GroupTrajectoryPath {
 		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.netting.GroupTrajectoryVertex gtvTail =_aGTE[i].tail();
+			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail();
 
 			adtVertex[i] = gtvTail.vertex();
 
-			double dblTailCollateralNumeraire = gtvTail.numeraire().collateral();
+			double dblTailCollateralNumeraire = gtvTail.numeraire().csa();
 
-			org.drip.xva.netting.GroupTrajectoryVertexExposure gtve = gtvTail.exposure();
+			org.drip.xva.collateral.GroupTrajectoryVertexExposure gtve = gtvTail.exposure();
 
-			adblExposurePV[i] = (adblExposure[i] = gtve.gross()) / dblTailCollateralNumeraire;
+			adblExposurePV[i] = (adblExposure[i] = gtve.net()) / dblTailCollateralNumeraire;
 
 			adblNegativeExposurePV[i] = (adblNegativeExposure[i] = gtve.negative()) /
 				dblTailCollateralNumeraire;

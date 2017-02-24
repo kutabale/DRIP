@@ -8,6 +8,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.GroupTrajectoryEdge;
+import org.drip.xva.collateral.GroupTrajectoryVertex;
+import org.drip.xva.collateral.GroupTrajectoryVertexExposure;
+import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
 import org.drip.xva.netting.*;
 
 /*
@@ -169,7 +173,10 @@ public class PortfolioGroupSimulation {
 			for (int j = 0; j < iNumSimulation; ++j)
 				aaGTV[j][i] = new GroupTrajectoryVertex (
 					adtVertex[i],
-					new GroupTrajectoryVertexExposure (aaJDE[j][i].finish()),
+					new GroupTrajectoryVertexExposure (
+						aaJDE[j][i].finish(),
+						0.
+					),
 					new GroupTrajectoryVertexNumeraire (
 						adblCollateral[i],
 						adblBankSurvival[i],

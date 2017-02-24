@@ -69,7 +69,7 @@ package org.drip.xva.pde;
  */
 
 public class TrajectoryEvolutionScheme {
-	private org.drip.xva.custom.Settings _settings = null;
+	private org.drip.xva.settings.PDEEvolutionControl _settings = null;
 	private double _dblTimeIncrement = java.lang.Double.NaN;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
 	private org.drip.xva.definition.MasterAgreementCloseOut _maco = null;
@@ -88,7 +88,7 @@ public class TrajectoryEvolutionScheme {
 	public TrajectoryEvolutionScheme (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
 		final org.drip.xva.definition.MasterAgreementCloseOut maco,
-		final org.drip.xva.custom.Settings settings,
+		final org.drip.xva.settings.PDEEvolutionControl settings,
 		final double dblTimeIncrement)
 		throws java.lang.Exception
 	{
@@ -125,7 +125,7 @@ public class TrajectoryEvolutionScheme {
 	 * @return The XVA Control Settings
 	 */
 
-	public org.drip.xva.custom.Settings settings()
+	public org.drip.xva.settings.PDEEvolutionControl settings()
 	{
 		return _settings;
 	}
@@ -229,7 +229,7 @@ public class TrajectoryEvolutionScheme {
 
 		double dblDerivativeXVAValue = eagFinish.derivativeXVAValue();
 
-		double dblCloseOutMTM = org.drip.xva.custom.Settings.CLOSEOUT_GREGORY_LI_TANG ==
+		double dblCloseOutMTM = org.drip.xva.settings.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
 			_settings.closeOutScheme() ? eagFinish.derivativeValue() : dblDerivativeXVAValue;
 
 		try {

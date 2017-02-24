@@ -1,5 +1,5 @@
 
-package org.drip.xva.netting;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.netting;
  */
 
 /**
- * GroupTrajectoryVertex holds the Vertex Realizations of a Projected Path of a Single Simulation Run along
- *  the Granularity of a Netting Group. The References are:
+ * GroupTrajectoryVertexNumeraire holds the Vertex Market Numeraire Realizations of a Projected Path of a
+ *  Simulation Run along the Granularity of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,61 +67,109 @@ package org.drip.xva.netting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryVertex {
-	private org.drip.analytics.date.JulianDate _dtVertex = null;
-	private org.drip.xva.netting.GroupTrajectoryVertexExposure _gtve = null;
-	private org.drip.xva.netting.GroupTrajectoryVertexNumeraire _gtvn = null;
+public class GroupTrajectoryVertexNumeraire {
+	private double _dblCSA = java.lang.Double.NaN;
+	private double _dblBankRecovery = java.lang.Double.NaN;
+	private double _dblBankSurvival = java.lang.Double.NaN;
+	private double _dblBankFundingSpread = java.lang.Double.NaN;
+	private double _dblCounterPartyRecovery = java.lang.Double.NaN;
+	private double _dblCounterPartySurvival = java.lang.Double.NaN;
 
 	/**
-	 * GroupTrajectoryVertex Constructor
+	 * GroupTrajectoryVertexNumeraire Constructor
 	 * 
-	 * @param dtVertex The Trade Trajectory Vertex Date
-	 * @param gtve The Trade Trajectory Vertex Exposure
-	 * @param gtvn The Trade Trajectory Vertex Numeraire
+	 * @param dblCSA The Realized CSA Numeraire
+	 * @param dblBankSurvival The Realized Bank Survival Numeraire
+	 * @param dblBankRecovery The Realized Bank Recovery Numeraire
+	 * @param dblBankFundingSpread The Bank Funding Spread Numeraire
+	 * @param dblCounterPartySurvival The Realized Counter Party Survival Numeraire
+	 * @param dblCounterPartyRecovery The Realized Counter Party Recovery Numeraire
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryVertex (
-		final org.drip.analytics.date.JulianDate dtVertex,
-		final org.drip.xva.netting.GroupTrajectoryVertexExposure gtve,
-		final org.drip.xva.netting.GroupTrajectoryVertexNumeraire gtvn)
+	public GroupTrajectoryVertexNumeraire (
+		final double dblCSA,
+		final double dblBankSurvival,
+		final double dblBankRecovery,
+		final double dblBankFundingSpread,
+		final double dblCounterPartySurvival,
+		final double dblCounterPartyRecovery)
 		throws java.lang.Exception
 	{
-		if (null == (_dtVertex = dtVertex) || null == (_gtve = gtve) || null == (_gtvn = gtvn))
-			throw new java.lang.Exception ("GroupTrajectoryVertex Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCSA = dblCSA) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankSurvival = dblBankSurvival) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblBankFundingSpread = dblBankFundingSpread)
+						|| !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartySurvival =
+							dblCounterPartySurvival) || !org.drip.quant.common.NumberUtil.IsValid
+								(_dblCounterPartyRecovery = dblCounterPartyRecovery))
+			throw new java.lang.Exception ("GroupTrajectoryVertexNumeraire Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Trade Trajectory Vertex Date
+	 * Retrieve the Realized CSA Numeraire
 	 * 
-	 * @return The Trade Trajectory Vertex Date
+	 * @return The Realized CSA Numeraire
 	 */
 
-	public org.drip.analytics.date.JulianDate vertex()
+	public double csa()
 	{
-		return _dtVertex;
+		return _dblCSA;
 	}
 
 	/**
-	 * Retrieve the Trade Trajectory Vertex Exposure
+	 * Retrieve the Realized Bank Survival Numeraire
 	 * 
-	 * @return The Trade Trajectory Vertex Exposure
+	 * @return The Realized Bank Survival Numeraire
 	 */
 
-	public org.drip.xva.netting.GroupTrajectoryVertexExposure exposure()
+	public double bankSurvival()
 	{
-		return _gtve;
+		return _dblBankSurvival;
 	}
 
 	/**
-	 * Retrieve the Trade Trajectory Vertex Numeraire
+	 * Retrieve the Realized Bank Recovery Numeraire
 	 * 
-	 * @return The Trade Trajectory Vertex Numeraire
+	 * @return The Realized Bank Recovery Numeraire
 	 */
 
-	public org.drip.xva.netting.GroupTrajectoryVertexNumeraire numeraire()
+	public double bankRecovery()
 	{
-		return _gtvn;
+		return _dblBankRecovery;
+	}
+
+	/**
+	 * Retrieve the Realized Bank Funding Spread
+	 * 
+	 * @return The Realized Bank Funding Spread
+	 */
+
+	public double bankFundingSpread()
+	{
+		return _dblBankFundingSpread;
+	}
+
+	/**
+	 * Retrieve the Realized Counter Party Survival Numeraire
+	 * 
+	 * @return The Realized Counter Party Survival Numeraire
+	 */
+
+	public double counterPartySurvival()
+	{
+		return _dblCounterPartySurvival;
+	}
+
+	/**
+	 * Retrieve the Realized Counter Party Recovery Numeraire
+	 * 
+	 * @return The Realized Counter Party Recovery Numeraire
+	 */
+
+	public double counterPartyRecovery()
+	{
+		return _dblCounterPartyRecovery;
 	}
 }

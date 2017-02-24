@@ -8,6 +8,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
 import org.drip.xva.netting.*;
 
 /*

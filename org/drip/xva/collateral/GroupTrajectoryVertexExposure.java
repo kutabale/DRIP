@@ -1,5 +1,5 @@
 
-package org.drip.xva.netting;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -48,7 +48,7 @@ package org.drip.xva.netting;
 
 /**
  * GroupTrajectoryVertexExposure holds the Vertex Exposure of a Projected Path of a Simulation Run of a
- *  Netting Group. The References are:
+ *  Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,26 +69,31 @@ package org.drip.xva.netting;
 
 public class GroupTrajectoryVertexExposure {
 	private double _dblForwardPV = java.lang.Double.NaN;
-	private double _dblNegative = java.lang.Double.NaN;
-	private double _dblPositive = java.lang.Double.NaN;
+	private double _dblCollateralBalance = java.lang.Double.NaN;
+	private double _dblCollateralizedNegative = java.lang.Double.NaN;
+	private double _dblCollateralizedPositive = java.lang.Double.NaN;
 
 	/**
 	 * GroupTrajectoryVertexExposure Constructor
 	 * 
 	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
+	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public GroupTrajectoryVertexExposure (
-		final double dblForwardPV)
+		final double dblForwardPV,
+		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV = dblForwardPV))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV = dblForwardPV) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance))
 			throw new java.lang.Exception ("GroupTrajectoryVertexExposure Constructor => Invalid Inputs");
 
-		_dblPositive = _dblForwardPV > 0. ? _dblForwardPV : 0.;
-		_dblNegative = _dblForwardPV < 0. ? _dblForwardPV : 0.;
+		double dblNetExposure = _dblForwardPV - _dblCollateralBalance;
+		_dblCollateralizedPositive = dblNetExposure > 0. ? dblNetExposure : 0.;
+		_dblCollateralizedNegative = dblNetExposure < 0. ? dblNetExposure : 0.;
 	}
 
 	/**
@@ -103,14 +108,58 @@ public class GroupTrajectoryVertexExposure {
 	}
 
 	/**
-	 * Retrieve the Total Exposure at the Path Vertex Time Node
+	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
 	 * 
-	 * @return The Total Exposure at the Path Vertex Time Node
+	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
 	 */
 
-	public double gross()
+	public double collateralized()
 	{
-		return _dblForwardPV;
+		return _dblForwardPV - _dblCollateralBalance;
+	}
+
+	/**
+	 * Retrieve the Total Uncollateralized Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Total Uncollateralized Exposure at the Path Vertex Time Node
+	 */
+
+	public double uncollateralized()
+	{
+		return _dblForwardPV - _dblCollateralBalance;
+	}
+
+	/**
+	 * Retrieve the Exposure at the Path Vertex Time Node Net of Collateral
+	 * 
+	 * @return The Exposure at the Path Vertex Time Node Net of Collateral
+	 */
+
+	public double net()
+	{
+		return collateralized();
+	}
+
+	/**
+	 * Retrieve the Collateralized Positive Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Collateralized Positive Exposure at the Path Vertex Time Node
+	 */
+
+	public double collateralizedPositive()
+	{
+		return _dblCollateralizedPositive;
+	}
+
+	/**
+	 * Retrieve the Uncollateralized Positive Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Uncollateralized Positive Exposure at the Path Vertex Time Node
+	 */
+
+	public double uncollateralizedPositive()
+	{
+		return _dblForwardPV > 0. ? _dblForwardPV : 0.;
 	}
 
 	/**
@@ -121,7 +170,29 @@ public class GroupTrajectoryVertexExposure {
 
 	public double positive()
 	{
-		return _dblPositive;
+		return collateralizedPositive();
+	}
+
+	/**
+	 * Retrieve the Collateralized Negative Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Collateralized Negative Exposure at the Path Vertex Time Node
+	 */
+
+	public double collateralizedNegative()
+	{
+		return _dblCollateralizedNegative;
+	}
+
+	/**
+	 * Retrieve the Uncollateralized Negative Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Uncollateralized Negative Exposure at the Path Vertex Time Node
+	 */
+
+	public double uncollateralizedNegative()
+	{
+		return _dblForwardPV < 0. ? _dblForwardPV : 0.;
 	}
 
 	/**
@@ -132,6 +203,17 @@ public class GroupTrajectoryVertexExposure {
 
 	public double negative()
 	{
-		return _dblNegative;
+		return collateralizedNegative();
+	}
+
+	/**
+	 * Retrieve the Collateral Balance at the Path Vertex Time Node
+	 * 
+	 * @return The Collateral Balance at the Path Vertex Time Node
+	 */
+
+	public double collateralBalance()
+	{
+		return _dblCollateralBalance;
 	}
 }

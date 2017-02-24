@@ -8,6 +8,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.GroupTrajectoryEdge;
+import org.drip.xva.collateral.GroupTrajectoryVertex;
+import org.drip.xva.collateral.GroupTrajectoryVertexExposure;
+import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
 import org.drip.xva.netting.*;
 
 /*
@@ -167,7 +171,10 @@ public class FixFloatVABank {
 			for (int j = 0; j < iNumSimulation; ++j)
 				aaGTV[j][i] = new GroupTrajectoryVertex (
 					adtVertex[i],
-					new GroupTrajectoryVertexExposure (aaJDE[j][i].finish()),
+					new GroupTrajectoryVertexExposure (
+						aaJDE[j][i].finish(),
+						0.
+					),
 					new GroupTrajectoryVertexNumeraire (
 						adblCollateral[i],
 						adblBankSurvival[i],
@@ -194,7 +201,7 @@ public class FixFloatVABank {
 		GroupTrajectoryPathAggregator gta = new GroupTrajectoryPathAggregator (aGTP);
 
 		System.out.println ("\t|| " +
-			FormatUtil.FormatDouble (dblCounterPartyHazardRate, 3, 0, 10000.) + " bp => " +
+			FormatUtil.FormatDouble (dblBankHazardRate, 3, 0, 10000.) + " bp => " +
 			FormatUtil.FormatDouble (gta.cva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (gta.dva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (gta.fca(), 1, 2, 100.) + "% | " +
@@ -215,7 +222,7 @@ public class FixFloatVABank {
 			0.0100,
 			0.0125,
 			0.0150,
-			0.0155,
+			0.0175,
 			0.0200,
 			0.0225,
 			0.0250,

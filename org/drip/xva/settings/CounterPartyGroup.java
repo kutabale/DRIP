@@ -1,5 +1,5 @@
 
-package org.drip.xva.bundle;
+package org.drip.xva.settings;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -67,7 +67,7 @@ package org.drip.xva.bundle;
  */
 
 public class CounterPartyGroup {
-	private org.drip.xva.bundle.NettingGroup[] _aNG = null;
+	private org.drip.xva.settings.NettingGroup[] _aNG = null;
 
 	/**
 	 * Retrieve the Array of Netting Groups
@@ -75,7 +75,7 @@ public class CounterPartyGroup {
 	 * @return The Array of Netting Groups
 	 */
 
-	public org.drip.xva.bundle.NettingGroup[] nettingGroups()
+	public org.drip.xva.settings.NettingGroup[] nettingGroups()
 	{
 		return _aNG;
 	}

@@ -6,10 +6,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.JumpDiffusionVertex;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.custom.Settings;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
 import org.drip.xva.pde.*;
+import org.drip.xva.settings.PDEEvolutionControl;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -261,8 +261,8 @@ public class XVAReplicationPortfolio {
 		double dblTime = 1.;
 		double dblTerminalXVADerivativeValue = 1.;
 
-		Settings settings = new Settings (
-			Settings.CLOSEOUT_GREGORY_LI_TANG,
+		PDEEvolutionControl settings = new PDEEvolutionControl (
+			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
 			dblSensitivityShiftFactor
 		);
 
