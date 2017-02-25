@@ -1,10 +1,11 @@
 #DRIP
 
-**v2.57**  *17 February 2017*
+**v2.62**  *25 February 2017*
 
 DRIP aims to collects the models and provides libraries for fixed income valuation and adjustments, asset allocation and transaction cost analytics, and supporting libraries in numerical optimization and statistical learning.
 
 DRIP is composed of four main libraries:
+
  * [Asset Allocation] (https://github.com/lakshmiDRIP/DRIP-Asset-Allocation)
  * [Fixed Income Analytics] (https://github.com/lakshmiDRIP/DRIP-Fixed-Income)
  * [Numerical Optimization] (https://github.com/lakshmiDRIP/DRIP-Numerical-Optimizer)
