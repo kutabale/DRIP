@@ -10,7 +10,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
-import org.drip.xva.netting.GroupTrajectoryPathAggregator;
+import org.drip.xva.netting.PathAggregator;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -276,7 +276,7 @@ public class PortfolioPathAggregationCorrelated {
 				);
 		}
 
-		GroupTrajectoryPathAggregator gtpa = GroupTrajectoryPathAggregator.Standard (
+		PathAggregator gtpa = PathAggregator.Standard (
 			adtVertex,
 			aaJDEPortfolio,
 			aaGTVN

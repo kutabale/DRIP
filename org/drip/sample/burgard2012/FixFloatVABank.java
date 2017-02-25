@@ -199,7 +199,7 @@ public class FixFloatVABank {
 			aGTP[j] = new GroupTrajectoryPath (aGTE);
 		}
 
-		GroupTrajectoryPathAggregator gta = GroupTrajectoryPathAggregator.Standard (aGTP);
+		PathAggregator gta = PathAggregator.Standard (aGTP);
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblBankHazardRate, 3, 0, 10000.) + " bp => " +

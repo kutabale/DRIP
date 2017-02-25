@@ -296,7 +296,7 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		GroupTrajectoryPathAggregator gta = GroupTrajectoryPathAggregator.Standard (
+		PathAggregator gta = PathAggregator.Standard (
 			new GroupTrajectoryPath[] {
 				new GroupTrajectoryPath (aGTE1),
 				new GroupTrajectoryPath (aGTE2)

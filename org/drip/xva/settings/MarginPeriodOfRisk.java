@@ -47,7 +47,8 @@ package org.drip.xva.settings;
  */
 
 /**
- * CounterPartyGroup specifies the Details of a Counter Party Group. The References are:
+ * MarginPeriodOfRisk contains the Margining Information associated with the Counter Party. The References
+ *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -66,41 +67,36 @@ package org.drip.xva.settings;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyGroup {
-	private int _iBankDefaultWindow = -1;
-	private int _iCounterPartyDefaultWindow = -1;
-	private org.drip.xva.settings.NettingGroup[] _aNG = null;
+public class MarginPeriodOfRisk {
 
 	/**
-	 * Retrieve the Counter Party Default Window
-	 * 
-	 * @return The Counter Party Default Window
+	 * MPoR Interpolation Type - LINEAR
 	 */
 
-	public int counterPartyDefaultWindow()
-	{
-		return _iCounterPartyDefaultWindow;
-	}
+	public static final int MPOR_INTERPOLATION_LINEAR = 1;
 
 	/**
-	 * Retrieve the Bank Default Window
-	 * 
-	 * @return The Bank Default Window
+	 * MPoR Interpolation Type - SQRT_T
 	 */
 
-	public int bankDefaultWindow()
-	{
-		return _iBankDefaultWindow;
-	}
+	public static final int MPOR_INTERPOLATION_SQRT_T = 2;
 
 	/**
-	 * Retrieve the Array of Netting Groups
-	 * 
-	 * @return The Array of Netting Groups
+	 * MPoR Interpolation Type - BROWNIAN_BRIDGE
 	 */
 
-	public org.drip.xva.settings.NettingGroup[] nettingGroups()
+	public static final int MPOR_INTERPOLATION_BROWNIAN_BRIDGE = 4;
+
+	private int _iMarginCallFrequency = -1;
+
+	/**
+	 * Retrieve the MPoR Margin Call Frequency
+	 * 
+	 * @return The MPoR Margin Call Frequency
+	 */
+
+	public int marginCallFrequency()
 	{
-		return _aNG;
+		return _iMarginCallFrequency;
 	}
 }

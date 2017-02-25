@@ -201,7 +201,7 @@ public class PortfolioGroupSimulation {
 			aGTP[j] = new GroupTrajectoryPath (aGTE);
 		}
 
-		GroupTrajectoryPathAggregator gtpa = GroupTrajectoryPathAggregator.Standard (aGTP);
+		PathAggregator gtpa = PathAggregator.Standard (aGTP);
 
 		JulianDate[] adtVertexNode = gtpa.vertexes();
 

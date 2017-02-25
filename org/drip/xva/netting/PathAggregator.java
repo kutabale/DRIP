@@ -47,8 +47,8 @@ package org.drip.xva.netting;
  */
 
 /**
- * GroupTrajectoryPathAggregator aggregates across Multiple Path Projection Runs along the Granularity of a
- *  Netting Group. The References are:
+ * PathAggregator aggregates across Multiple Path Projection Runs along the Granularity of a Netting Group.
+ *  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,20 +67,20 @@ package org.drip.xva.netting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryPathAggregator {
+public class PathAggregator {
 	private org.drip.xva.netting.CollateralGroupDigest[] _aCGD = null;
 
 	/**
-	 * Construct a Standard GroupTrajectoryPathAggregator Instance
+	 * Construct a Standard PathAggregator Instance
 	 * 
 	 * @param adtVertex Array of the Evolution Vertex Dates
 	 * @param aaJDE Array of the Portfolio Date/Path Realizations
 	 * @param aaGTVN Array of the GroupTrajectoryVertexNumeraire Realizations
 	 * 
-	 * @return The Standard GroupTrajectoryPathAggregator Instance
+	 * @return The Standard PathAggregator Instance
 	 */
 
-	public static final GroupTrajectoryPathAggregator Standard (
+	public static final PathAggregator Standard (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
 		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
 		final org.drip.xva.collateral.GroupTrajectoryVertexNumeraire[][] aaGTVN)
@@ -126,7 +126,7 @@ public class GroupTrajectoryPathAggregator {
 			for (int i = 0; i < iNumSimulation; ++i)
 				aCGD[i] = org.drip.xva.netting.CollateralGroupDigest.Mono (aGTP[i]);
 
-			return new GroupTrajectoryPathAggregator (aCGD);
+			return new PathAggregator (aCGD);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -135,16 +135,16 @@ public class GroupTrajectoryPathAggregator {
 	}
 
 	/**
-	 * Construct a Standard GroupTrajectoryPathAggregator Instance
+	 * Construct a Standard PathAggregator Instance
 	 * 
 	 * @param adtVertex Array of the Evolution Vertex Dates
 	 * @param aaJDE Array of the Portfolio Date/Path Realizations
 	 * @param aGTVN Array of the GroupTrajectoryVertexNumeraire Realizations
 	 * 
-	 * @return The Standard GroupTrajectoryPathAggregator Instance
+	 * @return The Standard PathAggregator Instance
 	 */
 
-	public static final GroupTrajectoryPathAggregator Standard (
+	public static final PathAggregator Standard (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
 		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
 		final org.drip.xva.collateral.GroupTrajectoryVertexNumeraire[] aGTVN)
@@ -162,14 +162,14 @@ public class GroupTrajectoryPathAggregator {
 	}
 
 	/**
-	 * Construct a Standard GroupTrajectoryPathAggregator Instance
+	 * Construct a Standard PathAggregator Instance
 	 * 
 	 * @param aGTP Array of the GroupTrajectoryPath Realizations
 	 * 
-	 * @return The Standard GroupTrajectoryPathAggregator Instance
+	 * @return The Standard PathAggregator Instance
 	 */
 
-	public static final GroupTrajectoryPathAggregator Standard (
+	public static final PathAggregator Standard (
 		final org.drip.xva.collateral.GroupTrajectoryPath[] aGTP)
 	{
 		if (null == aGTP) return null;
@@ -184,7 +184,7 @@ public class GroupTrajectoryPathAggregator {
 			aCGD[i] = org.drip.xva.netting.CollateralGroupDigest.Mono (aGTP[i]);
 
 		try {
-			return new GroupTrajectoryPathAggregator (aCGD);
+			return new PathAggregator (aCGD);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -193,19 +193,19 @@ public class GroupTrajectoryPathAggregator {
 	}
 
 	/**
-	 * GroupTrajectoryPathAggregator Constructor
+	 * PathAggregator Constructor
 	 * 
 	 * @param aCGD The Array of Collateral Group Digests
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryPathAggregator (
+	public PathAggregator (
 		final org.drip.xva.netting.CollateralGroupDigest[] aCGD)
 		throws java.lang.Exception
 	{
 		if (null == (_aCGD = aCGD) || 0 == _aCGD.length)
-			throw new java.lang.Exception ("GroupTrajectoryPathAggregator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathAggregator Constructor => Invalid Inputs");
 	}
 
 	/**

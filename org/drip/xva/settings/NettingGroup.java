@@ -67,7 +67,61 @@ package org.drip.xva.settings;
  */
 
 public class NettingGroup {
+	private boolean _bContractual = true;
+	private boolean _bEnforceable = true;
+	private java.lang.String _strID = "";
+	private java.lang.String _strName = "";
 	private org.drip.xva.settings.CollateralGroup[] _aCG = null;
+
+	/**
+	 * NettingGroup Constructor
+	 * 
+	 * @param strID The Collateral Group ID
+	 * @param strName The Collateral Group Name
+	 * @param aCG The Array of Collateral Groups
+	 * @param bContractual TRUE - The Netting is Contractual
+	 * @param bEnforceable TRUE - The Netting is Enforceable
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public NettingGroup (
+		final java.lang.String strID,
+		final java.lang.String strName,
+		final org.drip.xva.settings.CollateralGroup[] aCG,
+		final boolean bContractual,
+		final boolean bEnforceable)
+		throws java.lang.Exception
+	{
+		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
+			_strName.isEmpty() || null == (_aCG = aCG) || 0 == _aCG.length)
+			throw new java.lang.Exception ("NettingGroup Constructor => Invalid Inputs");
+
+		_bContractual = bContractual;
+		_bEnforceable = bEnforceable;
+	}
+
+	/**
+	 * Retrieve the Collateral Group ID
+	 * 
+	 * @return The Collateral Group ID
+	 */
+
+	public java.lang.String id()
+	{
+		return _strID;
+	}
+
+	/**
+	 * Retrieve the Collateral Group Name
+	 * 
+	 * @return The Collateral Group Name
+	 */
+
+	public java.lang.String name()
+	{
+		return _strName;
+	}
 
 	/**
 	 * Retrieve the Array of Collateral Groups
@@ -78,5 +132,27 @@ public class NettingGroup {
 	public org.drip.xva.settings.CollateralGroup[] collateralGroups()
 	{
 		return _aCG;
+	}
+
+	/**
+	 * Indicate if the Netting allowed is Contractual
+	 * 
+	 * @return TRUE - The Netting allowed is Contractual
+	 */
+
+	public boolean contractual()
+	{
+		return _bContractual;
+	}
+
+	/**
+	 * Indicate if the Netting is Enforceable
+	 * 
+	 * @return TRUE - The Netting is Enforceable
+	 */
+
+	public boolean enforceable()
+	{
+		return _bEnforceable;
 	}
 }

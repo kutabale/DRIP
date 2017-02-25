@@ -985,8 +985,8 @@ public class Helper {
 	 * @return The Aggregated Period Set
 	 */
 
-	public static final java.util.Set<org.drip.analytics.cashflow.CompositePeriod> AggregateComponentPeriods (
-		final org.drip.product.definition.Component[] aComp)
+	public static final java.util.Set<org.drip.analytics.cashflow.CompositePeriod> AggregateComponentPeriods
+	(final org.drip.product.definition.Component[] aComp)
 	{
 		if (null == aComp) return null;
 

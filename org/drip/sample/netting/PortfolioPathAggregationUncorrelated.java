@@ -281,7 +281,7 @@ public class PortfolioPathAggregationUncorrelated {
 			);
 		}
 
-		GroupTrajectoryPathAggregator gtpa = GroupTrajectoryPathAggregator.Standard (
+		PathAggregator gtpa = PathAggregator.Standard (
 			adtVertex,
 			aaJDEPortfolio,
 			aGTVN

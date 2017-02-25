@@ -159,7 +159,7 @@ public class PortfolioPathAggregationDeterministic {
 			);
 		}
 
-		GroupTrajectoryPathAggregator gtpa = GroupTrajectoryPathAggregator.Standard (
+		PathAggregator gtpa = PathAggregator.Standard (
 			adtVertex,
 			aaJDE,
 			aGTVN

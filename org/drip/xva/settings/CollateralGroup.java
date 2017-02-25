@@ -67,8 +67,10 @@ package org.drip.xva.settings;
  */
 
 public class CollateralGroup {
+	private java.lang.String _strID = "";
 	private java.lang.String _strName = "";
 	private double _dblBankThreshold = java.lang.Double.NaN;
+	private double _dblIndependentAmount = java.lang.Double.NaN;
 	private double _dblCounterPartyThreshold = java.lang.Double.NaN;
 	private double _dblMinimumTransferAmount = java.lang.Double.NaN;
 
@@ -84,7 +86,7 @@ public class CollateralGroup {
 		final java.lang.String strName)
 	{
 		try {
-			return new CollateralGroup (strName, 0., 0., 0.);
+			return new CollateralGroup (org.drip.quant.common.StringUtil.GUID(), strName, 0., 0., 0., 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -95,27 +97,45 @@ public class CollateralGroup {
 	/**
 	 * CollateralGroup Constructor
 	 * 
+	 * @param strID The Collateral Group ID
 	 * @param strName The Collateral Group Name
 	 * @param dblCounterPartyThreshold The Collateral Group Counter Party Threshold
 	 * @param dblBankThreshold The Collateral Group Bank Threshold
 	 * @param dblMinimumTransferAmount The Collateral Group Minimum Transfer Amount
+	 * @param dblIndependentAmount The Collateral Group Independent Amount
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public CollateralGroup (
+		final java.lang.String strID,
 		final java.lang.String strName,
 		final double dblCounterPartyThreshold,
 		final double dblBankThreshold,
-		final double dblMinimumTransferAmount)
+		final double dblMinimumTransferAmount,
+		final double dblIndependentAmount)
 		throws java.lang.Exception
 	{
-		if (null == (_strName = strName) || _strName.isEmpty() || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblCounterPartyThreshold = dblCounterPartyThreshold) || 0. > _dblCounterPartyThreshold ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblBankThreshold = dblBankThreshold) || 0. >
-					_dblBankThreshold || !org.drip.quant.common.NumberUtil.IsValid (_dblMinimumTransferAmount
-						= dblMinimumTransferAmount))
+		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
+			_strName.isEmpty() || !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyThreshold =
+				dblCounterPartyThreshold) || 0. > _dblCounterPartyThreshold ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblBankThreshold = dblBankThreshold) || 0. >
+						_dblBankThreshold || !org.drip.quant.common.NumberUtil.IsValid
+							(_dblMinimumTransferAmount = dblMinimumTransferAmount) ||
+								!org.drip.quant.common.NumberUtil.IsValid (_dblIndependentAmount =
+									dblIndependentAmount))
 			throw new java.lang.Exception ("CollateralGroup Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Collateral Group ID
+	 * 
+	 * @return The Collateral Group ID
+	 */
+
+	public java.lang.String id()
+	{
+		return _strID;
 	}
 
 	/**
@@ -160,6 +180,17 @@ public class CollateralGroup {
 	public double minimumTransferAmount()
 	{
 		return _dblMinimumTransferAmount;
+	}
+
+	/**
+	 * Retrieve the Collateral Group Independent Amount
+	 * 
+	 * @return The Collateral Group Independent Amount
+	 */
+
+	public double independentAmount()
+	{
+		return _dblIndependentAmount;
 	}
 
 	/**
