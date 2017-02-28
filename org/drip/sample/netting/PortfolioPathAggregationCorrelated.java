@@ -9,8 +9,7 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.trajectory.CollateralGroupVertexNumeraire;
-import org.drip.xva.trajectory.NettingGroupPathAggregator;
+import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -92,9 +91,9 @@ public class PortfolioPathAggregationCorrelated {
 		double dblPortfolioDrift = 0.06;
 		double dblPortfolioVolatility = 0.15;
 		double dblPortfolioInitial = 1.;
-		double dblCollateralDrift = 0.01;
-		double dblCollateralVolatility = 0.05;
-		double dblCollateralInitial = 1.;
+		double dblCSADrift = 0.01;
+		double dblCSAVolatility = 0.05;
+		double dblCSAInitial = 1.;
 		double dblBankHazardRateDrift = 0.002;
 		double dblBankHazardRateVolatility = 0.20;
 		double dblBankHazardRateInitial = 0.015;
@@ -122,9 +121,9 @@ public class PortfolioPathAggregationCorrelated {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep];
-		JumpDiffusionEdge[][] aaJDEPortfolio = new JumpDiffusionEdge[iNumSimulation][iNumStep];
+		double[][] aadblPortfolioValue = new double[iNumSimulation][iNumStep];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
-		CollateralGroupVertexNumeraire[][] aaGTVN = new CollateralGroupVertexNumeraire[iNumSimulation][iNumStep];
+		CollateralGroupVertexNumeraire[][] aaCGVN = new CollateralGroupVertexNumeraire[iNumSimulation][iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -138,10 +137,10 @@ public class PortfolioPathAggregationCorrelated {
 			)
 		);
 
-		DiffusionEvolver deCollateral = new DiffusionEvolver (
+		DiffusionEvolver deCSA = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
-				dblCollateralDrift,
-				dblCollateralVolatility
+				dblCSADrift,
+				dblCSAVolatility
 			)
 		);
 
@@ -188,7 +187,7 @@ public class PortfolioPathAggregationCorrelated {
 				)
 			);
 
-			aaJDEPortfolio[i] = dePortfolio.incrementSequence (
+			JumpDiffusionEdge[] aJDEPortfolio = dePortfolio.incrementSequence (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblPortfolioInitial,
@@ -199,10 +198,13 @@ public class PortfolioPathAggregationCorrelated {
 				dblTimeWidth
 			);
 
-			JumpDiffusionEdge[] aJDECollateral = deCollateral.incrementSequence (
+			for (int j = 0; j < aJDEPortfolio.length; ++j)
+				aadblPortfolioValue[i][j] = aJDEPortfolio[j].finish();
+
+			JumpDiffusionEdge[] aJDECSA = deCSA.incrementSequence (
 				new JumpDiffusionVertex (
 					dblTime,
-					dblCollateralInitial,
+					dblCSAInitial,
 					0.,
 					false
 				),
@@ -266,8 +268,8 @@ public class PortfolioPathAggregationCorrelated {
 			);
 
 			for (int j = 0; j < iNumStep; ++j)
-				aaGTVN[i][j] = new CollateralGroupVertexNumeraire (
-					aJDECollateral[j].finish(),
+				aaCGVN[i][j] = new CollateralGroupVertexNumeraire (
+					aJDECSA[j].finish(),
 					Math.exp (-0.5 * aJDEBankHazardRate[j].finish() * (j + 1)),
 					aJDEBankRecoveryRate[j].finish(),
 					aJDEBankFundingSpread[j].finish(),
@@ -276,13 +278,13 @@ public class PortfolioPathAggregationCorrelated {
 				);
 		}
 
-		NettingGroupPathAggregator gtpa = NettingGroupPathAggregator.Standard (
+		NettingGroupPathAggregator ngpa = NettingGroupPathAggregator.Standard (
 			adtVertex,
-			aaJDEPortfolio,
-			aaGTVN
+			aadblPortfolioValue,
+			aaCGVN
 		);
 
-		JulianDate[] adtVertexNode = gtpa.vertexes();
+		JulianDate[] adtVertexNode = ngpa.vertexes();
 
 		System.out.println();
 
@@ -297,7 +299,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
-		double[] adblEE = gtpa.collateralizedExposure();
+		double[] adblEE = ngpa.collateralizedExposure();
 
 		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblPortfolioInitial, 1, 4, 1.) + "   |";
 
@@ -306,7 +308,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblEPE = gtpa.collateralizedPositiveExposure();
+		double[] adblEPE = ngpa.collateralizedPositiveExposure();
 
 		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblPortfolioInitial, 1, 4, 1.) + "   |";
 
@@ -315,7 +317,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblENE = gtpa.collateralizedNegativeExposure();
+		double[] adblENE = ngpa.collateralizedNegativeExposure();
 
 		strDump = "\t|  NEGATIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 
@@ -324,7 +326,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblEEPV = gtpa.collateralizedExposurePV();
+		double[] adblEEPV = ngpa.collateralizedExposurePV();
 
 		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblPortfolioInitial, 1, 4, 1.) + "   |";
 
@@ -333,7 +335,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblEPEPV = gtpa.collateralizedPositiveExposurePV();
+		double[] adblEPEPV = ngpa.collateralizedPositiveExposurePV();
 
 		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblPortfolioInitial, 1, 4, 1.) + "   |";
 
@@ -342,7 +344,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println (strDump);
 
-		double[] adblENEPV = gtpa.collateralizedNegativeExposurePV();
+		double[] adblENEPV = ngpa.collateralizedNegativeExposurePV();
 
 		strDump = "\t| NEGATIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 
@@ -357,11 +359,11 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println ("\t||----------------||");
 
-		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (gtpa.cva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (ngpa.cva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (gtpa.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (ngpa.dva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (gtpa.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (ngpa.fca(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||----------------||");
 

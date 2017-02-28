@@ -74,7 +74,7 @@ public class NettingGroupPathAggregator {
 	 * Construct a Standard NettingGroupPathAggregator Instance
 	 * 
 	 * @param adtVertex Array of the Evolution Vertex Dates
-	 * @param aaJDE Array of the Portfolio Date/Path Realizations
+	 * @param aadblPortfolioValue Array of the Portfolio Path Value Realizations
 	 * @param aaCGVN Array of the GroupTrajectoryVertexNumeraire Realizations
 	 * 
 	 * @return The Standard NettingGroupPathAggregator Instance
@@ -82,29 +82,31 @@ public class NettingGroupPathAggregator {
 
 	public static final NettingGroupPathAggregator Standard (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
-		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
+		final double[][] aadblPortfolioValue,
 		final org.drip.xva.trajectory.CollateralGroupVertexNumeraire[][] aaCGVN)
 	{
-		if (null == adtVertex || null == aaJDE || null == aaJDE[0] || null == aaCGVN || null == aaCGVN[0])
-			return null;
+		if (null == adtVertex || null == aadblPortfolioValue || null == aaCGVN) return null;
 
-		int iNumSimulation = aaJDE.length;
-		int iNumTimeStep = aaJDE[0].length;
+		int iNumSimulation = aadblPortfolioValue.length;
+
+		if (0 == iNumSimulation || null == aadblPortfolioValue[0] || null == aaCGVN[0]) return null;
+
+		int iNumTimeStep = aadblPortfolioValue[0].length;
 		org.drip.xva.trajectory.CollateralGroupPath[] aCGP = 0 == iNumSimulation ? null : new
 			org.drip.xva.trajectory.CollateralGroupPath[iNumSimulation];
 		org.drip.xva.trajectory.CollateralGroupVertex[][] aaCGV = 0 == iNumSimulation || 1 >= iNumTimeStep ?
 			null : new org.drip.xva.trajectory.CollateralGroupVertex[iNumSimulation][iNumTimeStep];
 
-		if (0 == iNumSimulation || iNumSimulation != aaCGVN.length || 1 >= iNumTimeStep || iNumTimeStep !=
-			adtVertex.length || iNumTimeStep != aaCGVN[0].length)
+		if (iNumSimulation != aaCGVN.length || 1 >= iNumTimeStep || iNumTimeStep != adtVertex.length ||
+			iNumTimeStep != aaCGVN[0].length)
 			return null;
 
 		try {
 			for (int i = 0; i < iNumSimulation; ++i) {
 				for (int j = 0; j < iNumTimeStep; ++j)
 					aaCGV[i][j] = new org.drip.xva.trajectory.CollateralGroupVertex (adtVertex[j], new
-						org.drip.xva.trajectory.CollateralGroupVertexExposure (aaJDE[i][j].finish(), 0., 0.),
-							aaCGVN[i][j]);
+						org.drip.xva.trajectory.CollateralGroupVertexExposure (aadblPortfolioValue[i][j], 0.,
+							0.), aaCGVN[i][j]);
 			}
 
 			for (int i = 0; i < iNumSimulation; ++i) {
@@ -138,7 +140,7 @@ public class NettingGroupPathAggregator {
 	 * Construct a Standard NettingGroupPathAggregator Instance
 	 * 
 	 * @param adtVertex Array of the Evolution Vertex Dates
-	 * @param aaJDE Array of the Portfolio Date/Path Realizations
+	 * @param aadblPortfolioValue Array of the Portfolio Path Value Realizations
 	 * @param aCGVN Array of the GroupTrajectoryVertexNumeraire Realizations
 	 * 
 	 * @return The Standard NettingGroupPathAggregator Instance
@@ -146,19 +148,19 @@ public class NettingGroupPathAggregator {
 
 	public static final NettingGroupPathAggregator Standard (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
-		final org.drip.measure.realization.JumpDiffusionEdge[][] aaJDE,
+		final double[][] aadblPortfolioValue,
 		final org.drip.xva.trajectory.CollateralGroupVertexNumeraire[] aCGVN)
 	{
-		if (null == aaJDE) return null;
+		if (null == aadblPortfolioValue) return null;
 
-		int iNumSimulation = aaJDE.length;
+		int iNumSimulation = aadblPortfolioValue.length;
 		org.drip.xva.trajectory.CollateralGroupVertexNumeraire[][] aaCGVN = 0 == iNumSimulation ? null : new
 			org.drip.xva.trajectory.CollateralGroupVertexNumeraire[iNumSimulation][];
 
 		for (int i = 0; i < iNumSimulation; ++i)
 			aaCGVN[i] = aCGVN;
 
-		return Standard (adtVertex, aaJDE, aaCGVN);
+		return Standard (adtVertex, aadblPortfolioValue, aaCGVN);
 	}
 
 	/**

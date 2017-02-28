@@ -102,25 +102,25 @@ public class PortfolioGroupRun {
 		double[] adblBankFundingSpread = new double[iNumStep];
 		double[] adblCounterPartySurvival = new double[iNumStep];
 		double[] adblCounterPartyRecovery = new double[iNumStep];
-		CollateralGroupEdge[] aGTE1 = new CollateralGroupEdge[iNumStep - 1];
-		CollateralGroupEdge[] aGTE2 = new CollateralGroupEdge[iNumStep - 1];
-		CollateralGroupVertex[] aGTV1 = new CollateralGroupVertex[iNumStep];
-		CollateralGroupVertex[] aGTV2 = new CollateralGroupVertex[iNumStep];
+		CollateralGroupEdge[] aCGE1 = new CollateralGroupEdge[iNumStep - 1];
+		CollateralGroupEdge[] aCGE2 = new CollateralGroupEdge[iNumStep - 1];
+		CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep];
+		CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
-		CollateralGroupVertexExposure[] aGTVE1 = new CollateralGroupVertexExposure[iNumStep];
-		CollateralGroupVertexExposure[] aGTVE2 = new CollateralGroupVertexExposure[iNumStep];
-		CollateralGroupVertexNumeraire[] aGTVN = new CollateralGroupVertexNumeraire[iNumStep];
+		CollateralGroupVertexExposure[] aCGVE1 = new CollateralGroupVertexExposure[iNumStep];
+		CollateralGroupVertexExposure[] aCGVE2 = new CollateralGroupVertexExposure[iNumStep];
+		CollateralGroupVertexNumeraire[] aCGVN = new CollateralGroupVertexNumeraire[iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		DiffusionEvolver meAsset = new DiffusionEvolver (
+		DiffusionEvolver deAsset = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblAssetDrift,
 				dblAssetVolatility
 			)
 		);
 
-		JumpDiffusionEdge[] aR1Asset1 = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aJDEAsset1 = deAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialAssetValue,
@@ -131,7 +131,7 @@ public class PortfolioGroupRun {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aR1Asset2 = meAsset.incrementSequence (
+		JumpDiffusionEdge[] aJDEAsset2 = deAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
 				dblInitialAssetValue,
@@ -178,7 +178,7 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		for (int i = 0; i < aR1Asset1.length; ++i) {
+		for (int i = 0; i < aJDEAsset1.length; ++i) {
 			adblBankRecovery[i] = dblBankRecoveryRate;
 			adblBankFundingSpread[i] = dblBankFundingSpread;
 			adblCounterPartyRecovery[i] = dblCounterPartyRecoveryRate;
@@ -189,21 +189,21 @@ public class PortfolioGroupRun {
 
 			adblBankSurvival[i] = Math.exp (-0.5 * dblBankHazardRate * (i + 1));
 
-			aGTVE1[i] = new CollateralGroupVertexExposure (
-				aR1Asset1[i].finish(),
+			aCGVE1[i] = new CollateralGroupVertexExposure (
+				aJDEAsset1[i].finish(),
 				0.,
 				0.
 			);
 
-			aGTVE2[i] = new CollateralGroupVertexExposure (
-				aR1Asset2[i].finish(),
+			aCGVE2[i] = new CollateralGroupVertexExposure (
+				aJDEAsset2[i].finish(),
 				0.,
 				0.
 			);
 
 			adblCounterPartySurvival[i] = Math.exp (-0.5 * dblCounterPartyHazardRate * (i + 1));
 
-			aGTVN[i] = new CollateralGroupVertexNumeraire (
+			aCGVN[i] = new CollateralGroupVertexNumeraire (
 				adblCollateral[i],
 				adblBankSurvival[i],
 				adblBankRecovery[i],
@@ -212,26 +212,26 @@ public class PortfolioGroupRun {
 				adblCounterPartyRecovery[i]
 			);
 
-			aGTV1[i] = new CollateralGroupVertex (
+			aCGV1[i] = new CollateralGroupVertex (
 				adtVertex[i],
-				aGTVE1[i],
-				aGTVN[i]
+				aCGVE1[i],
+				aCGVN[i]
 			);
 
-			aGTV2[i] = new CollateralGroupVertex (
+			aCGV2[i] = new CollateralGroupVertex (
 				adtVertex[i],
-				aGTVE2[i],
-				aGTVN[i]
+				aCGVE2[i],
+				aCGVN[i]
 			);
 
 			System.out.println (
 				"\t| " + adtVertex[i] + " => " +
-				FormatUtil.FormatDouble (aGTVE1[i].net(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTVE1[i].positive(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTVE1[i].negative(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTVE2[i].net(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTVE2[i].positive(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTVE2[i].negative(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGVE1[i].net(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGVE1[i].positive(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGVE1[i].negative(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGVE2[i].net(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGVE2[i].positive(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGVE2[i].negative(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblCollateral[i], 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblBankSurvival[i], 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblBankRecovery[i], 1, 6, 1.) + " | " +
@@ -267,25 +267,25 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
 
-		for (int i = 1; i < aR1Asset1.length; ++i) {
-			aGTE1[i - 1] = new CollateralGroupEdge (
-				aGTV1[i - 1],
-				aGTV1[i]
+		for (int i = 1; i < aJDEAsset1.length; ++i) {
+			aCGE1[i - 1] = new CollateralGroupEdge (
+				aCGV1[i - 1],
+				aCGV1[i]
 			);
 
-			aGTE2[i - 1] = new CollateralGroupEdge (
-				aGTV2[i - 1],
-				aGTV2[i]
+			aCGE2[i - 1] = new CollateralGroupEdge (
+				aCGV2[i - 1],
+				aCGV2[i]
 			);
 
 			System.out.println ("\t| [" +
-				aGTE1[i - 1].head().vertex() + " -> " + aGTE1[i - 1].tail().vertex() + "] => " +
-				FormatUtil.FormatDouble (aGTE1[i - 1].credit(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTE1[i - 1].debt(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTE1[i - 1].funding(), 1, 6, 1.) + " || " +
-				FormatUtil.FormatDouble (aGTE2[i - 1].credit(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTE2[i - 1].debt(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aGTE2[i - 1].funding(), 1, 6, 1.) + " ||"
+				aCGE1[i - 1].head().vertex() + " -> " + aCGE1[i - 1].tail().vertex() + "] => " +
+				FormatUtil.FormatDouble (aCGE1[i - 1].credit(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGE1[i - 1].debt(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGE1[i - 1].funding(), 1, 6, 1.) + " || " +
+				FormatUtil.FormatDouble (aCGE2[i - 1].credit(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGE2[i - 1].debt(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aCGE2[i - 1].funding(), 1, 6, 1.) + " ||"
 			);
 		}
 
@@ -293,14 +293,14 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		NettingGroupPathAggregator gta = NettingGroupPathAggregator.Standard (
+		NettingGroupPathAggregator ngpa = NettingGroupPathAggregator.Standard (
 			new CollateralGroupPath[] {
-				new CollateralGroupPath (aGTE1),
-				new CollateralGroupPath (aGTE2)
+				new CollateralGroupPath (aCGE1),
+				new CollateralGroupPath (aCGE2)
 			}
 		);
 
-		JulianDate[] adtVertexNode = gta.vertexes();
+		JulianDate[] adtVertexNode = ngpa.vertexes();
 
 		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
@@ -313,7 +313,7 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
-		double[] adblEE = gta.collateralizedExposure();
+		double[] adblEE = ngpa.collateralizedExposure();
 
 		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -322,7 +322,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblEPE = gta.collateralizedPositiveExposure();
+		double[] adblEPE = ngpa.collateralizedPositiveExposure();
 
 		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -331,7 +331,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblENE = gta.collateralizedNegativeExposure();
+		double[] adblENE = ngpa.collateralizedNegativeExposure();
 
 		strDump = "\t|  NEGATIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 
@@ -340,7 +340,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblEEPV = gta.collateralizedExposurePV();
+		double[] adblEEPV = ngpa.collateralizedExposurePV();
 
 		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -349,7 +349,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblEPEPV = gta.collateralizedPositiveExposurePV();
+		double[] adblEPEPV = ngpa.collateralizedPositiveExposurePV();
 
 		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -358,7 +358,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblENEPV = gta.collateralizedNegativeExposurePV();
+		double[] adblENEPV = ngpa.collateralizedNegativeExposurePV();
 
 		strDump = "\t| NEGATIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 
@@ -373,11 +373,11 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t||----------------||");
 
-		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (gta.cva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (ngpa.cva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (gta.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (ngpa.dva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (gta.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (ngpa.fca(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||----------------||");
 	}

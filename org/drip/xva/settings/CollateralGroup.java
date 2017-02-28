@@ -69,10 +69,10 @@ package org.drip.xva.settings;
 public class CollateralGroup {
 	private java.lang.String _strID = "";
 	private java.lang.String _strName = "";
-	private double _dblBankThreshold = java.lang.Double.NaN;
 	private double _dblIndependentAmount = java.lang.Double.NaN;
-	private double _dblCounterPartyThreshold = java.lang.Double.NaN;
 	private double _dblMinimumTransferAmount = java.lang.Double.NaN;
+	private org.drip.function.definition.R1ToR1 _r1ToR1BankThreshold = null;
+	private org.drip.function.definition.R1ToR1 _r1ToR1CounterPartyThreshold = null;
 
 	/**
 	 * Generate an "Uncollateralized" Instance of the Named Collateral Group
@@ -86,7 +86,8 @@ public class CollateralGroup {
 		final java.lang.String strName)
 	{
 		try {
-			return new CollateralGroup (org.drip.quant.common.StringUtil.GUID(), strName, 0., 0., 0., 0.);
+			return new CollateralGroup (org.drip.quant.common.StringUtil.GUID(), strName, null, null, 0.,
+				0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -99,8 +100,8 @@ public class CollateralGroup {
 	 * 
 	 * @param strID The Collateral Group ID
 	 * @param strName The Collateral Group Name
-	 * @param dblCounterPartyThreshold The Collateral Group Counter Party Threshold
-	 * @param dblBankThreshold The Collateral Group Bank Threshold
+	 * @param r1ToR1CounterPartyThreshold The Collateral Group Counter Party Threshold R^1 -> R^1 Function
+	 * @param r1ToR1BankThreshold The Collateral Group Bank Threshold R^1 -> R^1 Function
 	 * @param dblMinimumTransferAmount The Collateral Group Minimum Transfer Amount
 	 * @param dblIndependentAmount The Collateral Group Independent Amount
 	 * 
@@ -110,21 +111,19 @@ public class CollateralGroup {
 	public CollateralGroup (
 		final java.lang.String strID,
 		final java.lang.String strName,
-		final double dblCounterPartyThreshold,
-		final double dblBankThreshold,
+		final org.drip.function.definition.R1ToR1 r1ToR1CounterPartyThreshold,
+		final org.drip.function.definition.R1ToR1 r1ToR1BankThreshold,
 		final double dblMinimumTransferAmount,
 		final double dblIndependentAmount)
 		throws java.lang.Exception
 	{
 		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
-			_strName.isEmpty() || !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyThreshold =
-				dblCounterPartyThreshold) || 0. > _dblCounterPartyThreshold ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblBankThreshold = dblBankThreshold) || 0. >
-						_dblBankThreshold || !org.drip.quant.common.NumberUtil.IsValid
-							(_dblMinimumTransferAmount = dblMinimumTransferAmount) ||
-								!org.drip.quant.common.NumberUtil.IsValid (_dblIndependentAmount =
-									dblIndependentAmount))
+			_strName.isEmpty() || !org.drip.quant.common.NumberUtil.IsValid (_dblMinimumTransferAmount =
+				dblMinimumTransferAmount) || !org.drip.quant.common.NumberUtil.IsValid (_dblIndependentAmount
+					= dblIndependentAmount))
 			throw new java.lang.Exception ("CollateralGroup Constructor => Invalid Inputs");
+
+		_r1ToR1BankThreshold = r1ToR1BankThreshold;
 	}
 
 	/**
@@ -150,25 +149,25 @@ public class CollateralGroup {
 	}
 
 	/**
-	 * Retrieve the Collateral Group Counter Party Threshold
+	 * Retrieve the Collateral Group Counter Party Threshold R^1 -> R^1 Function
 	 * 
-	 * @return The Collateral Group Counter Party Threshold
+	 * @return The Collateral Group Counter Party Threshold R^1 -> R^1 Function
 	 */
 
-	public double counterPartyThreshold()
+	public org.drip.function.definition.R1ToR1 counterPartyThreshold()
 	{
-		return _dblCounterPartyThreshold;
+		return _r1ToR1CounterPartyThreshold;
 	}
 
 	/**
-	 * Retrieve the Collateral Group Bank Threshold
+	 * Retrieve the Collateral Group Bank Threshold R^1 -> R^1 Function
 	 * 
-	 * @return The Collateral Group Bank Threshold
+	 * @return The Collateral Group Bank Threshold R^1 -> R^1 Function
 	 */
 
-	public double bankThreshold()
+	public org.drip.function.definition.R1ToR1 bankThreshold()
 	{
-		return _dblBankThreshold;
+		return _r1ToR1BankThreshold;
 	}
 
 	/**
@@ -201,6 +200,6 @@ public class CollateralGroup {
 
 	public boolean isUncollateralized()
 	{
-		return 0. == _dblCounterPartyThreshold && 0. == _dblBankThreshold;
+		return null == _r1ToR1CounterPartyThreshold && null == _r1ToR1BankThreshold;
 	}
 }

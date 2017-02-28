@@ -78,8 +78,8 @@ import org.drip.xva.trajectory.*;
 
 public class PortfolioPathAggregationDeterministic {
 
-	private static final JumpDiffusionEdge[][] PortfolioRealization (
-		final DiffusionEvolver mePortfolio,
+	private static final double[][] PortfolioRealization (
+		final DiffusionEvolver dePortfolio,
 		final double dblInitialAssetValue,
 		final double dblTime,
 		final double dblTimeWidth,
@@ -87,10 +87,10 @@ public class PortfolioPathAggregationDeterministic {
 		final int iNumSimulation)
 		throws Exception
 	{
-		JumpDiffusionEdge[][] aaJDE = new JumpDiffusionEdge[iNumSimulation][];
+		double[][] aadblPortfolioValue = new double[iNumSimulation][];
 
-		for (int i = 0; i < iNumSimulation; ++i)
-			aaJDE[i] = mePortfolio.incrementSequence (
+		for (int i = 0; i < iNumSimulation; ++i) {
+			JumpDiffusionEdge[] aJDE = dePortfolio.incrementSequence (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblInitialAssetValue,
@@ -101,7 +101,13 @@ public class PortfolioPathAggregationDeterministic {
 				dblTimeWidth
 			);
 
-		return aaJDE;
+			aadblPortfolioValue[i] = new double[aJDE.length];
+
+			for (int j = 0; j < aJDE.length; ++j)
+				aadblPortfolioValue[i][j] = aJDE[j].finish();
+		}
+
+		return aadblPortfolioValue;
 	}
 
 	public static final void main (
@@ -125,19 +131,17 @@ public class PortfolioPathAggregationDeterministic {
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
-		CollateralGroupVertexNumeraire[] aGTVN = new CollateralGroupVertexNumeraire[iNumStep];
+		CollateralGroupVertexNumeraire[] aCGVN = new CollateralGroupVertexNumeraire[iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		DiffusionEvolver mePortfolio = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblAssetDrift,
-				dblAssetVolatility
-			)
-		);
-
-		JumpDiffusionEdge[][] aaJDE = PortfolioRealization (
-			mePortfolio,
+		double[][] aadblPortfolioValue = PortfolioRealization (
+			new DiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					dblAssetDrift,
+					dblAssetVolatility
+				)
+			),
 			dblInitialAssetValue,
 			dblTime,
 			dblTimeWidth,
@@ -148,7 +152,7 @@ public class PortfolioPathAggregationDeterministic {
 		for (int i = 0; i < iNumStep; ++i) {
 			adtVertex[i] = dtSpot.addMonths (6 * i + 6);
 
-			aGTVN[i] = new CollateralGroupVertexNumeraire (
+			aCGVN[i] = new CollateralGroupVertexNumeraire (
 				Math.exp (0.5 * dblCollateralDrift * (i + 1)),
 				Math.exp (-0.5 * dblBankHazardRate * (i + 1)),
 				dblBankRecoveryRate,
@@ -158,13 +162,13 @@ public class PortfolioPathAggregationDeterministic {
 			);
 		}
 
-		NettingGroupPathAggregator gtpa = NettingGroupPathAggregator.Standard (
+		NettingGroupPathAggregator ngpa = NettingGroupPathAggregator.Standard (
 			adtVertex,
-			aaJDE,
-			aGTVN
+			aadblPortfolioValue,
+			aCGVN
 		);
 
-		JulianDate[] adtVertexNode = gtpa.vertexes();
+		JulianDate[] adtVertexNode = ngpa.vertexes();
 
 		System.out.println();
 
@@ -179,7 +183,7 @@ public class PortfolioPathAggregationDeterministic {
 
 		System.out.println ("\t|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
-		double[] adblEE = gtpa.collateralizedExposure();
+		double[] adblEE = ngpa.collateralizedExposure();
 
 		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -188,7 +192,7 @@ public class PortfolioPathAggregationDeterministic {
 
 		System.out.println (strDump);
 
-		double[] adblEPE = gtpa.collateralizedPositiveExposure();
+		double[] adblEPE = ngpa.collateralizedPositiveExposure();
 
 		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -197,7 +201,7 @@ public class PortfolioPathAggregationDeterministic {
 
 		System.out.println (strDump);
 
-		double[] adblENE = gtpa.collateralizedNegativeExposure();
+		double[] adblENE = ngpa.collateralizedNegativeExposure();
 
 		strDump = "\t|  NEGATIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 
@@ -206,7 +210,7 @@ public class PortfolioPathAggregationDeterministic {
 
 		System.out.println (strDump);
 
-		double[] adblEEPV = gtpa.collateralizedExposurePV();
+		double[] adblEEPV = ngpa.collateralizedExposurePV();
 
 		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -215,7 +219,7 @@ public class PortfolioPathAggregationDeterministic {
 
 		System.out.println (strDump);
 
-		double[] adblEPEPV = gtpa.collateralizedPositiveExposurePV();
+		double[] adblEPEPV = ngpa.collateralizedPositiveExposurePV();
 
 		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblInitialAssetValue, 1, 4, 1.) + "   |";
 
@@ -224,7 +228,7 @@ public class PortfolioPathAggregationDeterministic {
 
 		System.out.println (strDump);
 
-		double[] adblENEPV = gtpa.collateralizedNegativeExposurePV();
+		double[] adblENEPV = ngpa.collateralizedNegativeExposurePV();
 
 		strDump = "\t| NEGATIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (0., 1, 4, 1.) + "   |";
 
@@ -239,11 +243,11 @@ public class PortfolioPathAggregationDeterministic {
 
 		System.out.println ("\t||----------------||");
 
-		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (gtpa.cva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (ngpa.cva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (gtpa.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (ngpa.dva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (gtpa.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (ngpa.fca(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||----------------||");
 

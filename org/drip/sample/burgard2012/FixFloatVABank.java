@@ -79,7 +79,7 @@ import org.drip.xva.trajectory.*;
 public class FixFloatVABank {
 
 	private static final JumpDiffusionEdge[][] PortfolioRealization (
-		final DiffusionEvolver mePortfolio,
+		final DiffusionEvolver dePortfolio,
 		final double dblInitialAssetValue,
 		final double dblTime,
 		final double dblTimeWidth,
@@ -90,7 +90,7 @@ public class FixFloatVABank {
 		JumpDiffusionEdge[][] aaJDE = new JumpDiffusionEdge[iNumSimulation][];
 
 		for (int i = 0; i < iNumSimulation; ++i)
-			aaJDE[i] = mePortfolio.incrementSequence (
+			aaJDE[i] = dePortfolio.incrementSequence (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblInitialAssetValue,
@@ -127,21 +127,19 @@ public class FixFloatVABank {
 		double[] adblBankFundingSpread = new double[iNumStep];
 		double[] adblCounterPartySurvival = new double[iNumStep];
 		double[] adblCounterPartyRecovery = new double[iNumStep];
-		CollateralGroupPath[] aGTP = new CollateralGroupPath[iNumSimulation];
+		CollateralGroupPath[] aCGP = new CollateralGroupPath[iNumSimulation];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
-		CollateralGroupVertex[][] aaGTV = new CollateralGroupVertex[iNumSimulation][iNumStep];
+		CollateralGroupVertex[][] aaCGV = new CollateralGroupVertex[iNumSimulation][iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		DiffusionEvolver mePortfolio = new DiffusionEvolver (
-			DiffusionEvaluatorLinear.Standard (
-				dblAssetDrift,
-				dblAssetVolatility
-			)
-		);
-
 		JumpDiffusionEdge[][] aaJDE = PortfolioRealization (
-			mePortfolio,
+			new DiffusionEvolver (
+				DiffusionEvaluatorLinear.Standard (
+					dblAssetDrift,
+					dblAssetVolatility
+				)
+			),
 			dblInitialAssetValue,
 			dblTime,
 			dblTimeWidth,
@@ -165,7 +163,7 @@ public class FixFloatVABank {
 
 		for (int i = 0; i < iNumStep; ++i) {
 			for (int j = 0; j < iNumSimulation; ++j)
-				aaGTV[j][i] = new CollateralGroupVertex (
+				aaCGV[j][i] = new CollateralGroupVertex (
 					adtVertex[i],
 					new CollateralGroupVertexExposure (
 						aaJDE[j][i].finish(),
@@ -184,25 +182,25 @@ public class FixFloatVABank {
 		}
 
 		for (int j = 0; j < iNumSimulation; ++j) {
-			CollateralGroupEdge[] aGTE = new CollateralGroupEdge[iNumStep - 1];
+			CollateralGroupEdge[] aCGE = new CollateralGroupEdge[iNumStep - 1];
 
 			for (int i = 1; i < iNumStep; ++i)
-				aGTE[i - 1] = new CollateralGroupEdge (
-					aaGTV[j][i - 1],
-					aaGTV[j][i]
+				aCGE[i - 1] = new CollateralGroupEdge (
+					aaCGV[j][i - 1],
+					aaCGV[j][i]
 				);
 
-			aGTP[j] = new CollateralGroupPath (aGTE);
+			aCGP[j] = new CollateralGroupPath (aCGE);
 		}
 
-		NettingGroupPathAggregator gta = NettingGroupPathAggregator.Standard (aGTP);
+		NettingGroupPathAggregator ngpa = NettingGroupPathAggregator.Standard (aCGP);
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblBankHazardRate, 3, 0, 10000.) + " bp => " +
-			FormatUtil.FormatDouble (gta.cva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (gta.dva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (gta.fca(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (gta.total(), 1, 2, 100.) + "% ||"
+			FormatUtil.FormatDouble (ngpa.cva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (ngpa.dva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (ngpa.fca(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (ngpa.total(), 1, 2, 100.) + "% ||"
 		);
 	}
 
