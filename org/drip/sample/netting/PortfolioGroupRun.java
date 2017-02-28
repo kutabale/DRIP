@@ -8,12 +8,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.GroupTrajectoryEdge;
-import org.drip.xva.collateral.GroupTrajectoryPath;
-import org.drip.xva.collateral.GroupTrajectoryVertex;
-import org.drip.xva.collateral.GroupTrajectoryVertexExposure;
-import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
-import org.drip.xva.netting.*;
+import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -107,14 +102,14 @@ public class PortfolioGroupRun {
 		double[] adblBankFundingSpread = new double[iNumStep];
 		double[] adblCounterPartySurvival = new double[iNumStep];
 		double[] adblCounterPartyRecovery = new double[iNumStep];
-		GroupTrajectoryEdge[] aGTE1 = new GroupTrajectoryEdge[iNumStep - 1];
-		GroupTrajectoryEdge[] aGTE2 = new GroupTrajectoryEdge[iNumStep - 1];
-		GroupTrajectoryVertex[] aGTV1 = new GroupTrajectoryVertex[iNumStep];
-		GroupTrajectoryVertex[] aGTV2 = new GroupTrajectoryVertex[iNumStep];
+		CollateralGroupEdge[] aGTE1 = new CollateralGroupEdge[iNumStep - 1];
+		CollateralGroupEdge[] aGTE2 = new CollateralGroupEdge[iNumStep - 1];
+		CollateralGroupVertex[] aGTV1 = new CollateralGroupVertex[iNumStep];
+		CollateralGroupVertex[] aGTV2 = new CollateralGroupVertex[iNumStep];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
-		GroupTrajectoryVertexExposure[] aGTVE1 = new GroupTrajectoryVertexExposure[iNumStep];
-		GroupTrajectoryVertexExposure[] aGTVE2 = new GroupTrajectoryVertexExposure[iNumStep];
-		GroupTrajectoryVertexNumeraire[] aGTVN = new GroupTrajectoryVertexNumeraire[iNumStep];
+		CollateralGroupVertexExposure[] aGTVE1 = new CollateralGroupVertexExposure[iNumStep];
+		CollateralGroupVertexExposure[] aGTVE2 = new CollateralGroupVertexExposure[iNumStep];
+		CollateralGroupVertexNumeraire[] aGTVN = new CollateralGroupVertexNumeraire[iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -194,19 +189,21 @@ public class PortfolioGroupRun {
 
 			adblBankSurvival[i] = Math.exp (-0.5 * dblBankHazardRate * (i + 1));
 
-			aGTVE1[i] = new GroupTrajectoryVertexExposure (
+			aGTVE1[i] = new CollateralGroupVertexExposure (
 				aR1Asset1[i].finish(),
+				0.,
 				0.
 			);
 
-			aGTVE2[i] = new GroupTrajectoryVertexExposure (
+			aGTVE2[i] = new CollateralGroupVertexExposure (
 				aR1Asset2[i].finish(),
+				0.,
 				0.
 			);
 
 			adblCounterPartySurvival[i] = Math.exp (-0.5 * dblCounterPartyHazardRate * (i + 1));
 
-			aGTVN[i] = new GroupTrajectoryVertexNumeraire (
+			aGTVN[i] = new CollateralGroupVertexNumeraire (
 				adblCollateral[i],
 				adblBankSurvival[i],
 				adblBankRecovery[i],
@@ -215,13 +212,13 @@ public class PortfolioGroupRun {
 				adblCounterPartyRecovery[i]
 			);
 
-			aGTV1[i] = new GroupTrajectoryVertex (
+			aGTV1[i] = new CollateralGroupVertex (
 				adtVertex[i],
 				aGTVE1[i],
 				aGTVN[i]
 			);
 
-			aGTV2[i] = new GroupTrajectoryVertex (
+			aGTV2[i] = new CollateralGroupVertex (
 				adtVertex[i],
 				aGTVE2[i],
 				aGTVN[i]
@@ -271,12 +268,12 @@ public class PortfolioGroupRun {
 		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 1; i < aR1Asset1.length; ++i) {
-			aGTE1[i - 1] = new GroupTrajectoryEdge (
+			aGTE1[i - 1] = new CollateralGroupEdge (
 				aGTV1[i - 1],
 				aGTV1[i]
 			);
 
-			aGTE2[i - 1] = new GroupTrajectoryEdge (
+			aGTE2[i - 1] = new CollateralGroupEdge (
 				aGTV2[i - 1],
 				aGTV2[i]
 			);
@@ -296,10 +293,10 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		PathAggregator gta = PathAggregator.Standard (
-			new GroupTrajectoryPath[] {
-				new GroupTrajectoryPath (aGTE1),
-				new GroupTrajectoryPath (aGTE2)
+		NettingGroupPathAggregator gta = NettingGroupPathAggregator.Standard (
+			new CollateralGroupPath[] {
+				new CollateralGroupPath (aGTE1),
+				new CollateralGroupPath (aGTE2)
 			}
 		);
 

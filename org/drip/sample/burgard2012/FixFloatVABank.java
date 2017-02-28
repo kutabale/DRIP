@@ -8,12 +8,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.GroupTrajectoryEdge;
-import org.drip.xva.collateral.GroupTrajectoryPath;
-import org.drip.xva.collateral.GroupTrajectoryVertex;
-import org.drip.xva.collateral.GroupTrajectoryVertexExposure;
-import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
-import org.drip.xva.netting.*;
+import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -132,9 +127,9 @@ public class FixFloatVABank {
 		double[] adblBankFundingSpread = new double[iNumStep];
 		double[] adblCounterPartySurvival = new double[iNumStep];
 		double[] adblCounterPartyRecovery = new double[iNumStep];
-		GroupTrajectoryPath[] aGTP = new GroupTrajectoryPath[iNumSimulation];
+		CollateralGroupPath[] aGTP = new CollateralGroupPath[iNumSimulation];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
-		GroupTrajectoryVertex[][] aaGTV = new GroupTrajectoryVertex[iNumSimulation][iNumStep];
+		CollateralGroupVertex[][] aaGTV = new CollateralGroupVertex[iNumSimulation][iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -170,13 +165,14 @@ public class FixFloatVABank {
 
 		for (int i = 0; i < iNumStep; ++i) {
 			for (int j = 0; j < iNumSimulation; ++j)
-				aaGTV[j][i] = new GroupTrajectoryVertex (
+				aaGTV[j][i] = new CollateralGroupVertex (
 					adtVertex[i],
-					new GroupTrajectoryVertexExposure (
+					new CollateralGroupVertexExposure (
 						aaJDE[j][i].finish(),
+						0.,
 						0.
 					),
-					new GroupTrajectoryVertexNumeraire (
+					new CollateralGroupVertexNumeraire (
 						adblCollateral[i],
 						adblBankSurvival[i],
 						adblBankRecovery[i],
@@ -188,18 +184,18 @@ public class FixFloatVABank {
 		}
 
 		for (int j = 0; j < iNumSimulation; ++j) {
-			GroupTrajectoryEdge[] aGTE = new GroupTrajectoryEdge[iNumStep - 1];
+			CollateralGroupEdge[] aGTE = new CollateralGroupEdge[iNumStep - 1];
 
 			for (int i = 1; i < iNumStep; ++i)
-				aGTE[i - 1] = new GroupTrajectoryEdge (
+				aGTE[i - 1] = new CollateralGroupEdge (
 					aaGTV[j][i - 1],
 					aaGTV[j][i]
 				);
 
-			aGTP[j] = new GroupTrajectoryPath (aGTE);
+			aGTP[j] = new CollateralGroupPath (aGTE);
 		}
 
-		PathAggregator gta = PathAggregator.Standard (aGTP);
+		NettingGroupPathAggregator gta = NettingGroupPathAggregator.Standard (aGTP);
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblBankHazardRate, 3, 0, 10000.) + " bp => " +

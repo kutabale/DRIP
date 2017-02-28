@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * GroupTrajectoryVertexNumeraire holds the Vertex Market Numeraire Realizations of a Projected Path of a
+ * CollateralGroupVertexNumeraire holds the Vertex Market Numeraire Realizations of a Projected Path of a
  *  Simulation Run along the Granularity of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,7 +67,7 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryVertexNumeraire {
+public class CollateralGroupVertexNumeraire {
 	private double _dblCSA = java.lang.Double.NaN;
 	private double _dblBankRecovery = java.lang.Double.NaN;
 	private double _dblBankSurvival = java.lang.Double.NaN;
@@ -76,7 +76,7 @@ public class GroupTrajectoryVertexNumeraire {
 	private double _dblCounterPartySurvival = java.lang.Double.NaN;
 
 	/**
-	 * GroupTrajectoryVertexNumeraire Constructor
+	 * CollateralGroupVertexNumeraire Constructor
 	 * 
 	 * @param dblCSA The Realized CSA Numeraire
 	 * @param dblBankSurvival The Realized Bank Survival Numeraire
@@ -88,7 +88,7 @@ public class GroupTrajectoryVertexNumeraire {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryVertexNumeraire (
+	public CollateralGroupVertexNumeraire (
 		final double dblCSA,
 		final double dblBankSurvival,
 		final double dblBankRecovery,
@@ -104,7 +104,7 @@ public class GroupTrajectoryVertexNumeraire {
 						|| !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartySurvival =
 							dblCounterPartySurvival) || !org.drip.quant.common.NumberUtil.IsValid
 								(_dblCounterPartyRecovery = dblCounterPartyRecovery))
-			throw new java.lang.Exception ("GroupTrajectoryVertexNumeraire Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("CollateralGroupVertexNumeraire Constructor => Invalid Inputs");
 	}
 
 	/**

@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * GroupTrajectoryPathAdjustment holds the Adjustments from the Exposure Sequence in a Single Path Projection
+ * CollateralGroupPathAdjustment holds the Adjustments from the Exposure Sequence in a Single Path Projection
  *  Run along the Granularity of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,7 +67,7 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryPathAdjustment {
+public class CollateralGroupPathAdjustment {
 	private double[] _adblCollateralizedExposure = null;
 	private double[] _adblUncollateralizedExposure = null;
 	private double[] _adblCollateralizedExposurePV = null;
@@ -75,7 +75,7 @@ public class GroupTrajectoryPathAdjustment {
 	private org.drip.analytics.date.JulianDate[] _adtVertex = null;
 
 	/**
-	 * GroupTrajectoryPathAdjustment Constructor
+	 * CollateralGroupPathAdjustment Constructor
 	 * 
 	 * @param adtVertex Array of Vertex Dates
 	 * @param adblCollateralizedExposure The Array of Collateralized Exposures
@@ -86,7 +86,7 @@ public class GroupTrajectoryPathAdjustment {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryPathAdjustment (
+	public CollateralGroupPathAdjustment (
 		final org.drip.analytics.date.JulianDate[] adtVertex,
 		final double[] adblCollateralizedExposure,
 		final double[] adblUncollateralizedExposure,
@@ -99,7 +99,7 @@ public class GroupTrajectoryPathAdjustment {
 			null == (_adblUncollateralizedExposure = adblUncollateralizedExposure) ||
 			null == (_adblCollateralizedExposurePV = adblCollateralizedExposurePV) ||
 			null == (_adblUncollateralizedExposurePV = adblUncollateralizedExposurePV))
-			throw new java.lang.Exception ("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("CollateralGroupPathAdjustment Constructor => Invalid Inputs");
 
 		int iNumEdge = _adtVertex.length;
 
@@ -112,7 +112,7 @@ public class GroupTrajectoryPathAdjustment {
 			!org.drip.quant.common.NumberUtil.IsValid (_adblUncollateralizedExposure) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_adblCollateralizedExposurePV) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_adblUncollateralizedExposurePV))
-			throw new java.lang.Exception ("GroupTrajectoryPathAdjustment Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("CollateralGroupPathAdjustment Constructor => Invalid Inputs");
 	}
 
 	/**

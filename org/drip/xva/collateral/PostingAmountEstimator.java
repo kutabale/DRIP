@@ -1,10 +1,5 @@
 
-package org.drip.sample.measure;
-
-import org.drip.analytics.date.*;
-import org.drip.measure.continuousmarginal.BrokenDateBridgeBrownian3P;
-import org.drip.quant.common.FormatUtil;
-import org.drip.service.env.EnvManager;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -52,84 +47,26 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * BrownianBridgeLinear demonstrates using the Brownian Bridge Scheme to Interpolate Three Linear Value
- *  Points.
- *
+ * PostingAmountEstimator estimates the Amount of Collateral that is to be Posted during a Single Run of a
+ *  Collateral Group Valuation. The References are:
+ *  
+ *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
+ *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
+ *  
+ *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
+ *  
+ *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
+ *  
+ *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
+ *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
+ *  	Singapore.
+ * 
+ *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
+ *  	21 (2) 97-102.
+ * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class BrownianBridgeLinear {
+public class PostingAmountEstimator {
 
-	public static final void main (
-		final String[] astrArgs)
-		throws Exception
-	{
-		EnvManager.InitEnv ("");
-
-		JulianDate dt1 = DateUtil.CreateFromYMD (
-			2015,
-			DateUtil.JULY,
-			1
-		);
-
-		JulianDate dt2 = DateUtil.CreateFromYMD (
-			2015,
-			DateUtil.AUGUST,
-			1
-		);
-
-		JulianDate dt3 = DateUtil.CreateFromYMD (
-			2015,
-			DateUtil.SEPTEMBER,
-			1
-		);
-
-		double dblV1 = 10.;
-		double dblV2 = 15.;
-		double dblV3 = 20.;
-
-		int iDaysStep = 2;
-
-		BrokenDateBridgeBrownian3P tpbb = new BrokenDateBridgeBrownian3P (
-			dt1.julian(),
-			dt2.julian(),
-			dt3.julian(),
-			dblV1,
-			dblV2,
-			dblV3
-		);
-
-		System.out.println();
-
-		System.out.println ("\t||--------------------------||");
-
-		System.out.println ("\t||  BROWNIAN BRIDGE LINEAR  ||");
-
-		System.out.println ("\t||--------------------------||");
-
-		System.out.println (
-			"\t|| [" + dt1 + "] => " +
-			FormatUtil.FormatDouble (tpbb.interpolate (dt1.julian()), 2, 3, 1.) + " ||"
-		);
-
-		JulianDate dt = dt1.addDays (iDaysStep);
-
-		while (dt.julian() < dt3.julian()) {
-			System.out.println (
-				"\t|| [" + dt + "] => " +
-				FormatUtil.FormatDouble (tpbb.interpolate (dt.julian()), 2, 3, 1.) + " ||"
-			);
-
-			dt = dt.addDays (iDaysStep);
-		}
-
-		System.out.println (
-			"\t|| [" + dt3 + "] => " +
-			FormatUtil.FormatDouble (tpbb.interpolate (dt3.julian()), 2, 3, 1.) + " ||"
-		);
-
-		System.out.println ("\t||--------------------------||");
-
-		System.out.println();
-	}
 }

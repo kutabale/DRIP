@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * GroupTrajectoryVertexExposure holds the Vertex Exposure of a Projected Path of a Simulation Run of a
+ * CollateralGroupVertexExposure holds the Vertex Exposure of a Projected Path of a Simulation Run of a
  *  Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,31 +67,35 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryVertexExposure {
+public class CollateralGroupVertexExposure {
 	private double _dblForwardPV = java.lang.Double.NaN;
+	private double _dblRealizedCashFlow = java.lang.Double.NaN;
 	private double _dblCollateralBalance = java.lang.Double.NaN;
 	private double _dblCollateralizedNegative = java.lang.Double.NaN;
 	private double _dblCollateralizedPositive = java.lang.Double.NaN;
 
 	/**
-	 * GroupTrajectoryVertexExposure Constructor
+	 * CollateralGroupVertexExposure Constructor
 	 * 
 	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
+	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryVertexExposure (
+	public CollateralGroupVertexExposure (
 		final double dblForwardPV,
+		final double dblRealizedCashFlow,
 		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV = dblForwardPV) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance))
-			throw new java.lang.Exception ("GroupTrajectoryVertexExposure Constructor => Invalid Inputs");
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow = dblRealizedCashFlow))
+			throw new java.lang.Exception ("CollateralGroupVertexExposure Constructor => Invalid Inputs");
 
-		double dblNetExposure = _dblForwardPV - _dblCollateralBalance;
+		double dblNetExposure = _dblForwardPV + _dblRealizedCashFlow - _dblCollateralBalance;
 		_dblCollateralizedPositive = dblNetExposure > 0. ? dblNetExposure : 0.;
 		_dblCollateralizedNegative = dblNetExposure < 0. ? dblNetExposure : 0.;
 	}
@@ -115,7 +119,7 @@ public class GroupTrajectoryVertexExposure {
 
 	public double collateralized()
 	{
-		return _dblForwardPV - _dblCollateralBalance;
+		return _dblForwardPV + _dblRealizedCashFlow - _dblCollateralBalance;
 	}
 
 	/**
@@ -126,7 +130,7 @@ public class GroupTrajectoryVertexExposure {
 
 	public double uncollateralized()
 	{
-		return _dblForwardPV - _dblCollateralBalance;
+		return _dblForwardPV + _dblRealizedCashFlow;
 	}
 
 	/**
@@ -215,5 +219,16 @@ public class GroupTrajectoryVertexExposure {
 	public double collateralBalance()
 	{
 		return _dblCollateralBalance;
+	}
+
+	/**
+	 * Retrieve the Default Window Realized Cash-flow at the Path Vertex Time Node
+	 * 
+	 * @return The Default Window Realized Cash-flow at the Path Vertex Time Node
+	 */
+
+	public double realizedCashFlow()
+	{
+		return _dblRealizedCashFlow;
 	}
 }

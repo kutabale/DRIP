@@ -8,8 +8,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
-import org.drip.xva.netting.*;
+import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -157,7 +156,7 @@ public class PortfolioPathAggregationUncorrelated {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep];
-		GroupTrajectoryVertexNumeraire[] aGTVN = new GroupTrajectoryVertexNumeraire[iNumStep];
+		CollateralGroupVertexNumeraire[] aGTVN = new CollateralGroupVertexNumeraire[iNumStep];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
 
 		JulianDate dtSpot = DateUtil.Today();
@@ -271,7 +270,7 @@ public class PortfolioPathAggregationUncorrelated {
 		for (int i = 0; i < iNumStep; ++i) {
 			adtVertex[i] = dtSpot.addMonths (6 * i + 6);
 
-			aGTVN[i] = new GroupTrajectoryVertexNumeraire (
+			aGTVN[i] = new CollateralGroupVertexNumeraire (
 				aJDECollateral[i].finish(),
 				Math.exp (-0.5 * aJDEBankHazardRate[i].finish() * (i + 1)),
 				aJDEBankRecoveryRate[i].finish(),
@@ -281,7 +280,7 @@ public class PortfolioPathAggregationUncorrelated {
 			);
 		}
 
-		PathAggregator gtpa = PathAggregator.Standard (
+		NettingGroupPathAggregator gtpa = NettingGroupPathAggregator.Standard (
 			adtVertex,
 			aaJDEPortfolio,
 			aGTVN

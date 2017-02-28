@@ -1,5 +1,5 @@
 
-package org.drip.measure.stochastic;
+package org.drip.measure.continuousmarginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,57 +47,41 @@ package org.drip.measure.stochastic;
  */
 
 /**
- * ThreePointBrownianBridge Interpolates using Three Stochastic Value Nodes using the Brownian Bridge Scheme.
+ * BrokenDateBridgeSqrtT Interpolates using Two Stochastic Value Nodes with Linear Scheme. The Scheme is
+ *  Linear in Square Root of Time.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class ThreePointBrownianBridge {
+public class BrokenDateBridgeSqrtT implements org.drip.measure.continuousmarginal.BrokenDateBridge {
 	private double _dblT1 = java.lang.Double.NaN;
 	private double _dblT2 = java.lang.Double.NaN;
-	private double _dblT3 = java.lang.Double.NaN;
 	private double _dblV1 = java.lang.Double.NaN;
 	private double _dblV2 = java.lang.Double.NaN;
-	private double _dblV3 = java.lang.Double.NaN;
-	private double _dblBrownianBridgeFactor = java.lang.Double.NaN;
 
 	/**
-	 * ThreePointBrownianBridge Constructor
+	 * BrokenDateBridgeSqrtT Constructor
 	 * 
 	 * @param dblT1 T1
 	 * @param dblT2 T2
-	 * @param dblT3 T3
 	 * @param dblV1 V1
 	 * @param dblV2 V2
-	 * @param dblV3 V3
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public ThreePointBrownianBridge (
+	public BrokenDateBridgeSqrtT (
 		final double dblT1,
 		final double dblT2,
-		final double dblT3,
 		final double dblV1,
-		final double dblV2,
-		final double dblV3)
+		final double dblV2)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblT1 = dblT1) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblT2 = dblT2) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblT3 = dblT3) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblV1 = dblV1) ||
-						!org.drip.quant.common.NumberUtil.IsValid (_dblV2 = dblV2) ||
-							!org.drip.quant.common.NumberUtil.IsValid (_dblV3 = dblV3) || _dblT1 >= _dblT2 ||
-								_dblT2 >= _dblT3)
-			throw new java.lang.Exception ("ThreePointBrownianBridge Constructor => Invalid Inputs");
-
-		double dblT3MinusT1 = _dblT3 - _dblT1;
-		double dblT3MinusT2 = _dblT3 - _dblT2;
-		double dblT2MinusT1 = _dblT2 - _dblT1;
-
-		_dblBrownianBridgeFactor = java.lang.Math.sqrt (dblT3MinusT1 / (dblT3MinusT2 * dblT2MinusT1)) *
-			(_dblV2 - (dblT3MinusT2 * _dblV1 / dblT3MinusT1) - (dblT2MinusT1 * _dblV3 / dblT3MinusT1));
+				!org.drip.quant.common.NumberUtil.IsValid (_dblV1 = dblV1) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblV2 = dblV2)|| _dblT1 >= _dblT2)
+			throw new java.lang.Exception ("BrokenDateBridgeSqrtT Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -123,17 +107,6 @@ public class ThreePointBrownianBridge {
 	}
 
 	/**
-	 * Retrieve T3
-	 * 
-	 * @return T3
-	 */
-
-	public double t3()
-	{
-		return _dblT3;
-	}
-
-	/**
 	 * Retrieve V1
 	 * 
 	 * @return V1
@@ -155,50 +128,14 @@ public class ThreePointBrownianBridge {
 		return _dblV2;
 	}
 
-	/**
-	 * Retrieve V3
-	 * 
-	 * @return V3
-	 */
-
-	public double v3()
-	{
-		return _dblV3;
-	}
-
-	/**
-	 * Retrieve the Brownian Bridge Factor
-	 * 
-	 * @return The Brownian Bridge Factor
-	 */
-
-	public double brownianBridgeFactor()
-	{
-		return _dblBrownianBridgeFactor;
-	}
-
-	/**
-	 * Interpolate the Value at T
-	 * 
-	 * @param dblT T
-	 * 
-	 * @return The Interpolated Value
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public double interpolate (
+	@Override public double interpolate (
 		final double dblT)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblT) || dblT < _dblT1 || dblT > _dblT3)
-			throw new java.lang.Exception ("ThreePointBrownianBridge::interpolate => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblT) || dblT < _dblT1 || dblT > _dblT2)
+			throw new java.lang.Exception ("BrokenDateBridgeSqrtT::interpolate => Invalid Inputs");
 
-		double dblT3MinusT1 = _dblT3 - _dblT1;
-		double dblT3MinusT = _dblT3 - dblT;
-		double dblTMinusT1 = dblT - _dblT1;
-
-		return (dblT3MinusT * _dblV1 / dblT3MinusT1) + (dblTMinusT1 * _dblV3 / dblT3MinusT1) +
-			_dblBrownianBridgeFactor * java.lang.Math.sqrt (dblT3MinusT * dblTMinusT1 / dblT3MinusT1);
+		return (java.lang.Math.sqrt (_dblT2 - dblT) * _dblV1 + java.lang.Math.sqrt (dblT - _dblT1) * _dblV2)
+			/ java.lang.Math.sqrt (_dblT2 - _dblT1);
 	}
 }

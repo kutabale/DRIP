@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.measure.continuousmarginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,84 +47,94 @@ package org.drip.xva.collateral;
  */
 
 /**
- * GroupTrajectoryEdgeAdjustment holds the XVA Adjustment that result from the Vertex Realizations of a
- *  Projected Path of a Single Simulation Run along the Granularity of a Collateral Group. The References
- *  are:
- *  
- *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
- *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
- *  
- *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
- *  
- *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
- * 
- *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
- *  	21 (2) 97-102.
- * 
+ * BrokenDateBridgeLinearT Interpolates using Two Stochastic Value Nodes with Linear Scheme. The Scheme is
+ *  Linear in Time.
+ *
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryEdgeAdjustment {
-	private double _dblDebt = java.lang.Double.NaN;
-	private double _dblCredit = java.lang.Double.NaN;
-	private double _dblFunding = java.lang.Double.NaN;
+public class BrokenDateBridgeLinearT implements org.drip.measure.continuousmarginal.BrokenDateBridge {
+	private double _dblT1 = java.lang.Double.NaN;
+	private double _dblT2 = java.lang.Double.NaN;
+	private double _dblV1 = java.lang.Double.NaN;
+	private double _dblV2 = java.lang.Double.NaN;
 
 	/**
-	 * GroupTrajectoryEdgeAdjustment Constructor
+	 * BrokenDateBridgeLinearT Constructor
 	 * 
-	 * @param dblCredit The Path-specific Credit Value Adjustment
-	 * @param dblDebt The Path-specific Debt Value Adjustment
-	 * @param dblFunding The Path-specific Funding Value Adjustment
+	 * @param dblT1 T1
+	 * @param dblT2 T2
+	 * @param dblV1 V1
+	 * @param dblV2 V2
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryEdgeAdjustment (
-		final double dblCredit,
-		final double dblDebt,
-		final double dblFunding)
+	public BrokenDateBridgeLinearT (
+		final double dblT1,
+		final double dblT2,
+		final double dblV1,
+		final double dblV2)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCredit = dblCredit) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblDebt = dblDebt) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblFunding = dblFunding))
-			throw new java.lang.Exception ("GroupTrajectoryEdgeAdjustment Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblT1 = dblT1) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblT2 = dblT2) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblV1 = dblV1) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblV2 = dblV2)|| _dblT1 >= _dblT2)
+			throw new java.lang.Exception ("BrokenDateBridgeLinearT Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Path-specific Credit Adjustment
+	 * Retrieve T1
 	 * 
-	 * @return The Path-specific Credit Adjustment
+	 * @return T1
 	 */
 
-	public double credit()
+	public double t1()
 	{
-		return _dblCredit;
+		return _dblT1;
 	}
 
 	/**
-	 * Retrieve the Path-specific Debt Adjustment
+	 * Retrieve T2
 	 * 
-	 * @return The Path-specific Debt Adjustment
+	 * @return T2
 	 */
 
-	public double debt()
+	public double t2()
 	{
-		return _dblDebt;
+		return _dblT2;
 	}
 
 	/**
-	 * Retrieve the Path-specific Funding Adjustment
+	 * Retrieve V1
 	 * 
-	 * @return The Path-specific Funding Adjustment
+	 * @return V1
 	 */
 
-	public double funding()
+	public double v1()
 	{
-		return _dblFunding;
+		return _dblV1;
+	}
+
+	/**
+	 * Retrieve V2
+	 * 
+	 * @return V2
+	 */
+
+	public double v2()
+	{
+		return _dblV2;
+	}
+
+	@Override public double interpolate (
+		final double dblT)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblT) || dblT < _dblT1 || dblT > _dblT2)
+			throw new java.lang.Exception ("BrokenDateBridgeLinearT::interpolate => Invalid Inputs");
+
+		return ((_dblT2 - dblT) * _dblV1 + (dblT - _dblT1) * _dblV2) / (_dblT2 - _dblT1);
 	}
 }

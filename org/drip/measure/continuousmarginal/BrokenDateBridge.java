@@ -1,10 +1,5 @@
 
-package org.drip.sample.measure;
-
-import org.drip.analytics.date.*;
-import org.drip.measure.continuousmarginal.BrokenDateBridgeBrownian3P;
-import org.drip.quant.common.FormatUtil;
-import org.drip.service.env.EnvManager;
+package org.drip.measure.continuousmarginal;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -52,84 +47,25 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * BrownianBridgeLinear demonstrates using the Brownian Bridge Scheme to Interpolate Three Linear Value
- *  Points.
+ * BrokenDateBridgeLinearT exposes the Ability to Interpolate the Realized Path Value between two Broken
+ *  Dates.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class BrownianBridgeLinear {
+public interface BrokenDateBridge {
 
-	public static final void main (
-		final String[] astrArgs)
-		throws Exception
-	{
-		EnvManager.InitEnv ("");
+	/**
+	 * Interpolate the Value at T
+	 * 
+	 * @param dblT T
+	 * 
+	 * @return The Interpolated Value
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
 
-		JulianDate dt1 = DateUtil.CreateFromYMD (
-			2015,
-			DateUtil.JULY,
-			1
-		);
-
-		JulianDate dt2 = DateUtil.CreateFromYMD (
-			2015,
-			DateUtil.AUGUST,
-			1
-		);
-
-		JulianDate dt3 = DateUtil.CreateFromYMD (
-			2015,
-			DateUtil.SEPTEMBER,
-			1
-		);
-
-		double dblV1 = 10.;
-		double dblV2 = 15.;
-		double dblV3 = 20.;
-
-		int iDaysStep = 2;
-
-		BrokenDateBridgeBrownian3P tpbb = new BrokenDateBridgeBrownian3P (
-			dt1.julian(),
-			dt2.julian(),
-			dt3.julian(),
-			dblV1,
-			dblV2,
-			dblV3
-		);
-
-		System.out.println();
-
-		System.out.println ("\t||--------------------------||");
-
-		System.out.println ("\t||  BROWNIAN BRIDGE LINEAR  ||");
-
-		System.out.println ("\t||--------------------------||");
-
-		System.out.println (
-			"\t|| [" + dt1 + "] => " +
-			FormatUtil.FormatDouble (tpbb.interpolate (dt1.julian()), 2, 3, 1.) + " ||"
-		);
-
-		JulianDate dt = dt1.addDays (iDaysStep);
-
-		while (dt.julian() < dt3.julian()) {
-			System.out.println (
-				"\t|| [" + dt + "] => " +
-				FormatUtil.FormatDouble (tpbb.interpolate (dt.julian()), 2, 3, 1.) + " ||"
-			);
-
-			dt = dt.addDays (iDaysStep);
-		}
-
-		System.out.println (
-			"\t|| [" + dt3 + "] => " +
-			FormatUtil.FormatDouble (tpbb.interpolate (dt3.julian()), 2, 3, 1.) + " ||"
-		);
-
-		System.out.println ("\t||--------------------------||");
-
-		System.out.println();
-	}
+	public abstract double interpolate (
+		final double dblT)
+		throws java.lang.Exception;
 }

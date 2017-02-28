@@ -8,8 +8,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.GroupTrajectoryVertexNumeraire;
-import org.drip.xva.netting.*;
+import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -126,7 +125,7 @@ public class PortfolioPathAggregationDeterministic {
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
-		GroupTrajectoryVertexNumeraire[] aGTVN = new GroupTrajectoryVertexNumeraire[iNumStep];
+		CollateralGroupVertexNumeraire[] aGTVN = new CollateralGroupVertexNumeraire[iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -149,7 +148,7 @@ public class PortfolioPathAggregationDeterministic {
 		for (int i = 0; i < iNumStep; ++i) {
 			adtVertex[i] = dtSpot.addMonths (6 * i + 6);
 
-			aGTVN[i] = new GroupTrajectoryVertexNumeraire (
+			aGTVN[i] = new CollateralGroupVertexNumeraire (
 				Math.exp (0.5 * dblCollateralDrift * (i + 1)),
 				Math.exp (-0.5 * dblBankHazardRate * (i + 1)),
 				dblBankRecoveryRate,
@@ -159,7 +158,7 @@ public class PortfolioPathAggregationDeterministic {
 			);
 		}
 
-		PathAggregator gtpa = PathAggregator.Standard (
+		NettingGroupPathAggregator gtpa = NettingGroupPathAggregator.Standard (
 			adtVertex,
 			aaJDE,
 			aGTVN

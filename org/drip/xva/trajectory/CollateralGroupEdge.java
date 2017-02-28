@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * GroupTrajectoryEdge holds the Edge that contains the Vertex Realizations of a Projected Path of a Single
+ * CollateralGroupEdge holds the Edge that contains the Vertex Realizations of a Projected Path of a Single
  *  Simulation Run along the Granularity of a Netting Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,27 +67,27 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryEdge {
-	private org.drip.xva.collateral.GroupTrajectoryVertex _gtvHead = null;
-	private org.drip.xva.collateral.GroupTrajectoryVertex _gtvTail = null;
+public class CollateralGroupEdge {
+	private org.drip.xva.trajectory.CollateralGroupVertex _cgvHead = null;
+	private org.drip.xva.trajectory.CollateralGroupVertex _cgvTail = null;
 
 	/**
-	 * GroupTrajectoryEdge Constructor
+	 * CollateralGroupEdge Constructor
 	 * 
-	 * @param gtvHead The Head Vertex
-	 * @param gtvTail The Tail Vertex
+	 * @param cgvHead The Head Vertex
+	 * @param cgvTail The Tail Vertex
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryEdge (
-		final org.drip.xva.collateral.GroupTrajectoryVertex gtvHead,
-		final org.drip.xva.collateral.GroupTrajectoryVertex gtvTail)
+	public CollateralGroupEdge (
+		final org.drip.xva.trajectory.CollateralGroupVertex cgvHead,
+		final org.drip.xva.trajectory.CollateralGroupVertex cgvTail)
 		throws java.lang.Exception
 	{
-		if (null == (_gtvHead = gtvHead) || null == (_gtvTail = gtvTail) || _gtvHead.vertex().julian() >=
-			_gtvTail.vertex().julian())
-			throw new java.lang.Exception ("GroupTrajectoryEdge Constructor => Invalid Inputs");
+		if (null == (_cgvHead = cgvHead) || null == (_cgvTail = cgvTail) || _cgvHead.vertex().julian() >=
+			_cgvTail.vertex().julian())
+			throw new java.lang.Exception ("CollateralGroupEdge Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -96,9 +96,9 @@ public class GroupTrajectoryEdge {
 	 * @return The Head Vertex
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryVertex head()
+	public org.drip.xva.trajectory.CollateralGroupVertex head()
 	{
-		return _gtvHead;
+		return _cgvHead;
 	}
 
 	/**
@@ -107,9 +107,9 @@ public class GroupTrajectoryEdge {
 	 * @return The Tail Vertex
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryVertex tail()
+	public org.drip.xva.trajectory.CollateralGroupVertex tail()
 	{
-		return _gtvTail;
+		return _cgvTail;
 	}
 
 	/**
@@ -120,14 +120,14 @@ public class GroupTrajectoryEdge {
 
 	public double credit()
 	{
-		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvnHead = _gtvHead.numeraire();
+		org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvnHead = _cgvHead.numeraire();
 
-		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
+		org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvnTail = _cgvTail.numeraire();
 
-		return 0.5 * (_gtvTail.exposure().collateralizedPositive() / gtvnTail.csa() +
-			_gtvHead.exposure().collateralizedPositive() / gtvnHead.csa()) * (gtvnTail.counterPartySurvival()
-				- gtvnHead.counterPartySurvival()) * (1. - 0.5 * (gtvnHead.counterPartyRecovery() +
-					gtvnTail.counterPartyRecovery()));
+		return 0.5 * (_cgvTail.exposure().collateralizedPositive() / cgvnTail.csa() +
+			_cgvHead.exposure().collateralizedPositive() / cgvnHead.csa()) * (cgvnTail.counterPartySurvival()
+				- cgvnHead.counterPartySurvival()) * (1. - 0.5 * (cgvnHead.counterPartyRecovery() +
+					cgvnTail.counterPartyRecovery()));
 	}
 
 	/**
@@ -138,13 +138,13 @@ public class GroupTrajectoryEdge {
 
 	public double debt()
 	{
-		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvnHead = _gtvHead.numeraire();
+		org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvnHead = _cgvHead.numeraire();
 
-		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
+		org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvnTail = _cgvTail.numeraire();
 
-		return 0.5 * (_gtvTail.exposure().collateralizedNegative() / gtvnTail.csa() +
-			_gtvHead.exposure().collateralizedNegative() / gtvnHead.csa()) * (gtvnTail.bankSurvival() -
-				gtvnHead.bankSurvival()) * (1. - 0.5 * (gtvnHead.bankRecovery() + gtvnTail.bankRecovery()));
+		return 0.5 * (_cgvTail.exposure().collateralizedNegative() / cgvnTail.csa() +
+			_cgvHead.exposure().collateralizedNegative() / cgvnHead.csa()) * (cgvnTail.bankSurvival() -
+				cgvnHead.bankSurvival()) * (1. - 0.5 * (cgvnHead.bankRecovery() + cgvnTail.bankRecovery()));
 	}
 
 	/**
@@ -155,13 +155,13 @@ public class GroupTrajectoryEdge {
 
 	public double funding()
 	{
-		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvnHead = _gtvHead.numeraire();
+		org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvnHead = _cgvHead.numeraire();
 
-		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
+		org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvnTail = _cgvTail.numeraire();
 
-		return -0.5 * (_gtvTail.exposure().collateralizedPositive() / gtvnTail.csa() *
-			gtvnTail.bankFundingSpread() + _gtvHead.exposure().collateralizedPositive() / gtvnHead.csa() *
-				gtvnHead.bankFundingSpread()) * (_gtvTail.vertex().julian() - _gtvHead.vertex().julian()) /
+		return -0.5 * (_cgvTail.exposure().collateralizedPositive() / cgvnTail.csa() *
+			cgvnTail.bankFundingSpread() + _cgvHead.exposure().collateralizedPositive() / cgvnHead.csa() *
+				cgvnHead.bankFundingSpread()) * (_cgvTail.vertex().julian() - _cgvHead.vertex().julian()) /
 					365.25;
 	}
 
@@ -182,32 +182,32 @@ public class GroupTrajectoryEdge {
 	 * @return The Assorted XVA Adjustment Metrics
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment generate()
+	public org.drip.xva.trajectory.CollateralGroupEdgeAdjustment generate()
 	{
-		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvnHead = _gtvHead.numeraire();
+		org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvnHead = _cgvHead.numeraire();
 
-		org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvnTail = _gtvTail.numeraire();
+		org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvnTail = _cgvTail.numeraire();
 
-		double dblEdgeBankRecovery = 0.5 * (gtvnHead.bankRecovery() + gtvnTail.bankRecovery());
+		double dblEdgeBankRecovery = 0.5 * (cgvnHead.bankRecovery() + cgvnTail.bankRecovery());
 
-		double dblEdgeCounterPartyRecovery = 0.5 * (gtvnHead.counterPartyRecovery() +
-			gtvnTail.counterPartyRecovery());
+		double dblEdgeCounterPartyRecovery = 0.5 * (cgvnHead.counterPartyRecovery() +
+			cgvnTail.counterPartyRecovery());
 
-		org.drip.xva.collateral.GroupTrajectoryVertexExposure gtveHead = _gtvHead.exposure();
+		org.drip.xva.trajectory.CollateralGroupVertexExposure cgveHead = _cgvHead.exposure();
 
-		org.drip.xva.collateral.GroupTrajectoryVertexExposure gtveTail = _gtvTail.exposure();
+		org.drip.xva.trajectory.CollateralGroupVertexExposure cgveTail = _cgvTail.exposure();
 
-		double dblHeadCollateralizedPositiveExposure = gtveHead.collateralizedPositive();
+		double dblHeadCollateralizedPositiveExposure = cgveHead.collateralizedPositive();
 
-		double dblTailCollateralizedPositiveExposure = gtveTail.collateralizedPositive();
+		double dblTailCollateralizedPositiveExposure = cgveTail.collateralizedPositive();
 
-		double dblHeadCollateralizedNegativeExposure = gtveHead.collateralizedNegative();
+		double dblHeadCollateralizedNegativeExposure = cgveHead.collateralizedNegative();
 
-		double dblTailCollateralizedNegativeExposure = gtveTail.collateralizedNegative();
+		double dblTailCollateralizedNegativeExposure = cgveTail.collateralizedNegative();
 
-		double dblHeadCSA = gtvnHead.csa();
+		double dblHeadCSA = cgvnHead.csa();
 
-		double dblTailCSA = gtvnTail.csa();
+		double dblTailCSA = cgvnTail.csa();
 
 		double dblHeadCollateralizedPositiveExposurePV = dblHeadCollateralizedPositiveExposure / dblHeadCSA;
 		double dblTailCollateralizedPositiveExposurePV = dblTailCollateralizedPositiveExposure / dblTailCSA;
@@ -219,15 +219,15 @@ public class GroupTrajectoryEdge {
 			dblHeadCollateralizedNegativeExposurePV);
 
 		try {
-			return new org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment (
-				dblEdgeCollateralizedPositiveExposurePV * (gtvnTail.counterPartySurvival() -
-					gtvnHead.counterPartySurvival()) * (1. - dblEdgeCounterPartyRecovery),
-				dblEdgeCollateralizedNegativeExposurePV * (gtvnTail.bankSurvival() - gtvnHead.bankSurvival())
+			return new org.drip.xva.trajectory.CollateralGroupEdgeAdjustment (
+				dblEdgeCollateralizedPositiveExposurePV * (cgvnTail.counterPartySurvival() -
+					cgvnHead.counterPartySurvival()) * (1. - dblEdgeCounterPartyRecovery),
+				dblEdgeCollateralizedNegativeExposurePV * (cgvnTail.bankSurvival() - cgvnHead.bankSurvival())
 					* (1. - dblEdgeBankRecovery),
 				0.5 * (
-					dblTailCollateralizedPositiveExposurePV * gtvnTail.bankFundingSpread() +
-					dblHeadCollateralizedPositiveExposurePV * gtvnHead.bankFundingSpread()
-				) * (_gtvTail.vertex().julian() - _gtvHead.vertex().julian()) / 365.25
+					dblTailCollateralizedPositiveExposurePV * cgvnTail.bankFundingSpread() +
+					dblHeadCollateralizedPositiveExposurePV * cgvnHead.bankFundingSpread()
+				) * (_cgvTail.vertex().julian() - _cgvHead.vertex().julian()) / 365.25
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

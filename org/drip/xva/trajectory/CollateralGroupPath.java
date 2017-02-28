@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * GroupTrajectoryPath accumulates the Vertex Realizations of the Sequence in a Single Path Projection Run
+ * CollateralGroupPath accumulates the Vertex Realizations of the Sequence in a Single Path Projection Run
  *  along the Granularity of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,35 +67,35 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryPath {
-	private org.drip.xva.collateral.GroupTrajectoryEdge[] _aGTE = null;
+public class CollateralGroupPath {
+	private org.drip.xva.trajectory.CollateralGroupEdge[] _aCGE = null;
 
 	/**
-	 * GroupTrajectoryPath Constructor
+	 * CollateralGroupPath Constructor
 	 * 
-	 * @param aGTE The Array of Netting Group Trajectory Edges
+	 * @param aCGE The Array of Netting Group Trajectory Edges
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryPath (
-		final org.drip.xva.collateral.GroupTrajectoryEdge[] aGTE)
+	public CollateralGroupPath (
+		final org.drip.xva.trajectory.CollateralGroupEdge[] aCGE)
 		throws java.lang.Exception
 	{
-		if (null == (_aGTE = aGTE))
-			throw new java.lang.Exception ("GroupTrajectoryPath Constructor => Invalid Inputs");
+		if (null == (_aCGE = aCGE))
+			throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
-		int iNumEdge = _aGTE.length;
+		int iNumEdge = _aCGE.length;
 
 		if (1 >= iNumEdge)
-			throw new java.lang.Exception ("GroupTrajectoryPath Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			if (null == _aGTE[i])
-				throw new java.lang.Exception ("GroupTrajectoryPath Constructor => Invalid Inputs");
+			if (null == _aCGE[i])
+				throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
-			if (0 != i && _aGTE[i - 1].tail().vertex().julian() != _aGTE[i].head().vertex().julian())
-				throw new java.lang.Exception ("GroupTrajectoryPath Constructor => Invalid Inputs");
+			if (0 != i && _aCGE[i - 1].tail().vertex().julian() != _aCGE[i].head().vertex().julian())
+				throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 		}
 	}
 
@@ -105,9 +105,9 @@ public class GroupTrajectoryPath {
 	 * @return The Array of Netting Group Trajectory Edges
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryEdge[] edges()
+	public org.drip.xva.trajectory.CollateralGroupEdge[] edges()
 	{
-		return _aGTE;
+		return _aCGE;
 	}
 
 	/**
@@ -120,8 +120,8 @@ public class GroupTrajectoryPath {
 	{
 		double dblCredit = 0.;
 
-		for (org.drip.xva.collateral.GroupTrajectoryEdge gte : _aGTE)
-			dblCredit += gte.credit();
+		for (org.drip.xva.trajectory.CollateralGroupEdge cge : _aCGE)
+			dblCredit += cge.credit();
 
 		return dblCredit;
 	}
@@ -136,8 +136,8 @@ public class GroupTrajectoryPath {
 	{
 		double dblDebt = 0.;
 
-		for (org.drip.xva.collateral.GroupTrajectoryEdge gte : _aGTE)
-			dblDebt += gte.debt();
+		for (org.drip.xva.trajectory.CollateralGroupEdge cge : _aCGE)
+			dblDebt += cge.debt();
 
 		return dblDebt;
 	}
@@ -152,8 +152,8 @@ public class GroupTrajectoryPath {
 	{
 		double dblFunding = 0.;
 
-		for (org.drip.xva.collateral.GroupTrajectoryEdge gte : _aGTE)
-			dblFunding += gte.funding();
+		for (org.drip.xva.trajectory.CollateralGroupEdge cge : _aCGE)
+			dblFunding += cge.funding();
 
 		return dblFunding;
 	}
@@ -168,8 +168,8 @@ public class GroupTrajectoryPath {
 	{
 		double dblTotal = 0.;
 
-		for (org.drip.xva.collateral.GroupTrajectoryEdge gte : _aGTE)
-			dblTotal += gte.total();
+		for (org.drip.xva.trajectory.CollateralGroupEdge cge : _aCGE)
+			dblTotal += cge.total();
 
 		return dblTotal;
 	}
@@ -182,11 +182,11 @@ public class GroupTrajectoryPath {
 
 	public double[] collateralizedExposure()
 	{
-		int iNumEdge = _aGTE.length;
+		int iNumEdge = _aCGE.length;
 		double[] adblCollateralizedExposure = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblCollateralizedExposure[i] = _aGTE[i].tail().exposure().collateralized();
+			adblCollateralizedExposure[i] = _aCGE[i].tail().exposure().collateralized();
 
 		return adblCollateralizedExposure;
 	}
@@ -199,11 +199,11 @@ public class GroupTrajectoryPath {
 
 	public double[] uncollateralizedExposure()
 	{
-		int iNumEdge = _aGTE.length;
+		int iNumEdge = _aCGE.length;
 		double[] adblUncollateralizedExposure = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblUncollateralizedExposure[i] = _aGTE[i].tail().exposure().uncollateralized();
+			adblUncollateralizedExposure[i] = _aCGE[i].tail().exposure().uncollateralized();
 
 		return adblUncollateralizedExposure;
 	}
@@ -216,14 +216,14 @@ public class GroupTrajectoryPath {
 
 	public double[] collateralizedExposurePV()
 	{
-		int iNumEdge = _aGTE.length;
+		int iNumEdge = _aCGE.length;
 		double[] adblCollateralizedExposurePV = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail();
+			org.drip.xva.trajectory.CollateralGroupVertex cgvTail =_aCGE[i].tail();
 
-			adblCollateralizedExposurePV[i] = gtvTail.exposure().collateralized() /
-				gtvTail.numeraire().csa();
+			adblCollateralizedExposurePV[i] = cgvTail.exposure().collateralized() /
+				cgvTail.numeraire().csa();
 		}
 
 		return adblCollateralizedExposurePV;
@@ -237,14 +237,14 @@ public class GroupTrajectoryPath {
 
 	public double[] uncollateralizedExposurePV()
 	{
-		int iNumEdge = _aGTE.length;
+		int iNumEdge = _aCGE.length;
 		double[] adblUncollateralizedExposurePV = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail();
+			org.drip.xva.trajectory.CollateralGroupVertex cgvTail =_aCGE[i].tail();
 
-			adblUncollateralizedExposurePV[i] = gtvTail.exposure().uncollateralized() /
-				gtvTail.numeraire().csa();
+			adblUncollateralizedExposurePV[i] = cgvTail.exposure().uncollateralized() /
+				cgvTail.numeraire().csa();
 		}
 
 		return adblUncollateralizedExposurePV;
@@ -258,11 +258,11 @@ public class GroupTrajectoryPath {
 
 	public double[] collateralBalance()
 	{
-		int iNumEdge = _aGTE.length;
+		int iNumEdge = _aCGE.length;
 		double[] adblCollateralizedBalance = new double[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			adblCollateralizedBalance[i] = _aGTE[i].tail().exposure().collateralBalance();
+			adblCollateralizedBalance[i] = _aCGE[i].tail().exposure().collateralBalance();
 
 		return adblCollateralizedBalance;
 	}
@@ -273,16 +273,16 @@ public class GroupTrajectoryPath {
 	 * @return The Array of Edge Adjustments
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment[] edgeAdjustments()
+	public org.drip.xva.trajectory.CollateralGroupEdgeAdjustment[] edgeAdjustments()
 	{
-		int iNumEdge = _aGTE.length;
-		org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment[] aGTEA = new
-			org.drip.xva.collateral.GroupTrajectoryEdgeAdjustment[iNumEdge];
+		int iNumEdge = _aCGE.length;
+		org.drip.xva.trajectory.CollateralGroupEdgeAdjustment[] aCGEA = new
+			org.drip.xva.trajectory.CollateralGroupEdgeAdjustment[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i)
-			aGTEA[i] = _aGTE[i].generate();
+			aCGEA[i] = _aCGE[i].generate();
 
-		return aGTEA;
+		return aCGEA;
 	}
 
 	/**
@@ -291,9 +291,9 @@ public class GroupTrajectoryPath {
 	 * @return The Group Trajectory Path Adjustment Instance
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryPathAdjustment adjustment()
+	public org.drip.xva.trajectory.CollateralGroupPathAdjustment adjustment()
 	{
-		int iNumEdge = _aGTE.length;
+		int iNumEdge = _aCGE.length;
 		double[] adblCollateralizedExposure = new double[iNumEdge];
 		double[] adblUncollateralizedExposure = new double[iNumEdge];
 		double[] adblCollateralizedExposurePV = new double[iNumEdge];
@@ -301,25 +301,25 @@ public class GroupTrajectoryPath {
 		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumEdge];
 
 		for (int i = 0; i < iNumEdge; ++i) {
-			org.drip.xva.collateral.GroupTrajectoryVertex gtvTail =_aGTE[i].tail();
+			org.drip.xva.trajectory.CollateralGroupVertex cgvTail =_aCGE[i].tail();
 
-			adtVertex[i] = gtvTail.vertex();
+			adtVertex[i] = cgvTail.vertex();
 
-			double dblTailCSANumeraire = gtvTail.numeraire().csa();
+			double dblTailCSANumeraire = cgvTail.numeraire().csa();
 
-			org.drip.xva.collateral.GroupTrajectoryVertexExposure gtve = gtvTail.exposure();
+			org.drip.xva.trajectory.CollateralGroupVertexExposure cgve = cgvTail.exposure();
 
-			adblUncollateralizedExposure[i] = gtve.uncollateralized();
+			adblUncollateralizedExposure[i] = cgve.uncollateralized();
 
-			adblCollateralizedExposurePV[i] = (adblCollateralizedExposure[i] = gtve.collateralized()) /
+			adblCollateralizedExposurePV[i] = (adblCollateralizedExposure[i] = cgve.collateralized()) /
 				dblTailCSANumeraire;
 
-			adblUncollateralizedExposurePV[i] = (adblUncollateralizedExposure[i] = gtve.collateralized()) /
+			adblUncollateralizedExposurePV[i] = (adblUncollateralizedExposure[i] = cgve.collateralized()) /
 				dblTailCSANumeraire;
 		}
 
 		try {
-			return new org.drip.xva.collateral.GroupTrajectoryPathAdjustment (
+			return new org.drip.xva.trajectory.CollateralGroupPathAdjustment (
 				adtVertex,
 				adblCollateralizedExposure,
 				adblUncollateralizedExposure,

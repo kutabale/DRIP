@@ -87,7 +87,45 @@ public class MarginPeriodOfRisk {
 
 	public static final int MPOR_INTERPOLATION_BROWNIAN_BRIDGE = 4;
 
+	private int _iInterpolationType = -1;
 	private int _iMarginCallFrequency = -1;
+
+	/**
+	 * Construct a Standard Instance of MarginPeriodOfRisk
+	 * 
+	 * @return The Standard Instance of MarginPeriodOfRisk
+	 */
+
+	public static final MarginPeriodOfRisk Standard()
+	{
+		try {
+			return new MarginPeriodOfRisk (1, MPOR_INTERPOLATION_BROWNIAN_BRIDGE);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * MarginPeriodOfRisk Constructor
+	 * 
+	 * @param iMarginCallFrequency The MPoR Margin Call Frequency
+	 * @param iInterpolationType The MPoR Interpolation Type
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public MarginPeriodOfRisk (
+		final int iMarginCallFrequency,
+		final int iInterpolationType)
+		throws java.lang.Exception
+	{
+		if (-1 == (_iMarginCallFrequency = iMarginCallFrequency) || MPOR_INTERPOLATION_LINEAR ==
+			(_iInterpolationType = iInterpolationType) || MPOR_INTERPOLATION_SQRT_T == _iInterpolationType ||
+				MPOR_INTERPOLATION_BROWNIAN_BRIDGE == _iInterpolationType)
+			throw new java.lang.Exception ("MarginPeriodOfRisk Constructor => Invalid Inputs");
+	}
 
 	/**
 	 * Retrieve the MPoR Margin Call Frequency
@@ -98,5 +136,16 @@ public class MarginPeriodOfRisk {
 	public int marginCallFrequency()
 	{
 		return _iMarginCallFrequency;
+	}
+
+	/**
+	 * Retrieve the MPoR Interpolation Type
+	 * 
+	 * @return The MPoR Interpolation Type
+	 */
+
+	public int interpolationType()
+	{
+		return _iInterpolationType;
 	}
 }

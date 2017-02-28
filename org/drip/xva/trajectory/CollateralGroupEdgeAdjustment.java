@@ -1,5 +1,5 @@
 
-package org.drip.xva.settings;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,9 @@ package org.drip.xva.settings;
  */
 
 /**
- * CounterPartyGroup specifies the Details of a Counter Party Group. The References are:
+ * CollateralGroupEdgeAdjustment holds the XVA Adjustment that result from the Vertex Realizations of a
+ *  Projected Path of a Single Simulation Run along the Granularity of a Collateral Group. The References
+ *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -66,129 +68,63 @@ package org.drip.xva.settings;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyGroup {
-	private int _iBankDefaultWindow = -1;
-	private java.lang.String _strID = "";
-	private java.lang.String _strName = "";
-	private int _iCounterPartyDefaultWindow = -1;
-	private org.drip.xva.settings.NettingGroup[] _aNG = null;
-	private org.drip.xva.settings.MarginPeriodOfRisk _mpor = null;
+public class CollateralGroupEdgeAdjustment {
+	private double _dblDebt = java.lang.Double.NaN;
+	private double _dblCredit = java.lang.Double.NaN;
+	private double _dblFunding = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Standard Instance of CounterPartyGroup
+	 * CollateralGroupEdgeAdjustment Constructor
 	 * 
-	 * @param strName The Collateral Group Name
-	 * @param aNG The Array of Netting Groups
-	 * 
-	 * @return The Standard Instance of CounterPartyGroup
-	 */
-
-	public static final CounterPartyGroup Standard (
-		final java.lang.String strName,
-		final org.drip.xva.settings.NettingGroup[] aNG)
-	{
-		try {
-			return new CounterPartyGroup (org.drip.quant.common.StringUtil.GUID(), strName, aNG,
-				org.drip.xva.settings.MarginPeriodOfRisk.Standard(), 14, 14);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * CounterPartyGroup Constructor
-	 * 
-	 * @param strID The Collateral Group ID
-	 * @param strName The Collateral Group Name
-	 * @param aNG The Array of Netting Groups
-	 * @param mpor The Margin Period Of Risk
-	 * @param iCounterPartyDefaultWindow The Counter Party Default Window
-	 * @param iBankDefaultWindow The Bank Default Window
+	 * @param dblCredit The Path-specific Credit Value Adjustment
+	 * @param dblDebt The Path-specific Debt Value Adjustment
+	 * @param dblFunding The Path-specific Funding Value Adjustment
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CounterPartyGroup (
-		final java.lang.String strID,
-		final java.lang.String strName,
-		final org.drip.xva.settings.NettingGroup[] aNG,
-		final org.drip.xva.settings.MarginPeriodOfRisk mpor,
-		final int iCounterPartyDefaultWindow,
-		final int iBankDefaultWindow)
+	public CollateralGroupEdgeAdjustment (
+		final double dblCredit,
+		final double dblDebt,
+		final double dblFunding)
 		throws java.lang.Exception
 	{
-		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
-			_strName.isEmpty() || null == (_aNG = aNG) || 0 == _aNG.length || null == (_mpor = mpor) ||
-				-1 >= (_iCounterPartyDefaultWindow = iCounterPartyDefaultWindow) || -1 >=
-					(_iBankDefaultWindow = iBankDefaultWindow))
-			throw new java.lang.Exception ("NettingGroup Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCredit = dblCredit) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDebt = dblDebt) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblFunding = dblFunding))
+			throw new java.lang.Exception ("CollateralGroupEdgeAdjustment Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Collateral Group ID
+	 * Retrieve the Path-specific Credit Adjustment
 	 * 
-	 * @return The Collateral Group ID
+	 * @return The Path-specific Credit Adjustment
 	 */
 
-	public java.lang.String id()
+	public double credit()
 	{
-		return _strID;
+		return _dblCredit;
 	}
 
 	/**
-	 * Retrieve the Collateral Group Name
+	 * Retrieve the Path-specific Debt Adjustment
 	 * 
-	 * @return The Collateral Group Name
+	 * @return The Path-specific Debt Adjustment
 	 */
 
-	public java.lang.String name()
+	public double debt()
 	{
-		return _strName;
+		return _dblDebt;
 	}
 
 	/**
-	 * Retrieve the Array of Netting Groups
+	 * Retrieve the Path-specific Funding Adjustment
 	 * 
-	 * @return The Array of Netting Groups
+	 * @return The Path-specific Funding Adjustment
 	 */
 
-	public org.drip.xva.settings.NettingGroup[] nettingGroups()
+	public double funding()
 	{
-		return _aNG;
-	}
-
-	/**
-	 * Retrieve the Margin Period Of Risk
-	 * 
-	 * @return The Margin Period Of Risk
-	 */
-
-	public org.drip.xva.settings.MarginPeriodOfRisk mpor()
-	{
-		return _mpor;
-	}
-
-	/**
-	 * Retrieve the Counter Party Default Window
-	 * 
-	 * @return The Counter Party Default Window
-	 */
-
-	public int counterPartyDefaultWindow()
-	{
-		return _iCounterPartyDefaultWindow;
-	}
-
-	/**
-	 * Retrieve the Bank Default Window
-	 * 
-	 * @return The Bank Default Window
-	 */
-
-	public int bankDefaultWindow()
-	{
-		return _iBankDefaultWindow;
+		return _dblFunding;
 	}
 }

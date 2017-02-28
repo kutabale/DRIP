@@ -1,5 +1,5 @@
 
-package org.drip.xva.netting;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.netting;
  */
 
 /**
- * CollateralGroupDigest rolls up the Path Realizations of the Sequence in a Single Path Projection Run over
+ * NettingGroupPath rolls up the Path Realizations of the Sequence in a Single Path Projection Run over
  *  Multiple Collateral Groups onto a Single Netting Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,23 +67,23 @@ package org.drip.xva.netting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupDigest {
-	private org.drip.xva.collateral.GroupTrajectoryPath[] _aGTP = null;
+public class NettingGroupPath {
+	private org.drip.xva.trajectory.CollateralGroupPath[] _aCGP = null;
 
 	/**
 	 * Generate a "Mono" CollateralGroupDigest Instance
 	 * 
-	 * @param gtp The "Mono" Collateral Group Path
+	 * @param cgp The "Mono" Collateral Group Path
 	 * 
 	 * @return The "Mono" CollateralGroupDigest Instance
 	 */
 
-	public static final CollateralGroupDigest Mono (
-		final org.drip.xva.collateral.GroupTrajectoryPath gtp)
+	public static final NettingGroupPath Mono (
+		final org.drip.xva.trajectory.CollateralGroupPath cgp)
 	{
 		try {
-			return new org.drip.xva.netting.CollateralGroupDigest (new
-				org.drip.xva.collateral.GroupTrajectoryPath[] {gtp});
+			return new org.drip.xva.trajectory.NettingGroupPath (new
+				org.drip.xva.trajectory.CollateralGroupPath[] {cgp});
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -92,19 +92,19 @@ public class CollateralGroupDigest {
 	}
 
 	/**
-	 * CollateralGroupDigest Constructor
+	 * NettingGroupPath Constructor
 	 * 
-	 * @param aGTP Array of the Collateral Group Trajectory Paths
+	 * @param aCGP Array of the Collateral Group Trajectory Paths
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupDigest (
-		final org.drip.xva.collateral.GroupTrajectoryPath[] aGTP)
+	public NettingGroupPath (
+		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP)
 		throws java.lang.Exception
 	{
-		if (null == (_aGTP = aGTP) || 0 == _aGTP.length)
-			throw new java.lang.Exception ("CollateralGroupDigest Constructor => Invalid Inputs");
+		if (null == (_aCGP = aCGP) || 0 == _aCGP.length)
+			throw new java.lang.Exception ("NettingGroupPath Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -113,9 +113,9 @@ public class CollateralGroupDigest {
 	 * @return Array of the Collateral Group Trajectory Paths
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryPath[] collateralGroupTrajectoryPaths()
+	public org.drip.xva.trajectory.CollateralGroupPath[] collateralGroupTrajectoryPaths()
 	{
-		return _aGTP;
+		return _aCGP;
 	}
 
 	/**
@@ -126,15 +126,15 @@ public class CollateralGroupDigest {
 
 	public org.drip.analytics.date.JulianDate[] vertexes()
 	{
-		org.drip.xva.collateral.GroupTrajectoryEdge[] aGTE = _aGTP[0].edges();
+		org.drip.xva.trajectory.CollateralGroupEdge[] aCGE = _aCGP[0].edges();
 
-		int iNumVertex = aGTE.length + 1;
+		int iNumVertex = aCGE.length + 1;
 		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
 
-		adtVertex[0] = aGTE[0].head().vertex();
+		adtVertex[0] = aCGE[0].head().vertex();
 
 		for (int i = 1; i < iNumVertex; ++i)
-			adtVertex[i] = aGTE[i - 1].tail().vertex();
+			adtVertex[i] = aCGE[i - 1].tail().vertex();
 
 		return adtVertex;
 	}
@@ -148,10 +148,10 @@ public class CollateralGroupDigest {
 	public double cva()
 	{
 		double dblCVASum = 0.;
-		int iNumCollateralGroup = _aGTP.length;
+		int iNumCollateralGroup = _aCGP.length;
 
 		for (int i = 0; i < iNumCollateralGroup; ++i)
-			dblCVASum += _aGTP[i].credit();
+			dblCVASum += _aCGP[i].credit();
 
 		return dblCVASum / iNumCollateralGroup;
 	}
@@ -165,10 +165,10 @@ public class CollateralGroupDigest {
 	public double dva()
 	{
 		double dblDVASum = 0.;
-		int iNumCollateralGroup = _aGTP.length;
+		int iNumCollateralGroup = _aCGP.length;
 
 		for (int i = 0; i < iNumCollateralGroup; ++i)
-			dblDVASum += _aGTP[i].debt();
+			dblDVASum += _aCGP[i].debt();
 
 		return dblDVASum / iNumCollateralGroup;
 	}
@@ -182,10 +182,10 @@ public class CollateralGroupDigest {
 	public double fca()
 	{
 		double dblFCASum = 0.;
-		int iNumCollateralGroup = _aGTP.length;
+		int iNumCollateralGroup = _aCGP.length;
 
 		for (int i = 0; i < iNumCollateralGroup; ++i)
-			dblFCASum += _aGTP[i].funding();
+			dblFCASum += _aCGP[i].funding();
 
 		return dblFCASum / iNumCollateralGroup;
 	}
@@ -199,10 +199,10 @@ public class CollateralGroupDigest {
 	public double total()
 	{
 		double dblTotalSum = 0.;
-		int iNumCollateralGroup = _aGTP.length;
+		int iNumCollateralGroup = _aCGP.length;
 
 		for (int i = 0; i < iNumCollateralGroup; ++i)
-			dblTotalSum += _aGTP[i].total();
+			dblTotalSum += _aCGP[i].total();
 
 		return dblTotalSum / iNumCollateralGroup;
 	}
@@ -215,9 +215,9 @@ public class CollateralGroupDigest {
 
 	public double[] collateralizedExposure()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGP[0].edges().length;
 
-		int iNumCollateralGroup = _aGTP.length;
+		int iNumCollateralGroup = _aCGP.length;
 		double[] adblCollateralizedExposure = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -225,7 +225,7 @@ public class CollateralGroupDigest {
 
 		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
 			++iCollateralGroupIndex) {
-			double[] adblPathCollateralizedExposure = _aGTP[iCollateralGroupIndex].collateralizedExposure();
+			double[] adblPathCollateralizedExposure = _aCGP[iCollateralGroupIndex].collateralizedExposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
 				adblCollateralizedExposure[iEdgeIndex] += adblPathCollateralizedExposure[iEdgeIndex];
@@ -242,9 +242,9 @@ public class CollateralGroupDigest {
 
 	public double[] uncollateralizedExposure()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGP[0].edges().length;
 
-		int iNumCollateralGroup = _aGTP.length;
+		int iNumCollateralGroup = _aCGP.length;
 		double[] adblUncollateralizedExposure = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -253,7 +253,7 @@ public class CollateralGroupDigest {
 		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
 			++iCollateralGroupIndex) {
 			double[] adblPathUncollateralizedExposure =
-				_aGTP[iCollateralGroupIndex].uncollateralizedExposure();
+				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
 				adblUncollateralizedExposure[iEdgeIndex] += adblPathUncollateralizedExposure[iEdgeIndex];
@@ -270,9 +270,9 @@ public class CollateralGroupDigest {
 
 	public double[] collateralizedExposurePV()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGP[0].edges().length;
 
-		int iNumCollateralGroup = _aGTP.length;
+		int iNumCollateralGroup = _aCGP.length;
 		double[] adblCollateralizedExposurePV = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -281,7 +281,7 @@ public class CollateralGroupDigest {
 		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
 			++iCollateralGroupIndex) {
 			double[] adblPathCollateralizedExposurePV =
-				_aGTP[iCollateralGroupIndex].collateralizedExposurePV();
+				_aCGP[iCollateralGroupIndex].collateralizedExposurePV();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
 				adblCollateralizedExposurePV[iEdgeIndex] += adblPathCollateralizedExposurePV[iEdgeIndex];
@@ -298,9 +298,9 @@ public class CollateralGroupDigest {
 
 	public double[] uncollateralizedExposurePV()
 	{
-		int iNumEdge = _aGTP[0].edges().length;
+		int iNumEdge = _aCGP[0].edges().length;
 
-		int iNumCollateralGroup = _aGTP.length;
+		int iNumCollateralGroup = _aCGP.length;
 		double[] adblUncollateralizedExposurePV = new double[iNumEdge];
 
 		for (int j = 0; j < iNumEdge; ++j)
@@ -309,7 +309,7 @@ public class CollateralGroupDigest {
 		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
 			++iCollateralGroupIndex) {
 			double[] adblPathUncollateralizedExposurePV =
-				_aGTP[iCollateralGroupIndex].uncollateralizedExposurePV();
+				_aCGP[iCollateralGroupIndex].uncollateralizedExposurePV();
 
 			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
 				adblUncollateralizedExposurePV[iEdgeIndex] += adblPathUncollateralizedExposurePV[iEdgeIndex];

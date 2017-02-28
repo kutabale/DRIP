@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * GroupTrajectoryVertex holds the Vertex Realizations of a Projected Path of a Single Simulation Run along
+ * CollateralGroupVertex holds the Vertex Realizations of a Projected Path of a Single Simulation Run along
  *  the Granularity of a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,29 +67,29 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class GroupTrajectoryVertex {
+public class CollateralGroupVertex {
 	private org.drip.analytics.date.JulianDate _dtVertex = null;
-	private org.drip.xva.collateral.GroupTrajectoryVertexExposure _gtve = null;
-	private org.drip.xva.collateral.GroupTrajectoryVertexNumeraire _gtvn = null;
+	private org.drip.xva.trajectory.CollateralGroupVertexExposure _cgve = null;
+	private org.drip.xva.trajectory.CollateralGroupVertexNumeraire _cgvn = null;
 
 	/**
-	 * GroupTrajectoryVertex Constructor
+	 * CollateralGroupVertex Constructor
 	 * 
 	 * @param dtVertex The Trade Trajectory Vertex Date
-	 * @param gtve The Trade Trajectory Vertex Exposure
-	 * @param gtvn The Trade Trajectory Vertex Numeraire
+	 * @param cgve The Trade Trajectory Vertex Exposure
+	 * @param cgvn The Trade Trajectory Vertex Numeraire
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public GroupTrajectoryVertex (
+	public CollateralGroupVertex (
 		final org.drip.analytics.date.JulianDate dtVertex,
-		final org.drip.xva.collateral.GroupTrajectoryVertexExposure gtve,
-		final org.drip.xva.collateral.GroupTrajectoryVertexNumeraire gtvn)
+		final org.drip.xva.trajectory.CollateralGroupVertexExposure cgve,
+		final org.drip.xva.trajectory.CollateralGroupVertexNumeraire cgvn)
 		throws java.lang.Exception
 	{
-		if (null == (_dtVertex = dtVertex) || null == (_gtve = gtve) || null == (_gtvn = gtvn))
-			throw new java.lang.Exception ("GroupTrajectoryVertex Constructor => Invalid Inputs");
+		if (null == (_dtVertex = dtVertex) || null == (_cgve = cgve) || null == (_cgvn = cgvn))
+			throw new java.lang.Exception ("CollateralGroupVertex Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -109,9 +109,9 @@ public class GroupTrajectoryVertex {
 	 * @return The Trade Trajectory Vertex Exposure
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryVertexExposure exposure()
+	public org.drip.xva.trajectory.CollateralGroupVertexExposure exposure()
 	{
-		return _gtve;
+		return _cgve;
 	}
 
 	/**
@@ -120,8 +120,8 @@ public class GroupTrajectoryVertex {
 	 * @return The Trade Trajectory Vertex Numeraire
 	 */
 
-	public org.drip.xva.collateral.GroupTrajectoryVertexNumeraire numeraire()
+	public org.drip.xva.trajectory.CollateralGroupVertexNumeraire numeraire()
 	{
-		return _gtvn;
+		return _cgvn;
 	}
 }
