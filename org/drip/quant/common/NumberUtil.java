@@ -80,6 +80,26 @@ public class NumberUtil {
 	}
 
 	/**
+	 * Check if the Input Long Array contains a MIN_VALUE or MAX_VALUE
+	 * 
+	 * @param al Input Long Array
+	 * 
+	 * @return TRUE - Input Long Array contains a MIN_VALUE or MAX_VALUE
+	 */
+
+	public static final boolean IsValid (
+		final long[] al)
+	{
+		if (null == al) return true;
+
+		for (int i = 0; i < al.length; ++i) {
+			if (!IsValid (al[i])) return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Checks if the input double is Infinite or NaN
 	 * 
 	 * @param dbl Input double

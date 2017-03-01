@@ -52,7 +52,7 @@ package org.drip.measure.crng;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LinearCongruentialGenerator {
+public class LinearCongruentialGenerator extends org.drip.measure.crng.RandomNumberGenerator {
 	private long _lA = java.lang.Long.MIN_VALUE;
 	private long _lB = java.lang.Long.MIN_VALUE;
 	private long _lM = java.lang.Long.MIN_VALUE;
@@ -102,7 +102,7 @@ public class LinearCongruentialGenerator {
 			l2Power32 *= 2;
 
 		try {
-			return new LinearCongruentialGenerator (1664525L, 1013904223, l2Power32, rg);
+			return new LinearCongruentialGenerator (1664525L, 1013904223L, l2Power32, rg);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -189,13 +189,18 @@ public class LinearCongruentialGenerator {
 	}
 
 	/**
-	 * Retrieve a Random Number between 0 and 1
+	 * Retrieve a Random Number between -1 and 1
 	 * 
-	 * @return Random Number between 0 and 1
+	 * @return Random Number between -1 and 1
 	 */
 
 	public double nextDouble()
 	{
 		return ((double) nextLong()) / ((double) _lM);
+	}
+
+	@Override public double nextDouble01()
+	{
+		return 0.5 * (1. + nextDouble());
 	}
 }
