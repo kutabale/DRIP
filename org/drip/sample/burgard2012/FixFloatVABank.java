@@ -78,22 +78,22 @@ import org.drip.xva.trajectory.*;
 
 public class FixFloatVABank {
 
-	private static final JumpDiffusionEdge[][] PortfolioRealization (
-		final DiffusionEvolver dePortfolio,
-		final double dblInitialAssetValue,
+	private static final JumpDiffusionEdge[][] ATMSwapRateOffsetRealization (
+		final DiffusionEvolver deATMSwapRateOffset,
+		final double dblATMSwapRateOffsetInitial,
 		final double dblTime,
 		final double dblTimeWidth,
 		final int iNumStep,
 		final int iNumSimulation)
 		throws Exception
 	{
-		JumpDiffusionEdge[][] aaJDE = new JumpDiffusionEdge[iNumSimulation][];
+		JumpDiffusionEdge[][] aaJDEATMSwapRateOffset = new JumpDiffusionEdge[iNumSimulation][];
 
 		for (int i = 0; i < iNumSimulation; ++i)
-			aaJDE[i] = dePortfolio.incrementSequence (
+			aaJDEATMSwapRateOffset[i] = deATMSwapRateOffset.incrementSequence (
 				new JumpDiffusionVertex (
 					dblTime,
-					dblInitialAssetValue,
+					dblATMSwapRateOffsetInitial,
 					0.,
 					false
 				),
@@ -101,7 +101,7 @@ public class FixFloatVABank {
 				dblTimeWidth
 			);
 
-		return aaJDE;
+		return aaJDEATMSwapRateOffset;
 	}
 
 	public static final void VA (
@@ -111,9 +111,9 @@ public class FixFloatVABank {
 		int iNumStep = 10;
 		double dblTime = 5.;
 		int iNumSimulation = 10000;
-		double dblAssetDrift = 0.0;
-		double dblAssetVolatility = 0.15;
-		double dblInitialAssetValue = 0.;
+		double dblATMSwapRateOffsetDrift = 0.0;
+		double dblATMSwapRateOffsetVolatility = 0.15;
+		double dblATMSwapRateOffsetInitial = 0.;
 		double dblCollateralDrift = 0.01;
 		double dblBankRecoveryRate = 0.40;
 		double dblCounterPartyHazardRate = 0.015;
@@ -133,14 +133,14 @@ public class FixFloatVABank {
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		JumpDiffusionEdge[][] aaJDE = PortfolioRealization (
+		JumpDiffusionEdge[][] aaJDEATMSwapRateOffset = ATMSwapRateOffsetRealization (
 			new DiffusionEvolver (
 				DiffusionEvaluatorLinear.Standard (
-					dblAssetDrift,
-					dblAssetVolatility
+					dblATMSwapRateOffsetDrift,
+					dblATMSwapRateOffsetVolatility
 				)
 			),
-			dblInitialAssetValue,
+			dblATMSwapRateOffsetInitial,
 			dblTime,
 			dblTimeWidth,
 			iNumStep,
@@ -166,7 +166,7 @@ public class FixFloatVABank {
 				aaCGV[j][i] = new CollateralGroupVertex (
 					adtVertex[i],
 					new CollateralGroupVertexExposure (
-						aaJDE[j][i].finish(),
+						aaJDEATMSwapRateOffset[j][i].finish() * dblTimeWidth * (iNumStep - i),
 						0.,
 						0.
 					),

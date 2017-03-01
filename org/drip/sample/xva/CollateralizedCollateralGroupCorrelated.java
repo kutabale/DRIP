@@ -82,19 +82,19 @@ import org.drip.xva.trajectory.*;
 
 public class CollateralizedCollateralGroupCorrelated {
 
-	private static final double[] SwapTradeValueRealization (
-		final DiffusionEvolver deSwap,
-		final double dblSwapValueStart,
+	private static final double[] ATMSwapRateOffsetRealization (
+		final DiffusionEvolver deATMSwapRateOffset,
+		final double dblATMSwapRateOffsetStart,
 		final int iNumStep,
 		final double[] adblRandom,
 		final double dblTime,
 		final double dblTimeWidth)
 		throws Exception
 	{
-		JumpDiffusionEdge[] aJDE = deSwap.incrementSequence (
+		JumpDiffusionEdge[] aJDEATMSwapRateOffset = deATMSwapRateOffset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
-				dblSwapValueStart,
+				dblATMSwapRateOffsetStart,
 				0.,
 				false
 			),
@@ -102,17 +102,17 @@ public class CollateralizedCollateralGroupCorrelated {
 			dblTimeWidth
 		);
 
-		double[] adblSwapValueRealization = new double[aJDE.length];
+		double[] adblATMSwapRateOffsetRealization = new double[aJDEATMSwapRateOffset.length];
 
-		for (int i = 0; i < aJDE.length; ++i)
-			adblSwapValueRealization[i] = aJDE[i].finish();
+		for (int i = 0; i < aJDEATMSwapRateOffset.length; ++i)
+			adblATMSwapRateOffsetRealization[i] = aJDEATMSwapRateOffset[i].finish();
 
-		return adblSwapValueRealization;
+		return adblATMSwapRateOffsetRealization;
 	}
 
 	private static final double[] SwapPortfolioValueRealization (
-		final DiffusionEvolver deSwap,
-		final double dblSwapValueStart,
+		final DiffusionEvolver deATMSwapRateOffset,
+		final double dblATMSwapRateOffsetStart,
 		final int iNumStep,
 		final double[] adblRandom,
 		final double dblTime,
@@ -126,9 +126,9 @@ public class CollateralizedCollateralGroupCorrelated {
 			adblSwapPortfolioValueRealization[i] = 0.;
 
 		for (int i = 0; i < iNumSwap; ++i) {
-			double[] adblSwapValueRealization = SwapTradeValueRealization (
-				deSwap,
-				dblSwapValueStart,
+			double[] adblATMSwapRateOffsetRealization = ATMSwapRateOffsetRealization (
+				deATMSwapRateOffset,
+				dblATMSwapRateOffsetStart,
 				iNumStep,
 				adblRandom,
 				dblTime,
@@ -136,7 +136,7 @@ public class CollateralizedCollateralGroupCorrelated {
 			);
 
 			for (int j = 0; j < iNumStep; ++j)
-				adblSwapPortfolioValueRealization[j] += adblSwapValueRealization[j];
+				adblSwapPortfolioValueRealization[j] += dblTimeWidth * (iNumStep - j) * adblATMSwapRateOffsetRealization[j];
 		}
 
 		return adblSwapPortfolioValueRealization;
@@ -150,11 +150,11 @@ public class CollateralizedCollateralGroupCorrelated {
 
 		int iNumStep = 10;
 		int iNumSwap = 10;
-		double dblTime = 10.;
+		double dblTime = 5.;
 		int iNumSimulation = 1000;
-		double dblSwapDrift = 0.0;
-		double dblSwapVolatility = 0.25;
-		double dblSwapInitial = 0.;
+		double dblATMSwapRateOffsetDrift = 0.0;
+		double dblATMSwapRateOffsetVolatility = 0.25;
+		double dblATMSwapRateOffsetInitial = 0.;
 		double dblCSADrift = 0.01;
 		double dblCSAVolatility = 0.05;
 		double dblCSAInitial = 1.;
@@ -205,10 +205,10 @@ public class CollateralizedCollateralGroupCorrelated {
 		for (int j = 0; j < iNumStep; ++j)
 			adtVertex[j] = dtSpot.addMonths (6 * j + 6);
 
-		DiffusionEvolver deSwap = new DiffusionEvolver (
+		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
 			DiffusionEvaluatorLinear.Standard (
-				dblSwapDrift,
-				dblSwapVolatility
+				dblATMSwapRateOffsetDrift,
+				dblATMSwapRateOffsetVolatility
 			)
 		);
 
@@ -263,8 +263,8 @@ public class CollateralizedCollateralGroupCorrelated {
 			);
 
 			aadblPortfolioValue[i] = SwapPortfolioValueRealization (
-				deSwap,
-				dblSwapInitial,
+				deATMSwapRateOffset,
+				dblATMSwapRateOffsetInitial,
 				iNumStep,
 				aadblNumeraire[0],
 				dblTime,
@@ -339,12 +339,11 @@ public class CollateralizedCollateralGroupCorrelated {
 			);
 
 			JulianDate dtStart = dtSpot;
-			double dblValueStart = dblSwapInitial;
+			double dblValueStart = dblTime * dblATMSwapRateOffsetInitial;
 
 			for (int j = 0; j < iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
 				double dblValueEnd = aadblPortfolioValue[i][j];
-				// double dblValueEnd = dblTimeWidth * (iNumStep - j) * aadblPortfolioValue[i][j];
 
 				aaCGVN[i][j] = new CollateralGroupVertexNumeraire (
 					aJDECSA[j].finish(),
@@ -398,7 +397,7 @@ public class CollateralizedCollateralGroupCorrelated {
 
 		double[] adblEE = ngpa.collateralizedExposure();
 
-		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblSwapInitial, 1, 4, 1.) + "   |";
+		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblTime * dblATMSwapRateOffsetInitial, 1, 4, 1.) + "   |";
 
 		for (int j = 0; j < adblEE.length; ++j)
 			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEE[j], 1, 4, 1.) + "   |";
@@ -407,7 +406,7 @@ public class CollateralizedCollateralGroupCorrelated {
 
 		double[] adblEPE = ngpa.collateralizedPositiveExposure();
 
-		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblSwapInitial, 1, 4, 1.) + "   |";
+		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblTime * dblATMSwapRateOffsetInitial, 1, 4, 1.) + "   |";
 
 		for (int j = 0; j < adblEPE.length; ++j)
 			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEPE[j], 1, 4, 1.) + "   |";
@@ -425,7 +424,7 @@ public class CollateralizedCollateralGroupCorrelated {
 
 		double[] adblEEPV = ngpa.collateralizedExposurePV();
 
-		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblSwapInitial, 1, 4, 1.) + "   |";
+		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblTime * dblATMSwapRateOffsetInitial, 1, 4, 1.) + "   |";
 
 		for (int j = 0; j < adblEEPV.length; ++j)
 			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEEPV[j], 1, 4, 1.) + "   |";
@@ -434,7 +433,7 @@ public class CollateralizedCollateralGroupCorrelated {
 
 		double[] adblEPEPV = ngpa.collateralizedPositiveExposurePV();
 
-		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblSwapInitial, 1, 4, 1.) + "   |";
+		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblTime * dblATMSwapRateOffsetInitial, 1, 4, 1.) + "   |";
 
 		for (int j = 0; j < adblEPEPV.length; ++j)
 			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEPEPV[j], 1, 4, 1.) + "   |";

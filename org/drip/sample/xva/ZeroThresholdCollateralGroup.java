@@ -80,18 +80,18 @@ import org.drip.xva.trajectory.*;
 
 public class ZeroThresholdCollateralGroup {
 
-	private static final double[] SwapTradeValueRealization (
-		final DiffusionEvolver deSwap,
-		final double dblSwapValueStart,
+	private static final double[] ATMSwapRateOffsetRealization (
+		final DiffusionEvolver deATMSwapRateOffset,
+		final double dblATMSwapRateOffsetStart,
 		final int iNumStep,
 		final double dblTime,
 		final double dblTimeWidth)
 		throws Exception
 	{
-		JumpDiffusionEdge[] aJDE = deSwap.incrementSequence (
+		JumpDiffusionEdge[] aJDEATMSwapRateOffset = deATMSwapRateOffset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
-				dblSwapValueStart,
+				dblATMSwapRateOffsetStart,
 				0.,
 				false
 			),
@@ -99,17 +99,17 @@ public class ZeroThresholdCollateralGroup {
 			dblTimeWidth
 		);
 
-		double[] adblSwapValueRealization = new double[aJDE.length];
+		double[] adblATMSwapRateOffsetRealization = new double[aJDEATMSwapRateOffset.length];
 
-		for (int i = 0; i < aJDE.length; ++i)
-			adblSwapValueRealization[i] = aJDE[i].finish();
+		for (int i = 0; i < aJDEATMSwapRateOffset.length; ++i)
+			adblATMSwapRateOffsetRealization[i] = aJDEATMSwapRateOffset[i].finish();
 
-		return adblSwapValueRealization;
+		return adblATMSwapRateOffsetRealization;
 	}
 
 	private static final double[] SwapPortfolioValueRealization (
-		final DiffusionEvolver deSwap,
-		final double dblSwapValueStart,
+		final DiffusionEvolver deATMSwapRateOffset,
+		final double dblATMSwapRateOffsetStart,
 		final int iNumStep,
 		final double dblTime,
 		final double dblTimeWidth,
@@ -122,16 +122,16 @@ public class ZeroThresholdCollateralGroup {
 			adblSwapPortfolioValueRealization[i] = 0.;
 
 		for (int i = 0; i < iNumSwap; ++i) {
-			double[] adblSwapValueRealization = SwapTradeValueRealization (
-				deSwap,
-				dblSwapValueStart,
+			double[] adblATMSwapRateOffsetRealization = ATMSwapRateOffsetRealization (
+				deATMSwapRateOffset,
+				dblATMSwapRateOffsetStart,
 				iNumStep,
 				dblTime,
 				dblTimeWidth
 			);
 
 			for (int j = 0; j < iNumStep; ++j)
-				adblSwapPortfolioValueRealization[j] += adblSwapValueRealization[j];
+				adblSwapPortfolioValueRealization[j] += dblTimeWidth * (iNumStep - j) * adblATMSwapRateOffsetRealization[j];
 		}
 
 		return adblSwapPortfolioValueRealization;
@@ -172,9 +172,9 @@ public class ZeroThresholdCollateralGroup {
 		int iNumSwap = 10;
 		double dblTime = 5.;
 		int iNumSimulation = 1000;
-		double dblSwapValueStart = 0.;
-		double dblSwapDrift = 0.0;
-		double dblSwapVolatility = 0.25;
+		double dblATMSwapRateOffsetStart = 0.;
+		double dblATMSwapRateOffsetDrift = 0.0;
+		double dblATMSwapRateOffsetVolatility = 0.25;
 		double dblCSADrift = 0.01;
 		double dblBankHazardRate = 0.015;
 		double dblBankRecoveryRate = 0.40;
@@ -203,16 +203,16 @@ public class ZeroThresholdCollateralGroup {
 
 		CounterPartyGroupSpecification cpgs = CounterPartyGroupSpecification.Standard ("CPGROUP");
 
-		DiffusionEvolver deSwap = new DiffusionEvolver (
+		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
 			DiffusionEvaluatorLinear.Standard (
-				dblSwapDrift,
-				dblSwapVolatility
+				dblATMSwapRateOffsetDrift,
+				dblATMSwapRateOffsetVolatility
 			)
 		);
 
 		double[][] aadblSwapPortfolioValueRealization = SwapPortfolioValueRealization (
-			deSwap,
-			dblSwapValueStart,
+			deATMSwapRateOffset,
+			dblATMSwapRateOffsetStart,
 			iNumStep,
 			dblTime,
 			dblTimeWidth,
@@ -236,7 +236,7 @@ public class ZeroThresholdCollateralGroup {
 
 		for (int j = 0; j < iNumSimulation; ++j) {
 			JulianDate dtStart = dtSpot;
-			double dblValueStart = dblSwapValueStart;
+			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
 
 			for (int i = 0; i < iNumStep; ++i) {
 				JulianDate dtEnd = adtVertex[i];
@@ -307,7 +307,7 @@ public class ZeroThresholdCollateralGroup {
 
 		double[] adblEE = ngpa.collateralizedExposure();
 
-		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblSwapValueStart, 1, 4, 1.) + "   |";
+		strDump = "\t|       EXPOSURE       =>   " + FormatUtil.FormatDouble (dblTime * dblATMSwapRateOffsetStart, 1, 4, 1.) + "   |";
 
 		for (int j = 0; j < adblEE.length; ++j)
 			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEE[j], 1, 4, 1.) + "   |";
@@ -316,7 +316,7 @@ public class ZeroThresholdCollateralGroup {
 
 		double[] adblEPE = ngpa.collateralizedPositiveExposure();
 
-		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblSwapValueStart, 1, 4, 1.) + "   |";
+		strDump = "\t|  POSITIVE EXPOSURE   =>   " + FormatUtil.FormatDouble (dblTime * dblATMSwapRateOffsetStart, 1, 4, 1.) + "   |";
 
 		for (int j = 0; j < adblEPE.length; ++j)
 			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEPE[j], 1, 4, 1.) + "   |";
@@ -334,7 +334,7 @@ public class ZeroThresholdCollateralGroup {
 
 		double[] adblEEPV = ngpa.collateralizedExposurePV();
 
-		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblSwapValueStart, 1, 4, 1.) + "   |";
+		strDump = "\t|      EXPOSURE PV     =>   " + FormatUtil.FormatDouble (dblTime * dblATMSwapRateOffsetStart, 1, 4, 1.) + "   |";
 
 		for (int j = 0; j < adblEEPV.length; ++j)
 			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEEPV[j], 1, 4, 1.) + "   |";
@@ -343,7 +343,7 @@ public class ZeroThresholdCollateralGroup {
 
 		double[] adblEPEPV = ngpa.collateralizedPositiveExposurePV();
 
-		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblSwapValueStart, 1, 4, 1.) + "   |";
+		strDump = "\t| POSITIVE EXPOSURE PV =>   " + FormatUtil.FormatDouble (dblTime * dblATMSwapRateOffsetStart, 1, 4, 1.) + "   |";
 
 		for (int j = 0; j < adblEPEPV.length; ++j)
 			strDump = strDump + "   " + FormatUtil.FormatDouble (adblEPEPV[j], 1, 4, 1.) + "   |";

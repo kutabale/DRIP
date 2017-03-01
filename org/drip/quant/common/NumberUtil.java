@@ -66,6 +66,20 @@ public class NumberUtil {
 	private static final double DEFAULT_RELATIVE_TOLERANCE = 1.0e-03;
 
 	/**
+	 * Check if the Input Long is MIN_VALUE or MAX_VALUE
+	 * 
+	 * @param l Input Long
+	 * 
+	 * @return TRUE - Input Long is MIN_VALUE or MAX_VALUE
+	 */
+
+	public static final boolean IsValid (
+		final long l)
+	{
+		return java.lang.Long.MIN_VALUE != l && java.lang.Long.MAX_VALUE != l;
+	}
+
+	/**
 	 * Checks if the input double is Infinite or NaN
 	 * 
 	 * @param dbl Input double
