@@ -2,8 +2,8 @@
 package org.drip.sample.xva;
 
 import org.drip.analytics.date.*;
-import org.drip.measure.continuousmarginal.BrokenDateBridgeLinearT;
-import org.drip.measure.discretemarginal.SequenceGenerator;
+import org.drip.measure.bridge.BrokenDateInterpolatorLinearT;
+import org.drip.measure.discrete.SequenceGenerator;
 import org.drip.measure.dynamics.*;
 import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
@@ -357,7 +357,7 @@ public class CollateralizedCollateralGroupCorrelated {
 				CollateralAmountEstimator cae = new CollateralAmountEstimator (
 					cgs,
 					cpgs,
-					new BrokenDateBridgeLinearT (
+					new BrokenDateInterpolatorLinearT (
 						dtStart.julian(),
 						dtEnd.julian(),
 						dblValueStart,

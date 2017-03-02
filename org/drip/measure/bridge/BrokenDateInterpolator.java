@@ -1,5 +1,5 @@
 
-package org.drip.learning.regularization;
+package org.drip.measure.bridge;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,8 +7,6 @@ package org.drip.learning.regularization;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
- * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -49,71 +47,25 @@ package org.drip.learning.regularization;
  */
 
 /**
- * RegularizerR1ToR1 exposes the Structural Loss and Risk Calculations for the specified Normed R^1 To Normed
- *  R^1 Learning Function.
- *  
- * The References are:
- *  
- *  1) Alon, N., S. Ben-David, N. Cesa Bianchi, and D. Haussler (1997): Scale-sensitive Dimensions, Uniform
- *  	Convergence, and Learnability, Journal of Association of Computational Machinery, 44 (4) 615-631.
- * 
- *  2) Anthony, M., and P. L. Bartlett (1999): Artificial Neural Network Learning - Theoretical Foundations,
- *  	Cambridge University Press, Cambridge, UK.
- *  
- *  3) Kearns, M. J., R. E. Schapire, and L. M. Sellie (1994): Towards Efficient Agnostic Learning, Machine
- *  	Learning, 17 (2) 115-141.
- *  
- *  4) Lee, W. S., P. L. Bartlett, and R. C. Williamson (1998): The Importance of Convexity in Learning with
- *  	Squared Loss, IEEE Transactions on Information Theory, 44 1974-1980.
- * 
- *  5) Vapnik, V. N. (1998): Statistical Learning Theory, Wiley, New York.
+ * BrokenDateInterpolator exposes the Ability to Interpolate the Realized Path Value between two Broken
+ *  Dates.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public interface RegularizerR1ToR1 {
+public interface BrokenDateInterpolator {
 
 	/**
-	 * Retrieve the Regularization Constant Lambda
+	 * Interpolate the Value at T
 	 * 
-	 * @return The Regularization Constant Lambda
-	 */
-
-	public abstract double lambda();
-
-	/**
-	 * Compute the Regularization Sample Structural Loss
+	 * @param dblT T
 	 * 
-	 * @param funcR1ToR1 R^1 To R^1 Function Instance
-	 * @param adblX The Predictor Instance
-	 * 
-	 * @return The Regularization Sample Structural Loss
+	 * @return The Interpolated Value
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double structuralLoss (
-		final org.drip.function.definition.R1ToR1 funcR1ToR1,
-		final double[] adblX)
-		throws java.lang.Exception;
-
-	/**
-	 * Compute the Regularization Sample Structural Loss
-	 * 
-	 * @param distR1R1 R^1 R^1 Multivariate Measure
-	 * @param funcR1ToR1 R^1 To R^1 Function Instance
-	 * @param adblX The Predictor Instance
-	 * @param adblY The Response Instance
-	 * 
-	 * @return The Regularization Sample Structural Loss
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public abstract double structuralRisk (
-		final org.drip.measure.continuous.R1R1 distR1R1,
-		final org.drip.function.definition.R1ToR1 funcR1ToR1,
-		final double[] adblX,
-		final double[] adblY)
+	public abstract double interpolate (
+		final double dblT)
 		throws java.lang.Exception;
 }

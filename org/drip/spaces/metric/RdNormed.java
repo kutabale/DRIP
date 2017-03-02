@@ -68,7 +68,7 @@ public interface RdNormed extends org.drip.spaces.metric.GeneralizedMetricVector
 	 * @return The Borel Sigma R^d Probability Measure
 	 */
 
-	public abstract org.drip.measure.continuousmarginal.Rd borelSigmaMeasure();
+	public abstract org.drip.measure.continuous.Rd borelSigmaMeasure();
 
 	/**
 	 * Compute the Supremum Norm of the Sample

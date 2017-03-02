@@ -93,7 +93,7 @@ public class NormedR1CombinatorialToR1Continuous extends org.drip.spaces.rxtor1.
 
 		org.drip.function.definition.R1ToR1 funcR1ToR1 = function();
 
-		org.drip.measure.continuousmarginal.R1 distR1 = r1Combinatorial.borelSigmaMeasure();
+		org.drip.measure.continuous.R1 distR1 = r1Combinatorial.borelSigmaMeasure();
 
 		if (null == distR1 || null == funcR1ToR1)
 			throw new java.lang.Exception

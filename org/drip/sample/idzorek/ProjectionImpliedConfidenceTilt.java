@@ -2,7 +2,7 @@
 package org.drip.sample.idzorek;
 
 import org.drip.measure.bayesian.ProjectionDistributionLoading;
-import org.drip.measure.continuousjoint.MultivariateMeta;
+import org.drip.measure.continuous.MultivariateMeta;
 import org.drip.measure.gaussian.*;
 import org.drip.portfolioconstruction.allocator.ForwardReverseOptimizationOutput;
 import org.drip.portfolioconstruction.asset.Portfolio;

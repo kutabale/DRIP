@@ -152,7 +152,7 @@ public class LipschitzLossLearner extends org.drip.learning.rxtor1.GeneralizedLe
 	}
 
 	@Override public double empiricalRisk (
-		final org.drip.measure.continuousjoint.R1R1 distR1R1,
+		final org.drip.measure.continuous.R1R1 distR1R1,
 		final org.drip.function.definition.R1ToR1 funcLearnerR1ToR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
@@ -162,7 +162,7 @@ public class LipschitzLossLearner extends org.drip.learning.rxtor1.GeneralizedLe
 	}
 
 	@Override public double empiricalRisk (
-		final org.drip.measure.continuousjoint.RdR1 distRdR1,
+		final org.drip.measure.continuous.RdR1 distRdR1,
 		final org.drip.function.definition.RdToR1 funcLearnerRdToR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)

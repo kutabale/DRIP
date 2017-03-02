@@ -70,7 +70,7 @@ package org.drip.xva.settings;
 public class CollateralAmountEstimator {
 	private double _dblCurrentBalance = java.lang.Double.NaN;
 	private org.drip.xva.settings.CollateralGroupSpecification _cgs = null;
-	private org.drip.measure.continuousmarginal.BrokenDateBridge _bdb = null;
+	private org.drip.measure.bridge.BrokenDateInterpolator _bdb = null;
 	private org.drip.xva.settings.CounterPartyGroupSpecification _cpgs = null;
 
 	/**
@@ -87,7 +87,7 @@ public class CollateralAmountEstimator {
 	public CollateralAmountEstimator (
 		final org.drip.xva.settings.CollateralGroupSpecification cgs,
 		final org.drip.xva.settings.CounterPartyGroupSpecification cpgs,
-		final org.drip.measure.continuousmarginal.BrokenDateBridge bdb,
+		final org.drip.measure.bridge.BrokenDateInterpolator bdb,
 		final double dblCurrentBalance)
 		throws java.lang.Exception
 	{
@@ -125,7 +125,7 @@ public class CollateralAmountEstimator {
 	 * @return The Stochastic Value Broken Date Bridge Estimator
 	 */
 
-	public org.drip.measure.continuousmarginal.BrokenDateBridge brokenDateBridge()
+	public org.drip.measure.bridge.BrokenDateInterpolator brokenDateBridge()
 	{
 		return _bdb;
 	}

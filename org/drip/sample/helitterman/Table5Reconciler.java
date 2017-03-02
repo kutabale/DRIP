@@ -2,7 +2,7 @@
 package org.drip.sample.helitterman;
 
 import org.drip.measure.bayesian.JointPosteriorMetrics;
-import org.drip.measure.continuousjoint.MultivariateMeta;
+import org.drip.measure.continuous.MultivariateMeta;
 import org.drip.measure.gaussian.*;
 import org.drip.measure.statistics.MultivariateMoments;
 import org.drip.portfolioconstruction.allocator.*;

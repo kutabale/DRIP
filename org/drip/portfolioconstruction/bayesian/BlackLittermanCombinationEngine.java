@@ -187,7 +187,7 @@ public class BlackLittermanCombinationEngine {
 	{
 		double[][] aadblAssetSpaceExcessReturnsCovariance = _frooUnadjusted.assetExcessReturnsCovariance();
 
-		org.drip.measure.continuousjoint.MultivariateMeta meta = _frooUnadjusted.optimalPortfolio().meta();
+		org.drip.measure.continuous.MultivariateMeta meta = _frooUnadjusted.optimalPortfolio().meta();
 
 		org.drip.measure.bayesian.ScopingProjectionVariateDistribution spvd =
 			scopingProjectionDistribution();
@@ -201,7 +201,7 @@ public class BlackLittermanCombinationEngine {
 
 		if (null == jpm) return null;
 
-		org.drip.measure.continuousjoint.R1Multivariate r1mPosterior = jpm.posterior();
+		org.drip.measure.continuous.R1Multivariate r1mPosterior = jpm.posterior();
 
 		org.drip.portfolioconstruction.allocator.ForwardReverseOptimizationOutput frooAdjusted =
 			org.drip.portfolioconstruction.allocator.ForwardReverseOptimizationOutput.Forward (meta.names(),
@@ -231,7 +231,7 @@ public class BlackLittermanCombinationEngine {
 
 	public org.drip.portfolioconstruction.bayesian.BlackLittermanOutput fullConfidenceRun()
 	{
-		org.drip.measure.continuousjoint.MultivariateMeta meta = _frooUnadjusted.optimalPortfolio().meta();
+		org.drip.measure.continuous.MultivariateMeta meta = _frooUnadjusted.optimalPortfolio().meta();
 
 		double[][] aadblAssetSpaceExcessReturnsCovariance = _frooUnadjusted.assetExcessReturnsCovariance();
 
@@ -286,7 +286,7 @@ public class BlackLittermanCombinationEngine {
 
 		org.drip.portfolioconstruction.asset.Portfolio pfUnadjusted = _frooUnadjusted.optimalPortfolio();
 
-		org.drip.measure.continuousjoint.MultivariateMeta meta = pfUnadjusted.meta();
+		org.drip.measure.continuous.MultivariateMeta meta = pfUnadjusted.meta();
 
 		boolean bUseAlternateReferenceModel = _pcs.useAlternateReferenceModel();
 
@@ -306,7 +306,7 @@ public class BlackLittermanCombinationEngine {
 
 		if (null == jpm) return null;
 
-		org.drip.measure.continuousjoint.R1Multivariate r1mPosterior = jpm.posterior();
+		org.drip.measure.continuous.R1Multivariate r1mPosterior = jpm.posterior();
 
 		org.drip.portfolioconstruction.allocator.ForwardReverseOptimizationOutput frooCustomConfidence =
 			org.drip.portfolioconstruction.allocator.ForwardReverseOptimizationOutput.Forward (astrAssetID,

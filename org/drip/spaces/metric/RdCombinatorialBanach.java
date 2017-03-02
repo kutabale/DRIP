@@ -62,7 +62,7 @@ package org.drip.spaces.metric;
 public class RdCombinatorialBanach extends org.drip.spaces.tensor.RdCombinatorialVector implements
 	org.drip.spaces.metric.RdNormed {
 	private int _iPNorm = -1;
-	private org.drip.measure.continuousmarginal.Rd _distRd = null;
+	private org.drip.measure.continuous.Rd _distRd = null;
 
 	/**
 	 * RdCombinatorialBanach Space Constructor
@@ -76,7 +76,7 @@ public class RdCombinatorialBanach extends org.drip.spaces.tensor.RdCombinatoria
 
 	public RdCombinatorialBanach (
 		final org.drip.spaces.tensor.R1CombinatorialVector[] aR1CV,
-		final org.drip.measure.continuousmarginal.Rd distRd,
+		final org.drip.measure.continuous.Rd distRd,
 		final int iPNorm)
 		throws java.lang.Exception
 	{
@@ -93,7 +93,7 @@ public class RdCombinatorialBanach extends org.drip.spaces.tensor.RdCombinatoria
 		return _iPNorm;
 	}
 
-	@Override public org.drip.measure.continuousmarginal.Rd borelSigmaMeasure()
+	@Override public org.drip.measure.continuous.Rd borelSigmaMeasure()
 	{
 		return _distRd;
 	}

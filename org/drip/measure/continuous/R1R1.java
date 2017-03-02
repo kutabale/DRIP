@@ -1,5 +1,5 @@
 
-package org.drip.measure.continuousmarginal;
+package org.drip.measure.continuous;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,6 +7,8 @@ package org.drip.measure.continuousmarginal;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
+ * Copyright (C) 2016 Lakshmi Krishnamurthy
+ * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -47,95 +49,63 @@ package org.drip.measure.continuousmarginal;
  */
 
 /**
- * BrokenDateBridgeSqrtT Interpolates using Two Stochastic Value Nodes with Linear Scheme. The Scheme is
- *  Linear in Square Root of Time.
+ * R1R1 implements the Base Abstract Class behind Bivariate R^1 Distributions. It exports Methods for
+ *  Incremental, Cumulative, and Inverse Cumulative Distribution Densities.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class BrokenDateBridgeSqrtT implements org.drip.measure.continuousmarginal.BrokenDateBridge {
-	private double _dblT1 = java.lang.Double.NaN;
-	private double _dblT2 = java.lang.Double.NaN;
-	private double _dblV1 = java.lang.Double.NaN;
-	private double _dblV2 = java.lang.Double.NaN;
+public abstract class R1R1 {
 
 	/**
-	 * BrokenDateBridgeSqrtT Constructor
+	 * Compute the Cumulative under the Distribution to the given Variate Pair
 	 * 
-	 * @param dblT1 T1
-	 * @param dblT2 T2
-	 * @param dblV1 V1
-	 * @param dblV2 V2
+	 * @param dblX R^1 The X Variate to which the Cumulative is to be computed
+	 * @param dblY R^1 The Y Variate to which the Cumulative is to be computed
+	 * 
+	 * @return The Cumulative under the Distribution to the given Variate Pair
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public BrokenDateBridgeSqrtT (
-		final double dblT1,
-		final double dblT2,
-		final double dblV1,
-		final double dblV2)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblT1 = dblT1) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblT2 = dblT2) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblV1 = dblV1) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblV2 = dblV2)|| _dblT1 >= _dblT2)
-			throw new java.lang.Exception ("BrokenDateBridgeSqrtT Constructor => Invalid Inputs");
-	}
+	public abstract double cumulative (
+		final double dblX,
+		final double dblY)
+		throws java.lang.Exception;
 
 	/**
-	 * Retrieve T1
+	 * Compute the Incremental under the Distribution between the Variate Pair
 	 * 
-	 * @return T1
+	 * @param dblXLeft R^1 Left X Variate from which the Cumulative is to be computed
+	 * @param dblYLeft R^1 Left Y Variate from which the Cumulative is to be computed
+	 * @param dblXRight R^1 Right X Variate to which the Cumulative is to be computed
+	 * @param dblYRight R^1 Right Y Variate to which the Cumulative is to be computed
+	 * 
+	 * @return The Incremental under the Distribution between the Variate Pair
+	 * 
+	 * @throws java.lang.Exception Thrown if the inputs are invalid
 	 */
 
-	public double t1()
-	{
-		return _dblT1;
-	}
+	public abstract double incremental (
+		final double dblXLeft,
+		final double dblYLeft,
+		final double dblXRight,
+		final double dblYRight)
+		throws java.lang.Exception;
 
 	/**
-	 * Retrieve T2
+	 * Compute the Density under the Distribution at the given Variate Pair
 	 * 
-	 * @return T2
+	 * @param dblX R^1 The Variate to which the Cumulative is to be computed
+	 * @param dblY R^1 The Variate to which the Cumulative is to be computed
+	 * 
+	 * @return The Density under the Distribution at the given Variate Pair
+	 * 
+	 * @throws java.lang.Exception Thrown if the Input is Invalid
 	 */
 
-	public double t2()
-	{
-		return _dblT2;
-	}
-
-	/**
-	 * Retrieve V1
-	 * 
-	 * @return V1
-	 */
-
-	public double v1()
-	{
-		return _dblV1;
-	}
-
-	/**
-	 * Retrieve V2
-	 * 
-	 * @return V2
-	 */
-
-	public double v2()
-	{
-		return _dblV2;
-	}
-
-	@Override public double interpolate (
-		final double dblT)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblT) || dblT < _dblT1 || dblT > _dblT2)
-			throw new java.lang.Exception ("BrokenDateBridgeSqrtT::interpolate => Invalid Inputs");
-
-		return (java.lang.Math.sqrt (_dblT2 - dblT) * _dblV1 + java.lang.Math.sqrt (dblT - _dblT1) * _dblV2)
-			/ java.lang.Math.sqrt (_dblT2 - _dblT1);
-	}
+	public abstract double density (
+		final double dblX,
+		final double dblY)
+		throws java.lang.Exception;
 }

@@ -57,7 +57,7 @@ package org.drip.sequence.functional;
 
 public class FunctionSupremumUnivariateRandom extends org.drip.function.r1tor1.FunctionClassSupremum
 {
-	private org.drip.measure.continuousmarginal.R1 _dist = null;
+	private org.drip.measure.continuous.R1 _dist = null;
 
 	/**
 	 * FunctionSupremumUnivariateRandom Constructor
@@ -70,7 +70,7 @@ public class FunctionSupremumUnivariateRandom extends org.drip.function.r1tor1.F
 
 	public FunctionSupremumUnivariateRandom (
 		final org.drip.function.definition.R1ToR1[] aAUClass,
-		final org.drip.measure.continuousmarginal.R1 dist)
+		final org.drip.measure.continuous.R1 dist)
 		throws java.lang.Exception
 	{
 		super (aAUClass);
@@ -153,7 +153,7 @@ public class FunctionSupremumUnivariateRandom extends org.drip.function.r1tor1.F
 	 * @return The Underlying Distribution
 	 */
 
-	public org.drip.measure.continuousmarginal.R1 underlyingDistribution()
+	public org.drip.measure.continuous.R1 underlyingDistribution()
 	{
 		return _dist;
 	}

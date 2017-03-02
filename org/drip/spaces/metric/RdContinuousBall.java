@@ -74,7 +74,7 @@ public class RdContinuousBall extends org.drip.spaces.metric.RdContinuousBanach 
 
 	public static final RdContinuousBall ClosedUnit (
 		final org.drip.spaces.tensor.R1ContinuousVector[] aR1CV,
-		final org.drip.measure.continuousmarginal.Rd distRd,
+		final org.drip.measure.continuous.Rd distRd,
 		final int iPNorm)
 	{
 		try {
@@ -99,7 +99,7 @@ public class RdContinuousBall extends org.drip.spaces.metric.RdContinuousBanach 
 
 	public RdContinuousBall (
 		final org.drip.spaces.tensor.R1ContinuousVector[] aR1CV,
-		final org.drip.measure.continuousmarginal.Rd distRd,
+		final org.drip.measure.continuous.Rd distRd,
 		final int iPNorm,
 		final double dblNormRadius)
 		throws java.lang.Exception

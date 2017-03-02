@@ -2,7 +2,7 @@
 package org.drip.sample.netting;
 
 import org.drip.analytics.date.*;
-import org.drip.measure.discretemarginal.SequenceGenerator;
+import org.drip.measure.discrete.SequenceGenerator;
 import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
 import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;

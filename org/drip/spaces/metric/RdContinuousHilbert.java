@@ -72,7 +72,7 @@ public class RdContinuousHilbert extends org.drip.spaces.metric.RdContinuousBana
 
 	public static final RdContinuousHilbert StandardHilbert (
 		final int iDimension,
-		final org.drip.measure.continuousmarginal.Rd distRd)
+		final org.drip.measure.continuous.Rd distRd)
 	{
 		try {
 			return 0 >= iDimension ? null : new RdContinuousHilbert (new
@@ -95,7 +95,7 @@ public class RdContinuousHilbert extends org.drip.spaces.metric.RdContinuousBana
 
 	public RdContinuousHilbert (
 		final org.drip.spaces.tensor.R1ContinuousVector[] aR1CV,
-		final org.drip.measure.continuousmarginal.Rd distRd)
+		final org.drip.measure.continuous.Rd distRd)
 		throws java.lang.Exception
 	{
 		super (aR1CV, distRd, 2);

@@ -1,5 +1,7 @@
 
-package org.drip.measure.continuousmarginal;
+package org.drip.sample.rng;
+
+import org.drip.service.env.EnvManager;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,25 +49,30 @@ package org.drip.measure.continuousmarginal;
  */
 
 /**
- * BrokenDateBridgeLinearT exposes the Ability to Interpolate the Realized Path Value between two Broken
- *  Dates.
+ * RdMultiPath illustrates the Generation of the Multi-Path Correlated Random Variables without using
+ *  Quadratic Re-sampling or Antithetic Variables.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public interface BrokenDateBridge {
+public class RdMultiPath {
 
-	/**
-	 * Interpolate the Value at T
-	 * 
-	 * @param dblT T
-	 * 
-	 * @return The Interpolated Value
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
+	public static final void main (
+		final String[] astrArgs)
+		throws Exception
+	{
+		EnvManager.InitEnv ("");
 
-	public abstract double interpolate (
-		final double dblT)
-		throws java.lang.Exception;
+		double[][] aadblCorrelation = new double[][] {
+			{1.000, 0.161, 0.245, 0.352, 0.259, 0.166, 0.003, 0.038, 0.114},	// USD_LIBOR_3M
+			{0.161, 1.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000},	// EUR_LIBOR_3M
+			{0.245, 0.000, 1.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000},	// JPY_LIBOR_3M
+			{0.352, 0.000, 0.000, 1.000, 0.000, 0.000, 0.000, 0.000, 0.000},	// CHF_LIBOR_3M
+			{0.259, 0.000, 0.000, 0.000, 1.000, 0.000, 0.000, 0.000, 0.000},	// GBP_LIBOR_3M
+			{0.166, 0.000, 0.000, 0.000, 0.000, 1.000, 0.000, 0.000, 0.000},	// EURUSD
+			{0.003, 0.000, 0.000, 0.000, 0.000, 0.000, 1.000, 0.000, 0.000},	// JPYUSD
+			{0.038, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 1.000, 0.000},	// CHFUSD
+			{0.114, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 1.000},	// GBPUSD
+		};
+	}
 }

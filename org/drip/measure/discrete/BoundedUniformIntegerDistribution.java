@@ -1,5 +1,5 @@
 
-package org.drip.measure.discretemarginal;
+package org.drip.measure.discrete;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -55,7 +55,7 @@ package org.drip.measure.discretemarginal;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BoundedUniformIntegerDistribution extends org.drip.measure.continuousmarginal.R1 {
+public class BoundedUniformIntegerDistribution extends org.drip.measure.continuous.R1 {
 	private int _iStart = -1;
 	private int _iFinish = -1;
 

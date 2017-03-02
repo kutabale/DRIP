@@ -55,7 +55,7 @@ package org.drip.measure.bayesian;
  */
 
 public class ScopingProjectionVariateDistribution {
-	private org.drip.measure.continuousjoint.R1Multivariate _r1mScopingDistribution = null;
+	private org.drip.measure.continuous.R1Multivariate _r1mScopingDistribution = null;
 
 	private java.util.Map<java.lang.String, org.drip.measure.bayesian.ProjectionDistributionLoading> _mapPDL
 		= new
@@ -70,7 +70,7 @@ public class ScopingProjectionVariateDistribution {
 	 */
 
 	public ScopingProjectionVariateDistribution (
-		final org.drip.measure.continuousjoint.R1Multivariate r1mScopingDistribution)
+		final org.drip.measure.continuous.R1Multivariate r1mScopingDistribution)
 		throws java.lang.Exception
 	{
 		if (null == (_r1mScopingDistribution = r1mScopingDistribution))
@@ -84,7 +84,7 @@ public class ScopingProjectionVariateDistribution {
 	 * @return The Scoping Distribution
 	 */
 
-	public org.drip.measure.continuousjoint.R1Multivariate scopingDistribution()
+	public org.drip.measure.continuous.R1Multivariate scopingDistribution()
 	{
 		return _r1mScopingDistribution;
 	}

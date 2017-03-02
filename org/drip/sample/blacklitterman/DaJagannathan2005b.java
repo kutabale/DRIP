@@ -2,7 +2,7 @@
 package org.drip.sample.blacklitterman;
 
 import org.drip.measure.bayesian.*;
-import org.drip.measure.continuousjoint.MultivariateMeta;
+import org.drip.measure.continuous.MultivariateMeta;
 import org.drip.measure.gaussian.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;

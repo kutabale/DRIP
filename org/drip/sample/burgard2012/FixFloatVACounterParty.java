@@ -2,7 +2,7 @@
 package org.drip.sample.burgard2012;
 
 import org.drip.analytics.date.*;
-import org.drip.measure.discretemarginal.SequenceGenerator;
+import org.drip.measure.discrete.SequenceGenerator;
 import org.drip.measure.dynamics.DiffusionEvaluatorLinear;
 import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;

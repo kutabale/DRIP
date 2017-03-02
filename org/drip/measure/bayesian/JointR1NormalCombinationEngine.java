@@ -65,9 +65,9 @@ public class JointR1NormalCombinationEngine implements org.drip.measure.bayesian
 	}
 
 	@Override public org.drip.measure.bayesian.JointPosteriorMetrics process (
-		final org.drip.measure.continuousjoint.R1Multivariate r1mPrior,
-		final org.drip.measure.continuousjoint.R1Multivariate r1mUnconditional,
-		final org.drip.measure.continuousjoint.R1Multivariate r1mConditional)
+		final org.drip.measure.continuous.R1Multivariate r1mPrior,
+		final org.drip.measure.continuous.R1Multivariate r1mUnconditional,
+		final org.drip.measure.continuous.R1Multivariate r1mConditional)
 	{
 		if (null == r1mPrior || !(r1mPrior instanceof org.drip.measure.gaussian.R1MultivariateNormal) || null
 			== r1mConditional || !(r1mConditional instanceof org.drip.measure.gaussian.R1MultivariateNormal)
@@ -118,7 +118,7 @@ public class JointR1NormalCombinationEngine implements org.drip.measure.bayesian
 
 		double[][] aadblUnconditionalCovariance = r1mnUnconditional.covariance().covarianceMatrix();
 
-		org.drip.measure.continuousjoint.MultivariateMeta meta = r1mnPrior.meta();
+		org.drip.measure.continuous.MultivariateMeta meta = r1mnPrior.meta();
 
 		for (int i = 0; i < iNumVariate; ++i) {
 			for (int j = 0; j < iNumVariate; ++j)

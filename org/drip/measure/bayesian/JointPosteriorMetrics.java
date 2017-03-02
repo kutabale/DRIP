@@ -54,11 +54,11 @@ package org.drip.measure.bayesian;
  */
 
 public class JointPosteriorMetrics {
-	private org.drip.measure.continuousjoint.R1Multivariate _r1mJoint = null;
-	private org.drip.measure.continuousjoint.R1Multivariate _r1mPrior = null;
-	private org.drip.measure.continuousjoint.R1Multivariate _r1mPosterior = null;
-	private org.drip.measure.continuousjoint.R1Multivariate _r1mConditional = null;
-	private org.drip.measure.continuousjoint.R1Multivariate _r1mUnconditional = null;
+	private org.drip.measure.continuous.R1Multivariate _r1mJoint = null;
+	private org.drip.measure.continuous.R1Multivariate _r1mPrior = null;
+	private org.drip.measure.continuous.R1Multivariate _r1mPosterior = null;
+	private org.drip.measure.continuous.R1Multivariate _r1mConditional = null;
+	private org.drip.measure.continuous.R1Multivariate _r1mUnconditional = null;
 
 	/**
 	 * JointPosteriorMetrics Constructor
@@ -73,11 +73,11 @@ public class JointPosteriorMetrics {
 	 */
 
 	public JointPosteriorMetrics (
-		final org.drip.measure.continuousjoint.R1Multivariate r1mPrior,
-		final org.drip.measure.continuousjoint.R1Multivariate r1mUnconditional,
-		final org.drip.measure.continuousjoint.R1Multivariate r1mConditional,
-		final org.drip.measure.continuousjoint.R1Multivariate r1mJoint,
-		final org.drip.measure.continuousjoint.R1Multivariate r1mPosterior)
+		final org.drip.measure.continuous.R1Multivariate r1mPrior,
+		final org.drip.measure.continuous.R1Multivariate r1mUnconditional,
+		final org.drip.measure.continuous.R1Multivariate r1mConditional,
+		final org.drip.measure.continuous.R1Multivariate r1mJoint,
+		final org.drip.measure.continuous.R1Multivariate r1mPosterior)
 		throws java.lang.Exception
 	{
 		if (null == (_r1mPrior = r1mPrior) || null == (_r1mUnconditional = r1mUnconditional) || null ==
@@ -92,7 +92,7 @@ public class JointPosteriorMetrics {
 	 * @return The Prior Distribution
 	 */
 
-	public org.drip.measure.continuousjoint.R1Multivariate prior()
+	public org.drip.measure.continuous.R1Multivariate prior()
 	{
 		return _r1mPrior;
 	}
@@ -103,7 +103,7 @@ public class JointPosteriorMetrics {
 	 * @return The Unconditional Distribution
 	 */
 
-	public org.drip.measure.continuousjoint.R1Multivariate unconditional()
+	public org.drip.measure.continuous.R1Multivariate unconditional()
 	{
 		return _r1mUnconditional;
 	}
@@ -114,7 +114,7 @@ public class JointPosteriorMetrics {
 	 * @return The Conditional Distribution
 	 */
 
-	public org.drip.measure.continuousjoint.R1Multivariate conditional()
+	public org.drip.measure.continuous.R1Multivariate conditional()
 	{
 		return _r1mConditional;
 	}
@@ -125,7 +125,7 @@ public class JointPosteriorMetrics {
 	 * @return The Joint Distribution
 	 */
 
-	public org.drip.measure.continuousjoint.R1Multivariate joint()
+	public org.drip.measure.continuous.R1Multivariate joint()
 	{
 		return _r1mJoint;
 	}
@@ -136,7 +136,7 @@ public class JointPosteriorMetrics {
 	 * @return The Posterior Distribution
 	 */
 
-	public org.drip.measure.continuousjoint.R1Multivariate posterior()
+	public org.drip.measure.continuous.R1Multivariate posterior()
 	{
 		return _r1mPosterior;
 	}

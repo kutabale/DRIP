@@ -53,7 +53,7 @@ package org.drip.measure.gaussian;
  * @author Lakshmi Krishnamurthy
  */
 
-public class R1MultivariateNormal extends org.drip.measure.continuousjoint.R1Multivariate {
+public class R1MultivariateNormal extends org.drip.measure.continuous.R1Multivariate {
 	private double[] _adblMean = null;
 	private org.drip.measure.gaussian.Covariance _covariance = null;
 
@@ -68,7 +68,7 @@ public class R1MultivariateNormal extends org.drip.measure.continuousjoint.R1Mul
 	 */
 
 	public static final R1MultivariateNormal Standard (
-		final org.drip.measure.continuousjoint.MultivariateMeta meta,
+		final org.drip.measure.continuous.MultivariateMeta meta,
 		final double[] adblMean,
 		final double[][] aadblCovariance)
 	{
@@ -98,7 +98,7 @@ public class R1MultivariateNormal extends org.drip.measure.continuousjoint.R1Mul
 		final double[][] aadblCovariance)
 	{
 		try {
-			return new R1MultivariateNormal (new org.drip.measure.continuousjoint.MultivariateMeta
+			return new R1MultivariateNormal (new org.drip.measure.continuous.MultivariateMeta
 				(astrVariateID), adblMean, new org.drip.measure.gaussian.Covariance (aadblCovariance));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -118,7 +118,7 @@ public class R1MultivariateNormal extends org.drip.measure.continuousjoint.R1Mul
 	 */
 
 	public R1MultivariateNormal (
-		final org.drip.measure.continuousjoint.MultivariateMeta meta,
+		final org.drip.measure.continuous.MultivariateMeta meta,
 		final double[] adblMean,
 		final org.drip.measure.gaussian.Covariance covariance)
 		throws java.lang.Exception

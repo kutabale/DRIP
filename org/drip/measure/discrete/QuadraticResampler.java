@@ -1,5 +1,5 @@
 
-package org.drip.measure.continuousjoint;
+package org.drip.measure.discrete;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,7 +7,6 @@ package org.drip.measure.continuousjoint;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -48,82 +47,109 @@ package org.drip.measure.continuousjoint;
  */
 
 /**
- * MultivariateMeta holds a Group of Variable Names - each of which separately is a Valid Single R^1/R^d
- *  Variable.
+ * QuadraticResampler Quadratically Re-samples the Input Points to Convert it to a Standard Normal.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MultivariateMeta {
-	private java.lang.String[] _astrName = null;
+public class QuadraticResampler {
+	private int _iBlockSize = -1;
+	private boolean _bUnbiased = false;
+	private boolean _bMeanCenter = false;
 
 	/**
-	 * MultivariateMeta Constructor
+	 * QuadraticResampler Constructor
 	 * 
-	 * @param astrName Array of the Variate Names
+	 * @param iBlockSize The Block Size of the Sampling
+	 * @param bMeanCenter TRUE - The Sequence is to be Mean Centered
+	 * @param bUnbiased TRUE - The Sampling needs to be Unbiased
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MultivariateMeta (
-		final java.lang.String[] astrName)
+	public QuadraticResampler (
+		final int iBlockSize,
+		final boolean bMeanCenter,
+		final boolean bUnbiased)
 		throws java.lang.Exception
 	{
-		if (null == (_astrName = astrName))
-			throw new java.lang.Exception ("MultivariateMeta Constructor => Invalid Inputs");
+		if (1 >= (_iBlockSize = iBlockSize))
+			throw new java.lang.Exception ("QuadraticResampler Constructor =. Invalid Inputs");
 
-		int iNumVariable = _astrName.length;
+		_bUnbiased = bUnbiased;
+		_bMeanCenter = bMeanCenter;
+	}
 
-		if (0 >= iNumVariable)
-			throw new java.lang.Exception ("MultivariateMeta Constructor => Invalid Inputs");
+	/**
+	 * Retrieve the Block Size of the Sampling
+	 * 
+	 * @return The Block Size of the Sampling
+	 */
 
-		for (int i = 0; i < iNumVariable; ++i) {
-			if (null == _astrName[i] || _astrName[i].isEmpty())
-				throw new java.lang.Exception ("MultivariateMeta Constructor => Invalid Inputs");
+	public int blockSize()
+	{
+		return _iBlockSize;
+	}
+
+	/**
+	 * Indicate if the Sequence is to be Mean Centered
+	 * 
+	 * @return TRUE - The Sequence is to be Mean Centered
+	 */
+
+	public boolean meanCenter()
+	{
+		return _bMeanCenter;
+	}
+
+	/**
+	 * Indicate if the Sampling needs to be Unbiased
+	 * 
+	 * @return TRUE - The Sampling needs to be Unbiased
+	 */
+
+	public boolean unbiased()
+	{
+		return _bUnbiased;
+	}
+
+	/**
+	 * Transform the Input Sequence by applying Quadratic Sampling
+	 * 
+	 * @param adblSequence The Input Sequence
+	 * 
+	 * @return The Transformed Sequence
+	 */
+
+	public double[] transform (
+		final double[] adblSequence)
+	{
+		if (null == adblSequence) return null;
+
+		double dblMean = 0.;
+		double dblVariance = 0.;
+		int iSequenceSize = adblSequence.length;
+		double[] adblTransfomedSequence = 0 == iSequenceSize ? null : new double[iSequenceSize];
+
+		if (0 == iSequenceSize) return null;
+
+		if (_bMeanCenter) {
+			for (int i = 0; i < iSequenceSize; ++i)
+				dblMean += adblSequence[i];
+
+			dblMean = dblMean / iSequenceSize;
 		}
-	}
 
-	/**
-	 * Retrieve the Number of Variate
-	 * 
-	 * @return The Number of Variate
-	 */
-
-	public int numVariable()
-	{
-		return _astrName.length;
-	}
-
-	/**
-	 * Retrieve the Array of the Variate Names
-	 * 
-	 * @return The Array of the Variate Names
-	 */
-
-	public java.lang.String[] names()
-	{
-		return _astrName;
-	}
-
-	/**
-	 * Retrieve the Index of the Named Variate
-	 * 
-	 * @param strName The Named Variate
-	 * 
-	 * @return Index of the Named Variate
-	 */
-
-	public int variateIndex (
-		final java.lang.String strName)
-	{
-		if (null == strName || strName.isEmpty()) return -1;
-
-		int iNumVariable = numVariable();
-
-		for (int i = 0; i < iNumVariable; ++i) {
-			if (strName.equalsIgnoreCase (_astrName[i])) return i;
+		for (int i = 0; i < iSequenceSize; ++i) {
+			double dblOffset = adblSequence[i] - dblMean;
+			dblVariance += dblOffset * dblOffset;
 		}
 
-		return -1;
+		dblVariance = dblVariance / (_bUnbiased ? iSequenceSize - 1 : iSequenceSize);
+
+		for (int i = 0; i < iSequenceSize; ++i)
+			adblTransfomedSequence[i] = adblSequence[i] / dblVariance;
+
+		return adblTransfomedSequence;
 	}
 }

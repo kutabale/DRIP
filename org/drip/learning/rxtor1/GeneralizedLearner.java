@@ -255,7 +255,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public org.drip.learning.rxtor1.EmpiricalPenaltySupremum supremumEmpiricalRisk (
-		final org.drip.measure.continuousjoint.R1R1 distR1R1,
+		final org.drip.measure.continuous.R1R1 distR1R1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
 	{
@@ -271,7 +271,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public org.drip.learning.rxtor1.EmpiricalPenaltySupremum supremumEmpiricalRisk (
-		final org.drip.measure.continuousjoint.RdR1 distRdR1,
+		final org.drip.measure.continuous.RdR1 distRdR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
 	{
@@ -287,7 +287,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public double structuralRisk (
-		final org.drip.measure.continuousjoint.R1R1 distR1R1,
+		final org.drip.measure.continuous.R1R1 distR1R1,
 		final org.drip.function.definition.R1ToR1 funcLearnerR1ToR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
@@ -333,7 +333,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public double structuralRisk (
-		final org.drip.measure.continuousjoint.RdR1 distRdR1,
+		final org.drip.measure.continuous.RdR1 distRdR1,
 		final org.drip.function.definition.RdToR1 funcLearnerRdToR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
@@ -379,7 +379,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public org.drip.learning.rxtor1.EmpiricalPenaltySupremum supremumStructuralRisk (
-		final org.drip.measure.continuousjoint.R1R1 distR1R1,
+		final org.drip.measure.continuous.R1R1 distR1R1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
 	{
@@ -395,7 +395,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public org.drip.learning.rxtor1.EmpiricalPenaltySupremum supremumStructuralRisk (
-		final org.drip.measure.continuousjoint.RdR1 distRdR1,
+		final org.drip.measure.continuous.RdR1 distRdR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
 	{
@@ -411,7 +411,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public double regularizedRisk (
-		final org.drip.measure.continuousjoint.R1R1 distR1R1,
+		final org.drip.measure.continuous.R1R1 distR1R1,
 		final org.drip.function.definition.R1ToR1 funcLearnerR1ToR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
@@ -422,7 +422,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public double regularizedRisk (
-		final org.drip.measure.continuousjoint.RdR1 distRdR1,
+		final org.drip.measure.continuous.RdR1 distRdR1,
 		final org.drip.function.definition.RdToR1 funcLearnerRdToR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
@@ -433,7 +433,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public org.drip.learning.rxtor1.EmpiricalPenaltySupremum supremumRegularizedRisk (
-		final org.drip.measure.continuousjoint.R1R1 distR1R1,
+		final org.drip.measure.continuous.R1R1 distR1R1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
 	{
@@ -449,7 +449,7 @@ public abstract class GeneralizedLearner implements org.drip.learning.rxtor1.Emp
 	}
 
 	@Override public org.drip.learning.rxtor1.EmpiricalPenaltySupremum supremumRegularizedRisk (
-		final org.drip.measure.continuousjoint.RdR1 distRdR1,
+		final org.drip.measure.continuous.RdR1 distRdR1,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviX,
 		final org.drip.spaces.instance.GeneralizedValidatedVector gvviY)
 	{

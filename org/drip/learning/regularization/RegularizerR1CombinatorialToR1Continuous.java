@@ -147,7 +147,7 @@ public class RegularizerR1CombinatorialToR1Continuous extends
 	}
 
 	@Override public double structuralRisk (
-		final org.drip.measure.continuousjoint.R1R1 distR1R1,
+		final org.drip.measure.continuous.R1R1 distR1R1,
 		final org.drip.function.definition.R1ToR1 funcR1ToR1,
 		final double[] adblX,
 		final double[] adblY)

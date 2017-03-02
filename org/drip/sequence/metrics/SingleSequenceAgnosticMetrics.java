@@ -60,7 +60,7 @@ public class SingleSequenceAgnosticMetrics {
 	private double[] _adblSequence = null;
 	private double _dblEmpiricalVariance = java.lang.Double.NaN;
 	private double _dblEmpiricalExpectation = java.lang.Double.NaN;
-	private org.drip.measure.continuousmarginal.R1 _distPopulation = null;
+	private org.drip.measure.continuous.R1 _distPopulation = null;
 
 	/**
 	 * Build out the Sequence and their Metrics
@@ -73,7 +73,7 @@ public class SingleSequenceAgnosticMetrics {
 
 	public SingleSequenceAgnosticMetrics (
 		final double[] adblSequence,
-		final org.drip.measure.continuousmarginal.R1 distPopulation)
+		final org.drip.measure.continuous.R1 distPopulation)
 		throws java.lang.Exception
 	{
 		if (null == (_adblSequence = adblSequence))
@@ -237,7 +237,7 @@ public class SingleSequenceAgnosticMetrics {
 	 * @return The Population Distribution
 	 */
 
-	public org.drip.measure.continuousmarginal.R1 populationDistribution()
+	public org.drip.measure.continuous.R1 populationDistribution()
 	{
 		return _distPopulation;
 	}

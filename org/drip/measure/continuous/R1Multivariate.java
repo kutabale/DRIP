@@ -1,5 +1,5 @@
 
-package org.drip.measure.continuousjoint;
+package org.drip.measure.continuous;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -54,10 +54,10 @@ package org.drip.measure.continuousjoint;
  */
 
 public abstract class R1Multivariate {
-	private org.drip.measure.continuousjoint.MultivariateMeta _meta = null;
+	private org.drip.measure.continuous.MultivariateMeta _meta = null;
 
 	protected R1Multivariate (
-		final org.drip.measure.continuousjoint.MultivariateMeta meta)
+		final org.drip.measure.continuous.MultivariateMeta meta)
 		throws java.lang.Exception
 	{
 		if (null == (_meta = meta))
@@ -70,7 +70,7 @@ public abstract class R1Multivariate {
 	 * @return The Multivariate Meta Instance
 	 */
 
-	public org.drip.measure.continuousjoint.MultivariateMeta meta()
+	public org.drip.measure.continuous.MultivariateMeta meta()
 	{
 		return _meta;
 	}

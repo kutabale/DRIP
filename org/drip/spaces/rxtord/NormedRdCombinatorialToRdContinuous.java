@@ -90,7 +90,7 @@ public class NormedRdCombinatorialToRdContinuous extends org.drip.spaces.rxtord.
 		org.drip.spaces.metric.RdCombinatorialBanach rdCombinatorialInput =
 			(org.drip.spaces.metric.RdCombinatorialBanach) inputMetricVectorSpace();
 
-		org.drip.measure.continuousmarginal.Rd distRd = rdCombinatorialInput.borelSigmaMeasure();
+		org.drip.measure.continuous.Rd distRd = rdCombinatorialInput.borelSigmaMeasure();
 
 		org.drip.spaces.iterator.RdSpanningCombinatorialIterator ciRd = rdCombinatorialInput.iterator();
 

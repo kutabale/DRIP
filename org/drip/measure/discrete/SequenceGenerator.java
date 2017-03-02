@@ -1,5 +1,5 @@
 
-package org.drip.measure.continuousmarginal;
+package org.drip.measure.discrete;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -9,8 +9,6 @@ package org.drip.measure.continuousmarginal;
  * Copyright (C) 2017 Lakshmi Krishnamurthy
  * Copyright (C) 2016 Lakshmi Krishnamurthy
  * Copyright (C) 2015 Lakshmi Krishnamurthy
- * Copyright (C) 2014 Lakshmi Krishnamurthy
- * Copyright (C) 2013 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -51,96 +49,101 @@ package org.drip.measure.continuousmarginal;
  */
 
 /**
- * R1 implements the Base Abstract Class behind R^1 Distributions. It exports the Methods for incremental,
- *  cumulative, and inverse cumulative distribution densities.
+ * SequenceGenerator generates the specified Univariate Sequence of the Given Distribution Type.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class R1 {
+public class SequenceGenerator {
 
 	/**
-	 * Compute the cumulative under the distribution to the given value
+	 * Generate a Sequence of Uniform Random Numbers
 	 * 
-	 * @param dblX Variate to which the cumulative is to be computed
+	 * @param iCount The Count in the Sequence
 	 * 
-	 * @return The cumulative
-	 * 
-	 * @throws java.lang.Exception Thrown if the inputs are invalid
+	 * @return The Sequence of Uniform Random Numbers
 	 */
 
-	public abstract double cumulative (
-		final double dblX)
-		throws java.lang.Exception;
-
-	/**
-	 * Compute the Incremental under the Distribution between the 2 variates
-	 * 
-	 * @param dblXLeft Left Variate to which the cumulative is to be computed
-	 * @param dblXRight Right Variate to which the cumulative is to be computed
-	 * 
-	 * @return The Incremental under the Distribution between the 2 variates
-	 * 
-	 * @throws java.lang.Exception Thrown if the inputs are invalid
-	 */
-
-	public double incremental (
-		final double dblXLeft,
-		final double dblXRight)
-		throws java.lang.Exception
+	public static final double[] Uniform (
+		final int iCount)
 	{
-		return cumulative (dblXRight) - cumulative (dblXLeft);
+		if (0 >= iCount) return null;
+
+		double[] adblRandom = new double[iCount];
+
+		for (int i = 0; i < iCount; ++i)
+			adblRandom[i] = java.lang.Math.random();
+
+		return adblRandom;
 	}
 
 	/**
-	 * Compute the inverse cumulative under the distribution corresponding to the given value
+	 * Generate a Sequence of Gaussian Random Numbers
 	 * 
-	 * @param dblX Value corresponding to which the inverse cumulative is to be computed
+	 * @param iCount The Count in the Sequence
 	 * 
-	 * @return The inverse cumulative
-	 * 
-	 * @throws java.lang.Exception Thrown if the input is invalid
+	 * @return The Sequence of Gaussian Random Numbers
 	 */
 
-	public abstract double invCumulative (
-		final double dblX)
-		throws java.lang.Exception;
+	public static final double[] Gaussian (
+		final int iCount)
+	{
+		if (0 >= iCount) return null;
+
+		double[] adblRandom = new double[iCount];
+
+		for (int i = 0; i < iCount; ++i) {
+			try {
+				adblRandom[i] = org.drip.measure.gaussian.NormalQuadrature.Random();
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return adblRandom;
+	}
 
 	/**
-	 * Compute the Density under the Distribution at the given Variate
+	 * Generate a Sequence of R^d Correlated Gaussian Random Numbers
 	 * 
-	 * @param dblX Variate at which the Density needs to be computed
+	 * @param iCount The Count in the Sequence
 	 * 
-	 * @return The Density
-	 * 
-	 * @throws java.lang.Exception Thrown if the input is invalid
+	 * @return The Sequence of R^d Correlated Gaussian Random Numbers
 	 */
 
-	public abstract double density (
-		final double dblX)
-		throws java.lang.Exception;
+	public static final double[][] GaussianJoint (
+		final int iCount,
+		final double[][] aadblCorrelation)
+	{
+		if (0 >= iCount) return null;
 
-	/**
-	 * Retrieve the Mean of the Distribution
-	 * 
-	 * @return The Mean of the Distribution
-	 */
+		double[][] aadblCholesky = org.drip.quant.linearalgebra.Matrix.CholeskyBanachiewiczFactorization
+			(aadblCorrelation);
 
-	public abstract double mean();
+		if (null == aadblCholesky) return null;
 
-	/**
-	 * Retrieve the Variance of the Distribution
-	 * 
-	 * @return The Variance of the Distribution
-	 */
+		int iDimension = aadblCholesky.length;
+		double[][] aadblRandom = new double[iCount][];
 
-	public abstract double variance();
+		for (int k = 0; k < iCount; ++k) {
+			double[] adblUncorrelatedRandom = Gaussian (iDimension);
 
-	/**
-	 * Retrieve the Univariate Weighted Histogram
-	 * 
-	 * @return The Univariate Weighted Histogram
-	 */
+			if (null == adblUncorrelatedRandom || iDimension != adblUncorrelatedRandom.length) return null;
 
-	public abstract org.drip.quant.common.Array2D histogram();
+			double[] adblCorrelatedRandom = new double[iDimension];
+
+			for (int i = 0; i < iDimension; ++i) {
+				adblCorrelatedRandom[i] = 0.;
+
+				for (int j = 0; j < iDimension; ++j)
+					adblCorrelatedRandom[i] += aadblCholesky[i][j] * adblUncorrelatedRandom[j];
+			}
+
+			aadblRandom[k] = adblCorrelatedRandom;
+		}
+
+		return aadblRandom;
+	}
 }

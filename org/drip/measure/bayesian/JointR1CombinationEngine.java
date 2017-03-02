@@ -67,7 +67,7 @@ public interface JointR1CombinationEngine {
 	 */
 
 	public abstract org.drip.measure.bayesian.JointPosteriorMetrics process (
-		final org.drip.measure.continuousjoint.R1Multivariate rmPrior,
-		final org.drip.measure.continuousjoint.R1Multivariate rmUnconditional,
-		final org.drip.measure.continuousjoint.R1Multivariate rmConditional);
+		final org.drip.measure.continuous.R1Multivariate rmPrior,
+		final org.drip.measure.continuous.R1Multivariate rmUnconditional,
+		final org.drip.measure.continuous.R1Multivariate rmConditional);
 }

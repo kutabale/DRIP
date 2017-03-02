@@ -1,5 +1,5 @@
 
-package org.drip.measure.continuousmarginal;
+package org.drip.measure.continuous;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,6 +7,8 @@ package org.drip.measure.continuousmarginal;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
+ * Copyright (C) 2016 Lakshmi Krishnamurthy
+ * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -47,94 +49,55 @@ package org.drip.measure.continuousmarginal;
  */
 
 /**
- * BrokenDateBridgeLinearT Interpolates using Two Stochastic Value Nodes with Linear Scheme. The Scheme is
- *  Linear in Time.
+ * Rd implements the Base Abstract Class behind R^d Distributions. It exports Methods for incremental,
+ *  cumulative, and inverse cumulative Distribution Densities.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class BrokenDateBridgeLinearT implements org.drip.measure.continuousmarginal.BrokenDateBridge {
-	private double _dblT1 = java.lang.Double.NaN;
-	private double _dblT2 = java.lang.Double.NaN;
-	private double _dblV1 = java.lang.Double.NaN;
-	private double _dblV2 = java.lang.Double.NaN;
+public abstract class Rd {
 
 	/**
-	 * BrokenDateBridgeLinearT Constructor
+	 * Compute the Cumulative under the Distribution to the given Variaate Array
 	 * 
-	 * @param dblT1 T1
-	 * @param dblT2 T2
-	 * @param dblV1 V1
-	 * @param dblV2 V2
+	 * @param adblX Variate Array to which the Cumulative is to be computed
 	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Cumulative
+	 * 
+	 * @throws java.lang.Exception Thrown if the inputs are invalid
 	 */
 
-	public BrokenDateBridgeLinearT (
-		final double dblT1,
-		final double dblT2,
-		final double dblV1,
-		final double dblV2)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblT1 = dblT1) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblT2 = dblT2) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblV1 = dblV1) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblV2 = dblV2)|| _dblT1 >= _dblT2)
-			throw new java.lang.Exception ("BrokenDateBridgeLinearT Constructor => Invalid Inputs");
-	}
+	public abstract double cumulative (
+		final double[] adblX)
+		throws java.lang.Exception;
 
 	/**
-	 * Retrieve T1
+	 * Compute the Incremental under the Distribution between the 2 Variate Arrays
 	 * 
-	 * @return T1
+	 * @param adblXLeft Left Variate Array to which the Cumulative is to be computed
+	 * @param adblXRight Right Variate Array to which the Cumulative is to be computed
+	 * 
+	 * @return The Incremental
+	 * 
+	 * @throws java.lang.Exception Thrown if the inputs are invalid
 	 */
 
-	public double t1()
-	{
-		return _dblT1;
-	}
+	public abstract double incremental (
+		final double[] adblXLeft,
+		final double[] adblXRight)
+		throws java.lang.Exception;
 
 	/**
-	 * Retrieve T2
+	 * Compute the Density under the Distribution at the given Variate Array
 	 * 
-	 * @return T2
+	 * @param adblX Variate Array at which the Density needs to be computed
+	 * 
+	 * @return The Density
+	 * 
+	 * @throws java.lang.Exception Thrown if the input is invalid
 	 */
 
-	public double t2()
-	{
-		return _dblT2;
-	}
-
-	/**
-	 * Retrieve V1
-	 * 
-	 * @return V1
-	 */
-
-	public double v1()
-	{
-		return _dblV1;
-	}
-
-	/**
-	 * Retrieve V2
-	 * 
-	 * @return V2
-	 */
-
-	public double v2()
-	{
-		return _dblV2;
-	}
-
-	@Override public double interpolate (
-		final double dblT)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblT) || dblT < _dblT1 || dblT > _dblT2)
-			throw new java.lang.Exception ("BrokenDateBridgeLinearT::interpolate => Invalid Inputs");
-
-		return ((_dblT2 - dblT) * _dblV1 + (dblT - _dblT1) * _dblV2) / (_dblT2 - _dblT1);
-	}
+	public abstract double density (
+		final double[] adblX)
+		throws java.lang.Exception;
 }

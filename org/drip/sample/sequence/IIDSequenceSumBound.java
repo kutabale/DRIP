@@ -1,7 +1,7 @@
 
 package org.drip.sample.sequence;
 
-import org.drip.measure.continuousmarginal.*;
+import org.drip.measure.continuous.R1;
 import org.drip.measure.lebesgue.R1Uniform;
 import org.drip.quant.common.FormatUtil;
 import org.drip.sequence.metrics.*;

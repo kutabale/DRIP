@@ -74,7 +74,7 @@ public class RdCombinatorialBall extends org.drip.spaces.metric.RdCombinatorialB
 
 	public static final RdCombinatorialBall ClosedUnit (
 		final org.drip.spaces.tensor.R1CombinatorialVector[] aR1CV,
-		final org.drip.measure.continuousmarginal.Rd distRd,
+		final org.drip.measure.continuous.Rd distRd,
 		final int iPNorm)
 	{
 		try {
@@ -99,7 +99,7 @@ public class RdCombinatorialBall extends org.drip.spaces.metric.RdCombinatorialB
 
 	public RdCombinatorialBall (
 		final org.drip.spaces.tensor.R1CombinatorialVector[] aR1CV,
-		final org.drip.measure.continuousmarginal.Rd distRd,
+		final org.drip.measure.continuous.Rd distRd,
 		final int iPNorm,
 		final double dblNormRadius)
 		throws java.lang.Exception

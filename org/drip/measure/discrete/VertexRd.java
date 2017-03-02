@@ -1,5 +1,5 @@
 
-package org.drip.learning.regularization;
+package org.drip.measure.discrete;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -7,8 +7,6 @@ package org.drip.learning.regularization;
 
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
- * Copyright (C) 2016 Lakshmi Krishnamurthy
- * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -49,71 +47,66 @@ package org.drip.learning.regularization;
  */
 
 /**
- * RegularizerR1ToR1 exposes the Structural Loss and Risk Calculations for the specified Normed R^1 To Normed
- *  R^1 Learning Function.
- *  
- * The References are:
- *  
- *  1) Alon, N., S. Ben-David, N. Cesa Bianchi, and D. Haussler (1997): Scale-sensitive Dimensions, Uniform
- *  	Convergence, and Learnability, Journal of Association of Computational Machinery, 44 (4) 615-631.
- * 
- *  2) Anthony, M., and P. L. Bartlett (1999): Artificial Neural Network Learning - Theoretical Foundations,
- *  	Cambridge University Press, Cambridge, UK.
- *  
- *  3) Kearns, M. J., R. E. Schapire, and L. M. Sellie (1994): Towards Efficient Agnostic Learning, Machine
- *  	Learning, 17 (2) 115-141.
- *  
- *  4) Lee, W. S., P. L. Bartlett, and R. C. Williamson (1998): The Importance of Convexity in Learning with
- *  	Squared Loss, IEEE Transactions on Information Theory, 44 1974-1980.
- * 
- *  5) Vapnik, V. N. (1998): Statistical Learning Theory, Wiley, New York.
+ * VertexRd holds the R^d Realizations at the Individual Vertexes.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public interface RegularizerR1ToR1 {
+public class VertexRd {
+	private java.util.List<double[]> _lsVertexRd = new java.util.ArrayList<double[]>();
 
 	/**
-	 * Retrieve the Regularization Constant Lambda
-	 * 
-	 * @return The Regularization Constant Lambda
+	 * Empty VertexRd Constructor
 	 */
 
-	public abstract double lambda();
+	public VertexRd()
+	{
+	}
 
 	/**
-	 * Compute the Regularization Sample Structural Loss
+	 * Retrieve the Vertex R^d List
 	 * 
-	 * @param funcR1ToR1 R^1 To R^1 Function Instance
-	 * @param adblX The Predictor Instance
-	 * 
-	 * @return The Regularization Sample Structural Loss
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Vertex R^d List
 	 */
 
-	public abstract double structuralLoss (
-		final org.drip.function.definition.R1ToR1 funcR1ToR1,
-		final double[] adblX)
-		throws java.lang.Exception;
+	public java.util.List<double[]> vertexList()
+	{
+		return _lsVertexRd;
+	}
 
 	/**
-	 * Compute the Regularization Sample Structural Loss
+	 * Add the Vertex Index and its corresponding Realization
 	 * 
-	 * @param distR1R1 R^1 R^1 Multivariate Measure
-	 * @param funcR1ToR1 R^1 To R^1 Function Instance
-	 * @param adblX The Predictor Instance
-	 * @param adblY The Response Instance
+	 * @param iVertex The Vertex Index
+	 * @param adblRealization The R^d Realization Array
 	 * 
-	 * @return The Regularization Sample Structural Loss
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return TRUE - The Vertex Index/Realization successfully added
 	 */
 
-	public abstract double structuralRisk (
-		final org.drip.measure.continuous.R1R1 distR1R1,
-		final org.drip.function.definition.R1ToR1 funcR1ToR1,
-		final double[] adblX,
-		final double[] adblY)
-		throws java.lang.Exception;
+	public boolean add (
+		final int iVertex,
+		final double[] adblRealization)
+	{
+		if (-1 >= iVertex || null == adblRealization || 0 == adblRealization.length ||
+			!org.drip.quant.common.NumberUtil.IsValid (adblRealization))
+			return false;
+
+		_lsVertexRd.add (iVertex, adblRealization);
+
+		return true;
+	}
+
+	/**
+	 * Retrieve the Vertex Realization given the Vertex Index
+	 * 
+	 * @param iVertex The Vertex Index
+	 * 
+	 * @return Array of Vertex Realizations
+	 */
+
+	public double[] vertexRealization (
+		final int iVertex)
+	{
+		return -1 >= iVertex ? null : _lsVertexRd.get (iVertex);
+	}
 }

@@ -164,10 +164,10 @@ public class Portfolio {
 	 * @return The Multivariate Meta Instance around the Assets
 	 */
 
-	public org.drip.measure.continuousjoint.MultivariateMeta meta()
+	public org.drip.measure.continuous.MultivariateMeta meta()
 	{
 		try {
-			return new org.drip.measure.continuousjoint.MultivariateMeta (id());
+			return new org.drip.measure.continuous.MultivariateMeta (id());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

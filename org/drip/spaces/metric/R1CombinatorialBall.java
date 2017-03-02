@@ -74,7 +74,7 @@ public class R1CombinatorialBall extends org.drip.spaces.metric.R1Combinatorial 
 
 	public static final R1CombinatorialBall ClosedUnit (
 		final java.util.List<java.lang.Double> lsElementSpace,
-		final org.drip.measure.continuousmarginal.R1 distR1,
+		final org.drip.measure.continuous.R1 distR1,
 		final int iPNorm)
 	{
 		try {
@@ -99,7 +99,7 @@ public class R1CombinatorialBall extends org.drip.spaces.metric.R1Combinatorial 
 
 	public R1CombinatorialBall (
 		final java.util.List<java.lang.Double> lsElementSpace,
-		final org.drip.measure.continuousmarginal.R1 distR1,
+		final org.drip.measure.continuous.R1 distR1,
 		final int iPNorm,
 		final double dblNormRadius)
 		throws java.lang.Exception

@@ -1,7 +1,7 @@
 
 package org.drip.sample.burgard2011;
 
-import org.drip.measure.discretemarginal.SequenceGenerator;
+import org.drip.measure.discrete.SequenceGenerator;
 import org.drip.measure.dynamics.*;
 import org.drip.measure.process.*;
 import org.drip.measure.realization.*;

@@ -1,5 +1,5 @@
 
-package org.drip.measure.continuousjoint;
+package org.drip.measure.continuous;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -8,7 +8,6 @@ package org.drip.measure.continuousjoint;
 /*!
  * Copyright (C) 2017 Lakshmi Krishnamurthy
  * Copyright (C) 2016 Lakshmi Krishnamurthy
- * Copyright (C) 2015 Lakshmi Krishnamurthy
  * 
  *  This file is part of DRIP, a free-software/open-source library for buy/side financial/trading model
  *  	libraries targeting analysts and developers
@@ -49,63 +48,82 @@ package org.drip.measure.continuousjoint;
  */
 
 /**
- * R1R1 implements the Base Abstract Class behind Bivariate R^1 Distributions. It exports Methods for
- *  Incremental, Cumulative, and Inverse Cumulative Distribution Densities.
+ * MultivariateMeta holds a Group of Variable Names - each of which separately is a Valid Single R^1/R^d
+ *  Variable.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class R1R1 {
+public class MultivariateMeta {
+	private java.lang.String[] _astrName = null;
 
 	/**
-	 * Compute the Cumulative under the Distribution to the given Variate Pair
+	 * MultivariateMeta Constructor
 	 * 
-	 * @param dblX R^1 The X Variate to which the Cumulative is to be computed
-	 * @param dblY R^1 The Y Variate to which the Cumulative is to be computed
-	 * 
-	 * @return The Cumulative under the Distribution to the given Variate Pair
+	 * @param astrName Array of the Variate Names
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double cumulative (
-		final double dblX,
-		final double dblY)
-		throws java.lang.Exception;
+	public MultivariateMeta (
+		final java.lang.String[] astrName)
+		throws java.lang.Exception
+	{
+		if (null == (_astrName = astrName))
+			throw new java.lang.Exception ("MultivariateMeta Constructor => Invalid Inputs");
+
+		int iNumVariable = _astrName.length;
+
+		if (0 >= iNumVariable)
+			throw new java.lang.Exception ("MultivariateMeta Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumVariable; ++i) {
+			if (null == _astrName[i] || _astrName[i].isEmpty())
+				throw new java.lang.Exception ("MultivariateMeta Constructor => Invalid Inputs");
+		}
+	}
 
 	/**
-	 * Compute the Incremental under the Distribution between the Variate Pair
+	 * Retrieve the Number of Variate
 	 * 
-	 * @param dblXLeft R^1 Left X Variate from which the Cumulative is to be computed
-	 * @param dblYLeft R^1 Left Y Variate from which the Cumulative is to be computed
-	 * @param dblXRight R^1 Right X Variate to which the Cumulative is to be computed
-	 * @param dblYRight R^1 Right Y Variate to which the Cumulative is to be computed
-	 * 
-	 * @return The Incremental under the Distribution between the Variate Pair
-	 * 
-	 * @throws java.lang.Exception Thrown if the inputs are invalid
+	 * @return The Number of Variate
 	 */
 
-	public abstract double incremental (
-		final double dblXLeft,
-		final double dblYLeft,
-		final double dblXRight,
-		final double dblYRight)
-		throws java.lang.Exception;
+	public int numVariable()
+	{
+		return _astrName.length;
+	}
 
 	/**
-	 * Compute the Density under the Distribution at the given Variate Pair
+	 * Retrieve the Array of the Variate Names
 	 * 
-	 * @param dblX R^1 The Variate to which the Cumulative is to be computed
-	 * @param dblY R^1 The Variate to which the Cumulative is to be computed
-	 * 
-	 * @return The Density under the Distribution at the given Variate Pair
-	 * 
-	 * @throws java.lang.Exception Thrown if the Input is Invalid
+	 * @return The Array of the Variate Names
 	 */
 
-	public abstract double density (
-		final double dblX,
-		final double dblY)
-		throws java.lang.Exception;
+	public java.lang.String[] names()
+	{
+		return _astrName;
+	}
+
+	/**
+	 * Retrieve the Index of the Named Variate
+	 * 
+	 * @param strName The Named Variate
+	 * 
+	 * @return Index of the Named Variate
+	 */
+
+	public int variateIndex (
+		final java.lang.String strName)
+	{
+		if (null == strName || strName.isEmpty()) return -1;
+
+		int iNumVariable = numVariable();
+
+		for (int i = 0; i < iNumVariable; ++i) {
+			if (strName.equalsIgnoreCase (_astrName[i])) return i;
+		}
+
+		return -1;
+	}
 }

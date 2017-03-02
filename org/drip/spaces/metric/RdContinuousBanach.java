@@ -62,7 +62,7 @@ package org.drip.spaces.metric;
 public class RdContinuousBanach extends org.drip.spaces.tensor.RdContinuousVector implements
 	org.drip.spaces.metric.RdNormed {
 	private int _iPNorm = -1;
-	private org.drip.measure.continuousmarginal.Rd _distRd = null;
+	private org.drip.measure.continuous.Rd _distRd = null;
 
 	/**
 	 * Construct the Standard l^p R^d Continuous Banach Space Instance
@@ -76,7 +76,7 @@ public class RdContinuousBanach extends org.drip.spaces.tensor.RdContinuousVecto
 
 	public static final RdContinuousBanach StandardBanach (
 		final int iDimension,
-		final org.drip.measure.continuousmarginal.Rd distRd,
+		final org.drip.measure.continuous.Rd distRd,
 		final int iPNorm)
 	{
 		try {
@@ -100,7 +100,7 @@ public class RdContinuousBanach extends org.drip.spaces.tensor.RdContinuousVecto
 
 	public static final RdContinuousBanach SupremumBanach (
 		final int iDimension,
-		final org.drip.measure.continuousmarginal.Rd distRd)
+		final org.drip.measure.continuous.Rd distRd)
 	{
 		try {
 			return 0 >= iDimension ? null : new RdContinuousBanach (new
@@ -124,7 +124,7 @@ public class RdContinuousBanach extends org.drip.spaces.tensor.RdContinuousVecto
 
 	public RdContinuousBanach (
 		final org.drip.spaces.tensor.R1ContinuousVector[] aR1CV,
-		final org.drip.measure.continuousmarginal.Rd distRd,
+		final org.drip.measure.continuous.Rd distRd,
 		final int iPNorm)
 		throws java.lang.Exception
 	{
@@ -141,7 +141,7 @@ public class RdContinuousBanach extends org.drip.spaces.tensor.RdContinuousVecto
 		return _iPNorm;
 	}
 
-	@Override public org.drip.measure.continuousmarginal.Rd borelSigmaMeasure()
+	@Override public org.drip.measure.continuous.Rd borelSigmaMeasure()
 	{
 		return _distRd;
 	}

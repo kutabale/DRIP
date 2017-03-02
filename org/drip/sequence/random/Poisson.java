@@ -105,7 +105,7 @@ public class Poisson extends org.drip.sequence.random.UnivariateSequenceGenerato
 
 	@Override public org.drip.sequence.metrics.SingleSequenceAgnosticMetrics sequence (
 		final int iNumEntry,
-		final org.drip.measure.continuousmarginal.R1 distPopulation)
+		final org.drip.measure.continuous.R1 distPopulation)
 	{
 		double[] adblSequence = new double[iNumEntry];
 

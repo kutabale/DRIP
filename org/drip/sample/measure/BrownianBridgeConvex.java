@@ -2,7 +2,7 @@
 package org.drip.sample.measure;
 
 import org.drip.analytics.date.*;
-import org.drip.measure.continuousmarginal.BrokenDateBridgeBrownian3P;
+import org.drip.measure.bridge.BrokenDateInterpolatorBrownian3P;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -90,7 +90,7 @@ public class BrownianBridgeConvex {
 
 		int iDaysStep = 2;
 
-		BrokenDateBridgeBrownian3P tpbb = new BrokenDateBridgeBrownian3P (
+		BrokenDateInterpolatorBrownian3P tpbb = new BrokenDateInterpolatorBrownian3P (
 			dt1.julian(),
 			dt2.julian(),
 			dt3.julian(),

@@ -105,7 +105,7 @@ public class BlackLittermanProcessor {
 			dblRiskFreeRate = org.drip.json.parser.Converter.DoubleEntry (jsonParameter, "RiskFreeRate");
 
 			viewDistribution = org.drip.measure.gaussian.R1MultivariateNormal.Standard (new
-				org.drip.measure.continuousjoint.MultivariateMeta (astrProjectionName),
+				org.drip.measure.continuous.MultivariateMeta (astrProjectionName),
 					adblProjectionExpectedExcessReturns, aadblProjectionExcessReturnsCovariance);
 
 			blce = new org.drip.portfolioconstruction.bayesian.BlackLittermanCombinationEngine
@@ -128,11 +128,11 @@ public class BlackLittermanProcessor {
 
 		org.drip.measure.bayesian.JointPosteriorMetrics jpm = blo.combinationMetrics();
 
-		org.drip.measure.continuousjoint.R1Multivariate r1mPrior = jpm.prior();
+		org.drip.measure.continuous.R1Multivariate r1mPrior = jpm.prior();
 
-		org.drip.measure.continuousjoint.R1Multivariate r1mJoint = jpm.joint();
+		org.drip.measure.continuous.R1Multivariate r1mJoint = jpm.joint();
 
-		org.drip.measure.continuousjoint.R1Multivariate r1mPosterior = jpm.posterior();
+		org.drip.measure.continuous.R1Multivariate r1mPosterior = jpm.posterior();
 
 		if (null == r1mPrior || !(r1mPrior instanceof org.drip.measure.gaussian.R1MultivariateNormal) || null
 			== r1mJoint || !(r1mJoint instanceof org.drip.measure.gaussian.R1MultivariateNormal) || null ==

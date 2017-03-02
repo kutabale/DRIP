@@ -55,7 +55,7 @@ package org.drip.measure.lebesgue;
  * @author Lakshmi Krishnamurthy
  */
 
-public class RdUniform extends org.drip.measure.continuousmarginal.Rd {
+public class RdUniform extends org.drip.measure.continuous.Rd {
 	private org.drip.spaces.tensor.RdGeneralizedVector _gmvs = null;
 
 	/**
