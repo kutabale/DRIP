@@ -95,7 +95,7 @@ public class CorrelatedRdSequence {
 
 		VertexRd vertexRd = cpvd.multiPathVertexRd()[0];
 
-		MultivariateDiscreteSequence mds = new MultivariateDiscreteSequence (vertexRd.flatten());
+		MultivariateDiscreteSequence mds = new MultivariateDiscreteSequence (vertexRd.flatform());
 
 		double[] adblMeanOutput = mds.mean();
 

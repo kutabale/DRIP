@@ -93,7 +93,6 @@ public class RdMultiPathQR {
 			iNumPath,
 			bApplyAntithetic,
 			new QuadraticResampler (
-				-1,
 				bMeanCenter,
 				bDebias
 			)

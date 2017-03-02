@@ -56,6 +56,33 @@ public class VertexRd {
 	private java.util.List<double[]> _lsVertexRd = new java.util.ArrayList<double[]>();
 
 	/**
+	 * Construct a VertexRd Instance from the R^d Sequence
+	 * 
+	 * @param aadblSequence The R^d Sequence
+	 * 
+	 * @return The VertexRd Instance
+	 */
+
+	public static final VertexRd FromFlatForm (
+		final double[][] aadblSequence)
+	{
+		if (null == aadblSequence) return null;
+
+		int iSequenceSize = aadblSequence.length;
+
+		if (0 == iSequenceSize) return null;
+
+		VertexRd vertexRd = new VertexRd();
+
+		for (int iSequence = 0; iSequence < iSequenceSize; ++iSequence) {
+			if (null == aadblSequence[iSequence] || !vertexRd.add (iSequence, aadblSequence[iSequence]))
+				return null;
+		}
+
+		return vertexRd;
+	}
+
+	/**
 	 * Empty VertexRd Constructor
 	 */
 
@@ -116,7 +143,7 @@ public class VertexRd {
 	 * @return The 2D Array of the VertexRd Realizations
 	 */
 
-	public double[][] flatten()
+	public double[][] flatform()
 	{
 		int iSize = _lsVertexRd.size();
 

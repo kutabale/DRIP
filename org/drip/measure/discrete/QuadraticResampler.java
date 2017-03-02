@@ -53,14 +53,12 @@ package org.drip.measure.discrete;
  */
 
 public class QuadraticResampler {
-	private int _iBlockSize = -1;
 	private boolean _bDebias = false;
 	private boolean _bMeanCenter = false;
 
 	/**
 	 * QuadraticResampler Constructor
 	 * 
-	 * @param iBlockSize The Block Size of the Sampling
 	 * @param bMeanCenter TRUE - The Sequence is to be Mean Centered
 	 * @param bDebias TRUE - Remove the Sampling Bias
 	 * 
@@ -68,25 +66,12 @@ public class QuadraticResampler {
 	 */
 
 	public QuadraticResampler (
-		final int iBlockSize,
 		final boolean bMeanCenter,
 		final boolean bDebias)
 		throws java.lang.Exception
 	{
 		_bDebias = bDebias;
-		_iBlockSize = iBlockSize;
 		_bMeanCenter = bMeanCenter;
-	}
-
-	/**
-	 * Retrieve the Block Size of the Sampling
-	 * 
-	 * @return The Block Size of the Sampling
-	 */
-
-	public int blockSize()
-	{
-		return _iBlockSize;
 	}
 
 	/**
@@ -112,9 +97,9 @@ public class QuadraticResampler {
 	}
 
 	/**
-	 * Transform the Input Sequence by applying Quadratic Sampling
+	 * Transform the Input R^1 Sequence by applying Quadratic Sampling
 	 * 
-	 * @param adblSequence The Input Sequence
+	 * @param adblSequence The Input R^1 Sequence
 	 * 
 	 * @return The Transformed Sequence
 	 */
@@ -143,27 +128,36 @@ public class QuadraticResampler {
 			dblVariance += dblOffset * dblOffset;
 		}
 
-		dblVariance = dblVariance / (_bDebias ? iSequenceSize - 1 : iSequenceSize);
+		double dblStandardDeviation = java.lang.Math.sqrt (dblVariance / (_bDebias ? iSequenceSize - 1 :
+			iSequenceSize));
 
 		for (int i = 0; i < iSequenceSize; ++i)
-			adblTransfomedSequence[i] = adblSequence[i] / dblVariance;
+			adblTransfomedSequence[i] = adblSequence[i] / dblStandardDeviation;
 
 		return adblTransfomedSequence;
 	}
 
 	/**
-	 * Transform the Input Sequence Block-by-Block by applying Quadratic Sampling
+	 * Transform the Input R^d Sequence by applying Quadratic Sampling
 	 * 
-	 * @param adblSequence The Input Sequence
+	 * @param aadblSequence The Input R^d Sequence
 	 * 
 	 * @return The Transformed Sequence
 	 */
 
-	public double[] transformBlock (
-		final double[] adblSequence)
+	public double[][] transform (
+		final double[][] aadblSequence)
 	{
-		if (0 >= _iBlockSize) return transform (adblSequence);
+		double[][] aadblFlippedSequence = org.drip.quant.linearalgebra.Matrix.Transpose (aadblSequence);
 
-		 return transform (adblSequence);
+		if (null == aadblFlippedSequence) return null;
+
+		int iDimension = aadblFlippedSequence.length;
+		double[][] aadblFlippedTransformedSequence = new double[iDimension][];
+
+		for (int i = 0; i < iDimension; ++i)
+			aadblFlippedTransformedSequence[i] = transform (aadblFlippedSequence[i]);
+		
+		return org.drip.quant.linearalgebra.Matrix.Transpose (aadblFlippedTransformedSequence);
 	}
 }

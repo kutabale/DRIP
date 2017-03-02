@@ -53,14 +53,14 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * CorrelatedRdSequenceAntithetic demonstrates the Generation of the Statistical Measures for the Input
- *  Correlated Sequence Set created using the Multi-Path Correlated Random Variable Generator without
- *  Quadratic Re-sampling, but with Antithetic Variables.
+ * CorrelatedRdSequenceQR demonstrates the Generation of the Statistical Measures for the Input Correlated
+ *  Sequence Set created using the Multi-Path Correlated Random Variable Generator using Quadratic
+ *  Re-sampling but without Antithetic Variables.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class CorrelatedRdSequenceAntithetic {
+public class CorrelatedRdSequenceQR {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -70,7 +70,9 @@ public class CorrelatedRdSequenceAntithetic {
 
 		int iNumPath = 1;
 		int iNumVertex = 50000;
-		boolean bApplyAntithetic = true;
+		boolean bDebias = false;
+		boolean bMeanCenter = false;
+		boolean bApplyAntithetic = false;
 
 		double[][] aadblCorrelationInput = new double[][] {
 			{1.000, 0.161, 0.245, 0.352, 0.259, 0.166, 0.003, 0.038, 0.114},	// USD_LIBOR_3M
@@ -90,7 +92,10 @@ public class CorrelatedRdSequenceAntithetic {
 			iNumVertex,
 			iNumPath,
 			bApplyAntithetic,
-			null
+			new QuadraticResampler (
+				bMeanCenter,
+				bDebias
+			)
 		);
 
 		VertexRd vertexRd = cpvd.multiPathVertexRd()[0];

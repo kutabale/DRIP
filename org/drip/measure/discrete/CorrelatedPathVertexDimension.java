@@ -212,7 +212,7 @@ public class CorrelatedPathVertexDimension {
 				adblRdCorrelated[i] += _aadblCholesky[i][j] * adblRdUncorrelated[j];
 		}
 
-		return null != _qr ? _qr.transform (adblRdCorrelated) : adblRdCorrelated;
+		return adblRdCorrelated;
 	}
 
 	/**
@@ -249,7 +249,8 @@ public class CorrelatedPathVertexDimension {
 			if (!vertexRealization.add (i, straightVertexRealization())) return null;
 		}
 
-		return vertexRealization;
+		return null != _qr ? org.drip.measure.discrete.VertexRd.FromFlatForm (_qr.transform
+			(vertexRealization.flatform())) : vertexRealization;
 	}
 
 	/**
@@ -274,8 +275,14 @@ public class CorrelatedPathVertexDimension {
 				return null;
 		}
 
-		return new org.drip.measure.discrete.VertexRd[] {straightVertexRealization,
-			antitheticVertexRealization};
+		if (null == _qr)
+			return new org.drip.measure.discrete.VertexRd[] {straightVertexRealization,
+				antitheticVertexRealization};
+
+		return new org.drip.measure.discrete.VertexRd[] {org.drip.measure.discrete.VertexRd.FromFlatForm
+			(_qr.transform (straightVertexRealization.flatform())),
+				org.drip.measure.discrete.VertexRd.FromFlatForm (_qr.transform
+					(antitheticVertexRealization.flatform()))};
 	}
 
 	/**
