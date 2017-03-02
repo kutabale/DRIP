@@ -54,7 +54,7 @@ package org.drip.measure.discrete;
 
 public class QuadraticResampler {
 	private int _iBlockSize = -1;
-	private boolean _bUnbiased = false;
+	private boolean _bDebias = false;
 	private boolean _bMeanCenter = false;
 
 	/**
@@ -62,7 +62,7 @@ public class QuadraticResampler {
 	 * 
 	 * @param iBlockSize The Block Size of the Sampling
 	 * @param bMeanCenter TRUE - The Sequence is to be Mean Centered
-	 * @param bUnbiased TRUE - The Sampling needs to be Unbiased
+	 * @param bDebias TRUE - Remove the Sampling Bias
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -70,13 +70,11 @@ public class QuadraticResampler {
 	public QuadraticResampler (
 		final int iBlockSize,
 		final boolean bMeanCenter,
-		final boolean bUnbiased)
+		final boolean bDebias)
 		throws java.lang.Exception
 	{
-		if (1 >= (_iBlockSize = iBlockSize))
-			throw new java.lang.Exception ("QuadraticResampler Constructor =. Invalid Inputs");
-
-		_bUnbiased = bUnbiased;
+		_bDebias = bDebias;
+		_iBlockSize = iBlockSize;
 		_bMeanCenter = bMeanCenter;
 	}
 
@@ -103,14 +101,14 @@ public class QuadraticResampler {
 	}
 
 	/**
-	 * Indicate if the Sampling needs to be Unbiased
+	 * Indicate if the Sampling Bias needs to be Removed
 	 * 
-	 * @return TRUE - The Sampling needs to be Unbiased
+	 * @return TRUE - The Sampling Bias needs to be Removed
 	 */
 
-	public boolean unbiased()
+	public boolean debias()
 	{
-		return _bUnbiased;
+		return _bDebias;
 	}
 
 	/**
@@ -145,11 +143,27 @@ public class QuadraticResampler {
 			dblVariance += dblOffset * dblOffset;
 		}
 
-		dblVariance = dblVariance / (_bUnbiased ? iSequenceSize - 1 : iSequenceSize);
+		dblVariance = dblVariance / (_bDebias ? iSequenceSize - 1 : iSequenceSize);
 
 		for (int i = 0; i < iSequenceSize; ++i)
 			adblTransfomedSequence[i] = adblSequence[i] / dblVariance;
 
 		return adblTransfomedSequence;
+	}
+
+	/**
+	 * Transform the Input Sequence Block-by-Block by applying Quadratic Sampling
+	 * 
+	 * @param adblSequence The Input Sequence
+	 * 
+	 * @return The Transformed Sequence
+	 */
+
+	public double[] transformBlock (
+		final double[] adblSequence)
+	{
+		if (0 >= _iBlockSize) return transform (adblSequence);
+
+		 return transform (adblSequence);
 	}
 }

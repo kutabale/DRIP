@@ -54,13 +54,13 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * RdMultiPath illustrates the Generation of the Multi-Path Correlated Random Variables without using
- *  Quadratic Re-sampling or Antithetic Variables.
+ * RdMultiPathAntithetic illustrates the Generation of the Multi-Path Correlated Random Variables with
+ *  Antithetic Variables but without using Quadratic Re-sampling.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class RdMultiPath {
+public class RdMultiPathAntithetic {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -70,7 +70,7 @@ public class RdMultiPath {
 
 		int iNumPath = 1;
 		int iNumVertex = 50;
-		boolean bApplyAntithetic = false;
+		boolean bApplyAntithetic = true;
 
 		double[][] aadblCorrelation = new double[][] {
 			{1.000, 0.161, 0.245, 0.352, 0.259, 0.166, 0.003, 0.038, 0.114},	// USD_LIBOR_3M

@@ -109,4 +109,24 @@ public class VertexRd {
 	{
 		return -1 >= iVertex ? null : _lsVertexRd.get (iVertex);
 	}
+
+	/**
+	 * Flatten out into a 2D Array
+	 * 
+	 * @return The 2D Array of the VertexRd Realizations
+	 */
+
+	public double[][] flatten()
+	{
+		int iSize = _lsVertexRd.size();
+
+		if (0 == iSize) return null;
+
+		double[][] aadblSequence = new double[iSize][];
+
+		for (int i = 0; i < iSize; ++i)
+			aadblSequence[i] = _lsVertexRd.get (i);
+
+		return aadblSequence;
+	}
 }

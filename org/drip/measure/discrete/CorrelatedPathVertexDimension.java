@@ -90,7 +90,7 @@ public class CorrelatedPathVertexDimension {
 		_bApplyAntithetic = bApplyAntithetic;
 
 		if (null == (_aadblCholesky = org.drip.quant.linearalgebra.Matrix.CholeskyBanachiewiczFactorization
-			(_aadblCorrelation)))
+			(_aadblCorrelation = aadblCorrelation)))
 			throw new java.lang.Exception ("CorrelatedPathVertexDimension Constructor => Invalid Inputs");
 	}
 
@@ -194,8 +194,16 @@ public class CorrelatedPathVertexDimension {
 		double[] adblRdCorrelated = new double[iDimension];
 		double[] adblRdUncorrelated = new double[iDimension];
 
-		for (int i = 0; i < iDimension; ++i)
-			adblRdUncorrelated[i] = _rng.nextDouble01();
+		for (int i = 0; i < iDimension; ++i) {
+			try {
+				adblRdUncorrelated[i] = org.drip.measure.gaussian.NormalQuadrature.InverseCDF
+					(_rng.nextDouble01());
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
 
 		for (int i = 0; i < iDimension; ++i) {
 			adblRdCorrelated[i] = 0.;
@@ -204,7 +212,7 @@ public class CorrelatedPathVertexDimension {
 				adblRdCorrelated[i] += _aadblCholesky[i][j] * adblRdUncorrelated[j];
 		}
 
-		return adblRdCorrelated;
+		return null != _qr ? _qr.transform (adblRdCorrelated) : adblRdCorrelated;
 	}
 
 	/**
