@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.measure.statistics;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,84 +47,106 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupEdgeAdjustment holds the XVA Adjustment that result from the Vertex Realizations of a
- *  Projected Path of a Single Simulation Run along the Granularity of a Collateral Group. The References
- *  are:
- *  
- *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
- *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
- *  
- *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
- *  
- *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
- * 
- *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
- *  	21 (2) 97-102.
- * 
+ * UnivariateDiscreteThin analyzes and computes the "Thin" Statistics for the Realized Univariate Sequence.
+ *
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupEdgeAdjustment {
-	private double _dblDebt = java.lang.Double.NaN;
-	private double _dblCredit = java.lang.Double.NaN;
-	private double _dblFunding = java.lang.Double.NaN;
+public class UnivariateDiscreteThin {
+	private double _dblError = java.lang.Double.NaN;
+	private double _dblAverage = java.lang.Double.NaN;
+	private double _dblMaximum = java.lang.Double.NaN;
+	private double _dblMinimum = java.lang.Double.NaN;
 
 	/**
-	 * CollateralGroupEdgeAdjustment Constructor
+	 * UnivariateDiscreteThin Constructor
 	 * 
-	 * @param dblCredit The Path-specific Credit Value Adjustment
-	 * @param dblDebt The Path-specific Debt Value Adjustment
-	 * @param dblFunding The Path-specific Funding Value Adjustment
+	 * @param adblSequence The Univariate Sequence
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupEdgeAdjustment (
-		final double dblCredit,
-		final double dblDebt,
-		final double dblFunding)
+	public UnivariateDiscreteThin (
+		final double[] adblSequence)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCredit = dblCredit) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblDebt = dblDebt) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblFunding = dblFunding))
-			throw new java.lang.Exception ("CollateralGroupEdgeAdjustment Constructor => Invalid Inputs");
+		if (null == adblSequence)
+			throw new java.lang.Exception ("UnivariateDiscreteThin Constructor => Invalid Inputs");
+
+		_dblError = 0.;
+		_dblAverage = 0.;
+		_dblMaximum = 0.;
+		_dblMinimum = 0.;
+		int iSequenceSize = adblSequence.length;
+
+		if (0 == iSequenceSize)
+			throw new java.lang.Exception ("UnivariateDiscreteThin Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iSequenceSize; ++i) {
+			if (!org.drip.quant.common.NumberUtil.IsValid (adblSequence[i]))
+				throw new java.lang.Exception ("UnivariateDiscreteThin Constructor => Invalid Inputs");
+
+			if (0 == i) {
+				_dblMaximum = adblSequence[0];
+				_dblMinimum = adblSequence[0];
+			} else {
+				if (_dblMaximum < adblSequence[i]) _dblMaximum = adblSequence[i];
+
+				if (_dblMinimum > adblSequence[i]) _dblMinimum = adblSequence[i];
+			}
+
+			_dblAverage = _dblAverage + adblSequence[i];
+		}
+
+		_dblAverage /= iSequenceSize;
+
+		for (int i = 0; i < iSequenceSize; ++i)
+			_dblError = _dblError + java.lang.Math.abs (_dblAverage - adblSequence[i]);
+
+		_dblError /= iSequenceSize;
 	}
 
 	/**
-	 * Retrieve the Path-specific Credit Adjustment
+	 * Retrieve the Sequence Average
 	 * 
-	 * @return The Path-specific Credit Adjustment
+	 * @return The Sequence Average
 	 */
 
-	public double credit()
+	public double average()
 	{
-		return _dblCredit;
+		return _dblAverage;
 	}
 
 	/**
-	 * Retrieve the Path-specific Debt Adjustment
+	 * Retrieve the Sequence Error
 	 * 
-	 * @return The Path-specific Debt Adjustment
+	 * @return The Sequence Error
 	 */
 
-	public double debt()
+	public double error()
 	{
-		return _dblDebt;
+		return _dblError;
 	}
 
 	/**
-	 * Retrieve the Path-specific Funding Adjustment
+	 * Retrieve the Sequence Maximum
 	 * 
-	 * @return The Path-specific Funding Adjustment
+	 * @return The Sequence Maximum
 	 */
 
-	public double funding()
+	public double maximum()
 	{
-		return _dblFunding;
+		return _dblMaximum;
+	}
+
+	/**
+	 * Retrieve the Sequence Minimum
+	 * 
+	 * @return The Sequence Minimum
+	 */
+
+	public double minimum()
+	{
+		return _dblMinimum;
 	}
 }

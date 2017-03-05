@@ -69,7 +69,7 @@ package org.drip.xva.accounting;
 
 public class ValueAdjustment {
 	private double _dblAmount = java.lang.Double.NaN;
-	private org.drip.xva.accounting.AttributionCategory _ac = null;
+	private org.drip.xva.accounting.ValueCategory _vc = null;
 
 	/**
 	 * Construct the Collateralized Transaction Value Adjustment Instance
@@ -83,7 +83,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.AttributionCategory.CF1());
+			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF1());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -103,7 +103,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.AttributionCategory.CF2());
+			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF2());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -123,7 +123,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.AttributionCategory.CF3());
+			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF3());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -143,7 +143,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.AttributionCategory.CF3());
+			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF3());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -163,7 +163,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.AttributionCategory.CF4());
+			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF4());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -183,7 +183,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.AttributionCategory.CF5());
+			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF5());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -195,17 +195,17 @@ public class ValueAdjustment {
 	 * ValueAdjustment Constructor
 	 * 
 	 * @param dblAmount Valuation Adjustment Amount
-	 * @param ac Valuation Adjustment Attribution Category
+	 * @param vc Valuation Adjustment Attribution Category
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ValueAdjustment (
 		final double dblAmount,
-		final org.drip.xva.accounting.AttributionCategory ac)
+		final org.drip.xva.accounting.ValueCategory vc)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAmount = dblAmount) || null == (_ac = ac))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAmount = dblAmount) || null == (_vc = vc))
 			throw new java.lang.Exception ("ValueAdjustment Constructor => Invalid Inputs");
 	}
 
@@ -226,8 +226,8 @@ public class ValueAdjustment {
 	 * @return The Valuation Adjustment Attribution Category
 	 */
 
-	public org.drip.xva.accounting.AttributionCategory attributionCategory()
+	public org.drip.xva.accounting.ValueCategory valueCategory()
 	{
-		return _ac;
+		return _vc;
 	}
 }

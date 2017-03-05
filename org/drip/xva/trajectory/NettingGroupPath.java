@@ -68,22 +68,25 @@ package org.drip.xva.trajectory;
  */
 
 public class NettingGroupPath {
+	private org.drip.xva.trajectory.NumerairePath _np = null;
 	private org.drip.xva.trajectory.CollateralGroupPath[] _aCGP = null;
 
 	/**
 	 * Generate a "Mono" CollateralGroupDigest Instance
 	 * 
 	 * @param cgp The "Mono" Collateral Group Path
+	 * @param np The Numeraire Path
 	 * 
 	 * @return The "Mono" CollateralGroupDigest Instance
 	 */
 
 	public static final NettingGroupPath Mono (
-		final org.drip.xva.trajectory.CollateralGroupPath cgp)
+		final org.drip.xva.trajectory.CollateralGroupPath cgp,
+		final org.drip.xva.trajectory.NumerairePath np)
 	{
 		try {
 			return new org.drip.xva.trajectory.NettingGroupPath (new
-				org.drip.xva.trajectory.CollateralGroupPath[] {cgp});
+				org.drip.xva.trajectory.CollateralGroupPath[] {cgp}, np);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -95,15 +98,17 @@ public class NettingGroupPath {
 	 * NettingGroupPath Constructor
 	 * 
 	 * @param aCGP Array of the Collateral Group Trajectory Paths
+	 * @param np The Numeraire Path
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public NettingGroupPath (
-		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP)
+		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
+		final org.drip.xva.trajectory.NumerairePath np)
 		throws java.lang.Exception
 	{
-		if (null == (_aCGP = aCGP) || 0 == _aCGP.length)
+		if (null == (_aCGP = aCGP) || 0 == _aCGP.length || null == (_np = np))
 			throw new java.lang.Exception ("NettingGroupPath Constructor => Invalid Inputs");
 	}
 
@@ -113,98 +118,31 @@ public class NettingGroupPath {
 	 * @return Array of the Collateral Group Trajectory Paths
 	 */
 
-	public org.drip.xva.trajectory.CollateralGroupPath[] collateralGroupTrajectoryPaths()
+	public org.drip.xva.trajectory.CollateralGroupPath[] collateralGroupPaths()
 	{
 		return _aCGP;
 	}
 
 	/**
-	 * Retrieve the Array of the Vertex Dates
+	 * Retrieve the Numeraire Paths
 	 * 
-	 * @return The Array of the Vertex Dates
+	 * @return The Numeraire Paths
 	 */
 
-	public org.drip.analytics.date.JulianDate[] vertexes()
+	public org.drip.xva.trajectory.NumerairePath numerairePath()
 	{
-		org.drip.xva.trajectory.CollateralGroupEdge[] aCGE = _aCGP[0].edges();
-
-		int iNumVertex = aCGE.length + 1;
-		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
-
-		adtVertex[0] = aCGE[0].head().vertex();
-
-		for (int i = 1; i < iNumVertex; ++i)
-			adtVertex[i] = aCGE[i - 1].tail().vertex();
-
-		return adtVertex;
+		return _np;
 	}
 
 	/**
-	 * Retrieve the Expected CVA
+	 * Retrieve the Array of the Vertex Anchor Dates
 	 * 
-	 * @return The Expected CVA
+	 * @return The Array of the Vertex Anchor Dates
 	 */
 
-	public double cva()
+	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		double dblCVASum = 0.;
-		int iNumCollateralGroup = _aCGP.length;
-
-		for (int i = 0; i < iNumCollateralGroup; ++i)
-			dblCVASum += _aCGP[i].credit();
-
-		return dblCVASum / iNumCollateralGroup;
-	}
-
-	/**
-	 * Retrieve the Expected DVA
-	 * 
-	 * @return The Expected DVA
-	 */
-
-	public double dva()
-	{
-		double dblDVASum = 0.;
-		int iNumCollateralGroup = _aCGP.length;
-
-		for (int i = 0; i < iNumCollateralGroup; ++i)
-			dblDVASum += _aCGP[i].debt();
-
-		return dblDVASum / iNumCollateralGroup;
-	}
-
-	/**
-	 * Retrieve the Expected FCA
-	 * 
-	 * @return The Expected FCA
-	 */
-
-	public double fca()
-	{
-		double dblFCASum = 0.;
-		int iNumCollateralGroup = _aCGP.length;
-
-		for (int i = 0; i < iNumCollateralGroup; ++i)
-			dblFCASum += _aCGP[i].funding();
-
-		return dblFCASum / iNumCollateralGroup;
-	}
-
-	/**
-	 * Retrieve the Expected Total VA
-	 * 
-	 * @return The Expected Total VA
-	 */
-
-	public double total()
-	{
-		double dblTotalSum = 0.;
-		int iNumCollateralGroup = _aCGP.length;
-
-		for (int i = 0; i < iNumCollateralGroup; ++i)
-			dblTotalSum += _aCGP[i].total();
-
-		return dblTotalSum / iNumCollateralGroup;
+		return _aCGP[0].anchors();
 	}
 
 	/**
@@ -215,23 +153,190 @@ public class NettingGroupPath {
 
 	public double[] collateralizedExposure()
 	{
-		int iNumEdge = _aCGP[0].edges().length;
+		int iNumVertex = anchors().length;
 
 		int iNumCollateralGroup = _aCGP.length;
-		double[] adblCollateralizedExposure = new double[iNumEdge];
+		double[] adblCollateralizedExposure = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
+		for (int j = 0; j < iNumVertex; ++j)
 			adblCollateralizedExposure[j] = 0.;
 
 		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
 			++iCollateralGroupIndex) {
-			double[] adblPathCollateralizedExposure = _aCGP[iCollateralGroupIndex].collateralizedExposure();
+			double[] adblCollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].collateralizedExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblCollateralizedExposure[iEdgeIndex] += adblPathCollateralizedExposure[iEdgeIndex];
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralizedExposure[iVertexIndex] +=
+					adblCollateralGroupCollateralizedExposure[iVertexIndex];
 		}
 
 		return adblCollateralizedExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Exposure PV
+	 * 
+	 * @return The Array of Collateralized Exposure PV
+	 */
+
+	public double[] collateralizedExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblCollateralizedExposurePV = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCollateralizedExposurePV[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].collateralizedExposure();
+
+			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralizedExposurePV[iVertexIndex] +=
+					adblCollateralGroupCollateralizedExposure[iVertexIndex] / aNV[iVertexIndex].csa();
+		}
+
+		return adblCollateralizedExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Positive Exposures
+	 * 
+	 * @return The Array of Collateralized Positive Exposures
+	 */
+
+	public double[] collateralizedPositiveExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblCollateralizedPositiveExposure = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCollateralizedPositiveExposure[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].collateralizedExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				double dblCollateralizedExposure = adblCollateralGroupCollateralizedExposure[iVertexIndex];
+
+				if (0. < dblCollateralizedExposure)
+					adblCollateralizedPositiveExposure[iVertexIndex] += dblCollateralizedExposure;
+			}
+		}
+
+		return adblCollateralizedPositiveExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Positive Exposure PV
+	 * 
+	 * @return The Array of Collateralized Positive Exposures PV
+	 */
+
+	public double[] collateralizedPositiveExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblCollateralizedPositiveExposurePV = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCollateralizedPositiveExposurePV[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].collateralizedExposure();
+
+			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				double dblCollateralizedExposure = adblCollateralGroupCollateralizedExposure[iVertexIndex];
+
+				if (0. < dblCollateralizedExposure)
+					adblCollateralizedPositiveExposurePV[iVertexIndex] += dblCollateralizedExposure /
+						aNV[iVertexIndex].csa();
+			}
+		}
+
+		return adblCollateralizedPositiveExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Negative Exposures
+	 * 
+	 * @return The Array of Collateralized Negative Exposures
+	 */
+
+	public double[] collateralizedNegativeExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblCollateralizedNegativeExposure = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCollateralizedNegativeExposure[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].collateralizedExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				double dblCollateralizedExposure = adblCollateralGroupCollateralizedExposure[iVertexIndex];
+
+				if (0. > dblCollateralizedExposure)
+					adblCollateralizedNegativeExposure[iVertexIndex] += dblCollateralizedExposure;
+			}
+		}
+
+		return adblCollateralizedNegativeExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Collateralized Negative Exposure PV
+	 * 
+	 * @return The Array of Collateralized Negative Exposure PV
+	 */
+
+	public double[] collateralizedNegativeExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblCollateralizedNegativeExposurePV = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCollateralizedNegativeExposurePV[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].collateralizedExposure();
+
+			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				double dblCollateralizedExposure = adblCollateralGroupCollateralizedExposure[iVertexIndex];
+
+				if (0. > dblCollateralizedExposure)
+					adblCollateralizedNegativeExposurePV[iVertexIndex] += dblCollateralizedExposure /
+						aNV[iVertexIndex].csa();
+			}
+		}
+
+		return adblCollateralizedNegativeExposurePV;
 	}
 
 	/**
@@ -242,79 +347,395 @@ public class NettingGroupPath {
 
 	public double[] uncollateralizedExposure()
 	{
-		int iNumEdge = _aCGP[0].edges().length;
+		int iNumVertex = anchors().length;
 
 		int iNumCollateralGroup = _aCGP.length;
-		double[] adblUncollateralizedExposure = new double[iNumEdge];
+		double[] adblUncollateralizedExposure = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
+		for (int j = 0; j < iNumVertex; ++j)
 			adblUncollateralizedExposure[j] = 0.;
 
 		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
 			++iCollateralGroupIndex) {
-			double[] adblPathUncollateralizedExposure =
+			double[] adblCollateralGroupUncollateralizedExposure =
 				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblUncollateralizedExposure[iEdgeIndex] += adblPathUncollateralizedExposure[iEdgeIndex];
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblUncollateralizedExposure[iVertexIndex] +=
+					adblCollateralGroupUncollateralizedExposure[iVertexIndex];
 		}
 
 		return adblUncollateralizedExposure;
 	}
 
 	/**
-	 * Retrieve the Array of Collateralized Exposure PV's
+	 * Retrieve the Array of Uncollateralized Exposure PV
 	 * 
-	 * @return The Array of Collateralized Exposure PV's
-	 */
-
-	public double[] collateralizedExposurePV()
-	{
-		int iNumEdge = _aCGP[0].edges().length;
-
-		int iNumCollateralGroup = _aCGP.length;
-		double[] adblCollateralizedExposurePV = new double[iNumEdge];
-
-		for (int j = 0; j < iNumEdge; ++j)
-			adblCollateralizedExposurePV[j] = 0.;
-
-		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
-			++iCollateralGroupIndex) {
-			double[] adblPathCollateralizedExposurePV =
-				_aCGP[iCollateralGroupIndex].collateralizedExposurePV();
-
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblCollateralizedExposurePV[iEdgeIndex] += adblPathCollateralizedExposurePV[iEdgeIndex];
-		}
-
-		return adblCollateralizedExposurePV;
-	}
-
-	/**
-	 * Retrieve the Array of Uncollateralized Exposure PV's
-	 * 
-	 * @return The Array of Uncollateralized Exposure PV's
+	 * @return The Array of Uncollateralized Exposure PV
 	 */
 
 	public double[] uncollateralizedExposurePV()
 	{
-		int iNumEdge = _aCGP[0].edges().length;
+		int iNumVertex = anchors().length;
 
 		int iNumCollateralGroup = _aCGP.length;
-		double[] adblUncollateralizedExposurePV = new double[iNumEdge];
+		double[] adblUncollateralizedExposurePV = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
+		for (int j = 0; j < iNumVertex; ++j)
 			adblUncollateralizedExposurePV[j] = 0.;
 
 		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
 			++iCollateralGroupIndex) {
-			double[] adblPathUncollateralizedExposurePV =
-				_aCGP[iCollateralGroupIndex].uncollateralizedExposurePV();
+			double[] adblCollateralGroupUncollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblUncollateralizedExposurePV[iEdgeIndex] += adblPathUncollateralizedExposurePV[iEdgeIndex];
+			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblUncollateralizedExposurePV[iVertexIndex] +=
+					adblCollateralGroupUncollateralizedExposure[iVertexIndex] / aNV[iVertexIndex].csa();
 		}
 
 		return adblUncollateralizedExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Positive Exposures
+	 * 
+	 * @return The Array of Uncollateralized Positive Exposures
+	 */
+
+	public double[] uncollateralizedPositiveExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblUncollateralizedPositiveExposure = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblUncollateralizedPositiveExposure[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblUncollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				double dblUncollateralizedExposure =
+					adblUncollateralGroupCollateralizedExposure[iVertexIndex];
+
+				if (0. < dblUncollateralizedExposure)
+					adblUncollateralizedPositiveExposure[iVertexIndex] += dblUncollateralizedExposure;
+			}
+		}
+
+		return adblUncollateralizedPositiveExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Positive Exposure PV
+	 * 
+	 * @return The Array of Uncollateralized Positive Exposure PV
+	 */
+
+	public double[] uncollateralizedPositiveExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblUncollateralizedPositiveExposurePV = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblUncollateralizedPositiveExposurePV[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblUncollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
+
+			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				double dblUncollateralizedExposure =
+					adblUncollateralGroupCollateralizedExposure[iVertexIndex];
+
+				if (0. < dblUncollateralizedExposure)
+					adblUncollateralizedPositiveExposurePV[iVertexIndex] += dblUncollateralizedExposure /
+						aNV[iVertexIndex].csa();
+			}
+		}
+
+		return adblUncollateralizedPositiveExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Negative Exposures
+	 * 
+	 * @return The Array of Uncollateralized Negative Exposures
+	 */
+
+	public double[] uncollateralizedNegativeExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblUncollateralizedNegativeExposure = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblUncollateralizedNegativeExposure[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupUncollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				double dblUncollateralizedExposure =
+					adblCollateralGroupUncollateralizedExposure[iVertexIndex];
+
+				if (0. > dblUncollateralizedExposure)
+					adblUncollateralizedNegativeExposure[iVertexIndex] += dblUncollateralizedExposure;
+			}
+		}
+
+		return adblUncollateralizedNegativeExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Negative Exposure PV
+	 * 
+	 * @return The Array of Uncollateralized Negative Exposure PV
+	 */
+
+	public double[] uncollateralizedNegativeExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblUncollateralizedNegativeExposurePV = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblUncollateralizedNegativeExposurePV[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblUncollateralGroupCollateralizedExposure =
+				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
+
+			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				double dblUncollateralizedExposure =
+					adblUncollateralGroupCollateralizedExposure[iVertexIndex];
+
+				if (0. > dblUncollateralizedExposure)
+					adblUncollateralizedNegativeExposurePV[iVertexIndex] += dblUncollateralizedExposure /
+						aNV[iVertexIndex].csa();
+			}
+		}
+
+		return adblUncollateralizedNegativeExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Collateral Balances
+	 * 
+	 * @return The Array of Collateral Balances
+	 */
+
+	public double[] collateralBalance()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblCollateralBalance = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCollateralBalance[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupCollateralBalance = _aCGP[iCollateralGroupIndex].collateralBalance();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralBalance[iVertexIndex] += adblCollateralGroupCollateralBalance[iVertexIndex];
+		}
+
+		return adblCollateralBalance;
+	}
+
+	/**
+	 * Compute Path Credit Adjustment
+	 * 
+	 * @return The Path Credit Adjustment
+	 */
+
+	public double creditAdjustment()
+	{
+		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
+
+		org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
+		double dblCreditAdjustment = 0.;
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodStartLoss = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] * (1. -
+				aNV[iVertexIndex - 1].counterPartyRecovery());
+
+			double dblPeriodEndLoss = adblCollateralizedPositiveExposurePV[iVertexIndex] * (1. -
+				aNV[iVertexIndex].counterPartyRecovery());
+
+			dblCreditAdjustment -= 0.5 * (dblPeriodStartLoss + dblPeriodEndLoss) *
+				(aNV[iVertexIndex - 1].counterPartySurvival() - aNV[iVertexIndex].counterPartySurvival());
+		}
+
+		return dblCreditAdjustment;
+	}
+
+	/**
+	 * Compute Period-wise Path Credit Adjustment
+	 * 
+	 * @return Period-wise Path Credit Adjustment
+	 */
+
+	public double[] periodCreditAdjustment()
+	{
+		org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+		int iNumVertex = aNV.length;
+		double[] adblPeriodCreditAdjustment = new double[iNumVertex - 1];
+
+		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodStartLoss = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] * (1. -
+				aNV[iVertexIndex - 1].counterPartyRecovery());
+
+			double dblPeriodEndLoss = adblCollateralizedPositiveExposurePV[iVertexIndex] * (1. -
+				aNV[iVertexIndex].counterPartyRecovery());
+
+			adblPeriodCreditAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodStartLoss + dblPeriodEndLoss) *
+				(aNV[iVertexIndex - 1].counterPartySurvival() - aNV[iVertexIndex].counterPartySurvival());
+		}
+
+		return adblPeriodCreditAdjustment;
+	}
+
+	/**
+	 * Compute Path Debt Adjustment
+	 * 
+	 * @return The Path Debt Adjustment
+	 */
+
+	public double debtAdjustment()
+	{
+		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
+
+		org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
+		double dblDebtAdjustment = 0.;
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodStartLoss = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] * (1. -
+				aNV[iVertexIndex - 1].bankRecovery());
+
+			double dblPeriodEndLoss = adblCollateralizedNegativeExposurePV[iVertexIndex] * (1. -
+				aNV[iVertexIndex].bankRecovery());
+
+			dblDebtAdjustment -= 0.5 * (dblPeriodStartLoss + dblPeriodEndLoss) *
+				(aNV[iVertexIndex - 1].bankSurvival() - aNV[iVertexIndex].bankSurvival());
+		}
+
+		return dblDebtAdjustment;
+	}
+
+	/**
+	 * Compute Period-wise Path Debt Adjustment
+	 * 
+	 * @return Period-wise Path Debt Adjustment
+	 */
+
+	public double[] periodDebtAdjustment()
+	{
+		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
+
+		org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+		int iNumVertex = aNV.length;
+		double[] adblDebtAdjustment = new double[iNumVertex - 1];
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodStartLoss = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] * (1. -
+				aNV[iVertexIndex - 1].bankRecovery());
+
+			double dblPeriodEndLoss = adblCollateralizedNegativeExposurePV[iVertexIndex] * (1. -
+				aNV[iVertexIndex].bankRecovery());
+
+			adblDebtAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodStartLoss + dblPeriodEndLoss) *
+				(aNV[iVertexIndex - 1].bankSurvival() - aNV[iVertexIndex].bankSurvival());
+		}
+
+		return adblDebtAdjustment;
+	}
+
+	/**
+	 * Compute Path Funding Adjustment
+	 * 
+	 * @return The Path Funding Adjustment
+	 */
+
+	public double fundingAdjustment()
+	{
+		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
+
+		org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
+		double dblFundingAdjustment = 0.;
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodStartNotionalSpread = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
+				aNV[iVertexIndex - 1].bankFundingSpread();
+
+			double dblPeriodEndNotionalSpread = adblCollateralizedPositiveExposurePV[iVertexIndex] *
+				aNV[iVertexIndex].bankFundingSpread();
+
+			dblFundingAdjustment -= 0.5 * (dblPeriodStartNotionalSpread + dblPeriodEndNotionalSpread) *
+				(aNV[iVertexIndex].anchor().julian() - aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
+		}
+
+		return dblFundingAdjustment;
+	}
+
+	/**
+	 * Compute Period-wise Path Funding Adjustment
+	 * 
+	 * @return The Period-wise Path Funding Adjustment
+	 */
+
+	public double[] periodFundingAdjustment()
+	{
+		org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+
+		int iNumVertex = aNV.length;
+		double[] adblFundingAdjustment = new double[iNumVertex - 1];
+
+		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodStartNotionalSpread = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
+				aNV[iVertexIndex - 1].bankFundingSpread();
+
+			double dblPeriodEndNotionalSpread = adblCollateralizedPositiveExposurePV[iVertexIndex] *
+				aNV[iVertexIndex].bankFundingSpread();
+
+			adblFundingAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodStartNotionalSpread +
+				dblPeriodEndNotionalSpread) * (aNV[iVertexIndex].anchor().julian() -
+					aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
+		}
+
+		return adblFundingAdjustment;
 	}
 }

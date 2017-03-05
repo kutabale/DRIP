@@ -47,8 +47,8 @@ package org.drip.xva.accounting;
  */
 
 /**
- * AttributionCategory holds the Fields relevant to Classifying Value Attribution from an Accounting
- *  ViewPoint. The References are:
+ * ValueCategory holds the Fields relevant to Classifying Value Attribution from an Accounting ViewPoint. The
+ *  References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
@@ -67,7 +67,7 @@ package org.drip.xva.accounting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AttributionCategory {
+public class ValueCategory {
 	private java.lang.String _strID = "";
 	private boolean _bCET1Contributor = false;
 	private java.lang.String _strDescription = "";
@@ -78,10 +78,10 @@ public class AttributionCategory {
 	 * @return An Instance of the CF1 Cash Flow
 	 */
 
-	public static final AttributionCategory CF1()
+	public static final ValueCategory CF1()
 	{
 		try {
-			return new AttributionCategory ("CF1", "Underlying Trade Contractual Cash Flow", true);
+			return new ValueCategory ("CF1", "Underlying Trade Contractual Cash Flow", true);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -95,10 +95,10 @@ public class AttributionCategory {
 	 * @return An Instance of the CF2 Cash Flow
 	 */
 
-	public static final AttributionCategory CF2()
+	public static final ValueCategory CF2()
 	{
 		try {
-			return new AttributionCategory ("CF2", "Counter Party Default Cash Flow", true);
+			return new ValueCategory ("CF2", "Counter Party Default Cash Flow", true);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -112,10 +112,10 @@ public class AttributionCategory {
 	 * @return An Instance of the CF3 Cash Flow
 	 */
 
-	public static final AttributionCategory CF3()
+	public static final ValueCategory CF3()
 	{
 		try {
-			return new AttributionCategory ("CF3", "Bank Default Related Cash Flow", false);
+			return new ValueCategory ("CF3", "Bank Default Related Cash Flow", false);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -129,10 +129,10 @@ public class AttributionCategory {
 	 * @return An Instance of the CF4 Cash Flow
 	 */
 
-	public static final AttributionCategory CF4()
+	public static final ValueCategory CF4()
 	{
 		try {
-			return new AttributionCategory ("CF4", "Pre Bank Default Dynamic Flow", false);
+			return new ValueCategory ("CF4", "Pre Bank Default Dynamic Flow", false);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -146,10 +146,10 @@ public class AttributionCategory {
 	 * @return An Instance of the CF5 Cash Flow
 	 */
 
-	public static final AttributionCategory CF5()
+	public static final ValueCategory CF5()
 	{
 		try {
-			return new AttributionCategory ("CF5", "Post Bank Default Dynamic Flow", false);
+			return new ValueCategory ("CF5", "Post Bank Default Dynamic Flow", false);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -158,7 +158,7 @@ public class AttributionCategory {
 	}
 
 	/**
-	 * AttributionCategory Constructor
+	 * ValueCategory Constructor
 	 * 
 	 * @param strID The Category ID
 	 * @param strDescription The Category Description
@@ -167,7 +167,7 @@ public class AttributionCategory {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public AttributionCategory (
+	public ValueCategory (
 		final java.lang.String strID,
 		final java.lang.String strDescription,
 		final boolean bCET1Contributor)
@@ -175,7 +175,7 @@ public class AttributionCategory {
 	{
 		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strDescription = strDescription) ||
 			_strDescription.isEmpty())
-			throw new java.lang.Exception ("AttributionCategory Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("ValueCategory Constructor => Invalid Inputs");
 
 		_bCET1Contributor = bCET1Contributor;
 	}

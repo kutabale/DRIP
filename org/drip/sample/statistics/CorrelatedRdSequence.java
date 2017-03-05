@@ -3,7 +3,7 @@ package org.drip.sample.statistics;
 
 import org.drip.measure.crng.RandomNumberGenerator;
 import org.drip.measure.discrete.*;
-import org.drip.measure.statistics.MultivariateDiscreteSequence;
+import org.drip.measure.statistics.MultivariateDiscrete;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 
@@ -95,7 +95,7 @@ public class CorrelatedRdSequence {
 
 		VertexRd vertexRd = cpvd.multiPathVertexRd()[0];
 
-		MultivariateDiscreteSequence mds = new MultivariateDiscreteSequence (vertexRd.flatform());
+		MultivariateDiscrete mds = new MultivariateDiscrete (vertexRd.flatform());
 
 		double[] adblMeanOutput = mds.mean();
 

@@ -47,8 +47,7 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupVertexNumeraire holds the Vertex Market Numeraire Realizations of a Projected Path of a
- *  Simulation Run along the Granularity of a Collateral Group. The References are:
+ * NumeraireVertex holds the Vertex Market Numeraire Realizations at a Trajectory Vertex. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,17 +66,19 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertexNumeraire {
+public class NumeraireVertex {
 	private double _dblCSA = java.lang.Double.NaN;
 	private double _dblBankRecovery = java.lang.Double.NaN;
 	private double _dblBankSurvival = java.lang.Double.NaN;
 	private double _dblBankFundingSpread = java.lang.Double.NaN;
+	private org.drip.analytics.date.JulianDate _dtAnchor = null;
 	private double _dblCounterPartyRecovery = java.lang.Double.NaN;
 	private double _dblCounterPartySurvival = java.lang.Double.NaN;
 
 	/**
-	 * CollateralGroupVertexNumeraire Constructor
+	 * NumeraireVertex Constructor
 	 * 
+	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblCSA The Realized CSA Numeraire
 	 * @param dblBankSurvival The Realized Bank Survival Numeraire
 	 * @param dblBankRecovery The Realized Bank Recovery Numeraire
@@ -88,7 +89,8 @@ public class CollateralGroupVertexNumeraire {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertexNumeraire (
+	public NumeraireVertex (
+		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblCSA,
 		final double dblBankSurvival,
 		final double dblBankRecovery,
@@ -97,14 +99,25 @@ public class CollateralGroupVertexNumeraire {
 		final double dblCounterPartyRecovery)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCSA = dblCSA) ||
+		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblCSA = dblCSA) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBankSurvival = dblBankSurvival) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
 					!org.drip.quant.common.NumberUtil.IsValid (_dblBankFundingSpread = dblBankFundingSpread)
 						|| !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartySurvival =
 							dblCounterPartySurvival) || !org.drip.quant.common.NumberUtil.IsValid
 								(_dblCounterPartyRecovery = dblCounterPartyRecovery))
-			throw new java.lang.Exception ("CollateralGroupVertexNumeraire Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("NumeraireVertex Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Date Anchor
+	 * 
+	 * @return The Date Anchor
+	 */
+
+	public org.drip.analytics.date.JulianDate anchor()
+	{
+		return _dtAnchor;
 	}
 
 	/**

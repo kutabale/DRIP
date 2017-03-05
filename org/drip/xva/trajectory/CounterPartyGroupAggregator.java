@@ -68,112 +68,44 @@ package org.drip.xva.trajectory;
  */
 
 public class CounterPartyGroupAggregator {
-	private org.drip.xva.trajectory.NettingGroupPathAggregator[] _aNGPA = null;
+	private org.drip.xva.trajectory.CounterPartyGroupPath[] _aCPGP = null;
 
 	/**
 	 * CounterPartyGroupAggregator Constructor
 	 * 
-	 * @param aNGPA Array of Netting Group Aggregator
+	 * @param aCPGP Array of the Counter Party Group Paths
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public CounterPartyGroupAggregator (
-		final org.drip.xva.trajectory.NettingGroupPathAggregator[] aNGPA)
+		final org.drip.xva.trajectory.CounterPartyGroupPath[] aCPGP)
 		throws java.lang.Exception
 	{
-		if (null == (_aNGPA = aNGPA) || 0 == _aNGPA.length)
+		if (null == (_aCPGP = aCPGP) || 0 == _aCPGP.length)
 			throw new java.lang.Exception ("CounterPartyGroupAggregator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Array of Netting Group Aggregator
+	 * Retrieve the Array of Counter Party Group Paths
 	 * 
-	 * @return Array of Netting Group Aggregator
+	 * @return Array of Counter Party Group Paths
 	 */
 
-	public org.drip.xva.trajectory.NettingGroupPathAggregator[] nettingGroups()
+	public org.drip.xva.trajectory.CounterPartyGroupPath[] counterPartyGroups()
 	{
-		return _aNGPA;
+		return _aCPGP;
 	}
 
 	/**
-	 * Retrieve the Array of the Vertex Dates
+	 * Retrieve the Array of the Vertex Anchor Dates
 	 * 
-	 * @return The Array of the Vertex Dates
+	 * @return The Array of the Vertex Anchor Dates
 	 */
 
-	public org.drip.analytics.date.JulianDate[] vertexes()
+	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		return _aNGPA[0].vertexes();
-	}
-
-	/**
-	 * Retrieve the Expected CVA
-	 * 
-	 * @return The Expected CVA
-	 */
-
-	public double cva()
-	{
-		double dblCVA = 0.;
-		int iNumNettingGroup = _aNGPA.length;
-
-		for (int i = 0; i < iNumNettingGroup; ++i)
-			dblCVA += _aNGPA[i].cva();
-
-		return dblCVA;
-	}
-
-	/**
-	 * Retrieve the Expected DVA
-	 * 
-	 * @return The Expected DVA
-	 */
-
-	public double dva()
-	{
-		double dblDVA = 0.;
-		int iNumNettingGroup = _aNGPA.length;
-
-		for (int i = 0; i < iNumNettingGroup; ++i)
-			dblDVA += _aNGPA[i].dva();
-
-		return dblDVA;
-	}
-
-	/**
-	 * Retrieve the Expected FCA
-	 * 
-	 * @return The Expected FCA
-	 */
-
-	public double fca()
-	{
-		double dblFCA = 0.;
-		int iNumNettingGroup = _aNGPA.length;
-
-		for (int i = 0; i < iNumNettingGroup; ++i)
-			dblFCA += _aNGPA[i].fca();
-
-		return dblFCA;
-	}
-
-	/**
-	 * Retrieve the Expected Total VA
-	 * 
-	 * @return The Expected Total VA
-	 */
-
-	public double total()
-	{
-		double dblTotal = 0.;
-		int iNumNettingGroup = _aNGPA.length;
-
-		for (int i = 0; i < iNumNettingGroup; ++i)
-			dblTotal += _aNGPA[i].total();
-
-		return dblTotal;
+		return _aCPGP[0].anchors();
 	}
 
 	/**
@@ -184,51 +116,25 @@ public class CounterPartyGroupAggregator {
 
 	public double[] collateralizedExposure()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblCollateralizedExposure = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblCollateralizedExposure = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblCollateralizedExposure[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedExposure[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedExposure =
-				_aNGPA[iNettingGroupIndex].collateralizedExposure();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedExposure = _aCPGP[iPathIndex].collateralizedExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblCollateralizedExposure[iEdgeIndex] += adblNettingGroupCollateralizedExposure[iEdgeIndex];
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralizedExposure[iVertexIndex] += adblPathCollateralizedExposure[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedExposure[iVertexIndex] /= iNumPath;
 
 		return adblCollateralizedExposure;
-	}
-
-	/**
-	 * Retrieve the Array of Uncollateralized Exposures
-	 * 
-	 * @return The Array of Uncollateralized Exposures
-	 */
-
-	public double[] uncollateralizedExposure()
-	{
-		int iNumEdge = vertexes().length - 1;
-
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblUncollateralizedExposure = new double[iNumEdge];
-
-		for (int j = 0; j < iNumEdge; ++j)
-			adblUncollateralizedExposure[j] = 0.;
-
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedExposure =
-				_aNGPA[iNettingGroupIndex].uncollateralizedExposure();
-
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblUncollateralizedExposure[iEdgeIndex] +=
-					adblNettingGroupUncollateralizedExposure[iEdgeIndex];
-		}
-
-		return adblUncollateralizedExposure;
 	}
 
 	/**
@@ -239,24 +145,54 @@ public class CounterPartyGroupAggregator {
 
 	public double[] collateralizedExposurePV()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblCollateralizedExposurePV = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblCollateralizedExposurePV = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblCollateralizedExposurePV[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedExposurePV[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedExposurePV =
-				_aNGPA[iNettingGroupIndex].collateralizedExposurePV();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedExposurePV = _aCPGP[iPathIndex].collateralizedExposurePV();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblCollateralizedExposurePV[iEdgeIndex] +=
-					adblNettingGroupCollateralizedExposurePV[iEdgeIndex];
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralizedExposurePV[iVertexIndex] += adblPathCollateralizedExposurePV[iVertexIndex];
 		}
 
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedExposurePV[iVertexIndex] /= iNumPath;
+
 		return adblCollateralizedExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Uncollateralized Exposures
+	 * 
+	 * @return The Array of Uncollateralized Exposures
+	 */
+
+	public double[] uncollateralizedExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumPath = _aCPGP.length;
+		double[] adblUncollateralizedExposure = new double[iNumVertex];
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedExposure[iVertexIndex] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedExposure = _aCPGP[iPathIndex].uncollateralizedExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblUncollateralizedExposure[iVertexIndex] += adblPathUncollateralizedExposure[iVertexIndex];
+		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedExposure[iVertexIndex] /= iNumPath;
+
+		return adblUncollateralizedExposure;
 	}
 
 	/**
@@ -267,22 +203,24 @@ public class CounterPartyGroupAggregator {
 
 	public double[] uncollateralizedExposurePV()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblUncollateralizedExposurePV = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblUncollateralizedExposurePV = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblUncollateralizedExposurePV[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedExposurePV[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedExposurePV =
-				_aNGPA[iNettingGroupIndex].uncollateralizedExposurePV();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedExposurePV = _aCPGP[iPathIndex].uncollateralizedExposurePV();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex)
-				adblUncollateralizedExposurePV[iEdgeIndex] +=
-					adblNettingGroupUncollateralizedExposurePV[iEdgeIndex];
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblUncollateralizedExposurePV[iVertexIndex] +=
+					adblPathUncollateralizedExposurePV[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedExposurePV[iVertexIndex] /= iNumPath;
 
 		return adblUncollateralizedExposurePV;
 	}
@@ -295,27 +233,25 @@ public class CounterPartyGroupAggregator {
 
 	public double[] collateralizedPositiveExposure()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblCollateralizedPositiveExposure = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblCollateralizedPositiveExposure = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblCollateralizedPositiveExposure[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedPositiveExposure[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedExposure =
-				_aNGPA[iNettingGroupIndex].collateralizedExposure();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedPositiveExposure =
+				_aCPGP[iPathIndex].collateralizedPositiveExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
-				double dblNettingGroupEdgeCollateralizedExposure =
-					adblNettingGroupCollateralizedExposure[iEdgeIndex];
-
-				if (0 < dblNettingGroupEdgeCollateralizedExposure)
-					adblCollateralizedPositiveExposure[iEdgeIndex] +=
-						dblNettingGroupEdgeCollateralizedExposure;
-			}
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralizedPositiveExposure[iVertexIndex] +=
+					adblPathCollateralizedPositiveExposure[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedPositiveExposure[iVertexIndex] /= iNumPath;
 
 		return adblCollateralizedPositiveExposure;
 	}
@@ -328,27 +264,25 @@ public class CounterPartyGroupAggregator {
 
 	public double[] collateralizedPositiveExposurePV()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblCollateralizedPositiveExposurePV = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblCollateralizedPositiveExposurePV = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblCollateralizedPositiveExposurePV[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedPositiveExposurePV[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedExposurePV =
-				_aNGPA[iNettingGroupIndex].collateralizedExposurePV();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedPositiveExposurePV =
+				_aCPGP[iPathIndex].collateralizedPositiveExposurePV();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
-				double dblNettingGroupEdgeCollateralizedExposurePV =
-					adblNettingGroupCollateralizedExposurePV[iEdgeIndex];
-
-				if (0 < dblNettingGroupEdgeCollateralizedExposurePV)
-					adblCollateralizedPositiveExposurePV[iEdgeIndex] +=
-						dblNettingGroupEdgeCollateralizedExposurePV;
-			}
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralizedPositiveExposurePV[iVertexIndex] +=
+					adblPathCollateralizedPositiveExposurePV[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedPositiveExposurePV[iVertexIndex] /= iNumPath;
 
 		return adblCollateralizedPositiveExposurePV;
 	}
@@ -361,27 +295,25 @@ public class CounterPartyGroupAggregator {
 
 	public double[] uncollateralizedPositiveExposure()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblUncollateralizedPositiveExposure = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblUncollateralizedPositiveExposure = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblUncollateralizedPositiveExposure[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedPositiveExposure[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedExposure =
-				_aNGPA[iNettingGroupIndex].uncollateralizedExposure();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedPositiveExposure =
+				_aCPGP[iPathIndex].uncollateralizedPositiveExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
-				double dblNettingGroupEdgeUncollateralizedExposure =
-					adblNettingGroupUncollateralizedExposure[iEdgeIndex];
-
-				if (0 < dblNettingGroupEdgeUncollateralizedExposure)
-					adblUncollateralizedPositiveExposure[iEdgeIndex] +=
-						dblNettingGroupEdgeUncollateralizedExposure;
-			}
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblUncollateralizedPositiveExposure[iVertexIndex] +=
+					adblPathUncollateralizedPositiveExposure[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedPositiveExposure[iVertexIndex] /= iNumPath;
 
 		return adblUncollateralizedPositiveExposure;
 	}
@@ -394,27 +326,25 @@ public class CounterPartyGroupAggregator {
 
 	public double[] uncollateralizedPositiveExposurePV()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblUncollateralizedPositiveExposurePV = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblUncollateralizedPositiveExposurePV = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblUncollateralizedPositiveExposurePV[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedPositiveExposurePV[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedExposurePV =
-				_aNGPA[iNettingGroupIndex].uncollateralizedExposurePV();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedPositiveExposurePV =
+				_aCPGP[iPathIndex].uncollateralizedPositiveExposurePV();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
-				double dblNettingGroupEdgeUncollateralizedExposurePV =
-					adblNettingGroupUncollateralizedExposurePV[iEdgeIndex];
-
-				if (0 < dblNettingGroupEdgeUncollateralizedExposurePV)
-					adblUncollateralizedPositiveExposurePV[iEdgeIndex] +=
-						dblNettingGroupEdgeUncollateralizedExposurePV;
-			}
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblUncollateralizedPositiveExposurePV[iVertexIndex] +=
+					adblPathUncollateralizedPositiveExposurePV[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedPositiveExposurePV[iVertexIndex] /= iNumPath;
 
 		return adblUncollateralizedPositiveExposurePV;
 	}
@@ -427,27 +357,25 @@ public class CounterPartyGroupAggregator {
 
 	public double[] collateralizedNegativeExposure()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblCollateralizedNegativeExposure = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblCollateralizedNegativeExposure = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblCollateralizedNegativeExposure[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedNegativeExposure[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedExposure =
-				_aNGPA[iNettingGroupIndex].collateralizedExposure();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedNegativeExposure =
+				_aCPGP[iPathIndex].collateralizedNegativeExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
-				double dblNettingGroupEdgeCollateralizedExposure =
-					adblNettingGroupCollateralizedExposure[iEdgeIndex];
-
-				if (0 > dblNettingGroupEdgeCollateralizedExposure)
-					adblCollateralizedNegativeExposure[iEdgeIndex] +=
-						dblNettingGroupEdgeCollateralizedExposure;
-			}
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralizedNegativeExposure[iVertexIndex] +=
+					adblPathCollateralizedNegativeExposure[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedNegativeExposure[iVertexIndex] /= iNumPath;
 
 		return adblCollateralizedNegativeExposure;
 	}
@@ -460,27 +388,25 @@ public class CounterPartyGroupAggregator {
 
 	public double[] collateralizedNegativeExposurePV()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblCollateralizedNegativeExposurePV = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblCollateralizedNegativeExposurePV = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblCollateralizedNegativeExposurePV[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedNegativeExposurePV[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedExposurePV =
-				_aNGPA[iNettingGroupIndex].collateralizedExposurePV();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedNegativeExposurePV =
+				_aCPGP[iPathIndex].collateralizedNegativeExposurePV();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
-				double dblNettingGroupEdgeCollateralizedExposurePV =
-					adblNettingGroupCollateralizedExposurePV[iEdgeIndex];
-
-				if (0 > dblNettingGroupEdgeCollateralizedExposurePV)
-					adblCollateralizedNegativeExposurePV[iEdgeIndex] +=
-						dblNettingGroupEdgeCollateralizedExposurePV;
-			}
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralizedNegativeExposurePV[iVertexIndex] +=
+					adblPathCollateralizedNegativeExposurePV[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCollateralizedNegativeExposurePV[iVertexIndex] /= iNumPath;
 
 		return adblCollateralizedNegativeExposurePV;
 	}
@@ -493,27 +419,25 @@ public class CounterPartyGroupAggregator {
 
 	public double[] uncollateralizedNegativeExposure()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblUncollateralizedNegativeExposure = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblUncollateralizedNegativeExposure = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblUncollateralizedNegativeExposure[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedNegativeExposure[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedExposure =
-				_aNGPA[iNettingGroupIndex].uncollateralizedExposure();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedNegativeExposure =
+				_aCPGP[iPathIndex].uncollateralizedNegativeExposure();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
-				double dblNettingGroupEdgeUncollateralizedExposure =
-					adblNettingGroupUncollateralizedExposure[iEdgeIndex];
-
-				if (0 > dblNettingGroupEdgeUncollateralizedExposure)
-					adblUncollateralizedNegativeExposure[iEdgeIndex] +=
-						dblNettingGroupEdgeUncollateralizedExposure;
-			}
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblUncollateralizedNegativeExposure[iVertexIndex] +=
+					adblPathUncollateralizedNegativeExposure[iVertexIndex];
 		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedNegativeExposure[iVertexIndex] /= iNumPath;
 
 		return adblUncollateralizedNegativeExposure;
 	}
@@ -526,28 +450,172 @@ public class CounterPartyGroupAggregator {
 
 	public double[] uncollateralizedNegativeExposurePV()
 	{
-		int iNumEdge = vertexes().length - 1;
+		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGPA.length;
-		double[] adblUncollateralizedNegativeExposurePV = new double[iNumEdge];
+		int iNumPath = _aCPGP.length;
+		double[] adblUncollateralizedNegativeExposurePV = new double[iNumVertex];
 
-		for (int j = 0; j < iNumEdge; ++j)
-			adblUncollateralizedNegativeExposurePV[j] = 0.;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedNegativeExposurePV[iVertexIndex] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedExposurePV =
-				_aNGPA[iNettingGroupIndex].uncollateralizedExposurePV();
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathUncollateralizedNegativeExposurePV =
+				_aCPGP[iPathIndex].uncollateralizedNegativeExposurePV();
 
-			for (int iEdgeIndex = 0; iEdgeIndex < iNumEdge; ++iEdgeIndex) {
-				double dblNettingGroupEdgeUncollateralizedExposurePV =
-					adblNettingGroupUncollateralizedExposurePV[iEdgeIndex];
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblUncollateralizedNegativeExposurePV[iVertexIndex] +=
+					adblPathUncollateralizedNegativeExposurePV[iVertexIndex];
+		}
 
-				if (0 > dblNettingGroupEdgeUncollateralizedExposurePV)
-					adblUncollateralizedNegativeExposurePV[iEdgeIndex] +=
-						dblNettingGroupEdgeUncollateralizedExposurePV;
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblUncollateralizedNegativeExposurePV[iVertexIndex] /= iNumPath;
+
+		return adblUncollateralizedNegativeExposurePV;
+	}
+
+	/**
+	 * Retrieve the Expected CVA
+	 * 
+	 * @return The Expected CVA
+	 */
+
+	public double cva()
+	{
+		double dblCVA = 0.;
+		int iNumPath = _aCPGP.length;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+			dblCVA += _aCPGP[iPathIndex].creditAdjustment();
+
+		return dblCVA / iNumPath;
+	}
+
+	/**
+	 * Retrieve the Expected DVA
+	 * 
+	 * @return The Expected DVA
+	 */
+
+	public double dva()
+	{
+		double dblDVA = 0.;
+		int iNumPath = _aCPGP.length;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+			dblDVA += _aCPGP[iPathIndex].debtAdjustment();
+
+		return dblDVA / iNumPath;
+	}
+
+	/**
+	 * Retrieve the Expected FCA
+	 * 
+	 * @return The Expected FCA
+	 */
+
+	public double fca()
+	{
+		double dblFCA = 0.;
+		int iNumPath = _aCPGP.length;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+			dblFCA += _aCPGP[iPathIndex].fundingAdjustment();
+
+		return dblFCA / iNumPath;
+	}
+
+	/**
+	 * Retrieve the Total VA
+	 * 
+	 * @return The Total VA
+	 */
+
+	public double total()
+	{
+		return cva() + dva() + fca();
+	}
+
+	/**
+	 * Generate the "Digest" containing the "Thin" Path Statistics
+	 * 
+	 * @return The "Digest" containing the "Thin" Path Statistics
+	 */
+
+	public org.drip.xva.trajectory.CounterPartyGroupDigest digest()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumPath = _aCPGP.length;
+		double[][] aadblCollateralizedExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblUncollateralizedExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblCollateralizedExposurePV = new double[iNumVertex][iNumPath];
+		double[][] aadblUncollateralizedExposurePV = new double[iNumVertex][iNumPath];
+		double[][] aadblCollateralizedPositiveExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblCollateralizedNegativeExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblUncollateralizedPositiveExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblCollateralizedPositiveExposurePV = new double[iNumVertex][iNumPath];
+		double[][] aadblCollateralizedNegativeExposurePV = new double[iNumVertex][iNumPath];
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+				aadblCollateralizedExposure[iVertexIndex][iPathIndex] = 0.;
+				aadblUncollateralizedExposure[iVertexIndex][iPathIndex] = 0.;
+				aadblCollateralizedExposurePV[iVertexIndex][iPathIndex] = 0.;
+				aadblUncollateralizedExposurePV[iVertexIndex][iPathIndex] = 0.;
+				aadblCollateralizedPositiveExposure[iVertexIndex][iPathIndex] = 0.;
+				aadblCollateralizedNegativeExposure[iVertexIndex][iPathIndex] = 0.;
+				aadblUncollateralizedPositiveExposure[iVertexIndex][iPathIndex] = 0.;
+				aadblCollateralizedPositiveExposurePV[iVertexIndex][iPathIndex] = 0.;
+				aadblCollateralizedNegativeExposurePV[iVertexIndex][iPathIndex] = 0.;
 			}
 		}
 
-		return adblUncollateralizedNegativeExposurePV;
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCollateralizedExposure = _aCPGP[iPathIndex].collateralizedExposure();
+
+			double[] adblPathCollateralizedExposurePV = _aCPGP[iPathIndex].collateralizedExposurePV();
+
+			double[] adblPathCollateralizedPositiveExposure =
+				_aCPGP[iPathIndex].collateralizedPositiveExposure();
+
+			double[] adblPathCollateralizedPositiveExposurePV =
+				_aCPGP[iPathIndex].collateralizedPositiveExposurePV();
+
+			double[] adblPathCollateralizedNegativeExposure =
+				_aCPGP[iPathIndex].collateralizedNegativeExposure();
+
+			double[] adblPathCollateralizedNegativeExposurePV =
+				_aCPGP[iPathIndex].collateralizedNegativeExposurePV();
+
+			double[] adblPathUncollateralizedExposure = _aCPGP[iPathIndex].uncollateralizedExposure();
+
+			double[] adblPathUncollateralizedExposurePV = _aCPGP[iPathIndex].uncollateralizedExposurePV();
+
+			double[] adblPathUncollateralizedPositiveExposure =
+				_aCPGP[iPathIndex].uncollateralizedPositiveExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
+				aadblCollateralizedExposure[iVertexIndex][iPathIndex] =
+					adblPathCollateralizedExposure[iVertexIndex];
+				aadblCollateralizedExposurePV[iVertexIndex][iPathIndex] =
+					adblPathCollateralizedExposurePV[iVertexIndex];
+				aadblCollateralizedPositiveExposure[iVertexIndex][iPathIndex] =
+					adblPathCollateralizedPositiveExposure[iVertexIndex];
+				aadblCollateralizedPositiveExposurePV[iVertexIndex][iPathIndex] =
+					adblPathCollateralizedPositiveExposurePV[iVertexIndex];
+				aadblCollateralizedNegativeExposure[iVertexIndex][iPathIndex] =
+					adblPathCollateralizedNegativeExposure[iVertexIndex];
+				aadblCollateralizedNegativeExposurePV[iVertexIndex][iPathIndex] =
+					adblPathCollateralizedNegativeExposurePV[iVertexIndex];
+				aadblUncollateralizedExposure[iVertexIndex][iPathIndex] =
+					adblPathUncollateralizedExposure[iVertexIndex];
+				aadblUncollateralizedExposurePV[iVertexIndex][iPathIndex] =
+					adblPathUncollateralizedExposurePV[iVertexIndex];
+				aadblUncollateralizedPositiveExposure[iVertexIndex][iPathIndex] =
+					adblPathUncollateralizedPositiveExposure[iVertexIndex];
+			}
+		}
+
+		return null;
 	}
 }

@@ -78,7 +78,7 @@ import org.drip.xva.trajectory.*;
 
 public class FixFloatVACounterParty {
 
-	private static final JumpDiffusionEdge[][] ATMSwapRateOffsetRealization (
+	private static final double[][] ATMSwapRateOffsetRealization (
 		final DiffusionEvolver deATMSwapRateOffset,
 		final double dblATMSwapRateOffsetInitial,
 		final double dblTime,
@@ -87,10 +87,10 @@ public class FixFloatVACounterParty {
 		final int iNumSimulation)
 		throws Exception
 	{
-		JumpDiffusionEdge[][] aaJDEATMSwapRateOffset = new JumpDiffusionEdge[iNumSimulation][];
+		double[][] aablATMSwapRateOffset = new double[iNumSimulation][iNumStep + 1];
 
-		for (int i = 0; i < iNumSimulation; ++i)
-			aaJDEATMSwapRateOffset[i] = deATMSwapRateOffset.incrementSequence (
+		for (int i = 0; i < iNumSimulation; ++i) {
+			JumpDiffusionEdge[] aJDE = deATMSwapRateOffset.incrementSequence (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblATMSwapRateOffsetInitial,
@@ -101,7 +101,13 @@ public class FixFloatVACounterParty {
 				dblTimeWidth
 			);
 
-		return aaJDEATMSwapRateOffset;
+			aablATMSwapRateOffset[i][0] = dblATMSwapRateOffsetInitial;
+
+			for (int j = 1; j <= iNumStep; ++j)
+				aablATMSwapRateOffset[i][j] = aJDE[j - 1].finish();
+		}
+
+		return aablATMSwapRateOffset;
 	}
 
 	public static final void VA (
@@ -110,30 +116,24 @@ public class FixFloatVACounterParty {
 	{
 		int iNumStep = 10;
 		double dblTime = 5.;
-		int iNumSimulation = 10000;
+		int iNumPath = 10000;
 		double dblATMSwapRateOffsetDrift = 0.0;
 		double dblATMSwapRateOffsetVolatility = 0.15;
 		double dblATMSwapRateOffsetInitial = 0.;
-		double dblCollateralDrift = 0.01;
+		double dblCSADrift = 0.01;
 		double dblBankHazardRate = 0.015;
 		double dblBankRecoveryRate = 0.40;
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
-		double[] adblCollateral = new double[iNumStep];
-		double[] adblBankSurvival = new double[iNumStep];
-		double[] adblBankRecovery = new double[iNumStep];
-		JulianDate[] adtVertex = new JulianDate[iNumStep];
-		double[] adblBankFundingSpread = new double[iNumStep];
-		double[] adblCounterPartySurvival = new double[iNumStep];
-		double[] adblCounterPartyRecovery = new double[iNumStep];
-		CollateralGroupPath[] aCGP = new CollateralGroupPath[iNumSimulation];
+		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
+		NumeraireVertex[] aVN = new NumeraireVertex[iNumStep + 1];
+		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
-		CollateralGroupVertex[][] aaCGV = new CollateralGroupVertex[iNumSimulation][iNumStep];
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		JumpDiffusionEdge[][] aaJDEATMSwapRateOffset = ATMSwapRateOffsetRealization (
+		double[][] aaablATMSwapRateOffset = ATMSwapRateOffsetRealization (
 			new DiffusionEvolver (
 				DiffusionEvaluatorLinear.Standard (
 					dblATMSwapRateOffsetDrift,
@@ -144,63 +144,51 @@ public class FixFloatVACounterParty {
 			dblTime,
 			dblTimeWidth,
 			iNumStep,
-			iNumSimulation
+			iNumPath
 		);
 
-		for (int i = 0; i < iNumStep; ++i) {
-			adblBankRecovery[i] = dblBankRecoveryRate;
-			adblBankFundingSpread[i] = dblBankFundingSpread;
-			adblCounterPartyRecovery[i] = dblCounterPartyRecoveryRate;
+		for (int i = 0; i <= iNumStep; ++i)
+			aVN[i] = new NumeraireVertex (
+				adtVertex[i] = dtSpot.addMonths (6 * i),
+				Math.exp (0.5 * dblCSADrift * i),
+				Math.exp (-0.5 * dblBankHazardRate * i),
+				dblBankRecoveryRate,
+				dblBankFundingSpread,
+				Math.exp (-0.5 * dblCounterPartyHazardRate * i),
+				dblCounterPartyRecoveryRate
+			);
 
-			adtVertex[i] = dtSpot.addMonths (6 * i + 6);
+		NumerairePath np = new NumerairePath (aVN);
 
-			adblCollateral[i] = Math.exp (0.5 * dblCollateralDrift * (i + 1));
+		for (int i = 0; i < iNumPath; ++i) {
+			CollateralGroupVertex[] aCGV = new CollateralGroupVertex[iNumStep + 1];
 
-			adblBankSurvival[i] = Math.exp (-0.5 * dblBankHazardRate * (i + 1));
+			for (int j = 0; j <= iNumStep; ++j)
+				aCGV[j] = new CollateralGroupVertex (
+					adtVertex[j],
+					aaablATMSwapRateOffset[i][j],
+					0.,
+					0.
+				);
 
-			adblCounterPartySurvival[i] = Math.exp (-0.5 * dblCounterPartyHazardRate * (i + 1));
-		}
-
-		for (int i = 0; i < iNumStep; ++i) {
-			for (int j = 0; j < iNumSimulation; ++j)
-				aaCGV[j][i] = new CollateralGroupVertex (
-					adtVertex[i],
-					new CollateralGroupVertexExposure (
-						aaJDEATMSwapRateOffset[j][i].finish(),
-						0.,
-						0.
-					),
-					new CollateralGroupVertexNumeraire (
-						adblCollateral[i],
-						adblBankSurvival[i],
-						adblBankRecovery[i],
-						adblBankFundingSpread[i],
-						adblCounterPartySurvival[i],
-						adblCounterPartyRecovery[i]
+			aCPGP[i] = new CounterPartyGroupPath (
+				new NettingGroupPath[] {
+					NettingGroupPath.Mono (
+						new CollateralGroupPath (aCGV),
+						np
 					)
-				);
+				}
+			);
 		}
 
-		for (int j = 0; j < iNumSimulation; ++j) {
-			CollateralGroupEdge[] aCGE = new CollateralGroupEdge[iNumStep - 1];
-
-			for (int i = 1; i < iNumStep; ++i)
-				aCGE[i - 1] = new CollateralGroupEdge (
-					aaCGV[j][i - 1],
-					aaCGV[j][i]
-				);
-
-			aCGP[j] = new CollateralGroupPath (aCGE);
-		}
-
-		NettingGroupPathAggregator ngpa = NettingGroupPathAggregator.Standard (aCGP);
+		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (aCPGP);
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblCounterPartyHazardRate, 3, 0, 10000.) + " bp => " +
-			FormatUtil.FormatDouble (ngpa.cva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (ngpa.dva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (ngpa.fca(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (ngpa.total(), 1, 2, 100.) + "% ||"
+			FormatUtil.FormatDouble (cpga.cva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.dva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fca(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.total(), 1, 2, 100.) + "% ||"
 		);
 	}
 

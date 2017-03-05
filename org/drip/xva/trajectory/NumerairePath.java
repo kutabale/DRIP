@@ -47,8 +47,8 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupVertex holds the Vertex Exposure of a Projected Path of a Simulation Run of a Collateral
- *  Group. The References are:
+ * NumerairePath holds the Vertex Market Numeraire Realizations at the Trajectory Vertexes along the Path of
+ * 	a Simulation. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,100 +67,50 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertex {
-	private double _dblForwardPV = java.lang.Double.NaN;
-	private double _dblRealizedCashFlow = java.lang.Double.NaN;
-	private double _dblCollateralBalance = java.lang.Double.NaN;
-	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+public class NumerairePath {
+	private org.drip.xva.trajectory.NumeraireVertex[] _aNV = null;
 
 	/**
-	 * CollateralGroupVertex Constructor
+	 * NumerairePath Constructor
 	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param aNV Array of the Numeraire Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertex (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardPV,
-		final double dblRealizedCashFlow,
-		final double dblCollateralBalance)
+	public NumerairePath (
+		final org.drip.xva.trajectory.NumeraireVertex[] aNV)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV =
-			dblForwardPV) || !org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance =
-				dblCollateralBalance) || !org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow =
-					dblRealizedCashFlow))
-			throw new java.lang.Exception ("CollateralGroupVertex Constructor => Invalid Inputs");
+		if (null == (_aNV = aNV) || 0 == _aNV.length)
+			throw new java.lang.Exception ("NumerairePath Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Date Anchor
+	 * Retrieve the Array of the Vertex Anchor Dates
 	 * 
-	 * @return The Date Anchor
+	 * @return The Array of the Vertex Anchor Dates
 	 */
 
-	public org.drip.analytics.date.JulianDate anchor()
+	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		return _dtAnchor;
+		int iNumVertex = _aNV.length;
+		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
+
+		for (int i = 0; i < iNumVertex; ++i)
+			adtVertex[i] = _aNV[i].anchor();
+
+		return adtVertex;
 	}
 
 	/**
-	 * Retrieve the Forward PV at the Path Vertex Time Node
+	 * Array of the Numeraire Vertexes
 	 * 
-	 * @return The Forward PV at the Path Vertex Time Node
+	 * @return The Numeraire Vertexes
 	 */
 
-	public double forwardPV()
+	public org.drip.xva.trajectory.NumeraireVertex[] vertexes()
 	{
-		return _dblForwardPV;
-	}
-
-	/**
-	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
-	 */
-
-	public double collateralizedExposure()
-	{
-		return _dblForwardPV + _dblRealizedCashFlow - _dblCollateralBalance;
-	}
-
-	/**
-	 * Retrieve the Total Uncollateralized Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Total Uncollateralized Exposure at the Path Vertex Time Node
-	 */
-
-	public double uncollateralizedExposure()
-	{
-		return _dblForwardPV + _dblRealizedCashFlow;
-	}
-
-	/**
-	 * Retrieve the Collateral Balance at the Path Vertex Time Node
-	 * 
-	 * @return The Collateral Balance at the Path Vertex Time Node
-	 */
-
-	public double collateralBalance()
-	{
-		return _dblCollateralBalance;
-	}
-
-	/**
-	 * Retrieve the Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * 
-	 * @return The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 */
-
-	public double realizedCashFlow()
-	{
-		return _dblRealizedCashFlow;
+		return _aNV;
 	}
 }

@@ -47,13 +47,13 @@ package org.drip.measure.statistics;
  */
 
 /**
- * MultivariateDiscreteSequence analyzes and computes the Moment and Metric Statistics for the Realized
- * 	Multivariate Sequence.
+ * MultivariateDiscrete analyzes and computes the Moment and Metric Statistics for the Realized Multivariate
+ *  Sequence.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MultivariateDiscreteSequence {
+public class MultivariateDiscrete {
 	private double[] _adblMean = null;
 	private double[] _adblError = null;
 	private double[] _adblVariance = null;
@@ -62,35 +62,34 @@ public class MultivariateDiscreteSequence {
 	private double[] _adblStandardDeviation = null;
 
 	/**
-	 * MultivariateDiscreteSequence Constructor
+	 * MultivariateDiscrete Constructor
 	 * 
 	 * @param aadblSequence The Array of Multivariate Realizations
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MultivariateDiscreteSequence (
+	public MultivariateDiscrete (
 		final double[][] aadblSequence)
 		throws java.lang.Exception
 	{
 		if (null == aadblSequence)
-			throw new java.lang.Exception ("MultivariateDiscreteSequence Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("MultivariateDiscrete Constructor => Invalid Inputs");
 
 		int iNumVariate = -1;
 		int iSequenceSize = aadblSequence.length;
 
 		if (0 == iSequenceSize)
-			throw new java.lang.Exception ("MultivariateDiscreteSequence Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("MultivariateDiscrete Constructor => Invalid Inputs");
 
 		for (int iSequence = 0; iSequence < iSequenceSize; ++iSequence) {
 			if (null == aadblSequence[iSequence] || !org.drip.quant.common.NumberUtil.IsValid
 				(aadblSequence[iSequence]))
-				throw new java.lang.Exception ("MultivariateDiscreteSequence Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("MultivariateDiscrete Constructor => Invalid Inputs");
 
 			if (0 == iSequence) {
 				if (0 == (iNumVariate = aadblSequence[0].length))
-					throw new java.lang.Exception
-						("MultivariateDiscreteSequence Constructor => Invalid Inputs");
+					throw new java.lang.Exception ("MultivariateDiscrete Constructor => Invalid Inputs");
 
 				_adblMean = new double[iNumVariate];
 				_adblError = new double[iNumVariate];
@@ -107,7 +106,7 @@ public class MultivariateDiscreteSequence {
 						_aadblCovariance[iVariate][iVariateOther] = 0.;
 				}
 			} else if (iNumVariate != aadblSequence[iSequence].length)
-				throw new java.lang.Exception ("MultivariateDiscreteSequence Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("MultivariateDiscrete Constructor => Invalid Inputs");
 
 			for (int iVariate = 0; iVariate < iNumVariate; ++iVariate)
 				_adblMean[iVariate] += aadblSequence[iSequence][iVariate];
