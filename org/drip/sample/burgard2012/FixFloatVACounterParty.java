@@ -133,7 +133,7 @@ public class FixFloatVACounterParty {
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		double[][] aaablATMSwapRateOffset = ATMSwapRateOffsetRealization (
+		double[][] aablATMSwapRateOffset = ATMSwapRateOffsetRealization (
 			new DiffusionEvolver (
 				DiffusionEvaluatorLinear.Standard (
 					dblATMSwapRateOffsetDrift,
@@ -166,7 +166,7 @@ public class FixFloatVACounterParty {
 			for (int j = 0; j <= iNumStep; ++j)
 				aCGV[j] = new CollateralGroupVertex (
 					adtVertex[j],
-					aaablATMSwapRateOffset[i][j],
+					dblTimeWidth * (iNumStep - j) * aablATMSwapRateOffset[i][j],
 					0.,
 					0.
 				);

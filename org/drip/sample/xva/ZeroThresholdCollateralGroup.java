@@ -171,7 +171,7 @@ public class ZeroThresholdCollateralGroup {
 
 		int iNumStep = 10;
 		int iNumSwap = 10;
-		double dblTime = 10.;
+		double dblTime = 5.;
 		int iNumPath = 10000;
 		double dblATMSwapRateStart = 0.;
 		double dblATMSwapRateDrift = 0.0;

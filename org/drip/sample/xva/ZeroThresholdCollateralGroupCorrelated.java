@@ -181,7 +181,7 @@ public class ZeroThresholdCollateralGroupCorrelated {
 		int iNumStep = 10;
 		int iNumSwap = 10;
 		double dblTime = 5.;
-		int iNumPath = 50000;
+		int iNumPath = 10000;
 		double dblATMSwapRateOffsetDrift = 0.0;
 		double dblATMSwapRateOffsetVolatility = 0.25;
 		double dblATMSwapRateOffsetStart = 0.;
@@ -228,9 +228,6 @@ public class ZeroThresholdCollateralGroupCorrelated {
 		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
 		double[][] aadblPortfolioValue = new double[iNumPath][iNumStep + 1];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
-
-		for (int j = 0; j < iNumStep; ++j)
-			adtVertex[j] = dtSpot.addMonths (6 * j + 6);
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
 			DiffusionEvaluatorLinear.Standard (

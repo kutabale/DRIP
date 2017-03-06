@@ -166,7 +166,7 @@ public class FixFloatVABank {
 			for (int j = 0; j <= iNumStep; ++j)
 				aCGV[j] = new CollateralGroupVertex (
 					adtVertex[j],
-					aaablATMSwapRateOffset[i][j],
+					dblTimeWidth * (iNumStep - j) * aaablATMSwapRateOffset[i][j],
 					0.,
 					0.
 				);

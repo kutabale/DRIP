@@ -181,7 +181,7 @@ public class CollateralizedCollateralGroupCorrelated {
 		int iNumStep = 10;
 		int iNumSwap = 10;
 		double dblTime = 5.;
-		int iNumPath = 50000;
+		int iNumPath = 10000;
 		double dblATMSwapRateOffsetDrift = 0.0;
 		double dblATMSwapRateOffsetVolatility = 0.25;
 		double dblATMSwapRateOffsetStart = 0.;

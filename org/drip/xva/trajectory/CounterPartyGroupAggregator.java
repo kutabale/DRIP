@@ -546,6 +546,10 @@ public class CounterPartyGroupAggregator {
 		int iNumVertex = anchors().length;
 
 		int iNumPath = _aCPGP.length;
+		double[] adblCVA = new double[iNumPath];
+		double[] adblDVA = new double[iNumPath];
+		double[] adblFCA = new double[iNumPath];
+		double[] adblTotalVA = new double[iNumPath];
 		double[][] aadblCollateralizedExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblUncollateralizedExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblCollateralizedExposurePV = new double[iNumVertex][iNumPath];
@@ -553,8 +557,11 @@ public class CounterPartyGroupAggregator {
 		double[][] aadblCollateralizedPositiveExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblCollateralizedNegativeExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblUncollateralizedPositiveExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblUncollateralizedNegativeExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblCollateralizedPositiveExposurePV = new double[iNumVertex][iNumPath];
 		double[][] aadblCollateralizedNegativeExposurePV = new double[iNumVertex][iNumPath];
+		double[][] aadblUncollateralizedPositiveExposurePV = new double[iNumVertex][iNumPath];
+		double[][] aadblUncollateralizedNegativeExposurePV = new double[iNumVertex][iNumPath];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
@@ -565,8 +572,11 @@ public class CounterPartyGroupAggregator {
 				aadblCollateralizedPositiveExposure[iVertexIndex][iPathIndex] = 0.;
 				aadblCollateralizedNegativeExposure[iVertexIndex][iPathIndex] = 0.;
 				aadblUncollateralizedPositiveExposure[iVertexIndex][iPathIndex] = 0.;
+				aadblUncollateralizedNegativeExposure[iVertexIndex][iPathIndex] = 0.;
 				aadblCollateralizedPositiveExposurePV[iVertexIndex][iPathIndex] = 0.;
 				aadblCollateralizedNegativeExposurePV[iVertexIndex][iPathIndex] = 0.;
+				aadblUncollateralizedPositiveExposurePV[iVertexIndex][iPathIndex] = 0.;
+				aadblUncollateralizedNegativeExposurePV[iVertexIndex][iPathIndex] = 0.;
 			}
 		}
 
@@ -594,6 +604,23 @@ public class CounterPartyGroupAggregator {
 			double[] adblPathUncollateralizedPositiveExposure =
 				_aCPGP[iPathIndex].uncollateralizedPositiveExposure();
 
+			double[] adblPathUncollateralizedPositiveExposurePV =
+				_aCPGP[iPathIndex].uncollateralizedPositiveExposurePV();
+
+			double[] adblPathUncollateralizedNegativeExposure =
+				_aCPGP[iPathIndex].uncollateralizedNegativeExposure();
+
+			double[] adblPathUncollateralizedNegativeExposurePV =
+				_aCPGP[iPathIndex].uncollateralizedNegativeExposurePV();
+
+			adblCVA[iPathIndex] = _aCPGP[iPathIndex].creditAdjustment();
+
+			adblDVA[iPathIndex] = _aCPGP[iPathIndex].debtAdjustment();
+
+			adblFCA[iPathIndex] = _aCPGP[iPathIndex].fundingAdjustment();
+
+			adblTotalVA[iPathIndex] = _aCPGP[iPathIndex].totalAdjustment();
+
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				aadblCollateralizedExposure[iVertexIndex][iPathIndex] =
 					adblPathCollateralizedExposure[iVertexIndex];
@@ -613,7 +640,36 @@ public class CounterPartyGroupAggregator {
 					adblPathUncollateralizedExposurePV[iVertexIndex];
 				aadblUncollateralizedPositiveExposure[iVertexIndex][iPathIndex] =
 					adblPathUncollateralizedPositiveExposure[iVertexIndex];
+				aadblUncollateralizedPositiveExposurePV[iVertexIndex][iPathIndex] =
+					adblPathUncollateralizedPositiveExposurePV[iVertexIndex];
+				aadblUncollateralizedNegativeExposure[iVertexIndex][iPathIndex] =
+					adblPathUncollateralizedNegativeExposure[iVertexIndex];
+				aadblUncollateralizedNegativeExposurePV[iVertexIndex][iPathIndex] =
+					adblPathUncollateralizedNegativeExposurePV[iVertexIndex];
 			}
+		}
+
+		try {
+			return new org.drip.xva.trajectory.CounterPartyGroupDigest (
+				adblCVA,
+				adblDVA,
+				adblFCA,
+				adblTotalVA,
+				aadblCollateralizedExposure,
+				aadblCollateralizedExposurePV,
+				aadblCollateralizedPositiveExposure,
+				aadblCollateralizedPositiveExposurePV,
+				aadblCollateralizedNegativeExposure,
+				aadblCollateralizedNegativeExposurePV,
+				aadblUncollateralizedExposure,
+				aadblUncollateralizedExposurePV,
+				aadblUncollateralizedPositiveExposure,
+				aadblUncollateralizedPositiveExposurePV,
+				aadblUncollateralizedNegativeExposure,
+				aadblUncollateralizedNegativeExposurePV
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
 		}
 
 		return null;

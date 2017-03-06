@@ -520,4 +520,22 @@ public class CounterPartyGroupPath {
 
 		return dblFundingAdjustment;
 	}
+
+	/**
+	 * Compute Path Total Adjustment
+	 * 
+	 * @return The Path Total Adjustment
+	 */
+
+	public double totalAdjustment()
+	{
+		double dblTotalAdjustment = 0.;
+		int iNumNettingGroup = _aNGP.length;
+
+		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+			dblTotalAdjustment += _aNGP[iNettingGroupIndex].creditAdjustment() +
+				_aNGP[iNettingGroupIndex].debtAdjustment() + _aNGP[iNettingGroupIndex].fundingAdjustment();
+
+		return dblTotalAdjustment;
+	}
 }

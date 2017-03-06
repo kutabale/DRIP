@@ -161,7 +161,7 @@ public class PortfolioCollateralEstimate {
 		for (int i = 0; i < iNumStep; ++i) {
 			JulianDate dtEnd = dtStart.addMonths (3);
 
-			double dblPortfolioValueFinish = 0.25 * (iNumStep - i) * aJDESwapRate[i].finish();
+			double dblPortfolioValueFinish = dblTimeWidth * (iNumStep - i) * aJDESwapRate[i].finish();
 
 			CollateralAmountEstimator cae = new CollateralAmountEstimator (
 				cgs,
