@@ -185,6 +185,8 @@ public class FixFloatVACounterParty {
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblCounterPartyHazardRate, 3, 0, 10000.) + " bp => " +
+			FormatUtil.FormatDouble (cpga.ucva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.ftdcva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.cva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.dva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.fca(), 1, 2, 100.) + "% | " +
@@ -215,20 +217,20 @@ public class FixFloatVACounterParty {
 
 		System.out.println();
 
-		System.out.println ("\t||----------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------||");
 
-		System.out.println ("\t||     VA DEPENDENCE ON COUNTER PARTY HAZARD    ||");
+		System.out.println ("\t||           VA DEPENDENCE ON COUNTER PARTY HAZARD RATE           ||");
 
-		System.out.println ("\t||----------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------||");
 
-		System.out.println ("\t||  Hazard =>   CVA  |   DVA  |   FCA  |  Total ||");
+		System.out.println ("\t||  Hazard =>  UCVA  | FTDCVA |   CVA  |   DVA  |   FCA  |  Total ||");
 
-		System.out.println ("\t||----------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------||");
 
 		for (double dblCounterPartyHazardRate : adblCounterPartyHazardRate)
 			VA (dblCounterPartyHazardRate);
 
-		System.out.println ("\t||----------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------||");
 
 		System.out.println();
 	}

@@ -47,8 +47,8 @@ package org.drip.xva.accounting;
  */
 
 /**
- * VertexBalanceSheetAccount implements the Streamlined Accounting Framework for OTC Derivatives, as
- *  described in Albanese and Andersen (2014). The References are:
+ * BalanceSheetAccountVertex implements the Balance Sheet Edge Component of the Streamlined Accounting
+ *  Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
@@ -67,115 +67,71 @@ package org.drip.xva.accounting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class VertexBalanceSheetAccount {
-	private double _dblAsset = java.lang.Double.NaN;
-	private double _dblLiability = java.lang.Double.NaN;
-	private double _dblContraAsset = java.lang.Double.NaN;
-	private double _dblContraLiability = java.lang.Double.NaN;
-	private double _dblRetainedEarning = java.lang.Double.NaN;
+public class BalanceSheetAccountEdge {
+	private org.drip.xva.accounting.BalanceSheetAccountVertex _bsavHead = null;
+	private org.drip.xva.accounting.BalanceSheetAccountVertex _bsavTail = null;
 
 	/**
-	 * VertexBalanceSheetAccount Constructor
+	 * BalanceSheetAccountEdge Constructor
 	 * 
-	 * @param dblAsset The Asset Account
-	 * @param dblLiability The Liability Account
-	 * @param dblContraAsset The Contra Asset Account
-	 * @param dblContraLiability The Contra Liability Account
-	 * @param dblRetainedEarning The Retained Earnings Account
+	 * @param bsavHead Balance Sheet Account Vertex Head Instance
+	 * @param bsavTail Balance Sheet Account Vertex Tail Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public VertexBalanceSheetAccount (
-		final double dblAsset,
-		final double dblLiability,
-		final double dblContraAsset,
-		final double dblContraLiability,
-		final double dblRetainedEarning)
+	public BalanceSheetAccountEdge (
+		final org.drip.xva.accounting.BalanceSheetAccountVertex bsavHead,
+		final org.drip.xva.accounting.BalanceSheetAccountVertex bsavTail)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAsset = dblAsset) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblLiability = dblLiability) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblContraAsset = dblContraAsset) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblContraLiability = dblContraLiability) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblRetainedEarning = dblRetainedEarning))
-			throw new java.lang.Exception ("VertexBalanceSheetAccount Constructor => Invalid Inputs");
+		if (null == (_bsavHead = bsavHead) || null == (_bsavTail = bsavTail))
+			throw new java.lang.Exception ("BalanceSheetAccountEdge Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asset Account
+	 * Retrieve the Balance Sheet Account Vertex Head Instance
 	 * 
-	 * @return The Asset Account
+	 * @return The Balance Sheet Account Vertex Head Instance
 	 */
 
-	public double asset()
+	public org.drip.xva.accounting.BalanceSheetAccountVertex head()
 	{
-		return _dblAsset;
+		return _bsavHead;
 	}
 
 	/**
-	 * Retrieve the Liability Account
+	 * Retrieve the Balance Sheet Account Vertex Tail Instance
 	 * 
-	 * @return The Liability Account
+	 * @return The Balance Sheet Account Vertex Tail Instance
 	 */
 
-	public double liability()
+	public org.drip.xva.accounting.BalanceSheetAccountVertex tail()
 	{
-		return _dblLiability;
+		return _bsavTail;
 	}
 
 	/**
-	 * Retrieve the Contra Asset Account
+	 * Compute the CET1 Change
 	 * 
-	 * @return The Contra Asset Account
+	 * @return The CET1 Change
 	 */
 
-	public double contraAsset()
+	public double cet1Change()
 	{
-		return _dblContraAsset;
+		return _bsavTail.retainedEarnings() - _bsavTail.contraAsset() - _bsavHead.retainedEarnings() +
+			_bsavHead.contraAsset();
 	}
 
 	/**
-	 * Retrieve the Contra Liability Account
+	 * Compute the "Income"
 	 * 
-	 * @return The Contra Liability Account
+	 * @return The "Income"
 	 */
 
-	public double contraLiability()
+	public double income()
 	{
-		return _dblContraLiability;
-	}
-
-	/**
-	 * Retrieve the Retained Earnings Account
-	 * 
-	 * @return The Retained Earnings Account
-	 */
-
-	public double retainedEarning()
-	{
-		return _dblRetainedEarning;
-	}
-
-	/**
-	 * Estimate the Equity Account
-	 * 
-	 * @return The Equity Account
-	 */
-
-	public double equity()
-	{
-		return _dblAsset - _dblLiability - _dblContraAsset + _dblContraLiability + _dblRetainedEarning;
-	}
-
-	/**
-	 * Estimate the Core Equity Tier I (CET1) Capital
-	 * 
-	 * @return The Core Equity Tier I (CET1) Capital
-	 */
-
-	public double cet1()
-	{
-		return _dblAsset - _dblLiability - _dblContraAsset + _dblRetainedEarning;
+		return _bsavTail.retainedEarnings() + _bsavTail.contraLiability() - _bsavTail.contraAsset() -
+			_bsavHead.retainedEarnings() + _bsavHead.contraAsset() - _bsavHead.contraLiability();
 	}
 }

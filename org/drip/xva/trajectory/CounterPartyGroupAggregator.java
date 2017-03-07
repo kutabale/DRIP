@@ -474,6 +474,40 @@ public class CounterPartyGroupAggregator {
 	}
 
 	/**
+	 * Retrieve the Expected Unilateral CVA
+	 * 
+	 * @return The Expected Unilateral CVA
+	 */
+
+	public double ucva()
+	{
+		double dblUCVA = 0.;
+		int iNumPath = _aCPGP.length;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+			dblUCVA += _aCPGP[iPathIndex].unilateralCreditAdjustment();
+
+		return dblUCVA / iNumPath;
+	}
+
+	/**
+	 * Retrieve the Expected Bilateral/FTD CVA
+	 * 
+	 * @return The Expected Bilateral/FTD CVA
+	 */
+
+	public double ftdcva()
+	{
+		double dblFTDCVA = 0.;
+		int iNumPath = _aCPGP.length;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+			dblFTDCVA += _aCPGP[iPathIndex].bilateralCreditAdjustment();
+
+		return dblFTDCVA / iNumPath;
+	}
+
+	/**
 	 * Retrieve the Expected CVA
 	 * 
 	 * @return The Expected CVA
@@ -481,13 +515,7 @@ public class CounterPartyGroupAggregator {
 
 	public double cva()
 	{
-		double dblCVA = 0.;
-		int iNumPath = _aCPGP.length;
-
-		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblCVA += _aCPGP[iPathIndex].creditAdjustment();
-
-		return dblCVA / iNumPath;
+		return ftdcva();
 	}
 
 	/**
@@ -549,6 +577,8 @@ public class CounterPartyGroupAggregator {
 		double[] adblCVA = new double[iNumPath];
 		double[] adblDVA = new double[iNumPath];
 		double[] adblFCA = new double[iNumPath];
+		double[] adblUCVA = new double[iNumPath];
+		double[] adblFTDCVA = new double[iNumPath];
 		double[] adblTotalVA = new double[iNumPath];
 		double[][] aadblCollateralizedExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblUncollateralizedExposure = new double[iNumVertex][iNumPath];
@@ -619,6 +649,10 @@ public class CounterPartyGroupAggregator {
 
 			adblFCA[iPathIndex] = _aCPGP[iPathIndex].fundingAdjustment();
 
+			adblUCVA[iPathIndex] = _aCPGP[iPathIndex].unilateralCreditAdjustment();
+
+			adblFTDCVA[iPathIndex] = _aCPGP[iPathIndex].bilateralCreditAdjustment();
+
 			adblTotalVA[iPathIndex] = _aCPGP[iPathIndex].totalAdjustment();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
@@ -651,6 +685,8 @@ public class CounterPartyGroupAggregator {
 
 		try {
 			return new org.drip.xva.trajectory.CounterPartyGroupDigest (
+				adblUCVA,
+				adblFTDCVA,
 				adblCVA,
 				adblDVA,
 				adblFCA,

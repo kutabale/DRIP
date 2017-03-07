@@ -518,8 +518,8 @@ public class CPGAUncollateralizedCorrelated {
 		System.out.println ("\t||----------------------------------------------------||");
 
 		UDTDump (
-			"\t||  CVA  => ",
-			cpgd.cva()
+			"\t|| UCVA  => ",
+			cpgd.ucva()
 		);
 
 		UDTDump (

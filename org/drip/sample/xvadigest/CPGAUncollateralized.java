@@ -383,8 +383,8 @@ public class CPGAUncollateralized {
 		System.out.println ("\t||----------------------------------------------------||");
 
 		UDTDump (
-			"\t||  CVA  => ",
-			cpgd.cva()
+			"\t|| UCVA  => ",
+			cpgd.ucva()
 		);
 
 		UDTDump (

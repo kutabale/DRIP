@@ -445,29 +445,37 @@ public class CounterPartyGroupPath {
 	}
 
 	/**
-	 * Retrieve the Array of Collateral Balances
+	 * Compute Path Unilateral Credit Adjustment
 	 * 
-	 * @return The Array of Collateral Balances
+	 * @return The Path Unilateral Credit Adjustment
 	 */
 
-	public double[] collateralBalances()
+	public double unilateralCreditAdjustment()
 	{
-		int iNumVertex = anchors().length;
-
+		double dblUnilateralCreditAdjustment = 0.;
 		int iNumNettingGroup = _aNGP.length;
-		double[] adblCollateralBalance = new double[iNumVertex];
 
-		for (int j = 0; j < iNumVertex; ++j)
-			adblCollateralBalance[j] = 0.;
+		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+			dblUnilateralCreditAdjustment += _aNGP[iNettingGroupIndex].unilateralCreditAdjustment();
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralBalance = _aNGP[iNettingGroupIndex].collateralBalance();
+		return dblUnilateralCreditAdjustment;
+	}
 
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblCollateralBalance[iVertexIndex] += adblNettingGroupCollateralBalance[iVertexIndex];
-		}
+	/**
+	 * Compute Path Bilateral Credit Adjustment
+	 * 
+	 * @return The Path Bilateral Credit Adjustment
+	 */
 
-		return adblCollateralBalance;
+	public double bilateralCreditAdjustment()
+	{
+		double dblBilateralCreditAdjustment = 0.;
+		int iNumNettingGroup = _aNGP.length;
+
+		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+			dblBilateralCreditAdjustment += _aNGP[iNettingGroupIndex].bilateralCreditAdjustment();
+
+		return dblBilateralCreditAdjustment;
 	}
 
 	/**
@@ -478,13 +486,7 @@ public class CounterPartyGroupPath {
 
 	public double creditAdjustment()
 	{
-		double dblCreditAdjustment = 0.;
-		int iNumNettingGroup = _aNGP.length;
-
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblCreditAdjustment += _aNGP[iNettingGroupIndex].creditAdjustment();
-
-		return dblCreditAdjustment;
+		return bilateralCreditAdjustment();
 	}
 
 	/**

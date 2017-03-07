@@ -244,13 +244,13 @@ public class PortfolioGroupRun {
 			np
 		);
 
-		double[] adblPeriodCreditAdjustment1 = ngp1.periodCreditAdjustment();
+		double[] adblPeriodUnilateralCreditAdjustment1 = ngp1.periodUnilateralCreditAdjustment();
 
 		double[] adblPeriodDebtAdjustment1 = ngp1.periodDebtAdjustment();
 
 		double[] adblPeriodFundingAdjustment1 = ngp1.periodFundingAdjustment();
 
-		double[] adblPeriodCreditAdjustment2 = ngp2.periodCreditAdjustment();
+		double[] adblPeriodUnilateralCreditAdjustment2 = ngp2.periodUnilateralCreditAdjustment();
 
 		double[] adblPeriodDebtAdjustment2 = ngp2.periodDebtAdjustment();
 
@@ -262,19 +262,19 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t|                          PERIOD CREDIT, DEBT, AND FUNDING VALUATION ADJUSTMENTS                          ||");
+		System.out.println ("\t|                     PERIOD UNILATERAL CREDIT, DEBT, AND FUNDING VALUATION ADJUSTMENTS                    ||");
 
 		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
 
 		System.out.println ("\t|    - Forward Period                                                                                      ||");
 
-		System.out.println ("\t|    - Path #1 Period Credit Adjustments                                                                   ||");
+		System.out.println ("\t|    - Path #1 Period Unilateral Credit Adjustments                                                        ||");
 
 		System.out.println ("\t|    - Path #1 Period Debt Adjustments                                                                     ||");
 
 		System.out.println ("\t|    - Path #1 Period Funding Adjustments                                                                  ||");
 
-		System.out.println ("\t|    - Path #2 Period Credit Adjustments                                                                   ||");
+		System.out.println ("\t|    - Path #2 Period Unilateral Credit Adjustments                                                        ||");
 
 		System.out.println ("\t|    - Path #2 Period Debt Adjustments                                                                     ||");
 
@@ -285,10 +285,10 @@ public class PortfolioGroupRun {
 		for (int i = 1; i <= iNumStep; ++i) {
 			System.out.println ("\t| [" +
 				adtVertex[i - 1] + " -> " + adtVertex[i] + "] => " +
-				FormatUtil.FormatDouble (adblPeriodCreditAdjustment1[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodUnilateralCreditAdjustment1[i - 1], 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblPeriodDebtAdjustment1[i - 1], 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblPeriodFundingAdjustment1[i - 1], 1, 6, 1.) + " || " +
-				FormatUtil.FormatDouble (adblPeriodCreditAdjustment2[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodUnilateralCreditAdjustment2[i - 1], 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblPeriodDebtAdjustment2[i - 1], 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (adblPeriodFundingAdjustment2[i - 1], 1, 6, 1.) + " ||"
 			);
@@ -376,14 +376,18 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		System.out.println ("\t||----------------||");
+		System.out.println ("\t||-------------------||");
 
-		System.out.println ("\t|| CVA => " + FormatUtil.FormatDouble (cpga.cva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| DVA => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FVA => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||----------------||");
+		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||-------------------||");
 	}
 }

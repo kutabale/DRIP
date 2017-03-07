@@ -185,6 +185,8 @@ public class FixFloatVABank {
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblBankHazardRate, 3, 0, 10000.) + " bp => " +
+			FormatUtil.FormatDouble (cpga.ucva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.ftdcva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.cva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.dva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.fca(), 1, 2, 100.) + "% | " +
@@ -215,20 +217,20 @@ public class FixFloatVABank {
 
 		System.out.println();
 
-		System.out.println ("\t||----------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------||");
 
-		System.out.println ("\t||       VA DEPENDENCE ON BANK HAZARD RATE      ||");
+		System.out.println ("\t||                VA DEPENDENCE ON BANK HAZARD RATE               ||");
 
-		System.out.println ("\t||----------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------||");
 
-		System.out.println ("\t||  Hazard =>   CVA  |   DVA  |   FCA  |  Total ||");
+		System.out.println ("\t||  Hazard =>  UCVA  | FTDCVA |   CVA  |   DVA  |   FCA  |  Total ||");
 
-		System.out.println ("\t||----------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------||");
 
 		for (double dblBankHazardRate : adblBankHazardRate)
 			VA (dblBankHazardRate);
 
-		System.out.println ("\t||----------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------||");
 
 		System.out.println();
 	}

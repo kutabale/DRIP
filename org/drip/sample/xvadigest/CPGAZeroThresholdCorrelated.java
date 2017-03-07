@@ -1,14 +1,17 @@
 
-package org.drip.sample.xva;
+package org.drip.sample.xvadigest;
 
 import org.drip.analytics.date.*;
+import org.drip.measure.bridge.BrokenDateInterpolatorLinearT;
 import org.drip.measure.discrete.SequenceGenerator;
 import org.drip.measure.dynamics.*;
 import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
+import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.settings.*;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -57,9 +60,9 @@ import org.drip.xva.trajectory.*;
  */
 
 /**
- * UncollateralizedCollateralGroupCorrelated illustrates the Sample Run of a Single Uncollateralized
- *  Collateral Group with several Fix-Float Swaps, and with built in Factor Correlations across the
- *  Numeraires. The References are:
+ * CPGAZeroThresholdCorrelated illustrates the Counter Party Aggregation over Netting Groups based
+ *  Collateralized Collateral Groups with several Fix-Float Swaps under Zero Collateral Threshold, and with
+ *  built in Factor Correlations across the Numeraires. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -78,7 +81,7 @@ import org.drip.xva.trajectory.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class UncollateralizedCollateralGroupCorrelated {
+public class CPGAZeroThresholdCorrelated {
 
 	private static final double[] NumeraireValueRealization (
 		final DiffusionEvolver deNumeraireValue,
@@ -170,6 +173,72 @@ public class UncollateralizedCollateralGroupCorrelated {
 		return adblSwapPortfolioValueRealization;
 	}
 
+	private static final void UDTDump (
+		final String strHeader,
+		final JulianDate[] adtVertexNode,
+		final UnivariateDiscreteThin[] aUDT)
+		throws Exception
+	{
+		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+		System.out.println (strHeader);
+
+		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+		String strDump = "\t|       DATE      =>" ;
+
+		for (int i = 0; i < adtVertexNode.length; ++i)
+			strDump = strDump + " " + adtVertexNode[i] + "  |";
+
+		System.out.println (strDump);
+
+		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+
+		 strDump = "\t|     AVERAGE     =>";
+
+		for (int j = 0; j < aUDT.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (aUDT[j].average(), 2, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		strDump = "\t|     MAXIMUM     =>";
+
+		for (int j = 0; j < aUDT.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (aUDT[j].maximum(), 2, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		strDump = "\t|     MINIMUM     =>";
+
+		for (int j = 0; j < aUDT.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (aUDT[j].minimum(), 2, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		strDump = "\t|      ERROR      =>";
+
+		for (int j = 0; j < aUDT.length; ++j)
+			strDump = strDump + "   " + FormatUtil.FormatDouble (aUDT[j].error(), 2, 4, 1.) + "   |";
+
+		System.out.println (strDump);
+
+		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+	}
+
+	private static final void UDTDump (
+		final String strHeader,
+		final UnivariateDiscreteThin udt)
+		throws Exception
+	{
+		System.out.println (
+			strHeader +
+			FormatUtil.FormatDouble (udt.average(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (udt.maximum(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (udt.minimum(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (udt.error(), 1, 2, 100.) + "% ||"
+		);
+	}
+
 	public static final void main (
 		final String[] astrArgs)
 		throws Exception
@@ -213,11 +282,18 @@ public class UncollateralizedCollateralGroupCorrelated {
 
 		JulianDate dtSpot = DateUtil.Today();
 
+		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
+			"FIXEDTHRESHOLD",
+			0.,
+			0.
+		);
+
+		CounterPartyGroupSpecification cpgs = CounterPartyGroupSpecification.Standard ("CPGROUP");
+
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
 		double[][] aadblPortfolioValue = new double[iNumPath][iNumStep + 1];
-		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
@@ -341,6 +417,8 @@ public class UncollateralizedCollateralGroupCorrelated {
 				iNumStep
 			);
 
+			JulianDate dtStart = dtSpot;
+			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
 			NumeraireVertex[] aNV = new NumeraireVertex [iNumStep + 1];
 			CollateralGroupVertex[] aCGV = new CollateralGroupVertex[iNumStep + 1];
 
@@ -355,14 +433,35 @@ public class UncollateralizedCollateralGroupCorrelated {
 					adblCounterPartyRecoveryRate[j]
 				);
 
-				aadblCollateralBalance[i][j] = 0.;
+				double dblCollateralBalance = 0.;
+				JulianDate dtEnd = adtVertex[j];
+				double dblValueEnd = aadblPortfolioValue[i][j];
+
+				if (0 != j) {
+					CollateralAmountEstimator cae = new CollateralAmountEstimator (
+						cgs,
+						cpgs,
+						new BrokenDateInterpolatorLinearT (
+							dtStart.julian(),
+							dtEnd.julian(),
+							dblValueStart,
+							dblValueEnd
+						),
+						Double.NaN
+					);
+
+					dblCollateralBalance = cae.postingRequirement (dtEnd);
+				}
 
 				aCGV[j] = new CollateralGroupVertex (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,
-					0.
+					dblCollateralBalance
 				);
+
+				dtStart = dtEnd;
+				dblValueStart = dblValueEnd;
 			}
 
 			aCPGP[i] = new CounterPartyGroupPath (
@@ -377,87 +476,102 @@ public class UncollateralizedCollateralGroupCorrelated {
 
 		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (aCPGP);
 
-		JulianDate[] adtVertexNode = cpga.anchors();
+		CounterPartyGroupDigest cpgd = cpga.digest();
 
 		System.out.println();
 
-		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+		UDTDump (
+			"\t|                                                                                COLLATERALIZED EXPOSURE                                                                                |",
+			cpga.anchors(),
+			cpgd.collateralizedExposure()
+		);
 
-		String strDump = "\t|         DATE         =>" ;
+		UDTDump (
+			"\t|                                                                               UNCOLLATERALIZED EXPOSURE                                                                               |",
+			cpga.anchors(),
+			cpgd.uncollateralizedExposure()
+		);
 
-		for (int i = 0; i < adtVertexNode.length; ++i)
-			strDump = strDump + " " + adtVertexNode[i] + " |";
+		UDTDump (
+			"\t|                                                                                COLLATERALIZED EXPOSURE PV                                                                             |",
+			cpga.anchors(),
+			cpgd.collateralizedExposurePV()
+		);
 
-		System.out.println (strDump);
+		UDTDump (
+			"\t|                                                                               UNCOLLATERALIZED EXPOSURE PV                                                                            |",
+			cpga.anchors(),
+			cpgd.uncollateralizedExposurePV()
+		);
 
-		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+		UDTDump (
+			"\t|                                                                            COLLATERALIZED POSITIVE EXPOSURE PV                                                                        |",
+			cpga.anchors(),
+			cpgd.collateralizedPositiveExposure()
+		);
 
-		double[] adblExposure = cpga.collateralizedExposure();
+		UDTDump (
+			"\t|                                                                           UNCOLLATERALIZED POSITIVE EXPOSURE PV                                                                       |",
+			cpga.anchors(),
+			cpgd.uncollateralizedPositiveExposure()
+		);
 
-		strDump = "\t|       EXPOSURE       =>";
+		UDTDump (
+			"\t|                                                                            COLLATERALIZED NEGATIVE EXPOSURE PV                                                                        |",
+			cpga.anchors(),
+			cpgd.collateralizedNegativeExposure()
+		);
 
-		for (int j = 0; j < adblExposure.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblExposure[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblPositiveExposure = cpga.collateralizedPositiveExposure();
-
-		strDump = "\t|  POSITIVE EXPOSURE   =>";
-
-		for (int j = 0; j < adblPositiveExposure.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblPositiveExposure[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblNegativeExposure = cpga.collateralizedNegativeExposure();
-
-		strDump = "\t|  NEGATIVE EXPOSURE   =>";
-
-		for (int j = 0; j < adblNegativeExposure.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblNegativeExposure[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblExposurePV = cpga.collateralizedExposurePV();
-
-		strDump = "\t|      EXPOSURE PV     =>";
-
-		for (int j = 0; j < adblExposurePV.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblExposurePV[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblPositiveExposurePV = cpga.collateralizedPositiveExposurePV();
-
-		strDump = "\t| POSITIVE EXPOSURE PV =>";
-
-		for (int j = 0; j < adblPositiveExposurePV.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblPositiveExposurePV[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		double[] adblNegativeExposurePV = cpga.collateralizedNegativeExposurePV();
-
-		strDump = "\t| NEGATIVE EXPOSURE PV =>";
-
-		for (int j = 0; j < adblNegativeExposurePV.length; ++j)
-			strDump = strDump + "   " + FormatUtil.FormatDouble (adblNegativeExposurePV[j], 1, 4, 1.) + "   |";
-
-		System.out.println (strDump);
-
-		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
+		UDTDump (
+			"\t|                                                                           UNCOLLATERALIZED NEGATIVE EXPOSURE PV                                                                       |",
+			cpga.anchors(),
+			cpgd.uncollateralizedNegativeExposure()
+		);
 
 		System.out.println();
 
-		System.out.println ("\t||-----------------||");
+		System.out.println ("\t||--------------------------------------------||");
 
-		System.out.println ("\t|| UCVA => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA DVA & FCA UNIVARIATE THIN STATISTICS  ||");
 
-		System.out.println ("\t||  DVA => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||--------------------------------------------||");
 
-		System.out.println ("\t||  FVA => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||    L -> R:                                 ||");
 
-		System.out.println ("\t||-----------------||");
+		System.out.println ("\t||            - Path Average                  ||");
+
+		System.out.println ("\t||            - Path Maximum                  ||");
+
+		System.out.println ("\t||            - Path Minimum                  ||");
+
+		System.out.println ("\t||            - Monte Carlo Error             ||");
+
+		System.out.println ("\t||--------------------------------------------||");
+
+		UDTDump (
+			"\t|| UCVA  => ",
+			cpgd.ucva()
+		);
+
+		UDTDump (
+			"\t||  DVA  => ",
+			cpgd.dva()
+		);
+
+		UDTDump (
+			"\t||  FCA  => ",
+			cpgd.fca()
+		);
+
+		System.out.println ("\t||--------------------------------------------||");
+
+		UDTDump (
+			"\t|| Total => ",
+			cpgd.totalVA()
+		);
+
+		System.out.println ("\t||--------------------------------------------||");
+
+		System.out.println();
 	}
 }
