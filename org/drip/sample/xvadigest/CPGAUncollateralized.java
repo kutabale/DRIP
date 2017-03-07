@@ -272,7 +272,7 @@ public class CPGAUncollateralized {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = new NumeraireVertex (
+			aNV[i] = NumeraireVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -364,47 +364,57 @@ public class CPGAUncollateralized {
 
 		System.out.println();
 
-		System.out.println ("\t||----------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------||");
 
-		System.out.println ("\t||      CVA DVA & FCA UNIVARIATE THIN STATISTICS      ||");
+		System.out.println ("\t||  UCVA CVA FTDCVA DVA FCA UNIVARIATE THIN STATISTICS ||");
 
-		System.out.println ("\t||----------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------||");
 
-		System.out.println ("\t||    L -> R:                                         ||");
+		System.out.println ("\t||    L -> R:                                          ||");
 
-		System.out.println ("\t||            - Path Average                          ||");
+		System.out.println ("\t||            - Path Average                           ||");
 
-		System.out.println ("\t||            - Path Maximum                          ||");
+		System.out.println ("\t||            - Path Maximum                           ||");
 
-		System.out.println ("\t||            - Path Minimum                          ||");
+		System.out.println ("\t||            - Path Minimum                           ||");
 
-		System.out.println ("\t||            - Monte Carlo Error                     ||");
+		System.out.println ("\t||            - Monte Carlo Error                      ||");
 
-		System.out.println ("\t||----------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------||");
 
 		UDTDump (
-			"\t|| UCVA  => ",
+			"\t||  UCVA  => ",
 			cpgd.ucva()
 		);
 
 		UDTDump (
-			"\t||  DVA  => ",
+			"\t|| FTDCVA => ",
+			cpgd.ucva()
+		);
+
+		UDTDump (
+			"\t||   CVA  => ",
+			cpgd.ucva()
+		);
+
+		UDTDump (
+			"\t||   DVA  => ",
 			cpgd.dva()
 		);
 
 		UDTDump (
-			"\t||  FCA  => ",
-			cpgd.fca()
+			"\t||   FVA  => ",
+			cpgd.fva()
 		);
 
-		System.out.println ("\t||----------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------||");
 
 		UDTDump (
-			"\t|| Total => ",
+			"\t||  Total => ",
 			cpgd.totalVA()
 		);
 
-		System.out.println ("\t||----------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------||");
 
 		System.out.println();
 	}

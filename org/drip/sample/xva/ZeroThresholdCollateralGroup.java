@@ -214,7 +214,7 @@ public class ZeroThresholdCollateralGroup {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = new NumeraireVertex (
+			aNV[i] = NumeraireVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -348,14 +348,18 @@ public class ZeroThresholdCollateralGroup {
 
 		System.out.println();
 
-		System.out.println ("\t||-----------------||");
+		System.out.println ("\t||-------------------||");
 
-		System.out.println ("\t|| UCVA => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  DVA => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FVA => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||-----------------||");
+		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||-------------------||");
 	}
 }

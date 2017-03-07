@@ -345,7 +345,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 			CollateralGroupVertex[] aCGV = new CollateralGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aNV[j] = new NumeraireVertex (
+				aNV[j] = NumeraireVertex.Standard (
 					adtVertex[j] = dtSpot.addMonths (6 * j + 6),
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -450,14 +450,18 @@ public class UncollateralizedCollateralGroupCorrelated {
 
 		System.out.println();
 
-		System.out.println ("\t||-----------------||");
+		System.out.println ("\t||-------------------||");
 
-		System.out.println ("\t|| UCVA => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  DVA => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FVA => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||-----------------||");
+		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||-------------------||");
 	}
 }

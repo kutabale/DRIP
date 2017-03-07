@@ -68,6 +68,7 @@ package org.drip.xva.trajectory;
 
 public class NumeraireVertex {
 	private double _dblCSA = java.lang.Double.NaN;
+	private double _dblBankHazard = java.lang.Double.NaN;
 	private double _dblBankRecovery = java.lang.Double.NaN;
 	private double _dblBankSurvival = java.lang.Double.NaN;
 	private double _dblBankFundingSpread = java.lang.Double.NaN;
@@ -76,12 +77,55 @@ public class NumeraireVertex {
 	private double _dblCounterPartySurvival = java.lang.Double.NaN;
 
 	/**
+	 * Construct a Standard Instance of the NumeraireVertex
+	 * 
+	 * @param dtAnchor The Vertex Date Anchor
+	 * @param dblCSA The Realized CSA Numeraire
+	 * @param dblBankSurvival The Realized Bank Survival Numeraire
+	 * @param dblBankRecovery The Realized Bank Recovery Numeraire
+	 * @param dblBankFundingSpread The Bank Funding Spread Numeraire
+	 * @param dblCounterPartySurvival The Realized Counter Party Survival Numeraire
+	 * @param dblCounterPartyRecovery The Realized Counter Party Recovery Numeraire
+	 * 
+	 * @return The Standard Instance of NumeraireVertex
+	 */
+
+	public static final NumeraireVertex Standard (
+		final org.drip.analytics.date.JulianDate dtAnchor,
+		final double dblCSA,
+		final double dblBankSurvival,
+		final double dblBankRecovery,
+		final double dblBankFundingSpread,
+		final double dblCounterPartySurvival,
+		final double dblCounterPartyRecovery)
+		throws java.lang.Exception
+	{
+		try {
+			return new NumeraireVertex (
+				dtAnchor,
+				dblCSA,
+				dblBankSurvival,
+				dblBankRecovery,
+				dblBankFundingSpread / (1. - dblBankRecovery),
+				dblBankFundingSpread,
+				dblCounterPartySurvival,
+				dblCounterPartyRecovery
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * NumeraireVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblCSA The Realized CSA Numeraire
 	 * @param dblBankSurvival The Realized Bank Survival Numeraire
 	 * @param dblBankRecovery The Realized Bank Recovery Numeraire
+	 * @param dblBankHazard The Realized Bank Hazard Numeraire
 	 * @param dblBankFundingSpread The Bank Funding Spread Numeraire
 	 * @param dblCounterPartySurvival The Realized Counter Party Survival Numeraire
 	 * @param dblCounterPartyRecovery The Realized Counter Party Recovery Numeraire
@@ -94,6 +138,7 @@ public class NumeraireVertex {
 		final double dblCSA,
 		final double dblBankSurvival,
 		final double dblBankRecovery,
+		final double dblBankHazard,
 		final double dblBankFundingSpread,
 		final double dblCounterPartySurvival,
 		final double dblCounterPartyRecovery)
@@ -102,10 +147,11 @@ public class NumeraireVertex {
 		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblCSA = dblCSA) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBankSurvival = dblBankSurvival) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblBankFundingSpread = dblBankFundingSpread)
-						|| !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartySurvival =
-							dblCounterPartySurvival) || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblCounterPartyRecovery = dblCounterPartyRecovery))
+					!org.drip.quant.common.NumberUtil.IsValid (_dblBankHazard = dblBankHazard) ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblBankFundingSpread = dblBankFundingSpread)
+							|| !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartySurvival =
+								dblCounterPartySurvival) || !org.drip.quant.common.NumberUtil.IsValid
+									(_dblCounterPartyRecovery = dblCounterPartyRecovery))
 			throw new java.lang.Exception ("NumeraireVertex Constructor => Invalid Inputs");
 	}
 
@@ -129,6 +175,17 @@ public class NumeraireVertex {
 	public double csa()
 	{
 		return _dblCSA;
+	}
+
+	/**
+	 * Retrieve the Realized Bank Hazard Numeraire
+	 * 
+	 * @return The Realized Bank Hazard Numeraire
+	 */
+
+	public double bankHazard()
+	{
+		return _dblBankHazard;
 	}
 
 	/**

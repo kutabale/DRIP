@@ -452,8 +452,8 @@ public class CounterPartyGroupPath {
 
 	public double unilateralCreditAdjustment()
 	{
-		double dblUnilateralCreditAdjustment = 0.;
 		int iNumNettingGroup = _aNGP.length;
+		double dblUnilateralCreditAdjustment = 0.;
 
 		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
 			dblUnilateralCreditAdjustment += _aNGP[iNettingGroupIndex].unilateralCreditAdjustment();
@@ -469,8 +469,8 @@ public class CounterPartyGroupPath {
 
 	public double bilateralCreditAdjustment()
 	{
-		double dblBilateralCreditAdjustment = 0.;
 		int iNumNettingGroup = _aNGP.length;
+		double dblBilateralCreditAdjustment = 0.;
 
 		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
 			dblBilateralCreditAdjustment += _aNGP[iNettingGroupIndex].bilateralCreditAdjustment();
@@ -487,6 +487,24 @@ public class CounterPartyGroupPath {
 	public double creditAdjustment()
 	{
 		return bilateralCreditAdjustment();
+	}
+
+	/**
+	 * Compute Path Contra-Liability Credit Adjustment
+	 * 
+	 * @return The Path Contra-Liability Credit Adjustment
+	 */
+
+	public double contraLiabilityCreditAdjustment()
+	{
+		int iNumNettingGroup = _aNGP.length;
+		double dblContraLiabilityCreditAdjustment = 0.;
+
+		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+			dblContraLiabilityCreditAdjustment +=
+				_aNGP[iNettingGroupIndex].contraLiabilityCreditAdjustment();
+
+		return dblContraLiabilityCreditAdjustment;
 	}
 
 	/**
@@ -507,20 +525,37 @@ public class CounterPartyGroupPath {
 	}
 
 	/**
-	 * Compute Path Funding Adjustment
+	 * Compute Path Funding Value Adjustment
 	 * 
-	 * @return The Path Funding Adjustment
+	 * @return The Path Funding Value Adjustment
 	 */
 
-	public double fundingAdjustment()
+	public double fundingValueAdjustment()
 	{
-		double dblFundingAdjustment = 0.;
 		int iNumNettingGroup = _aNGP.length;
+		double dblFundingValueAdjustment = 0.;
 
 		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblFundingAdjustment += _aNGP[iNettingGroupIndex].fundingAdjustment();
+			dblFundingValueAdjustment += _aNGP[iNettingGroupIndex].fundingValueAdjustment();
 
-		return dblFundingAdjustment;
+		return dblFundingValueAdjustment;
+	}
+
+	/**
+	 * Compute Path Funding Debt Adjustment
+	 * 
+	 * @return The Path Funding Debt Adjustment
+	 */
+
+	public double fundingDebtAdjustment()
+	{
+		int iNumNettingGroup = _aNGP.length;
+		double dblFundingDebtAdjustment = 0.;
+
+		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+			dblFundingDebtAdjustment += _aNGP[iNettingGroupIndex].fundingDebtAdjustment();
+
+		return dblFundingDebtAdjustment;
 	}
 
 	/**
@@ -536,7 +571,8 @@ public class CounterPartyGroupPath {
 
 		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
 			dblTotalAdjustment += _aNGP[iNettingGroupIndex].creditAdjustment() +
-				_aNGP[iNettingGroupIndex].debtAdjustment() + _aNGP[iNettingGroupIndex].fundingAdjustment();
+				_aNGP[iNettingGroupIndex].debtAdjustment() +
+					_aNGP[iNettingGroupIndex].fundingValueAdjustment();
 
 		return dblTotalAdjustment;
 	}

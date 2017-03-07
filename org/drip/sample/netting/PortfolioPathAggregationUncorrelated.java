@@ -270,7 +270,7 @@ public class PortfolioPathAggregationUncorrelated {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i) {
-			aNV[i] = new NumeraireVertex (
+			aNV[i] = NumeraireVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				adblCSA[i],
 				Math.exp (-0.5 * adblBankHazardRate[i] * i),
@@ -393,7 +393,7 @@ public class PortfolioPathAggregationUncorrelated {
 
 		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||-------------------||");
 	}

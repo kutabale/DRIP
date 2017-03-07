@@ -71,8 +71,10 @@ package org.drip.xva.trajectory;
 public class CounterPartyGroupDigest {
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtCVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtDVA = null;
-	private org.drip.measure.statistics.UnivariateDiscreteThin _udtFCA = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin _udtFDA = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin _udtFVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtUCVA = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin _udtCVACL = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtFTDCVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtTotalVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTCollateralizedExposure = null;
@@ -100,8 +102,10 @@ public class CounterPartyGroupDigest {
 	 * @param adblUCVA The Array of UCVA
 	 * @param adblFTDCVA The Array of FTD CVA
 	 * @param adblCVA The Array of CVA
+	 * @param adblCVACL The Array of CVA Contra-Liabilities
 	 * @param adblDVA The Array of DVA
-	 * @param adblFCA The Array of FCA
+	 * @param adblFVA The Array of FVA
+	 * @param adblFDA The Array of FVA
 	 * @param adblTotal The Array of Total
 	 * @param aadblCollateralizedExposure Double Array of Collateralized Exposure
 	 * @param aadblCollateralizedExposurePV Double Array of Collateralized Exposure PV
@@ -123,8 +127,10 @@ public class CounterPartyGroupDigest {
 		final double[] adblUCVA,
 		final double[] adblFTDCVA,
 		final double[] adblCVA,
+		final double[] adblCVACL,
 		final double[] adblDVA,
-		final double[] adblFCA,
+		final double[] adblFVA,
+		final double[] adblFDA,
 		final double[] adblTotalVA,
 		final double[][] aadblCollateralizedExposure,
 		final double[][] aadblCollateralizedExposurePV,
@@ -140,8 +146,8 @@ public class CounterPartyGroupDigest {
 		final double[][] aadblUncollateralizedNegativeExposurePV)
 		throws java.lang.Exception
 	{
-		if (null == adblUCVA || null == adblFTDCVA || null == adblCVA || null == adblDVA || null == adblFCA
-			|| null == adblTotalVA || null == aadblCollateralizedExposure || null ==
+		if (null == adblUCVA || null == adblFTDCVA || null == adblCVA || null == adblCVACL || null == adblDVA
+			|| null == adblFVA || null == adblTotalVA || null == aadblCollateralizedExposure || null ==
 				aadblCollateralizedExposurePV || null == aadblCollateralizedPositiveExposure || null ==
 					aadblCollateralizedPositiveExposurePV || null == aadblCollateralizedNegativeExposure ||
 						null == aadblCollateralizedNegativeExposurePV || null ==
@@ -158,9 +164,13 @@ public class CounterPartyGroupDigest {
 
 		_udtCVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblCVA);
 
+		_udtCVACL = new org.drip.measure.statistics.UnivariateDiscreteThin (adblCVACL);
+
 		_udtDVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblDVA);
 
-		_udtFCA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblFCA);
+		_udtFVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblFVA);
+
+		_udtFDA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblFDA);
 
 		_udtTotalVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblTotalVA);
 
@@ -406,6 +416,17 @@ public class CounterPartyGroupDigest {
 	}
 
 	/**
+	 * Retrieve the Univariate Thin Statistics for CVA Contra-Liabilities
+	 * 
+	 * @return Univariate Thin Statistics for CVA Contra-Liabilities
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin cvacl()
+	{
+		return _udtCVACL;
+	}
+
+	/**
 	 * Retrieve the Univariate Thin Statistics for DVA
 	 * 
 	 * @return Univariate Thin Statistics for DVA
@@ -417,14 +438,25 @@ public class CounterPartyGroupDigest {
 	}
 
 	/**
-	 * Retrieve the Univariate Thin Statistics for FCA
+	 * Retrieve the Univariate Thin Statistics for FVA
 	 * 
-	 * @return Univariate Thin Statistics for FCA
+	 * @return Univariate Thin Statistics for FVA
 	 */
 
-	public org.drip.measure.statistics.UnivariateDiscreteThin fca()
+	public org.drip.measure.statistics.UnivariateDiscreteThin fva()
 	{
-		return _udtFCA;
+		return _udtFVA;
+	}
+
+	/**
+	 * Retrieve the Univariate Thin Statistics for FDA
+	 * 
+	 * @return Univariate Thin Statistics for FDA
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin fda()
+	{
+		return _udtFDA;
 	}
 
 	/**

@@ -148,7 +148,7 @@ public class FixFloatVACounterParty {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aVN[i] = new NumeraireVertex (
+			aVN[i] = NumeraireVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -189,7 +189,7 @@ public class FixFloatVACounterParty {
 			FormatUtil.FormatDouble (cpga.ftdcva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.cva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.dva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fca(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.total(), 1, 2, 100.) + "% ||"
 		);
 	}
@@ -223,7 +223,7 @@ public class FixFloatVACounterParty {
 
 		System.out.println ("\t||----------------------------------------------------------------||");
 
-		System.out.println ("\t||  Hazard =>  UCVA  | FTDCVA |   CVA  |   DVA  |   FCA  |  Total ||");
+		System.out.println ("\t||  Hazard =>  UCVA  | FTDCVA |   CVA  |   DVA  |   FVA  |  Total ||");
 
 		System.out.println ("\t||----------------------------------------------------------------||");
 
