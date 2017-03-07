@@ -559,6 +559,58 @@ public class CounterPartyGroupPath {
 	}
 
 	/**
+	 * Compute Path Funding Cost Adjustment
+	 * 
+	 * @return The Path Funding Cost Adjustment
+	 */
+
+	public double fundingCostAdjustment()
+	{
+		int iNumNettingGroup = _aNGP.length;
+		double dblFundingCostAdjustment = 0.;
+
+		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+			dblFundingCostAdjustment += _aNGP[iNettingGroupIndex].fundingCostAdjustment();
+
+		return dblFundingCostAdjustment;
+	}
+
+	/**
+	 * Compute Path Funding Benefit Adjustment
+	 * 
+	 * @return The Path Funding Benefit Adjustment
+	 */
+
+	public double fundingBenefitAdjustment()
+	{
+		int iNumNettingGroup = _aNGP.length;
+		double dblFundingBenefitAdjustment = 0.;
+
+		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+			dblFundingBenefitAdjustment += _aNGP[iNettingGroupIndex].fundingBenefitAdjustment();
+
+		return dblFundingBenefitAdjustment;
+	}
+
+	/**
+	 * Compute Path Symmetric Funding Value Adjustment
+	 * 
+	 * @return The Path Symmetric Funding Value Adjustment
+	 */
+
+	public double symmetricFundingValueAdjustment()
+	{
+		int iNumNettingGroup = _aNGP.length;
+		double dblSymmetricFundingValueAdjustment = 0.;
+
+		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+			dblSymmetricFundingValueAdjustment +=
+				_aNGP[iNettingGroupIndex].symmetricFundingValueAdjustment();
+
+		return dblSymmetricFundingValueAdjustment;
+	}
+
+	/**
 	 * Compute Path Total Adjustment
 	 * 
 	 * @return The Path Total Adjustment

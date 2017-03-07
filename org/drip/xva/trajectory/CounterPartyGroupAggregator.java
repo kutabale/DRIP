@@ -587,6 +587,57 @@ public class CounterPartyGroupAggregator {
 	}
 
 	/**
+	 * Retrieve the Expected FCA
+	 * 
+	 * @return The Expected FCA
+	 */
+
+	public double fca()
+	{
+		double dblFCA = 0.;
+		int iNumPath = _aCPGP.length;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+			dblFCA += _aCPGP[iPathIndex].fundingCostAdjustment();
+
+		return dblFCA / iNumPath;
+	}
+
+	/**
+	 * Retrieve the Expected FBA
+	 * 
+	 * @return The Expected FBA
+	 */
+
+	public double fba()
+	{
+		double dblFBA = 0.;
+		int iNumPath = _aCPGP.length;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+			dblFBA += _aCPGP[iPathIndex].fundingBenefitAdjustment();
+
+		return dblFBA / iNumPath;
+	}
+
+	/**
+	 * Retrieve the Expected SFVA
+	 * 
+	 * @return The Expected SFVA
+	 */
+
+	public double sfva()
+	{
+		double dblSFVA = 0.;
+		int iNumPath = _aCPGP.length;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+			dblSFVA += _aCPGP[iPathIndex].symmetricFundingValueAdjustment();
+
+		return dblSFVA / iNumPath;
+	}
+
+	/**
 	 * Retrieve the Total VA
 	 * 
 	 * @return The Total VA
@@ -610,9 +661,12 @@ public class CounterPartyGroupAggregator {
 		int iNumPath = _aCPGP.length;
 		double[] adblCVA = new double[iNumPath];
 		double[] adblDVA = new double[iNumPath];
+		double[] adblFBA = new double[iNumPath];
+		double[] adblFCA = new double[iNumPath];
 		double[] adblFDA = new double[iNumPath];
 		double[] adblFVA = new double[iNumPath];
 		double[] adblUCVA = new double[iNumPath];
+		double[] adblSFVA = new double[iNumPath];
 		double[] adblCVACL = new double[iNumPath];
 		double[] adblFTDCVA = new double[iNumPath];
 		double[] adblTotalVA = new double[iNumPath];
@@ -683,11 +737,17 @@ public class CounterPartyGroupAggregator {
 
 			adblDVA[iPathIndex] = _aCPGP[iPathIndex].debtAdjustment();
 
+			adblFCA[iPathIndex] = _aCPGP[iPathIndex].fundingCostAdjustment();
+
 			adblFDA[iPathIndex] = _aCPGP[iPathIndex].fundingDebtAdjustment();
 
 			adblFVA[iPathIndex] = _aCPGP[iPathIndex].fundingValueAdjustment();
 
+			adblFBA[iPathIndex] = _aCPGP[iPathIndex].fundingBenefitAdjustment();
+
 			adblUCVA[iPathIndex] = _aCPGP[iPathIndex].unilateralCreditAdjustment();
+
+			adblSFVA[iPathIndex] = _aCPGP[iPathIndex].symmetricFundingValueAdjustment();
 
 			adblCVACL[iPathIndex] = _aCPGP[iPathIndex].contraLiabilityCreditAdjustment();
 
@@ -732,6 +792,9 @@ public class CounterPartyGroupAggregator {
 				adblDVA,
 				adblFVA,
 				adblFDA,
+				adblFCA,
+				adblFBA,
+				adblSFVA,
 				adblTotalVA,
 				aadblCollateralizedExposure,
 				aadblCollateralizedExposurePV,

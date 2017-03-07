@@ -188,8 +188,13 @@ public class FixFloatVABank {
 			FormatUtil.FormatDouble (cpga.ucva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.ftdcva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.cva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.cvacl(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.dva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.fva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fda(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fca(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fba(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.sfva(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.total(), 1, 2, 100.) + "% ||"
 		);
 	}
@@ -217,20 +222,20 @@ public class FixFloatVABank {
 
 		System.out.println();
 
-		System.out.println ("\t||----------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                VA DEPENDENCE ON BANK HAZARD RATE               ||");
+		System.out.println ("\t||                                      VA DEPENDENCE ON BANK HAZARD RATE                                      ||");
 
-		System.out.println ("\t||----------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||  Hazard =>  UCVA  | FTDCVA |   CVA  |   DVA  |   FVA  |  Total ||");
+		System.out.println ("\t||  Hazard =>  UCVA  | FTDCVA |   CVA  |  CVACL |   DVA  |   FVA  |   FDA  |   FCA  |   FBA  |  SFVA  |  Total ||");
 
-		System.out.println ("\t||----------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
 
 		for (double dblBankHazardRate : adblBankHazardRate)
 			VA (dblBankHazardRate);
 
-		System.out.println ("\t||----------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

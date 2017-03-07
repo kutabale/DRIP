@@ -246,55 +246,145 @@ public class PortfolioGroupRun {
 
 		double[] adblPeriodUnilateralCreditAdjustment1 = ngp1.periodUnilateralCreditAdjustment();
 
-		double[] adblPeriodDebtAdjustment1 = ngp1.periodDebtAdjustment();
+		double[] adblPeriodBilateralCreditAdjustment1 = ngp1.periodBilateralCreditAdjustment();
 
-		double[] adblPeriodFundingValueAdjustment1 = ngp1.periodFundingValueAdjustment();
+		double[] adblPeriodCreditAdjustment1 = ngp1.periodCreditAdjustment();
+
+		double[] adblPeriodContraLiabilityCreditAdjustment1 = ngp1.periodContraLiabilityCreditAdjustment();
 
 		double[] adblPeriodUnilateralCreditAdjustment2 = ngp2.periodUnilateralCreditAdjustment();
 
-		double[] adblPeriodDebtAdjustment2 = ngp2.periodDebtAdjustment();
+		double[] adblPeriodBilateralCreditAdjustment2 = ngp2.periodBilateralCreditAdjustment();
 
-		double[] adblPeriodFundingValueAdjustment2 = ngp2.periodFundingValueAdjustment();
+		double[] adblPeriodCreditAdjustment2 = ngp2.periodCreditAdjustment();
+
+		double[] adblPeriodContraLiabilityCreditAdjustment2 = ngp2.periodContraLiabilityCreditAdjustment();
 
 		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t|                     PERIOD UNILATERAL CREDIT, DEBT, AND FUNDING VALUATION ADJUSTMENTS                    ||");
+		System.out.println ("\t|               PERIOD UNILATERAL CREDIT, BILATERAL CREDIT, CREDIT, & CONTRA LIABILITY CREDIT VALUATION ADJUSTMENTS               ||");
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t|    - Forward Period                                                                                      ||");
+		System.out.println ("\t|    - Forward Period                                                                                                             ||");
 
-		System.out.println ("\t|    - Path #1 Period Unilateral Credit Adjustments                                                        ||");
+		System.out.println ("\t|    - Path #1 Period Unilateral Credit Adjustments                                                                               ||");
 
-		System.out.println ("\t|    - Path #1 Period Debt Adjustments                                                                     ||");
+		System.out.println ("\t|    - Path #1 Period Bilateral Credit Adjustments                                                                                ||");
 
-		System.out.println ("\t|    - Path #1 Period Funding Value Adjustments                                                            ||");
+		System.out.println ("\t|    - Path #1 Period Credit Adjustments                                                                                          ||");
 
-		System.out.println ("\t|    - Path #2 Period Unilateral Credit Adjustments                                                        ||");
+		System.out.println ("\t|    - Path #1 Period Contra-Liability Credit Adjustments                                                                         ||");
 
-		System.out.println ("\t|    - Path #2 Period Debt Adjustments                                                                     ||");
+		System.out.println ("\t|    - Path #2 Period Unilateral Credit Adjustments                                                                               ||");
 
-		System.out.println ("\t|    - Path #2 Period Funding Value Adjustments                                                            ||");
+		System.out.println ("\t|    - Path #2 Period Bilateral Credit Adjustments                                                                                ||");
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|    - Path #2 Period Credit Adjustments                                                                                          ||");
+
+		System.out.println ("\t|    - Path #2 Period Contra-Liability Credit Adjustments                                                                         ||");
+
+		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 1; i <= iNumStep; ++i) {
 			System.out.println ("\t| [" +
 				adtVertex[i - 1] + " -> " + adtVertex[i] + "] => " +
 				FormatUtil.FormatDouble (adblPeriodUnilateralCreditAdjustment1[i - 1], 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (adblPeriodDebtAdjustment1[i - 1], 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (adblPeriodFundingValueAdjustment1[i - 1], 1, 6, 1.) + " || " +
+				FormatUtil.FormatDouble (adblPeriodBilateralCreditAdjustment1[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodCreditAdjustment1[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodContraLiabilityCreditAdjustment1[i - 1], 1, 6, 1.) + " ||| " +
 				FormatUtil.FormatDouble (adblPeriodUnilateralCreditAdjustment2[i - 1], 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (adblPeriodDebtAdjustment2[i - 1], 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (adblPeriodFundingValueAdjustment2[i - 1], 1, 6, 1.) + " ||"
+				FormatUtil.FormatDouble (adblPeriodBilateralCreditAdjustment2[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodCreditAdjustment2[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodContraLiabilityCreditAdjustment2[i - 1], 1, 6, 1.) + " ||"
 			);
 		}
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println();
+
+		double[] adblPeriodDebtAdjustment1 = ngp1.periodDebtAdjustment();
+
+		double[] adblPeriodFundingValueAdjustment1 = ngp1.periodFundingValueAdjustment();
+
+		double[] adblPeriodFundingDebtAdjustment1 = ngp1.periodFundingDebtAdjustment();
+
+		double[] adblPeriodFundingCostAdjustment1 = ngp1.periodFundingCostAdjustment();
+
+		double[] adblPeriodFundingBenefitAdjustment1 = ngp1.periodFundingBenefitAdjustment();
+
+		double[] adblPeriodSymmetricFundingValueAdjustment1 = ngp1.periodSymmetricFundingValueAdjustment();
+
+		double[] adblPeriodDebtAdjustment2 = ngp2.periodDebtAdjustment();
+
+		double[] adblPeriodFundingValueAdjustment2 = ngp2.periodFundingValueAdjustment();
+
+		double[] adblPeriodFundingDebtAdjustment2 = ngp2.periodFundingDebtAdjustment();
+
+		double[] adblPeriodFundingCostAdjustment2 = ngp2.periodFundingCostAdjustment();
+
+		double[] adblPeriodFundingBenefitAdjustment2 = ngp2.periodFundingBenefitAdjustment();
+
+		double[] adblPeriodSymmetricFundingValueAdjustment2 = ngp2.periodSymmetricFundingValueAdjustment();
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|                            DEBT VALUATION, FUNDING VALUATION, FUNDING DEBT, FUNDING COST, FUNDING BENEFIT, & SYMMETRIC FUNDING VALUATION ADJUSTMENTS                             ||");
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|  L -> R:                                                                                                                                                                         ||");
+
+		System.out.println ("\t|          - Path #1 Debt Valuation Adjustment                                                                                                                                     ||");
+
+		System.out.println ("\t|          - Path #1 Funding Valuation Adjustment                                                                                                                                  ||");
+
+		System.out.println ("\t|          - Path #1 Funding Debt Adjustment                                                                                                                                       ||");
+
+		System.out.println ("\t|          - Path #1 Funding Cost Adjustment                                                                                                                                       ||");
+
+		System.out.println ("\t|          - Path #1 Funding Benefit Adjustment                                                                                                                                    ||");
+
+		System.out.println ("\t|          - Path #1 Symmatric Funding Valuation Adjustment                                                                                                                        ||");
+
+		System.out.println ("\t|          - Path #2 Debt Valuation Adjustment                                                                                                                                     ||");
+
+		System.out.println ("\t|          - Path #2 Funding Valuation Adjustment                                                                                                                                  ||");
+
+		System.out.println ("\t|          - Path #2 Funding Debt Adjustment                                                                                                                                       ||");
+
+		System.out.println ("\t|          - Path #2 Funding Cost Adjustment                                                                                                                                       ||");
+
+		System.out.println ("\t|          - Path #2 Funding Benefit Adjustment                                                                                                                                    ||");
+
+		System.out.println ("\t|          - Path #2 Symmatric Funding Valuation Adjustment                                                                                                                        ||");
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		for (int i = 1; i <= iNumStep; ++i) {
+			System.out.println ("\t| [" +
+				adtVertex[i - 1] + " -> " + adtVertex[i] + "] => " +
+				FormatUtil.FormatDouble (adblPeriodDebtAdjustment1[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodFundingValueAdjustment1[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodFundingDebtAdjustment1[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodFundingCostAdjustment1[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodFundingBenefitAdjustment1[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodSymmetricFundingValueAdjustment1[i - 1], 1, 6, 1.) + " || " +
+				FormatUtil.FormatDouble (adblPeriodDebtAdjustment2[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodFundingValueAdjustment2[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodFundingDebtAdjustment2[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodFundingCostAdjustment2[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodFundingBenefitAdjustment2[i - 1], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (adblPeriodSymmetricFundingValueAdjustment2[i - 1], 1, 6, 1.) + " || "
+			);
+		}
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 
@@ -380,13 +470,23 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ftdcva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.cva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  CVACL => " + FormatUtil.FormatDouble (cpga.cvacl(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (cpga.fda(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (cpga.fba(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (cpga.sfva(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||-------------------||");
 	}
