@@ -171,10 +171,18 @@ public class FixFloatVACounterParty {
 					0.
 				);
 
+			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+
 			aCPGP[i] = new CounterPartyGroupPath (
 				new NettingGroupPath[] {
-					NettingGroupPath.Mono (
-						new CollateralGroupPath (aCGV),
+					new NettingGroupPath (
+						aCGP,
+						np
+					)
+				},
+				new FundingGroupPath[] {
+					new FundingGroupPath (
+						aCGP,
 						np
 					)
 				}
@@ -224,7 +232,7 @@ public class FixFloatVACounterParty {
 
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                                      VA DEPENDENCE ON BANK HAZARD RATE                                      ||");
+		System.out.println ("\t||                                 VA DEPENDENCE ON COUNTER PARTY HAZARD RATE                                  ||");
 
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
 

@@ -176,10 +176,18 @@ public class PortfolioGroupSimulation {
 				);
 			}
 
+			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+
 			aCPGP[i] = new CounterPartyGroupPath (
 				new NettingGroupPath[] {
 					new NettingGroupPath (
-						new CollateralGroupPath[] {new CollateralGroupPath (aCGV)},
+						aCGP,
+						np
+					)
+				},
+				new FundingGroupPath[] {
+					new FundingGroupPath (
+						aCGP,
 						np
 					)
 				}

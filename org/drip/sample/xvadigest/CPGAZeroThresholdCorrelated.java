@@ -470,6 +470,12 @@ public class CPGAZeroThresholdCorrelated {
 						new CollateralGroupPath[] {new CollateralGroupPath (aCGV)},
 						new NumerairePath (aNV)
 					)
+				},
+				new FundingGroupPath[] {
+					new FundingGroupPath (
+						new CollateralGroupPath[] {new CollateralGroupPath (aCGV)},
+						new NumerairePath (aNV)
+					)
 				}
 			);
 		}
@@ -555,12 +561,17 @@ public class CPGAZeroThresholdCorrelated {
 
 		UDTDump (
 			"\t|| FTDCVA => ",
-			cpgd.ucva()
+			cpgd.ftdcva()
 		);
 
 		UDTDump (
 			"\t||   CVA  => ",
-			cpgd.ucva()
+			cpgd.cva()
+		);
+
+		UDTDump (
+			"\t||  CVACL => ",
+			cpgd.cvacl()
 		);
 
 		UDTDump (
@@ -571,6 +582,26 @@ public class CPGAZeroThresholdCorrelated {
 		UDTDump (
 			"\t||   FVA  => ",
 			cpgd.fva()
+		);
+
+		UDTDump (
+			"\t||   FDA  => ",
+			cpgd.fda()
+		);
+
+		UDTDump (
+			"\t||   FCA  => ",
+			cpgd.fca()
+		);
+
+		UDTDump (
+			"\t||   FBA  => ",
+			cpgd.fba()
+		);
+
+		UDTDump (
+			"\t||  SFVA  => ",
+			cpgd.sfva()
 		);
 
 		System.out.println ("\t||-----------------------------------------------------||");

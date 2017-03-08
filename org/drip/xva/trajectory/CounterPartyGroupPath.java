@@ -68,22 +68,36 @@ package org.drip.xva.trajectory;
  */
 
 public class CounterPartyGroupPath {
+	private org.drip.xva.trajectory.FundingGroupPath[] _aFGP = null;
 	private org.drip.xva.trajectory.NettingGroupPath[] _aNGP = null;
 
 	/**
 	 * CounterPartyGroupPath Constructor
 	 * 
 	 * @param aNGP The Array of Netting Group Paths
+	 * @param aFGP The Array of Funding Group Paths
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public CounterPartyGroupPath (
-		final org.drip.xva.trajectory.NettingGroupPath[] aNGP)
+		final org.drip.xva.trajectory.NettingGroupPath[] aNGP,
+		final org.drip.xva.trajectory.FundingGroupPath[] aFGP)
 		throws java.lang.Exception
 	{
-		if (null == (_aNGP = aNGP) || 0 == _aNGP.length)
+		if (null == (_aNGP = aNGP) || 0 == _aNGP.length || null == (_aFGP = aFGP) || 0 == _aFGP.length)
 			throw new java.lang.Exception ("CounterPartyGroupPath Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Array of the Funding Group Trajectory Paths
+	 * 
+	 * @return The Array of the Funding Group Trajectory Paths
+	 */
+
+	public org.drip.xva.trajectory.FundingGroupPath[] fundingGroupTrajectoryPaths()
+	{
+		return _aFGP;
 	}
 
 	/**
@@ -532,11 +546,11 @@ public class CounterPartyGroupPath {
 
 	public double fundingValueAdjustment()
 	{
-		int iNumNettingGroup = _aNGP.length;
+		int iNumFundingGroup = _aFGP.length;
 		double dblFundingValueAdjustment = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblFundingValueAdjustment += _aNGP[iNettingGroupIndex].fundingValueAdjustment();
+		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
+			dblFundingValueAdjustment += _aFGP[iFundingGroupIndex].fundingValueAdjustment();
 
 		return dblFundingValueAdjustment;
 	}
@@ -549,11 +563,11 @@ public class CounterPartyGroupPath {
 
 	public double fundingDebtAdjustment()
 	{
-		int iNumNettingGroup = _aNGP.length;
+		int iNumFundingGroup = _aFGP.length;
 		double dblFundingDebtAdjustment = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblFundingDebtAdjustment += _aNGP[iNettingGroupIndex].fundingDebtAdjustment();
+		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
+			dblFundingDebtAdjustment += _aFGP[iFundingGroupIndex].fundingDebtAdjustment();
 
 		return dblFundingDebtAdjustment;
 	}
@@ -566,11 +580,11 @@ public class CounterPartyGroupPath {
 
 	public double fundingCostAdjustment()
 	{
-		int iNumNettingGroup = _aNGP.length;
+		int iNumFundingGroup = _aFGP.length;
 		double dblFundingCostAdjustment = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblFundingCostAdjustment += _aNGP[iNettingGroupIndex].fundingCostAdjustment();
+		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
+			dblFundingCostAdjustment += _aFGP[iFundingGroupIndex].fundingCostAdjustment();
 
 		return dblFundingCostAdjustment;
 	}
@@ -583,11 +597,11 @@ public class CounterPartyGroupPath {
 
 	public double fundingBenefitAdjustment()
 	{
-		int iNumNettingGroup = _aNGP.length;
+		int iNumFundingGroup = _aFGP.length;
 		double dblFundingBenefitAdjustment = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblFundingBenefitAdjustment += _aNGP[iNettingGroupIndex].fundingBenefitAdjustment();
+		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
+			dblFundingBenefitAdjustment += _aFGP[iFundingGroupIndex].fundingBenefitAdjustment();
 
 		return dblFundingBenefitAdjustment;
 	}
@@ -600,12 +614,12 @@ public class CounterPartyGroupPath {
 
 	public double symmetricFundingValueAdjustment()
 	{
-		int iNumNettingGroup = _aNGP.length;
+		int iNumFundingGroup = _aFGP.length;
 		double dblSymmetricFundingValueAdjustment = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
 			dblSymmetricFundingValueAdjustment +=
-				_aNGP[iNettingGroupIndex].symmetricFundingValueAdjustment();
+				_aFGP[iFundingGroupIndex].symmetricFundingValueAdjustment();
 
 		return dblSymmetricFundingValueAdjustment;
 	}
@@ -619,12 +633,15 @@ public class CounterPartyGroupPath {
 	public double totalAdjustment()
 	{
 		double dblTotalAdjustment = 0.;
+		int iNumFundingGroup = _aFGP.length;
 		int iNumNettingGroup = _aNGP.length;
 
 		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
 			dblTotalAdjustment += _aNGP[iNettingGroupIndex].creditAdjustment() +
-				_aNGP[iNettingGroupIndex].debtAdjustment() +
-					_aNGP[iNettingGroupIndex].fundingValueAdjustment();
+				_aNGP[iNettingGroupIndex].debtAdjustment();
+
+		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
+			dblTotalAdjustment += _aFGP[iFundingGroupIndex].fundingValueAdjustment();
 
 		return dblTotalAdjustment;
 	}

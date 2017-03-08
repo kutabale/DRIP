@@ -304,10 +304,18 @@ public class PortfolioPathAggregationCorrelated {
 				);
 			}
 
+			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+
 			aCPGP[i] = new CounterPartyGroupPath (
 				new NettingGroupPath[] {
 					new NettingGroupPath (
-						new CollateralGroupPath[] {new CollateralGroupPath (aCGV)},
+						aCGP,
+						new NumerairePath (aNV)
+					)
+				},
+				new FundingGroupPath[] {
+					new FundingGroupPath (
+						aCGP,
 						new NumerairePath (aNV)
 					)
 				}

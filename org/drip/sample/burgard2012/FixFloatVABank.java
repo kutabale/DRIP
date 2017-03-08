@@ -171,10 +171,18 @@ public class FixFloatVABank {
 					0.
 				);
 
+			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+
 			aCPGP[i] = new CounterPartyGroupPath (
 				new NettingGroupPath[] {
-					NettingGroupPath.Mono (
-						new CollateralGroupPath (aCGV),
+					new NettingGroupPath (
+						aCGP,
+						np
+					)
+				},
+				new FundingGroupPath[] {
+					new FundingGroupPath (
+						aCGP,
 						np
 					)
 				}

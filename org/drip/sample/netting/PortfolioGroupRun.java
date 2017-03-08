@@ -234,13 +234,27 @@ public class PortfolioGroupRun {
 
 		NumerairePath np = new NumerairePath (aNV);
 
+		CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV1)};
+
+		CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV2)};
+
 		NettingGroupPath ngp1 = new NettingGroupPath (
-			new CollateralGroupPath[] {new CollateralGroupPath (aCGV1)},
+			aCGP1,
+			np
+		);
+
+		FundingGroupPath fgp1 = new FundingGroupPath (
+			aCGP1,
 			np
 		);
 
 		NettingGroupPath ngp2 = new NettingGroupPath (
-			new CollateralGroupPath[] {new CollateralGroupPath (aCGV2)},
+			aCGP2,
+			np
+		);
+
+		FundingGroupPath fgp2 = new FundingGroupPath (
+			aCGP2,
 			np
 		);
 
@@ -310,27 +324,27 @@ public class PortfolioGroupRun {
 
 		double[] adblPeriodDebtAdjustment1 = ngp1.periodDebtAdjustment();
 
-		double[] adblPeriodFundingValueAdjustment1 = ngp1.periodFundingValueAdjustment();
+		double[] adblPeriodFundingValueAdjustment1 = fgp1.periodFundingValueAdjustment();
 
-		double[] adblPeriodFundingDebtAdjustment1 = ngp1.periodFundingDebtAdjustment();
+		double[] adblPeriodFundingDebtAdjustment1 = fgp1.periodFundingDebtAdjustment();
 
-		double[] adblPeriodFundingCostAdjustment1 = ngp1.periodFundingCostAdjustment();
+		double[] adblPeriodFundingCostAdjustment1 = fgp1.periodFundingCostAdjustment();
 
-		double[] adblPeriodFundingBenefitAdjustment1 = ngp1.periodFundingBenefitAdjustment();
+		double[] adblPeriodFundingBenefitAdjustment1 = fgp1.periodFundingBenefitAdjustment();
 
-		double[] adblPeriodSymmetricFundingValueAdjustment1 = ngp1.periodSymmetricFundingValueAdjustment();
+		double[] adblPeriodSymmetricFundingValueAdjustment1 = fgp1.periodSymmetricFundingValueAdjustment();
 
 		double[] adblPeriodDebtAdjustment2 = ngp2.periodDebtAdjustment();
 
-		double[] adblPeriodFundingValueAdjustment2 = ngp2.periodFundingValueAdjustment();
+		double[] adblPeriodFundingValueAdjustment2 = fgp2.periodFundingValueAdjustment();
 
-		double[] adblPeriodFundingDebtAdjustment2 = ngp2.periodFundingDebtAdjustment();
+		double[] adblPeriodFundingDebtAdjustment2 = fgp2.periodFundingDebtAdjustment();
 
-		double[] adblPeriodFundingCostAdjustment2 = ngp2.periodFundingCostAdjustment();
+		double[] adblPeriodFundingCostAdjustment2 = fgp2.periodFundingCostAdjustment();
 
-		double[] adblPeriodFundingBenefitAdjustment2 = ngp2.periodFundingBenefitAdjustment();
+		double[] adblPeriodFundingBenefitAdjustment2 = fgp2.periodFundingBenefitAdjustment();
 
-		double[] adblPeriodSymmetricFundingValueAdjustment2 = ngp2.periodSymmetricFundingValueAdjustment();
+		double[] adblPeriodSymmetricFundingValueAdjustment2 = fgp2.periodSymmetricFundingValueAdjustment();
 
 		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
@@ -390,8 +404,14 @@ public class PortfolioGroupRun {
 
 		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (
 			new CounterPartyGroupPath[] {
-				new CounterPartyGroupPath (new NettingGroupPath[] {ngp1}),
-				new CounterPartyGroupPath (new NettingGroupPath[] {ngp2})
+				new CounterPartyGroupPath (
+					new NettingGroupPath[] {ngp1},
+					new FundingGroupPath[] {fgp1}
+				),
+				new CounterPartyGroupPath (
+					new NettingGroupPath[] {ngp2},
+					new FundingGroupPath[] {fgp2}
+				)
 			}
 		);
 

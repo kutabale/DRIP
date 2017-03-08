@@ -365,11 +365,21 @@ public class UncollateralizedCollateralGroupCorrelated {
 				);
 			}
 
+			NumerairePath np = new NumerairePath (aNV);
+
+			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+
 			aCPGP[i] = new CounterPartyGroupPath (
 				new NettingGroupPath[] {
 					new NettingGroupPath (
-						new CollateralGroupPath[] {new CollateralGroupPath (aCGV)},
-						new NumerairePath (aNV)
+						aCGP,
+						np
+					)
+				},
+				new FundingGroupPath[] {
+					new FundingGroupPath (
+						aCGP,
+						np
 					)
 				}
 			);
@@ -454,13 +464,23 @@ public class UncollateralizedCollateralGroupCorrelated {
 
 		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ftdcva(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.cva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  CVACL => " + FormatUtil.FormatDouble (cpga.cvacl(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (cpga.fda(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (cpga.fba(), 2, 2, 100.) + "% ||");
+
+		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (cpga.sfva(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||-------------------||");
 	}
