@@ -1,5 +1,5 @@
 
-package org.drip.xva.accounting;
+package org.drip.xva.basel;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.accounting;
  */
 
 /**
- * BalanceSheetAccountVertex implements the Balance Sheet Edge Component of the Streamlined Accounting
- *  Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The References are:
+ * ValueCategory holds the Fields relevant to Classifying Value Attribution from an Accounting ViewPoint. The
+ *  References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
@@ -67,71 +67,149 @@ package org.drip.xva.accounting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BalanceSheetAccountEdge {
-	private org.drip.xva.accounting.BalanceSheetAccountVertex _bsavHead = null;
-	private org.drip.xva.accounting.BalanceSheetAccountVertex _bsavTail = null;
+public class ValueCategory {
+	private java.lang.String _strID = "";
+	private boolean _bCET1Contributor = false;
+	private java.lang.String _strDescription = "";
 
 	/**
-	 * BalanceSheetAccountEdge Constructor
+	 * Retrieve an Instance of the CF1 Cash Flow
 	 * 
-	 * @param bsavHead Balance Sheet Account Vertex Head Instance
-	 * @param bsavTail Balance Sheet Account Vertex Tail Instance
+	 * @return An Instance of the CF1 Cash Flow
+	 */
+
+	public static final ValueCategory CF1()
+	{
+		try {
+			return new ValueCategory ("CF1", "Underlying Trade Contractual Cash Flow", true);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieve an Instance of the CF2 Cash Flow
+	 * 
+	 * @return An Instance of the CF2 Cash Flow
+	 */
+
+	public static final ValueCategory CF2()
+	{
+		try {
+			return new ValueCategory ("CF2", "Counter Party Default Cash Flow", true);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieve an Instance of the CF3 Cash Flow
+	 * 
+	 * @return An Instance of the CF3 Cash Flow
+	 */
+
+	public static final ValueCategory CF3()
+	{
+		try {
+			return new ValueCategory ("CF3", "Bank Default Related Cash Flow", false);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieve an Instance of the CF4 Cash Flow
+	 * 
+	 * @return An Instance of the CF4 Cash Flow
+	 */
+
+	public static final ValueCategory CF4()
+	{
+		try {
+			return new ValueCategory ("CF4", "Pre Bank Default Dynamic Flow", false);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieve an Instance of the CF5 Cash Flow
+	 * 
+	 * @return An Instance of the CF5 Cash Flow
+	 */
+
+	public static final ValueCategory CF5()
+	{
+		try {
+			return new ValueCategory ("CF5", "Post Bank Default Dynamic Flow", false);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * ValueCategory Constructor
+	 * 
+	 * @param strID The Category ID
+	 * @param strDescription The Category Description
+	 * @param bCET1Contributor TRUE - The Category is a CET1 Contributor
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public BalanceSheetAccountEdge (
-		final org.drip.xva.accounting.BalanceSheetAccountVertex bsavHead,
-		final org.drip.xva.accounting.BalanceSheetAccountVertex bsavTail)
+	public ValueCategory (
+		final java.lang.String strID,
+		final java.lang.String strDescription,
+		final boolean bCET1Contributor)
 		throws java.lang.Exception
 	{
-		if (null == (_bsavHead = bsavHead) || null == (_bsavTail = bsavTail))
-			throw new java.lang.Exception ("BalanceSheetAccountEdge Constructor => Invalid Inputs");
+		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strDescription = strDescription) ||
+			_strDescription.isEmpty())
+			throw new java.lang.Exception ("ValueCategory Constructor => Invalid Inputs");
+
+		_bCET1Contributor = bCET1Contributor;
 	}
 
 	/**
-	 * Retrieve the Balance Sheet Account Vertex Head Instance
+	 * Retrieve the Category ID
 	 * 
-	 * @return The Balance Sheet Account Vertex Head Instance
+	 * @return The Category ID
 	 */
 
-	public org.drip.xva.accounting.BalanceSheetAccountVertex head()
+	public java.lang.String id()
 	{
-		return _bsavHead;
+		return _strID;
 	}
 
 	/**
-	 * Retrieve the Balance Sheet Account Vertex Tail Instance
+	 * Retrieve the Category Description
 	 * 
-	 * @return The Balance Sheet Account Vertex Tail Instance
+	 * @return The Category Description
 	 */
 
-	public org.drip.xva.accounting.BalanceSheetAccountVertex tail()
+	public java.lang.String description()
 	{
-		return _bsavTail;
+		return _strDescription;
 	}
 
 	/**
-	 * Compute the CET1 Change
+	 * Indicator if the Category is a CET1 Contributor
 	 * 
-	 * @return The CET1 Change
+	 * @return TRUE - The Category is a CET1 Contributor
 	 */
 
-	public double cet1Change()
+	public boolean isCET1Contributor()
 	{
-		return _bsavTail.retainedEarnings() - _bsavTail.contraAsset() - _bsavHead.retainedEarnings() +
-			_bsavHead.contraAsset();
-	}
-
-	/**
-	 * Compute the "Income"
-	 * 
-	 * @return The "Income"
-	 */
-
-	public double income()
-	{
-		return _bsavTail.retainedEarnings() + _bsavTail.contraLiability() - _bsavTail.contraAsset() -
-			_bsavHead.retainedEarnings() + _bsavHead.contraAsset() - _bsavHead.contraLiability();
+		return _bCET1Contributor;
 	}
 }

@@ -1,5 +1,5 @@
 
-package org.drip.xva.accounting;
+package org.drip.xva.basel;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.accounting;
  */
 
 /**
- * ValueCategory holds the Fields relevant to Classifying Value Attribution from an Accounting ViewPoint. The
- *  References are:
+ * OTCAccountingScheme implements the Generic Basel Accounting Scheme using the Streamlined Accounting
+ *  Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
@@ -67,149 +67,52 @@ package org.drip.xva.accounting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class ValueCategory {
-	private java.lang.String _strID = "";
-	private boolean _bCET1Contributor = false;
-	private java.lang.String _strDescription = "";
+public abstract class OTCAccountingScheme {
+	private org.drip.xva.trajectory.CounterPartyGroupAggregator _cpga = null;
 
-	/**
-	 * Retrieve an Instance of the CF1 Cash Flow
-	 * 
-	 * @return An Instance of the CF1 Cash Flow
-	 */
-
-	public static final ValueCategory CF1()
-	{
-		try {
-			return new ValueCategory ("CF1", "Underlying Trade Contractual Cash Flow", true);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * Retrieve an Instance of the CF2 Cash Flow
-	 * 
-	 * @return An Instance of the CF2 Cash Flow
-	 */
-
-	public static final ValueCategory CF2()
-	{
-		try {
-			return new ValueCategory ("CF2", "Counter Party Default Cash Flow", true);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * Retrieve an Instance of the CF3 Cash Flow
-	 * 
-	 * @return An Instance of the CF3 Cash Flow
-	 */
-
-	public static final ValueCategory CF3()
-	{
-		try {
-			return new ValueCategory ("CF3", "Bank Default Related Cash Flow", false);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * Retrieve an Instance of the CF4 Cash Flow
-	 * 
-	 * @return An Instance of the CF4 Cash Flow
-	 */
-
-	public static final ValueCategory CF4()
-	{
-		try {
-			return new ValueCategory ("CF4", "Pre Bank Default Dynamic Flow", false);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * Retrieve an Instance of the CF5 Cash Flow
-	 * 
-	 * @return An Instance of the CF5 Cash Flow
-	 */
-
-	public static final ValueCategory CF5()
-	{
-		try {
-			return new ValueCategory ("CF5", "Post Bank Default Dynamic Flow", false);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * ValueCategory Constructor
-	 * 
-	 * @param strID The Category ID
-	 * @param strDescription The Category Description
-	 * @param bCET1Contributor TRUE - The Category is a CET1 Contributor
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public ValueCategory (
-		final java.lang.String strID,
-		final java.lang.String strDescription,
-		final boolean bCET1Contributor)
+	protected OTCAccountingScheme (
+		final org.drip.xva.trajectory.CounterPartyGroupAggregator cpga)
 		throws java.lang.Exception
 	{
-		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strDescription = strDescription) ||
-			_strDescription.isEmpty())
-			throw new java.lang.Exception ("ValueCategory Constructor => Invalid Inputs");
-
-		_bCET1Contributor = bCET1Contributor;
+		if (null == (_cpga = cpga))
+			throw new java.lang.Exception ("OTCAccountingScheme Contructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Category ID
+	 * Retrieve the Counter Party Group Aggregator Instance
 	 * 
-	 * @return The Category ID
+	 * @return The Counter Party Group Aggregator Instance
 	 */
 
-	public java.lang.String id()
+	public org.drip.xva.trajectory.CounterPartyGroupAggregator aggregator()
 	{
-		return _strID;
+		return _cpga;
 	}
 
 	/**
-	 * Retrieve the Category Description
+	 * Compute the Contra-Asset Adjustment
 	 * 
-	 * @return The Category Description
+	 * @return The Contra-Asset Adjustment
 	 */
 
-	public java.lang.String description()
-	{
-		return _strDescription;
-	}
+	public abstract double contraAssetAdjustment();
 
 	/**
-	 * Indicator if the Category is a CET1 Contributor
+	 * Compute the Contra-Liability Adjustment
 	 * 
-	 * @return TRUE - The Category is a CET1 Contributor
+	 * @return The Contra-Liability Adjustment
 	 */
 
-	public boolean isCET1Contributor()
-	{
-		return _bCET1Contributor;
-	}
+	public abstract double contraLiabilityAdjustment();
+
+	/**
+	 * Generate the Fee Policy Based on the Aggregation Incremental
+	 * 
+	 * @param cpgaNext The "Next" Counter Party Group Aggregator Instance
+	 * 
+	 * @return The OTC Fee Policy
+	 */
+
+	public abstract org.drip.xva.basel.OTCAccountingPolicy feePolicy (
+		final org.drip.xva.trajectory.CounterPartyGroupAggregator cpgaNext);
 }

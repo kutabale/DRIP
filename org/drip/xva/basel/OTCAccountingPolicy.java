@@ -1,5 +1,5 @@
 
-package org.drip.xva.accounting;
+package org.drip.xva.basel;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.accounting;
  */
 
 /**
- * BalanceSheetAccountVertex implements the Balance Sheet Vertex Component of the Streamlined Accounting
+ * OTCAccountingPolicy implements the Generic Basel Accounting Policy using the Streamlined Accounting
  *  Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
@@ -67,115 +67,79 @@ package org.drip.xva.accounting;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BalanceSheetAccountVertex {
-	private double _dblAsset = java.lang.Double.NaN;
-	private double _dblLiability = java.lang.Double.NaN;
-	private double _dblContraAsset = java.lang.Double.NaN;
-	private double _dblContraLiability = java.lang.Double.NaN;
-	private double _dblRetainedEarnings = java.lang.Double.NaN;
+public class OTCAccountingPolicy {
+	private double _dblCET1Change = java.lang.Double.NaN;
+	private double _dblPortfolioValueChange = java.lang.Double.NaN;
+	private double _dblContraLiabilityChange = java.lang.Double.NaN;
+	private double _dblFundingTransferPricing = java.lang.Double.NaN;
 
 	/**
-	 * VertexBalanceSheetAccount Constructor
+	 * OTCAccountingPolicy Constructor
 	 * 
-	 * @param dblAsset The Asset Account
-	 * @param dblLiability The Liability Account
-	 * @param dblContraAsset The Contra Asset Account
-	 * @param dblContraLiability The Contra Liability Account
-	 * @param dblRetainedEarnings The Retained Earnings Account
+	 * @param dblFundingTransferPricing The Funding Transfer Pricing
+	 * @param dblCET1Change The CET1 Change
+	 * @param dblContraLiabilityChange The Contra-Liability Change
+	 * @param dblPortfolioValueChange The Portfolio Value Change
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public BalanceSheetAccountVertex (
-		final double dblAsset,
-		final double dblLiability,
-		final double dblContraAsset,
-		final double dblContraLiability,
-		final double dblRetainedEarnings)
+	public OTCAccountingPolicy (
+		final double dblFundingTransferPricing,
+		final double dblCET1Change,
+		final double dblContraLiabilityChange,
+		final double dblPortfolioValueChange)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAsset = dblAsset) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblLiability = dblLiability) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblContraAsset = dblContraAsset) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblContraLiability = dblContraLiability) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblRetainedEarnings = dblRetainedEarnings))
-			throw new java.lang.Exception ("VertexBalanceSheetAccount Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblFundingTransferPricing =
+			dblFundingTransferPricing) || !org.drip.quant.common.NumberUtil.IsValid (_dblCET1Change =
+				dblCET1Change) || !org.drip.quant.common.NumberUtil.IsValid (_dblContraLiabilityChange =
+					dblContraLiabilityChange) || !org.drip.quant.common.NumberUtil.IsValid
+						(_dblPortfolioValueChange = dblPortfolioValueChange))
+			throw new java.lang.Exception ("OTCAccountingPolicy Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asset Account
+	 * Retrieve the Funding Transfer Pricing
 	 * 
-	 * @return The Asset Account
+	 * @return The Funding Transfer Pricing
 	 */
 
-	public double asset()
+	public double fundingTransferPricing()
 	{
-		return _dblAsset;
+		return _dblFundingTransferPricing;
 	}
 
 	/**
-	 * Retrieve the Liability Account
+	 * Retrieve the CET1 Change
 	 * 
-	 * @return The Liability Account
+	 * @return The CET1 Change
 	 */
 
-	public double liability()
+	public double cet1Change()
 	{
-		return _dblLiability;
+		return _dblCET1Change;
 	}
 
 	/**
-	 * Retrieve the Contra Asset Account
+	 * Retrieve the Contra-Liability Change
 	 * 
-	 * @return The Contra Asset Account
+	 * @return The Contra-Liability Change
 	 */
 
-	public double contraAsset()
+	public double contraLiabilityChange()
 	{
-		return _dblContraAsset;
+		return _dblContraLiabilityChange;
 	}
 
 	/**
-	 * Retrieve the Contra Liability Account
+	 * Retrieve the Portfolio Value Change
 	 * 
-	 * @return The Contra Liability Account
+	 * @return The Portfolio Value Change
 	 */
 
-	public double contraLiability()
+	public double portfolioValueChange()
 	{
-		return _dblContraLiability;
-	}
-
-	/**
-	 * Retrieve the Retained Earnings Account
-	 * 
-	 * @return The Retained Earnings Account
-	 */
-
-	public double retainedEarnings()
-	{
-		return _dblRetainedEarnings;
-	}
-
-	/**
-	 * Estimate the Equity Account
-	 * 
-	 * @return The Equity Account
-	 */
-
-	public double equity()
-	{
-		return _dblAsset - _dblLiability - _dblContraAsset + _dblContraLiability + _dblRetainedEarnings;
-	}
-
-	/**
-	 * Estimate the Core Equity Tier I (CET1) Capital
-	 * 
-	 * @return The Core Equity Tier I (CET1) Capital
-	 */
-
-	public double cet1()
-	{
-		return _dblAsset - _dblLiability - _dblContraAsset + _dblRetainedEarnings;
+		return _dblPortfolioValueChange;
 	}
 }

@@ -13,7 +13,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
-import org.drip.xva.collateralized.*;
+import org.drip.xva.csa.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -291,7 +291,7 @@ public class CSAImpliedMeasureDifference {
 
 				aadblNoCSAForward[j][i] = dblCSAForward * sftf.CSANoCSARatio (strTenor);
 
-				CSAInducedMeasureShift cims = new CSAInducedMeasureShift (
+				NumeraireInducedMeasureShift cims = new NumeraireInducedMeasureShift (
 					dblCSAForward,
 					aadblNoCSAForward[j][i],
 					dblCSAForward * dblCSAForward * adblCSAImpliedVolatility[i] * adblCSAImpliedVolatility[i]

@@ -1,5 +1,5 @@
 
-package org.drip.xva.accounting;
+package org.drip.xva.basel;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -69,7 +69,7 @@ package org.drip.xva.accounting;
 
 public class ValueAdjustment {
 	private double _dblAmount = java.lang.Double.NaN;
-	private org.drip.xva.accounting.ValueCategory _vc = null;
+	private org.drip.xva.basel.ValueCategory _vc = null;
 
 	/**
 	 * Construct the Collateralized Transaction Value Adjustment Instance
@@ -83,7 +83,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF1());
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF1());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -103,7 +103,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF2());
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF2());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -123,7 +123,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF3());
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF3());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -143,7 +143,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF3());
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF3());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -163,7 +163,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF4());
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF4());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -183,7 +183,7 @@ public class ValueAdjustment {
 		final double dblAmount)
 	{
 		try {
-			return new ValueAdjustment (dblAmount, org.drip.xva.accounting.ValueCategory.CF5());
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF5());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -202,7 +202,7 @@ public class ValueAdjustment {
 
 	public ValueAdjustment (
 		final double dblAmount,
-		final org.drip.xva.accounting.ValueCategory vc)
+		final org.drip.xva.basel.ValueCategory vc)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAmount = dblAmount) || null == (_vc = vc))
@@ -226,7 +226,7 @@ public class ValueAdjustment {
 	 * @return The Valuation Adjustment Attribution Category
 	 */
 
-	public org.drip.xva.accounting.ValueCategory valueCategory()
+	public org.drip.xva.basel.ValueCategory valueCategory()
 	{
 		return _vc;
 	}

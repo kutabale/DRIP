@@ -469,17 +469,21 @@ public class CPGACollateralizedCorrelated {
 				dblValueStart = dblValueEnd;
 			}
 
+			NumerairePath np = new NumerairePath (aNV);
+
+			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+
 			aCPGP[i] = new CounterPartyGroupPath (
 				new NettingGroupPath[] {
 					new NettingGroupPath (
-						new CollateralGroupPath[] {new CollateralGroupPath (aCGV)},
-						new NumerairePath (aNV)
+						aCGP,
+						np
 					)
 				},
 				new FundingGroupPath[] {
 					new FundingGroupPath (
-						new CollateralGroupPath[] {new CollateralGroupPath (aCGV)},
-						new NumerairePath (aNV)
+						aCGP,
+						np
 					)
 				}
 			);

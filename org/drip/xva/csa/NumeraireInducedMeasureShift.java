@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateralized;
+package org.drip.xva.csa;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.collateralized;
  */
 
 /**
- * CSAInducedMeasureShift computes the Shift of the Forward Terminal Distribution between the Non-CSA and the
- *  CSA Cases. The References are:
+ * NumeraireInducedMeasureShift computes the Shift of the Forward Terminal Distribution between the Non-CSA
+ *  and the CSA Cases. The References are:
  *  
  *  - Antonov, A., and M. Arneguy (2009): Analytical Formulas for Pricing CMS Products in the LIBOR Market
  *  	Model with Stochastic Volatility, https://papers.ssrn.com/sol3/Papers.cfm?abstract_id=1352606, eSSRN.
@@ -66,13 +66,13 @@ package org.drip.xva.collateralized;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CSAInducedMeasureShift {
+public class NumeraireInducedMeasureShift {
 	private double _dblCSAForward = java.lang.Double.NaN;
 	private double _dblNoCSAForward = java.lang.Double.NaN;
 	private double _dblTerminalVariance = java.lang.Double.NaN;
 
 	/**
-	 * CSAInducedMeasureShift Constructor
+	 * NumeraireInducedMeasureShift Constructor
 	 * 
 	 * @param dblCSAForward The CSA Implied Forward Value
 	 * @param dblNoCSAForward The No CSA Implied Forward Value
@@ -81,7 +81,7 @@ public class CSAInducedMeasureShift {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CSAInducedMeasureShift (
+	public NumeraireInducedMeasureShift (
 		final double dblCSAForward,
 		final double dblNoCSAForward,
 		final double dblTerminalVariance)
@@ -90,7 +90,7 @@ public class CSAInducedMeasureShift {
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCSAForward = dblCSAForward) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblNoCSAForward = dblNoCSAForward) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblTerminalVariance = dblTerminalVariance))
-			throw new java.lang.Exception ("CSAInducedMeasureShift Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("NumeraireInducedMeasureShift Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class CSAInducedMeasureShift {
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblK))
-			throw new java.lang.Exception ("CSAInducedMeasureShift::densityRescale => Invalid Inputs");
+			throw new java.lang.Exception ("NumeraireInducedMeasureShift::densityRescale => Invalid Inputs");
 
 		double dblAlpha1 = (_dblNoCSAForward - _dblCSAForward) / _dblTerminalVariance;
 		return 1. - dblAlpha1 * _dblCSAForward + dblAlpha1 * dblK;
