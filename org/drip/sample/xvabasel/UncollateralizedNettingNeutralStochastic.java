@@ -1,5 +1,5 @@
 
-package org.drip.sample.basel;
+package org.drip.sample.xvabasel;
 
 import org.drip.analytics.date.*;
 import org.drip.measure.crng.RandomNumberGenerator;
@@ -11,6 +11,7 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.basel.*;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -59,9 +60,17 @@ import org.drip.xva.trajectory.*;
  */
 
 /**
- * UncollateralizedParIncrement examines the Basel BCBS 2012 OTC Accounting Impact to a Portfolio of 10 Swaps
- * 	resulting from the Addition of a Par Swap - Comparison via both FVA/FDA and FCA/FBA Schemes. The
- *  References are:
+ * UncollateralizedNettingNeutralStochastic examines the Basel BCBS 2012 OTC Accounting Impact to a
+ *  Portfolio of 10 Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA
+ *  Schemes. Simulation is carried out under the following Criteria:
+ *  
+ *    - Collateralization Status => Uncollateralized
+ *    - Aggregation Unit         => Netting Group
+ *    - Added Swap Type          => Zero Upfront Par Swap (Neutral)
+ *    - Market Dynamics          => Fully Stochastic (Correlated Market Evolution)
+ *  
+ *  
+ *  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -80,7 +89,7 @@ import org.drip.xva.trajectory.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class UncollateralizedParIncrement {
+public class UncollateralizedNettingNeutralStochastic {
 
 	private static final double[] NumeraireValueRealization (
 		final DiffusionEvolver deNumeraireValue,
@@ -190,7 +199,7 @@ public class UncollateralizedParIncrement {
 		return cpvd.multiPathVertexRd()[0].flatform();
 	}
 
-	private static final CounterPartyGroupAggregator Mix (
+	private static final CounterPartyGroupAggregator[] Mix (
 		final double dblTimeMaturity1,
 		final double dblATMSwapRateOffsetStart1,
 		final double dblSwapNotional1,
@@ -237,10 +246,11 @@ public class UncollateralizedParIncrement {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
+		CounterPartyGroupPath[] aCPGPGround = new CounterPartyGroupPath[iNumPath];
+		CounterPartyGroupPath[] aCPGPExtended = new CounterPartyGroupPath[iNumPath];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
@@ -410,28 +420,57 @@ public class UncollateralizedParIncrement {
 
 			NumerairePath np = new NumerairePath (aNV);
 
-			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGV1),
-				new CollateralGroupPath (aCGV2)
+			CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {
+				new CollateralGroupPath (aCGV1)
 			};
 
-			aCPGP[i] = new CounterPartyGroupPath (
+			aCPGPGround[i] = new CounterPartyGroupPath (
 				new NettingGroupPath[] {
 					new NettingGroupPath (
-						aCGP,
+						aCGP1,
 						np
 					)
 				},
 				new FundingGroupPath[] {
 					new FundingGroupPath (
-						aCGP,
+						aCGP1,
+						np
+					)
+				}
+			);
+
+			CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {
+				new CollateralGroupPath (aCGV2)
+			};
+
+			aCPGPExtended[i] = new CounterPartyGroupPath (
+				new NettingGroupPath[] {
+					new NettingGroupPath (
+						aCGP1,
+						np
+					),
+					new NettingGroupPath (
+						aCGP2,
+						np
+					)
+				},
+				new FundingGroupPath[] {
+					new FundingGroupPath (
+						aCGP1,
+						np
+					),
+					new FundingGroupPath (
+						aCGP2,
 						np
 					)
 				}
 			);
 		}
 
-		return new CounterPartyGroupAggregator (aCPGP);
+		return new CounterPartyGroupAggregator[] {
+			new CounterPartyGroupAggregator (aCPGPGround),
+			new CounterPartyGroupAggregator (aCPGPExtended)
+		};
 	}
 
 	private static final void CPGDDump (
@@ -536,29 +575,11 @@ public class UncollateralizedParIncrement {
 
 	private static final void CPGDDiffDump (
 		final String strHeader,
-		final CounterPartyGroupDigest cpgdBase,
+		final CounterPartyGroupDigest cpgdGround,
 		final CounterPartyGroupDigest cpgdExpanded)
 		throws Exception
 	{
 		System.out.println();
-
-		UnivariateDiscreteThin udtUCVA = cpgdBase.ucva();
-
-		UnivariateDiscreteThin udtFTDCVA = cpgdBase.ftdcva();
-
-		UnivariateDiscreteThin udtCVACL = cpgdBase.cvacl();
-
-		UnivariateDiscreteThin udtCVA = cpgdBase.cva();
-
-		UnivariateDiscreteThin udtFVA = cpgdBase.fva();
-
-		UnivariateDiscreteThin udtFDA = cpgdBase.fda();
-
-		UnivariateDiscreteThin udtFCA = cpgdBase.fca();
-
-		UnivariateDiscreteThin udtFBA = cpgdBase.fba();
-
-		UnivariateDiscreteThin udtSFVA = cpgdBase.sfva();
 
 		System.out.println (
 			"\t||----------------------------------------------------------------------------------------------------||"
@@ -580,59 +601,107 @@ public class UncollateralizedParIncrement {
 
 		System.out.println (
 			"\t|| Average => " +
-			FormatUtil.FormatDouble (udtUCVA.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFTDCVA.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtCVACL.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtCVA.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFVA.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFDA.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFCA.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFBA.average(), 2, 2, 1.) + "  | " + 
-			FormatUtil.FormatDouble (udtSFVA.average(), 2, 2, 1.) + "  ||"
-		);
-
-		System.out.println (
-			"\t|| Minimum => " +
-			FormatUtil.FormatDouble (udtUCVA.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFTDCVA.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtCVACL.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtCVA.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFVA.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFDA.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFCA.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFBA.minimum(), 2, 2, 1.) + "  | " + 
-			FormatUtil.FormatDouble (udtSFVA.minimum(), 2, 2, 1.) + "  ||"
-		);
-
-		System.out.println (
-			"\t|| Maximum => " +
-			FormatUtil.FormatDouble (udtUCVA.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFTDCVA.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtCVACL.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtCVA.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFVA.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFDA.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFCA.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFBA.maximum(), 2, 2, 1.) + "  | " + 
-			FormatUtil.FormatDouble (udtSFVA.maximum(), 2, 2, 1.) + "  ||"
-		);
-
-		System.out.println (
-			"\t||  Error  => " +
-			FormatUtil.FormatDouble (udtUCVA.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFTDCVA.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtCVACL.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtCVA.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFVA.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFDA.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFCA.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtFBA.error(), 2, 2, 1.) + "  | " + 
-			FormatUtil.FormatDouble (udtSFVA.error(), 2, 2, 1.) + "  ||"
+			FormatUtil.FormatDouble (cpgdExpanded.ucva().average() - cpgdGround.ucva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.ftdcva().average() - cpgdGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.cvacl().average() - cpgdGround.cvacl().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.cva().average() - cpgdGround.cva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.fva().average() - cpgdGround.fva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.fda().average() - cpgdGround.fda().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.fca().average() - cpgdGround.fca().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.fba().average() - cpgdGround.fba().average(), 3, 1, 10000.) + "  | " + 
+			FormatUtil.FormatDouble (cpgdExpanded.sfva().average() - cpgdGround.sfva().average(), 3, 1, 10000.) + "  ||"
 		);
 
 		System.out.println (
 			"\t||----------------------------------------------------------------------------------------------------||"
 		);
+	}
+
+	private static final void BaselAccountingMetrics (
+		final String strHeader,
+		final CounterPartyGroupAggregator cpgaGround,
+		final CounterPartyGroupAggregator cpgaExpanded)
+		throws Exception
+	{
+		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (cpgaGround);
+
+		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (cpgaGround);
+
+		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (cpgaExpanded);
+
+		OTCAccountingPolicy oapFVAFDA = oasFVAFDA.feePolicy (cpgaExpanded);
+
+		System.out.println();
+
+		System.out.println (
+			"\t||---------------------------------------------------------------------||"
+		);
+
+		System.out.println (strHeader);
+
+		System.out.println (
+			"\t||---------------------------------------------------------------------||"
+		);
+
+		System.out.println (
+			"\t|| L -> R:                                                             ||"
+		);
+
+		System.out.println (
+			"\t||         - Accounting Type (FCA/FBA vs. FVA/FDA)                     ||"
+		);
+
+		System.out.println (
+			"\t||         - Contra Asset Adjustment                                   ||"
+		);
+
+		System.out.println (
+			"\t||         - Contra Liability Adjustment                               ||"
+		);
+
+		System.out.println (
+			"\t||         - FTP (Funding Transfer Pricing) (bp)                       ||"
+		);
+
+		System.out.println (
+			"\t||         - CET1 (Common Equity Tier I) Change (bp)                   ||"
+		);
+
+		System.out.println (
+			"\t||         - CL (Contra Liability) Change (bp)                         ||"
+		);
+
+		System.out.println (
+			"\t||         - PFV (Porfolio Value) Change (Income) (bp)                 ||"
+		);
+
+		System.out.println (
+			"\t||---------------------------------------------------------------------||"
+		);
+
+		System.out.println ("\t|| FCA/FBA Accounting => " +
+			FormatUtil.FormatDouble (oasFCAFBA.contraAssetAdjustment(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (oasFCAFBA.contraLiabilityAdjustment(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (oapFCAFBA.fundingTransferPricing(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (oapFCAFBA.cet1Change(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (oapFCAFBA.contraLiabilityChange(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (oapFCAFBA.portfolioValueChange(), 3, 0, 10000.) + " || "
+		);
+
+		System.out.println ("\t|| FVA/FDA Accounting => " +
+			FormatUtil.FormatDouble (oasFVAFDA.contraAssetAdjustment(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (oasFVAFDA.contraLiabilityAdjustment(), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (oapFVAFDA.fundingTransferPricing(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (oapFVAFDA.cet1Change(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (oapFVAFDA.contraLiabilityChange(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (oapFVAFDA.portfolioValueChange(), 3, 0, 10000.) + " || "
+		);
+
+		System.out.println (
+			"\t||---------------------------------------------------------------------||"
+		);
+
+		System.out.println();
 	}
 
 	public static final void main (
@@ -641,21 +710,7 @@ public class UncollateralizedParIncrement {
 	{
 		EnvManager.InitEnv ("");
 
-		CounterPartyGroupAggregator cpgaGround = Mix (
-			5.,
-			0.,
-			100.,
-			5.,
-			0.,
-			0.
-		);
-
-		CPGDDump (
-			"\t||                                   GROUND BOOK VALUATION METRICS                                    ||",
-			cpgaGround.digest()
-		);
-
-		CounterPartyGroupAggregator cpgaExtended = Mix (
+		CounterPartyGroupAggregator[] aCPGA = Mix (
 			5.,
 			0.,
 			100.,
@@ -664,24 +719,33 @@ public class UncollateralizedParIncrement {
 			1.
 		);
 
+		CounterPartyGroupAggregator cpgaGround = aCPGA[0];
+		CounterPartyGroupAggregator cpgaExtended = aCPGA[1];
+
+		CounterPartyGroupDigest cpgdGround = cpgaGround.digest();
+
+		CounterPartyGroupDigest cpgdExtended = cpgaExtended.digest();
+
 		CPGDDump (
-			"\t||                                  EXTENDED BOOK VALUATION METRICS                                   ||",
-			cpgaExtended.digest()
+			"\t||                                   GROUND BOOK ADJUSTMENT METRICS                                   ||",
+			cpgdGround
 		);
 
-		/* OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (cpgaBase);
+		CPGDDump (
+			"\t||                                  EXTENDED BOOK ADJUSTMENT METRICS                                  ||",
+			cpgdExtended
+		);
 
-		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (cpgaBase);
+		CPGDDiffDump (
+			"\t||                              TRADE INCREMENT ADJUSTMENT METRICS (bp)                               ||",
+			cpgdGround,
+			cpgdExtended
+		);
 
-		System.out.println (oasFVAFDA.feePolicy (cpgaIncrement));
-
-		System.out.println (oasFVAFDA.feePolicy (cpgaIncrement));
-
-		System.out.println ("\t|| " +
-			FormatUtil.FormatDouble (oasFCAFBA.contraAssetAdjustment(), 1, 4, 1.) + " | " +
-			FormatUtil.FormatDouble (oasFCAFBA.contraLiabilityAdjustment(), 1, 4, 1.) + " || " +
-			FormatUtil.FormatDouble (oasFVAFDA.contraAssetAdjustment(), 1, 4, 1.) + " | " +
-			FormatUtil.FormatDouble (oasFVAFDA.contraLiabilityAdjustment(), 1, 4, 1.) + " ||"
-		); */
+		BaselAccountingMetrics (
+			"\t||           ALBANESE & ANDERSEN (2015) BCBS OTC ACCOUNTING            ||",
+			cpgaGround,
+			cpgaExtended
+		);
 	}
 }
