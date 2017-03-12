@@ -2,6 +2,7 @@
 package org.drip.sample.xvabasel;
 
 import org.drip.analytics.date.*;
+import org.drip.measure.bridge.BrokenDateInterpolatorLinearT;
 import org.drip.measure.discrete.SequenceGenerator;
 import org.drip.measure.dynamics.*;
 import org.drip.measure.process.DiffusionEvolver;
@@ -10,6 +11,7 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
+import org.drip.xva.settings.*;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -58,13 +60,13 @@ import org.drip.xva.trajectory.*;
  */
 
 /**
- * UncollateralizedNettingPayable examines the Basel BCBS 2012 OTC Accounting Impact to a Portfolio of 10
+ * CollateralizedNettingNeutral examines the Basel BCBS 2012 OTC Accounting Impact to a Portfolio of 10
  *  Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA Schemes.
  *  Simulation is carried out under the following Criteria:
  *  
- *    - Collateralization Status => Uncollateralized
+ *    - Collateralization Status => Collateralized
  *    - Aggregation Unit         => Netting Group
- *    - Added Swap Type          => Positive Upfront Swap (Payable)
+ *    - Added Swap Type          => Zero Upfront Par Swap (Neutral)
  *    - Market Dynamics          => Deterministic (Static Market Evolution)
  *  
  *  
@@ -87,7 +89,7 @@ import org.drip.xva.trajectory.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class UncollateralizedNettingPayable {
+public class CollateralizedNettingNeutral {
 
 	private static final double[] ATMSwapRateOffsetRealization (
 		final DiffusionEvolver deATMSwapRateOffset,
@@ -171,6 +173,8 @@ public class UncollateralizedNettingPayable {
 		double dblBankRecoveryRate = 0.40;
 		double dblCounterPartyHazardRate = 0.030;
 		double dblCounterPartyRecoveryRate = 0.30;
+		double dblBankThreshold = -0.1;
+		double dblCounterPartyThreshold = 0.1;
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -179,10 +183,17 @@ public class UncollateralizedNettingPayable {
 		NumeraireVertex[] aNV = new NumeraireVertex[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
-		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		CounterPartyGroupPath[] aCPGPGround = new CounterPartyGroupPath[iNumPath];
 		CounterPartyGroupPath[] aCPGPExtended = new CounterPartyGroupPath[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
+
+		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
+			"FIXEDTHRESHOLD",
+			dblCounterPartyThreshold,
+			dblBankThreshold
+		);
+
+		CounterPartyGroupSpecification cpgs = CounterPartyGroupSpecification.Standard ("CPGROUP");
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
 			DiffusionEvaluatorLinear.Standard (
@@ -203,12 +214,10 @@ public class UncollateralizedNettingPayable {
 			);
 
 		for (int i = 0; i < iNumPath; ++i) {
-			double[] adblRandom = SequenceGenerator.Gaussian (iNumStep);
-
 			aadblPortfolio1Value[i] = SwapPortfolioValueRealization (
 				deATMSwapRateOffset,
 				dblATMSwapRateOffsetStart1,
-				adblRandom,
+				SequenceGenerator.Gaussian (iNumStep),
 				iNumVertex,
 				dblTime,
 				dblTimeWidth,
@@ -219,7 +228,7 @@ public class UncollateralizedNettingPayable {
 			aadblPortfolio2Value[i] = SwapPortfolioValueRealization (
 				deATMSwapRateOffset,
 				dblATMSwapRateOffsetStart2,
-				adblRandom,
+				SequenceGenerator.Gaussian (iNumStep),
 				iNumVertex,
 				dblTime,
 				dblTimeWidth,
@@ -227,25 +236,67 @@ public class UncollateralizedNettingPayable {
 				dblSwapNotional2
 			);
 
+			JulianDate dtStart = dtSpot;
+			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
+			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
 			CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
 			CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aadblCollateralBalance[i][j] = 0.;
+				JulianDate dtEnd = adtVertex[j];
+				double dblCollateralBalance1 = 0.;
+				double dblCollateralBalance2 = 0.;
+				double dblValueEnd1 = aadblPortfolio1Value[i][j];
+				double dblValueEnd2 = aadblPortfolio2Value[i][j];
+
+				if (0 != j) {
+					CollateralAmountEstimator cae1 = new CollateralAmountEstimator (
+						cgs,
+						cpgs,
+						new BrokenDateInterpolatorLinearT (
+							dtStart.julian(),
+							dtEnd.julian(),
+							dblValueStart1,
+							dblValueEnd1
+						),
+						Double.NaN
+					);
+
+					dblCollateralBalance1 = cae1.postingRequirement (dtEnd);
+
+					CollateralAmountEstimator cae2 = new CollateralAmountEstimator (
+						cgs,
+						cpgs,
+						new BrokenDateInterpolatorLinearT (
+							dtStart.julian(),
+							dtEnd.julian(),
+							dblValueStart2,
+							dblValueEnd2
+						),
+						Double.NaN
+					);
+
+					dblCollateralBalance2 = cae2.postingRequirement (dtEnd);
+				}
+
 
 				aCGV1[j] = new CollateralGroupVertex (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					0.
+					dblCollateralBalance1
 				);
 
 				aCGV2[j] = new CollateralGroupVertex (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					0.
+					dblCollateralBalance2
 				);
+
+				dtStart = dtEnd;
+				dblValueStart1 = dblValueEnd1;
+				dblValueStart2 = dblValueEnd2;
 			}
 
 			NumerairePath np = new NumerairePath (aNV);
@@ -318,6 +369,8 @@ public class UncollateralizedNettingPayable {
 
 		UnivariateDiscreteThin udtCVA = cpgd.cva();
 
+		UnivariateDiscreteThin udtDVA = cpgd.dva();
+
 		UnivariateDiscreteThin udtFVA = cpgd.fva();
 
 		UnivariateDiscreteThin udtFDA = cpgd.fda();
@@ -329,21 +382,21 @@ public class UncollateralizedNettingPayable {
 		UnivariateDiscreteThin udtSFVA = cpgd.sfva();
 
 		System.out.println (
-			"\t||----------------------------------------------------------------------------------------------------||"
+			"\t||--------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||----------------------------------------------------------------------------------------------------||"
+			"\t||--------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||----------------------------------------------------------------------------------------------------||"
+			"\t||--------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
@@ -352,6 +405,7 @@ public class UncollateralizedNettingPayable {
 			FormatUtil.FormatDouble (udtFTDCVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.average(), 2, 2, 1.) + "  | " +
+			FormatUtil.FormatDouble (udtDVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.average(), 2, 2, 1.) + "  | " +
@@ -365,6 +419,7 @@ public class UncollateralizedNettingPayable {
 			FormatUtil.FormatDouble (udtFTDCVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.minimum(), 2, 2, 1.) + "  | " +
+			FormatUtil.FormatDouble (udtDVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.minimum(), 2, 2, 1.) + "  | " +
@@ -378,6 +433,7 @@ public class UncollateralizedNettingPayable {
 			FormatUtil.FormatDouble (udtFTDCVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.maximum(), 2, 2, 1.) + "  | " +
+			FormatUtil.FormatDouble (udtDVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.maximum(), 2, 2, 1.) + "  | " +
@@ -391,6 +447,7 @@ public class UncollateralizedNettingPayable {
 			FormatUtil.FormatDouble (udtFTDCVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.error(), 2, 2, 1.) + "  | " +
+			FormatUtil.FormatDouble (udtDVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.error(), 2, 2, 1.) + "  | " +
@@ -399,7 +456,7 @@ public class UncollateralizedNettingPayable {
 		);
 
 		System.out.println (
-			"\t||----------------------------------------------------------------------------------------------------||"
+			"\t||--------------------------------------------------------------------------------------------------------------||"
 		);
 	}
 
@@ -412,21 +469,21 @@ public class UncollateralizedNettingPayable {
 		System.out.println();
 
 		System.out.println (
-			"\t||----------------------------------------------------------------------------------------------------||"
+			"\t||--------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||----------------------------------------------------------------------------------------------------||"
+			"\t||--------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||----------------------------------------------------------------------------------------------------||"
+			"\t||--------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
@@ -435,6 +492,7 @@ public class UncollateralizedNettingPayable {
 			FormatUtil.FormatDouble (cpgdExpanded.ftdcva().average() - cpgdGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.cvacl().average() - cpgdGround.cvacl().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.cva().average() - cpgdGround.cva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.dva().average() - cpgdGround.dva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.fva().average() - cpgdGround.fva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.fda().average() - cpgdGround.fda().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.fca().average() - cpgdGround.fca().average(), 3, 1, 10000.) + "  | " +
@@ -443,7 +501,7 @@ public class UncollateralizedNettingPayable {
 		);
 
 		System.out.println (
-			"\t||----------------------------------------------------------------------------------------------------||"
+			"\t||--------------------------------------------------------------------------------------------------------------||"
 		);
 	}
 
@@ -545,7 +603,7 @@ public class UncollateralizedNettingPayable {
 			0.,
 			100.,
 			5.,
-			0.05,
+			0.,
 			1.
 		);
 
@@ -557,17 +615,17 @@ public class UncollateralizedNettingPayable {
 		CounterPartyGroupDigest cpgdExtended = cpgaExtended.digest();
 
 		CPGDDump (
-			"\t||                                   GROUND BOOK ADJUSTMENT METRICS                                   ||",
+			"\t||                                        GROUND BOOK ADJUSTMENT METRICS                                        ||",
 			cpgdGround
 		);
 
 		CPGDDump (
-			"\t||                                  EXTENDED BOOK ADJUSTMENT METRICS                                  ||",
+			"\t||                                       EXTENDED BOOK ADJUSTMENT METRICS                                       ||",
 			cpgdExtended
 		);
 
 		CPGDDiffDump (
-			"\t||                              TRADE INCREMENT ADJUSTMENT METRICS (bp)                               ||",
+			"\t||                                   TRADE INCREMENT ADJUSTMENT METRICS (bp)                                    ||",
 			cpgdGround,
 			cpgdExtended
 		);
