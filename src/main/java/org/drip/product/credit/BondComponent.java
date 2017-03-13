@@ -11795,13 +11795,16 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 					true).findRoot();
 
 			if (null == rfop || !rfop.containsRoot())
-				rfop = new org.drip.function.r1tor1solver.FixedPointFinderZheng (0., ofZSpreadToPrice,
+				rfop = new org.drip.function.r1tor1solver.FixedPointFinderBrent (0., ofZSpreadToPrice,
 					true).findRoot();
 
 			if (null == rfop || !rfop.containsRoot())
 				rfop = new org.drip.function.r1tor1solver.FixedPointFinderBracketing (0., ofZSpreadToPrice,
-					null, org.drip.function.r1tor1solver.VariateIteratorPrimitive.FALSE_POSITION,
-						true).findRoot();
+					new org.drip.function.r1tor1solver.ExecutionControl (ofZSpreadToPrice, new
+						org.drip.function.r1tor1solver.ExecutionControlParams (200, false, 1.e-04, 1.e-04,
+							1.e-05, 1.e-05)),
+								org.drip.function.r1tor1solver.VariateIteratorPrimitive.FALSE_POSITION,
+									true).findRoot();
 
 			if (null == rfop || !rfop.containsRoot())
 				throw new java.lang.Exception
@@ -11854,7 +11857,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 					true).findRoot();
 
 			if (null == rfop || !rfop.containsRoot())
-				rfop = new org.drip.function.r1tor1solver.FixedPointFinderZheng (0., r1ToR1OASToPrice,
+				rfop = new org.drip.function.r1tor1solver.FixedPointFinderBrent (0., r1ToR1OASToPrice,
 					true).findRoot();
 
 			if (null == rfop || !rfop.containsRoot())
