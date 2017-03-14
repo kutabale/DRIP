@@ -65,13 +65,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * CorporateFixedBullet6 demonstrates Non-EOS Fixed Coupon Agency Bond Pricing and Relative Value Measure
+ * CorporateFixedBullet7 demonstrates Non-EOS Fixed Coupon Agency Bond Pricing and Relative Value Measure
  *  Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CorporateFixedBullet6 {
+public class CorporateFixedBullet7 {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -605,59 +605,49 @@ public class CorporateFixedBullet6 {
 		);
 
 		Bond[] aCorporateBond = new Bond[] {
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  4, 27), DateUtil.CreateFromYMD (2017,  5,  1), 0.05625, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  6,  5), DateUtil.CreateFromYMD (2017,  6,  2), 0.01250, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015,  3, 12), DateUtil.CreateFromYMD (2018,  3, 12), 0.02350, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  1, 16), DateUtil.CreateFromYMD (2019,  1, 15), 0.08625, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  6, 30), DateUtil.CreateFromYMD (2019,  6, 15), 0.09250, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015,  6, 30), DateUtil.CreateFromYMD (2019,  7, 15), 0.08500, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  8, 12), DateUtil.CreateFromYMD (2019,  8, 12), 0.09000, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009, 12, 11), DateUtil.CreateFromYMD (2020,  2, 15), 0.06250, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  7, 19), DateUtil.CreateFromYMD (2020,  7, 15), 0.05450, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  9, 13), DateUtil.CreateFromYMD (2020,  9, 15), 0.05250, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2011, 12, 16), DateUtil.CreateFromYMD (2021,  2, 16), 0.05462, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2016,  3, 17), DateUtil.CreateFromYMD (2021,  3,  1), 0.05000, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  4,  5), DateUtil.CreateFromYMD (2022,  4, 15), 0.05125, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013, 10,  2), DateUtil.CreateFromYMD (2023, 10,  2), 0.05000, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013, 11, 26), DateUtil.CreateFromYMD (2023, 11, 26), 0.03875, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013, 12, 11), DateUtil.CreateFromYMD (2024,  1, 15), 0.04150, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014, 11,  4), DateUtil.CreateFromYMD (2024, 11,  4), 0.04500, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015, 12,  9), DateUtil.CreateFromYMD (2025, 12,  9), 0.04500, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015, 12, 16), DateUtil.CreateFromYMD (2025, 12, 16), 0.04500, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (1997,  3, 18), DateUtil.CreateFromYMD (2027,  3, 15), 0.08150, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2001,  8, 27), DateUtil.CreateFromYMD (2031,  5,  1), 0.07500, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2008, 12, 11), DateUtil.CreateFromYMD (2038, 12, 15), 0.06375, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  6,  1), DateUtil.CreateFromYMD (2039,  6,  1), 0.08875, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009, 12, 16), DateUtil.CreateFromYMD (2039, 12, 16), 0.06850, 2, "30/360"),
-			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  9, 18), DateUtil.CreateFromYMD (2044,  9, 15), 0.04900, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  3,  5), DateUtil.CreateFromYMD (2017,  9,  5), 0.05125, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  4, 26), DateUtil.CreateFromYMD (2020,  4, 30), 0.06375, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  3, 23), DateUtil.CreateFromYMD (2020,  6,  1), 0.05875, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  9, 10), DateUtil.CreateFromYMD (2020,  9, 30), 0.05000, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  6, 28), DateUtil.CreateFromYMD (2021,  4, 15), 0.06875, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  9, 18), DateUtil.CreateFromYMD (2022,  9, 15), 0.04450, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013,  9, 14), DateUtil.CreateFromYMD (2023,  9, 15), 0.04700, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013, 10,  4), DateUtil.CreateFromYMD (2023, 10, 15), 0.05750, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  9, 16), DateUtil.CreateFromYMD (2024,  9, 30), 0.04250, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015, 11, 24), DateUtil.CreateFromYMD (2025, 11, 24), 0.04750, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2016,  5, 12), DateUtil.CreateFromYMD (2026,  5, 12), 0.05200, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (1996,  8, 23), DateUtil.CreateFromYMD (2026,  8, 20), 0.07500, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2000,  3,  6), DateUtil.CreateFromYMD (2029,  3,  1), 0.06927, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2000, 12, 15), DateUtil.CreateFromYMD (2030, 12, 15), 0.08600, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2003,  3,  4), DateUtil.CreateFromYMD (2032, 10, 15), 0.05900, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2008,  4,  1), DateUtil.CreateFromYMD (2038,  4,  1), 0.06750, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2008,  5,  8), DateUtil.CreateFromYMD (2038,  5,  8), 0.05900, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  2,  3), DateUtil.CreateFromYMD (2039,  2,  1), 0.06500, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  9,  3), DateUtil.CreateFromYMD (2039,  9, 15), 0.10500, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  7,  1), DateUtil.CreateFromYMD (2040,  6, 15), 0.07625, 2, "30/360"),
 		};
 
 		double[] adblCleanPrice = new double[] {
-			1.0052380,	// (2017,  5,  1)
-			0.9993700,	// (2017,  6,  2)
-			1.0062000,	// (2018,  3, 12)
-			1.1114620,	// (2019,  1, 15)
-			1.1521480,	// (2019,  6, 15)
-			1.1318480,	// (2019,  7, 15)
-			1.1519410,	// (2019,  8, 12)
-			1.0999050,	// (2020,  2, 15)
-			1.0701430,	// (2020,  7, 15)
-			1.0902680,	// (2020,  9, 15)
-			1.0894350,	// (2021,  2, 16)
-			1.0755300,	// (2021,  3,  1)
-			1.0938500,	// (2022,  4, 15)
-			1.0424110,	// (2023, 10,  2)
-			1.0238800,	// (2023, 11, 26)
-			1.0375300,	// (2024,  1, 15)
-			1.0139000,	// (2024, 11,  4)
-			1.0238050,	// (2025, 12,  9)
-			1.0291000,	// (2025, 12, 16)
-			1.3179430,	// (2027,  3, 15)
-			1.2482600,	// (2031,  5,  1)
-			1.2620200,	// (2038, 12, 15)
-			1.5812100,	// (2039,  6,  1)
-			1.2975700,	// (2039, 12, 16)
-			1.0670140,	// (2044,  9, 15)
+			1.0134120,	// (2017,  9,  5)
+			1.0989580,	// (2020,  4, 30)
+			1.0965300,	// (2020,  6,  1)
+			1.0752300,	// (2020,  9, 30)
+			1.1336500,	// (2021,  4, 15)
+			1.0459590,	// (2022,  9, 15)
+			1.0667540,	// (2023,  9, 15)
+			1.0602570,	// (2023, 10, 15)
+			1.0420350,	// (2024,  9, 30)
+			0.9889300,	// (2025, 11, 24)
+			1.0134600,	// (2026,  5, 12)
+			1.2440100,	// (2026,  8, 20)
+			1.2988520,	// (2029,  3,  1)
+			1.3863850,	// (2030, 12, 15)
+			1.1538490,	// (2032, 10, 15)
+			1.3436000,	// (2038,  4,  1)
+			1.1397900,	// (2038,  5,  8)
+			1.2250600,	// (2039,  2,  1)
+			1.4944130,	// (2039,  9, 15)
+			1.2032460,	// (2040,  6, 15)
 		};
 
 		double[] adblOAS = RVMeasures (
