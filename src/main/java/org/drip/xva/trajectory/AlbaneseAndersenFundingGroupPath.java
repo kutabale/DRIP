@@ -47,9 +47,9 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * FundingGroupPath rolls up the Path Realizations of the Sequence in a Single Path Projection Run over
- *  Multiple Collateral Groups onto a Single Funding Group - the Purpose being to calculate Funding Valuation
- *  Adjustments. The References are:
+ * AlbaneseAndersenFundingGroupPath rolls up the Path Realizations of the Sequence in a Single Path
+ *  Projection Run over Multiple Collateral Groups onto a Single Funding Group - the Purpose being to
+ *  calculate Funding Valuation Adjustments. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,23 +68,23 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath {
+public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.FundingGroupPath {
 
 	/**
-	 * Generate a "Mono" FundingGroupPath Instance
+	 * Generate a "Mono" AlbaneseAndersenFundingGroupPath Instance
 	 * 
 	 * @param cgp The "Mono" Collateral Group Path
 	 * @param np The Numeraire Path
 	 * 
-	 * @return The "Mono" FundingGroupPath Instance
+	 * @return The "Mono" AlbaneseAndersenFundingGroupPath Instance
 	 */
 
-	public static final FundingGroupPath Mono (
+	public static final AlbaneseAndersenFundingGroupPath Mono (
 		final org.drip.xva.trajectory.CollateralGroupPath cgp,
 		final org.drip.xva.trajectory.NumerairePath np)
 	{
 		try {
-			return new org.drip.xva.trajectory.FundingGroupPath (new
+			return new org.drip.xva.trajectory.AlbaneseAndersenFundingGroupPath (new
 				org.drip.xva.trajectory.CollateralGroupPath[] {cgp}, np);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 	}
 
 	/**
-	 * FundingGroupPath Constructor
+	 * AlbaneseAndersenFundingGroupPath Constructor
 	 * 
 	 * @param aCGP Array of the Collateral Group Trajectory Paths
 	 * @param np The Numeraire Path
@@ -102,7 +102,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public FundingGroupPath (
+	public AlbaneseAndersenFundingGroupPath (
 		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
 		final org.drip.xva.trajectory.NumerairePath np)
 		throws java.lang.Exception
@@ -110,13 +110,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		super (aCGP, np);
 	}
 
-	/**
-	 * Compute Path Funding Value Adjustment
-	 * 
-	 * @return The Path Funding Value Adjustment
-	 */
-
-	public double fundingValueAdjustment()
+	@Override public double fundingValueAdjustment()
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -141,13 +135,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return dblFundingValueAdjustment;
 	}
 
-	/**
-	 * Compute Path Funding Debt Adjustment
-	 * 
-	 * @return The Path Funding Debt Adjustment
-	 */
-
-	public double fundingDebtAdjustment()
+	@Override public double fundingDebtAdjustment()
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -172,13 +160,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return dblFundingDebtAdjustment;
 	}
 
-	/**
-	 * Compute Path Funding Cost Adjustment
-	 * 
-	 * @return The Path Funding Cost Adjustment
-	 */
-
-	public double fundingCostAdjustment()
+	@Override public double fundingCostAdjustment()
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -201,13 +183,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return dblFundingCostAdjustment;
 	}
 
-	/**
-	 * Compute Path Funding Benefit Adjustment
-	 * 
-	 * @return The Path Funding Benefit Adjustment
-	 */
-
-	public double fundingBenefitAdjustment()
+	@Override public double fundingBenefitAdjustment()
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
@@ -230,13 +206,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return dblFundingBenefitAdjustment;
 	}
 
-	/**
-	 * Compute Path Symmetric Funding Value Adjustment
-	 * 
-	 * @return The Path Symmetric Funding Value Adjustment
-	 */
-
-	public double symmetricFundingValueAdjustment()
+	@Override public double symmetricFundingValueAdjustment()
 	{
 		double[] adblCollateralizedExposurePV = collateralizedExposurePV();
 
@@ -259,13 +229,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return dblSymmetricFundingValueAdjustment;
 	}
 
-	/**
-	 * Compute Period-wise Path Funding Value Adjustment
-	 * 
-	 * @return The Period-wise Path Funding Value Adjustment
-	 */
-
-	public double[] periodFundingValueAdjustment()
+	@Override public double[] periodFundingValueAdjustment()
 	{
 		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
 
@@ -291,13 +255,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return adblFundingValueAdjustment;
 	}
 
-	/**
-	 * Compute Period-wise Path Funding Debt Adjustment
-	 * 
-	 * @return The Period-wise Path Funding Debt Adjustment
-	 */
-
-	public double[] periodFundingDebtAdjustment()
+	@Override public double[] periodFundingDebtAdjustment()
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -323,13 +281,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return adblFundingDebtAdjustment;
 	}
 
-	/**
-	 * Compute Period-wise Path Funding Cost Adjustment
-	 * 
-	 * @return The Period-wise Path Funding Cost Adjustment
-	 */
-
-	public double[] periodFundingCostAdjustment()
+	@Override public double[] periodFundingCostAdjustment()
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -353,13 +305,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return adblFundingCostAdjustment;
 	}
 
-	/**
-	 * Compute Period-wise Path Funding Benefit Adjustment
-	 * 
-	 * @return The Period-wise Path Funding Benefit Adjustment
-	 */
-
-	public double[] periodFundingBenefitAdjustment()
+	@Override public double[] periodFundingBenefitAdjustment()
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
@@ -383,13 +329,7 @@ public class FundingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return adblFundingBenefitAdjustment;
 	}
 
-	/**
-	 * Compute Period-wise Path Symmetric Funding Value Adjustment
-	 * 
-	 * @return The Period-wise Path Symmetric Funding Value Adjustment
-	 */
-
-	public double[] periodSymmetricFundingValueAdjustment()
+	@Override public double[] periodSymmetricFundingValueAdjustment()
 	{
 		double[] adblCollateralizedExposurePV = collateralizedExposurePV();
 

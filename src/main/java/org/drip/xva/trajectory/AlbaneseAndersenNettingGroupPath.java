@@ -47,9 +47,9 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * NettingGroupPath rolls up the Path Realizations of the Sequence in a Single Path Projection Run over
- *  Multiple Collateral Groups onto a Single Netting Group - the Purpose being to calculate Credit Valuation
- *  Adjustments. The References are:
+ * AlbaneseAndersenNettingGroupPath rolls up the Path Realizations of the Sequence in a Single Path
+ *  Projection Run over Multiple Collateral Groups onto a Single Netting Group - the Purpose being to
+ *  calculate Credit Valuation Adjustments. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,23 +68,23 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath {
+public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.NettingGroupPath {
 
 	/**
-	 * Generate a "Mono" NettingGroupPath Instance
+	 * Generate a "Mono" AlbaneseAndersenNettingGroupPath Instance
 	 * 
 	 * @param cgp The "Mono" Collateral Group Path
 	 * @param np The Numeraire Path
 	 * 
-	 * @return The "Mono" NettingGroupPath Instance
+	 * @return The "Mono" AlbaneseAndersenNettingGroupPath Instance
 	 */
 
-	public static final NettingGroupPath Mono (
+	public static final AlbaneseAndersenNettingGroupPath Mono (
 		final org.drip.xva.trajectory.CollateralGroupPath cgp,
 		final org.drip.xva.trajectory.NumerairePath np)
 	{
 		try {
-			return new org.drip.xva.trajectory.NettingGroupPath (new
+			return new org.drip.xva.trajectory.AlbaneseAndersenNettingGroupPath (new
 				org.drip.xva.trajectory.CollateralGroupPath[] {cgp}, np);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 	}
 
 	/**
-	 * NettingGroupPath Constructor
+	 * AlbaneseAndersenNettingGroupPath Constructor
 	 * 
 	 * @param aCGP Array of the Collateral Group Trajectory Paths
 	 * @param np The Numeraire Path
@@ -102,7 +102,7 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public NettingGroupPath (
+	public AlbaneseAndersenNettingGroupPath (
 		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
 		final org.drip.xva.trajectory.NumerairePath np)
 		throws java.lang.Exception
@@ -110,13 +110,7 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		super (aCGP, np);
 	}
 
-	/**
-	 * Compute Path Unilateral Credit Adjustment
-	 * 
-	 * @return The Path Unilateral Credit Adjustment
-	 */
-
-	public double unilateralCreditAdjustment()
+	@Override public double unilateralCreditAdjustment()
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -139,13 +133,7 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return dblUnilateralCreditAdjustment;
 	}
 
-	/**
-	 * Compute Path Bilateral Credit Adjustment
-	 * 
-	 * @return The Path Bilateral Credit Adjustment
-	 */
-
-	public double bilateralCreditAdjustment()
+	@Override public double bilateralCreditAdjustment()
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -168,35 +156,17 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return dblBilateralCreditAdjustment;
 	}
 
-	/**
-	 * Compute Path Contra-Liability Credit Adjustment
-	 * 
-	 * @return The Path Contra-Liability Credit Adjustment
-	 */
-
-	public double contraLiabilityCreditAdjustment()
+	@Override public double contraLiabilityCreditAdjustment()
 	{
 		return unilateralCreditAdjustment() - bilateralCreditAdjustment();
 	}
 
-	/**
-	 * Compute Path Credit Adjustment
-	 * 
-	 * @return The Path Credit Adjustment
-	 */
-
-	public double creditAdjustment()
+	@Override public double creditAdjustment()
 	{
 		return bilateralCreditAdjustment();
 	}
 
-	/**
-	 * Compute Path Debt Adjustment
-	 * 
-	 * @return The Path Debt Adjustment
-	 */
-
-	public double debtAdjustment()
+	@Override public double debtAdjustment()
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
@@ -219,126 +189,7 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return dblDebtAdjustment;
 	}
 
-	/* public double fundingValueAdjustment()
-	{
-		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
-
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
-
-		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
-		double dblFundingValueAdjustment = 0.;
-
-		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
-			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
-				aNV[iVertexIndex - 1].bankSurvival() * aNV[iVertexIndex - 1].bankFundingSpread() *
-					aNV[iVertexIndex - 1].counterPartySurvival();
-
-			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
-				aNV[iVertexIndex].bankSurvival() * aNV[iVertexIndex].bankFundingSpread() *
-					aNV[iVertexIndex].counterPartySurvival();
-
-			dblFundingValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
-				(aNV[iVertexIndex].anchor().julian() - aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
-		}
-
-		return dblFundingValueAdjustment;
-	}
-
-	public double fundingDebtAdjustment()
-	{
-		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
-
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
-
-		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
-		double dblFundingDebtAdjustment = 0.;
-
-		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
-			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
-				aNV[iVertexIndex - 1].bankSurvival() * (1. - aNV[iVertexIndex - 1].bankRecovery()) *
-					aNV[iVertexIndex - 1].bankHazard() * aNV[iVertexIndex - 1].counterPartySurvival();
-
-			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
-				aNV[iVertexIndex].bankSurvival() * (1. - aNV[iVertexIndex].bankRecovery()) *
-					aNV[iVertexIndex].bankHazard() * aNV[iVertexIndex].counterPartySurvival();
-
-			dblFundingDebtAdjustment += 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
-				(aNV[iVertexIndex].anchor().julian() - aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
-		}
-
-		return dblFundingDebtAdjustment;
-	}
-
-	public double fundingCostAdjustment()
-	{
-		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
-
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
-
-		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
-		double dblFundingCostAdjustment = 0.;
-
-		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
-			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
-				aNV[iVertexIndex - 1].bankSurvival() * aNV[iVertexIndex - 1].bankFundingSpread();
-
-			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
-				aNV[iVertexIndex].bankSurvival() * aNV[iVertexIndex].bankFundingSpread();
-
-			dblFundingCostAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
-				(aNV[iVertexIndex].anchor().julian() - aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
-		}
-
-		return dblFundingCostAdjustment;
-	}
-
-	public double fundingBenefitAdjustment()
-	{
-		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
-
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
-
-		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
-		double dblFundingBenefitAdjustment = 0.;
-
-		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
-			double dblPeriodIntegrandStart = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] *
-				aNV[iVertexIndex - 1].bankSurvival() * aNV[iVertexIndex - 1].bankFundingSpread();
-
-			double dblPeriodIntegrandEnd = adblCollateralizedNegativeExposurePV[iVertexIndex] *
-				aNV[iVertexIndex].bankSurvival() * aNV[iVertexIndex].bankFundingSpread();
-
-			dblFundingBenefitAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
-				(aNV[iVertexIndex].anchor().julian() - aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
-		}
-
-		return dblFundingBenefitAdjustment;
-	}
-
-	public double symmetricFundingValueAdjustment()
-	{
-		double[] adblCollateralizedExposurePV = collateralizedExposurePV();
-
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
-
-		int iNumVertex = adblCollateralizedExposurePV.length;
-		double dblSymmetricFundingValueAdjustment = 0.;
-
-		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
-			double dblPeriodIntegrandStart = adblCollateralizedExposurePV[iVertexIndex - 1] *
-				aNV[iVertexIndex - 1].bankSurvival() * aNV[iVertexIndex - 1].bankFundingSpread();
-
-			double dblPeriodIntegrandEnd = adblCollateralizedExposurePV[iVertexIndex] *
-				aNV[iVertexIndex].bankSurvival() * aNV[iVertexIndex].bankFundingSpread();
-
-			dblSymmetricFundingValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
-				(aNV[iVertexIndex].anchor().julian() - aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
-		}
-
-		return dblSymmetricFundingValueAdjustment;
-	} */
-
-	public double[] periodUnilateralCreditAdjustment()
+	@Override public double[] periodUnilateralCreditAdjustment()
 	{
 		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
 
@@ -354,7 +205,7 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] * (1. -
 				aNV[iVertexIndex].counterPartyRecovery());
 
-			adblPeriodUnilateralCreditAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
+			adblPeriodUnilateralCreditAdjustment[iVertexIndex - 1] = 0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aNV[iVertexIndex - 1].counterPartySurvival() -
 					aNV[iVertexIndex].counterPartySurvival());
 		}
@@ -362,7 +213,7 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return adblPeriodUnilateralCreditAdjustment;
 	}
 
-	public double[] periodBilateralCreditAdjustment()
+	@Override public double[] periodBilateralCreditAdjustment()
 	{
 		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
 
@@ -386,7 +237,7 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return adblPeriodBilateralCreditAdjustment;
 	}
 
-	public double[] periodContraLiabilityCreditAdjustment()
+	@Override public double[] periodContraLiabilityCreditAdjustment()
 	{
 		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
 
@@ -410,12 +261,12 @@ public class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath 
 		return adblPeriodContraLiabilityCreditAdjustment;
 	}
 
-	public double[] periodCreditAdjustment()
+	@Override public double[] periodCreditAdjustment()
 	{
 		return periodBilateralCreditAdjustment();
 	}
 
-	public double[] periodDebtAdjustment()
+	@Override public double[] periodDebtAdjustment()
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 

@@ -310,14 +310,14 @@ public class CollateralizedFundingNeutral {
 			};
 
 			aCPGPGround[i] = new CounterPartyGroupPath (
-				new NettingGroupPath[] {
-					new NettingGroupPath (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGP1,
 						np
 					)
 				},
-				new FundingGroupPath[] {
-					new FundingGroupPath (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGP1,
 						np
 					)
@@ -325,18 +325,18 @@ public class CollateralizedFundingNeutral {
 			);
 
 			aCPGPExtended[i] = new CounterPartyGroupPath (
-				new NettingGroupPath[] {
-					new NettingGroupPath (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGP1,
 						np
 					),
-					new NettingGroupPath (
+					new AlbaneseAndersenNettingGroupPath (
 						aCGP2,
 						np
 					)
 				},
-				new FundingGroupPath[] {
-					new FundingGroupPath (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						new CollateralGroupPath[] {
 							new CollateralGroupPath (aCGV1),
 							new CollateralGroupPath (aCGV2)

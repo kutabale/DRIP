@@ -65,13 +65,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * MunicipalFixedBullet2 demonstrates Non-EOS Fixed Coupon Agency Bond Pricing and Relative Value Measure
+ * MunicipalFixedBullet3 demonstrates Non-EOS Fixed Coupon Agency Bond Pricing and Relative Value Measure
  *  Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class MunicipalFixedBullet2 {
+public class MunicipalFixedBullet3 {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -605,61 +605,45 @@ public class MunicipalFixedBullet2 {
 		);
 
 		Bond[] aCorporateBond = new Bond[] {
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2011,  3,  4), DateUtil.CreateFromYMD (2020, 11,  1), 0.08000, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2011,  4, 21), DateUtil.CreateFromYMD (2021,  8,  1), 0.06050, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2011,  5,  3), DateUtil.CreateFromYMD (2025,  8,  1), 0.05914, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2011,  4, 21), DateUtil.CreateFromYMD (2025,  8,  1), 0.06650, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010,  7,  7), DateUtil.CreateFromYMD (2026, 11, 15), 0.06200, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 21), DateUtil.CreateFromYMD (2028,  2, 15), 0.07334, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 21), DateUtil.CreateFromYMD (2028,  8,  1), 0.07250, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2004,  6,  2), DateUtil.CreateFromYMD (2029,  7,  1), 0.06250, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 11, 17), DateUtil.CreateFromYMD (2030,  5,  1), 0.06500, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2011,  6, 15), DateUtil.CreateFromYMD (2031,  7,  1), 0.06202, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010,  4, 26), DateUtil.CreateFromYMD (2035,  4,  1), 0.06725, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2009,  9, 17), DateUtil.CreateFromYMD (2038, 12,  1), 0.07089, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2013, 12, 19), DateUtil.CreateFromYMD (2038, 12,  1), 0.05650, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2009, 12, 30), DateUtil.CreateFromYMD (2039,  5,  1), 0.07747, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2009,  9, 24), DateUtil.CreateFromYMD (2039, 12,  1), 0.06138, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010,  1, 27), DateUtil.CreateFromYMD (2040,  1,  1), 0.06257, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 11, 16), DateUtil.CreateFromYMD (2040,  1,  1), 0.06900, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010,  1, 28), DateUtil.CreateFromYMD (2040,  2, 15), 0.08223, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 21), DateUtil.CreateFromYMD (2040, 11,  1), 0.08572, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 11, 10), DateUtil.CreateFromYMD (2040, 11,  1), 0.06742, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 29), DateUtil.CreateFromYMD (2040, 11, 15), 0.06814, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 11,  2), DateUtil.CreateFromYMD (2040, 12,  1), 0.06519, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2008,  8,  6), DateUtil.CreateFromYMD (2040, 12,  1), 0.06899, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2009,  9,  1), DateUtil.CreateFromYMD (2042,  1,  1), 0.07088, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2012,  5,  3), DateUtil.CreateFromYMD (2042,  1,  1), 0.05432, 2, "US MUNI: 30/360"),
-			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 23), DateUtil.CreateFromYMD (2045,  7,  1), 0.06820, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2014,  8,  1), DateUtil.CreateFromYMD (2024,  8,  1), 0.03160, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2011,  2, 23), DateUtil.CreateFromYMD (2026,  2,  1), 0.06700, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010,  6, 24), DateUtil.CreateFromYMD (2027,  6, 15), 0.06485, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 13), DateUtil.CreateFromYMD (2028,  8,  1), 0.06450, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 11, 19), DateUtil.CreateFromYMD (2029,  5,  1), 0.05545, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2004,  7, 14), DateUtil.CreateFromYMD (2029, 10,  1), 0.07083, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 13), DateUtil.CreateFromYMD (2030,  8,  1), 0.06800, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2011, 12, 20), DateUtil.CreateFromYMD (2030,  9,  1), 0.05995, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2007,  5, 30), DateUtil.CreateFromYMD (2032,  7,  1), 0.05250, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2009,  4, 28), DateUtil.CreateFromYMD (2034,  4,  1), 0.07500, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2005, 10,  4), DateUtil.CreateFromYMD (2035,  7,  1), 0.05250, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 21), DateUtil.CreateFromYMD (2037, 12,  1), 0.06271, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2009,  6, 18), DateUtil.CreateFromYMD (2039,  8,  1), 0.07430, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 23), DateUtil.CreateFromYMD (2040,  4,  1), 0.07650, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 13), DateUtil.CreateFromYMD (2040,  8,  1), 0.07100, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12,  1), DateUtil.CreateFromYMD (2040, 11,  1), 0.07600, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 22), DateUtil.CreateFromYMD (2041,  4,  1), 0.07399, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2016, 11, 16), DateUtil.CreateFromYMD (2042,  9,  1), 0.05060, 2, "US MUNI: 30/360"),
 		};
 
 		double[] adblCleanPrice = new double[] {
-			1.0496650,	// (2020, 11,  1)
-			1.1012830,	// (2021,  8,  1)
-			1.1673525,	// (2025,  8,  1)
-			1.1855460,	// (2025,  8,  1)
-			1.1825295,	// (2026, 11, 15)
-			1.2784200,	// (2028,  2, 15)
-			1.2141710,	// (2028,  8,  1)
-			1.1442065,	// (2029,  7,  1)
-			1.1737825,	// (2029,  5,  1)
-			1.1405340,	// (2031,  7,  1)
-			0.9901500,	// (2035,  4,  1)
-			1.1825000,	// (2038, 12,  1)
-			1.0437800,	// (2038, 12,  1)
-			1.2400000,	// (2039,  5,  1)
-			0.7347500,	// (2039, 12,  1)
-			0.8761800,	// (2040,  1,  1)
-			1.2338200,	// (2040,  1,  1)
-			1.1520200,	// (2040,  2, 15)
-			1.2996000,	// (2040, 11,  1)
-			1.2319000,	// (2040, 11,  1)
-			1.3186200,	// (2040, 11, 15)
-			0.7500000,	// (2040, 12,  1)
-			1.2404300,	// (2040, 12,  1)
-			1.2843000,	// (2042,  1,  1)
-			0.7982400,	// (2042,  1,  1)
-			1.3849000,	// (2045,  7,  1)
+			1.0080000,	// (2024,  8,  1)
+			1.1898135,	// (2026,  2,  1)
+			1.1856250,	// (2027,  6, 15)
+			1.2354160,	// (2028,  8,  1)
+			1.1327260,	// (2029,  5,  1)
+			1.2140040,	// (2029, 10,  1)
+			1.2656460,	// (2030,  8,  1)
+			1.0485000,	// (2030,  9,  1)
+			1.0313555,	// (2032,  7,  1)
+			1.3825100,	// (2034,  4,  1)
+			1.0293900,	// (2035,  7,  1)
+			1.2911000,	// (2037, 12,  1)
+			1.3578890,	// (2039,  8,  1)
+			1.3409510,	// (2040,  4,  1)
+			1.2843295,	// (2040,  8,  1)
+			1.4759900,	// (2040, 11,  1)
+			1.4229365,	// (2041,  4,  1)
+			1.0138000,	// (2042,  9,  1)
 		};
 
 		double[] adblOAS = RVMeasures (

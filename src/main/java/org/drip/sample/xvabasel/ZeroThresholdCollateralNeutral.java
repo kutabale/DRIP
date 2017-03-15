@@ -311,14 +311,14 @@ public class ZeroThresholdCollateralNeutral {
 			};
 
 			aCPGPGround[i] = new CounterPartyGroupPath (
-				new NettingGroupPath[] {
-					new NettingGroupPath (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGPGround,
 						np
 					)
 				},
-				new FundingGroupPath[] {
-					new FundingGroupPath (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGPGround,
 						np
 					)
@@ -326,14 +326,14 @@ public class ZeroThresholdCollateralNeutral {
 			);
 
 			aCPGPExtended[i] = new CounterPartyGroupPath (
-				new NettingGroupPath[] {
-					new NettingGroupPath (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGPExtended,
 						np
 					)
 				},
-				new FundingGroupPath[] {
-					new FundingGroupPath (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGPExtended,
 						np
 					)

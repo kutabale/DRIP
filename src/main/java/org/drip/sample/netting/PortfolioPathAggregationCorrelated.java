@@ -307,14 +307,14 @@ public class PortfolioPathAggregationCorrelated {
 			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
 
 			aCPGP[i] = new CounterPartyGroupPath (
-				new NettingGroupPath[] {
-					new NettingGroupPath (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGP,
 						new NumerairePath (aNV)
 					)
 				},
-				new FundingGroupPath[] {
-					new FundingGroupPath (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGP,
 						new NumerairePath (aNV)
 					)

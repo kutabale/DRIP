@@ -238,22 +238,22 @@ public class PortfolioGroupRun {
 
 		CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV2)};
 
-		NettingGroupPath ngp1 = new NettingGroupPath (
+		AlbaneseAndersenNettingGroupPath ngp1 = new AlbaneseAndersenNettingGroupPath (
 			aCGP1,
 			np
 		);
 
-		FundingGroupPath fgp1 = new FundingGroupPath (
+		AlbaneseAndersenFundingGroupPath fgp1 = new AlbaneseAndersenFundingGroupPath (
 			aCGP1,
 			np
 		);
 
-		NettingGroupPath ngp2 = new NettingGroupPath (
+		AlbaneseAndersenNettingGroupPath ngp2 = new AlbaneseAndersenNettingGroupPath (
 			aCGP2,
 			np
 		);
 
-		FundingGroupPath fgp2 = new FundingGroupPath (
+		AlbaneseAndersenFundingGroupPath fgp2 = new AlbaneseAndersenFundingGroupPath (
 			aCGP2,
 			np
 		);
@@ -405,12 +405,12 @@ public class PortfolioGroupRun {
 		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (
 			new CounterPartyGroupPath[] {
 				new CounterPartyGroupPath (
-					new NettingGroupPath[] {ngp1},
-					new FundingGroupPath[] {fgp1}
+					new AlbaneseAndersenNettingGroupPath[] {ngp1},
+					new AlbaneseAndersenFundingGroupPath[] {fgp1}
 				),
 				new CounterPartyGroupPath (
-					new NettingGroupPath[] {ngp2},
-					new FundingGroupPath[] {fgp2}
+					new AlbaneseAndersenNettingGroupPath[] {ngp2},
+					new AlbaneseAndersenFundingGroupPath[] {fgp2}
 				)
 			}
 		);

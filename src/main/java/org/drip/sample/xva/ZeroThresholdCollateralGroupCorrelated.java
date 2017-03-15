@@ -402,14 +402,14 @@ public class ZeroThresholdCollateralGroupCorrelated {
 			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
 
 			aCPGP[i] = new CounterPartyGroupPath (
-				new NettingGroupPath[] {
-					new NettingGroupPath (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGP,
 						np
 					)
 				},
-				new FundingGroupPath[] {
-					new FundingGroupPath (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGP,
 						np
 					)
