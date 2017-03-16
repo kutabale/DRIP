@@ -1,5 +1,5 @@
 
-package org.drip.xva.numeraire;
+package org.drip.xva.strategy;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,9 @@ package org.drip.xva.numeraire;
  */
 
 /**
- * CounterPartyMarketVertex holds the Vertex Counter Party Market Numeraire Realizations at a Trajectory
- *  Vertex. The References are:
+ * FundingGroupPathAA2014 rolls up the Path Realizations of the Sequence in a Single Path Projection Run over
+ *  Multiple Collateral Groups onto a Single Funding Group in accordance with the Albanese Andersen (2014)
+ *  Strategy. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,63 +68,85 @@ package org.drip.xva.numeraire;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyMarketVertex {
-	private double _dblRecovery = java.lang.Double.NaN;
-	private double _dblSurvival = java.lang.Double.NaN;
-	private double _dblCollateralSpread = java.lang.Double.NaN;
+public class FundingGroupPathAA2014 extends org.drip.xva.trajectory.FundingGroupPath {
 
 	/**
-	 * CounterPartyMarketVertex Constructor
+	 * Generate a "Mono" FundingGroupPathAA2014 Instance
 	 * 
-	 * @param dblSurvival The Realized Counter Party Survival Numeraire
-	 * @param dblRecovery The Realized Counter Party Recovery Numeraire
-	 * @param dblCollateralSpread The Realized Counter Party Collateral Spread Numeraire
+	 * @param cgp The "Mono" Collateral Group Path
+	 * @param np The Numeraire Path
+	 * 
+	 * @return The "Mono" FundingGroupPathAA2014 Instance
+	 */
+
+	public static final FundingGroupPathAA2014 Mono (
+		final org.drip.xva.trajectory.CollateralGroupPath cgp,
+		final org.drip.xva.numeraire.MarketPath np)
+	{
+		try {
+			return new org.drip.xva.strategy.FundingGroupPathAA2014 (new
+				org.drip.xva.trajectory.CollateralGroupPath[] {cgp}, np);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * FundingGroupPathAA2014 Constructor
+	 * 
+	 * @param aCGP Array of the Collateral Group Trajectory Paths
+	 * @param np The Numeraire Path
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CounterPartyMarketVertex (
-		final double dblSurvival,
-		final double dblRecovery,
-		final double dblCollateralSpread)
+	public FundingGroupPathAA2014 (
+		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
+		final org.drip.xva.numeraire.MarketPath np)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSurvival = dblSurvival) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblRecovery = dblRecovery) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralSpread = dblCollateralSpread))
-			throw new java.lang.Exception ("CounterPartyMarketVertex Constructor => Invalid Inputs");
+		super (aCGP, np);
 	}
 
-	/**
-	 * Retrieve the Realized Counter Party Survival Numeraire
-	 * 
-	 * @return The Realized Counter Party Survival Numeraire
-	 */
-
-	public double survival()
+	@Override public double fundingValueAdjustment()
 	{
-		return _dblSurvival;
+		return bilateralFundingValueAdjustment();
 	}
 
-	/**
-	 * Retrieve the Realized Counter Party Recovery Numeraire
-	 * 
-	 * @return The Realized Counter Party Recovery Numeraire
-	 */
-
-	public double recovery()
+	@Override public double fundingDebtAdjustment()
 	{
-		return _dblRecovery;
+		return bilateralFundingDebtAdjustment();
 	}
 
-	/**
-	 * Retrieve the Realized Counter Party Collateral Spread
-	 * 
-	 * @return The Realized Counter Party Collateral Spread
-	 */
-
-	public double collateralSpread()
+	@Override public double fundingCostAdjustment()
 	{
-		return _dblCollateralSpread;
+		return unilateralFundingValueAdjustment();
+	}
+
+	@Override public double fundingBenefitAdjustment()
+	{
+		return unilateralFundingDebtAdjustment();
+	}
+
+	@Override public double[] periodFundingValueAdjustment()
+	{
+		return periodBilateralFundingValueAdjustment();
+	}
+
+	@Override public double[] periodFundingDebtAdjustment()
+	{
+		return periodBilateralFundingDebtAdjustment();
+	}
+
+	@Override public double[] periodFundingCostAdjustment()
+	{
+		return periodUnilateralFundingValueAdjustment();
+	}
+
+	@Override public double[] periodFundingBenefitAdjustment()
+	{
+		return periodUnilateralFundingDebtAdjustment();
 	}
 }

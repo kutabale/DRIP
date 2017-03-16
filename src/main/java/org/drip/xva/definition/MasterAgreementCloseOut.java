@@ -50,6 +50,8 @@ package org.drip.xva.definition;
  * MasterAgreementCloseOut implements the (2002) ISDA Master Agreement Close Out Scheme to be applied to the
  *  MTM at the Bank/Counter Party Default. The References are:
  *  
+ *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
+ *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
@@ -57,10 +59,6 @@ package org.drip.xva.definition;
  *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -70,6 +68,7 @@ package org.drip.xva.definition;
 
 public class MasterAgreementCloseOut {
 	private double _dblBankRecovery = java.lang.Double.NaN;
+	private double _dblCollateralBalance = java.lang.Double.NaN;
 	private double _dblCounterPartyRecovery = java.lang.Double.NaN;
 
 	/**
@@ -77,17 +76,20 @@ public class MasterAgreementCloseOut {
 	 * 
 	 * @param dblBankRecovery The Bank Recovery Rate
 	 * @param dblCounterPartyRecovery The Counter Party Recovery Rate
+	 * @param dblCollateralBalance The Posted Collateral Balance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public MasterAgreementCloseOut (
 		final double dblBankRecovery,
-		final double dblCounterPartyRecovery)
+		final double dblCounterPartyRecovery,
+		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyRecovery = dblCounterPartyRecovery))
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyRecovery = dblCounterPartyRecovery) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance))
 			throw new java.lang.Exception ("MasterAgreementCloseOut Constructor => Invalid Inputs");
 	}
 
@@ -114,6 +116,17 @@ public class MasterAgreementCloseOut {
 	}
 
 	/**
+	 * Retrieve the Collateral Balance
+	 * 
+	 * @return The Collateral Balance
+	 */
+
+	public double collateralBalance()
+	{
+		return _dblCollateralBalance;
+	}
+
+	/**
 	 * Retrieve the Close-out from the MTM on the Bank Default
 	 * 
 	 * @param dblMTM The MTM
@@ -130,7 +143,10 @@ public class MasterAgreementCloseOut {
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM))
 			throw new java.lang.Exception ("MasterAgreementCloseOut::bankDefault => Invalid Inputs");
 
-		return dblMTM > 0. ? dblMTM : _dblBankRecovery * dblMTM;
+		double dblNetMTM = dblMTM - _dblCollateralBalance;
+
+		return (dblNetMTM > 0. ? dblNetMTM : 0.) + _dblBankRecovery * (dblNetMTM < 0. ? dblNetMTM : 0.) +
+			_dblCollateralBalance;
 	}
 
 	/**
@@ -150,6 +166,9 @@ public class MasterAgreementCloseOut {
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM))
 			throw new java.lang.Exception ("MasterAgreementCloseOut::counterPartyDefault => Invalid Inputs");
 
-		return dblMTM < 0. ? dblMTM : _dblCounterPartyRecovery * dblMTM;
+		double dblNetMTM = dblMTM - _dblCollateralBalance;
+
+		return _dblCounterPartyRecovery * (dblNetMTM > 0. ? dblNetMTM : 0.) + (dblNetMTM < 0. ? dblNetMTM :
+			0.) + _dblCollateralBalance;
 	}
 }

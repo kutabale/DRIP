@@ -14,8 +14,8 @@ import org.drip.xva.basel.*;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.settings.*;
-import org.drip.xva.strategy.AlbaneseAndersenFunding;
-import org.drip.xva.strategy.AlbaneseAndersenNetting;
+import org.drip.xva.strategy.FundingGroupPathAA2014;
+import org.drip.xva.strategy.NettingGroupPathAA2014;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -314,14 +314,14 @@ public class CollateralizedNettingNeutral {
 			};
 
 			aCPGPGround[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNetting[] {
-					new AlbaneseAndersenNetting (
+				new NettingGroupPathAA2014[] {
+					new NettingGroupPathAA2014 (
 						aCGP1,
 						np
 					)
 				},
-				new AlbaneseAndersenFunding[] {
-					new AlbaneseAndersenFunding (
+				new FundingGroupPathAA2014[] {
+					new FundingGroupPathAA2014 (
 						aCGP1,
 						np
 					)
@@ -329,22 +329,22 @@ public class CollateralizedNettingNeutral {
 			);
 
 			aCPGPExtended[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNetting[] {
-					new AlbaneseAndersenNetting (
+				new NettingGroupPathAA2014[] {
+					new NettingGroupPathAA2014 (
 						aCGP1,
 						np
 					),
-					new AlbaneseAndersenNetting (
+					new NettingGroupPathAA2014 (
 						aCGP2,
 						np
 					)
 				},
-				new AlbaneseAndersenFunding[] {
-					new AlbaneseAndersenFunding (
+				new FundingGroupPathAA2014[] {
+					new FundingGroupPathAA2014 (
 						aCGP1,
 						np
 					),
-					new AlbaneseAndersenFunding (
+					new FundingGroupPathAA2014 (
 						aCGP2,
 						np
 					)

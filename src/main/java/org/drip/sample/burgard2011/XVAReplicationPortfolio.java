@@ -268,7 +268,8 @@ public class XVAReplicationPortfolio {
 
 		MasterAgreementCloseOut maco = new MasterAgreementCloseOut (
 			dblBankRecovery,
-			dblCounterPartyRecovery
+			dblCounterPartyRecovery,
+			0.
 		);
 
 		DiffusionEvolver meAsset = new DiffusionEvolver (

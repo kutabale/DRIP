@@ -515,4 +515,116 @@ public class ExposureGroupPath {
 
 		return adblUncollateralizedNegativeExposurePV;
 	}
+
+	/**
+	 * Retrieve the Array of Collateral Balances
+	 * 
+	 * @return The Array of Collateral Balances
+	 */
+
+	public double[] collateralBalance()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aCGP.length;
+		double[] adblCollateralBalance = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCollateralBalance[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupCollateralBalance = _aCGP[iCollateralGroupIndex].collateralBalance();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCollateralBalance[iVertexIndex] += adblCollateralGroupCollateralBalance[iVertexIndex];
+		}
+
+		return adblCollateralBalance;
+	}
+
+	/**
+	 * Compute Path Bilateral Collateral Value Adjustment
+	 * 
+	 * @return The Path Bilateral Collateral Value Adjustment
+	 */
+
+	public double bilateralCollateralValueAdjustment()
+	{
+		org.drip.xva.numeraire.MarketVertex[] aNV = _np.vertexes();
+
+		double[] adblCollateralBalance = collateralBalance();
+
+		double dblBilateralCollateralValueAdjustment = 0.;
+		int iNumVertex = adblCollateralBalance.length;
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
+				aNV[iVertexIndex - 1].bankSurvival() * aNV[iVertexIndex - 1].counterPartySurvival() *
+					aNV[iVertexIndex - 1].csaSpread();
+
+			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
+				aNV[iVertexIndex].bankSurvival() * aNV[iVertexIndex].counterPartySurvival() *
+					aNV[iVertexIndex].csaSpread();
+
+			dblBilateralCollateralValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd)
+				* (aNV[iVertexIndex].anchor().julian() - aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
+		}
+
+		return dblBilateralCollateralValueAdjustment;
+	}
+
+	/**
+	 * Compute Path Collateral Value Adjustment
+	 * 
+	 * @return The Path Collateral Value Adjustment
+	 */
+
+	public double collateralValueAdjustment()
+	{
+		return bilateralCollateralValueAdjustment();
+	}
+
+	/**
+	 * Compute Period-wise Path Bilateral Collateral Value Adjustment
+	 * 
+	 * @return The Period-wise Path Bilateral Collateral Value Adjustment
+	 */
+
+	public double[] periodBilateralCollateralValueAdjustment()
+	{
+		org.drip.xva.numeraire.MarketVertex[] aNV = _np.vertexes();
+
+		double[] adblCollateralBalance = collateralBalance();
+
+		int iNumVertex = adblCollateralBalance.length;
+		double[] adblBilateralCollateralValueAdjustment = new double[iNumVertex - 1];
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
+				aNV[iVertexIndex - 1].bankSurvival() * aNV[iVertexIndex - 1].counterPartySurvival() *
+					aNV[iVertexIndex - 1].csaSpread();
+
+			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
+				aNV[iVertexIndex].bankSurvival() * aNV[iVertexIndex].counterPartySurvival() *
+					aNV[iVertexIndex].csaSpread();
+
+			adblBilateralCollateralValueAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
+				dblPeriodIntegrandEnd) * (aNV[iVertexIndex].anchor().julian() -
+					aNV[iVertexIndex - 1].anchor().julian()) / 365.25;
+		}
+
+		return adblBilateralCollateralValueAdjustment;
+	}
+
+	/**
+	 * Compute Period-wise Path Collateral Value Adjustment
+	 * 
+	 * @return The Period-wise Path Collateral Value Adjustment
+	 */
+
+	public double[] periodCollateralValueAdjustment()
+	{
+		return periodBilateralCollateralValueAdjustment();
+	}
 }

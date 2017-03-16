@@ -49,16 +49,14 @@ package org.drip.xva.numeraire;
 /**
  * MarketVertex holds the Vertex Market Numeraire Realizations at a Trajectory Vertex. The References are:
  *  
+ *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
+ *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
  *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -69,9 +67,9 @@ package org.drip.xva.numeraire;
 public class MarketVertex {
 	private double _dblCSASpread = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
-	private org.drip.xva.numeraire.BankMarketVertex _bmv = null;
 	private double _dblOvernightPolicyIndex = java.lang.Double.NaN;
-	private org.drip.xva.numeraire.CounterPartyMarketVertex _cpmv = null;
+	private org.drip.xva.numeraire.EntityMarketVertex _emvBank = null;
+	private org.drip.xva.numeraire.EntityMarketVertex _emvCounterParty = null;
 
 	/**
 	 * Construct a Standard Instance of the MarketVertex
@@ -102,16 +100,16 @@ public class MarketVertex {
 				dtAnchor,
 				dblOvernightPolicyIndex,
 				0.,
-				new org.drip.xva.numeraire.BankMarketVertex (
+				new org.drip.xva.numeraire.EntityMarketVertex (
 					dblBankSurvival,
 					dblBankRecovery,
 					dblBankFundingSpread / (1. - dblBankRecovery),
-					dblBankFundingSpread,
-					0.
+					dblBankFundingSpread
 				),
-				new org.drip.xva.numeraire.CounterPartyMarketVertex (
+				new org.drip.xva.numeraire.EntityMarketVertex (
 					dblCounterPartySurvival,
 					dblCounterPartyRecovery,
+					0.,
 					0.
 				)
 			);
@@ -128,7 +126,7 @@ public class MarketVertex {
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Numeraire
 	 * @param dblCSASpread The Realized CSA Spread Numeraire
-	 * @param bmv Bank Market Vertex Instance
+	 * @param emvBank Bank Entity Market Vertex Instance
 	 * @param cpmv Counter PartyMarket Vertex Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -138,13 +136,14 @@ public class MarketVertex {
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblOvernightPolicyIndex,
 		final double dblCSASpread,
-		final org.drip.xva.numeraire.BankMarketVertex bmv,
-		final org.drip.xva.numeraire.CounterPartyMarketVertex cpmv)
+		final org.drip.xva.numeraire.EntityMarketVertex emvBank,
+		final org.drip.xva.numeraire.EntityMarketVertex emvCounterParty)
 		throws java.lang.Exception
 	{
 		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
 			(_dblOvernightPolicyIndex = dblOvernightPolicyIndex) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblCSASpread = dblCSASpread) || null == (_bmv = bmv) || null == (_cpmv = cpmv))
+				(_dblCSASpread = dblCSASpread) || null == (_emvBank = emvBank) || null == (_emvCounterParty =
+					emvCounterParty))
 			throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
 	}
 
@@ -198,9 +197,9 @@ public class MarketVertex {
 	 * @return The Realized Bank Market Vertex
 	 */
 
-	public org.drip.xva.numeraire.BankMarketVertex bankMarketVertex()
+	public org.drip.xva.numeraire.EntityMarketVertex bankMarketVertex()
 	{
-		return _bmv;
+		return _emvBank;
 	}
 
 	/**
@@ -209,9 +208,9 @@ public class MarketVertex {
 	 * @return The Realized Counter Party Market Vertex
 	 */
 
-	public org.drip.xva.numeraire.CounterPartyMarketVertex counterPartyMarketVertex()
+	public org.drip.xva.numeraire.EntityMarketVertex counterPartyMarketVertex()
 	{
-		return _cpmv;
+		return _emvCounterParty;
 	}
 
 	/**
@@ -222,7 +221,7 @@ public class MarketVertex {
 
 	public double bankHazard()
 	{
-		return _bmv.hazard();
+		return _emvBank.hazard();
 	}
 
 	/**
@@ -233,7 +232,7 @@ public class MarketVertex {
 
 	public double bankSurvival()
 	{
-		return _bmv.survival();
+		return _emvBank.survival();
 	}
 
 	/**
@@ -244,7 +243,7 @@ public class MarketVertex {
 
 	public double bankRecovery()
 	{
-		return _bmv.recovery();
+		return _emvBank.recovery();
 	}
 
 	/**
@@ -255,18 +254,7 @@ public class MarketVertex {
 
 	public double bankFundingSpread()
 	{
-		return _bmv.fundingSpread();
-	}
-
-	/**
-	 * Retrieve the Realized Bank Collateral Spread
-	 * 
-	 * @return The Realized Bank Collateral Spread
-	 */
-
-	public double bankCollateralSpread()
-	{
-		return _bmv.collateralSpread();
+		return _emvBank.fundingSpread();
 	}
 
 	/**
@@ -277,7 +265,7 @@ public class MarketVertex {
 
 	public double counterPartySurvival()
 	{
-		return _cpmv.survival();
+		return _emvCounterParty.survival();
 	}
 
 	/**
@@ -288,17 +276,6 @@ public class MarketVertex {
 
 	public double counterPartyRecovery()
 	{
-		return _cpmv.recovery();
-	}
-
-	/**
-	 * Retrieve the Realized Counter Party Collateral Spread
-	 * 
-	 * @return The Realized Counter Party Collateral Spread
-	 */
-
-	public double counterPartyCollateralSpread()
-	{
-		return _cpmv.collateralSpread();
+		return _emvCounterParty.recovery();
 	}
 }

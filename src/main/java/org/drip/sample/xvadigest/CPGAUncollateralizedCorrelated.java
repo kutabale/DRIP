@@ -12,8 +12,8 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
-import org.drip.xva.strategy.AlbaneseAndersenFunding;
-import org.drip.xva.strategy.AlbaneseAndersenNetting;
+import org.drip.xva.strategy.FundingGroupPathAA2014;
+import org.drip.xva.strategy.NettingGroupPathAA2014;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -441,14 +441,14 @@ public class CPGAUncollateralizedCorrelated {
 			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
 
 			aCPGP[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNetting[] {
-					new AlbaneseAndersenNetting (
+				new NettingGroupPathAA2014[] {
+					new NettingGroupPathAA2014 (
 						aCGP,
 						np
 					)
 				},
-				new AlbaneseAndersenFunding[] {
-					new AlbaneseAndersenFunding (
+				new FundingGroupPathAA2014[] {
+					new FundingGroupPathAA2014 (
 						aCGP,
 						np
 					)

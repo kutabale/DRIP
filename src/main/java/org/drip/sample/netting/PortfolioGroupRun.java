@@ -10,8 +10,8 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
-import org.drip.xva.strategy.AlbaneseAndersenFunding;
-import org.drip.xva.strategy.AlbaneseAndersenNetting;
+import org.drip.xva.strategy.FundingGroupPathAA2014;
+import org.drip.xva.strategy.NettingGroupPathAA2014;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -242,22 +242,22 @@ public class PortfolioGroupRun {
 
 		CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV2)};
 
-		AlbaneseAndersenNetting ngp1 = new AlbaneseAndersenNetting (
+		NettingGroupPathAA2014 ngp1 = new NettingGroupPathAA2014 (
 			aCGP1,
 			np
 		);
 
-		AlbaneseAndersenFunding fgp1 = new AlbaneseAndersenFunding (
+		FundingGroupPathAA2014 fgp1 = new FundingGroupPathAA2014 (
 			aCGP1,
 			np
 		);
 
-		AlbaneseAndersenNetting ngp2 = new AlbaneseAndersenNetting (
+		NettingGroupPathAA2014 ngp2 = new NettingGroupPathAA2014 (
 			aCGP2,
 			np
 		);
 
-		AlbaneseAndersenFunding fgp2 = new AlbaneseAndersenFunding (
+		FundingGroupPathAA2014 fgp2 = new FundingGroupPathAA2014 (
 			aCGP2,
 			np
 		);
@@ -409,12 +409,12 @@ public class PortfolioGroupRun {
 		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (
 			new CounterPartyGroupPath[] {
 				new CounterPartyGroupPath (
-					new AlbaneseAndersenNetting[] {ngp1},
-					new AlbaneseAndersenFunding[] {fgp1}
+					new NettingGroupPathAA2014[] {ngp1},
+					new FundingGroupPathAA2014[] {fgp1}
 				),
 				new CounterPartyGroupPath (
-					new AlbaneseAndersenNetting[] {ngp2},
-					new AlbaneseAndersenFunding[] {fgp2}
+					new NettingGroupPathAA2014[] {ngp2},
+					new FundingGroupPathAA2014[] {fgp2}
 				)
 			}
 		);

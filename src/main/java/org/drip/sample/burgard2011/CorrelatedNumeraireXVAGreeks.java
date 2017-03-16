@@ -262,7 +262,8 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		MasterAgreementCloseOut maco = new MasterAgreementCloseOut (
 			dblBankRecoveryRate,
-			dblCounterPartyRecoveryRate
+			dblCounterPartyRecoveryRate,
+			0.
 		);
 
 		DiffusionEvolver deAsset = new DiffusionEvolver (

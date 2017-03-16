@@ -69,8 +69,8 @@ package org.drip.xva.settings;
 
 public class CollateralAmountEstimator {
 	private double _dblCurrentBalance = java.lang.Double.NaN;
-	private org.drip.xva.settings.CollateralGroupSpecification _cgs = null;
 	private org.drip.measure.bridge.BrokenDateInterpolator _bdb = null;
+	private org.drip.xva.settings.CollateralGroupSpecification _cgs = null;
 	private org.drip.xva.settings.CounterPartyGroupSpecification _cpgs = null;
 
 	/**
