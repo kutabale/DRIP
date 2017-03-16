@@ -10,7 +10,11 @@ import org.drip.measure.realization.*;
 import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.numeraire.MarketPath;
+import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.settings.*;
+import org.drip.xva.strategy.AlbaneseAndersenFunding;
+import org.drip.xva.strategy.AlbaneseAndersenNetting;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -253,7 +257,7 @@ public class CPGAZeroThreshold {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		NumeraireVertex[] aNV = new NumeraireVertex[iNumStep + 1];
+		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
 		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
@@ -281,7 +285,7 @@ public class CPGAZeroThreshold {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = NumeraireVertex.Standard (
+			aNV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -291,7 +295,7 @@ public class CPGAZeroThreshold {
 				dblCounterPartyRecoveryRate
 			);
 
-		NumerairePath np = new NumerairePath (aNV);
+		MarketPath np = new MarketPath (aNV);
 
 		for (int i = 0; i < iNumPath; ++i) {
 			JulianDate dtStart = dtSpot;
@@ -333,14 +337,14 @@ public class CPGAZeroThreshold {
 			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
 
 			aCPGP[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGP,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						aCGP,
 						np
 					)

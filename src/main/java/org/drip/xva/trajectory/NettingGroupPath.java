@@ -1,5 +1,5 @@
 
-package org.drip.xva.strategy;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -68,11 +68,11 @@ package org.drip.xva.strategy;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class NettingGroupPath extends org.drip.xva.strategy.ExposureGroupPath {
+public abstract class NettingGroupPath extends org.drip.xva.trajectory.ExposureGroupPath {
 
 	protected NettingGroupPath (
 		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
-		final org.drip.xva.trajectory.NumerairePath np)
+		final org.drip.xva.numeraire.MarketPath np)
 		throws java.lang.Exception
 	{
 		super (aCGP, np);

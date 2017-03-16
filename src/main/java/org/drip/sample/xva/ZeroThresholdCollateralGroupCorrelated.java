@@ -10,7 +10,11 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.numeraire.MarketPath;
+import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.settings.*;
+import org.drip.xva.strategy.AlbaneseAndersenFunding;
+import org.drip.xva.strategy.AlbaneseAndersenNetting;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -352,11 +356,11 @@ public class ZeroThresholdCollateralGroupCorrelated {
 
 			JulianDate dtStart = dtSpot;
 			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
-			NumeraireVertex[] aNV = new NumeraireVertex [iNumStep + 1];
+			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
 			CollateralGroupVertex[] aCGV = new CollateralGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aNV[j] = NumeraireVertex.Standard (
+				aNV[j] = MarketVertex.Standard (
 					adtVertex[j] = dtSpot.addMonths (6 * j + 6),
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -397,19 +401,19 @@ public class ZeroThresholdCollateralGroupCorrelated {
 				dblValueStart = dblValueEnd;
 			}
 
-			NumerairePath np = new NumerairePath (aNV);
+			MarketPath np = new MarketPath (aNV);
 
 			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
 
 			aCPGP[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGP,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						aCGP,
 						np
 					)

@@ -8,6 +8,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.numeraire.MarketPath;
+import org.drip.xva.numeraire.MarketVertex;
+import org.drip.xva.strategy.AlbaneseAndersenFunding;
+import org.drip.xva.strategy.AlbaneseAndersenNetting;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -127,7 +131,7 @@ public class FixFloatVABank {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		NumeraireVertex[] aVN = new NumeraireVertex[iNumStep + 1];
+		MarketVertex[] aVN = new MarketVertex[iNumStep + 1];
 		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
@@ -148,7 +152,7 @@ public class FixFloatVABank {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aVN[i] = NumeraireVertex.Standard (
+			aVN[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -158,7 +162,7 @@ public class FixFloatVABank {
 				dblCounterPartyRecoveryRate
 			);
 
-		NumerairePath np = new NumerairePath (aVN);
+		MarketPath np = new MarketPath (aVN);
 
 		for (int i = 0; i < iNumPath; ++i) {
 			CollateralGroupVertex[] aCGV = new CollateralGroupVertex[iNumStep + 1];
@@ -174,14 +178,14 @@ public class FixFloatVABank {
 			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
 
 			aCPGP[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGP,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						aCGP,
 						np
 					)

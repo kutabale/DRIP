@@ -13,7 +13,11 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
+import org.drip.xva.numeraire.MarketPath;
+import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.settings.*;
+import org.drip.xva.strategy.AlbaneseAndersenFunding;
+import org.drip.xva.strategy.AlbaneseAndersenNetting;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -398,7 +402,7 @@ public class ZeroThresholdCollateralPayableStochastic {
 			);
 
 			JulianDate dtStart = dtSpot;
-			NumeraireVertex[] aNV = new NumeraireVertex [iNumStep + 1];
+			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
 			CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
@@ -443,7 +447,7 @@ public class ZeroThresholdCollateralPayableStochastic {
 				}
 
 
-				aNV[j] = NumeraireVertex.Standard (
+				aNV[j] = MarketVertex.Standard (
 					adtVertex[j],
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -468,21 +472,21 @@ public class ZeroThresholdCollateralPayableStochastic {
 				);
 			}
 
-			NumerairePath np = new NumerairePath (aNV);
+			MarketPath np = new MarketPath (aNV);
 
 			CollateralGroupPath[] aCGPGround = new CollateralGroupPath[] {
 				new CollateralGroupPath (aCGV1)
 			};
 
 			aCPGPGround[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGPGround,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						aCGPGround,
 						np
 					)
@@ -495,14 +499,14 @@ public class ZeroThresholdCollateralPayableStochastic {
 			};
 
 			aCPGPExtended[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGPExtended,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						aCGPExtended,
 						np
 					)

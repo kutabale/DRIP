@@ -11,7 +11,11 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
+import org.drip.xva.numeraire.MarketPath;
+import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.settings.*;
+import org.drip.xva.strategy.AlbaneseAndersenFunding;
+import org.drip.xva.strategy.AlbaneseAndersenNetting;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -180,7 +184,7 @@ public class ZeroThresholdCollateralReceivable {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		NumeraireVertex[] aNV = new NumeraireVertex[iNumStep + 1];
+		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
 		CounterPartyGroupPath[] aCPGPGround = new CounterPartyGroupPath[iNumPath];
@@ -203,7 +207,7 @@ public class ZeroThresholdCollateralReceivable {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = NumeraireVertex.Standard (
+			aNV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -299,7 +303,7 @@ public class ZeroThresholdCollateralReceivable {
 				dblValueStart2 = dblValueEnd2;
 			}
 
-			NumerairePath np = new NumerairePath (aNV);
+			MarketPath np = new MarketPath (aNV);
 
 			CollateralGroupPath[] aCGPGround = new CollateralGroupPath[] {
 				new CollateralGroupPath (aCGV1)
@@ -311,14 +315,14 @@ public class ZeroThresholdCollateralReceivable {
 			};
 
 			aCPGPGround[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGPGround,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						aCGPGround,
 						np
 					)
@@ -326,14 +330,14 @@ public class ZeroThresholdCollateralReceivable {
 			);
 
 			aCPGPExtended[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGPExtended,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						aCGPExtended,
 						np
 					)

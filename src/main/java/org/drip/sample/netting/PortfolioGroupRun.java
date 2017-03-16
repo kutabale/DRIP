@@ -8,6 +8,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.numeraire.MarketPath;
+import org.drip.xva.numeraire.MarketVertex;
+import org.drip.xva.strategy.AlbaneseAndersenFunding;
+import org.drip.xva.strategy.AlbaneseAndersenNetting;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -124,7 +128,7 @@ public class PortfolioGroupRun {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		NumeraireVertex[] aNV = new NumeraireVertex[iNumStep + 1];
+		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
 		CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
 		CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
@@ -191,7 +195,7 @@ public class PortfolioGroupRun {
 		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 0; i <= iNumStep; ++i) {
-			aNV[i] = NumeraireVertex.Standard (
+			aNV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -223,7 +227,7 @@ public class PortfolioGroupRun {
 				FormatUtil.FormatDouble (aCGV2[i].collateralizedExposure(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aCGV2[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aCGV2[i].collateralBalance(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aNV[i].csa(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aNV[i].overnightPolicyIndex(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aNV[i].bankSurvival(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aNV[i].bankRecovery(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aNV[i].bankFundingSpread(), 1, 6, 1.) + " | " +
@@ -232,28 +236,28 @@ public class PortfolioGroupRun {
 			);
 		}
 
-		NumerairePath np = new NumerairePath (aNV);
+		MarketPath np = new MarketPath (aNV);
 
 		CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV1)};
 
 		CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV2)};
 
-		AlbaneseAndersenNettingGroupPath ngp1 = new AlbaneseAndersenNettingGroupPath (
+		AlbaneseAndersenNetting ngp1 = new AlbaneseAndersenNetting (
 			aCGP1,
 			np
 		);
 
-		AlbaneseAndersenFundingGroupPath fgp1 = new AlbaneseAndersenFundingGroupPath (
+		AlbaneseAndersenFunding fgp1 = new AlbaneseAndersenFunding (
 			aCGP1,
 			np
 		);
 
-		AlbaneseAndersenNettingGroupPath ngp2 = new AlbaneseAndersenNettingGroupPath (
+		AlbaneseAndersenNetting ngp2 = new AlbaneseAndersenNetting (
 			aCGP2,
 			np
 		);
 
-		AlbaneseAndersenFundingGroupPath fgp2 = new AlbaneseAndersenFundingGroupPath (
+		AlbaneseAndersenFunding fgp2 = new AlbaneseAndersenFunding (
 			aCGP2,
 			np
 		);
@@ -405,12 +409,12 @@ public class PortfolioGroupRun {
 		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (
 			new CounterPartyGroupPath[] {
 				new CounterPartyGroupPath (
-					new AlbaneseAndersenNettingGroupPath[] {ngp1},
-					new AlbaneseAndersenFundingGroupPath[] {fgp1}
+					new AlbaneseAndersenNetting[] {ngp1},
+					new AlbaneseAndersenFunding[] {fgp1}
 				),
 				new CounterPartyGroupPath (
-					new AlbaneseAndersenNettingGroupPath[] {ngp2},
-					new AlbaneseAndersenFundingGroupPath[] {fgp2}
+					new AlbaneseAndersenNetting[] {ngp2},
+					new AlbaneseAndersenFunding[] {fgp2}
 				)
 			}
 		);

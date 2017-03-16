@@ -10,6 +10,10 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
+import org.drip.xva.numeraire.MarketPath;
+import org.drip.xva.numeraire.MarketVertex;
+import org.drip.xva.strategy.AlbaneseAndersenFunding;
+import org.drip.xva.strategy.AlbaneseAndersenNetting;
 import org.drip.xva.trajectory.*;
 
 /*
@@ -176,7 +180,7 @@ public class UncollateralizedFundingPayable {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		NumeraireVertex[] aNV = new NumeraireVertex[iNumStep + 1];
+		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
@@ -192,7 +196,7 @@ public class UncollateralizedFundingPayable {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = NumeraireVertex.Standard (
+			aNV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -246,7 +250,7 @@ public class UncollateralizedFundingPayable {
 				);
 			}
 
-			NumerairePath np = new NumerairePath (aNV);
+			MarketPath np = new MarketPath (aNV);
 
 			CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {
 				new CollateralGroupPath (aCGV1)
@@ -257,14 +261,14 @@ public class UncollateralizedFundingPayable {
 			};
 
 			aCPGPGround[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGP1,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						aCGP1,
 						np
 					)
@@ -272,18 +276,18 @@ public class UncollateralizedFundingPayable {
 			);
 
 			aCPGPExtended[i] = new CounterPartyGroupPath (
-				new AlbaneseAndersenNettingGroupPath[] {
-					new AlbaneseAndersenNettingGroupPath (
+				new AlbaneseAndersenNetting[] {
+					new AlbaneseAndersenNetting (
 						aCGP1,
 						np
 					),
-					new AlbaneseAndersenNettingGroupPath (
+					new AlbaneseAndersenNetting (
 						aCGP2,
 						np
 					)
 				},
-				new AlbaneseAndersenFundingGroupPath[] {
-					new AlbaneseAndersenFundingGroupPath (
+				new AlbaneseAndersenFunding[] {
+					new AlbaneseAndersenFunding (
 						new CollateralGroupPath[] {
 							new CollateralGroupPath (aCGV1),
 							new CollateralGroupPath (aCGV2)

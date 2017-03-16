@@ -68,8 +68,8 @@ package org.drip.xva.trajectory;
  */
 
 public class CounterPartyGroupPath {
-	private org.drip.xva.trajectory.AlbaneseAndersenFundingGroupPath[] _aFGP = null;
-	private org.drip.xva.trajectory.AlbaneseAndersenNettingGroupPath[] _aNGP = null;
+	private org.drip.xva.trajectory.FundingGroupPath[] _aFGP = null;
+	private org.drip.xva.trajectory.NettingGroupPath[] _aNGP = null;
 
 	/**
 	 * CounterPartyGroupPath Constructor
@@ -81,8 +81,8 @@ public class CounterPartyGroupPath {
 	 */
 
 	public CounterPartyGroupPath (
-		final org.drip.xva.trajectory.AlbaneseAndersenNettingGroupPath[] aNGP,
-		final org.drip.xva.trajectory.AlbaneseAndersenFundingGroupPath[] aFGP)
+		final org.drip.xva.trajectory.NettingGroupPath[] aNGP,
+		final org.drip.xva.trajectory.FundingGroupPath[] aFGP)
 		throws java.lang.Exception
 	{
 		if (null == (_aNGP = aNGP) || 0 == _aNGP.length || null == (_aFGP = aFGP) || 0 == _aFGP.length)
@@ -95,7 +95,7 @@ public class CounterPartyGroupPath {
 	 * @return The Array of the Funding Group Trajectory Paths
 	 */
 
-	public org.drip.xva.trajectory.AlbaneseAndersenFundingGroupPath[] fundingGroupTrajectoryPaths()
+	public org.drip.xva.trajectory.FundingGroupPath[] fundingGroupTrajectoryPaths()
 	{
 		return _aFGP;
 	}
@@ -106,7 +106,7 @@ public class CounterPartyGroupPath {
 	 * @return The Array of the Netting Group Trajectory Paths
 	 */
 
-	public org.drip.xva.trajectory.AlbaneseAndersenNettingGroupPath[] nettingGroupTrajectoryPaths()
+	public org.drip.xva.trajectory.NettingGroupPath[] nettingGroupTrajectoryPaths()
 	{
 		return _aNGP;
 	}

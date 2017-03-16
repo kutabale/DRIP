@@ -1,5 +1,5 @@
 
-package org.drip.xva.strategy;
+package org.drip.xva.numeraire;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,7 @@ package org.drip.xva.strategy;
  */
 
 /**
- * FundingGroupPath holds up the Strategy Abstract Realizations of the Sequence in a Single Path Projection
- *  Run over Multiple Collateral Groups onto a Single Funding Group - the Purpose being to calculate Funding
- *  Valuation Adjustments. The References are:
+ * BankMarketVertex holds the Vertex Bank Market Numeraire Realizations at a Trajectory Vertex. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,93 +66,93 @@ package org.drip.xva.strategy;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class FundingGroupPath extends org.drip.xva.strategy.ExposureGroupPath {
+public class BankMarketVertex {
+	private double _dblHazard = java.lang.Double.NaN;
+	private double _dblRecovery = java.lang.Double.NaN;
+	private double _dblSurvival = java.lang.Double.NaN;
+	private double _dblFundingSpread = java.lang.Double.NaN;
+	private double _dblCollateralSpread = java.lang.Double.NaN;
 
-	protected FundingGroupPath (
-		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
-		final org.drip.xva.trajectory.NumerairePath np)
+	/**
+	 * BankMarketVertex Constructor
+	 * 
+	 * @param dblSurvival The Realized Bank Survival Numeraire
+	 * @param dblRecovery The Realized Bank Recovery Numeraire
+	 * @param dblHazard The Realized Bank Hazard Numeraire
+	 * @param dblFundingSpread The RealizedBank Funding Spread Numeraire
+	 * @param dblCollateralSpread The Realized Bank Collateral Spread Numeraire
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public BankMarketVertex (
+		final double dblSurvival,
+		final double dblRecovery,
+		final double dblHazard,
+		final double dblFundingSpread,
+		final double dblCollateralSpread)
 		throws java.lang.Exception
 	{
-		super (aCGP, np);
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSurvival = dblSurvival) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblRecovery = dblRecovery) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblHazard = dblHazard) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblFundingSpread = dblFundingSpread) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralSpread = dblCollateralSpread))
+			throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Compute Path Funding Value Adjustment
+	 * Retrieve the Realized Bank Hazard Numeraire
 	 * 
-	 * @return The Path Funding Value Adjustment
+	 * @return The Realized Bank Hazard Numeraire
 	 */
 
-	public abstract double fundingValueAdjustment();
+	public double hazard()
+	{
+		return _dblHazard;
+	}
 
 	/**
-	 * Compute Path Funding Debt Adjustment
+	 * Retrieve the Realized Bank Survival Numeraire
 	 * 
-	 * @return The Path Funding Debt Adjustment
+	 * @return The Realized Bank Survival Numeraire
 	 */
 
-	public abstract double fundingDebtAdjustment();
+	public double survival()
+	{
+		return _dblSurvival;
+	}
 
 	/**
-	 * Compute Path Funding Cost Adjustment
+	 * Retrieve the Realized Bank Recovery Numeraire
 	 * 
-	 * @return The Path Funding Cost Adjustment
+	 * @return The Realized Bank Recovery Numeraire
 	 */
 
-	public abstract double fundingCostAdjustment();
+	public double recovery()
+	{
+		return _dblRecovery;
+	}
 
 	/**
-	 * Compute Path Funding Benefit Adjustment
+	 * Retrieve the Realized Bank Funding Spread
 	 * 
-	 * @return The Path Funding Benefit Adjustment
+	 * @return The Realized Bank Funding Spread
 	 */
 
-	public abstract double fundingBenefitAdjustment();
+	public double fundingSpread()
+	{
+		return _dblFundingSpread;
+	}
 
 	/**
-	 * Compute Path Symmetric Funding Value Adjustment
+	 * Retrieve the Realized Bank Collateral Spread
 	 * 
-	 * @return The Path Symmetric Funding Value Adjustment
+	 * @return The Realized Bank Collateral Spread
 	 */
 
-	public abstract double symmetricFundingValueAdjustment();
-
-	/**
-	 * Compute Period-wise Path Funding Value Adjustment
-	 * 
-	 * @return The Period-wise Path Funding Value Adjustment
-	 */
-
-	public abstract double[] periodFundingValueAdjustment();
-
-	/**
-	 * Compute Period-wise Path Funding Debt Adjustment
-	 * 
-	 * @return The Period-wise Path Funding Debt Adjustment
-	 */
-
-	public abstract double[] periodFundingDebtAdjustment();
-
-	/**
-	 * Compute Period-wise Path Funding Cost Adjustment
-	 * 
-	 * @return The Period-wise Path Funding Cost Adjustment
-	 */
-
-	public abstract double[] periodFundingCostAdjustment();
-
-	/**
-	 * Compute Period-wise Path Funding Benefit Adjustment
-	 * 
-	 * @return The Period-wise Path Funding Benefit Adjustment
-	 */
-
-	public abstract double[] periodFundingBenefitAdjustment();
-
-	/**
-	 * Compute Period-wise Path Symmetric Funding Value Adjustment
-	 * 
-	 * @return The Period-wise Path Symmetric Funding Value Adjustment
-	 */
-
-	public abstract double[] periodSymmetricFundingValueAdjustment();
+	public double collateralSpread()
+	{
+		return _dblCollateralSpread;
+	}
 }

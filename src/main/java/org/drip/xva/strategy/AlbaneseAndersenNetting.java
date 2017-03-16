@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.strategy;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,9 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * AlbaneseAndersenNettingGroupPath rolls up the Path Realizations of the Sequence in a Single Path
- *  Projection Run over Multiple Collateral Groups onto a Single Netting Group - the Purpose being to
- *  calculate Credit Valuation Adjustments. The References are:
+ * AlbaneseAndersenNetting rolls up the Path Realizations of the Sequence in a Single Path Projection Run
+ *  over Multiple Collateral Groups onto a Single Netting Group - the Purpose being to calculate Credit
+ *  Valuation Adjustments. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,23 +68,23 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.NettingGroupPath {
+public class AlbaneseAndersenNetting extends org.drip.xva.trajectory.NettingGroupPath {
 
 	/**
-	 * Generate a "Mono" AlbaneseAndersenNettingGroupPath Instance
+	 * Generate a "Mono" AlbaneseAndersenNetting Instance
 	 * 
 	 * @param cgp The "Mono" Collateral Group Path
 	 * @param np The Numeraire Path
 	 * 
-	 * @return The "Mono" AlbaneseAndersenNettingGroupPath Instance
+	 * @return The "Mono" AlbaneseAndersenNetting Instance
 	 */
 
-	public static final AlbaneseAndersenNettingGroupPath Mono (
+	public static final AlbaneseAndersenNetting Mono (
 		final org.drip.xva.trajectory.CollateralGroupPath cgp,
-		final org.drip.xva.trajectory.NumerairePath np)
+		final org.drip.xva.numeraire.MarketPath np)
 	{
 		try {
-			return new org.drip.xva.trajectory.AlbaneseAndersenNettingGroupPath (new
+			return new org.drip.xva.strategy.AlbaneseAndersenNetting (new
 				org.drip.xva.trajectory.CollateralGroupPath[] {cgp}, np);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 	}
 
 	/**
-	 * AlbaneseAndersenNettingGroupPath Constructor
+	 * AlbaneseAndersenNetting Constructor
 	 * 
 	 * @param aCGP Array of the Collateral Group Trajectory Paths
 	 * @param np The Numeraire Path
@@ -102,9 +102,9 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public AlbaneseAndersenNettingGroupPath (
+	public AlbaneseAndersenNetting (
 		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
-		final org.drip.xva.trajectory.NumerairePath np)
+		final org.drip.xva.numeraire.MarketPath np)
 		throws java.lang.Exception
 	{
 		super (aCGP, np);
@@ -114,7 +114,7 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblUnilateralCreditAdjustment = 0.;
@@ -137,7 +137,7 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblBilateralCreditAdjustment = 0.;
@@ -170,7 +170,7 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
 		double dblDebtAdjustment = 0.;
@@ -191,7 +191,7 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 
 	@Override public double[] periodUnilateralCreditAdjustment()
 	{
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = aNV.length;
 		double[] adblPeriodUnilateralCreditAdjustment = new double[iNumVertex - 1];
@@ -215,7 +215,7 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 
 	@Override public double[] periodBilateralCreditAdjustment()
 	{
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = aNV.length;
 		double[] adblPeriodBilateralCreditAdjustment = new double[iNumVertex - 1];
@@ -239,7 +239,7 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 
 	@Override public double[] periodContraLiabilityCreditAdjustment()
 	{
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = aNV.length;
 		double[] adblPeriodContraLiabilityCreditAdjustment = new double[iNumVertex - 1];
@@ -270,7 +270,7 @@ public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.strategy.Nett
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = aNV.length;
 		double[] adblDebtAdjustment = new double[iNumVertex - 1];

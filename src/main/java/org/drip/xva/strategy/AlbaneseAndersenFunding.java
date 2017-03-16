@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.strategy;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,9 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * AlbaneseAndersenFundingGroupPath rolls up the Path Realizations of the Sequence in a Single Path
- *  Projection Run over Multiple Collateral Groups onto a Single Funding Group - the Purpose being to
- *  calculate Funding Valuation Adjustments. The References are:
+ * AlbaneseAndersen rolls up the Path Realizations of the Sequence in a Single Path Projection Run over
+ *  Multiple Collateral Groups onto a Single Funding Group - the Purpose being to calculate Funding Valuation
+ *  Adjustments. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,23 +68,23 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.FundingGroupPath {
+public class AlbaneseAndersenFunding extends org.drip.xva.trajectory.FundingGroupPath {
 
 	/**
-	 * Generate a "Mono" AlbaneseAndersenFundingGroupPath Instance
+	 * Generate a "Mono" AlbaneseAndersenFunding Instance
 	 * 
 	 * @param cgp The "Mono" Collateral Group Path
 	 * @param np The Numeraire Path
 	 * 
-	 * @return The "Mono" AlbaneseAndersenFundingGroupPath Instance
+	 * @return The "Mono" AlbaneseAndersenFunding Instance
 	 */
 
-	public static final AlbaneseAndersenFundingGroupPath Mono (
+	public static final AlbaneseAndersenFunding Mono (
 		final org.drip.xva.trajectory.CollateralGroupPath cgp,
-		final org.drip.xva.trajectory.NumerairePath np)
+		final org.drip.xva.numeraire.MarketPath np)
 	{
 		try {
-			return new org.drip.xva.trajectory.AlbaneseAndersenFundingGroupPath (new
+			return new org.drip.xva.strategy.AlbaneseAndersenFunding (new
 				org.drip.xva.trajectory.CollateralGroupPath[] {cgp}, np);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	}
 
 	/**
-	 * AlbaneseAndersenFundingGroupPath Constructor
+	 * AlbaneseAndersenFunding Constructor
 	 * 
 	 * @param aCGP Array of the Collateral Group Trajectory Paths
 	 * @param np The Numeraire Path
@@ -102,9 +102,9 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public AlbaneseAndersenFundingGroupPath (
+	public AlbaneseAndersenFunding (
 		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
-		final org.drip.xva.trajectory.NumerairePath np)
+		final org.drip.xva.numeraire.MarketPath np)
 		throws java.lang.Exception
 	{
 		super (aCGP, np);
@@ -114,7 +114,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblFundingValueAdjustment = 0.;
@@ -139,7 +139,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblFundingDebtAdjustment = 0.;
@@ -164,7 +164,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblFundingCostAdjustment = 0.;
@@ -187,7 +187,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
 		double dblFundingBenefitAdjustment = 0.;
@@ -210,7 +210,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedExposurePV = collateralizedExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedExposurePV.length;
 		double dblSymmetricFundingValueAdjustment = 0.;
@@ -231,7 +231,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 
 	@Override public double[] periodFundingValueAdjustment()
 	{
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = aNV.length;
 		double[] adblFundingValueAdjustment = new double[iNumVertex - 1];
@@ -259,7 +259,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double[] adblFundingDebtAdjustment = new double[iNumVertex - 1];
@@ -285,7 +285,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double[] adblFundingCostAdjustment = new double[iNumVertex - 1];
@@ -309,7 +309,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
 		double[] adblFundingBenefitAdjustment = new double[iNumVertex - 1];
@@ -333,7 +333,7 @@ public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.strategy.Fund
 	{
 		double[] adblCollateralizedExposurePV = collateralizedExposurePV();
 
-		org.drip.xva.trajectory.NumeraireVertex[] aNV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aNV = numerairePath().vertexes();
 
 		int iNumVertex = adblCollateralizedExposurePV.length;
 		double[] adblSymmetricFundingValueAdjustment = new double[iNumVertex - 1];

@@ -1,5 +1,5 @@
 
-package org.drip.xva.strategy;
+package org.drip.xva.trajectory;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -68,7 +68,7 @@ package org.drip.xva.strategy;
  */
 
 public class ExposureGroupPath {
-	private org.drip.xva.trajectory.NumerairePath _np = null;
+	private org.drip.xva.numeraire.MarketPath _np = null;
 	private org.drip.xva.trajectory.CollateralGroupPath[] _aCGP = null;
 
 	/**
@@ -82,7 +82,7 @@ public class ExposureGroupPath {
 
 	public ExposureGroupPath (
 		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
-		final org.drip.xva.trajectory.NumerairePath np)
+		final org.drip.xva.numeraire.MarketPath np)
 		throws java.lang.Exception
 	{
 		if (null == (_aCGP = aCGP) || 0 == _aCGP.length || null == (_np = np))
@@ -106,7 +106,7 @@ public class ExposureGroupPath {
 	 * @return The Numeraire Paths
 	 */
 
-	public org.drip.xva.trajectory.NumerairePath numerairePath()
+	public org.drip.xva.numeraire.MarketPath numerairePath()
 	{
 		return _np;
 	}
@@ -172,11 +172,12 @@ public class ExposureGroupPath {
 			double[] adblCollateralGroupCollateralizedExposure =
 				_aCGP[iCollateralGroupIndex].collateralizedExposure();
 
-			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+			org.drip.xva.numeraire.MarketVertex[] aNV = _np.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedExposurePV[iVertexIndex] +=
-					adblCollateralGroupCollateralizedExposure[iVertexIndex] / aNV[iVertexIndex].csa();
+					adblCollateralGroupCollateralizedExposure[iVertexIndex] /
+						aNV[iVertexIndex].overnightPolicyIndex();
 		}
 
 		return adblCollateralizedExposurePV;
@@ -235,14 +236,14 @@ public class ExposureGroupPath {
 			double[] adblCollateralGroupCollateralizedExposure =
 				_aCGP[iCollateralGroupIndex].collateralizedExposure();
 
-			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+			org.drip.xva.numeraire.MarketVertex[] aNV = _np.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				double dblCollateralizedExposure = adblCollateralGroupCollateralizedExposure[iVertexIndex];
 
 				if (0. < dblCollateralizedExposure)
 					adblCollateralizedPositiveExposurePV[iVertexIndex] += dblCollateralizedExposure /
-						aNV[iVertexIndex].csa();
+						aNV[iVertexIndex].overnightPolicyIndex();
 			}
 		}
 
@@ -302,14 +303,14 @@ public class ExposureGroupPath {
 			double[] adblCollateralGroupCollateralizedExposure =
 				_aCGP[iCollateralGroupIndex].collateralizedExposure();
 
-			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+			org.drip.xva.numeraire.MarketVertex[] aNV = _np.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				double dblCollateralizedExposure = adblCollateralGroupCollateralizedExposure[iVertexIndex];
 
 				if (0. > dblCollateralizedExposure)
 					adblCollateralizedNegativeExposurePV[iVertexIndex] += dblCollateralizedExposure /
-						aNV[iVertexIndex].csa();
+						aNV[iVertexIndex].overnightPolicyIndex();
 			}
 		}
 
@@ -366,11 +367,12 @@ public class ExposureGroupPath {
 			double[] adblCollateralGroupUncollateralizedExposure =
 				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
 
-			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+			org.drip.xva.numeraire.MarketVertex[] aNV = _np.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedExposurePV[iVertexIndex] +=
-					adblCollateralGroupUncollateralizedExposure[iVertexIndex] / aNV[iVertexIndex].csa();
+					adblCollateralGroupUncollateralizedExposure[iVertexIndex] /
+						aNV[iVertexIndex].overnightPolicyIndex();
 		}
 
 		return adblUncollateralizedExposurePV;
@@ -430,7 +432,7 @@ public class ExposureGroupPath {
 			double[] adblUncollateralGroupCollateralizedExposure =
 				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
 
-			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+			org.drip.xva.numeraire.MarketVertex[] aNV = _np.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				double dblUncollateralizedExposure =
@@ -438,7 +440,7 @@ public class ExposureGroupPath {
 
 				if (0. < dblUncollateralizedExposure)
 					adblUncollateralizedPositiveExposurePV[iVertexIndex] += dblUncollateralizedExposure /
-						aNV[iVertexIndex].csa();
+						aNV[iVertexIndex].overnightPolicyIndex();
 			}
 		}
 
@@ -499,7 +501,7 @@ public class ExposureGroupPath {
 			double[] adblUncollateralGroupCollateralizedExposure =
 				_aCGP[iCollateralGroupIndex].uncollateralizedExposure();
 
-			org.drip.xva.trajectory.NumeraireVertex[] aNV = _np.vertexes();
+			org.drip.xva.numeraire.MarketVertex[] aNV = _np.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				double dblUncollateralizedExposure =
@@ -507,7 +509,7 @@ public class ExposureGroupPath {
 
 				if (0. > dblUncollateralizedExposure)
 					adblUncollateralizedNegativeExposurePV[iVertexIndex] += dblUncollateralizedExposure /
-						aNV[iVertexIndex].csa();
+						aNV[iVertexIndex].overnightPolicyIndex();
 			}
 		}
 

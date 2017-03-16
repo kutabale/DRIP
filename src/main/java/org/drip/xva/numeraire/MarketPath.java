@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.numeraire;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * NumerairePath holds the Vertex Market Numeraire Realizations at the Trajectory Vertexes along the Path of
- * 	a Simulation. The References are:
+ * MarketPath holds the Vertex Market Numeraire Realizations at the Trajectory Vertexes along the Path of a
+ *  Simulation. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,23 +67,23 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NumerairePath {
-	private org.drip.xva.trajectory.NumeraireVertex[] _aNV = null;
+public class MarketPath {
+	private org.drip.xva.numeraire.MarketVertex[] _aNV = null;
 
 	/**
-	 * NumerairePath Constructor
+	 * MarketPath Constructor
 	 * 
 	 * @param aNV Array of the Numeraire Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public NumerairePath (
-		final org.drip.xva.trajectory.NumeraireVertex[] aNV)
+	public MarketPath (
+		final org.drip.xva.numeraire.MarketVertex[] aNV)
 		throws java.lang.Exception
 	{
 		if (null == (_aNV = aNV) || 0 == _aNV.length)
-			throw new java.lang.Exception ("NumerairePath Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("MarketPath Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class NumerairePath {
 	 * @return The Numeraire Vertexes
 	 */
 
-	public org.drip.xva.trajectory.NumeraireVertex[] vertexes()
+	public org.drip.xva.numeraire.MarketVertex[] vertexes()
 	{
 		return _aNV;
 	}
