@@ -522,6 +522,42 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate the Bond's Weighted Average Life from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqs ComponentMarketParams
+	 * @param iWorkoutDate Work-out date
+	 * @param dblWorkoutFactor Double Work-out factor
+	 * 
+	 * @return The Bond's Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Weighted Average Life cannot be calculated
+	 */
+
+	public abstract double weightedAverageLife (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate the Bond's Weighted Average Life To Maturity from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqs ComponentMarketParams
+	 * 
+	 * @return The Bond's Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Weighted Average Life To Maturity cannot be calculated
+	 */
+
+	public abstract double weightedAverageLife (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate the bond's non-credit risky theoretical price from the Bumped Zero Curve
 	 * 
 	 * @param valParams ValuationParams
