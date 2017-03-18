@@ -1,7 +1,6 @@
 
 package org.drip.sample.guggenheim;
 
-import org.drip.analytics.cashflow.*;
 import org.drip.analytics.date.*;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
@@ -61,13 +60,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * CorporateNonFixedBullet demonstrates Non-EOS Non-Fixed Coupon (Floater, Variable) Corporate Bond Pricing
- *  and Relative Value Measure Generation Functionality.
+ * ZeroCouponBullet demonstrates Non-EOS Zero Coupon Multi-flavor Bond Pricing and Relative Value Measure
+ *  Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CorporateNonFixedBullet {
+public class ZeroCouponBullet {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -344,22 +343,20 @@ public class CorporateNonFixedBullet {
 		return gc;
 	}
 
-	private static final BondComponent Corporate (
+	private static final BondComponent Zero (
 		final String strCUSIP,
-		final String strRateIndex,
 		final JulianDate dtEffective,
 		final JulianDate dtMaturity,
-		final double dblFloatSpread)
+		final String strDayCount)
 		throws Exception
 	{
-		return BondBuilder.CreateSimpleFloater (
+		return BondBuilder.CreateSimpleFixed (
 			strCUSIP,
 			"USD",
-			strRateIndex,
 			"",
-			dblFloatSpread,
-			4,
-			"Act/360",
+			0.,
+			2,
+			strDayCount,
 			dtEffective,
 			dtMaturity,
 			null,
@@ -370,11 +367,8 @@ public class CorporateNonFixedBullet {
 	private static final void RVMeasures (
 		final BondComponent[] aBond,
 		final JulianDate dtValue,
-		final MergedDiscountForwardCurve dcBase,
-		final MergedDiscountForwardCurve dcBump,
-		final GovvieCurve gc,
-		final double[] adblCleanPrice,
-		final double[] adblFullFirstCoupon)
+		final CurveSurfaceQuoteContainer csqc,
+		final double[] adblCleanPrice)
 		throws Exception
 	{
 		JulianDate dtSettle = dtValue.addBusDays (
@@ -403,129 +397,94 @@ public class CorporateNonFixedBullet {
 		String strSecularMetrics = "";
 
 		for (int i = 0; i < aBond.length; ++i) {
-			CurveSurfaceQuoteContainer csqc = MarketParamsBuilder.Create (
-				dcBase,
-				gc,
-				null,
-				null,
-				null,
-				null,
-				null
-			);
+			double dblOAS = Double.NaN;
+			double dblYTM = Double.NaN;
+			double dblYTW = Double.NaN;
+			double dblWALTM = Double.NaN;
+			double dblWALTW = Double.NaN;
+			double dblDiscountMargin = Double.NaN;
+			double dblModifiedDurationTW = Double.NaN;
 
-			CurveSurfaceQuoteContainer csqcBump = MarketParamsBuilder.Create (
-				dcBump,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null
-			);
+			try {
+				WorkoutInfo wi = aBond[i].exerciseYieldFromPrice (
+					valParams,
+					csqc,
+					null,
+					adblCleanPrice[i]
+				);
 
-			ComposableUnitPeriod cupFirst = aBond[i].stream().containingPeriod (dtValue.julian()).periods().get (0);
+				dblYTW = wi.yield();
 
-			csqc.setFixing (
-				((ComposableUnitFloatingPeriod) cupFirst).referenceIndexPeriod().fixingDate(),
-				aBond[i].floaterSetting().fri(),
-				adblFullFirstCoupon[i] - aBond[i].floatSpread()
-			);
+				dblYTM = aBond[i].yieldFromPrice (
+					valParams,
+					csqc,
+					null,
+					aBond[i].maturityDate().julian(),
+					1.,
+					adblCleanPrice[i]
+				);
 
-			csqcBump.setFixing (
-				((ComposableUnitFloatingPeriod) cupFirst).referenceIndexPeriod().fixingDate(),
-				aBond[i].floaterSetting().fri(),
-				adblFullFirstCoupon[i] - aBond[i].floatSpread() + 0.0001
-			);
+				dblWALTW = aBond[i].weightedAverageLife (
+					valParams,
+					csqc,
+					wi.date(),
+					wi.factor()
+				);
 
-			double dblAccrued = aBond[i].accrued (
-				dtSettle.julian(),
-				csqc
-			);
+				dblWALTM = aBond[i].weightedAverageLife (
+					valParams,
+					csqc,
+					aBond[i].maturityDate().julian(),
+					1.
+				);
 
-			WorkoutInfo wi = aBond[i].exerciseYieldFromPrice (
-				valParams,
-				csqc,
-				null,
-				adblCleanPrice[i]
-			);
+				dblDiscountMargin = aBond[i].discountMarginFromYield (
+					valParams,
+					csqc,
+					null,
+					wi.date(),
+					wi.factor(),
+					wi.yield()
+				);
 
-			double dblYTM = aBond[i].yieldFromPrice (
-				valParams,
-				csqc,
-				null,
-				aBond[i].maturityDate().julian(),
-				1.,
-				adblCleanPrice[i]
-			);
+				dblOAS = aBond[i].oasFromYield (
+					valParams,
+					csqc,
+					null,
+					wi.date(),
+					wi.factor(),
+					wi.yield()
+				);
 
-			double dblWALTW = aBond[i].weightedAverageLife (
-				valParams,
-				csqc,
-				wi.date(),
-				wi.factor()
-			);
-
-			double dblWALTM = aBond[i].weightedAverageLife (
-				valParams,
-				csqc,
-				aBond[i].maturityDate().julian(),
-				1.
-			);
-
-			double dblDiscountMargin = aBond[i].discountMarginFromYield (
-				valParams,
-				csqc,
-				null,
-				wi.date(),
-				wi.factor(),
-				wi.yield()
-			);
-
-			double dblOAS = aBond[i].oasFromYield (
-				valParams,
-				csqc,
-				null,
-				wi.date(),
-				wi.factor(),
-				wi.yield()
-			);
-
-			double dblBasePrice = aBond[i].priceFromFundingCurve (
-				valParams,
-				csqc,
-				wi.date(),
-				wi.factor(),
-				0.
-			);
-
-			double dblBumpPrice = aBond[i].priceFromFundingCurve (
-				valParams,
-				csqcBump,
-				wi.date(),
-				wi.factor(),
-				0.
-			);
+				dblModifiedDurationTW = aBond[i].modifiedDurationFromPrice (
+					valParams,
+					csqc,
+					null,
+					wi.date(),
+					wi.factor(),
+					adblCleanPrice[i]
+				);
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
 
 			strSecularMetrics +=
 				aBond[i].name() + "," +
 				aBond[i].effectiveDate() + "," +
 				aBond[i].maturityDate() + "," +
-				aBond[i].floaterSetting().fri().fullyQualifiedName() + "," +
-				FormatUtil.FormatDouble (aBond[i].floatSpread(), 3, 1, 10000.) + "," +
-				aBond[i].firstCouponDate() + "," +
 				FormatUtil.FormatDouble (adblCleanPrice[i], 3, 3, 100.) + "," +
-				FormatUtil.FormatDouble (dblAccrued, 1, 4, 100.) + "," +
-				FormatUtil.FormatDouble (wi.yield(), 1, 3, 100.) + "%," +
+				FormatUtil.FormatDouble (0., 1, 4, 100.) + "," +
+				FormatUtil.FormatDouble (dblYTW, 1, 3, 100.) + "%," +
 				FormatUtil.FormatDouble (dblYTM, 1, 3, 100.) + "%," +
 				FormatUtil.FormatDouble (dblWALTW, 1, 3, 1.) + "," +
 				FormatUtil.FormatDouble (dblWALTM, 1, 3, 1.) + "," +
-				FormatUtil.FormatDouble (dblBasePrice - dblBumpPrice, 1, 4, 10000.) + "," +
+				FormatUtil.FormatDouble (dblModifiedDurationTW, 1, 4, 10000.) + "," +
 				FormatUtil.FormatDouble (dblDiscountMargin, 1, 3, 10000.) + "," +
 				FormatUtil.FormatDouble (dblOAS, 1, 3, 10000.) + "\n";
 		}
 
 		System.out.println
-			("Bond, Issue, Maturity, Floater Index, Spread, First Coupon, Clean Price, Accrued, Yield TW, Yield TM, WAL TW, WAL TM, Duration TW, Discount Margin TW, OAS TW");
+			("Bond, Issue, Maturity, Clean Price, Accrued, Yield TW, Yield TM, WAL TW, WAL TM, Duration TW, Discount Margin TW, OAS TW");
 
 		System.out.print (strSecularMetrics);
 	}
@@ -567,84 +526,56 @@ public class CorporateNonFixedBullet {
 			0.0308  // 30Y
 		};
 
-		BondComponent[] aCorporateBond = new BondComponent[] {
-			Corporate ("55608PAF1", "USD-3M", DateUtil.CreateFromYMD (2014,  3, 24), DateUtil.CreateFromYMD (2017,  3, 24), 0.00790),
-			Corporate ("233851BX1", "USD-3M", DateUtil.CreateFromYMD (2015,  8,  3), DateUtil.CreateFromYMD (2017,  8,  3), 0.00710),
-			Corporate ("00817YAR9", "USD-3M", DateUtil.CreateFromYMD (2016,  6,  9), DateUtil.CreateFromYMD (2017, 12,  8), 0.00650),
-			Corporate ("38141GVK7", "USD-3M", DateUtil.CreateFromYMD (2013,  4, 30), DateUtil.CreateFromYMD (2018,  4, 30), 0.01200),
-			Corporate ("865622CD4", "USD-3M", DateUtil.CreateFromYMD (2016, 10, 19), DateUtil.CreateFromYMD (2018, 10, 19), 0.00670),
-			Corporate ("63307A2B0", "USD-3M", DateUtil.CreateFromYMD (2015, 12, 14), DateUtil.CreateFromYMD (2018, 12, 14), 0.00840),
-			Corporate ("6325C0DE8", "USD-3M", DateUtil.CreateFromYMD (2016,  1, 14), DateUtil.CreateFromYMD (2019,  1, 14), 0.00780),
-			Corporate ("55608PAU8", "USD-3M", DateUtil.CreateFromYMD (2016,  1, 15), DateUtil.CreateFromYMD (2019,  1, 15), 0.01180),
-			Corporate ("61746BDY9", "USD-3M", DateUtil.CreateFromYMD (2016,  1, 27), DateUtil.CreateFromYMD (2019,  2,  1), 0.01375),
-			Corporate ("80283LAL7", "USD-3M", DateUtil.CreateFromYMD (2016,  3, 14), DateUtil.CreateFromYMD (2019,  3, 14), 0.01480),
-			Corporate ("961214CU5", "USD-3M", DateUtil.CreateFromYMD (2016,  5, 13), DateUtil.CreateFromYMD (2019,  5, 13), 0.00710),
-			Corporate ("94988J5E3", "USD-3M", DateUtil.CreateFromYMD (2016,  6,  2), DateUtil.CreateFromYMD (2019,  5, 24), 0.00600),
-			Corporate ("064159HU3", "USD-3M", DateUtil.CreateFromYMD (2016,  6, 14), DateUtil.CreateFromYMD (2019,  6, 14), 0.00660),
-			Corporate ("23636AAG6", "USD-3M", DateUtil.CreateFromYMD (2016,  9,  8), DateUtil.CreateFromYMD (2019,  9,  6), 0.00580),
-			Corporate ("65557CAU7", "USD-3M", DateUtil.CreateFromYMD (2016,  9, 30), DateUtil.CreateFromYMD (2019,  9, 30), 0.00620),
-			Corporate ("86563VAF6", "USD-3M", DateUtil.CreateFromYMD (2016, 10, 18), DateUtil.CreateFromYMD (2019, 10, 18), 0.00910),
+		BondComponent[] aZeroBond = new BondComponent[] {
+			Zero ("167484QW7", DateUtil.CreateFromYMD (1999, 11, 30), DateUtil.CreateFromYMD (2031,  1,  1), "US MUNI: 30/360"),
+			Zero ("232723HH2", DateUtil.CreateFromYMD (2011,  4, 21), DateUtil.CreateFromYMD (2033,  8,  1), "US MUNI: 30/360"),
+			Zero ("891381G58", DateUtil.CreateFromYMD (2009, 10, 29), DateUtil.CreateFromYMD (2034,  8,  1), "US MUNI: 30/360"),
+			Zero ("738850QZ2", DateUtil.CreateFromYMD (2011,  8, 11), DateUtil.CreateFromYMD (2034,  8,  1), "US MUNI: 30/360"),
+			Zero ("010869AV7", DateUtil.CreateFromYMD (1999,  2, 29), DateUtil.CreateFromYMD (2034, 10,  1), "US MUNI: 30/360"),
+			Zero ("010824JC5", DateUtil.CreateFromYMD (2005,  6, 30), DateUtil.CreateFromYMD (2036,  8,  1), "US MUNI: 30/360"),
+			Zero ("779631EP1", DateUtil.CreateFromYMD (2009, 10, 26), DateUtil.CreateFromYMD (2039,  8,  1), "US MUNI: 30/360"),
+			Zero ("796720GG9", DateUtil.CreateFromYMD (2009,  6, 18), DateUtil.CreateFromYMD (2044,  8,  1), "US MUNI: 30/360"),
+			Zero ("59333HCA2", DateUtil.CreateFromYMD (2009,  7, 14), DateUtil.CreateFromYMD (2044, 10,  1), "US MUNI: 30/360"),
+			Zero ("59333HBH8", DateUtil.CreateFromYMD (2009,  7, 14), DateUtil.CreateFromYMD (2045, 10,  1), "US MUNI: 30/360"),
+			Zero ("70870EDQ9", DateUtil.CreateFromYMD (2013, 12, 23), DateUtil.CreateFromYMD (2053,  7,  1), "US MUNI: 30/360"),
 		};
 
 		double[] adblCleanPrice = new double[] {
-			1.0001950,	// (2017,  3, 24)
-			1.0024600,	// (2017,  8,  3)
-			1.0039670,	// (2017, 12,  8)
-			1.0097600,	// (2018,  4, 30)
-			1.0033100,	// (2018, 10, 19)
-			1.0058650,	// (2018, 12, 14)
-			1.0079700,	// (2019,  1, 14)
-			1.0114550,	// (2019,  1, 15)
-			1.0172800,	// (2019,  2,  1)
-			1.0164400,	// (2019,  3, 14)
-			1.0073900,	// (2019,  5, 13)
-			1.0055400,	// (2019,  5, 24)
-			1.0063760,	// (2019,  6, 14)
-			1.0032590,	// (2019,  9,  6)
-			1.0042840,	// (2019,  9, 30)
-			1.0052800,	// (2019, 10, 18)
-		};
-
-		double[] adblFullFirstCoupon = new double[] {
-			0.0178706,	// (2017,  3, 24)
-			0.0174456,	// (2017,  8,  3)
-			0.0175622,	// (2017, 12,  8)
-			0.0223900,	// (2018,  4, 30)
-			0.0168483,	// (2018, 10, 19)
-			0.0196122,	// (2018, 12, 14)
-			0.0180317,	// (2019,  1, 14)
-			0.0220317,	// (2019,  1, 15)
-			0.0240900,	// (2019,  2,  1)
-			0.0260122,	// (2019,  3, 14)
-			0.0174372,	// (2019,  5, 13)
-			0.0165400,	// (2019,  5, 24)
-			0.0178122,	// (2019,  6, 14)
-			0.0168000,	// (2019,  9,  6)
-			0.0161817,	// (2019,  9, 30)
-			0.0193372,	// (2019, 10, 18)
+			0.4916090,	// (2031,  1,  1)
+			0.5183290,	// (2033,  8,  1)
+			0.4450485,	// (2034,  8,  1)
+			0.4823590,	// (2034,  8,  1)
+			0.4703460,	// (2034, 10,  1)
+			0.4458700,	// (2036,  8,  1)
+			0.3508900,	// (2039,  8,  1)
+			0.2728300,	// (2044,  8,  1)
+			0.2619985,	// (2044, 10,  1)
+			0.2450195,	// (2045, 10,  1)
+			0.1614775,	// (2053,  7,  1)
 		};
 
 		RVMeasures (
-			aCorporateBond,
+			aZeroBond,
 			dtSpot,
-			FundingCurve (
-				dtSpot,
-				strCurrency,
-				0.
+			MarketParamsBuilder.Create (
+				FundingCurve (
+					dtSpot,
+					strCurrency,
+					0.
+				),
+				GovvieCurve (
+					dtSpot,
+					strTreasuryCode,
+					adblTreasuryCoupon,
+					adblTreasuryYield
+				),
+				null,
+				null,
+				null,
+				null,
+				null
 			),
-			FundingCurve (
-				dtSpot,
-				strCurrency,
-				0.0001
-			),
-			GovvieCurve (
-				dtSpot,
-				strTreasuryCode,
-				adblTreasuryCoupon,
-				adblTreasuryYield
-			),
-			adblCleanPrice,
-			adblFullFirstCoupon
+			adblCleanPrice
 		);
 
 		System.out.println();

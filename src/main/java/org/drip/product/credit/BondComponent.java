@@ -1788,19 +1788,22 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 				org.drip.analytics.date.DateUtil.YYYYMMDD (iValueDate) + " greater than Work-out " +
 					org.drip.analytics.date.DateUtil.YYYYMMDD (iWorkoutDate));
 
-		double dblPeriodWAL = 0.;
+		double dblTotalCashflow = 0.;
+		double dblPeriodEndTime = 0.;
 		boolean bTerminateCouponFlow = false;
+		double dblTimeWeightedTotalCashflow = 0.;
 
 		for (org.drip.analytics.cashflow.CompositePeriod period : couponPeriods()) {
 			int iPeriodPayDate = period.payDate();
 
 			if (iPeriodPayDate < iValueDate) continue;
 
+			int iNotionalEndDate = period.endDate();
+
 			int iPeriodStartDate = period.startDate();
 
-			int iAccrualEndDate = period.endDate();
-
-			int iNotionalEndDate = period.endDate();
+			int iAccrualEndDate = iNotionalEndDate;
+			int iAccrualStartDate = iPeriodStartDate > iValueDate ? iPeriodStartDate : iValueDate;
 
 			if (iAccrualEndDate >= iWorkoutDate) {
 				bTerminateCouponFlow = true;
@@ -1828,13 +1831,25 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 				iPeriodAmortizationMode)
 				dblCouponNotional = notional (iPeriodStartDate, iNotionalEndDate);
 
-			dblPeriodWAL += period.accrualDCF (iAccrualEndDate) * cpcm.rate() * dblCouponNotional +
+			double dblPeriodTimeWidth = period.accrualDCF (iAccrualEndDate) - period.accrualDCF
+				(iAccrualStartDate);
+
+			double dblPeriodCashflow = dblPeriodTimeWidth * cpcm.rate() * dblCouponNotional +
 				dblPeriodStartNotional - dblPeriodEndNotional;
+
+			dblTotalCashflow += dblPeriodCashflow;
+			dblPeriodEndTime += dblPeriodTimeWidth;
+			dblTimeWeightedTotalCashflow += dblPeriodEndTime * dblPeriodCashflow;
 
 			if (bTerminateCouponFlow) break;
 		}
 
-		return dblPeriodWAL + dblWorkoutFactor * notional (iWorkoutDate) - accrued (iValueDate, csqc);
+		double dblTerminalCashflow = dblWorkoutFactor * notional (iWorkoutDate);
+
+		dblTotalCashflow += dblTerminalCashflow;
+		dblTimeWeightedTotalCashflow += dblPeriodEndTime * dblTerminalCashflow;
+
+		return dblTimeWeightedTotalCashflow / dblTotalCashflow;
 	}
 
 	@Override public double weightedAverageLife (
