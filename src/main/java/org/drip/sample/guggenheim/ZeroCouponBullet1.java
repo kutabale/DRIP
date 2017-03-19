@@ -60,13 +60,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * ZeroCouponBullet demonstrates Non-EOS Zero Coupon Multi-flavor Bond Pricing and Relative Value Measure
+ * ZeroCouponBullet1 demonstrates Non-EOS Zero Coupon Multi-flavor Bond Pricing and Relative Value Measure
  *  Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class ZeroCouponBullet {
+public class ZeroCouponBullet1 {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
