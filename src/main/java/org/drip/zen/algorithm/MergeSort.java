@@ -18,6 +18,11 @@ public class MergeSort {
 		int startLocation,
 		int endLocation)
 	{
+		if (startLocation == endLocation)
+		{
+			return;
+		}
+
 		if (startLocation == endLocation - 1)
 		{
 			if (numberArray[startLocation] > numberArray[endLocation])
@@ -102,7 +107,7 @@ public class MergeSort {
 	public static void main (
 		String[] input)
 	{
-		double[] unsortedNumberArray = {6, 1, 5, 7, 2, 8, 4, 3};
+		double[] unsortedNumberArray = {6, 1, 5, 7, 9, 2, 8, 4, 3};
 
 		SplitAndMerge (unsortedNumberArray);
 
