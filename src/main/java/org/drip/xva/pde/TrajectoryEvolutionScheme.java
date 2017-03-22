@@ -72,7 +72,7 @@ public class TrajectoryEvolutionScheme {
 	private org.drip.xva.settings.PDEEvolutionControl _settings = null;
 	private double _dblTimeIncrement = java.lang.Double.NaN;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
-	private org.drip.xva.definition.MasterAgreementCloseOut _maco = null;
+	private org.drip.xva.definition.CloseOutBilateral _maco = null;
 
 	/**
 	 * TrajectoryEvolutionScheme Constructor
@@ -87,7 +87,7 @@ public class TrajectoryEvolutionScheme {
 
 	public TrajectoryEvolutionScheme (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
-		final org.drip.xva.definition.MasterAgreementCloseOut maco,
+		final org.drip.xva.definition.CloseOutBilateral maco,
 		final org.drip.xva.settings.PDEEvolutionControl settings,
 		final double dblTimeIncrement)
 		throws java.lang.Exception
@@ -114,7 +114,7 @@ public class TrajectoryEvolutionScheme {
 	 * @return The Close Out Boundary Condition
 	 */
 
-	public org.drip.xva.definition.MasterAgreementCloseOut boundaryCondition()
+	public org.drip.xva.definition.CloseOutBilateral boundaryCondition()
 	{
 		return _maco;
 	}

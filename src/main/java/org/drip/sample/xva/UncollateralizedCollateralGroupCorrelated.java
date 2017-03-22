@@ -346,7 +346,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 			);
 
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
-			CollateralGroupVertex[] aCGV = new CollateralGroupVertex[iNumStep + 1];
+			CollateralGroupVertexVanilla[] aCGV = new CollateralGroupVertexVanilla[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aNV[j] = MarketVertex.Standard (
@@ -361,7 +361,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV[j] = new CollateralGroupVertex (
+				aCGV[j] = new CollateralGroupVertexVanilla (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,

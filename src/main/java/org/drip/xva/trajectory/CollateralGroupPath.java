@@ -68,7 +68,7 @@ package org.drip.xva.trajectory;
  */
 
 public class CollateralGroupPath {
-	private org.drip.xva.trajectory.CollateralGroupVertex[] _aCGV = null;
+	private org.drip.xva.trajectory.CollateralGroupVertexVanilla[] _aCGV = null;
 
 	/**
 	 * CollateralGroupPath Constructor
@@ -79,7 +79,7 @@ public class CollateralGroupPath {
 	 */
 
 	public CollateralGroupPath (
-		final org.drip.xva.trajectory.CollateralGroupVertex[] aCGV)
+		final org.drip.xva.trajectory.CollateralGroupVertexVanilla[] aCGV)
 		throws java.lang.Exception
 	{
 		if (null == (_aCGV = aCGV))
@@ -105,7 +105,7 @@ public class CollateralGroupPath {
 	 * @return The Array of Netting Group Trajectory Vertexes
 	 */
 
-	public org.drip.xva.trajectory.CollateralGroupVertex[] vertexes()
+	public org.drip.xva.trajectory.CollateralGroupVertexVanilla[] vertexes()
 	{
 		return _aCGV;
 	}

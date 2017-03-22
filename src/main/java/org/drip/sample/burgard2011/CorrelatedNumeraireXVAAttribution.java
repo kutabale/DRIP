@@ -109,7 +109,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
 
-		MasterAgreementCloseOut maco = tes.boundaryCondition();
+		CloseOutBilateral maco = tes.boundaryCondition();
 
 		LevelBurgardKjaerAttribution lbka = bko.timeIncrementRunAttribution (
 			si,
@@ -252,10 +252,9 @@ public class CorrelatedNumeraireXVAAttribution {
 			dblSensitivityShiftFactor
 		);
 
-		MasterAgreementCloseOut maco = new MasterAgreementCloseOut (
+		CloseOutBilateral maco = new CloseOutBilateral (
 			dblBankRecoveryRate,
-			dblCounterPartyRecoveryRate,
-			0.
+			dblCounterPartyRecoveryRate
 		);
 
 		DiffusionEvolver deAsset = new DiffusionEvolver (

@@ -47,8 +47,8 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupVertex holds the Vertex Realizations of a Projected Path of a Simulation Run of a
- *  Collateral Group. The References are:
+ * CollateralGroupVertexVanilla holds the Vanilla Vertex Exposures of a Projected Path of a Simulation Run of
+ *  a Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,14 +67,10 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertex {
-	private double _dblForwardPV = java.lang.Double.NaN;
-	private double _dblRealizedCashFlow = java.lang.Double.NaN;
-	private double _dblCollateralBalance = java.lang.Double.NaN;
-	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+public class CollateralGroupVertexVanilla extends org.drip.xva.trajectory.CollateralGroupVertex {
 
 	/**
-	 * CollateralGroupVertex Constructor
+	 * CollateralGroupVertexVanilla Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
@@ -84,61 +80,35 @@ public class CollateralGroupVertex {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertex (
+	public CollateralGroupVertexVanilla (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardPV,
 		final double dblRealizedCashFlow,
 		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV =
-			dblForwardPV) || !org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow =
-				dblRealizedCashFlow) || !org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance =
-					dblCollateralBalance))
-			throw new java.lang.Exception ("CollateralGroupVertex Constructor => Invalid Inputs");
+		super (dtAnchor, dblForwardPV, dblRealizedCashFlow, dblCollateralBalance);
 	}
 
 	/**
-	 * Retrieve the Date Anchor
+	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
 	 * 
-	 * @return The Date Anchor
+	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
 	 */
 
-	public org.drip.analytics.date.JulianDate anchor()
+	public double collateralizedExposure()
 	{
-		return _dtAnchor;
+		return forwardPV() + realizedCashFlow() - collateralBalance();
 	}
 
 	/**
-	 * Retrieve the Forward PV at the Path Vertex Time Node
+	 * Retrieve the Total Uncollateralized Exposure at the Path Vertex Time Node
 	 * 
-	 * @return The Forward PV at the Path Vertex Time Node
+	 * @return The Total Uncollateralized Exposure at the Path Vertex Time Node
 	 */
 
-	public double forwardPV()
+	public double uncollateralizedExposure()
 	{
-		return _dblForwardPV;
-	}
-
-	/**
-	 * Retrieve the Collateral Balance at the Path Vertex Time Node
-	 * 
-	 * @return The Collateral Balance at the Path Vertex Time Node
-	 */
-
-	public double collateralBalance()
-	{
-		return _dblCollateralBalance;
-	}
-
-	/**
-	 * Retrieve the Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * 
-	 * @return The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 */
-
-	public double realizedCashFlow()
-	{
-		return _dblRealizedCashFlow;
+		return forwardPV() + realizedCashFlow();
 	}
 }

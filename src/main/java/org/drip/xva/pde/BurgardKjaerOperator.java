@@ -72,7 +72,7 @@ package org.drip.xva.pde;
 public class BurgardKjaerOperator {
 	private org.drip.xva.settings.PDEEvolutionControl _settings = null;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
-	private org.drip.xva.definition.MasterAgreementCloseOut _maco = null;
+	private org.drip.xva.definition.CloseOutBilateral _maco = null;
 
 	/**
 	 * BurgardKjaerOperator Constructor
@@ -86,7 +86,7 @@ public class BurgardKjaerOperator {
 
 	public BurgardKjaerOperator (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
-		final org.drip.xva.definition.MasterAgreementCloseOut maco,
+		final org.drip.xva.definition.CloseOutBilateral maco,
 		final org.drip.xva.settings.PDEEvolutionControl settings)
 		throws java.lang.Exception
 	{
@@ -111,7 +111,7 @@ public class BurgardKjaerOperator {
 	 * @return The Close Out Boundary Condition
 	 */
 
-	public org.drip.xva.definition.MasterAgreementCloseOut boundaryCondition()
+	public org.drip.xva.definition.CloseOutBilateral boundaryCondition()
 	{
 		return _maco;
 	}

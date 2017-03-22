@@ -165,10 +165,10 @@ public class FixFloatVACounterParty {
 		MarketPath np = new MarketPath (aVN);
 
 		for (int i = 0; i < iNumPath; ++i) {
-			CollateralGroupVertex[] aCGV = new CollateralGroupVertex[iNumStep + 1];
+			CollateralGroupVertexVanilla[] aCGV = new CollateralGroupVertexVanilla[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j)
-				aCGV[j] = new CollateralGroupVertex (
+				aCGV[j] = new CollateralGroupVertexVanilla (
 					adtVertex[j],
 					dblTimeWidth * (iNumStep - j) * aablATMSwapRateOffset[i][j],
 					0.,

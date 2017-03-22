@@ -243,8 +243,8 @@ public class CollateralizedFundingReceivable {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
-			CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
+			CollateralGroupVertexVanilla[] aCGV1 = new CollateralGroupVertexVanilla[iNumStep + 1];
+			CollateralGroupVertexVanilla[] aCGV2 = new CollateralGroupVertexVanilla[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
@@ -284,14 +284,14 @@ public class CollateralizedFundingReceivable {
 				}
 
 
-				aCGV1[j] = new CollateralGroupVertex (
+				aCGV1[j] = new CollateralGroupVertexVanilla (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					dblCollateralBalance1
 				);
 
-				aCGV2[j] = new CollateralGroupVertex (
+				aCGV2[j] = new CollateralGroupVertexVanilla (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,

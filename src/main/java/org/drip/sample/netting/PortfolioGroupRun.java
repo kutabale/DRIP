@@ -129,8 +129,8 @@ public class PortfolioGroupRun {
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
-		CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
-		CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
+		CollateralGroupVertexVanilla[] aCGV1 = new CollateralGroupVertexVanilla[iNumStep + 1];
+		CollateralGroupVertexVanilla[] aCGV2 = new CollateralGroupVertexVanilla[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
 		JulianDate dtSpot = DateUtil.Today();
@@ -205,14 +205,14 @@ public class PortfolioGroupRun {
 				dblCounterPartyRecoveryRate
 			);
 
-			aCGV1[i] = new CollateralGroupVertex (
+			aCGV1[i] = new CollateralGroupVertexVanilla (
 				adtVertex[i],
 				adblAssetValuePath1[i],
 				0.,
 				0.
 			);
 
-			aCGV2[i] = new CollateralGroupVertex (
+			aCGV2[i] = new CollateralGroupVertexVanilla (
 				adtVertex[i],
 				adblAssetValuePath2[i],
 				0.,

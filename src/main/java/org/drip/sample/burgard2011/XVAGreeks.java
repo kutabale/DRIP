@@ -144,7 +144,7 @@ public class XVAGreeks {
 			)
 		);
 
-		MasterAgreementCloseOut maco = tes.boundaryCondition();
+		CloseOutBilateral maco = tes.boundaryCondition();
 
 		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (
 			si,
@@ -256,10 +256,9 @@ public class XVAGreeks {
 			dblSensitivityShiftFactor
 		);
 
-		MasterAgreementCloseOut maco = new MasterAgreementCloseOut (
+		CloseOutBilateral maco = new CloseOutBilateral (
 			dblBankRecovery,
-			dblCounterPartyRecovery,
-			0.
+			dblCounterPartyRecovery
 		);
 
 		DiffusionEvolver meAsset = new DiffusionEvolver (

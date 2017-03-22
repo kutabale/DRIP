@@ -229,20 +229,20 @@ public class UncollateralizedNettingReceivable {
 				dblSwapNotional2
 			);
 
-			CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
-			CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
+			CollateralGroupVertexVanilla[] aCGV1 = new CollateralGroupVertexVanilla[iNumStep + 1];
+			CollateralGroupVertexVanilla[] aCGV2 = new CollateralGroupVertexVanilla[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV1[j] = new CollateralGroupVertex (
+				aCGV1[j] = new CollateralGroupVertexVanilla (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					0.
 				);
 
-				aCGV2[j] = new CollateralGroupVertex (
+				aCGV2[j] = new CollateralGroupVertexVanilla (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,

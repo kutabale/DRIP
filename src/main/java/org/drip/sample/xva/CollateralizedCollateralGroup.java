@@ -235,7 +235,7 @@ public class CollateralizedCollateralGroup {
 		for (int i = 0; i < iNumPath; ++i) {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart = dblTime * dblATMSwapRateStart;
-			CollateralGroupVertex[] aCGV = new CollateralGroupVertex[iNumStep + 1];
+			CollateralGroupVertexVanilla[] aCGV = new CollateralGroupVertexVanilla[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				double dblCollateralBalance = 0.;
@@ -258,7 +258,7 @@ public class CollateralizedCollateralGroup {
 					dblCollateralBalance = cae.postingRequirement (dtEnd);
 				}
 
-				aCGV[j] = new CollateralGroupVertex (
+				aCGV[j] = new CollateralGroupVertexVanilla (
 					adtVertex[j],
 					aadblSwapPortfolioValueRealization[i][j],
 					0.,

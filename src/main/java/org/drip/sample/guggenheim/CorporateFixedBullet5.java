@@ -459,12 +459,14 @@ public class CorporateFixedBullet5 {
 				aBond[i].maturityDate() + " |  " +
 				aBond[i].firstCouponDate() + "  |" +
 				FormatUtil.FormatDouble (adblCleanPrice[i], 3, 3, 100.) + " |" +
+				FormatUtil.FormatDouble (aBond[i].accrued (dtSettle.julian(), csqc), 1, 5, 100.) + " |" +
 				FormatUtil.FormatDouble (wi.yield(), 1, 2, 100.) + "% | " +
 				FormatUtil.FormatDouble (rvm.macaulayDuration(), 2, 2, 1.) + "  | " +
 				FormatUtil.FormatDouble (rvm.modifiedDuration(), 2, 2, 10000.) + "  |  " +
 				FormatUtil.FormatDouble (rvm.yield01(), 2, 2, 10000.) + "  |" +
 				FormatUtil.FormatDouble (rvm.yield01(), 4, 0, 1000000.) + " |" +
-				FormatUtil.FormatDouble (rvm.convexity(), 1, 2, 1000000.) + " |   " +
+				FormatUtil.FormatDouble (rvm.convexity(), 1, 2, 1000000.) + " |" +
+				FormatUtil.FormatDouble (aBond[i].weightedAverageLife (valParams, csqc), 2, 2, 1.) + " |   " +
 				FormatUtil.FormatDouble (rvm.bondBasis(), 3, 0, 10000.) + "     ||" + "\n";
 
 			adblOAS[i] = rvm.oas();
@@ -505,15 +507,15 @@ public class CorporateFixedBullet5 {
 				) + "  ||" + "\n";
 		}
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t|             BOND           |  EFFECTIVE  |   MATURITY  |  FIRST COUPON |  PRICE  | YIELD | MAC DUR | MOD DUR | YIELD 01 | DV01 | CONV | BOND BASIS ||");
+		System.out.println ("\t|             BOND           |  EFFECTIVE  |   MATURITY  |  FIRST COUPON |  PRICE  | ACCRUED | YIELD | MAC DUR | MOD DUR | YIELD 01 | DV01 | CONV |  WAL  | BOND BASIS ||");
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.print (strSecularMetrics);
 
-		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------||\n");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
 

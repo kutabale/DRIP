@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.definition;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,19 +47,18 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupVertex holds the Vertex Realizations of a Projected Path of a Simulation Run of a
- *  Collateral Group. The References are:
+ * CloseOutBilateral implements the (2002) ISDA Master Agreement Bilateral Close Out Scheme to be applied to
+ *  the MTM at the Bank/Counter Party Default. The References are:
+ *  
+ *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
- *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
+ *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
+ *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -67,78 +66,78 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertex {
-	private double _dblForwardPV = java.lang.Double.NaN;
-	private double _dblRealizedCashFlow = java.lang.Double.NaN;
-	private double _dblCollateralBalance = java.lang.Double.NaN;
-	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
+	private double _dblBankRecovery = java.lang.Double.NaN;
+	private double _dblCounterPartyRecovery = java.lang.Double.NaN;
 
 	/**
-	 * CollateralGroupVertex Constructor
+	 * CloseOutBilateral Constructor
 	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param dblBankRecovery The Bank Recovery Rate
+	 * @param dblCounterPartyRecovery The Counter Party Recovery Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertex (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardPV,
-		final double dblRealizedCashFlow,
+	public CloseOutBilateral (
+		final double dblBankRecovery,
+		final double dblCounterPartyRecovery)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyRecovery = dblCounterPartyRecovery))
+			throw new java.lang.Exception ("CloseOutBilateral Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Bank Recovery Rate
+	 * 
+	 * @return The Bank Recovery Rate
+	 */
+
+	public double bankRecovery()
+	{
+		return _dblBankRecovery;
+	}
+
+	/**
+	 * Retrieve the Counter Party Recovery Rate
+	 * 
+	 * @return The Counter Party Recovery Rate
+	 */
+
+	public double counterPartyRecovery()
+	{
+		return _dblCounterPartyRecovery;
+	}
+
+	@Override public double bankDefault (
+		final double dblMTM,
 		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV =
-			dblForwardPV) || !org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow =
-				dblRealizedCashFlow) || !org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance =
-					dblCollateralBalance))
-			throw new java.lang.Exception ("CollateralGroupVertex Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM) || !org.drip.quant.common.NumberUtil.IsValid
+			(dblCollateralBalance))
+			throw new java.lang.Exception ("CloseOutBilateral::bankDefault => Invalid Inputs");
+
+		double dblNetMTM = dblMTM - dblCollateralBalance;
+
+		return (dblNetMTM > 0. ? dblNetMTM : 0.) + _dblBankRecovery * (dblNetMTM < 0. ? dblNetMTM : 0.) +
+			dblCollateralBalance;
 	}
 
-	/**
-	 * Retrieve the Date Anchor
-	 * 
-	 * @return The Date Anchor
-	 */
-
-	public org.drip.analytics.date.JulianDate anchor()
+	@Override public double counterPartyDefault (
+		final double dblMTM,
+		final double dblCollateralBalance)
+		throws java.lang.Exception
 	{
-		return _dtAnchor;
-	}
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM) || !org.drip.quant.common.NumberUtil.IsValid
+			(dblCollateralBalance))
+			throw new java.lang.Exception ("CloseOutBilateral::counterPartyDefault => Invalid Inputs");
 
-	/**
-	 * Retrieve the Forward PV at the Path Vertex Time Node
-	 * 
-	 * @return The Forward PV at the Path Vertex Time Node
-	 */
+		double dblNetMTM = dblMTM - dblCollateralBalance;
 
-	public double forwardPV()
-	{
-		return _dblForwardPV;
-	}
-
-	/**
-	 * Retrieve the Collateral Balance at the Path Vertex Time Node
-	 * 
-	 * @return The Collateral Balance at the Path Vertex Time Node
-	 */
-
-	public double collateralBalance()
-	{
-		return _dblCollateralBalance;
-	}
-
-	/**
-	 * Retrieve the Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * 
-	 * @return The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 */
-
-	public double realizedCashFlow()
-	{
-		return _dblRealizedCashFlow;
+		return _dblCounterPartyRecovery * (dblNetMTM > 0. ? dblNetMTM : 0.) + (dblNetMTM < 0. ? dblNetMTM :
+			0.) + dblCollateralBalance;
 	}
 }

@@ -120,7 +120,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			jdeCounterParty
 		);
 
-		MasterAgreementCloseOut maco = tes.boundaryCondition();
+		CloseOutBilateral maco = tes.boundaryCondition();
 
 		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (
 			si,
@@ -261,10 +261,9 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			dblSensitivityShiftFactor
 		);
 
-		MasterAgreementCloseOut maco = new MasterAgreementCloseOut (
+		CloseOutBilateral maco = new CloseOutBilateral (
 			dblBankRecoveryRate,
-			dblCounterPartyRecoveryRate,
-			0.
+			dblCounterPartyRecoveryRate
 		);
 
 		DiffusionEvolver deAsset = new DiffusionEvolver (
