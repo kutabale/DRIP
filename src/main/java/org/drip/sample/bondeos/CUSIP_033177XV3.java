@@ -510,8 +510,8 @@ public class CUSIP_033177XV3 {
 		};
 
 		JulianDate dtEffective = DateUtil.CreateFromYMD (2009, 12,  3);
-		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2030, 12,  1);
-		double dblCoupon = 0.065598;
+		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2039, 12,  1);
+		double dblCoupon = 0.06558;
 		double dblCleanPrice = 1.10027;
 		int iFreq = 2;
 		String strCUSIP = "033177XV3";

@@ -510,7 +510,7 @@ public class CUSIP_378460TM1 {
 		};
 
 		JulianDate dtEffective = DateUtil.CreateFromYMD (2011,  8, 16);
-		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2036,  9,  1);
+		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2031,  9,  1);
 		double dblCoupon = 0.;
 		double dblCleanPrice = 0.484219;
 		int iFreq = 2;

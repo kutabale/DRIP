@@ -517,10 +517,10 @@ public class CUSIP_489399AG0 {
 		String strCUSIP = "489399AG0";
 		String strDayCount = "30/360";
 		int[] aiExerciseDate = new int[] {
-			DateUtil.CreateFromYMD (2019,  4, 19).julian(),
-			DateUtil.CreateFromYMD (2020,  4, 19).julian(),
-			DateUtil.CreateFromYMD (2021,  4, 19).julian(),
-			DateUtil.CreateFromYMD (2022,  4, 19).julian(),
+			DateUtil.CreateFromYMD (2019,  4, 1).julian(),
+			DateUtil.CreateFromYMD (2020,  4, 1).julian(),
+			DateUtil.CreateFromYMD (2021,  4, 1).julian(),
+			DateUtil.CreateFromYMD (2022,  4, 1).julian(),
 		};
 		double[] adblExercisePrice = new double[] {
 			1.02938,

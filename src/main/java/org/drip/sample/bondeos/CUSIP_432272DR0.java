@@ -512,7 +512,7 @@ public class CUSIP_432272DR0 {
 		JulianDate dtEffective = DateUtil.CreateFromYMD (2011,  1, 27);
 		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2040,  9,  1);
 		double dblCoupon = 0.00000;
-		double dblCleanPrice = 0.976596;
+		double dblCleanPrice = 0.244149;
 		int iFreq = 2;
 		String strCUSIP = "432272DR0";
 		String strDayCount = "30/360";
@@ -520,7 +520,7 @@ public class CUSIP_432272DR0 {
 			DateUtil.CreateFromYMD (2021,  9,  1).julian(),
 		};
 		double[] adblExercisePrice = new double[] {
-			1.05672,
+			0.26418,
 		};
 
 		BondComponent bond = BondBuilder.CreateSimpleFixed (
