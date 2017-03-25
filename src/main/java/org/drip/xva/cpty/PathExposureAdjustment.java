@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.cpty;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CounterPartyGroupPath aggregates across Multiple Netting Groups a Single Path Projection Runs along the
- *  Granularity of a Counter Party Group. The References are:
+ * PathExposureAdjustment aggregates the Exposures and the Adjustments across Multiple Netting/Funding Groups
+ *  on a Single Path Projection Run along the Granularity of a Counter Party Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,26 +67,26 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyGroupPath {
-	private org.drip.xva.trajectory.FundingGroupPath[] _aFGP = null;
-	private org.drip.xva.trajectory.NettingGroupPath[] _aNGP = null;
+public class PathExposureAdjustment {
+	private org.drip.xva.netting.FundingGroupPath[] _aFGP = null;
+	private org.drip.xva.netting.CreditDebtGroupPath[] _aCDGP = null;
 
 	/**
-	 * CounterPartyGroupPath Constructor
+	 * PathExposureAdjustment Constructor
 	 * 
-	 * @param aNGP The Array of Netting Group Paths
+	 * @param aCDGP The Array of Credit/Debt Netting Group Paths
 	 * @param aFGP The Array of Funding Group Paths
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CounterPartyGroupPath (
-		final org.drip.xva.trajectory.NettingGroupPath[] aNGP,
-		final org.drip.xva.trajectory.FundingGroupPath[] aFGP)
+	public PathExposureAdjustment (
+		final org.drip.xva.netting.CreditDebtGroupPath[] aCDGP,
+		final org.drip.xva.netting.FundingGroupPath[] aFGP)
 		throws java.lang.Exception
 	{
-		if (null == (_aNGP = aNGP) || 0 == _aNGP.length || null == (_aFGP = aFGP) || 0 == _aFGP.length)
-			throw new java.lang.Exception ("CounterPartyGroupPath Constructor => Invalid Inputs");
+		if (null == (_aCDGP = aCDGP) || 0 == _aCDGP.length || null == (_aFGP = aFGP) || 0 == _aFGP.length)
+			throw new java.lang.Exception ("PathExposureAdjustment Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -95,20 +95,20 @@ public class CounterPartyGroupPath {
 	 * @return The Array of the Funding Group Trajectory Paths
 	 */
 
-	public org.drip.xva.trajectory.FundingGroupPath[] fundingGroupTrajectoryPaths()
+	public org.drip.xva.netting.FundingGroupPath[] fundingGroupTrajectoryPaths()
 	{
 		return _aFGP;
 	}
 
 	/**
-	 * Retrieve the Array of the Netting Group Trajectory Paths
+	 * Retrieve the Array of Credit/Debt Netting Group Trajectory Paths
 	 * 
-	 * @return The Array of the Netting Group Trajectory Paths
+	 * @return The Array of Credit/Debt Netting Group Trajectory Paths
 	 */
 
-	public org.drip.xva.trajectory.NettingGroupPath[] nettingGroupTrajectoryPaths()
+	public org.drip.xva.netting.CreditDebtGroupPath[] nettingGroupTrajectoryPaths()
 	{
-		return _aNGP;
+		return _aCDGP;
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class CounterPartyGroupPath {
 
 	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		return _aNGP[0].anchors();
+		return _aCDGP[0].anchors();
 	}
 
 	/**
@@ -132,19 +132,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblCollateralizedExposure = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblCollateralizedExposure[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedExposure =
-				_aNGP[iNettingGroupIndex].collateralizedExposure();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupCollateralizedExposure =
+				_aCDGP[iCreditDebtGroupIndex].collateralizedExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedExposure[iVertexIndex] +=
-					adblNettingGroupCollateralizedExposure[iVertexIndex];
+					adblCreditDebtGroupCollateralizedExposure[iVertexIndex];
 		}
 
 		return adblCollateralizedExposure;
@@ -160,19 +161,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblCollateralizedExposurePV = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblCollateralizedExposurePV[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedExposurePV =
-				_aNGP[iNettingGroupIndex].collateralizedExposurePV();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupCollateralizedExposurePV =
+				_aCDGP[iCreditDebtGroupIndex].collateralizedExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedExposurePV[iVertexIndex] +=
-					adblNettingGroupCollateralizedExposurePV[iVertexIndex];
+					adblCreditDebtGroupCollateralizedExposurePV[iVertexIndex];
 		}
 
 		return adblCollateralizedExposurePV;
@@ -188,19 +190,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblCollateralizedPositiveExposure = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblCollateralizedPositiveExposure[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedPositiveExposure =
-				_aNGP[iNettingGroupIndex].collateralizedPositiveExposure();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupCollateralizedPositiveExposure =
+				_aCDGP[iCreditDebtGroupIndex].collateralizedPositiveExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedPositiveExposure[iVertexIndex] +=
-					adblNettingGroupCollateralizedPositiveExposure[iVertexIndex];
+					adblCreditDebtGroupCollateralizedPositiveExposure[iVertexIndex];
 		}
 
 		return adblCollateralizedPositiveExposure;
@@ -216,19 +219,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblCollateralizedPositiveExposurePV = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblCollateralizedPositiveExposurePV[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedPositiveExposurePV =
-				_aNGP[iNettingGroupIndex].collateralizedPositiveExposurePV();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupCollateralizedPositiveExposurePV =
+				_aCDGP[iCreditDebtGroupIndex].collateralizedPositiveExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedPositiveExposurePV[iVertexIndex] +=
-					adblNettingGroupCollateralizedPositiveExposurePV[iVertexIndex];
+					adblCreditDebtGroupCollateralizedPositiveExposurePV[iVertexIndex];
 		}
 
 		return adblCollateralizedPositiveExposurePV;
@@ -244,19 +248,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblCollateralizedNegativeExposure = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblCollateralizedNegativeExposure[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedNegativeExposure =
-				_aNGP[iNettingGroupIndex].collateralizedNegativeExposure();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupCollateralizedNegativeExposure =
+				_aCDGP[iCreditDebtGroupIndex].collateralizedNegativeExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedNegativeExposure[iVertexIndex] +=
-					adblNettingGroupCollateralizedNegativeExposure[iVertexIndex];
+					adblCreditDebtGroupCollateralizedNegativeExposure[iVertexIndex];
 		}
 
 		return adblCollateralizedNegativeExposure;
@@ -272,19 +277,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblCollateralizedNegativeExposurePV = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblCollateralizedNegativeExposurePV[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupCollateralizedNegativeExposurePV =
-				_aNGP[iNettingGroupIndex].collateralizedNegativeExposurePV();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupCollateralizedNegativeExposurePV =
+				_aCDGP[iCreditDebtGroupIndex].collateralizedNegativeExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedNegativeExposurePV[iVertexIndex] +=
-					adblNettingGroupCollateralizedNegativeExposurePV[iVertexIndex];
+					adblCreditDebtGroupCollateralizedNegativeExposurePV[iVertexIndex];
 		}
 
 		return adblCollateralizedNegativeExposurePV;
@@ -300,19 +306,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblUncollateralizedExposure = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblUncollateralizedExposure[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedExposure =
-				_aNGP[iNettingGroupIndex].uncollateralizedExposure();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupUncollateralizedExposure =
+				_aCDGP[iCreditDebtGroupIndex].uncollateralizedExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedExposure[iVertexIndex] +=
-					adblNettingGroupUncollateralizedExposure[iVertexIndex];
+					adblCreditDebtGroupUncollateralizedExposure[iVertexIndex];
 		}
 
 		return adblUncollateralizedExposure;
@@ -328,19 +335,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblUncollateralizedExposurePV = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblUncollateralizedExposurePV[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedExposurePV =
-				_aNGP[iNettingGroupIndex].uncollateralizedExposurePV();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupUncollateralizedExposurePV =
+				_aCDGP[iCreditDebtGroupIndex].uncollateralizedExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedExposurePV[iVertexIndex] +=
-					adblNettingGroupUncollateralizedExposurePV[iVertexIndex];
+					adblCreditDebtGroupUncollateralizedExposurePV[iVertexIndex];
 		}
 
 		return adblUncollateralizedExposurePV;
@@ -356,19 +364,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblUncollateralizedPositiveExposure = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblUncollateralizedPositiveExposure[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedPositiveExposure =
-				_aNGP[iNettingGroupIndex].uncollateralizedPositiveExposure();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupUncollateralizedPositiveExposure =
+				_aCDGP[iCreditDebtGroupIndex].uncollateralizedPositiveExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedPositiveExposure[iVertexIndex] +=
-					adblNettingGroupUncollateralizedPositiveExposure[iVertexIndex];
+					adblCreditDebtGroupUncollateralizedPositiveExposure[iVertexIndex];
 		}
 
 		return adblUncollateralizedPositiveExposure;
@@ -384,19 +393,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblUncollateralizedPositiveExposurePV = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblUncollateralizedPositiveExposurePV[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedPositiveExposurePV =
-				_aNGP[iNettingGroupIndex].uncollateralizedPositiveExposurePV();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupUncollateralizedPositiveExposurePV =
+				_aCDGP[iCreditDebtGroupIndex].uncollateralizedPositiveExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedPositiveExposurePV[iVertexIndex] +=
-					adblNettingGroupUncollateralizedPositiveExposurePV[iVertexIndex];
+					adblCreditDebtGroupUncollateralizedPositiveExposurePV[iVertexIndex];
 		}
 
 		return adblUncollateralizedPositiveExposurePV;
@@ -412,19 +422,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblUncollateralizedNegativeExposure = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblUncollateralizedNegativeExposure[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedNegativeExposure =
-				_aNGP[iNettingGroupIndex].uncollateralizedNegativeExposure();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupUncollateralizedNegativeExposure =
+				_aCDGP[iCreditDebtGroupIndex].uncollateralizedNegativeExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedNegativeExposure[iVertexIndex] +=
-					adblNettingGroupUncollateralizedNegativeExposure[iVertexIndex];
+					adblCreditDebtGroupUncollateralizedNegativeExposure[iVertexIndex];
 		}
 
 		return adblUncollateralizedNegativeExposure;
@@ -440,19 +451,20 @@ public class CounterPartyGroupPath {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double[] adblUncollateralizedNegativeExposurePV = new double[iNumVertex];
 
 		for (int j = 0; j < iNumVertex; ++j)
 			adblUncollateralizedNegativeExposurePV[j] = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex) {
-			double[] adblNettingGroupUncollateralizedNegativeExposurePV =
-				_aNGP[iNettingGroupIndex].uncollateralizedNegativeExposurePV();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupUncollateralizedNegativeExposurePV =
+				_aCDGP[iCreditDebtGroupIndex].uncollateralizedNegativeExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedNegativeExposurePV[iVertexIndex] +=
-					adblNettingGroupUncollateralizedNegativeExposurePV[iVertexIndex];
+					adblCreditDebtGroupUncollateralizedNegativeExposurePV[iVertexIndex];
 		}
 
 		return adblUncollateralizedNegativeExposurePV;
@@ -466,11 +478,12 @@ public class CounterPartyGroupPath {
 
 	public double unilateralCreditAdjustment()
 	{
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double dblUnilateralCreditAdjustment = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblUnilateralCreditAdjustment += _aNGP[iNettingGroupIndex].unilateralCreditAdjustment();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex)
+			dblUnilateralCreditAdjustment += _aCDGP[iCreditDebtGroupIndex].unilateralCreditAdjustment();
 
 		return dblUnilateralCreditAdjustment;
 	}
@@ -483,11 +496,12 @@ public class CounterPartyGroupPath {
 
 	public double bilateralCreditAdjustment()
 	{
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double dblBilateralCreditAdjustment = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblBilateralCreditAdjustment += _aNGP[iNettingGroupIndex].bilateralCreditAdjustment();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex)
+			dblBilateralCreditAdjustment += _aCDGP[iCreditDebtGroupIndex].bilateralCreditAdjustment();
 
 		return dblBilateralCreditAdjustment;
 	}
@@ -511,12 +525,13 @@ public class CounterPartyGroupPath {
 
 	public double contraLiabilityCreditAdjustment()
 	{
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 		double dblContraLiabilityCreditAdjustment = 0.;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex)
 			dblContraLiabilityCreditAdjustment +=
-				_aNGP[iNettingGroupIndex].contraLiabilityCreditAdjustment();
+				_aCDGP[iCreditDebtGroupIndex].contraLiabilityCreditAdjustment();
 
 		return dblContraLiabilityCreditAdjustment;
 	}
@@ -530,10 +545,11 @@ public class CounterPartyGroupPath {
 	public double debtAdjustment()
 	{
 		double dblDebtAdjustment = 0.;
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblDebtAdjustment += _aNGP[iNettingGroupIndex].debtAdjustment();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex)
+			dblDebtAdjustment += _aCDGP[iCreditDebtGroupIndex].debtAdjustment();
 
 		return dblDebtAdjustment;
 	}
@@ -634,11 +650,12 @@ public class CounterPartyGroupPath {
 	{
 		double dblTotalAdjustment = 0.;
 		int iNumFundingGroup = _aFGP.length;
-		int iNumNettingGroup = _aNGP.length;
+		int iNumCreditDebtGroup = _aCDGP.length;
 
-		for (int iNettingGroupIndex = 0; iNettingGroupIndex < iNumNettingGroup; ++iNettingGroupIndex)
-			dblTotalAdjustment += _aNGP[iNettingGroupIndex].creditAdjustment() +
-				_aNGP[iNettingGroupIndex].debtAdjustment();
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex)
+			dblTotalAdjustment += _aCDGP[iCreditDebtGroupIndex].creditAdjustment() +
+				_aCDGP[iCreditDebtGroupIndex].debtAdjustment();
 
 		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
 			dblTotalAdjustment += _aFGP[iFundingGroupIndex].fundingValueAdjustment();

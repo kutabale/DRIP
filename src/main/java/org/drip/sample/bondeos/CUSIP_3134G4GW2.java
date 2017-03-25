@@ -358,7 +358,7 @@ public class CUSIP_3134G4GW2 {
 
 		ValuationParams valParams = new ValuationParams (
 			dtValue,
-			dtSettle,
+			dtValue,
 			bond.currency()
 		);
 
@@ -455,7 +455,7 @@ public class CUSIP_3134G4GW2 {
 
 		System.out.println ("\t Price                     => " + FormatUtil.FormatDouble (dblCleanPrice, 1, 5, 100.));
 
-		System.out.println ("\t Bond Accrued              => " + FormatUtil.FormatDouble (bond.accrued (dtSettle.julian(), csqc), 1, 4, 100.));
+		System.out.println ("\t Bond Accrued              => " + FormatUtil.FormatDouble (bond.accrued (dtValue.julian(), csqc), 1, 4, 100.));
 
 		System.out.println ("\t Bond YTW                  => " + FormatUtil.FormatDouble (dblYTW, 1, 3, 100.) + "%");
 
@@ -658,7 +658,7 @@ public class CUSIP_3134G4GW2 {
 			aiExerciseDate,
 			adblExercisePrice,
 			false,
-			30,
+			5,
 			false,
 			Double.NaN,
 			"",

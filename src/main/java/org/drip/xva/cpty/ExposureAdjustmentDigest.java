@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.cpty;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,9 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CounterPartyGroupDigest holds the "thin" Statistics of the Aggregations across Multiple Path Projection
- *  Runs along the Granularity of a Counter Party Group (i.e., across multiple Netting groups). The
- *  References are:
+ * ExposureAdjustmentDigest holds the "thin" Statistics of the Aggregations across Multiple Path Projection
+ *  Runs along the Granularity of a Counter Party Group (i.e., across multiple Funding and Credit/Debt
+ *  Netting groups). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,7 +68,7 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyGroupDigest {
+public class ExposureAdjustmentDigest {
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtCVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtDVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtFBA = null;
@@ -100,7 +100,7 @@ public class CounterPartyGroupDigest {
 		null;
 
 	/**
-	 * CounterPartyGroupDigest Constructor
+	 * ExposureAdjustmentDigest Constructor
 	 * 
 	 * @param adblUCVA The Array of UCVA
 	 * @param adblFTDCVA The Array of FTD CVA
@@ -129,7 +129,7 @@ public class CounterPartyGroupDigest {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CounterPartyGroupDigest (
+	public ExposureAdjustmentDigest (
 		final double[] adblUCVA,
 		final double[] adblFTDCVA,
 		final double[] adblCVA,
@@ -166,7 +166,7 @@ public class CounterPartyGroupDigest {
 										aadblUncollateralizedPositiveExposurePV || null ==
 											aadblUncollateralizedNegativeExposure || null ==
 												aadblUncollateralizedNegativeExposurePV)
-			throw new java.lang.Exception ("CounterPartyGroupDigest Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("ExposureAdjustmentDigest Constructor => Invalid Inputs");
 
 		_udtUCVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblUCVA);
 
@@ -223,7 +223,7 @@ public class CounterPartyGroupDigest {
 										aadblCollateralizedPositiveExposurePV.length || iNumVertex !=
 											aadblCollateralizedNegativeExposurePV.length || iNumVertex !=
 												aadblCollateralizedNegativeExposurePV.length)
-			throw new java.lang.Exception ("CounterPartyGroupDigest Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("ExposureAdjustmentDigest Constructor => Invalid Inputs");
 
 		for (int i = 0 ; i < iNumVertex; ++i) {
 			_aUDTCollateralizedExposure[i] = new org.drip.measure.statistics.UnivariateDiscreteThin

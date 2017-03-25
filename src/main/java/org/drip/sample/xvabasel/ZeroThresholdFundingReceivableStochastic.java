@@ -13,12 +13,15 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
+import org.drip.xva.book.*;
+import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.collateral.HypothecationAmountEstimator;
+import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
-import org.drip.xva.settings.*;
 import org.drip.xva.strategy.FundingGroupPathAA2014;
 import org.drip.xva.strategy.NettingGroupPathAA2014;
-import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -205,7 +208,7 @@ public class ZeroThresholdFundingReceivableStochastic {
 		return cpvd.multiPathVertexRd()[0].flatform();
 	}
 
-	private static final CounterPartyGroupAggregator[] Mix (
+	private static final ExposureAdjustmentAggregator[] Mix (
 		final double dblTimeMaturity1,
 		final double dblATMSwapRateOffsetStart1,
 		final double dblSwapNotional1,
@@ -264,8 +267,8 @@ public class ZeroThresholdFundingReceivableStochastic {
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
-		CounterPartyGroupPath[] aCPGPGround = new CounterPartyGroupPath[iNumPath];
-		CounterPartyGroupPath[] aCPGPExtended = new CounterPartyGroupPath[iNumPath];
+		PathExposureAdjustment[] aCPGPGround = new PathExposureAdjustment[iNumPath];
+		PathExposureAdjustment[] aCPGPExtended = new PathExposureAdjustment[iNumPath];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
@@ -405,8 +408,8 @@ public class ZeroThresholdFundingReceivableStochastic {
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			CollateralGroupVertexVanilla[] aCGV1 = new CollateralGroupVertexVanilla[iNumStep + 1];
-			CollateralGroupVertexVanilla[] aCGV2 = new CollateralGroupVertexVanilla[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aCGV2 = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = (adtVertex[j] = dtSpot.addMonths (6 * j + 6));
@@ -417,7 +420,7 @@ public class ZeroThresholdFundingReceivableStochastic {
 				double dblValueEnd2 = aadblPortfolio2Value[i][j];
 
 				if (0 != j) {
-					CollateralAmountEstimator cae1 = new CollateralAmountEstimator (
+					HypothecationAmountEstimator cae1 = new HypothecationAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -431,7 +434,7 @@ public class ZeroThresholdFundingReceivableStochastic {
 
 					dblCollateralBalance1 = cae1.postingRequirement (dtEnd);
 
-					CollateralAmountEstimator cae2 = new CollateralAmountEstimator (
+					HypothecationAmountEstimator cae2 = new HypothecationAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -457,14 +460,14 @@ public class ZeroThresholdFundingReceivableStochastic {
 					adblCounterPartyRecoveryRate[j]
 				);
 
-				aCGV1[j] = new CollateralGroupVertexVanilla (
+				aCGV1[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					dblCollateralBalance1
 				);
 
-				aCGV2[j] = new CollateralGroupVertexVanilla (
+				aCGV2[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
@@ -474,15 +477,15 @@ public class ZeroThresholdFundingReceivableStochastic {
 
 			MarketPath np = new MarketPath (aNV);
 
-			CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGV1)
+			HypothecationGroupPathRegular[] aCGP1 = new HypothecationGroupPathRegular[] {
+				new HypothecationGroupPathRegular (aCGV1)
 			};
 
-			CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGV2)
+			HypothecationGroupPathRegular[] aCGP2 = new HypothecationGroupPathRegular[] {
+				new HypothecationGroupPathRegular (aCGV2)
 			};
 
-			aCPGPGround[i] = new CounterPartyGroupPath (
+			aCPGPGround[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP1,
@@ -497,7 +500,7 @@ public class ZeroThresholdFundingReceivableStochastic {
 				}
 			);
 
-			aCPGPExtended[i] = new CounterPartyGroupPath (
+			aCPGPExtended[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP1,
@@ -510,9 +513,9 @@ public class ZeroThresholdFundingReceivableStochastic {
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
-						new CollateralGroupPath[] {
-							new CollateralGroupPath (aCGV1),
-							new CollateralGroupPath (aCGV2)
+						new HypothecationGroupPathRegular[] {
+							new HypothecationGroupPathRegular (aCGV1),
+							new HypothecationGroupPathRegular (aCGV2)
 						},
 						np
 					)
@@ -520,15 +523,15 @@ public class ZeroThresholdFundingReceivableStochastic {
 			);
 		}
 
-		return new CounterPartyGroupAggregator[] {
-			new CounterPartyGroupAggregator (aCPGPGround),
-			new CounterPartyGroupAggregator (aCPGPExtended)
+		return new ExposureAdjustmentAggregator[] {
+			new ExposureAdjustmentAggregator (aCPGPGround),
+			new ExposureAdjustmentAggregator (aCPGPExtended)
 		};
 	}
 
 	private static final void CPGDDump (
 		final String strHeader,
-		final CounterPartyGroupDigest cpgd)
+		final ExposureAdjustmentDigest cpgd)
 		throws Exception
 	{
 		System.out.println();
@@ -634,8 +637,8 @@ public class ZeroThresholdFundingReceivableStochastic {
 
 	private static final void CPGDDiffDump (
 		final String strHeader,
-		final CounterPartyGroupDigest cpgdGround,
-		final CounterPartyGroupDigest cpgdExpanded)
+		final ExposureAdjustmentDigest cpgdGround,
+		final ExposureAdjustmentDigest cpgdExpanded)
 		throws Exception
 	{
 		System.out.println();
@@ -679,8 +682,8 @@ public class ZeroThresholdFundingReceivableStochastic {
 
 	private static final void BaselAccountingMetrics (
 		final String strHeader,
-		final CounterPartyGroupAggregator cpgaGround,
-		final CounterPartyGroupAggregator cpgaExpanded)
+		final ExposureAdjustmentAggregator cpgaGround,
+		final ExposureAdjustmentAggregator cpgaExpanded)
 		throws Exception
 	{
 		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (cpgaGround);
@@ -770,7 +773,7 @@ public class ZeroThresholdFundingReceivableStochastic {
 	{
 		EnvManager.InitEnv ("");
 
-		CounterPartyGroupAggregator[] aCPGA = Mix (
+		ExposureAdjustmentAggregator[] aCPGA = Mix (
 			5.,
 			0.,
 			100.,
@@ -779,12 +782,12 @@ public class ZeroThresholdFundingReceivableStochastic {
 			1.
 		);
 
-		CounterPartyGroupAggregator cpgaGround = aCPGA[0];
-		CounterPartyGroupAggregator cpgaExtended = aCPGA[1];
+		ExposureAdjustmentAggregator cpgaGround = aCPGA[0];
+		ExposureAdjustmentAggregator cpgaExtended = aCPGA[1];
 
-		CounterPartyGroupDigest cpgdGround = cpgaGround.digest();
+		ExposureAdjustmentDigest cpgdGround = cpgaGround.digest();
 
-		CounterPartyGroupDigest cpgdExtended = cpgaExtended.digest();
+		ExposureAdjustmentDigest cpgdExtended = cpgaExtended.digest();
 
 		CPGDDump (
 			"\t||                                        GROUND BOOK ADJUSTMENT METRICS                                        ||",

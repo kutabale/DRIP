@@ -1,5 +1,5 @@
 
-package org.drip.xva.settings;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.settings;
  */
 
 /**
- * CollateralAmountEstimator estimates the Amount of Collateral that is to be Posted during a Single Run of a
- *  Collateral Group Valuation. The References are:
+ * HypothecationAmountEstimator estimates the Amount of Collateral Hypothecation that is to be Posted during
+ *  a Single Run of a Collateral Hypothecation Group Valuation. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,32 +67,32 @@ package org.drip.xva.settings;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralAmountEstimator {
+public class HypothecationAmountEstimator {
 	private double _dblCurrentBalance = java.lang.Double.NaN;
-	private org.drip.measure.bridge.BrokenDateInterpolator _bdb = null;
-	private org.drip.xva.settings.CollateralGroupSpecification _cgs = null;
-	private org.drip.xva.settings.CounterPartyGroupSpecification _cpgs = null;
+	private org.drip.measure.bridge.BrokenDateInterpolator _bdi = null;
+	private org.drip.xva.book.CollateralGroupSpecification _cgs = null;
+	private org.drip.xva.book.CounterPartyGroupSpecification _cpgs = null;
 
 	/**
-	 * CollateralAmountEstimator Constructor
+	 * HypothecationAmountEstimator Constructor
 	 * 
 	 * @param cgs The Collateral Group Specification
 	 * @param cpgs The Counter Party Group Specification
-	 * @param bdb The Stochastic Value Broken Date Bridge Estimator
+	 * @param bdi The Stochastic Value Broken Date Bridge Estimator
 	 * @param dblCurrentBalance The Current Collateral Balance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralAmountEstimator (
-		final org.drip.xva.settings.CollateralGroupSpecification cgs,
-		final org.drip.xva.settings.CounterPartyGroupSpecification cpgs,
-		final org.drip.measure.bridge.BrokenDateInterpolator bdb,
+	public HypothecationAmountEstimator (
+		final org.drip.xva.book.CollateralGroupSpecification cgs,
+		final org.drip.xva.book.CounterPartyGroupSpecification cpgs,
+		final org.drip.measure.bridge.BrokenDateInterpolator bdi,
 		final double dblCurrentBalance)
 		throws java.lang.Exception
 	{
-		if (null == (_cgs = cgs) || null == (_cpgs = cpgs) || null == (_bdb = bdb))
-			throw new java.lang.Exception ("CollateralAmountEstimator Constructor => Invalid Inputs");
+		if (null == (_cgs = cgs) || null == (_cpgs = cpgs) || null == (_bdi = bdi))
+			throw new java.lang.Exception ("HypothecationAmountEstimator Constructor => Invalid Inputs");
 
 		_dblCurrentBalance = dblCurrentBalance;
 	}
@@ -103,7 +103,7 @@ public class CollateralAmountEstimator {
 	 * @return The Collateral Group Specification
 	 */
 
-	public org.drip.xva.settings.CollateralGroupSpecification collateralGroupSpecification()
+	public org.drip.xva.book.CollateralGroupSpecification collateralGroupSpecification()
 	{
 		return _cgs;
 	}
@@ -114,7 +114,7 @@ public class CollateralAmountEstimator {
 	 * @return The Counter Party Group Specification
 	 */
 
-	public org.drip.xva.settings.CounterPartyGroupSpecification counterPartyGroupSpecification()
+	public org.drip.xva.book.CounterPartyGroupSpecification counterPartyGroupSpecification()
 	{
 		return _cpgs;
 	}
@@ -127,7 +127,7 @@ public class CollateralAmountEstimator {
 
 	public org.drip.measure.bridge.BrokenDateInterpolator brokenDateBridge()
 	{
-		return _bdb;
+		return _bdi;
 	}
 
 	/**
@@ -157,15 +157,15 @@ public class CollateralAmountEstimator {
 	{
 		if (null == dtValue)
 			throw new java.lang.Exception
-				("CollateralAmountEstimator::bankWindowMarginValue => Invalid Inputs");
+				("HypothecationAmountEstimator::bankWindowMarginValue => Invalid Inputs");
 
 		org.drip.analytics.date.JulianDate dtMargin = dtValue.subtractDays (_cpgs.bankDefaultWindow());
 
 		if (null == dtMargin)
 			throw new java.lang.Exception
-				("CollateralAmountEstimator::bankWindowMarginValue => Invalid Inputs");
+				("HypothecationAmountEstimator::bankWindowMarginValue => Invalid Inputs");
 
-		return _bdb.interpolate (dtMargin.julian());
+		return _bdi.interpolate (dtMargin.julian());
 	}
 
 	/**
@@ -222,16 +222,16 @@ public class CollateralAmountEstimator {
 	{
 		if (null == dtValue)
 			throw new java.lang.Exception
-				("CollateralAmountEstimator::counterPartyWindowMarginValue => Invalid Inputs");
+				("HypothecationAmountEstimator::counterPartyWindowMarginValue => Invalid Inputs");
 
 		org.drip.analytics.date.JulianDate dtMargin = dtValue.subtractDays
 			(_cpgs.counterPartyDefaultWindow());
 
 		if (null == dtMargin)
 			throw new java.lang.Exception
-				("CollateralAmountEstimator::counterPartyWindowMarginValue => Invalid Inputs");
+				("HypothecationAmountEstimator::counterPartyWindowMarginValue => Invalid Inputs");
 
-		return _bdb.interpolate (dtMargin.julian());
+		return _bdi.interpolate (dtMargin.julian());
 	}
 
 	/**
@@ -300,7 +300,7 @@ public class CollateralAmountEstimator {
 	 * @return The CollateralAmountEstimatorOutput Instance
 	 */
 
-	public org.drip.xva.settings.CollateralAmountEstimatorOutput output (
+	public org.drip.xva.collateral.HypothecationAmountEstimatorOutput output (
 		final org.drip.analytics.date.JulianDate dtValue)
 	{
 		if (null == dtValue) return null;
@@ -319,9 +319,9 @@ public class CollateralAmountEstimator {
 		double dblValueDate = dtValue.julian();
 
 		try {
-			double dblBankWindowMarginValue = _bdb.interpolate (dtBankMargin.julian());
+			double dblBankWindowMarginValue = _bdi.interpolate (dtBankMargin.julian());
 
-			double dblCounterPartyWindowMarginValue = _bdb.interpolate (dtCounterPartyMargin.julian());
+			double dblCounterPartyWindowMarginValue = _bdi.interpolate (dtCounterPartyMargin.julian());
 
 			double dblBankThresholdValue = null == r1ToR1BankThreshold ? 0. : r1ToR1BankThreshold.evaluate
 				(dblValueDate);
@@ -336,7 +336,7 @@ public class CollateralAmountEstimator {
 			dblCounterPartyPostingRequirement = 0. > dblCounterPartyPostingRequirement ? 0. :
 				dblCounterPartyPostingRequirement;
 
-			return new org.drip.xva.settings.CollateralAmountEstimatorOutput (
+			return new org.drip.xva.collateral.HypothecationAmountEstimatorOutput (
 				dtBankMargin,
 				dtCounterPartyMargin,
 				dblBankWindowMarginValue,

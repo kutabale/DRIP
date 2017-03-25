@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,10 +47,8 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupVertexCloseOut holds the Close Out Based Vertex Exposure of a Projected Path of a
- *  Simulation Run of a Collateral Group. The References are:
- *  
- *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
+ * HypothecationGroupVertex holds the Vertex Realizations of a Projected Path of a Simulation Run of a
+ *  Collateral Hypothecation Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -58,6 +56,10 @@ package org.drip.xva.trajectory;
  *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
+ *  
+ *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
+ *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
+ *  	Singapore.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -65,97 +67,78 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertexCloseOut extends org.drip.xva.trajectory.CollateralGroupVertex {
-	private org.drip.xva.definition.CloseOutGeneral _cog = null;
+public class HypothecationGroupVertex {
+	private double _dblForwardPV = java.lang.Double.NaN;
+	private double _dblRealizedCashFlow = java.lang.Double.NaN;
+	private double _dblCollateralBalance = java.lang.Double.NaN;
+	private org.drip.analytics.date.JulianDate _dtAnchor = null;
 
 	/**
-	 * CollateralGroupVertexCloseOut Constructor
+	 * HypothecationGroupVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
 	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
-	 * @param cog The Generic Close Out Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertexCloseOut (
+	public HypothecationGroupVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardPV,
 		final double dblRealizedCashFlow,
-		final double dblCollateralBalance,
-		final org.drip.xva.definition.CloseOutGeneral cog)
+		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		super (dtAnchor, dblForwardPV, dblRealizedCashFlow, dblCollateralBalance);
+		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV =
+			dblForwardPV) || !org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow =
+				dblRealizedCashFlow) || !org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance =
+					dblCollateralBalance))
+			throw new java.lang.Exception ("HypothecationGroupVertex Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Generic Close Out Instance
+	 * Retrieve the Date Anchor
 	 * 
-	 * @return The Generic Close Out Instance
+	 * @return The Date Anchor
 	 */
 
-	public org.drip.xva.definition.CloseOutGeneral closeOut()
+	public org.drip.analytics.date.JulianDate anchor()
 	{
-		return _cog;
+		return _dtAnchor;
 	}
 
 	/**
-	 * Retrieve the Collateralized Credit Exposure at the Path Vertex Time Node
+	 * Retrieve the Forward PV at the Path Vertex Time Node
 	 * 
-	 * @return The Collateralized Credit Exposure at the Path Vertex Time Node
+	 * @return The Forward PV at the Path Vertex Time Node
 	 */
 
-	public double collateralizedCreditExposure()
-		throws java.lang.Exception
+	public double forwardPV()
 	{
-		double dblForwardPV = forwardPV();
-
-		return dblForwardPV + realizedCashFlow() - _cog.counterPartyDefault (dblForwardPV,
-			collateralBalance());
+		return _dblForwardPV;
 	}
 
 	/**
-	 * Retrieve the Uncollateralized Credit Exposure at the Path Vertex Time Node
+	 * Retrieve the Collateral Balance at the Path Vertex Time Node
 	 * 
-	 * @return The Uncollateralized Credit Exposure at the Path Vertex Time Node
+	 * @return The Collateral Balance at the Path Vertex Time Node
 	 */
 
-	public double uncollateralizedCreditExposure()
-		throws java.lang.Exception
+	public double collateralBalance()
 	{
-		double dblForwardPV = forwardPV();
-
-		return dblForwardPV + realizedCashFlow() - _cog.counterPartyDefault (dblForwardPV);
+		return _dblCollateralBalance;
 	}
 
 	/**
-	 * Retrieve the Collateralized Debt Exposure at the Path Vertex Time Node
+	 * Retrieve the Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * 
-	 * @return The Collateralized Debt Exposure at the Path Vertex Time Node
+	 * @return The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 */
 
-	public double collateralizedDebtExposure()
-		throws java.lang.Exception
+	public double realizedCashFlow()
 	{
-		double dblForwardPV = forwardPV();
-
-		return dblForwardPV + realizedCashFlow() - _cog.bankDefault (dblForwardPV, collateralBalance());
-	}
-
-	/**
-	 * Retrieve the Uncollateralized Debt Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Uncollateralized Debt Exposure at the Path Vertex Time Node
-	 */
-
-	public double uncollateralizedDebtExposure()
-		throws java.lang.Exception
-	{
-		double dblForwardPV = forwardPV();
-
-		return dblForwardPV + realizedCashFlow() - _cog.bankDefault (dblForwardPV);
+		return _dblRealizedCashFlow;
 	}
 }

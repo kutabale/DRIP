@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.definition;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,13 +47,15 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupVertexVanilla holds the Vanilla Vertex Exposures of a Projected Path of a Simulation Run of
- *  a Collateral Group. The References are:
+ * PDEEvolutionControl is used to Customize the XVA Estimation using PDE Evolution ,e.g., determine the MTM
+ *  Mechanism that determines the actual Termination Close Out, as laid out in Burgard and Kjaer (2014). The
+ *  References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
- *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
+ *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
+ *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
  *  
@@ -67,48 +69,62 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertexVanilla extends org.drip.xva.trajectory.CollateralGroupVertex {
+public class PDEEvolutionControl {
 
 	/**
-	 * CollateralGroupVertexVanilla Constructor
+	 * Set the Close-out to the Derivative MTM according to Li and Tang (2007) or Gregory (2009) 
+	 */
+
+	public static final int CLOSEOUT_GREGORY_LI_TANG = 1;
+
+	/**
+	 * Set the Close-out to the Derivative XVA MTM according to Burgard and Kjaer (2014)
+	 */
+
+	public static final int CLOSEOUT_BURGARD_KJAER = 2;
+
+	private int _iCloseOutScheme = CLOSEOUT_GREGORY_LI_TANG;
+	private double _dblSensitivityShiftFactor = java.lang.Double.NaN;
+
+	/**
+	 * PDEEvolutionControl Constructor
 	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param iCloseOutScheme The Close Out Scheme
+	 * @param dblSensitivityShiftFactor The Factor needed to evaluate Sensitivity Shifts
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertexVanilla (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardPV,
-		final double dblRealizedCashFlow,
-		final double dblCollateralBalance)
+	public PDEEvolutionControl (
+		final int iCloseOutScheme,
+		final double dblSensitivityShiftFactor)
 		throws java.lang.Exception
 	{
-		super (dtAnchor, dblForwardPV, dblRealizedCashFlow, dblCollateralBalance);
+		if ((CLOSEOUT_GREGORY_LI_TANG != (_iCloseOutScheme = iCloseOutScheme) && CLOSEOUT_BURGARD_KJAER !=
+			_iCloseOutScheme) || !org.drip.quant.common.NumberUtil.IsValid (_dblSensitivityShiftFactor =
+				dblSensitivityShiftFactor))
+			throw new java.lang.Exception ("PDEEvolutionControl Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
+	 * Retrieve the Close-out Scheme
 	 * 
-	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
+	 * @return The Close-out Scheme
 	 */
 
-	public double collateralizedExposure()
+	public int closeOutScheme()
 	{
-		return forwardPV() + realizedCashFlow() - collateralBalance();
+		return _iCloseOutScheme;
 	}
 
 	/**
-	 * Retrieve the Total Uncollateralized Exposure at the Path Vertex Time Node
+	 * Retrieve the Factor needed to evaluate Sensitivity Shifts
 	 * 
-	 * @return The Total Uncollateralized Exposure at the Path Vertex Time Node
+	 * @return The Factor needed to evaluate Sensitivity Shifts
 	 */
 
-	public double uncollateralizedExposure()
+	public double sensitivityShiftFactor()
 	{
-		return forwardPV() + realizedCashFlow();
+		return _dblSensitivityShiftFactor;
 	}
 }

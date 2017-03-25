@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupPath accumulates the Vertex Realizations of the Sequence in a Single Path Projection Run
- *  along the Granularity of a Collateral Group. The References are:
+ * MarginPeriodOfRisk contains the Margining Information associated with the Counter Party. The References
+ *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,114 +67,85 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupPath {
-	private org.drip.xva.trajectory.CollateralGroupVertexVanilla[] _aCGV = null;
+public class MarginPeriodOfRisk {
 
 	/**
-	 * CollateralGroupPath Constructor
+	 * MPoR Interpolation Type - LINEAR
+	 */
+
+	public static final int MPOR_INTERPOLATION_LINEAR = 1;
+
+	/**
+	 * MPoR Interpolation Type - SQRT_T
+	 */
+
+	public static final int MPOR_INTERPOLATION_SQRT_T = 2;
+
+	/**
+	 * MPoR Interpolation Type - BROWNIAN_BRIDGE
+	 */
+
+	public static final int MPOR_INTERPOLATION_BROWNIAN_BRIDGE = 4;
+
+	private int _iInterpolationType = -1;
+	private int _iMarginCallFrequency = -1;
+
+	/**
+	 * Construct a Standard Instance of MarginPeriodOfRisk
 	 * 
-	 * @param aCGV The Array of Netting Group Trajectory Vertexes
+	 * @return The Standard Instance of MarginPeriodOfRisk
+	 */
+
+	public static final MarginPeriodOfRisk Standard()
+	{
+		try {
+			return new MarginPeriodOfRisk (1, MPOR_INTERPOLATION_BROWNIAN_BRIDGE);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * MarginPeriodOfRisk Constructor
+	 * 
+	 * @param iMarginCallFrequency The MPoR Margin Call Frequency
+	 * @param iInterpolationType The MPoR Interpolation Type
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupPath (
-		final org.drip.xva.trajectory.CollateralGroupVertexVanilla[] aCGV)
+	public MarginPeriodOfRisk (
+		final int iMarginCallFrequency,
+		final int iInterpolationType)
 		throws java.lang.Exception
 	{
-		if (null == (_aCGV = aCGV))
-			throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
-
-		int iNumPath = _aCGV.length;
-
-		if (1 >= iNumPath)
-			throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
-
-		for (int i = 0; i < iNumPath; ++i) {
-			if (null == _aCGV[i])
-				throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
-
-			if (0 != i && _aCGV[i - 1].anchor().julian() >= _aCGV[i].anchor().julian())
-				throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
-		}
+		if (-1 >= (_iMarginCallFrequency = iMarginCallFrequency) || (MPOR_INTERPOLATION_LINEAR !=
+			(_iInterpolationType = iInterpolationType) && MPOR_INTERPOLATION_SQRT_T != _iInterpolationType &&
+				MPOR_INTERPOLATION_BROWNIAN_BRIDGE != _iInterpolationType))
+			throw new java.lang.Exception ("MarginPeriodOfRisk Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Array of Netting Group Trajectory Vertexes
+	 * Retrieve the MPoR Margin Call Frequency
 	 * 
-	 * @return The Array of Netting Group Trajectory Vertexes
+	 * @return The MPoR Margin Call Frequency
 	 */
 
-	public org.drip.xva.trajectory.CollateralGroupVertexVanilla[] vertexes()
+	public int marginCallFrequency()
 	{
-		return _aCGV;
+		return _iMarginCallFrequency;
 	}
 
 	/**
-	 * Retrieve the Array of the Vertex Anchor Dates
+	 * Retrieve the MPoR Interpolation Type
 	 * 
-	 * @return The Array of the Vertex Anchor Dates
+	 * @return The MPoR Interpolation Type
 	 */
 
-	public org.drip.analytics.date.JulianDate[] anchors()
+	public int interpolationType()
 	{
-		int iNumVertex = _aCGV.length;
-		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
-
-		for (int i = 0; i < iNumVertex; ++i)
-			adtVertex[i] = _aCGV[i].anchor();
-
-		return adtVertex;
-	}
-
-	/**
-	 * Retrieve the Array of Collateralized Exposures
-	 * 
-	 * @return The Array of Collateralized Exposures
-	 */
-
-	public double[] collateralizedExposure()
-	{
-		int iNumVertex = _aCGV.length;
-		double[] adblCollateralizedExposure = new double[iNumVertex];
-
-		for (int i = 0; i < iNumVertex; ++i)
-			adblCollateralizedExposure[i] = _aCGV[i].collateralizedExposure();
-
-		return adblCollateralizedExposure;
-	}
-
-	/**
-	 * Retrieve the Array of Uncollateralized Exposures
-	 * 
-	 * @return The Array of Uncollateralized Exposures
-	 */
-
-	public double[] uncollateralizedExposure()
-	{
-		int iNumVertex = _aCGV.length;
-		double[] adblUncollateralizedExposure = new double[iNumVertex];
-
-		for (int i = 0; i < iNumVertex; ++i)
-			adblUncollateralizedExposure[i] = _aCGV[i].uncollateralizedExposure();
-
-		return adblUncollateralizedExposure;
-	}
-
-	/**
-	 * Retrieve the Array of Collateral Balances
-	 * 
-	 * @return The Array of Collateral Balances
-	 */
-
-	public double[] collateralBalance()
-	{
-		int iNumVertex = _aCGV.length;
-		double[] adblCollateralizedBalance = new double[iNumVertex];
-
-		for (int i = 0; i < iNumVertex; ++i)
-			adblCollateralizedBalance[i] = _aCGV[i].collateralBalance();
-
-		return adblCollateralizedBalance;
+		return _iInterpolationType;
 	}
 }

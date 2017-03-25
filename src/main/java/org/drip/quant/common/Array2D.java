@@ -64,6 +64,54 @@ public class Array2D {
 	private double _adblY[] = null;
 
 	/**
+	 * Generate an Array2D Instance from the String Array containing semi-colon delimited Date/Factor Pair
+	 * 
+	 * @param strArray2D The String Array containing semi-colon delimited Date/Factor Pair
+	 * 
+	 * @return The Array2D Instance
+	 */
+
+	public static final Array2D FromDateFactor (
+		final java.lang.String strArray2D)
+	{
+		if (null == strArray2D || strArray2D.isEmpty()) return null;
+
+		java.lang.String[] astrDateFactor = org.drip.quant.common.StringUtil.Split (strArray2D, ";");
+
+		if (null == astrDateFactor) return null;
+
+		int iNumDateFactor = astrDateFactor.length;
+		int iNumDate = iNumDateFactor / 2;
+		double dblYCumulative = 0.;
+		double[] adblX = new double[iNumDate];
+		double[] adblY = new double[iNumDate];
+
+		if (0 == iNumDateFactor || 1 == iNumDateFactor % 2) return null;
+
+		for (int i = 0; i < iNumDate; ++i) {
+			org.drip.analytics.date.JulianDate dt = org.drip.analytics.date.DateUtil.FromMDY
+				(astrDateFactor[2 * i], "/");
+
+			java.lang.String strFactor = astrDateFactor[2 * i + 1];
+
+			if (null == dt || null == strFactor || strFactor.isEmpty()) return null;
+
+			adblX[i] = dt.julian();
+
+			if (!org.drip.quant.common.NumberUtil.IsValid (adblY[i] = java.lang.Double.parseDouble
+				(strFactor.trim())))
+				return null;
+
+			dblYCumulative += adblY[i];
+		}
+
+		for (int i = 0; i < iNumDate; ++i)
+			adblY[i] = (0 == i ? 1. : adblY[i - 1]) - (adblY[i] / dblYCumulative);
+
+		return FromArray (adblX, adblY);
+	}
+
+	/**
 	 * Create the Array2D Instance from a Matched String Array of X and Y
 	 * 
 	 * @param strX String Array of X

@@ -70,7 +70,7 @@ package org.drip.xva.pde;
  */
 
 public class BurgardKjaerOperator {
-	private org.drip.xva.settings.PDEEvolutionControl _settings = null;
+	private org.drip.xva.definition.PDEEvolutionControl _settings = null;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
 	private org.drip.xva.definition.CloseOutBilateral _maco = null;
 
@@ -87,7 +87,7 @@ public class BurgardKjaerOperator {
 	public BurgardKjaerOperator (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
 		final org.drip.xva.definition.CloseOutBilateral maco,
-		final org.drip.xva.settings.PDEEvolutionControl settings)
+		final org.drip.xva.definition.PDEEvolutionControl settings)
 		throws java.lang.Exception
 	{
 		if (null == (_twru = twru) || null == (_maco = maco) || null == (_settings = settings))
@@ -122,7 +122,7 @@ public class BurgardKjaerOperator {
 	 * @return The XVA Control Settings
 	 */
 
-	public org.drip.xva.settings.PDEEvolutionControl settings()
+	public org.drip.xva.definition.PDEEvolutionControl settings()
 	{
 		return _settings;
 	}
@@ -213,7 +213,7 @@ public class BurgardKjaerOperator {
 
 		double dblDerivativeXVAValue = eet.edgeAssetGreek().derivativeXVAValue();
 
-		double dblCloseOutMTM = org.drip.xva.settings.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
+		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
 			_settings.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
 
 		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _maco.bankRecovery() *

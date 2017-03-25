@@ -163,11 +163,11 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		int[] aiEOSDate = _eosCall.dates();
 
+		int iMaturityDate = maturityDate().julian();
+
 		double[] adblEOSFactor = _eosCall.factors();
 
 		int iNoticePeriod = _eosCall.exerciseNoticePeriod();
-
-		int iMaturityDate = maturityDate().julian();
 
 		int iExercise = -1;
 		double dblExerciseYield = java.lang.Double.NaN;

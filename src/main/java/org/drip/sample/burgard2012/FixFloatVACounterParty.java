@@ -8,11 +8,13 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.strategy.FundingGroupPathAA2014;
 import org.drip.xva.strategy.NettingGroupPathAA2014;
-import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -132,7 +134,7 @@ public class FixFloatVACounterParty {
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		MarketVertex[] aVN = new MarketVertex[iNumStep + 1];
-		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
+		PathExposureAdjustment[] aCPGP = new PathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
 		JulianDate dtSpot = DateUtil.Today();
@@ -165,19 +167,19 @@ public class FixFloatVACounterParty {
 		MarketPath np = new MarketPath (aVN);
 
 		for (int i = 0; i < iNumPath; ++i) {
-			CollateralGroupVertexVanilla[] aCGV = new CollateralGroupVertexVanilla[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aCGV = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j)
-				aCGV[j] = new CollateralGroupVertexVanilla (
+				aCGV[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					dblTimeWidth * (iNumStep - j) * aablATMSwapRateOffset[i][j],
 					0.,
 					0.
 				);
 
-			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+			HypothecationGroupPathRegular[] aCGP = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV)};
 
-			aCPGP[i] = new CounterPartyGroupPath (
+			aCPGP[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP,
@@ -193,7 +195,7 @@ public class FixFloatVACounterParty {
 			);
 		}
 
-		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (aCPGP);
+		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (aCPGP);
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblCounterPartyHazardRate, 3, 0, 10000.) + " bp => " +

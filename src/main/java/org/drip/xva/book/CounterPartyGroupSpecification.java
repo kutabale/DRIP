@@ -1,5 +1,5 @@
 
-package org.drip.xva.settings;
+package org.drip.xva.book;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,7 @@ package org.drip.xva.settings;
  */
 
 /**
- * MarginPeriodOfRisk contains the Margining Information associated with the Counter Party. The References
- *  are:
+ * CounterPartyGroupSpecification contains the Specifications of a Counter Party Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,39 +66,26 @@ package org.drip.xva.settings;
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarginPeriodOfRisk {
+public class CounterPartyGroupSpecification {
+	private int _iBankDefaultWindow = -1;
+	private java.lang.String _strID = "";
+	private java.lang.String _strName = "";
+	private int _iCounterPartyDefaultWindow = -1;
 
 	/**
-	 * MPoR Interpolation Type - LINEAR
-	 */
-
-	public static final int MPOR_INTERPOLATION_LINEAR = 1;
-
-	/**
-	 * MPoR Interpolation Type - SQRT_T
-	 */
-
-	public static final int MPOR_INTERPOLATION_SQRT_T = 2;
-
-	/**
-	 * MPoR Interpolation Type - BROWNIAN_BRIDGE
-	 */
-
-	public static final int MPOR_INTERPOLATION_BROWNIAN_BRIDGE = 4;
-
-	private int _iInterpolationType = -1;
-	private int _iMarginCallFrequency = -1;
-
-	/**
-	 * Construct a Standard Instance of MarginPeriodOfRisk
+	 * Construct a Standard Instance of CounterPartyGroupSpecification
 	 * 
-	 * @return The Standard Instance of MarginPeriodOfRisk
+	 * @param strName The Collateral Group Name
+	 * 
+	 * @return The Standard Instance of CounterPartyGroupSpecification
 	 */
 
-	public static final MarginPeriodOfRisk Standard()
+	public static final CounterPartyGroupSpecification Standard (
+		final java.lang.String strName)
 	{
 		try {
-			return new MarginPeriodOfRisk (1, MPOR_INTERPOLATION_BROWNIAN_BRIDGE);
+			return new CounterPartyGroupSpecification (org.drip.quant.common.StringUtil.GUID(), strName, 14,
+				14);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -108,44 +94,71 @@ public class MarginPeriodOfRisk {
 	}
 
 	/**
-	 * MarginPeriodOfRisk Constructor
+	 * CounterPartyGroup Constructor
 	 * 
-	 * @param iMarginCallFrequency The MPoR Margin Call Frequency
-	 * @param iInterpolationType The MPoR Interpolation Type
+	 * @param strID The Collateral Group ID
+	 * @param strName The Collateral Group Name
+	 * @param mpor The Margin Period Of Risk
+	 * @param iCounterPartyDefaultWindow The Counter Party Default Window
+	 * @param iBankDefaultWindow The Bank Default Window
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarginPeriodOfRisk (
-		final int iMarginCallFrequency,
-		final int iInterpolationType)
+	public CounterPartyGroupSpecification (
+		final java.lang.String strID,
+		final java.lang.String strName,
+		final int iCounterPartyDefaultWindow,
+		final int iBankDefaultWindow)
 		throws java.lang.Exception
 	{
-		if (-1 >= (_iMarginCallFrequency = iMarginCallFrequency) || (MPOR_INTERPOLATION_LINEAR !=
-			(_iInterpolationType = iInterpolationType) && MPOR_INTERPOLATION_SQRT_T != _iInterpolationType &&
-				MPOR_INTERPOLATION_BROWNIAN_BRIDGE != _iInterpolationType))
-			throw new java.lang.Exception ("MarginPeriodOfRisk Constructor => Invalid Inputs");
+		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
+			_strName.isEmpty() || -1 >= (_iCounterPartyDefaultWindow = iCounterPartyDefaultWindow) || -1 >=
+				(_iBankDefaultWindow = iBankDefaultWindow))
+			throw new java.lang.Exception ("CounterPartyGroupSpecification Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the MPoR Margin Call Frequency
+	 * Retrieve the Collateral Group ID
 	 * 
-	 * @return The MPoR Margin Call Frequency
+	 * @return The Collateral Group ID
 	 */
 
-	public int marginCallFrequency()
+	public java.lang.String id()
 	{
-		return _iMarginCallFrequency;
+		return _strID;
 	}
 
 	/**
-	 * Retrieve the MPoR Interpolation Type
+	 * Retrieve the Collateral Group Name
 	 * 
-	 * @return The MPoR Interpolation Type
+	 * @return The Collateral Group Name
 	 */
 
-	public int interpolationType()
+	public java.lang.String name()
 	{
-		return _iInterpolationType;
+		return _strName;
+	}
+
+	/**
+	 * Retrieve the Counter Party Default Window
+	 * 
+	 * @return The Counter Party Default Window
+	 */
+
+	public int counterPartyDefaultWindow()
+	{
+		return _iCounterPartyDefaultWindow;
+	}
+
+	/**
+	 * Retrieve the Bank Default Window
+	 * 
+	 * @return The Bank Default Window
+	 */
+
+	public int bankDefaultWindow()
+	{
+		return _iBankDefaultWindow;
 	}
 }

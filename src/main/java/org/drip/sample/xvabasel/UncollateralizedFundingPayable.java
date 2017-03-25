@@ -10,11 +10,13 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
+import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.strategy.FundingGroupPathAA2014;
 import org.drip.xva.strategy.NettingGroupPathAA2014;
-import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -155,7 +157,7 @@ public class UncollateralizedFundingPayable {
 		return adblSwapPortfolioValueRealization;
 	}
 
-	private static final CounterPartyGroupAggregator[] Mix (
+	private static final ExposureAdjustmentAggregator[] Mix (
 		final double dblTimeMaturity1,
 		final double dblATMSwapRateOffsetStart1,
 		final double dblSwapNotional1,
@@ -184,8 +186,8 @@ public class UncollateralizedFundingPayable {
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
-		CounterPartyGroupPath[] aCPGPGround = new CounterPartyGroupPath[iNumPath];
-		CounterPartyGroupPath[] aCPGPExtended = new CounterPartyGroupPath[iNumPath];
+		PathExposureAdjustment[] aCPGPGround = new PathExposureAdjustment[iNumPath];
+		PathExposureAdjustment[] aCPGPExtended = new PathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
@@ -229,20 +231,20 @@ public class UncollateralizedFundingPayable {
 				dblSwapNotional2
 			);
 
-			CollateralGroupVertexVanilla[] aCGV1 = new CollateralGroupVertexVanilla[iNumStep + 1];
-			CollateralGroupVertexVanilla[] aCGV2 = new CollateralGroupVertexVanilla[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aCGV2 = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV1[j] = new CollateralGroupVertexVanilla (
+				aCGV1[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					0.
 				);
 
-				aCGV2[j] = new CollateralGroupVertexVanilla (
+				aCGV2[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
@@ -252,15 +254,15 @@ public class UncollateralizedFundingPayable {
 
 			MarketPath np = new MarketPath (aNV);
 
-			CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGV1)
+			HypothecationGroupPathRegular[] aCGP1 = new HypothecationGroupPathRegular[] {
+				new HypothecationGroupPathRegular (aCGV1)
 			};
 
-			CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGV2)
+			HypothecationGroupPathRegular[] aCGP2 = new HypothecationGroupPathRegular[] {
+				new HypothecationGroupPathRegular (aCGV2)
 			};
 
-			aCPGPGround[i] = new CounterPartyGroupPath (
+			aCPGPGround[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP1,
@@ -275,7 +277,7 @@ public class UncollateralizedFundingPayable {
 				}
 			);
 
-			aCPGPExtended[i] = new CounterPartyGroupPath (
+			aCPGPExtended[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP1,
@@ -288,9 +290,9 @@ public class UncollateralizedFundingPayable {
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
-						new CollateralGroupPath[] {
-							new CollateralGroupPath (aCGV1),
-							new CollateralGroupPath (aCGV2)
+						new HypothecationGroupPathRegular[] {
+							new HypothecationGroupPathRegular (aCGV1),
+							new HypothecationGroupPathRegular (aCGV2)
 						},
 						np
 					)
@@ -298,15 +300,15 @@ public class UncollateralizedFundingPayable {
 			);
 		}
 
-		return new CounterPartyGroupAggregator[] {
-			new CounterPartyGroupAggregator (aCPGPGround),
-			new CounterPartyGroupAggregator (aCPGPExtended)
+		return new ExposureAdjustmentAggregator[] {
+			new ExposureAdjustmentAggregator (aCPGPGround),
+			new ExposureAdjustmentAggregator (aCPGPExtended)
 		};
 	}
 
 	private static final void CPGDDump (
 		final String strHeader,
-		final CounterPartyGroupDigest cpgd)
+		final ExposureAdjustmentDigest cpgd)
 		throws Exception
 	{
 		System.out.println();
@@ -412,8 +414,8 @@ public class UncollateralizedFundingPayable {
 
 	private static final void CPGDDiffDump (
 		final String strHeader,
-		final CounterPartyGroupDigest cpgdGround,
-		final CounterPartyGroupDigest cpgdExpanded)
+		final ExposureAdjustmentDigest cpgdGround,
+		final ExposureAdjustmentDigest cpgdExpanded)
 		throws Exception
 	{
 		System.out.println();
@@ -457,8 +459,8 @@ public class UncollateralizedFundingPayable {
 
 	private static final void BaselAccountingMetrics (
 		final String strHeader,
-		final CounterPartyGroupAggregator cpgaGround,
-		final CounterPartyGroupAggregator cpgaExpanded)
+		final ExposureAdjustmentAggregator cpgaGround,
+		final ExposureAdjustmentAggregator cpgaExpanded)
 		throws Exception
 	{
 		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (cpgaGround);
@@ -548,7 +550,7 @@ public class UncollateralizedFundingPayable {
 	{
 		EnvManager.InitEnv ("");
 
-		CounterPartyGroupAggregator[] aCPGA = Mix (
+		ExposureAdjustmentAggregator[] aCPGA = Mix (
 			5.,
 			0.,
 			100.,
@@ -557,12 +559,12 @@ public class UncollateralizedFundingPayable {
 			1.
 		);
 
-		CounterPartyGroupAggregator cpgaGround = aCPGA[0];
-		CounterPartyGroupAggregator cpgaExtended = aCPGA[1];
+		ExposureAdjustmentAggregator cpgaGround = aCPGA[0];
+		ExposureAdjustmentAggregator cpgaExtended = aCPGA[1];
 
-		CounterPartyGroupDigest cpgdGround = cpgaGround.digest();
+		ExposureAdjustmentDigest cpgdGround = cpgaGround.digest();
 
-		CounterPartyGroupDigest cpgdExtended = cpgaExtended.digest();
+		ExposureAdjustmentDigest cpgdExtended = cpgaExtended.digest();
 
 		CPGDDump (
 			"\t||                                        GROUND BOOK ADJUSTMENT METRICS                                        ||",

@@ -10,12 +10,15 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.book.*;
+import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.collateral.HypothecationAmountEstimator;
+import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
-import org.drip.xva.settings.*;
 import org.drip.xva.strategy.FundingGroupPathAA2014;
 import org.drip.xva.strategy.NettingGroupPathAA2014;
-import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -231,7 +234,7 @@ public class CollateralizedCollateralGroupCorrelated {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
+		PathExposureAdjustment[] aCPGP = new PathExposureAdjustment[iNumPath];
 		double[][] aadblPortfolioValue = new double[iNumPath][iNumStep + 1];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
 
@@ -362,7 +365,7 @@ public class CollateralizedCollateralGroupCorrelated {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
-			CollateralGroupVertexVanilla[] aCGV = new CollateralGroupVertexVanilla[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aCGV = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aNV[j] = MarketVertex.Standard (
@@ -380,7 +383,7 @@ public class CollateralizedCollateralGroupCorrelated {
 				double dblValueEnd = aadblPortfolioValue[i][j];
 
 				if (0 != j) {
-					CollateralAmountEstimator cae = new CollateralAmountEstimator (
+					HypothecationAmountEstimator cae = new HypothecationAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -395,7 +398,7 @@ public class CollateralizedCollateralGroupCorrelated {
 					dblCollateralBalance = cae.postingRequirement (dtEnd);
 				}
 
-				aCGV[j] = new CollateralGroupVertexVanilla (
+				aCGV[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,
@@ -408,9 +411,9 @@ public class CollateralizedCollateralGroupCorrelated {
 
 			MarketPath np = new MarketPath (aNV);
 
-			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+			HypothecationGroupPathRegular[] aCGP = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV)};
 
-			aCPGP[i] = new CounterPartyGroupPath (
+			aCPGP[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP,
@@ -426,7 +429,7 @@ public class CollateralizedCollateralGroupCorrelated {
 			);
 		}
 
-		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (aCPGP);
+		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (aCPGP);
 
 		JulianDate[] adtVertexNode = cpga.anchors();
 

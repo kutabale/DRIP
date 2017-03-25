@@ -9,11 +9,13 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.strategy.FundingGroupPathAA2014;
 import org.drip.xva.strategy.NettingGroupPathAA2014;
-import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -154,7 +156,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		CounterPartyGroupPath[] aCPGP = new CounterPartyGroupPath[iNumPath];
+		PathExposureAdjustment[] aCPGP = new PathExposureAdjustment[iNumPath];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		double[][] aadblCollateralPortfolio = new double[iNumPath][iNumStep + 1];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
@@ -285,7 +287,7 @@ public class PortfolioPathAggregationCorrelated {
 			);
 
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
-			CollateralGroupVertexVanilla[] aCGV = new CollateralGroupVertexVanilla[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aCGV = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aNV[j] = MarketVertex.Standard (
@@ -300,7 +302,7 @@ public class PortfolioPathAggregationCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV[j] = new CollateralGroupVertexVanilla (
+				aCGV[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblCollateralPortfolio[i][j],
 					0.,
@@ -308,9 +310,9 @@ public class PortfolioPathAggregationCorrelated {
 				);
 			}
 
-			CollateralGroupPath[] aCGP = new CollateralGroupPath[] {new CollateralGroupPath (aCGV)};
+			HypothecationGroupPathRegular[] aCGP = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV)};
 
-			aCPGP[i] = new CounterPartyGroupPath (
+			aCPGP[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP,
@@ -326,7 +328,7 @@ public class PortfolioPathAggregationCorrelated {
 			);
 		}
 
-		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (aCPGP);
+		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (aCPGP);
 
 		JulianDate[] adtVertexNode = cpga.anchors();
 

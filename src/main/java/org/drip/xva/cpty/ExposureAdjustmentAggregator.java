@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.cpty;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CounterPartyGroupAggregator aggregates across Multiple Netting Groups belonging to the Counter Party. The
- *  References are:
+ * ExposureAdjustmentAggregator aggregates across Multiple Exposure/Adjustment Paths belonging to the Counter
+ *  Party. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,23 +67,23 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyGroupAggregator {
-	private org.drip.xva.trajectory.CounterPartyGroupPath[] _aCPGP = null;
+public class ExposureAdjustmentAggregator {
+	private org.drip.xva.cpty.PathExposureAdjustment[] _aPEA = null;
 
 	/**
-	 * CounterPartyGroupAggregator Constructor
+	 * ExposureAdjustmentAggregator Constructor
 	 * 
-	 * @param aCPGP Array of the Counter Party Group Paths
+	 * @param aPEA Array of the Counter Party Group Paths
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CounterPartyGroupAggregator (
-		final org.drip.xva.trajectory.CounterPartyGroupPath[] aCPGP)
+	public ExposureAdjustmentAggregator (
+		final org.drip.xva.cpty.PathExposureAdjustment[] aPEA)
 		throws java.lang.Exception
 	{
-		if (null == (_aCPGP = aCPGP) || 0 == _aCPGP.length)
-			throw new java.lang.Exception ("CounterPartyGroupAggregator Constructor => Invalid Inputs");
+		if (null == (_aPEA = aPEA) || 0 == _aPEA.length)
+			throw new java.lang.Exception ("ExposureAdjustmentAggregator Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -92,9 +92,9 @@ public class CounterPartyGroupAggregator {
 	 * @return Array of Counter Party Group Paths
 	 */
 
-	public org.drip.xva.trajectory.CounterPartyGroupPath[] counterPartyGroups()
+	public org.drip.xva.cpty.PathExposureAdjustment[] counterPartyGroups()
 	{
-		return _aCPGP;
+		return _aPEA;
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class CounterPartyGroupAggregator {
 
 	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		return _aCPGP[0].anchors();
+		return _aPEA[0].anchors();
 	}
 
 	/**
@@ -118,14 +118,14 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblCollateralizedExposure = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 			adblCollateralizedExposure[iVertexIndex] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathCollateralizedExposure = _aCPGP[iPathIndex].collateralizedExposure();
+			double[] adblPathCollateralizedExposure = _aPEA[iPathIndex].collateralizedExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedExposure[iVertexIndex] += adblPathCollateralizedExposure[iVertexIndex];
@@ -147,14 +147,14 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblCollateralizedExposurePV = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 			adblCollateralizedExposurePV[iVertexIndex] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathCollateralizedExposurePV = _aCPGP[iPathIndex].collateralizedExposurePV();
+			double[] adblPathCollateralizedExposurePV = _aPEA[iPathIndex].collateralizedExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedExposurePV[iVertexIndex] += adblPathCollateralizedExposurePV[iVertexIndex];
@@ -176,14 +176,14 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblUncollateralizedExposure = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 			adblUncollateralizedExposure[iVertexIndex] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathUncollateralizedExposure = _aCPGP[iPathIndex].uncollateralizedExposure();
+			double[] adblPathUncollateralizedExposure = _aPEA[iPathIndex].uncollateralizedExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedExposure[iVertexIndex] += adblPathUncollateralizedExposure[iVertexIndex];
@@ -205,14 +205,14 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblUncollateralizedExposurePV = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 			adblUncollateralizedExposurePV[iVertexIndex] = 0.;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathUncollateralizedExposurePV = _aCPGP[iPathIndex].uncollateralizedExposurePV();
+			double[] adblPathUncollateralizedExposurePV = _aPEA[iPathIndex].uncollateralizedExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedExposurePV[iVertexIndex] +=
@@ -235,7 +235,7 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblCollateralizedPositiveExposure = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
@@ -243,7 +243,7 @@ public class CounterPartyGroupAggregator {
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
 			double[] adblPathCollateralizedPositiveExposure =
-				_aCPGP[iPathIndex].collateralizedPositiveExposure();
+				_aPEA[iPathIndex].collateralizedPositiveExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedPositiveExposure[iVertexIndex] +=
@@ -266,7 +266,7 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblCollateralizedPositiveExposurePV = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
@@ -274,7 +274,7 @@ public class CounterPartyGroupAggregator {
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
 			double[] adblPathCollateralizedPositiveExposurePV =
-				_aCPGP[iPathIndex].collateralizedPositiveExposurePV();
+				_aPEA[iPathIndex].collateralizedPositiveExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedPositiveExposurePV[iVertexIndex] +=
@@ -297,7 +297,7 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblUncollateralizedPositiveExposure = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
@@ -305,7 +305,7 @@ public class CounterPartyGroupAggregator {
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
 			double[] adblPathUncollateralizedPositiveExposure =
-				_aCPGP[iPathIndex].uncollateralizedPositiveExposure();
+				_aPEA[iPathIndex].uncollateralizedPositiveExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedPositiveExposure[iVertexIndex] +=
@@ -328,7 +328,7 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblUncollateralizedPositiveExposurePV = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
@@ -336,7 +336,7 @@ public class CounterPartyGroupAggregator {
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
 			double[] adblPathUncollateralizedPositiveExposurePV =
-				_aCPGP[iPathIndex].uncollateralizedPositiveExposurePV();
+				_aPEA[iPathIndex].uncollateralizedPositiveExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedPositiveExposurePV[iVertexIndex] +=
@@ -359,7 +359,7 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblCollateralizedNegativeExposure = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
@@ -367,7 +367,7 @@ public class CounterPartyGroupAggregator {
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
 			double[] adblPathCollateralizedNegativeExposure =
-				_aCPGP[iPathIndex].collateralizedNegativeExposure();
+				_aPEA[iPathIndex].collateralizedNegativeExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedNegativeExposure[iVertexIndex] +=
@@ -390,7 +390,7 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblCollateralizedNegativeExposurePV = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
@@ -398,7 +398,7 @@ public class CounterPartyGroupAggregator {
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
 			double[] adblPathCollateralizedNegativeExposurePV =
-				_aCPGP[iPathIndex].collateralizedNegativeExposurePV();
+				_aPEA[iPathIndex].collateralizedNegativeExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedNegativeExposurePV[iVertexIndex] +=
@@ -421,7 +421,7 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblUncollateralizedNegativeExposure = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
@@ -429,7 +429,7 @@ public class CounterPartyGroupAggregator {
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
 			double[] adblPathUncollateralizedNegativeExposure =
-				_aCPGP[iPathIndex].uncollateralizedNegativeExposure();
+				_aPEA[iPathIndex].uncollateralizedNegativeExposure();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedNegativeExposure[iVertexIndex] +=
@@ -452,7 +452,7 @@ public class CounterPartyGroupAggregator {
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblUncollateralizedNegativeExposurePV = new double[iNumVertex];
 
 		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
@@ -460,7 +460,7 @@ public class CounterPartyGroupAggregator {
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
 			double[] adblPathUncollateralizedNegativeExposurePV =
-				_aCPGP[iPathIndex].uncollateralizedNegativeExposurePV();
+				_aPEA[iPathIndex].uncollateralizedNegativeExposurePV();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedNegativeExposurePV[iVertexIndex] +=
@@ -482,10 +482,10 @@ public class CounterPartyGroupAggregator {
 	public double ucva()
 	{
 		double dblUCVA = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblUCVA += _aCPGP[iPathIndex].unilateralCreditAdjustment();
+			dblUCVA += _aPEA[iPathIndex].unilateralCreditAdjustment();
 
 		return dblUCVA / iNumPath;
 	}
@@ -499,10 +499,10 @@ public class CounterPartyGroupAggregator {
 	public double ftdcva()
 	{
 		double dblFTDCVA = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblFTDCVA += _aCPGP[iPathIndex].bilateralCreditAdjustment();
+			dblFTDCVA += _aPEA[iPathIndex].bilateralCreditAdjustment();
 
 		return dblFTDCVA / iNumPath;
 	}
@@ -527,10 +527,10 @@ public class CounterPartyGroupAggregator {
 	public double cvacl()
 	{
 		double dblCVACL = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblCVACL += _aCPGP[iPathIndex].contraLiabilityCreditAdjustment();
+			dblCVACL += _aPEA[iPathIndex].contraLiabilityCreditAdjustment();
 
 		return dblCVACL / iNumPath;
 	}
@@ -544,10 +544,10 @@ public class CounterPartyGroupAggregator {
 	public double dva()
 	{
 		double dblDVA = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblDVA += _aCPGP[iPathIndex].debtAdjustment();
+			dblDVA += _aPEA[iPathIndex].debtAdjustment();
 
 		return dblDVA / iNumPath;
 	}
@@ -561,10 +561,10 @@ public class CounterPartyGroupAggregator {
 	public double fva()
 	{
 		double dblFVA = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblFVA += _aCPGP[iPathIndex].fundingValueAdjustment();
+			dblFVA += _aPEA[iPathIndex].fundingValueAdjustment();
 
 		return dblFVA / iNumPath;
 	}
@@ -578,10 +578,10 @@ public class CounterPartyGroupAggregator {
 	public double fda()
 	{
 		double dblFDA = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblFDA += _aCPGP[iPathIndex].fundingDebtAdjustment();
+			dblFDA += _aPEA[iPathIndex].fundingDebtAdjustment();
 
 		return dblFDA / iNumPath;
 	}
@@ -595,10 +595,10 @@ public class CounterPartyGroupAggregator {
 	public double fca()
 	{
 		double dblFCA = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblFCA += _aCPGP[iPathIndex].fundingCostAdjustment();
+			dblFCA += _aPEA[iPathIndex].fundingCostAdjustment();
 
 		return dblFCA / iNumPath;
 	}
@@ -612,10 +612,10 @@ public class CounterPartyGroupAggregator {
 	public double fba()
 	{
 		double dblFBA = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblFBA += _aCPGP[iPathIndex].fundingBenefitAdjustment();
+			dblFBA += _aPEA[iPathIndex].fundingBenefitAdjustment();
 
 		return dblFBA / iNumPath;
 	}
@@ -629,10 +629,10 @@ public class CounterPartyGroupAggregator {
 	public double sfva()
 	{
 		double dblSFVA = 0.;
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblSFVA += _aCPGP[iPathIndex].symmetricFundingValueAdjustment();
+			dblSFVA += _aPEA[iPathIndex].symmetricFundingValueAdjustment();
 
 		return dblSFVA / iNumPath;
 	}
@@ -654,11 +654,11 @@ public class CounterPartyGroupAggregator {
 	 * @return The "Digest" containing the "Thin" Path Statistics
 	 */
 
-	public org.drip.xva.trajectory.CounterPartyGroupDigest digest()
+	public org.drip.xva.cpty.ExposureAdjustmentDigest digest()
 	{
 		int iNumVertex = anchors().length;
 
-		int iNumPath = _aCPGP.length;
+		int iNumPath = _aPEA.length;
 		double[] adblCVA = new double[iNumPath];
 		double[] adblDVA = new double[iNumPath];
 		double[] adblFBA = new double[iNumPath];
@@ -701,59 +701,59 @@ public class CounterPartyGroupAggregator {
 		}
 
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
-			double[] adblPathCollateralizedExposure = _aCPGP[iPathIndex].collateralizedExposure();
+			double[] adblPathCollateralizedExposure = _aPEA[iPathIndex].collateralizedExposure();
 
-			double[] adblPathCollateralizedExposurePV = _aCPGP[iPathIndex].collateralizedExposurePV();
+			double[] adblPathCollateralizedExposurePV = _aPEA[iPathIndex].collateralizedExposurePV();
 
 			double[] adblPathCollateralizedPositiveExposure =
-				_aCPGP[iPathIndex].collateralizedPositiveExposure();
+				_aPEA[iPathIndex].collateralizedPositiveExposure();
 
 			double[] adblPathCollateralizedPositiveExposurePV =
-				_aCPGP[iPathIndex].collateralizedPositiveExposurePV();
+				_aPEA[iPathIndex].collateralizedPositiveExposurePV();
 
 			double[] adblPathCollateralizedNegativeExposure =
-				_aCPGP[iPathIndex].collateralizedNegativeExposure();
+				_aPEA[iPathIndex].collateralizedNegativeExposure();
 
 			double[] adblPathCollateralizedNegativeExposurePV =
-				_aCPGP[iPathIndex].collateralizedNegativeExposurePV();
+				_aPEA[iPathIndex].collateralizedNegativeExposurePV();
 
-			double[] adblPathUncollateralizedExposure = _aCPGP[iPathIndex].uncollateralizedExposure();
+			double[] adblPathUncollateralizedExposure = _aPEA[iPathIndex].uncollateralizedExposure();
 
-			double[] adblPathUncollateralizedExposurePV = _aCPGP[iPathIndex].uncollateralizedExposurePV();
+			double[] adblPathUncollateralizedExposurePV = _aPEA[iPathIndex].uncollateralizedExposurePV();
 
 			double[] adblPathUncollateralizedPositiveExposure =
-				_aCPGP[iPathIndex].uncollateralizedPositiveExposure();
+				_aPEA[iPathIndex].uncollateralizedPositiveExposure();
 
 			double[] adblPathUncollateralizedPositiveExposurePV =
-				_aCPGP[iPathIndex].uncollateralizedPositiveExposurePV();
+				_aPEA[iPathIndex].uncollateralizedPositiveExposurePV();
 
 			double[] adblPathUncollateralizedNegativeExposure =
-				_aCPGP[iPathIndex].uncollateralizedNegativeExposure();
+				_aPEA[iPathIndex].uncollateralizedNegativeExposure();
 
 			double[] adblPathUncollateralizedNegativeExposurePV =
-				_aCPGP[iPathIndex].uncollateralizedNegativeExposurePV();
+				_aPEA[iPathIndex].uncollateralizedNegativeExposurePV();
 
-			adblCVA[iPathIndex] = _aCPGP[iPathIndex].creditAdjustment();
+			adblCVA[iPathIndex] = _aPEA[iPathIndex].creditAdjustment();
 
-			adblDVA[iPathIndex] = _aCPGP[iPathIndex].debtAdjustment();
+			adblDVA[iPathIndex] = _aPEA[iPathIndex].debtAdjustment();
 
-			adblFCA[iPathIndex] = _aCPGP[iPathIndex].fundingCostAdjustment();
+			adblFCA[iPathIndex] = _aPEA[iPathIndex].fundingCostAdjustment();
 
-			adblFDA[iPathIndex] = _aCPGP[iPathIndex].fundingDebtAdjustment();
+			adblFDA[iPathIndex] = _aPEA[iPathIndex].fundingDebtAdjustment();
 
-			adblFVA[iPathIndex] = _aCPGP[iPathIndex].fundingValueAdjustment();
+			adblFVA[iPathIndex] = _aPEA[iPathIndex].fundingValueAdjustment();
 
-			adblFBA[iPathIndex] = _aCPGP[iPathIndex].fundingBenefitAdjustment();
+			adblFBA[iPathIndex] = _aPEA[iPathIndex].fundingBenefitAdjustment();
 
-			adblUCVA[iPathIndex] = _aCPGP[iPathIndex].unilateralCreditAdjustment();
+			adblUCVA[iPathIndex] = _aPEA[iPathIndex].unilateralCreditAdjustment();
 
-			adblSFVA[iPathIndex] = _aCPGP[iPathIndex].symmetricFundingValueAdjustment();
+			adblSFVA[iPathIndex] = _aPEA[iPathIndex].symmetricFundingValueAdjustment();
 
-			adblCVACL[iPathIndex] = _aCPGP[iPathIndex].contraLiabilityCreditAdjustment();
+			adblCVACL[iPathIndex] = _aPEA[iPathIndex].contraLiabilityCreditAdjustment();
 
-			adblFTDCVA[iPathIndex] = _aCPGP[iPathIndex].bilateralCreditAdjustment();
+			adblFTDCVA[iPathIndex] = _aPEA[iPathIndex].bilateralCreditAdjustment();
 
-			adblTotalVA[iPathIndex] = _aCPGP[iPathIndex].totalAdjustment();
+			adblTotalVA[iPathIndex] = _aPEA[iPathIndex].totalAdjustment();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				aadblCollateralizedExposure[iVertexIndex][iPathIndex] =
@@ -784,7 +784,7 @@ public class CounterPartyGroupAggregator {
 		}
 
 		try {
-			return new org.drip.xva.trajectory.CounterPartyGroupDigest (
+			return new org.drip.xva.cpty.ExposureAdjustmentDigest (
 				adblUCVA,
 				adblFTDCVA,
 				adblCVA,

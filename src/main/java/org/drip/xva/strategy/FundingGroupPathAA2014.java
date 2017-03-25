@@ -68,7 +68,7 @@ package org.drip.xva.strategy;
  * @author Lakshmi Krishnamurthy
  */
 
-public class FundingGroupPathAA2014 extends org.drip.xva.trajectory.FundingGroupPath {
+public class FundingGroupPathAA2014 extends org.drip.xva.netting.FundingGroupPath {
 
 	/**
 	 * Generate a "Mono" FundingGroupPathAA2014 Instance
@@ -80,12 +80,12 @@ public class FundingGroupPathAA2014 extends org.drip.xva.trajectory.FundingGroup
 	 */
 
 	public static final FundingGroupPathAA2014 Mono (
-		final org.drip.xva.trajectory.CollateralGroupPath cgp,
+		final org.drip.xva.collateral.HypothecationGroupPathRegular cgp,
 		final org.drip.xva.numeraire.MarketPath np)
 	{
 		try {
 			return new org.drip.xva.strategy.FundingGroupPathAA2014 (new
-				org.drip.xva.trajectory.CollateralGroupPath[] {cgp}, np);
+				org.drip.xva.collateral.HypothecationGroupPathRegular[] {cgp}, np);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -103,7 +103,7 @@ public class FundingGroupPathAA2014 extends org.drip.xva.trajectory.FundingGroup
 	 */
 
 	public FundingGroupPathAA2014 (
-		final org.drip.xva.trajectory.CollateralGroupPath[] aCGP,
+		final org.drip.xva.collateral.HypothecationGroupPathRegular[] aCGP,
 		final org.drip.xva.numeraire.MarketPath np)
 		throws java.lang.Exception
 	{

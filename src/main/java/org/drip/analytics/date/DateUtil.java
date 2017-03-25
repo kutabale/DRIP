@@ -1090,6 +1090,36 @@ public class DateUtil {
 	}
 
 	/**
+	 * Create a JulianDate from the MDY
+	 * 
+	 * @param strMDY Java Date input as delimited M/D/Y
+	 * @param strDelim Delimiter
+	 * 
+	 * @return JulianDate output
+	 */
+
+	public static final org.drip.analytics.date.JulianDate FromMDY (
+		final java.lang.String strMDY,
+		final java.lang.String strDelim)
+	{
+		if (null == strMDY || strMDY.isEmpty() || null == strDelim || strDelim.isEmpty())
+			return null;
+
+		java.lang.String[] astrDMY = strMDY.split (strDelim);
+
+		if (null == astrDMY || 3 != astrDMY.length) return null;
+
+		try {
+			return CreateFromYMD (new java.lang.Integer (astrDMY[2].trim()), MonthFromMonthChars
+				(astrDMY[0].trim()), new java.lang.Integer (astrDMY[1].trim()));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Create a JulianDate from Bloomberg date string
 	 * 
 	 * @param strBBGDate Bloomberg date string

@@ -1,5 +1,5 @@
 
-package org.drip.xva.trajectory;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.trajectory;
  */
 
 /**
- * CollateralGroupVertex holds the Vertex Realizations of a Projected Path of a Simulation Run of a
- *  Collateral Group. The References are:
+ * HypothecationGroupPathRegular accumulates the Vertex Realizations of the Sequence in a Single Path
+ *  Projection Run along the Granularity of a Regular Collateral Hypothecation Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,78 +67,114 @@ package org.drip.xva.trajectory;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertex {
-	private double _dblForwardPV = java.lang.Double.NaN;
-	private double _dblRealizedCashFlow = java.lang.Double.NaN;
-	private double _dblCollateralBalance = java.lang.Double.NaN;
-	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+public class HypothecationGroupPathRegular {
+	private org.drip.xva.collateral.HypothecationGroupVertexRegular[] _aHGVR = null;
 
 	/**
-	 * CollateralGroupVertex Constructor
+	 * HypothecationGroupPathRegular Constructor
 	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param aHGVR The Array of Collateral Hypothecation Group Trajectory Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertex (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardPV,
-		final double dblRealizedCashFlow,
-		final double dblCollateralBalance)
+	public HypothecationGroupPathRegular (
+		final org.drip.xva.collateral.HypothecationGroupVertexRegular[] aHGVR)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV =
-			dblForwardPV) || !org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow =
-				dblRealizedCashFlow) || !org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance =
-					dblCollateralBalance))
-			throw new java.lang.Exception ("CollateralGroupVertex Constructor => Invalid Inputs");
+		if (null == (_aHGVR = aHGVR))
+			throw new java.lang.Exception ("HypothecationGroupPathRegular Constructor => Invalid Inputs");
+
+		int iNumPath = _aHGVR.length;
+
+		if (1 >= iNumPath)
+			throw new java.lang.Exception ("HypothecationGroupPathRegular Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumPath; ++i) {
+			if (null == _aHGVR[i])
+				throw new java.lang.Exception ("HypothecationGroupPathRegular Constructor => Invalid Inputs");
+
+			if (0 != i && _aHGVR[i - 1].anchor().julian() >= _aHGVR[i].anchor().julian())
+				throw new java.lang.Exception ("HypothecationGroupPathRegular Constructor => Invalid Inputs");
+		}
 	}
 
 	/**
-	 * Retrieve the Date Anchor
+	 * Retrieve the Array of Netting Group Trajectory Vertexes
 	 * 
-	 * @return The Date Anchor
+	 * @return The Array of Netting Group Trajectory Vertexes
 	 */
 
-	public org.drip.analytics.date.JulianDate anchor()
+	public org.drip.xva.collateral.HypothecationGroupVertexRegular[] vertexes()
 	{
-		return _dtAnchor;
+		return _aHGVR;
 	}
 
 	/**
-	 * Retrieve the Forward PV at the Path Vertex Time Node
+	 * Retrieve the Array of the Vertex Anchor Dates
 	 * 
-	 * @return The Forward PV at the Path Vertex Time Node
+	 * @return The Array of the Vertex Anchor Dates
 	 */
 
-	public double forwardPV()
+	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		return _dblForwardPV;
+		int iNumVertex = _aHGVR.length;
+		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
+
+		for (int i = 0; i < iNumVertex; ++i)
+			adtVertex[i] = _aHGVR[i].anchor();
+
+		return adtVertex;
 	}
 
 	/**
-	 * Retrieve the Collateral Balance at the Path Vertex Time Node
+	 * Retrieve the Array of Collateralized Exposures
 	 * 
-	 * @return The Collateral Balance at the Path Vertex Time Node
+	 * @return The Array of Collateralized Exposures
 	 */
 
-	public double collateralBalance()
+	public double[] collateralizedExposure()
 	{
-		return _dblCollateralBalance;
+		int iNumVertex = _aHGVR.length;
+		double[] adblCollateralizedExposure = new double[iNumVertex];
+
+		for (int i = 0; i < iNumVertex; ++i)
+			adblCollateralizedExposure[i] = _aHGVR[i].collateralizedExposure();
+
+		return adblCollateralizedExposure;
 	}
 
 	/**
-	 * Retrieve the Default Window Realized Cash-flow at the Path Vertex Time Node
+	 * Retrieve the Array of Uncollateralized Exposures
 	 * 
-	 * @return The Default Window Realized Cash-flow at the Path Vertex Time Node
+	 * @return The Array of Uncollateralized Exposures
 	 */
 
-	public double realizedCashFlow()
+	public double[] uncollateralizedExposure()
 	{
-		return _dblRealizedCashFlow;
+		int iNumVertex = _aHGVR.length;
+		double[] adblUncollateralizedExposure = new double[iNumVertex];
+
+		for (int i = 0; i < iNumVertex; ++i)
+			adblUncollateralizedExposure[i] = _aHGVR[i].uncollateralizedExposure();
+
+		return adblUncollateralizedExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Collateral Balances
+	 * 
+	 * @return The Array of Collateral Balances
+	 */
+
+	public double[] collateralBalance()
+	{
+		int iNumVertex = _aHGVR.length;
+		double[] adblCollateralizedBalance = new double[iNumVertex];
+
+		for (int i = 0; i < iNumVertex; ++i)
+			adblCollateralizedBalance[i] = _aHGVR[i].collateralBalance();
+
+		return adblCollateralizedBalance;
 	}
 }

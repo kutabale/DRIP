@@ -8,11 +8,13 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
 import org.drip.xva.numeraire.MarketVertex;
 import org.drip.xva.strategy.FundingGroupPathAA2014;
 import org.drip.xva.strategy.NettingGroupPathAA2014;
-import org.drip.xva.trajectory.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -129,8 +131,8 @@ public class PortfolioGroupRun {
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
-		CollateralGroupVertexVanilla[] aCGV1 = new CollateralGroupVertexVanilla[iNumStep + 1];
-		CollateralGroupVertexVanilla[] aCGV2 = new CollateralGroupVertexVanilla[iNumStep + 1];
+		HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
+		HypothecationGroupVertexRegular[] aCGV2 = new HypothecationGroupVertexRegular[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
 		JulianDate dtSpot = DateUtil.Today();
@@ -205,14 +207,14 @@ public class PortfolioGroupRun {
 				dblCounterPartyRecoveryRate
 			);
 
-			aCGV1[i] = new CollateralGroupVertexVanilla (
+			aCGV1[i] = new HypothecationGroupVertexRegular (
 				adtVertex[i],
 				adblAssetValuePath1[i],
 				0.,
 				0.
 			);
 
-			aCGV2[i] = new CollateralGroupVertexVanilla (
+			aCGV2[i] = new HypothecationGroupVertexRegular (
 				adtVertex[i],
 				adblAssetValuePath2[i],
 				0.,
@@ -238,9 +240,9 @@ public class PortfolioGroupRun {
 
 		MarketPath np = new MarketPath (aNV);
 
-		CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV1)};
+		HypothecationGroupPathRegular[] aCGP1 = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV1)};
 
-		CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV2)};
+		HypothecationGroupPathRegular[] aCGP2 = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV2)};
 
 		NettingGroupPathAA2014 ngp1 = new NettingGroupPathAA2014 (
 			aCGP1,
@@ -406,13 +408,13 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		CounterPartyGroupAggregator cpga = new CounterPartyGroupAggregator (
-			new CounterPartyGroupPath[] {
-				new CounterPartyGroupPath (
+		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (
+			new PathExposureAdjustment[] {
+				new PathExposureAdjustment (
 					new NettingGroupPathAA2014[] {ngp1},
 					new FundingGroupPathAA2014[] {fgp1}
 				),
-				new CounterPartyGroupPath (
+				new PathExposureAdjustment (
 					new NettingGroupPathAA2014[] {ngp2},
 					new FundingGroupPathAA2014[] {fgp2}
 				)

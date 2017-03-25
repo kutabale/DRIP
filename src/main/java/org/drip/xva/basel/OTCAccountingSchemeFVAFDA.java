@@ -79,7 +79,7 @@ public class OTCAccountingSchemeFVAFDA extends org.drip.xva.basel.OTCAccountingS
 	 */
 
 	public OTCAccountingSchemeFVAFDA (
-		final org.drip.xva.trajectory.CounterPartyGroupAggregator cpga)
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator cpga)
 		throws java.lang.Exception
 	{
 		super (cpga);
@@ -87,24 +87,24 @@ public class OTCAccountingSchemeFVAFDA extends org.drip.xva.basel.OTCAccountingS
 
 	@Override public double contraAssetAdjustment()
 	{
-		org.drip.xva.trajectory.CounterPartyGroupAggregator cpga = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator cpga = aggregator();
 
 		return cpga.ucva() + cpga.fva();
 	}
 
 	@Override public double contraLiabilityAdjustment()
 	{
-		org.drip.xva.trajectory.CounterPartyGroupAggregator cpga = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator cpga = aggregator();
 
 		return cpga.cvacl() + cpga.dva() + cpga.fda();
 	}
 
 	@Override public org.drip.xva.basel.OTCAccountingPolicy feePolicy (
-		final org.drip.xva.trajectory.CounterPartyGroupAggregator cpgaNext)
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator cpgaNext)
 	{
 		if (null == cpgaNext) return null;
 
-		org.drip.xva.trajectory.CounterPartyGroupAggregator cpga = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator cpga = aggregator();
 
 		double dblIncome = cpgaNext.dva() + cpgaNext.fda() + cpgaNext.cvacl() - cpga.dva() - cpga.fda() -
 			cpga.cvacl();

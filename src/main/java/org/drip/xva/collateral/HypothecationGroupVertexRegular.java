@@ -1,5 +1,5 @@
 
-package org.drip.xva.settings;
+package org.drip.xva.collateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,8 @@ package org.drip.xva.settings;
  */
 
 /**
- * CounterPartyGroupSpecification contains the Specifications of a Counter Party Group. The References are:
+ * HypothecationGroupVertexRegular holds the "Regular" Vertex Exposures of a Projected Path of a Simulation
+ *  Run of a Collateral Hypothecation Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -66,112 +67,48 @@ package org.drip.xva.settings;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyGroupSpecification {
-	private int _iBankDefaultWindow = -1;
-	private java.lang.String _strID = "";
-	private java.lang.String _strName = "";
-	private int _iCounterPartyDefaultWindow = -1;
-	private org.drip.xva.settings.MarginPeriodOfRisk _mpor = null;
+public class HypothecationGroupVertexRegular extends org.drip.xva.collateral.HypothecationGroupVertex {
 
 	/**
-	 * Construct a Standard Instance of CounterPartyGroupSpecification
+	 * HypothecationGroupVertexRegular Constructor
 	 * 
-	 * @param strName The Collateral Group Name
-	 * 
-	 * @return The Standard Instance of CounterPartyGroupSpecification
-	 */
-
-	public static final CounterPartyGroupSpecification Standard (
-		final java.lang.String strName)
-	{
-		try {
-			return new CounterPartyGroupSpecification (org.drip.quant.common.StringUtil.GUID(), strName,
-				org.drip.xva.settings.MarginPeriodOfRisk.Standard(), 14, 14);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * CounterPartyGroup Constructor
-	 * 
-	 * @param strID The Collateral Group ID
-	 * @param strName The Collateral Group Name
-	 * @param mpor The Margin Period Of Risk
-	 * @param iCounterPartyDefaultWindow The Counter Party Default Window
-	 * @param iBankDefaultWindow The Bank Default Window
+	 * @param dtAnchor The Vertex Date Anchor
+	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
+	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
+	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CounterPartyGroupSpecification (
-		final java.lang.String strID,
-		final java.lang.String strName,
-		final org.drip.xva.settings.MarginPeriodOfRisk mpor,
-		final int iCounterPartyDefaultWindow,
-		final int iBankDefaultWindow)
+	public HypothecationGroupVertexRegular (
+		final org.drip.analytics.date.JulianDate dtAnchor,
+		final double dblForwardPV,
+		final double dblRealizedCashFlow,
+		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
-			_strName.isEmpty() || null == (_mpor = mpor) || -1 >= (_iCounterPartyDefaultWindow =
-				iCounterPartyDefaultWindow) || -1 >= (_iBankDefaultWindow = iBankDefaultWindow))
-			throw new java.lang.Exception ("CounterPartyGroupSpecification Constructor => Invalid Inputs");
+		super (dtAnchor, dblForwardPV, dblRealizedCashFlow, dblCollateralBalance);
 	}
 
 	/**
-	 * Retrieve the Collateral Group ID
+	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
 	 * 
-	 * @return The Collateral Group ID
+	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
 	 */
 
-	public java.lang.String id()
+	public double collateralizedExposure()
 	{
-		return _strID;
+		return forwardPV() + realizedCashFlow() - collateralBalance();
 	}
 
 	/**
-	 * Retrieve the Collateral Group Name
+	 * Retrieve the Total Uncollateralized Exposure at the Path Vertex Time Node
 	 * 
-	 * @return The Collateral Group Name
+	 * @return The Total Uncollateralized Exposure at the Path Vertex Time Node
 	 */
 
-	public java.lang.String name()
+	public double uncollateralizedExposure()
 	{
-		return _strName;
-	}
-
-	/**
-	 * Retrieve the Margin Period Of Risk
-	 * 
-	 * @return The Margin Period Of Risk
-	 */
-
-	public org.drip.xva.settings.MarginPeriodOfRisk mpor()
-	{
-		return _mpor;
-	}
-
-	/**
-	 * Retrieve the Counter Party Default Window
-	 * 
-	 * @return The Counter Party Default Window
-	 */
-
-	public int counterPartyDefaultWindow()
-	{
-		return _iCounterPartyDefaultWindow;
-	}
-
-	/**
-	 * Retrieve the Bank Default Window
-	 * 
-	 * @return The Bank Default Window
-	 */
-
-	public int bankDefaultWindow()
-	{
-		return _iBankDefaultWindow;
+		return forwardPV() + realizedCashFlow();
 	}
 }
