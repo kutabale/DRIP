@@ -1764,7 +1764,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 				if (!org.drip.quant.common.NumberUtil.IsValid (dblCoupon))
 					throw new java.lang.Exception ("BondComponent::accrued => Invalid Coupon For " + dt);
 
-				return period.accrualDCF (iDate) * dblCoupon * notional (iStartDate);
+				return period.accrualDCF (iDate) * dblCoupon * notional (iEndDate);
 			}
 		}
 
@@ -8384,9 +8384,9 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 				org.drip.analytics.daycount.Convention.YearFraction (iValueDate, iWorkoutDate, strDC,
 					bApplyCpnEOMAdj, aap, strCalendar)) * notional (iWorkoutDate)) /
 						org.drip.analytics.support.Helper.Yield2DF (iFrequency, dblYield,
-							org.drip.analytics.daycount.Convention.YearFraction (iValueDate,
-								iCashPayDate, strDC, bApplyCpnEOMAdj, aap, strCalendar))) - accrued
-									(iValueDate, csqc)) / dblScalingNotional;
+							org.drip.analytics.daycount.Convention.YearFraction (iValueDate, iCashPayDate,
+								strDC, bApplyCpnEOMAdj, aap, strCalendar))) - accrued (iValueDate, csqc)) /
+									dblScalingNotional;
 	}
 
 	@Override public double priceFromYield (

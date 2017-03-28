@@ -64,51 +64,52 @@ public class Array2D {
 	private double _adblY[] = null;
 
 	/**
-	 * Generate an Array2D Instance from the String Array containing semi-colon delimited Date/Factor Pair
+	 * Generate an Array2D Instance from the String Array containing semi-colon delimited Date/Factor Vertex
+	 *  Pair
 	 * 
-	 * @param strArray2D The String Array containing semi-colon delimited Date/Factor Pair
+	 * @param strDateFactorVertex The String Array containing semi-colon delimited Date/Edge Pair
+	 * @param iMaturityDate The Maturity Date
 	 * 
 	 * @return The Array2D Instance
 	 */
 
-	public static final Array2D FromDateFactor (
-		final java.lang.String strArray2D)
+	public static final Array2D FromDateFactorVertex (
+		final java.lang.String strDateFactorVertex,
+		final int iMaturityDate)
 	{
-		if (null == strArray2D || strArray2D.isEmpty()) return null;
+		if (null == strDateFactorVertex || strDateFactorVertex.isEmpty()) return null;
 
-		java.lang.String[] astrDateFactor = org.drip.quant.common.StringUtil.Split (strArray2D, ";");
+		java.lang.String[] astrDateFactorVertex = org.drip.quant.common.StringUtil.Split
+			(strDateFactorVertex, ";");
 
-		if (null == astrDateFactor) return null;
+		if (null == astrDateFactorVertex) return null;
 
-		int iNumDateFactor = astrDateFactor.length;
-		int iNumDate = iNumDateFactor / 2;
-		double dblYCumulative = 0.;
-		double[] adblX = new double[iNumDate];
-		double[] adblY = new double[iNumDate];
+		int iNumDateFactorPair = astrDateFactorVertex.length;
+		int iNumVertex = iNumDateFactorPair / 2 + 1;
+		double[] adblVertexDate = new double[iNumVertex];
+		double[] adblVertexFactor = new double[iNumVertex];
+		adblVertexFactor[0] = 1.;
 
-		if (0 == iNumDateFactor || 1 == iNumDateFactor % 2) return null;
+		if (0 == iNumDateFactorPair || 1 == iNumDateFactorPair % 2) return null;
 
-		for (int i = 0; i < iNumDate; ++i) {
+		for (int i = 0; i < iNumVertex - 1; ++i) {
 			org.drip.analytics.date.JulianDate dt = org.drip.analytics.date.DateUtil.FromMDY
-				(astrDateFactor[2 * i], "/");
+				(astrDateFactorVertex[2 * i], "/");
 
-			java.lang.String strFactor = astrDateFactor[2 * i + 1];
+			java.lang.String strFactor = astrDateFactorVertex[2 * i + 1];
 
 			if (null == dt || null == strFactor || strFactor.isEmpty()) return null;
 
-			adblX[i] = dt.julian();
+			adblVertexDate[i] = dt.julian();
 
-			if (!org.drip.quant.common.NumberUtil.IsValid (adblY[i] = java.lang.Double.parseDouble
-				(strFactor.trim())))
+			if (!org.drip.quant.common.NumberUtil.IsValid (adblVertexFactor[i + 1] =
+				java.lang.Double.parseDouble (strFactor.trim())))
 				return null;
-
-			dblYCumulative += adblY[i];
 		}
 
-		for (int i = 0; i < iNumDate; ++i)
-			adblY[i] = (0 == i ? 1. : adblY[i - 1]) - (adblY[i] / dblYCumulative);
+		adblVertexDate[iNumVertex - 1] = iMaturityDate;
 
-		return FromArray (adblX, adblY);
+		return FromArray (adblVertexDate, adblVertexFactor);
 	}
 
 	/**

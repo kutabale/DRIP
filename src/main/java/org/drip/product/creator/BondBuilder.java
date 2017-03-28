@@ -186,7 +186,7 @@ public class BondBuilder {
 																(strCreditCurveName) ?
 																	org.drip.state.identifier.CreditLabel.Standard
 				(strCreditCurveName) : null), new org.drip.product.params.NotionalSetting (100., strCurrency,
-					fsPrincipalOutstanding, org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_START,
+					fsPrincipalOutstanding, org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_END,
 						false));
 	}
 
@@ -243,7 +243,7 @@ public class BondBuilder {
 			(strRateIndex), null == strCreditCurveName || strCreditCurveName.isEmpty() ? null :
 				org.drip.state.identifier.CreditLabel.Standard (strCreditCurveName)), new
 					org.drip.product.params.NotionalSetting (100., strCurrency, fsPrincipalOutstanding,
-						org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_START, false));
+						org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_END, false));
 	}
 
 	/**
@@ -371,7 +371,7 @@ public class BondBuilder {
 											org.drip.product.params.NotionalSetting (1., strCurrency,
 												org.drip.quant.common.Array2D.FromArray (aiPrincipalDate,
 													adblPrincipalFactor),
-														org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_START,
+														org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_END,
 			false));
 	}
 
@@ -418,7 +418,7 @@ public class BondBuilder {
 
 		tsyBond.setNotionalSetting (new org.drip.product.params.NotionalSetting (100., strCurrency,
 			org.drip.quant.common.Array2D.BulletSchedule(),
-				org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_START, false));
+				org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_END, false));
 
 		tsyBond.setCouponSetting (new org.drip.product.params.CouponSetting (null, "", dblCoupon,
 			java.lang.Double.NaN, java.lang.Double.NaN));

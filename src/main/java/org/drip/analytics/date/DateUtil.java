@@ -1110,7 +1110,7 @@ public class DateUtil {
 		if (null == astrDMY || 3 != astrDMY.length) return null;
 
 		try {
-			return CreateFromYMD (new java.lang.Integer (astrDMY[2].trim()), MonthFromMonthChars
+			return CreateFromYMD (new java.lang.Integer (astrDMY[2].trim()), new java.lang.Integer
 				(astrDMY[0].trim()), new java.lang.Integer (astrDMY[1].trim()));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
