@@ -609,9 +609,9 @@ public class BulletCorporate6 {
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015,  7, 29), DateUtil.CreateFromYMD (2025,  7, 29), 0.04000, 2, "30/360"),
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2016,  3,  4), DateUtil.CreateFromYMD (2026,  3,  4), 0.04150, 2, "30/360"),
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2011,  6, 30), DateUtil.CreateFromYMD (2034,  7, 15), 0.05820, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2004, 10, 15), DateUtil.CreateFromYMD (2049, 10,  1), 0.05586, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2006,  5,  1), DateUtil.CreateFromYMD (2051,  5, 15), 0.06124, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2015,  9, 30), DateUtil.CreateFromYMD (2051, 10, 15), 0.05334, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2004, 10, 15), DateUtil.CreateFromYMD (2049, 10,  1), 0.05586, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2006,  5,  1), DateUtil.CreateFromYMD (2051,  5, 15), 0.06124, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015,  9, 30), DateUtil.CreateFromYMD (2051, 10, 15), 0.05334, 2, "30/360"),
 		};
 
 		double[] adblCleanPrice = new double[] {
@@ -627,9 +627,9 @@ public class BulletCorporate6 {
 			1.0285550,	// (2026,  7, 29)
 			1.0456260,	// (2026,  3,  4)
 			1.0824400,	// (2034,  7, 15)
-			// 1.0980730,	// (2049, 10,  1)
-			// 1.0919230,	// (2051,  5, 15)
-			// 1.0331340,	// (2051, 10, 15)
+			1.0980730,	// (2049, 10,  1)
+			1.0919230,	// (2051,  5, 15)
+			1.0331340,	// (2051, 10, 15)
 		};
 
 		double[] adblOAS = RVMeasures (

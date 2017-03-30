@@ -655,9 +655,9 @@ public class BulletAgency {
 			Agency (DateUtil.CreateFromYMD (2016,  2,  2), DateUtil.CreateFromYMD (2039,  2,  2), 0.03500),
 			Agency (DateUtil.CreateFromYMD (2009,  9, 22), DateUtil.CreateFromYMD (2039,  9, 15), 0.05250),
 			Agency (DateUtil.CreateFromYMD (2016,  2,  2), DateUtil.CreateFromYMD (2041,  2,  2), 0.03650),
-			// Agency (DateUtil.CreateFromYMD (2015,  4,  6), DateUtil.CreateFromYMD (2045,  4,  6), 0.03430),
-			// Agency (DateUtil.CreateFromYMD (2006,  4,  3), DateUtil.CreateFromYMD (2056,  4,  1), 0.05375),
-			// Agency (DateUtil.CreateFromYMD (2015,  9, 24), DateUtil.CreateFromYMD (2065,  9, 24), 0.04250),
+			Agency (DateUtil.CreateFromYMD (2015,  4,  6), DateUtil.CreateFromYMD (2045,  4,  6), 0.03430),
+			Agency (DateUtil.CreateFromYMD (2006,  4,  3), DateUtil.CreateFromYMD (2056,  4,  1), 0.05375),
+			Agency (DateUtil.CreateFromYMD (2015,  9, 24), DateUtil.CreateFromYMD (2065,  9, 24), 0.04250),
 		};
 
 		double[] adblCleanPrice = new double[] {
@@ -719,9 +719,9 @@ public class BulletAgency {
 			0.9764945,	// (2039,  2,  2)
 			1.2595240,	// (2039,  9, 15)
 			0.9811483,	// (2041,  2,  2)
-			// 0.9423921,	// (2045,  4,  6)
-			// 1.2715880,	// (2056,  4,  1)
-			// 0.1051380,	// (2065,  9, 15)
+			0.9423921,	// (2045,  4,  6)
+			1.2715880,	// (2056,  4,  1)
+			1.0513800,	// (2065,  9, 15)
 		};
 
 		double[] adblOAS = RVMeasures (

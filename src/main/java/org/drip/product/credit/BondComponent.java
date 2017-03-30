@@ -1912,8 +1912,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 						_marketConvention.valuationCustomizationParams()) : vcp, new
 							org.drip.spline.params.SegmentCustomBuilderControl
 								(org.drip.spline.stretch.MultiSegmentSequenceBuilder.BASIS_SPLINE_POLYNOMIAL,
-									new org.drip.spline.basis.PolynomialFunctionSetParams (4),
-										org.drip.spline.params.SegmentInelasticDesignControl.Create (2, 2),
+									new org.drip.spline.basis.PolynomialFunctionSetParams (2),
+										org.drip.spline.params.SegmentInelasticDesignControl.Create (0, 2),
 											new org.drip.spline.params.ResponseScalingShapeControl (true, new
 												org.drip.function.r1tor1.QuadraticRationalShapeControl (0.)),
 													null));
@@ -11895,8 +11895,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			if (null == rfop || !rfop.containsRoot())
 				rfop = new org.drip.function.r1tor1solver.FixedPointFinderBracketing (0., ofZSpreadToPrice,
 					new org.drip.function.r1tor1solver.ExecutionControl (ofZSpreadToPrice, new
-						org.drip.function.r1tor1solver.ExecutionControlParams (200, false, 1.e-04, 1.e-04,
-							1.e-05, 1.e-05)),
+						org.drip.function.r1tor1solver.ExecutionControlParams (200, false, 1.e-02, 1.e-02,
+							1.e-01, 1.e-01)),
 								org.drip.function.r1tor1solver.VariateIteratorPrimitive.FALSE_POSITION,
 									true).findRoot();
 

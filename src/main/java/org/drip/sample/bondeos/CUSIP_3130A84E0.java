@@ -380,6 +380,7 @@ public class CUSIP_3130A84E0 {
 		double dblWALTM = Double.NaN;
 		double dblWALTW = Double.NaN;
 		double dblZSpreadTW = Double.NaN;
+		double dblOASDuration = Double.NaN;
 		double dblModifiedDurationTW = Double.NaN;
 
 		WorkoutInfo wi = bond.exerciseYieldFromPrice (
@@ -433,6 +434,22 @@ public class CUSIP_3130A84E0 {
 				wi.yield()
 			);
 
+			double dblCleanPriceOASDown = bond.priceFromOAS (
+				valParams,
+				csqc,
+				null,
+				dblOASTW - 0.0001
+			);
+
+			double dblCleanPriceOASUp = bond.priceFromOAS (
+				valParams,
+				csqc,
+				null,
+				dblOASTW + 0.0001
+			);
+
+			dblOASDuration = 0.5 * (dblCleanPriceOASDown - dblCleanPriceOASUp);
+
 			dblModifiedDurationTW = bond.modifiedDurationFromPrice (
 				valParams,
 				csqc,
@@ -467,9 +484,13 @@ public class CUSIP_3130A84E0 {
 
 		System.out.println ("\t Bond Modified Duration TW => " + FormatUtil.FormatDouble (dblModifiedDurationTW, 1, 4, 10000.));
 
+		System.out.println ("\t Bond DV01                 => " + FormatUtil.FormatDouble (dblModifiedDurationTW * dblCleanPrice, 1, 4, 10000.));
+
 		System.out.println ("\t Bond Z Spread TW          => " + FormatUtil.FormatDouble (dblZSpreadTW, 1, 1, 10000.));
 
-		System.out.println ("\t Bond OAS TW               => " + FormatUtil.FormatDouble (dblOASTW, 1, 1, 10000.));
+		System.out.println ("\t Bond OAS TW               => " + FormatUtil.FormatDouble (dblOASTW, 1, 1, 2000.));
+
+		System.out.println ("\t Bond OAS Duration         => " + FormatUtil.FormatDouble (dblOASDuration, 1, 1, 7000.));
 	}
 
 	public static final void main (
@@ -518,8 +539,86 @@ public class CUSIP_3130A84E0 {
 		String strDayCount = "30/360";
 		int[] aiExerciseDate = new int[] {
 			DateUtil.CreateFromYMD (2016, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2017,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2017, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2018,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2018, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2019,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2019, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2020,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2020, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2021,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2021, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2022,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2022, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2023,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2023, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2024,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2024, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2025,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2025, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2026,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2026, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2027,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2027, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2028,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2028, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2029,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2029, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2030,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2030, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2031,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2031, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2032,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2032, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2033,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2033, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2034,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2034, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2035,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2035, 11, 23).julian(),
+			DateUtil.CreateFromYMD (2036,  5, 23).julian(),
 		};
 		double[] adblExercisePrice = new double[] {
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
+			1.,
 			1.,
 		};
 
@@ -540,7 +639,7 @@ public class CUSIP_3130A84E0 {
 			aiExerciseDate,
 			adblExercisePrice,
 			false,
-			30,
+			5,
 			false,
 			Double.NaN,
 			"",

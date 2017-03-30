@@ -481,7 +481,7 @@ public class CUSIP_247367AX3 {
 		JulianDate dtSpot = DateUtil.CreateFromYMD (
 			2017,
 			DateUtil.MARCH,
-			10
+			15
 		);
 
 		String strCurrency = "USD";
@@ -512,7 +512,7 @@ public class CUSIP_247367AX3 {
 		JulianDate dtEffective = DateUtil.CreateFromYMD (2002,  4, 30);
 		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2023,  1,  2);
 		double dblCoupon = 0.06718;
-		double dblCleanPrice = 1.125049;
+		double dblCleanPrice = 1.1275;
 		int iFreq = 2;
 		String strCUSIP = "247367AX3";
 		String strDayCount = "30/360";

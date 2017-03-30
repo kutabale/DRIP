@@ -650,11 +650,11 @@ public class BulletCorporate5 {
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009,  6,  1), DateUtil.CreateFromYMD (2039,  6,  1), 0.08875, 2, "30/360"),
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2009, 12, 16), DateUtil.CreateFromYMD (2039, 12, 16), 0.06850, 2, "30/360"),
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  7,  1), DateUtil.CreateFromYMD (2040,  6, 15), 0.07625, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2008, 11,  4), DateUtil.CreateFromYMD (2046,  3, 15), 0.05780, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  8,  1), DateUtil.CreateFromYMD (2050,  8,  1), 0.05300, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2006, 11, 13), DateUtil.CreateFromYMD (2051, 12,  1), 0.05595, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2007,  2,  1), DateUtil.CreateFromYMD (2052,  2, 15), 0.05815, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  3, 18), DateUtil.CreateFromYMD (2057,  3, 15), 0.06750, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2008, 11,  4), DateUtil.CreateFromYMD (2046,  3, 15), 0.05780, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  8,  1), DateUtil.CreateFromYMD (2050,  8,  1), 0.05300, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2006, 11, 13), DateUtil.CreateFromYMD (2051, 12,  1), 0.05595, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2007,  2,  1), DateUtil.CreateFromYMD (2052,  2, 15), 0.05815, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  3, 18), DateUtil.CreateFromYMD (2057,  3, 15), 0.06750, 2, "30/360"),
 		};
 
 		double[] adblCleanPrice = new double[] {
@@ -711,11 +711,11 @@ public class BulletCorporate5 {
 			1.5222220,	// (2039,  6,  1)
 			1.3022560,	// (2039, 12, 16)
 			1.2955540,	// (2040,  6, 15)
-			// 1.1743430,	// (2046,  3, 15)
-			// 0.9253630,	// (2050,  8,  1)
-			// 1.0570930,	// (2051, 12,  1)
-			// 0.9831220,	// (2052,  2, 15)
-			// 1.3153640,	// (2057,  3, 15)
+			1.1743430,	// (2046,  3, 15)
+			0.9253630,	// (2050,  8,  1)
+			1.0570930,	// (2051, 12,  1)
+			0.9831220,	// (2052,  2, 15)
+			1.3153640,	// (2057,  3, 15)
 		};
 
 		double[] adblOAS = RVMeasures (

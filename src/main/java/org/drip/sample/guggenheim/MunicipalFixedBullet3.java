@@ -539,7 +539,7 @@ public class MunicipalFixedBullet3 {
 		JulianDate dtSpot = DateUtil.CreateFromYMD (
 			2017,
 			DateUtil.MARCH,
-			15
+			20
 		);
 
 		String strCurrency = "USD";
@@ -608,6 +608,7 @@ public class MunicipalFixedBullet3 {
 
 		Bond[] aCorporateBond = new Bond[] {
 			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2014,  8,  1), DateUtil.CreateFromYMD (2024,  8,  1), 0.03160, 2, "US MUNI: 30/360"),
+			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2009, 10, 15), DateUtil.CreateFromYMD (2025,  9, 15), 0.07500, 4, "US MUNI: 30/360"),
 			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2011,  2, 23), DateUtil.CreateFromYMD (2026,  2,  1), 0.06700, 2, "US MUNI: 30/360"),
 			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010,  6, 24), DateUtil.CreateFromYMD (2027,  6, 15), 0.06485, 2, "US MUNI: 30/360"),
 			Corporate ("MUNICI ", DateUtil.CreateFromYMD (2010, 12, 13), DateUtil.CreateFromYMD (2028,  8,  1), 0.06450, 2, "US MUNI: 30/360"),
@@ -629,6 +630,7 @@ public class MunicipalFixedBullet3 {
 
 		double[] adblCleanPrice = new double[] {
 			1.0080000,	// (2024,  8,  1)
+			1.0580500,	// (2025,  9, 15)
 			1.1898135,	// (2026,  2,  1)
 			1.1856250,	// (2027,  6, 15)
 			1.2354160,	// (2028,  8,  1)

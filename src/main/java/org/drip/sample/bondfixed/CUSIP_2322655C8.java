@@ -1,5 +1,5 @@
 
-package org.drip.sample.bondeos;
+package org.drip.sample.bondfixed;
 
 import org.drip.analytics.date.*;
 import org.drip.param.creator.MarketParamsBuilder;
@@ -8,7 +8,6 @@ import org.drip.param.valuation.*;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
 import org.drip.product.definition.*;
-import org.drip.product.params.EmbeddedOptionSchedule;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.*;
@@ -61,13 +60,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * CUSIP_13281KTT5 demonstrates EOS Fixed Coupon Multi-flavor Pricing and Relative Value Measure Generation
- *  for CUSIP 13281KTT5.
+ * CUSIP_2322655C8 demonstrates EOS Fixed Coupon Multi-flavor Pricing and Relative Value Measure Generation
+ *  for CUSIP 2322655C8.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CUSIP_13281KTT5 {
+public class CUSIP_2322655C8 {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -376,11 +375,9 @@ public class CUSIP_13281KTT5 {
 
 		double dblYTM = Double.NaN;
 		double dblYTW = Double.NaN;
-		double dblOASTM = Double.NaN;
 		double dblOASTW = Double.NaN;
 		double dblWALTM = Double.NaN;
 		double dblWALTW = Double.NaN;
-		double dblZSpreadTM = Double.NaN;
 		double dblZSpreadTW = Double.NaN;
 		double dblModifiedDurationTW = Double.NaN;
 
@@ -426,24 +423,6 @@ public class CUSIP_13281KTT5 {
 				wi.yield()
 			);
 
-			dblZSpreadTM = bond.zspreadFromYield (
-				valParams,
-				csqc,
-				null,
-				bond.maturityDate().julian(),
-				1.,
-				wi.yield()
-			);
-
-			dblOASTM = bond.oasFromYield (
-				valParams,
-				csqc,
-				null,
-				bond.maturityDate().julian(),
-				1.,
-				wi.yield()
-			);
-
 			dblOASTW = bond.oasFromYield (
 				valParams,
 				csqc,
@@ -481,17 +460,13 @@ public class CUSIP_13281KTT5 {
 
 		System.out.println ("\t Bond YTM                  => " + FormatUtil.FormatDouble (dblYTM, 1, 3, 100.) + "%");
 
-		System.out.println ("\t Bond WAL TM               => " + FormatUtil.FormatDouble (dblWALTM, 1, 3, 1.));
-
 		System.out.println ("\t Bond WAL TW               => " + FormatUtil.FormatDouble (dblWALTW, 1, 3, 1.));
+
+		System.out.println ("\t Bond WAL TM               => " + FormatUtil.FormatDouble (dblWALTM, 1, 3, 1.));
 
 		System.out.println ("\t Bond Modified Duration TW => " + FormatUtil.FormatDouble (dblModifiedDurationTW, 1, 4, 10000.));
 
-		System.out.println ("\t Bond Z Spread TM          => " + FormatUtil.FormatDouble (dblZSpreadTM, 1, 1, 10000.));
-
 		System.out.println ("\t Bond Z Spread TW          => " + FormatUtil.FormatDouble (dblZSpreadTW, 1, 1, 10000.));
-
-		System.out.println ("\t Bond OAS TM               => " + FormatUtil.FormatDouble (dblOASTM, 1, 1, 10000.));
 
 		System.out.println ("\t Bond OAS TW               => " + FormatUtil.FormatDouble (dblOASTW, 1, 1, 10000.));
 	}
@@ -533,45 +508,13 @@ public class CUSIP_13281KTT5 {
 			0.0308  // 30Y
 		};
 
-		JulianDate dtEffective = DateUtil.CreateFromYMD (2010, 12, 15);
-		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2034,  7,  1);
-		double dblCoupon = 0.07747;
-		double dblCleanPrice = 1.14843;
+		JulianDate dtEffective = DateUtil.CreateFromYMD (2010,  1, 28);
+		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2040,  2, 15);
+		double dblCoupon = 0.08223;
+		double dblCleanPrice = 1.15202;
 		int iFreq = 2;
-		String strCUSIP = "13281KTT5";
+		String strCUSIP = "2322655C8";
 		String strDayCount = "30/360";
-		int[] aiExerciseDate = new int[] {
-			DateUtil.CreateFromYMD (2020,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2021,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2022,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2023,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2024,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2025,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2026,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2027,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2028,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2029,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2030,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2031,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2032,  7,  1).julian(),
-			DateUtil.CreateFromYMD (2033,  7,  1).julian(),
-		};
-		double[] adblExercisePrice = new double[] {
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-		};
 
 		BondComponent bond = BondBuilder.CreateSimpleFixed (
 			strCUSIP,
@@ -585,19 +528,6 @@ public class CUSIP_13281KTT5 {
 			null,
 			null
 		);
-
-		EmbeddedOptionSchedule eos = new EmbeddedOptionSchedule (
-			aiExerciseDate,
-			adblExercisePrice,
-			false,
-			30,
-			false,
-			Double.NaN,
-			"",
-			Double.NaN
-		);
-
-		bond.setEmbeddedCallSchedule (eos);
 
 		RVMeasures (
 			bond,

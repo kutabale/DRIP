@@ -644,18 +644,18 @@ public class BulletCorporate1 {
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015, 10,  1), DateUtil.CreateFromYMD (2035,  7, 29), 0.04950, 2, "ISMA-30/360"),
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015,  5,  9), DateUtil.CreateFromYMD (2035, 11,  1), 0.06250, 2, "30/360"),
 			Corporate ("CORPORA", DateUtil.CreateFromYMD (2006, 11,  9), DateUtil.CreateFromYMD (2036, 10,  1), 0.05558, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2013,  8,  1), DateUtil.CreateFromYMD (2043,  8, 15), 0.06503, 12, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2003, 10,  1), DateUtil.CreateFromYMD (2043, 10,  1), 0.05937, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  2, 24), DateUtil.CreateFromYMD (2047, 12, 15), 0.05270, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  3,  1), DateUtil.CreateFromYMD (2049,  5, 15), 0.05690, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  4, 26), DateUtil.CreateFromYMD (2050,  6, 15), 0.05524, 2, "ISMA-30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  6,  2), DateUtil.CreateFromYMD (2050,  6, 15), 0.05912, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2006,  7,  1), DateUtil.CreateFromYMD (2051,  1,  1), 0.05521, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2006, 11,  1), DateUtil.CreateFromYMD (2051, 10,  1), 0.05658, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2007, 12,  4), DateUtil.CreateFromYMD (2053,  6, 15), 0.06171, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2007, 12,  4), DateUtil.CreateFromYMD (2053,  6, 15), 0.08421, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2013,  8,  1), DateUtil.CreateFromYMD (2053,  8, 15), 0.06803, 2, "30/360"),
-			// Corporate ("CORPORA", DateUtil.CreateFromYMD (2008, 11,  4), DateUtil.CreateFromYMD (2053,  9, 15), 0.07500, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013,  8,  1), DateUtil.CreateFromYMD (2043,  8, 15), 0.06503, 12, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2003, 10,  1), DateUtil.CreateFromYMD (2043, 10,  1), 0.05937, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  2, 24), DateUtil.CreateFromYMD (2047, 12, 15), 0.05270, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  3,  1), DateUtil.CreateFromYMD (2049,  5, 15), 0.05690, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2005,  4, 26), DateUtil.CreateFromYMD (2050,  6, 15), 0.05524, 2, "ISMA-30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  6,  2), DateUtil.CreateFromYMD (2050,  6, 15), 0.05912, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2006,  7,  1), DateUtil.CreateFromYMD (2051,  1,  1), 0.05521, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2006, 11,  1), DateUtil.CreateFromYMD (2051, 10,  1), 0.05658, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2007, 12,  4), DateUtil.CreateFromYMD (2053,  6, 15), 0.06171, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2007, 12,  4), DateUtil.CreateFromYMD (2053,  6, 15), 0.08421, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013,  8,  1), DateUtil.CreateFromYMD (2053,  8, 15), 0.06803, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2008, 11,  4), DateUtil.CreateFromYMD (2053,  9, 15), 0.07500, 2, "30/360"),
 		};
 
 		double[] adblCleanPrice = new double[] {
@@ -706,18 +706,18 @@ public class BulletCorporate1 {
 			1.0600360,	// (2035,  7, 29)
 			1.0899400,	// (2035, 11,  1)
 			1.1337930,	// (2036, 10,  1)
-			// 1.1776690,	// (2043,  8,  1)
-			// 1.1227270,	// (2043, 10,  1)
-			// 1.0392280,	// (2047, 12, 15)
-			// 1.1496480,	// (2049,  5, 15)
-			// 1.0961770,	// (2050,  6, 15)
-			// 1.2025960,	// (2050,  6, 15)
-			// 0.9276792,	// (2051,  1,  1)
-			// 1.0181790,	// (2051, 10,  1)
-			// 0.9694037,	// (2053,  6, 15)
-			// 1.0446570,	// (2053,  6, 15)
-			// 1.3776140,	// (2053,  8, 15)
-			// 1.3822020,	// (2053,  9, 15)
+			1.1776690,	// (2043,  8,  1)
+			1.1227270,	// (2043, 10,  1)
+			1.0392280,	// (2047, 12, 15)
+			1.1496480,	// (2049,  5, 15)
+			1.0961770,	// (2050,  6, 15)
+			1.2025960,	// (2050,  6, 15)
+			0.9276792,	// (2051,  1,  1)
+			1.0181790,	// (2051, 10,  1)
+			0.9694037,	// (2053,  6, 15)
+			1.0446570,	// (2053,  6, 15)
+			1.3776140,	// (2053,  8, 15)
+			1.3822020,	// (2053,  9, 15)
 		};
 
 		double[] adblOAS = RVMeasures (
