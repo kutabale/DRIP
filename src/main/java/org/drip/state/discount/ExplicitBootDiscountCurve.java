@@ -62,8 +62,8 @@ package org.drip.state.discount;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class ExplicitBootDiscountCurve extends org.drip.state.discount.MergedDiscountForwardCurve implements
-	org.drip.analytics.definition.ExplicitBootCurve {
+public abstract class ExplicitBootDiscountCurve extends org.drip.state.discount.MergedDiscountForwardCurve
+	implements org.drip.analytics.definition.ExplicitBootCurve {
 
 	protected ExplicitBootDiscountCurve (
 		final int iEpochDate,

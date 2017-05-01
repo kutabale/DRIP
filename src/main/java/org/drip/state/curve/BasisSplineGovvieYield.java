@@ -101,4 +101,49 @@ public class BasisSplineGovvieYield extends org.drip.state.govvie.GovvieCurve {
 	{
 		return _span.jackDResponseDManifestMeasure (strManifestMeasure, iDate, 1);
 	}
+
+	/**
+	 * Construct a Flat Forward Instance of the Curve at the specified Date Nodes
+	 * 
+	 * @param aiDate Array of Date Nodes
+	 * 
+	 * @return The Flat Forward Instance
+	 */
+
+	public org.drip.state.nonlinear.FlatForwardDiscountCurve flatForward (
+		final int[] aiDate)
+	{
+		return flatForward (dayCount(), freq(), aiDate);
+	}
+
+	/**
+	 * Construct a Flat Forward Instance of the Curve at the specified Date Node Tenors
+	 * 
+	 * @param astrTenor Array of Date Node Tenors
+	 * 
+	 * @return The Flat Forward Instance
+	 */
+
+	public org.drip.state.nonlinear.FlatForwardDiscountCurve flatForward (
+		final java.lang.String[] astrTenor)
+	{
+		if (null == astrTenor) return null;
+
+		int iNumTenor = astrTenor.length;
+		int[] aiDate = 0 == iNumTenor ? null : new int[iNumTenor];
+
+		org.drip.analytics.date.JulianDate dtEpoch = epoch();
+
+		for (int i = 0; i < iNumTenor; ++i) {
+			try {
+				aiDate[i] = dtEpoch.addTenor (astrTenor[i]).julian();
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return flatForward (dayCount(), freq(), aiDate);
+	}
 }

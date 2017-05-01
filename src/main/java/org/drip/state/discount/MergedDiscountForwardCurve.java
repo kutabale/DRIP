@@ -68,7 +68,7 @@ package org.drip.state.discount;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class MergedDiscountForwardCurve implements org.drip.state.discount.DiscountCurve {
+public abstract class MergedDiscountForwardCurve extends org.drip.state.discount.DiscountCurve {
 	private static final int NUM_DF_QUADRATURES = 5;
 
 	protected java.lang.String _strCurrency = "";

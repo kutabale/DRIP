@@ -63,13 +63,24 @@ public class Array2D {
 	private double _adblX[] = null;
 	private double _adblY[] = null;
 
+	/**
+	 * Generate the Array2D Schedule from the String Representation of the Vertex Dates and Edge Payments
+	 * 	Combination.
+	 * 
+	 * @param strDateAmountVertex The String Array consisting of the Date and the Amount Vertexes
+	 * @param iMaturityDate The Maturity Date
+	 * @param dblInitialAmount The Initial Amount\
+	 * 
+	 * @return The Array2D Instance
+	 */
+
 	public static final Array2D FromDateAmountVertex (
 		final java.lang.String strDateAmountVertex,
 		final int iMaturityDate,
-		final double dblOutstandingAmount)
+		final double dblInitialAmount)
 	{
 		if (null == strDateAmountVertex || strDateAmountVertex.isEmpty() ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblOutstandingAmount) || 0. >= dblOutstandingAmount)
+			!org.drip.quant.common.NumberUtil.IsValid (dblInitialAmount) || 0. >= dblInitialAmount)
 			return null;
 
 		java.lang.String[] astrDateAmountEdge = org.drip.quant.common.StringUtil.Split (strDateAmountVertex,
@@ -82,7 +93,7 @@ public class Array2D {
 		double[] adblVertexDate = new double[iNumVertex];
 		double[] adblVertexFactor = new double[iNumVertex];
 		double[] adblVertexOutstanding = new double[iNumVertex];
-		adblVertexOutstanding[0] = dblOutstandingAmount;
+		adblVertexOutstanding[0] = dblInitialAmount;
 
 		if (0 == iNumDateFactorPair || 1 == iNumDateFactorPair % 2) return null;
 
@@ -106,7 +117,7 @@ public class Array2D {
 		}
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblVertexFactor[i] = adblVertexOutstanding[i] / dblOutstandingAmount;
+			adblVertexFactor[i] = adblVertexOutstanding[i] / dblInitialAmount;
 
 		adblVertexDate[iNumVertex - 1] = iMaturityDate;
 

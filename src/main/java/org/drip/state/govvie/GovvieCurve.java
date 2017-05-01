@@ -53,7 +53,7 @@ package org.drip.state.govvie;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class GovvieCurve implements org.drip.state.discount.DiscountCurve,
+public abstract class GovvieCurve extends org.drip.state.discount.DiscountCurve implements
 	org.drip.state.govvie.YieldEstimator {
 	private static final int NUM_DF_QUADRATURES = 5;
 
@@ -191,6 +191,7 @@ public abstract class GovvieCurve implements org.drip.state.discount.DiscountCur
 	@Override public boolean setCCIS (
 		final org.drip.analytics.input.CurveConstructionInputSet ccis)
 	{
+		_ccis = ccis;
 		return true;
 	}
 

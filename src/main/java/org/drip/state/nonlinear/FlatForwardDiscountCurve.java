@@ -464,4 +464,15 @@ public class FlatForwardDiscountCurve extends org.drip.state.discount.ExplicitBo
 
 		return true;
 	}
+
+	/**
+	 * Retrieve the Forward Node Values
+	 * 
+	 * @return The Forward Node Values
+	 */
+
+	public double[] nodeValues()
+	{
+		return _adblForwardRate;
+	}
 }

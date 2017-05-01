@@ -59,7 +59,7 @@ package org.drip.state.discount;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class ZeroCurve implements org.drip.state.discount.DiscountCurve {
+public abstract class ZeroCurve extends org.drip.state.discount.DiscountCurve {
 	private int _iEpochDate = -1;
 	private java.lang.String _strCurrency = "";
 

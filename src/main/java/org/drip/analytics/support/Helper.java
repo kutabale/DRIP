@@ -596,11 +596,11 @@ public class Helper {
 	}
 
 	/**
-	 * Retrieve the Number of Days from the Tenor
+	 * Retrieve the Year Fraction from the Tenor
 	 * 
 	 * @param strTenor The Specified Tenor
 	 * 
-	 * @return The Number of Days
+	 * @return The Year Fraction
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -619,11 +619,11 @@ public class Helper {
 
 		if ('d' == chTenor || 'D' == chTenor) return ((double) iTimeUnit) / 365.25;
 
-		// if ('w' == chTenor || 'W' == chTenor) return ((double) (7. * iTimeUnit)) / 365.25;
+		if ('w' == chTenor || 'W' == chTenor) return ((double) (7. * iTimeUnit)) / 365.25;
 
 		if ('w' == chTenor || 'W' == chTenor) return ((double) (iTimeUnit)) / 52.;
 
-		// if ('l' == chTenor || 'L' == chTenor) return ((double) (28. * iTimeUnit)) / 365.25;
+		if ('l' == chTenor || 'L' == chTenor) return ((double) (28. * iTimeUnit)) / 365.25;
 
 		if ('l' == chTenor || 'L' == chTenor) return ((double) (iTimeUnit)) / 13.;
 
@@ -631,7 +631,45 @@ public class Helper {
 
 		if ('y' == chTenor || 'Y' == chTenor) return iTimeUnit;
 
-		throw new java.lang.Exception ("Helper::TenorToDays => Unknown tenor format " + strTenor);
+		throw new java.lang.Exception ("Helper::TenorToYearFraction => Unknown tenor format " + strTenor);
+	}
+
+	/**
+	 * Retrieve the Year Fraction from the Tenor Array 
+	 * 
+	 * @param astrTenor The Specified Tenor Array
+	 * @param bForward TRUE - Generated the Incremental Forward Year Fraction
+	 * 
+	 * @return The Year Fraction Array
+	 */
+
+	public static final double[] TenorToYearFraction (
+		final java.lang.String[] astrTenor,
+		final boolean bForward)
+		throws java.lang.Exception
+	{
+		if (null == astrTenor)
+			throw new java.lang.Exception ("Helper::TenorToYearFraction => Invalid Inputs");
+
+		int iNumTenor = astrTenor.length;
+		double[] adblYearFraction = 0 == iNumTenor ? null : new double[iNumTenor];
+
+		for (int i = 0; i < iNumTenor; ++i) {
+			try {
+				adblYearFraction[i] = TenorToYearFraction (astrTenor[i]);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		if (!bForward) return adblYearFraction;
+
+		for (int i = iNumTenor - 1; i > 1; --i)
+			adblYearFraction[i] = adblYearFraction[i] - adblYearFraction[i - 1];
+
+		return adblYearFraction;
 	}
 
 	/**

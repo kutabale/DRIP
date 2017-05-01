@@ -60,6 +60,7 @@ package org.drip.service.env;
  */
 
 public class EnvManager {
+
 	/**
 	 * Initialize the logger, the database connections, the day count parameters, and day count objects.
 	 * 

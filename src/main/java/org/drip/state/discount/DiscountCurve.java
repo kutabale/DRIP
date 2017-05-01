@@ -57,6 +57,53 @@ package org.drip.state.discount;
  * @author Lakshmi Krishnamurthy
  */
 
-public interface DiscountCurve extends org.drip.analytics.definition.Curve,
+public abstract class DiscountCurve implements org.drip.analytics.definition.Curve,
 	org.drip.state.discount.DiscountFactorEstimator {
+
+	/**
+	 * Construct a Flat Forward Instance of the Curve at the specified Date Nodes
+	 * 
+	 * @param strDayCount Forward Curve Day Count
+	 * @param iFreq Forward Curve Frequency
+	 * @param aiDate Array of Date Nodes
+	 * 
+	 * @return The Flat Forward Instance
+	 */
+
+	public org.drip.state.nonlinear.FlatForwardDiscountCurve flatForward (
+		final java.lang.String strDayCount,
+		final int iFreq,
+		final int[] aiDate)
+	{
+		if (null == aiDate) return null;
+
+		int iNumNode = aiDate.length;
+		double[] adblForwardRate = 0 == iNumNode ? null : new double [iNumNode];
+
+		if (0 == iNumNode) return null;
+
+		java.lang.String strCurrency = currency();
+
+		org.drip.analytics.date.JulianDate dtStart = epoch();
+
+		org.drip.analytics.daycount.ActActDCParams aap =
+			org.drip.analytics.daycount.ActActDCParams.FromFrequency (iFreq);
+
+		try {
+			for (int i = 0; i < iNumNode; ++i) {
+				int iStartDate = 0 == i ? dtStart.julian() : aiDate[i - 1];
+
+				adblForwardRate[i] = ((df (iStartDate) / df (aiDate[i])) - 1.) /
+					org.drip.analytics.daycount.Convention.YearFraction (iStartDate, aiDate[i], strDayCount,
+						false, aap, strCurrency);
+			}
+
+			return new org.drip.state.nonlinear.FlatForwardDiscountCurve (dtStart, strCurrency, aiDate,
+				adblForwardRate, true, strDayCount, iFreq);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }
