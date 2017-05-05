@@ -1,20 +1,11 @@
 
 package org.drip.sample.discountmc;
 
-import java.util.List;
-
 import org.drip.analytics.date.*;
-import org.drip.analytics.support.Helper;
-import org.drip.measure.crng.RandomNumberGenerator;
-import org.drip.measure.discrete.*;
-import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
-import org.drip.measure.process.DiffusionEvolver;
-import org.drip.measure.realization.JumpDiffusionVertex;
-import org.drip.measure.realization.UnitRandom;
+import org.drip.measure.discrete.SequenceGenerator;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
-import org.drip.state.curve.BasisSplineGovvieYield;
 import org.drip.state.govvie.GovvieCurve;
 
 /*
@@ -63,13 +54,12 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * TreasuryPath demonstrates the (Re-)construction of Treasury Curves from the Simulations of the Treasury
- * 	Forward Nodes.
+ * TreasuryStatePath demonstrates the Simulations of the Treasury State Paths.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class TreasuryPath {
+public class TreasuryStatePath {
 
 	private static final GovvieCurve GovvieCurve (
 		final JulianDate dtSpot,
@@ -112,8 +102,7 @@ public class TreasuryPath {
 			24
 		);
 
-		int iNumPath = 1;
-		int iNumVertex = 10;
+		int iNumPath = 50;
 		double dblVolatility = 0.10;
 		String strTreasuryCode = "UST";
 
@@ -150,7 +139,10 @@ public class TreasuryPath {
 			0.0308  // 30Y
 		};
 
-		BasisSplineGovvieYield bsgy = (BasisSplineGovvieYield) GovvieCurve (
+		int iNumTreasury = adblTreasuryYield.length;
+		GovvieCurve[] aGC = new GovvieCurve[iNumPath + 1];
+
+		aGC[0] = GovvieCurve (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,
@@ -158,91 +150,31 @@ public class TreasuryPath {
 			adblTreasuryYield
 		);
 
-		double[] adblInitialForward = bsgy.flatForward (astrTenor).nodeValues();
+		double[] adblWanderer = SequenceGenerator.Gaussian (iNumPath);
 
-		DiffusionEvolver de = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				0.,
-				dblVolatility
-			)
-		);
+		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			double[] adblPathTreasuryYield = new double[iNumTreasury];
+			double dblWanderFactor = (1. + dblVolatility * adblWanderer[iPath]);
 
-		DiffusionEvolver[] aDE = new DiffusionEvolver[astrTenor.length];
-		double[][] aadblCorrelation = new double[astrTenor.length][astrTenor.length];
-		JumpDiffusionVertex[] aJDVInitial = new JumpDiffusionVertex[astrTenor.length];
+			for (int iTreasury = 0; iTreasury < iNumTreasury; ++iTreasury)
+				adblPathTreasuryYield[iTreasury] = adblTreasuryYield[iTreasury] * dblWanderFactor;
 
-		for (int i = 0; i < astrTenor.length; ++i) {
-			aDE[i] = de;
-
-			aJDVInitial[i] = new JumpDiffusionVertex (
-				0.,
-				adblInitialForward[i],
-				0.,
-				false
+			aGC[iPath + 1] = GovvieCurve (
+				dtSpot,
+				strTreasuryCode,
+				astrTenor,
+				adblTreasuryCoupon,
+				adblPathTreasuryYield
 			);
-
-			for (int j = 0; j < astrTenor.length; ++j)
-				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		System.out.println ("\n\t||---------------------------------------------------------------------------------------||");
+		for (int iPath = 0; iPath <= iNumPath; ++iPath) {
+			String strDump = "\t[" + FormatUtil.FormatDouble (iPath, 3, 0, 1.) + "] => ";
 
-		String strDump = "\t|| TENOR";
+			for (int iTreasury = 0; iTreasury < iNumTreasury; ++iTreasury)
+				strDump = strDump + FormatUtil.FormatDouble (aGC[iPath].yield (astrTenor[iTreasury]), 1, 3, 100.) + "% |";
 
-		for (int i = 0; i < adblInitialForward.length; ++i)
-			strDump += " |   " + astrTenor[i] + "  ";
-
-		System.out.println (strDump + " ||");
-
-		strDump = "\t||  BASE";
-
-		System.out.println ("\t||---------------------------------------------------------------------------------------||");
-
-		for (int i = 0; i < adblInitialForward.length; ++i)
-			strDump += " | " + FormatUtil.FormatDouble (adblInitialForward[i], 2, 2, 100.) + "%";
-
-		System.out.println (strDump + " ||");
-
-		System.out.println ("\t||---------------------------------------------------------------------------------------||\n");
-
-		double[] adblTenorToYearFraction = Helper.TenorToYearFraction (
-			astrTenor,
-			true
-		);
-
-		CorrelatedPathVertexDimension cpvd = new CorrelatedPathVertexDimension (
-			new RandomNumberGenerator(),
-			aadblCorrelation,
-			iNumVertex,
-			iNumPath,
-			false,
-			null
-		);
-
-		VertexRd[] aVertexRd = cpvd.multiPathVertexRd();
-
-		for (int p = 0; p < iNumPath; ++p) {
-			List<double[]> lsVertexRd = aVertexRd[p].vertexList();
-
-			UnitRandom[] aUR = new UnitRandom[lsVertexRd.size()];
-
-			for (int t = 0; t < lsVertexRd.size(); ++t) {
-				double[] adblRd = lsVertexRd.get (t);
-
-				strDump = "\t||" + FormatUtil.FormatDouble (t, 2, 0, 1.) + " => ";
-
-				for (int f = 0; f < adblRd.length; ++f)
-					aUR[f] = new UnitRandom (
-						adblRd[f],
-						0.
-					);
-
-				for (int f = 0; f < adblRd.length; ++f) {
-					strDump = strDump + " " + FormatUtil.FormatDouble (adblRd[f], 1, 5, 1.) + " |";
-				}
-
-				System.out.println (strDump + "|");
-			}
+			System.out.println (strDump + "|");
 		}
 	}
 }

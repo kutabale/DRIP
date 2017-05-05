@@ -225,6 +225,61 @@ public class DiffusionEvolver {
 	}
 
 	/**
+	 * Generate the Array of JumpDiffusionVertex Snaps from the specified Random Variate Array
+	 * 
+	 * @param jdv The JumpDiffusionVertex Instance
+	 * @param aUR Array of Random Unit Realizations
+	 * @param adblTimeIncrement Array of Time Increment Evolution Units
+	 * 
+	 * @return The Array of JumpDiffusionVertex Snaps
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionVertex[] vertexSequence (
+		final org.drip.measure.realization.JumpDiffusionVertex jdv,
+		final org.drip.measure.realization.UnitRandom[] aUR,
+		final double[] adblTimeIncrement)
+	{
+		if (null == aUR || null == adblTimeIncrement) return null;
+
+		int iNumTimeStep = aUR.length;
+		org.drip.measure.realization.JumpDiffusionVertex jdvPrev = jdv;
+		org.drip.measure.realization.JumpDiffusionVertex[] aJDV = 0 == iNumTimeStep ? null : new
+			org.drip.measure.realization.JumpDiffusionVertex[iNumTimeStep];
+
+		if (0 == iNumTimeStep || iNumTimeStep != adblTimeIncrement.length) return null;
+
+		for (int i = 0; i < iNumTimeStep; ++i) {
+			org.drip.measure.realization.JumpDiffusionEdge jde = increment (jdvPrev, aUR[i],
+				adblTimeIncrement[i]);
+
+			if (null == jde) return null;
+
+			try {
+				org.drip.measure.realization.StochasticEdgeJump sej = jde.stochasticJumpEdge();
+
+				boolean bJumpOccurred = false;
+				double dblHazardIntegral = 0.;
+
+				if (null != sej) {
+					bJumpOccurred = sej.jumpOccurred();
+
+					dblHazardIntegral = sej.hazardIntegral();
+				}
+
+				jdvPrev = aJDV[i] = new org.drip.measure.realization.JumpDiffusionVertex (jdvPrev.time() +
+					adblTimeIncrement[i], jde.finish(), jdvPrev.cumulativeHazardIntegral() +
+						dblHazardIntegral, bJumpOccurred || jdvPrev.jumpOccurred());
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return aJDV;
+	}
+
+	/**
 	 * Generate the Adjacent JumpDiffusionDAG Increment from the specified Random Variate and a Weiner Driver
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance

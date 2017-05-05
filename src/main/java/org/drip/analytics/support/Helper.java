@@ -710,6 +710,37 @@ public class Helper {
 	}
 
 	/**
+	 * Retrieve the Date Array From the Tenor Array
+	 * 
+	 * @param dtSpot The Spot Date Array
+	 * @param astrTenor The Specified Tenor Array
+	 * 
+	 * @return The Date Array From the Tenor Array
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public static final int[] TenorToDate (
+		final org.drip.analytics.date.JulianDate dtSpot,
+		final java.lang.String[] astrTenor)
+	{
+		if (null == dtSpot || null == astrTenor) return null;
+
+		int iNumTenor = astrTenor.length;
+		int[] aiTenorDate = new int[iNumTenor];
+
+		for (int i = 0; i < iNumTenor; ++i) {
+			org.drip.analytics.date.JulianDate dtTenor = dtSpot.addTenor (astrTenor[i]);
+
+			if (null == dtTenor) return null;
+
+			aiTenorDate[i] = dtTenor.julian();
+		}
+
+		return aiTenorDate;
+	}
+
+	/**
 	 * Compare the Left and the Right Tenors
 	 * 
 	 * @param strTenorLeft Left Tenor
