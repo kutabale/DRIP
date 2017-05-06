@@ -111,7 +111,7 @@ public class TreasuryForwardYieldPath {
 			24
 		);
 
-		int iNumPath = 1;
+		int iNumPath = 50;
 		int iNumVertex = 1;
 		double dblTimeWidth = 1.0;
 		double dblVolatility = 0.10;
@@ -179,7 +179,7 @@ public class TreasuryForwardYieldPath {
 				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		System.out.println ("\n\t||----------------------------------------------------------------------------------------||");
+		System.out.println ("\n\t||------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		String strDump = "\t|| TENOR ";
 
@@ -193,7 +193,7 @@ public class TreasuryForwardYieldPath {
 
 		strDump = "\t|| " + FormatUtil.FormatDouble (0, 3, 0, 1.) + " => ";
 
-		System.out.println ("\t||----------------------------------------------------------------------------------------||");
+		System.out.println ("\t||------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 0; i < iNumDimension; ++i)
 			strDump += " " + FormatUtil.FormatDouble (adblInitialForward[i], 1, 3, 100.) + "% |";
@@ -270,6 +270,6 @@ public class TreasuryForwardYieldPath {
 			}
 		}
 
-		System.out.println ("\t||----------------------------------------------------------------------------------------||\n");
+		System.out.println ("\t||------------------------------------------------------------------------------------------------------------------------------------------------------------------------||\n");
 	}
 }

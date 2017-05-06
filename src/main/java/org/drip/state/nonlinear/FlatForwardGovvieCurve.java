@@ -129,7 +129,7 @@ public class FlatForwardGovvieCurve extends org.drip.state.govvie.ExplicitBootGo
 
 		return org.drip.analytics.support.Helper.DF2Yield (iFreq, dblDF * java.lang.Math.pow (1. +
 			(_adblForwardYield[i] / iFreq), -1. * yearFract (iStartDate, iDate, aap, strDayCount) * iFreq),
-				yearFract (_iEpochDate, iDate, aap, strDayCount) * iFreq);
+				yearFract (_iEpochDate, iDate, aap, strDayCount));
 	}
 
 	@Override public boolean setNodeValue (
