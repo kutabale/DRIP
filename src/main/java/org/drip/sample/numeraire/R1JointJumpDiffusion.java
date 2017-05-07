@@ -203,7 +203,7 @@ public class R1JointJumpDiffusion {
 				0.,
 				false
 			),
-			UnitRandom.Diffusion (aadblNumeraireTimeSeries[0]),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[0]),
 			dblTimeWidth
 		);
 
@@ -214,7 +214,7 @@ public class R1JointJumpDiffusion {
 				0.,
 				false
 			),
-			UnitRandom.Diffusion (aadblNumeraireTimeSeries[1]),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[1]),
 			dblTimeWidth
 		);
 
@@ -225,7 +225,7 @@ public class R1JointJumpDiffusion {
 				0.,
 				false
 			),
-			UnitRandom.JumpDiffusion (
+			UnitRandomEdge.JumpDiffusion (
 				aadblNumeraireTimeSeries[2],
 				adblBankDefaultIndicator
 			),
@@ -239,7 +239,7 @@ public class R1JointJumpDiffusion {
 				0.,
 				false
 			),
-			UnitRandom.JumpDiffusion (
+			UnitRandomEdge.JumpDiffusion (
 				aadblNumeraireTimeSeries[3],
 				adblCounterPartyDefaultIndicator
 			),

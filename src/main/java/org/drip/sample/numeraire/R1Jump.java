@@ -114,7 +114,7 @@ public class R1Jump {
 				0.,
 				false
 			),
-			UnitRandom.JumpDiffusion (
+			UnitRandomEdge.JumpDiffusion (
 				adblAssetNumeraireTimeSeries,
 				adblDefaultIndicatorTimeSeries
 			),

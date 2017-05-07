@@ -72,7 +72,7 @@ package org.drip.measure.realization;
 public class JumpDiffusionEdge {
 	private double _dblStart = java.lang.Double.NaN;
 	private double _dblDeterministic = java.lang.Double.NaN;
-	private org.drip.measure.realization.UnitRandom _ur = null;
+	private org.drip.measure.realization.UnitRandomEdge _ur = null;
 	private org.drip.measure.realization.StochasticEdgeJump _sej = null;
 	private org.drip.measure.realization.StochasticEdgeDiffusion _sed = null;
 
@@ -107,7 +107,7 @@ public class JumpDiffusionEdge {
 			return new JumpDiffusionEdge (dblStart, dblDeterministic, new
 				org.drip.measure.realization.StochasticEdgeDiffusion (dblDiffusionStochastic), new
 					org.drip.measure.realization.StochasticEdgeJump (bJumpOccurred, dblHazardRate,
-						dblHazardIntegral, dblJumpTarget), new org.drip.measure.realization.UnitRandom
+						dblHazardIntegral, dblJumpTarget), new org.drip.measure.realization.UnitRandomEdge
 							(dblUnitDiffusion, dblUnitJump));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -133,7 +133,7 @@ public class JumpDiffusionEdge {
 		final double dblDeterministic,
 		final double dblDiffusionStochastic,
 		final org.drip.measure.realization.StochasticEdgeJump sej,
-		final org.drip.measure.realization.UnitRandom ur)
+		final org.drip.measure.realization.UnitRandomEdge ur)
 	{
 		try {
 			return new JumpDiffusionEdge (dblStart, dblDeterministic, new
@@ -162,7 +162,7 @@ public class JumpDiffusionEdge {
 		final double dblDeterministic,
 		final org.drip.measure.realization.StochasticEdgeDiffusion sed,
 		final org.drip.measure.realization.StochasticEdgeJump sej,
-		final org.drip.measure.realization.UnitRandom ur)
+		final org.drip.measure.realization.UnitRandomEdge ur)
 		throws java.lang.Exception
 	{
 		_sed = sed;

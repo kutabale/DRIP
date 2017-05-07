@@ -47,12 +47,12 @@ package org.drip.measure.realization;
  */
 
 /**
- * UnitRandom holds the Jump Diffusion R^1 Unit Edge Realizations.
+ * UnitRandomEdge holds the Jump Diffusion R^1 Unit Edge Realizations.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class UnitRandom {
+public class UnitRandomEdge {
 	private double _dblJump = java.lang.Double.NaN;
 	private double _dblDiffusion = java.lang.Double.NaN;
 
@@ -62,10 +62,10 @@ public class UnitRandom {
 	 * @return The R^1 Uniform Diffusion Realization
 	 */
 
-	public static final UnitRandom UniformDiffusion()
+	public static final UnitRandomEdge UniformDiffusion()
 	{
 		try {
-			return new UnitRandom (java.lang.Math.random(), 0.);
+			return new UnitRandomEdge (java.lang.Math.random(), 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -79,10 +79,10 @@ public class UnitRandom {
 	 * @return The R^1 Gaussian Diffusion Realization
 	 */
 
-	public static final UnitRandom GaussianDiffusion()
+	public static final UnitRandomEdge GaussianDiffusion()
 	{
 		try {
-			return new UnitRandom (org.drip.measure.gaussian.NormalQuadrature.Random(), 0.);
+			return new UnitRandomEdge (org.drip.measure.gaussian.NormalQuadrature.Random(), 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -96,10 +96,10 @@ public class UnitRandom {
 	 * @return The R^1 Uniform Jump Realization
 	 */
 
-	public static final UnitRandom UniformJump()
+	public static final UnitRandomEdge UniformJump()
 	{
 		try {
-			return new UnitRandom (0., java.lang.Math.random());
+			return new UnitRandomEdge (0., java.lang.Math.random());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -113,10 +113,10 @@ public class UnitRandom {
 	 * @return The R^1 Gaussian Jump Realization
 	 */
 
-	public static final UnitRandom GaussianJump()
+	public static final UnitRandomEdge GaussianJump()
 	{
 		try {
-			return new UnitRandom (0., org.drip.measure.gaussian.NormalQuadrature.Random());
+			return new UnitRandomEdge (0., org.drip.measure.gaussian.NormalQuadrature.Random());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -132,17 +132,17 @@ public class UnitRandom {
 	 * @return Array of R^1 Diffusion Realizations
 	 */
 
-	public static final UnitRandom[] Diffusion (
+	public static final UnitRandomEdge[] Diffusion (
 		final double[] adblDiffusionRealization)
 	{
 		if (null == adblDiffusionRealization) return null;
 
 		int iSize = adblDiffusionRealization.length;
-		UnitRandom[] aJDU = 0 == iSize ? null : new UnitRandom[iSize];
+		UnitRandomEdge[] aJDU = 0 == iSize ? null : new UnitRandomEdge[iSize];
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aJDU[i] = new UnitRandom (adblDiffusionRealization[i], 0.);
+				aJDU[i] = new UnitRandomEdge (adblDiffusionRealization[i], 0.);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -161,17 +161,17 @@ public class UnitRandom {
 	 * @return Array of R^1 Jump Realizations
 	 */
 
-	public static final UnitRandom[] Jump (
+	public static final UnitRandomEdge[] Jump (
 		final double[] adblJumpRealization)
 	{
 		if (null == adblJumpRealization) return null;
 
 		int iSize = adblJumpRealization.length;
-		UnitRandom[] aJDU = 0 == iSize ? null : new UnitRandom[iSize];
+		UnitRandomEdge[] aJDU = 0 == iSize ? null : new UnitRandomEdge[iSize];
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aJDU[i] = new UnitRandom (0., adblJumpRealization[i]);
+				aJDU[i] = new UnitRandomEdge (0., adblJumpRealization[i]);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -191,20 +191,20 @@ public class UnitRandom {
 	 * @return Array of R^1 Jump Diffusion Realizations
 	 */
 
-	public static final UnitRandom[] JumpDiffusion (
+	public static final UnitRandomEdge[] JumpDiffusion (
 		final double[] adblDiffusionRealization,
 		final double[] adblJumpRealization)
 	{
 		if (null == adblDiffusionRealization || null == adblJumpRealization) return null;
 
 		int iSize = adblDiffusionRealization.length;
-		UnitRandom[] aJDU = 0 == iSize ? null : new UnitRandom[iSize];
+		UnitRandomEdge[] aJDU = 0 == iSize ? null : new UnitRandomEdge[iSize];
 
 		if (0 == iSize || iSize != adblJumpRealization.length) return null;
 
 		for (int i = 0; i < iSize; ++i) {
 			try {
-				aJDU[i] = new UnitRandom (adblDiffusionRealization[i], adblJumpRealization[i]);
+				aJDU[i] = new UnitRandomEdge (adblDiffusionRealization[i], adblJumpRealization[i]);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
@@ -216,7 +216,7 @@ public class UnitRandom {
 	}
 
 	/**
-	 * UnitRandom Constructor
+	 * UnitRandomEdge Constructor
 	 * 
 	 * @param dblDiffusion The Diffusion Random Variable
 	 * @param dblJump The Jump Random Variable
@@ -224,14 +224,14 @@ public class UnitRandom {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public UnitRandom (
+	public UnitRandomEdge (
 		final double dblDiffusion,
 		final double dblJump)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDiffusion = dblDiffusion) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblJump = dblJump))
-			throw new java.lang.Exception ("UnitRandom Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("UnitRandomEdge Constructor => Invalid Inputs");
 	}
 
 	/**

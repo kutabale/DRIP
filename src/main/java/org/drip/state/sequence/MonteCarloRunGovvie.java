@@ -57,6 +57,7 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 	private double[] _adblTreasuryCoupon = null;
 	private java.lang.String[] _astrTenor = null;
 	private java.lang.String _strTreasuryCode = "";
+	private double[] _adblForwardYieldGround = null;
 	private org.drip.analytics.date.JulianDate _dtSpot = null;
 	private org.drip.state.curve.BasisSplineGovvieYield _bsgyGround = null;
 
@@ -81,6 +82,91 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 			org.drip.service.template.LatentMarketStateBuilder.GovvieCurve (strCode, dtSpot, adtEffective,
 				adtMaturity, adblCoupon, adblYield, "Yield",
 					org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING);
+	}
+
+	private org.drip.state.govvie.GovvieCurve[][] curveVertex (
+		final double[][][] aaadblPathForward)
+	{
+		if (null == aaadblPathForward) return null;
+
+		org.drip.measure.discrete.CorrelatedPathVertexDimension cpvd = cpvd();
+
+		int iNumPath = cpvd.numPath();
+
+		int iNumVertex = cpvd.numVertex();
+
+		java.lang.String strCurrency = _bsgyGround.currency();
+
+		org.drip.state.nonlinear.FlatForwardGovvieCurve[][] aaFFGC = new
+			org.drip.state.nonlinear.FlatForwardGovvieCurve[iNumPath][iNumVertex];
+
+		for (int iTimeVertex = 0; iTimeVertex < iNumVertex; ++iTimeVertex) {
+			org.drip.analytics.date.JulianDate dtEvent = _dtSpot.addYears (iTimeVertex + 1);
+
+			if (null == dtEvent) return null;
+
+			int iEventDate = dtEvent.julian();
+
+			int[] aiDate = org.drip.analytics.support.Helper.TenorToDate (dtEvent, _astrTenor);
+
+			for (int iPath = 0; iPath < iNumPath; ++iPath) {
+				try {
+					if (null == (aaFFGC[iPath][iTimeVertex] = new
+						org.drip.state.nonlinear.FlatForwardGovvieCurve (iEventDate, _strTreasuryCode,
+							strCurrency, aiDate, aaadblPathForward[iPath][iTimeVertex])))
+						return null;
+				} catch (java.lang.Exception e) {
+					e.printStackTrace();
+
+					return null;
+				}
+			}
+		}
+
+		return aaFFGC;
+	}
+
+	/**
+	 * Generate a Standard Instance of MonteCarloRunGovvie
+	 * 
+	 * @param dtSpot The Spot Date
+	 * @param strTreasuryCode The Treasury Code
+	 * @param astrTenor Array of Maturity Tenors
+	 * @param adblTreasuryCoupon Array of Treasury Coupon
+	 * @param adblTreasuryYield Array of Treasury Yield
+	 * @param cpvd Latent State Evolver CPVD Instance
+	 * @param de The Latent State Diffusion Evolver
+	 * 
+	 * @return Standard Instance of MonteCarloRun
+	 */
+
+	public static final MonteCarloRunGovvie Standard (
+		final org.drip.analytics.date.JulianDate dtSpot,
+		final java.lang.String strTreasuryCode,
+		final java.lang.String[] astrTenor,
+		final double[] adblTreasuryCoupon,
+		final double[] adblTreasuryYield,
+		final org.drip.measure.discrete.CorrelatedPathVertexDimension cpvd,
+		final org.drip.measure.process.DiffusionEvolver de)
+	{
+		if (null == cpvd || null == de) return null;
+
+		int iNumDimension = cpvd.numDimension();
+
+		org.drip.measure.process.DiffusionEvolver[] aDE = new
+			org.drip.measure.process.DiffusionEvolver[iNumDimension];
+
+		for (int iDimension = 0; iDimension < iNumDimension; ++iDimension)
+			aDE[iDimension] = de;
+
+		try {
+			return new MonteCarloRunGovvie (dtSpot, strTreasuryCode, astrTenor, adblTreasuryCoupon,
+				adblTreasuryYield, cpvd, aDE);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**
@@ -112,6 +198,11 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 		if (null == (_bsgyGround = GovvieCurve (_dtSpot = dtSpot, _strTreasuryCode = strTreasuryCode,
 			_astrTenor = astrTenor, _adblTreasuryCoupon = adblTreasuryCoupon, _adblTreasuryYield =
 				adblTreasuryYield)))
+			throw new java.lang.Exception ("MonteCarloRunGovvie Constructor => Invalid Inputs");
+
+		org.drip.state.nonlinear.FlatForwardDiscountCurve ffdcGround = _bsgyGround.flatForward (_astrTenor);
+
+		if (null == ffdcGround || null == (_adblForwardYieldGround = ffdcGround.nodeValues()))
 			throw new java.lang.Exception ("MonteCarloRunGovvie Constructor => Invalid Inputs");
 	}
 
@@ -171,9 +262,45 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 	}
 
 	/**
+	 * Retrieve the Ground State Govvie Curve
+	 * 
+	 * @return The Ground State Govvie Curve
+	 */
+
+	public org.drip.state.curve.BasisSplineGovvieYield groundState()
+	{
+		return _bsgyGround;
+	}
+
+	/**
+	 * Retrieve the Ground Forward Yield Array
+	 * 
+	 * @return The Ground Forward Yield Array
+	 */
+
+	public double[] groundForwardYield()
+	{
+		return _adblForwardYieldGround;
+	}
+
+	/**
 	 * Generate the R^d Path/Vertex Govvie Curves using the Initial R^d and the Evolution Time Width
 	 * 
-	 * @param dblTimeIncrement The Evolution Time Width
+	 * @param adblTimeIncrement Array of the Evolution Time Widths
+	 * 
+	 * @return The R^d Path//Vertex Govvie Curves
+	 */
+
+	public org.drip.state.govvie.GovvieCurve[][] pathVertex (
+		final double[] adblTimeIncrement)
+	{
+		return curveVertex (pathVertex (_adblForwardYieldGround, adblTimeIncrement));
+	}
+
+	/**
+	 * Generate the R^d Path/Vertex Govvie Curves using the Initial R^d and the Evolution Time Width
+	 * 
+	 * @param dblTimeIncrement The Evolution Time Widths
 	 * 
 	 * @return The R^d Path//Vertex Govvie Curves
 	 */
@@ -181,43 +308,20 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 	public org.drip.state.govvie.GovvieCurve[][] pathVertex (
 		final double dblTimeIncrement)
 	{
-		double[][][] aaadblPathForward = pathVertex (_bsgyGround.flatForward (_astrTenor).nodeValues(),
-			dblTimeIncrement);
+		return curveVertex (pathVertex (_adblForwardYieldGround, dblTimeIncrement));
+	}
 
-		if (null == aaadblPathForward) return null;
+	/**
+	 * Generate the R^d Path/Vertex Govvie Curves using the Initial R^d and the Array of Event Tenors
+	 * 
+	 * @param astrEventTenor The Array of Event Tenors
+	 * 
+	 * @return The R^d Path//Vertex Govvie Curves
+	 */
 
-		org.drip.measure.discrete.CorrelatedPathVertexDimension cpvd = cpvd();
-
-		int iNumPath = cpvd.numPath();
-
-		int iNumVertex = cpvd.numVertex();
-
-		org.drip.state.nonlinear.FlatForwardGovvieCurve[][] aaFFGC = new
-			org.drip.state.nonlinear.FlatForwardGovvieCurve[iNumPath][iNumVertex];
-
-		for (int iTimeVertex = 0; iTimeVertex < iNumVertex; ++iTimeVertex) {
-			org.drip.analytics.date.JulianDate dtEvent = _dtSpot.addYears (iTimeVertex + 1);
-
-			if (null == dtEvent) return null;
-
-			int iEventDate = dtEvent.julian();
-
-			int[] aiDate = org.drip.analytics.support.Helper.TenorToDate (dtEvent, _astrTenor);
-
-			for (int iPath = 0; iPath < iNumPath; ++iPath) {
-				try {
-					if (null == (aaFFGC[iPath][iTimeVertex] = new
-						org.drip.state.nonlinear.FlatForwardGovvieCurve (iEventDate, _strTreasuryCode,
-							_bsgyGround.currency(), aiDate, aaadblPathForward[iPath][iTimeVertex])))
-						return null;
-				} catch (java.lang.Exception e) {
-					e.printStackTrace();
-
-					return null;
-				}
-			}
-		}
-
-		return aaFFGC;
+	public org.drip.state.govvie.GovvieCurve[][] pathVertex (
+		final java.lang.String[] astrEventTenor)
+	{
+		return curveVertex (pathVertex (_adblForwardYieldGround, astrEventTenor));
 	}
 }

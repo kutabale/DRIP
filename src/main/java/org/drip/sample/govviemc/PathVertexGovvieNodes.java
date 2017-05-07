@@ -1,5 +1,5 @@
 
-package org.drip.sample.discountmc;
+package org.drip.sample.govviemc;
 
 import java.util.List;
 
@@ -63,12 +63,12 @@ import org.drip.state.nonlinear.FlatForwardGovvieCurve;
  */
 
 /**
- * TreasuryForwardYieldPath demonstrates the Simulations of the Treasury Forward Nodes.
+ * PathVertexGovvieNodes demonstrates the Simulations of the Per-Path Forward Vertex Govvie Yield Nodes.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class TreasuryForwardYieldPath {
+public class PathVertexGovvieNodes {
 
 	private static final GovvieCurve GovvieCurve (
 		final JulianDate dtSpot,
@@ -217,14 +217,14 @@ public class TreasuryForwardYieldPath {
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
 			List<double[]> lsVertexRd = aVertexRd[iPath].vertexList();
 
-			UnitRandom[][] aaUR = new UnitRandom[iNumDimension][iNumVertex];
+			UnitRandomEdge[][] aaUR = new UnitRandomEdge[iNumDimension][iNumVertex];
 			JumpDiffusionVertex[][] aaJDV = new JumpDiffusionVertex[iNumDimension][iNumVertex + 1];
 
 			for (int iTimeVertex = 0; iTimeVertex < iNumVertex; ++iTimeVertex) {
 				double[] adblRd = lsVertexRd.get (iTimeVertex);
 
 				for (int iDimension = 0; iDimension < iNumDimension; ++iDimension)
-					aaUR[iDimension][iTimeVertex] = new UnitRandom (
+					aaUR[iDimension][iTimeVertex] = new UnitRandomEdge (
 						adblRd[iDimension],
 						0.
 					);

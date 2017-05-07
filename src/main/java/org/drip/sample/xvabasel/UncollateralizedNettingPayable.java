@@ -114,7 +114,7 @@ public class UncollateralizedNettingPayable {
 				0.,
 				false
 			),
-			UnitRandom.Diffusion (adblRandom),
+			UnitRandomEdge.Diffusion (adblRandom),
 			dblTimeWidth
 		);
 

@@ -97,7 +97,7 @@ public class VolumeTimeFrame extends org.drip.measure.realization.JumpDiffusionE
 	{
 		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, new
 			org.drip.measure.realization.StochasticEdgeDiffusion (dblVolatility * dblBrownian), null, new
-				org.drip.measure.realization.UnitRandom (dblBrownian, 0.));
+				org.drip.measure.realization.UnitRandomEdge (dblBrownian, 0.));
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *

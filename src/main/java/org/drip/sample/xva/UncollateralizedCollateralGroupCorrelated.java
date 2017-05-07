@@ -105,7 +105,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 				0.,
 				false
 			),
-			UnitRandom.Diffusion (adblRandom),
+			UnitRandomEdge.Diffusion (adblRandom),
 			dblTimeWidth
 		);
 
@@ -134,7 +134,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 				0.,
 				false
 			),
-			UnitRandom.Diffusion (adblRandom),
+			UnitRandomEdge.Diffusion (adblRandom),
 			dblTimeWidth
 		);
 

@@ -102,7 +102,7 @@ public class PortfolioGroupSimulation {
 					0.,
 					false
 				),
-				UnitRandom.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
+				UnitRandomEdge.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
 				dblTimeWidth
 			);
 

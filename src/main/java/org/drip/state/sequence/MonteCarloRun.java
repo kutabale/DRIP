@@ -153,25 +153,24 @@ public class MonteCarloRun {
 	 * Generate the R^d Path Vertex Realizations using the Initial R^d and the Evolution Time Width
 	 * 
 	 * @param adblPathInitial The initial Path R^d
-	 * @param dblTimeIncrement The Evolution Time Width
+	 * @param adblTimeIncrement The Array of Evolution Time Width Increments
 	 * 
 	 * @return The R^d Path Vertex Realizations
 	 */
 
 	public double[][][] pathVertex (
 		final double[] adblPathInitial,
-		final double dblTimeIncrement)
+		final double[] adblTimeIncrement)
 	{
-		if (null == adblPathInitial || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
-			return null;
-
-		int iNumDimension = dimension();
-
-		if (iNumDimension != adblPathInitial.length) return null;
+		if (null == adblPathInitial || null == adblTimeIncrement) return null;
 
 		int iNumPath = _cpvd.numPath();
 
+		int iNumDimension = dimension();
+
 		int iNumVertex = _cpvd.numVertex();
+
+		if (iNumDimension != adblPathInitial.length || iNumVertex != adblTimeIncrement.length) return null;
 
 		double[][][] aaadblPathForward = new double[iNumPath][iNumVertex][iNumDimension];
 
@@ -184,8 +183,8 @@ public class MonteCarloRun {
 
 			java.util.List<double[]> lsVertexRd = aVertexRd[iPath].vertexList();
 
-			org.drip.measure.realization.UnitRandom[][] aaUR = new
-				org.drip.measure.realization.UnitRandom[iNumDimension][iNumVertex];
+			org.drip.measure.realization.UnitRandomEdge[][] aaUR = new
+				org.drip.measure.realization.UnitRandomEdge[iNumDimension][iNumVertex];
 			org.drip.measure.realization.JumpDiffusionVertex[][] aaJDV = new
 				org.drip.measure.realization.JumpDiffusionVertex[iNumDimension][iNumVertex + 1];
 
@@ -196,7 +195,7 @@ public class MonteCarloRun {
 
 				for (int iDimension = 0; iDimension < iNumDimension; ++iDimension) {
 					try {
-						aaUR[iDimension][iTimeVertex] = new org.drip.measure.realization.UnitRandom
+						aaUR[iDimension][iTimeVertex] = new org.drip.measure.realization.UnitRandomEdge
 							(adblRd[iDimension], 0.);
 					} catch (java.lang.Exception e) {
 						e.printStackTrace();
@@ -210,7 +209,7 @@ public class MonteCarloRun {
 				try {
 					aaJDV[iDimension] = _aDE[iDimension].vertexSequence (new
 						org.drip.measure.realization.JumpDiffusionVertex (0., adblPathInitial[iDimension],
-							0., false), aaUR[iDimension], dblTimeIncrement);
+							0., false), aaUR[iDimension], adblTimeIncrement);
 				} catch (java.lang.Exception e) {
 					e.printStackTrace();
 
@@ -226,5 +225,65 @@ public class MonteCarloRun {
 		}
 
 		return aaadblPathForward;
+	}
+
+	/**
+	 * Generate the R^d Path Vertex Realizations using the Initial R^d and the Evolution Time Width
+	 * 
+	 * @param adblPathInitial The initial Path R^d
+	 * @param dblTimeIncrement The Evolution Time Width
+	 * 
+	 * @return The R^d Path Vertex Realizations
+	 */
+
+	public double[][][] pathVertex (
+		final double[] adblPathInitial,
+		final double dblTimeIncrement)
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement)) return null;
+
+		int iNumVertex = _cpvd.numVertex();
+
+		double[] adblTimeIncrement = new double[iNumVertex];
+
+		for (int iTimeVertex = 0; iTimeVertex < iNumVertex; ++iTimeVertex)
+			adblTimeIncrement[iTimeVertex] = dblTimeIncrement;
+
+		return pathVertex (adblPathInitial, adblTimeIncrement);
+	}
+
+	/**
+	 * Generate the R^d Path Vertex Realizations using the Initial R^d and the Array of Event Tenors
+	 * 
+	 * @param adblPathInitial The initial Path R^d
+	 * @param astrEventTenor The Array of Event Tenors
+	 * 
+	 * @return The R^d Path Vertex Realizations
+	 */
+
+	public double[][][] pathVertex (
+		final double[] adblPathInitial,
+		final java.lang.String[] astrEventTenor)
+	{
+		if (null == astrEventTenor) return null;
+
+		int iNumVertex = _cpvd.numVertex();
+
+		if (iNumVertex != astrEventTenor.length) return null;
+
+		double[] adblTimeIncrement = new double[iNumVertex];
+
+		for (int iTimeVertex = 0; iTimeVertex < iNumVertex; ++iTimeVertex) {
+			try {
+				adblTimeIncrement[iTimeVertex] = org.drip.analytics.support.Helper.TenorToYearFraction
+					(astrEventTenor[iTimeVertex]);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return pathVertex (adblPathInitial, adblTimeIncrement);
 	}
 }
