@@ -63,12 +63,12 @@ import org.drip.state.nonlinear.FlatForwardGovvieCurve;
  */
 
 /**
- * PathVertexGovvieNodes demonstrates the Simulations of the Per-Path Forward Vertex Govvie Yield Nodes.
+ * PathNodeForwardRealization demonstrates the Simulations of the Per-Path Forward Vertex Govvie Yield Nodes.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class PathVertexGovvieNodes {
+public class PathNodeForwardRealization {
 
 	private static final GovvieCurve GovvieCurve (
 		final JulianDate dtSpot,

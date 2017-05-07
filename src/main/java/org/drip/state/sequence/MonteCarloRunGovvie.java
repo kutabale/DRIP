@@ -324,4 +324,20 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 	{
 		return curveVertex (pathVertex (_adblForwardYieldGround, astrEventTenor));
 	}
+
+	/**
+	 * Generate the R^d Path/Vertex Govvie Curves using the Initial R^d and the Array of Event Tenors
+	 * 
+	 * @param iSpotDate The Spot Date
+	 * @param aiEventDate The Array of Event Dates
+	 * 
+	 * @return The R^d Path//Vertex Govvie Curves
+	 */
+
+	public org.drip.state.govvie.GovvieCurve[][] pathVertex (
+		final int iSpotDate,
+		final int[] aiEventDate)
+	{
+		return curveVertex (pathVertex (_adblForwardYieldGround, iSpotDate, aiEventDate));
+	}
 }

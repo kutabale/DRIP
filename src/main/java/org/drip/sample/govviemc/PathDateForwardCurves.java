@@ -2,11 +2,14 @@
 package org.drip.sample.govviemc;
 
 import org.drip.analytics.date.*;
-import org.drip.measure.discrete.SequenceGenerator;
+import org.drip.measure.crng.RandomNumberGenerator;
+import org.drip.measure.discrete.CorrelatedPathVertexDimension;
+import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
+import org.drip.measure.process.DiffusionEvolver;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.govvie.GovvieCurve;
+import org.drip.state.sequence.MonteCarloRunGovvie;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -54,41 +57,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * TreasuryStatePath demonstrates the Simulations of the Treasury State Paths.
+ * PathDateForwardCurves demonstrates the Simulations of the Per-Path Forward Vertex Date Govvie Yield
+ *  Curves.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class TreasuryStatePath {
-
-	private static final GovvieCurve GovvieCurve (
-		final JulianDate dtSpot,
-		final String strCode,
-		final String[] astrTenor,
-		final double[] adblCoupon,
-		final double[] adblYield)
-		throws Exception
-	{
-		JulianDate[] adtMaturity = new JulianDate[astrTenor.length];
-		JulianDate[] adtEffective = new JulianDate[astrTenor.length];
-
-		for (int i = 0; i < astrTenor.length; ++i) {
-			adtEffective[i] = dtSpot;
-
-			adtMaturity[i] = dtSpot.addTenor (astrTenor[i]);
-		}
-
-		return LatentMarketStateBuilder.GovvieCurve (
-			strCode,
-			dtSpot,
-			adtEffective,
-			adtMaturity,
-			adblCoupon,
-			adblYield,
-			"Yield",
-			LatentMarketStateBuilder.SHAPE_PRESERVING
-		);
-	}
+public class PathDateForwardCurves {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -138,43 +113,79 @@ public class TreasuryStatePath {
 			0.0280, // 20Y
 			0.0308  // 30Y
 		};
+		int[] aiEventDate = new int[] {
+			DateUtil.CreateFromYMD (2020, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2022, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2024, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2026, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2028, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2030, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2032, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2034, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2036, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2038, 12,  1).julian(),
+		};
 
-		int iNumTreasury = adblTreasuryYield.length;
-		GovvieCurve[] aGC = new GovvieCurve[iNumPath + 1];
+		int iNumVertex = aiEventDate.length;
+		int iNumDimension = astrTenor.length;
+		double[][] aadblCorrelation = new double[iNumDimension][iNumDimension];
 
-		aGC[0] = GovvieCurve (
+		for (int i = 0; i < iNumDimension; ++i) {
+			for (int j = 0; j < iNumDimension; ++j)
+				aadblCorrelation[i][j] = i == j ? 1. : 0.;
+		}
+
+		MonteCarloRunGovvie mcrg = MonteCarloRunGovvie.Standard (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,
 			adblTreasuryCoupon,
-			adblTreasuryYield
+			adblTreasuryYield,
+			new CorrelatedPathVertexDimension (
+				new RandomNumberGenerator(),
+				aadblCorrelation,
+				iNumVertex,
+				iNumPath,
+				false,
+				null
+			),
+			new DiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					0.,
+					dblVolatility
+				)
+			)
 		);
 
-		double[] adblWanderer = SequenceGenerator.Gaussian (iNumPath);
+		GovvieCurve[][] aaGC = mcrg.pathVertex (
+			dtSpot.julian(),
+			aiEventDate
+		);
+
+		System.out.println();
+
+		System.out.println ("\t||------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		String strDump = "\t|| ## |";
+
+		for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
+			strDump = strDump + " " + new JulianDate (aiEventDate[iVertex]) + " |";
+
+		System.out.println (strDump + "|");
+
+		System.out.println ("\t||------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
-			double[] adblPathTreasuryYield = new double[iNumTreasury];
-			double dblWanderFactor = (1. + dblVolatility * adblWanderer[iPath]);
+			strDump = "\t||" + FormatUtil.FormatDouble (iPath + 1, 2, 0, 1.) + " |";
 
-			for (int iTreasury = 0; iTreasury < iNumTreasury; ++iTreasury)
-				adblPathTreasuryYield[iTreasury] = adblTreasuryYield[iTreasury] * dblWanderFactor;
-
-			aGC[iPath + 1] = GovvieCurve (
-				dtSpot,
-				strTreasuryCode,
-				astrTenor,
-				adblTreasuryCoupon,
-				adblPathTreasuryYield
-			);
-		}
-
-		for (int iPath = 0; iPath <= iNumPath; ++iPath) {
-			String strDump = "\t[" + FormatUtil.FormatDouble (iPath, 3, 0, 1.) + "] => ";
-
-			for (int iTreasury = 0; iTreasury < iNumTreasury; ++iTreasury)
-				strDump = strDump + FormatUtil.FormatDouble (aGC[iPath].yield (astrTenor[iTreasury]), 1, 3, 100.) + "% |";
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
+				strDump = strDump + "   " + FormatUtil.FormatDouble (aaGC[iPath][iVertex].yield ("5Y"), 1, 3, 100.) + "%   |";
 
 			System.out.println (strDump + "|");
 		}
+
+		System.out.println ("\t||------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println();
 	}
 }

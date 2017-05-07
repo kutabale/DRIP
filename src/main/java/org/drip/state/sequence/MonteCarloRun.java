@@ -152,7 +152,7 @@ public class MonteCarloRun {
 	/**
 	 * Generate the R^d Path Vertex Realizations using the Initial R^d and the Evolution Time Width
 	 * 
-	 * @param adblPathInitial The initial Path R^d
+	 * @param adblPathInitial The Initial Path R^d
 	 * @param adblTimeIncrement The Array of Evolution Time Width Increments
 	 * 
 	 * @return The R^d Path Vertex Realizations
@@ -230,7 +230,7 @@ public class MonteCarloRun {
 	/**
 	 * Generate the R^d Path Vertex Realizations using the Initial R^d and the Evolution Time Width
 	 * 
-	 * @param adblPathInitial The initial Path R^d
+	 * @param adblPathInitial The Initial Path R^d
 	 * @param dblTimeIncrement The Evolution Time Width
 	 * 
 	 * @return The R^d Path Vertex Realizations
@@ -255,7 +255,7 @@ public class MonteCarloRun {
 	/**
 	 * Generate the R^d Path Vertex Realizations using the Initial R^d and the Array of Event Tenors
 	 * 
-	 * @param adblPathInitial The initial Path R^d
+	 * @param adblPathInitial The Initial Path R^d
 	 * @param astrEventTenor The Array of Event Tenors
 	 * 
 	 * @return The R^d Path Vertex Realizations
@@ -277,6 +277,46 @@ public class MonteCarloRun {
 			try {
 				adblTimeIncrement[iTimeVertex] = org.drip.analytics.support.Helper.TenorToYearFraction
 					(astrEventTenor[iTimeVertex]);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return pathVertex (adblPathInitial, adblTimeIncrement);
+	}
+
+	/**
+	 * Generate the R^d Path Vertex Realizations using the Initial R^d and the Array of Event Tenors
+	 * 
+	 * @param adblPathInitial The Initial Path R^d
+	 * @param iSpotDate The Spot Date
+	 * @param aiEventDate The Array of Event Dates
+	 * 
+	 * @return The R^d Path Vertex Realizations
+	 */
+
+	public double[][][] pathVertex (
+		final double[] adblPathInitial,
+		final int iSpotDate,
+		final int[] aiEventDate)
+	{
+		if (null == aiEventDate) return null;
+
+		int iNumVertex = _cpvd.numVertex();
+
+		if (iNumVertex != aiEventDate.length) return null;
+
+		double[] adblTimeIncrement = new double[iNumVertex];
+
+		org.drip.analytics.daycount.ActActDCParams aap =
+			org.drip.analytics.daycount.ActActDCParams.FromFrequency (1);
+
+		for (int iTimeVertex = 0; iTimeVertex < iNumVertex; ++iTimeVertex) {
+			try {
+				adblTimeIncrement[iTimeVertex] = org.drip.analytics.daycount.Convention.YearFraction
+					(iSpotDate, aiEventDate[iTimeVertex], "Act/Act ISDA", false, aap, "");
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 

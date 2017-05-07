@@ -57,12 +57,12 @@ import org.drip.state.sequence.MonteCarloRunGovvie;
  */
 
 /**
- * PathVertexGovvieCurves demonstrates the Simulations of the Per-Path Forward Vertex Govvie Yield Curves.
+ * PathNodeForwardCurves demonstrates the Simulations of the Per-Path Forward Vertex Govvie Yield Curves.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class PathVertexGovvieCurves {
+public class PathNodeForwardCurves {
 
 	public static final void main (
 		final String[] astrArgs)

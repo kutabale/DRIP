@@ -7,12 +7,15 @@ import org.drip.measure.discrete.CorrelatedPathVertexDimension;
 import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
 import org.drip.measure.process.DiffusionEvolver;
 import org.drip.param.creator.MarketParamsBuilder;
+import org.drip.param.market.CurveSurfaceQuoteContainer;
+import org.drip.param.valuation.ValuationParams;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
 import org.drip.product.params.EmbeddedOptionSchedule;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
+import org.drip.state.govvie.GovvieCurve;
 import org.drip.state.sequence.MonteCarloRunGovvie;
 
 /*
@@ -61,12 +64,13 @@ import org.drip.state.sequence.MonteCarloRunGovvie;
  */
 
 /**
- * CallableBond demonstrates the Simulations of the Per-Path Bond Optimal Exercise Metrics.
+ * CallableBondExerciseIndicator demonstrates the Simulations of the Per-Path Callable Bond OAS Based
+ *  Exercise Indicator.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CallableBond {
+public class CallableBondExerciseIndicator {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -316,6 +320,10 @@ public class CallableBond {
 			1.,
 		};
 
+		int iNumVertex = aiExerciseDate.length;
+		double[][] aadblForwardPrice = new double[iNumPath][iNumVertex];
+		ValuationParams[] aValParamsEvent = new ValuationParams[iNumVertex];
+
 		BondComponent bond = Callable (
 			new EmbeddedOptionSchedule (
 				aiExerciseDate,
@@ -332,15 +340,22 @@ public class CallableBond {
 		MonteCarloRunGovvie mcrg = ScenarioGovvieCurves (
 			dtSpot,
 			iNumPath,
-			aiExerciseDate.length
+			iNumVertex
 		);
 
-		MarketParamsBuilder.Create (
-			FundingCurve (
-				dtSpot,
-				"USD",
-				0.
-			),
+		GovvieCurve[][] aaGCPathEvent = mcrg.pathVertex (
+			dtSpot.julian(),
+			aiExerciseDate
+		);
+
+		MergedDiscountForwardCurve mdfc = FundingCurve (
+			dtSpot,
+			"USD",
+			0.
+		);
+
+		CurveSurfaceQuoteContainer csqcBase = MarketParamsBuilder.Create (
+			mdfc,
 			mcrg.groundState(),
 			null,
 			null,
@@ -349,8 +364,58 @@ public class CallableBond {
 			null
 		);
 
+		ValuationParams valParamsSpot = ValuationParams.Spot (dtSpot.julian());
+
+		double dblOASSpot = bond.oasFromPrice (
+			valParamsSpot,
+			csqcBase,
+			null,
+			dblCleanPrice
+		);
+
+		for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
+			aValParamsEvent[iVertex] = ValuationParams.Spot (aiExerciseDate[iVertex]);
+
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
-			
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+				CurveSurfaceQuoteContainer csqcEvent = MarketParamsBuilder.Create (
+					mdfc,
+					aaGCPathEvent[iPath][iVertex],
+					null,
+					null,
+					null,
+					null,
+					null
+				);
+
+				aadblForwardPrice[iPath][iVertex] = bond.priceFromOAS (
+					aValParamsEvent[iVertex],
+					csqcEvent,
+					null,
+					dblOASSpot
+				);
+			}
 		}
+
+		System.out.println();
+
+		System.out.println ("\t||-------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||                          FORWARD EXERCISE INDICATOR                           ||");
+
+		System.out.println ("\t||-------------------------------------------------------------------------------||");
+
+		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			String strDump = "\t||";
+
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
+				strDump = strDump + (aadblForwardPrice[iPath][iVertex] > adblExercisePrice[iVertex] ? " Y" : " N") + " |";
+
+			System.out.println (strDump + "|");
+		}
+
+		System.out.println ("\t||-------------------------------------------------------------------------------||");
+
+		System.out.println();
 	}
 }
