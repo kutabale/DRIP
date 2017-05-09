@@ -47,25 +47,26 @@ package org.drip.state.sequence;
  */
 
 /**
- * MonteCarloRun exposes the Functionality to generate a Sequence of Vertex Latent State Realizations.
+ * PathVertexForwardRd exposes the Functionality to generate a Sequence of the Path Vertex Forward Latent
+ *  State R^d Realizations.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MonteCarloRun {
+public class PathVertexForwardRd {
 	private org.drip.measure.process.DiffusionEvolver[] _aDE = null;
 	private org.drip.measure.discrete.CorrelatedPathVertexDimension _cpvd = null;
 
 	/**
-	 * Generate a Standard Instance of MonteCarloRun
+	 * Generate a Standard Instance of PathVertexForwardRd
 	 * 
 	 * @param cpvd Latent State Evolver CPVD Instance
 	 * @param de The Latent State Diffusion Evolver
 	 * 
-	 * @return Standard Instance of MonteCarloRun
+	 * @return Standard Instance of PathVertexForwardRd
 	 */
 
-	public static final MonteCarloRun Standard (
+	public static final PathVertexForwardRd Standard (
 		final org.drip.measure.discrete.CorrelatedPathVertexDimension cpvd,
 		final org.drip.measure.process.DiffusionEvolver de)
 	{
@@ -80,7 +81,7 @@ public class MonteCarloRun {
 			aDE[iDimension] = de;
 
 		try {
-			return new MonteCarloRun (cpvd, aDE);
+			return new PathVertexForwardRd (cpvd, aDE);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -89,7 +90,7 @@ public class MonteCarloRun {
 	}
 
 	/**
-	 * MonteCarloRun Constructor
+	 * PathVertexForwardRd Constructor
 	 * 
 	 * @param cpvd Latent State Evolver CPVD Instance
 	 * @param aDE Array of the Latent State Diffusion Evolvers
@@ -97,22 +98,22 @@ public class MonteCarloRun {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MonteCarloRun (
+	public PathVertexForwardRd (
 		final org.drip.measure.discrete.CorrelatedPathVertexDimension cpvd,
 		final org.drip.measure.process.DiffusionEvolver[] aDE)
 		throws java.lang.Exception
 	{
 		if (null == (_cpvd = cpvd) || null == (_aDE = aDE))
-			throw new java.lang.Exception ("MonteCarloRun Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathVertexForwardRd Constructor => Invalid Inputs");
 
 		int iNumDimension = _aDE.length;
 
 		if (iNumDimension != _cpvd.numDimension())
-			throw new java.lang.Exception ("MonteCarloRun Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathVertexForwardRd Constructor => Invalid Inputs");
 
 		for (int iDimension = 0; iDimension < iNumDimension; ++iDimension) {
 			if (null == _aDE[iDimension])
-				throw new java.lang.Exception ("MonteCarloRun Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("PathVertexForwardRd Constructor => Invalid Inputs");
 		}
 	}
 

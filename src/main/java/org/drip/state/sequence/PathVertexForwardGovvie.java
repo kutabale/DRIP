@@ -47,12 +47,12 @@ package org.drip.state.sequence;
  */
 
 /**
- * MonteCarloRunGovvie exposes the Functionality to generate a Sequence of Vertex Govvie Curves.
+ * PathVertexForwardGovvie exposes the Functionality to generate a Sequence of Path/Vertex Govvie Curves.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
+public class PathVertexForwardGovvie extends org.drip.state.sequence.PathVertexForwardRd {
 	private double[] _adblTreasuryYield = null;
 	private double[] _adblTreasuryCoupon = null;
 	private java.lang.String[] _astrTenor = null;
@@ -127,7 +127,7 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 	}
 
 	/**
-	 * Generate a Standard Instance of MonteCarloRunGovvie
+	 * Generate a Standard Instance of PathVertexForwardGovvie
 	 * 
 	 * @param dtSpot The Spot Date
 	 * @param strTreasuryCode The Treasury Code
@@ -137,10 +137,10 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 	 * @param cpvd Latent State Evolver CPVD Instance
 	 * @param de The Latent State Diffusion Evolver
 	 * 
-	 * @return Standard Instance of MonteCarloRun
+	 * @return Standard Instance of PathVertexForwardGovvie
 	 */
 
-	public static final MonteCarloRunGovvie Standard (
+	public static final PathVertexForwardGovvie Standard (
 		final org.drip.analytics.date.JulianDate dtSpot,
 		final java.lang.String strTreasuryCode,
 		final java.lang.String[] astrTenor,
@@ -160,7 +160,7 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 			aDE[iDimension] = de;
 
 		try {
-			return new MonteCarloRunGovvie (dtSpot, strTreasuryCode, astrTenor, adblTreasuryCoupon,
+			return new PathVertexForwardGovvie (dtSpot, strTreasuryCode, astrTenor, adblTreasuryCoupon,
 				adblTreasuryYield, cpvd, aDE);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -170,7 +170,7 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 	}
 
 	/**
-	 * MonteCarloRunGovvie Constructor
+	 * PathVertexForwardGovvie Constructor
 	 * 
 	 * @param dtSpot The Spot Date
 	 * @param strTreasuryCode The Treasury Code
@@ -183,7 +183,7 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MonteCarloRunGovvie (
+	public PathVertexForwardGovvie (
 		final org.drip.analytics.date.JulianDate dtSpot,
 		final java.lang.String strTreasuryCode,
 		final java.lang.String[] astrTenor,
@@ -198,12 +198,12 @@ public class MonteCarloRunGovvie extends org.drip.state.sequence.MonteCarloRun {
 		if (null == (_bsgyGround = GovvieCurve (_dtSpot = dtSpot, _strTreasuryCode = strTreasuryCode,
 			_astrTenor = astrTenor, _adblTreasuryCoupon = adblTreasuryCoupon, _adblTreasuryYield =
 				adblTreasuryYield)))
-			throw new java.lang.Exception ("MonteCarloRunGovvie Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathVertexForwardGovvie Constructor => Invalid Inputs");
 
 		org.drip.state.nonlinear.FlatForwardDiscountCurve ffdcGround = _bsgyGround.flatForward (_astrTenor);
 
 		if (null == ffdcGround || null == (_adblForwardYieldGround = ffdcGround.nodeValues()))
-			throw new java.lang.Exception ("MonteCarloRunGovvie Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathVertexForwardGovvie Constructor => Invalid Inputs");
 	}
 
 	/**

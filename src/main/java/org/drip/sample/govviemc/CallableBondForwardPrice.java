@@ -17,7 +17,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
 import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.MonteCarloRunGovvie;
+import org.drip.state.sequence.PathVertexForwardGovvie;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -150,7 +150,7 @@ public class CallableBondForwardPrice {
 		);
 	}
 
-	private static final MonteCarloRunGovvie ScenarioGovvieCurves (
+	private static final PathVertexForwardGovvie ScenarioGovvieCurves (
 		final JulianDate dtSpot,
 		final int iNumPath,
 		final int iNumVertex)
@@ -200,7 +200,7 @@ public class CallableBondForwardPrice {
 				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		return MonteCarloRunGovvie.Standard (
+		return PathVertexForwardGovvie.Standard (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,
@@ -338,7 +338,7 @@ public class CallableBondForwardPrice {
 			)
 		);
 
-		MonteCarloRunGovvie mcrg = ScenarioGovvieCurves (
+		PathVertexForwardGovvie mcrg = ScenarioGovvieCurves (
 			dtSpot,
 			iNumPath,
 			iNumVertex

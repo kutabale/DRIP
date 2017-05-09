@@ -12,6 +12,7 @@ import org.drip.param.valuation.ValuationParams;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
 import org.drip.product.params.EmbeddedOptionSchedule;
+import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
@@ -64,13 +65,13 @@ import org.drip.state.sequence.PathVertexForwardGovvie;
  */
 
 /**
- * CallableBondExerciseIndicator demonstrates the Simulations of the Per-Path Callable Bond Forward Price
- *  Based Exercise Indicator.
+ * CallableBondExerciseValue demonstrates the Simulations of the Per-Path Callable Bond Forward Price Based
+ *  Exercise Value.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CallableBondExerciseIndicator {
+public class CallableBondExerciseOptimal {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -321,6 +322,7 @@ public class CallableBondExerciseIndicator {
 		};
 
 		int iNumVertex = aiExerciseDate.length;
+		double[][] aadblExercisePV = new double[iNumPath][iNumVertex];
 		double[][] aadblForwardPrice = new double[iNumPath][iNumVertex];
 		ValuationParams[] aValParamsEvent = new ValuationParams[iNumVertex];
 
@@ -399,22 +401,26 @@ public class CallableBondExerciseIndicator {
 
 		System.out.println();
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                          FORWARD EXERCISE INDICATOR                           ||");
+		System.out.println ("\t||                                              FORWARD EXERCISE INDICATOR                                               ||");
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------||");
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
 			String strDump = "\t||";
 
-			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
-				strDump = strDump + (aadblForwardPrice[iPath][iVertex] > adblExercisePrice[iVertex] ? " Y" : " N") + " |";
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+				aadblExercisePV[iPath][iVertex] = (aadblForwardPrice[iPath][iVertex] - adblExercisePrice[iVertex])
+					* mdfc.df (aiExerciseDate[iVertex]);
+
+				strDump = strDump + " " + FormatUtil.FormatDouble (aadblExercisePV[iPath][iVertex], 2, 0, 100.) + " |";
+			}
 
 			System.out.println (strDump + "|");
 		}
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

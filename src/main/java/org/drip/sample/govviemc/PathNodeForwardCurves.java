@@ -9,7 +9,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.MonteCarloRunGovvie;
+import org.drip.state.sequence.PathVertexForwardGovvie;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -123,7 +123,7 @@ public class PathNodeForwardCurves {
 				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		MonteCarloRunGovvie mcrg = MonteCarloRunGovvie.Standard (
+		PathVertexForwardGovvie mcrg = PathVertexForwardGovvie.Standard (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,

@@ -17,7 +17,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
 import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.MonteCarloRunGovvie;
+import org.drip.state.sequence.PathVertexForwardGovvie;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -150,7 +150,7 @@ public class CallableBondExerciseMetrics {
 		);
 	}
 
-	private static final MonteCarloRunGovvie ScenarioGovvieCurves (
+	private static final PathVertexForwardGovvie ScenarioGovvieCurves (
 		final JulianDate dtSpot,
 		final int iNumPath,
 		final int iNumVertex)
@@ -200,7 +200,7 @@ public class CallableBondExerciseMetrics {
 				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		return MonteCarloRunGovvie.Standard (
+		return PathVertexForwardGovvie.Standard (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,
@@ -322,7 +322,8 @@ public class CallableBondExerciseMetrics {
 		};
 
 		int iNumVertex = aiExerciseDate.length;
-		int[] aiOptimalExerciseIndex = new int[iNumPath];
+		double[] adblExercisePV = new double[iNumPath];
+		int[] aiOptimalExerciseVertexIndex = new int[iNumPath];
 		double[] adblOptimalExerciseOAS = new double[iNumPath];
 		double[] adblOptimalExercisePrice = new double[iNumPath];
 		JulianDate[] adtOptimalExerciseDate = new JulianDate[iNumPath];
@@ -342,7 +343,7 @@ public class CallableBondExerciseMetrics {
 			)
 		);
 
-		MonteCarloRunGovvie mcrg = ScenarioGovvieCurves (
+		PathVertexForwardGovvie mcrg = ScenarioGovvieCurves (
 			dtSpot,
 			iNumPath,
 			iNumVertex
@@ -359,7 +360,7 @@ public class CallableBondExerciseMetrics {
 			0.
 		);
 
-		CurveSurfaceQuoteContainer csqcBase = MarketParamsBuilder.Create (
+		CurveSurfaceQuoteContainer csqcSpot = MarketParamsBuilder.Create (
 			mdfc,
 			mcrg.groundState(),
 			null,
@@ -373,7 +374,7 @@ public class CallableBondExerciseMetrics {
 
 		double dblOASSpot = bond.oasFromPrice (
 			valParamsSpot,
-			csqcBase,
+			csqcSpot,
 			null,
 			dblCleanPrice
 		);
@@ -403,18 +404,22 @@ public class CallableBondExerciseMetrics {
 		}
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			adblExercisePV[iPath] = 0.;
+			adblOptimalExercisePrice[iPath] = 1.;
+			aiOptimalExerciseVertexIndex[0] = iNumVertex - 1;
+
 			adtOptimalExerciseDate[iPath] = bond.maturityDate();
 
-			aiOptimalExerciseIndex[iPath] = iNumVertex;
-			adblOptimalExercisePrice[iPath] = 1.;
-
 			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
-				if (aadblForwardPrice[iPath][iVertex] > adblExercisePrice[iVertex]) {
+				double dblExercisePV = (aadblForwardPrice[iPath][iVertex] - adblExercisePrice[iVertex])
+					* mdfc.df (aiExerciseDate[iVertex]);
+
+				if (dblExercisePV > adblExercisePV[iPath]) {
 					adtOptimalExerciseDate[iPath] = new JulianDate (aiExerciseDate[iVertex]);
 
 					adblOptimalExercisePrice[iPath] = adblExercisePrice[iVertex];
-					aiOptimalExerciseIndex[iPath] = iVertex;
-					break;
+					aiOptimalExerciseVertexIndex[iPath] = iVertex;
+					adblExercisePV[iPath] = dblExercisePV;
 				}
 			}
 		}
@@ -428,30 +433,35 @@ public class CallableBondExerciseMetrics {
 		System.out.println ("\t||-------------------------------------------------------------------------------||");
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
-			CurveSurfaceQuoteContainer csqcOptimal = MarketParamsBuilder.Create (
-				mdfc,
-				aaGCPathEvent[iPath][aiOptimalExerciseIndex[iPath]],
-				null,
-				null,
-				null,
-				null,
-				null
-			);
+			int iOptimalExerciseDate = adtOptimalExerciseDate[iPath].julian();
 
 			adblOptimalExerciseOAS[iPath] = bond.oasFromPrice (
-				ValuationParams.Spot (adtOptimalExerciseDate[iPath].julian()),
-				csqcOptimal,
+				valParamsSpot,
+				csqcSpot,
 				null,
-				adblOptimalExercisePrice[iPath]
+				iOptimalExerciseDate,
+				adblOptimalExercisePrice[iPath],
+				dblCleanPrice
+			);
+
+			double dblOptimalExerciseDuration = bond.modifiedDurationFromPrice (
+				valParamsSpot,
+				csqcSpot,
+				null,
+				iOptimalExerciseDate,
+				adblOptimalExercisePrice[iPath],
+				dblCleanPrice
 			);
 
 			System.out.println (
 				"\t|| " +
 				FormatUtil.FormatDouble (iPath, 2, 0, 1.) + " => " +
-				FormatUtil.FormatDouble (aiOptimalExerciseIndex[iPath], 2, 0, 1.) + " | " +
+				FormatUtil.FormatDouble (aiOptimalExerciseVertexIndex[iPath], 2, 0, 1.) + " | " +
 				adtOptimalExerciseDate[iPath] + " | " +
 				FormatUtil.FormatDouble (adblOptimalExercisePrice[iPath], 3, 2, 100.) + " | " +
-				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath], 3, 0, 10000.) + " ||"
+				FormatUtil.FormatDouble (adblExercisePV[iPath], 2, 1, 100.) + " | " +
+				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath], 3, 0, 10000.) + " | " +
+				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath] - dblOASSpot, 3, 0, 10000.) + " ||"
 			);
 		}
 
