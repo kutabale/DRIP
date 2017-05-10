@@ -54,12 +54,12 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * PathNodeForwardState demonstrates the Simulations of the Forward Govvie State Paths.
+ * PathVertexForwardState demonstrates the Simulations of the Forward Govvie State at Paths and Vertexes.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class PathNodeForwardState {
+public class PathVertexForwardState {
 
 	private static final GovvieCurve GovvieCurve (
 		final JulianDate dtSpot,

@@ -12,11 +12,12 @@ import org.drip.param.valuation.ValuationParams;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
 import org.drip.product.params.EmbeddedOptionSchedule;
+import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
 import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.PathVertexGovvie;
+import org.drip.state.sequence.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -64,13 +65,13 @@ import org.drip.state.sequence.PathVertexGovvie;
  */
 
 /**
- * CallableBondExerciseIndicator demonstrates the Simulations of the Per-Path Callable Bond Forward Price
- *  Based Exercise Indicator.
+ * PathVertexExerciseOptimal demonstrates the Simulations of the Per-Path Callable Bond Forward Price Based
+ *  Exercise Value.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CallableBondExerciseIndicator {
+public class PathVertexExerciseOptimal {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -199,12 +200,16 @@ public class CallableBondExerciseIndicator {
 				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		return PathVertexGovvie.Standard (
+		GovvieBuilderSettings gbs = new GovvieBuilderSettings (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,
 			adblTreasuryCoupon,
-			adblTreasuryYield,
+			adblTreasuryYield
+		);
+
+		return PathVertexGovvie.Standard (
+			gbs,
 			new CorrelatedPathVertexDimension (
 				new RandomNumberGenerator(),
 				aadblCorrelation,
@@ -321,6 +326,7 @@ public class CallableBondExerciseIndicator {
 		};
 
 		int iNumVertex = aiExerciseDate.length;
+		double[][] aadblExercisePV = new double[iNumPath][iNumVertex];
 		double[][] aadblForwardPrice = new double[iNumPath][iNumVertex];
 		ValuationParams[] aValParamsEvent = new ValuationParams[iNumVertex];
 
@@ -356,7 +362,7 @@ public class CallableBondExerciseIndicator {
 
 		CurveSurfaceQuoteContainer csqcBase = MarketParamsBuilder.Create (
 			mdfc,
-			mcrg.groundState(),
+			mcrg.govvieBuilderSettings().groundState(),
 			null,
 			null,
 			null,
@@ -399,22 +405,26 @@ public class CallableBondExerciseIndicator {
 
 		System.out.println();
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                          FORWARD EXERCISE INDICATOR                           ||");
+		System.out.println ("\t||                                              FORWARD EXERCISE INDICATOR                                               ||");
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------||");
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
 			String strDump = "\t||";
 
-			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
-				strDump = strDump + (aadblForwardPrice[iPath][iVertex] > adblExercisePrice[iVertex] ? " Y" : " N") + " |";
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+				aadblExercisePV[iPath][iVertex] = (aadblForwardPrice[iPath][iVertex] - adblExercisePrice[iVertex])
+					* mdfc.df (aiExerciseDate[iVertex]);
+
+				strDump = strDump + " " + FormatUtil.FormatDouble (aadblExercisePV[iPath][iVertex], 2, 0, 100.) + " |";
+			}
 
 			System.out.println (strDump + "|");
 		}
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

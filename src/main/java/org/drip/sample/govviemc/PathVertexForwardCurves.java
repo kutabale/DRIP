@@ -57,13 +57,12 @@ import org.drip.state.sequence.*;
  */
 
 /**
- * PathDateForwardCurves demonstrates the Simulations of the Per-Path Forward Vertex Date Govvie Yield
- *  Curves.
+ * PathVertexForwardCurves demonstrates the Simulations of the Per-Path Forward Vertex Govvie Yield Curves.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class PathDateForwardCurves {
+public class PathVertexForwardCurves {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -78,6 +77,8 @@ public class PathDateForwardCurves {
 		);
 
 		int iNumPath = 50;
+		int iNumVertex = 10;
+		double dblTimeWidth = 1.0;
 		double dblVolatility = 0.10;
 		String strTreasuryCode = "UST";
 
@@ -113,20 +114,7 @@ public class PathDateForwardCurves {
 			0.0280, // 20Y
 			0.0308  // 30Y
 		};
-		int[] aiEventDate = new int[] {
-			DateUtil.CreateFromYMD (2020, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2022, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2024, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2026, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2028, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2030, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2032, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2034, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2036, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2038, 12,  1).julian(),
-		};
 
-		int iNumVertex = aiEventDate.length;
 		int iNumDimension = astrTenor.length;
 		double[][] aadblCorrelation = new double[iNumDimension][iNumDimension];
 
@@ -159,10 +147,7 @@ public class PathDateForwardCurves {
 			)
 		);
 
-		GovvieCurve[][] aaGC = mcrg.pathVertex (
-			dtSpot.julian(),
-			aiEventDate
-		);
+		GovvieCurve[][] aaGC = mcrg.pathVertex (dblTimeWidth);
 
 		System.out.println();
 
@@ -171,7 +156,7 @@ public class PathDateForwardCurves {
 		String strDump = "\t|| ## |";
 
 		for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
-			strDump = strDump + " " + new JulianDate (aiEventDate[iVertex]) + " |";
+			strDump = strDump + " " + dtSpot.addYears (iVertex) + " |";
 
 		System.out.println (strDump + "|");
 

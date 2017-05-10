@@ -1,15 +1,9 @@
 
 package org.drip.sample.govviemc;
 
-import org.drip.analytics.date.*;
-import org.drip.measure.crng.RandomNumberGenerator;
-import org.drip.measure.discrete.CorrelatedPathVertexDimension;
-import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
-import org.drip.measure.process.DiffusionEvolver;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.PathVertexGovvie;
+import org.drip.state.sequence.PathRd;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -57,12 +51,12 @@ import org.drip.state.sequence.PathVertexGovvie;
  */
 
 /**
- * PathNodeForwardCurves demonstrates the Simulations of the Per-Path Forward Vertex Govvie Yield Curves.
+ * PathForwardRealization demonstrates the Simulations of the Per-Path Forward Govvie Yield Nodes.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class PathNodeForwardCurves {
+public class PathForwardRealization {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -70,106 +64,49 @@ public class PathNodeForwardCurves {
 	{
 		EnvManager.InitEnv ("");
 
-		JulianDate dtSpot = DateUtil.CreateFromYMD (
-			2017,
-			DateUtil.MARCH,
-			24
-		);
+		double[] adblMean = new double[] {
+			0.011,
+			0.015,
+			0.017,
+			0.020,
+			0.023,
+			0.027,
+			0.040
+		};
 
 		int iNumPath = 50;
-		int iNumVertex = 10;
-		double dblTimeWidth = 1.0;
-		double dblVolatility = 0.10;
-		String strTreasuryCode = "UST";
+		double dblLogNormalVolatility = 0.10;
 
-		String[] astrTenor = new String[] {
-			"01Y",
-			"02Y",
-			"03Y",
-			"05Y",
-			"07Y",
-			"10Y",
-			"20Y",
-			"30Y"
-		};
-
-		double[] adblTreasuryCoupon = new double[] {
-			0.0100,
-			0.0100,
-			0.0125,
-			0.0150,
-			0.0200,
-			0.0225,
-			0.0250,
-			0.0300
-		};
-
-		double[] adblTreasuryYield = new double[] {
-			0.0083,	//  1Y
-			0.0122, //  2Y
-			0.0149, //  3Y
-			0.0193, //  5Y
-			0.0227, //  7Y
-			0.0248, // 10Y
-			0.0280, // 20Y
-			0.0308  // 30Y
-		};
-
-		int iNumDimension = astrTenor.length;
-		double[][] aadblCorrelation = new double[iNumDimension][iNumDimension];
-
-		for (int i = 0; i < iNumDimension; ++i) {
-			for (int j = 0; j < iNumDimension; ++j)
-				aadblCorrelation[i][j] = i == j ? 1. : 0.;
-		}
-
-		PathVertexGovvie mcrg = PathVertexGovvie.Standard (
-			dtSpot,
-			strTreasuryCode,
-			astrTenor,
-			adblTreasuryCoupon,
-			adblTreasuryYield,
-			new CorrelatedPathVertexDimension (
-				new RandomNumberGenerator(),
-				aadblCorrelation,
-				iNumVertex,
-				iNumPath,
-				false,
-				null
-			),
-			new DiffusionEvolver (
-				DiffusionEvaluatorLogarithmic.Standard (
-					0.,
-					dblVolatility
-				)
-			)
+		PathRd pRd = new PathRd (
+			adblMean,
+			dblLogNormalVolatility,
+			true
 		);
 
-		GovvieCurve[][] aaGC = mcrg.pathVertex (dblTimeWidth);
+		double[][] aadblSequence = pRd.sequence (iNumPath);
+
+		String strDump = "\t||";
+		int iNumVertex = adblMean.length;
 
 		System.out.println();
 
-		System.out.println ("\t||------------------------------------------------------------------------------------------------------------------------------------------------||");
-
-		String strDump = "\t|| ## |";
+		System.out.println ("\t||-------------------------------------------------------||");
 
 		for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
-			strDump = strDump + " " + dtSpot.addYears (iVertex) + " |";
+			strDump = strDump + FormatUtil.FormatDouble (adblMean[iVertex], 1, 2, 100.) + "% |";
 
 		System.out.println (strDump + "|");
 
-		System.out.println ("\t||------------------------------------------------------------------------------------------------------------------------------------------------||");
-
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
-			strDump = "\t||" + FormatUtil.FormatDouble (iPath + 1, 2, 0, 1.) + " |";
+			strDump = "\t||";
 
 			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
-				strDump = strDump + "   " + FormatUtil.FormatDouble (aaGC[iPath][iVertex].yield ("5Y"), 1, 3, 100.) + "%   |";
+				strDump = strDump + FormatUtil.FormatDouble (aadblSequence[iPath][iVertex], 1, 2, 100.) + "% |";
 
 			System.out.println (strDump + "|");
 		}
 
-		System.out.println ("\t||------------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------||");
 
 		System.out.println();
 	}

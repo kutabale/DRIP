@@ -2,22 +2,17 @@
 package org.drip.sample.govviemc;
 
 import org.drip.analytics.date.*;
-import org.drip.measure.crng.RandomNumberGenerator;
-import org.drip.measure.discrete.CorrelatedPathVertexDimension;
-import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
-import org.drip.measure.process.DiffusionEvolver;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
 import org.drip.param.valuation.ValuationParams;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
 import org.drip.product.params.EmbeddedOptionSchedule;
-import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
 import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.PathVertexGovvie;
+import org.drip.state.sequence.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -65,13 +60,13 @@ import org.drip.state.sequence.PathVertexGovvie;
  */
 
 /**
- * CallableBondExerciseMetrics demonstrates the Simulations of the Per-Path Callable Bond OAS Based Exercise
- *  Metrics.
+ * PathExerciseIndicator demonstrates the Simulations of the Per-Path Callable Bond OAS Based Exercise
+ *  Indicator.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CallableBondExerciseMetrics {
+public class PathExerciseIndicator {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -150,10 +145,9 @@ public class CallableBondExerciseMetrics {
 		);
 	}
 
-	private static final PathVertexGovvie ScenarioGovvieCurves (
+	private static final PathGovvie PathGovvieCurves (
 		final JulianDate dtSpot,
-		final int iNumPath,
-		final int iNumVertex)
+		final int iNumPath)
 		throws Exception
 	{
 		double dblVolatility = 0.10;
@@ -192,34 +186,16 @@ public class CallableBondExerciseMetrics {
 			0.0308  // 30Y
 		};
 
-		int iNumDimension = astrTenor.length;
-		double[][] aadblCorrelation = new double[iNumDimension][iNumDimension];
-
-		for (int i = 0; i < iNumDimension; ++i) {
-			for (int j = 0; j < iNumDimension; ++j)
-				aadblCorrelation[i][j] = i == j ? 1. : 0.;
-		}
-
-		return PathVertexGovvie.Standard (
-			dtSpot,
-			strTreasuryCode,
-			astrTenor,
-			adblTreasuryCoupon,
-			adblTreasuryYield,
-			new CorrelatedPathVertexDimension (
-				new RandomNumberGenerator(),
-				aadblCorrelation,
-				iNumVertex,
-				iNumPath,
-				false,
-				null
+		return new PathGovvie (
+			new GovvieBuilderSettings (
+				dtSpot,
+				strTreasuryCode,
+				astrTenor,
+				adblTreasuryCoupon,
+				adblTreasuryYield
 			),
-			new DiffusionEvolver (
-				DiffusionEvaluatorLogarithmic.Standard (
-					0.,
-					dblVolatility
-				)
-			)
+			dblVolatility,
+			true
 		);
 	}
 
@@ -322,11 +298,6 @@ public class CallableBondExerciseMetrics {
 		};
 
 		int iNumVertex = aiExerciseDate.length;
-		double[] adblExercisePV = new double[iNumPath];
-		int[] aiOptimalExerciseVertexIndex = new int[iNumPath];
-		double[] adblOptimalExerciseOAS = new double[iNumPath];
-		double[] adblOptimalExercisePrice = new double[iNumPath];
-		JulianDate[] adtOptimalExerciseDate = new JulianDate[iNumPath];
 		double[][] aadblForwardPrice = new double[iNumPath][iNumVertex];
 		ValuationParams[] aValParamsEvent = new ValuationParams[iNumVertex];
 
@@ -343,16 +314,12 @@ public class CallableBondExerciseMetrics {
 			)
 		);
 
-		PathVertexGovvie mcrg = ScenarioGovvieCurves (
+		PathGovvie pg = PathGovvieCurves (
 			dtSpot,
-			iNumPath,
-			iNumVertex
+			iNumPath
 		);
 
-		GovvieCurve[][] aaGCPathEvent = mcrg.pathVertex (
-			dtSpot.julian(),
-			aiExerciseDate
-		);
+		GovvieCurve[] aGCPath = pg.curveSequence (iNumPath);
 
 		MergedDiscountForwardCurve mdfc = FundingCurve (
 			dtSpot,
@@ -360,9 +327,9 @@ public class CallableBondExerciseMetrics {
 			0.
 		);
 
-		CurveSurfaceQuoteContainer csqcSpot = MarketParamsBuilder.Create (
+		CurveSurfaceQuoteContainer csqcBase = MarketParamsBuilder.Create (
 			mdfc,
-			mcrg.groundState(),
+			pg.govvieBuilderSettings().groundState(),
 			null,
 			null,
 			null,
@@ -374,7 +341,7 @@ public class CallableBondExerciseMetrics {
 
 		double dblOASSpot = bond.oasFromPrice (
 			valParamsSpot,
-			csqcSpot,
+			csqcBase,
 			null,
 			dblCleanPrice
 		);
@@ -383,122 +350,43 @@ public class CallableBondExerciseMetrics {
 			aValParamsEvent[iVertex] = ValuationParams.Spot (aiExerciseDate[iVertex]);
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
-			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
-				CurveSurfaceQuoteContainer csqcEvent = MarketParamsBuilder.Create (
-					mdfc,
-					aaGCPathEvent[iPath][iVertex],
-					null,
-					null,
-					null,
-					null,
-					null
-				);
+			CurveSurfaceQuoteContainer csqcPath = MarketParamsBuilder.Create (
+				mdfc,
+				aGCPath[iPath],
+				null,
+				null,
+				null,
+				null,
+				null
+			);
 
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
 				aadblForwardPrice[iPath][iVertex] = bond.priceFromOAS (
 					aValParamsEvent[iVertex],
-					csqcEvent,
+					csqcPath,
 					null,
 					dblOASSpot
 				);
-			}
 		}
+
+		System.out.println();
+
+		System.out.println ("\t||-------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||                          FORWARD EXERCISE INDICATOR                           ||");
+
+		System.out.println ("\t||-------------------------------------------------------------------------------||");
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
-			adblExercisePV[iPath] = 0.;
-			adblOptimalExercisePrice[iPath] = 1.;
-			aiOptimalExerciseVertexIndex[0] = iNumVertex - 1;
+			String strDump = "\t||";
 
-			adtOptimalExerciseDate[iPath] = bond.maturityDate();
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
+				strDump = strDump + (aadblForwardPrice[iPath][iVertex] > adblExercisePrice[iVertex] ? " Y" : " N") + " |";
 
-			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
-				double dblExercisePV = (aadblForwardPrice[iPath][iVertex] - adblExercisePrice[iVertex])
-					* mdfc.df (aiExerciseDate[iVertex]);
-
-				if (dblExercisePV > adblExercisePV[iPath]) {
-					adtOptimalExerciseDate[iPath] = new JulianDate (aiExerciseDate[iVertex]);
-
-					adblOptimalExercisePrice[iPath] = adblExercisePrice[iVertex];
-					aiOptimalExerciseVertexIndex[iPath] = iVertex;
-					adblExercisePV[iPath] = dblExercisePV;
-				}
-			}
+			System.out.println (strDump + "|");
 		}
 
-		System.out.println ("\n");
-
-		System.out.println ("\t||---------------------------------------------------------------------------||");
-
-		System.out.println ("\t||                        PATH-WISE EXERCISE METRICS                         ||");
-
-		System.out.println ("\t||---------------------------------------------------------------------------||");
-
-		System.out.println ("\t||    L -> R:                                                                ||");
-
-		System.out.println ("\t||        Path Number                                                        ||");
-
-		System.out.println ("\t||        Optimal Exercise Index                                             ||");
-
-		System.out.println ("\t||        Optimal Exercise Date                                              ||");
-
-		System.out.println ("\t||        Optimal Exercise Price                                             ||");
-
-		System.out.println ("\t||        Optimal Exercise Value                                             ||");
-
-		System.out.println ("\t||        Optimal Exercise OAS                                               ||");
-
-		System.out.println ("\t||        Optimal Exercise OAS Gap                                           ||");
-
-		System.out.println ("\t||        Optimal Exercise Duration                                          ||");
-
-		System.out.println ("\t||        Optimal Exercise Convexity                                         ||");
-
-		System.out.println ("\t||---------------------------------------------------------------------------||");
-
-		for (int iPath = 0; iPath < iNumPath; ++iPath) {
-			int iOptimalExerciseDate = adtOptimalExerciseDate[iPath].julian();
-
-			adblOptimalExerciseOAS[iPath] = bond.oasFromPrice (
-				valParamsSpot,
-				csqcSpot,
-				null,
-				iOptimalExerciseDate,
-				adblOptimalExercisePrice[iPath],
-				dblCleanPrice
-			);
-
-			double dblOptimalExerciseDuration = bond.modifiedDurationFromPrice (
-				valParamsSpot,
-				csqcSpot,
-				null,
-				iOptimalExerciseDate,
-				adblOptimalExercisePrice[iPath],
-				dblCleanPrice
-			);
-
-			double dblOptimalExerciseConvexity = bond.convexityFromPrice (
-				valParamsSpot,
-				csqcSpot,
-				null,
-				iOptimalExerciseDate,
-				adblOptimalExercisePrice[iPath],
-				dblCleanPrice
-			);
-
-			System.out.println (
-				"\t|| " +
-				FormatUtil.FormatDouble (iPath, 2, 0, 1.) + " => " +
-				FormatUtil.FormatDouble (aiOptimalExerciseVertexIndex[iPath], 2, 0, 1.) + " | " +
-				adtOptimalExerciseDate[iPath] + " | " +
-				FormatUtil.FormatDouble (adblOptimalExercisePrice[iPath], 3, 2, 100.) + " | " +
-				FormatUtil.FormatDouble (adblExercisePV[iPath], 2, 1, 100.) + " | " +
-				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath], 3, 0, 10000.) + " | " +
-				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath] - dblOASSpot, 3, 0, 10000.) + " | " +
-				FormatUtil.FormatDouble (dblOptimalExerciseDuration, 2, 2, 10000.)  + " | " +
-				FormatUtil.FormatDouble (dblOptimalExerciseConvexity, 1, 2, 1000000.) + " ||"
-			);
-		}
-
-		System.out.println ("\t||---------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

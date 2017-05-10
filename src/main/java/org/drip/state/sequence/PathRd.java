@@ -150,8 +150,8 @@ public class PathRd {
 			for (int iDimension = 0; iDimension < iNumDimension; ++iDimension) {
 				double dblWander = _dblVolatility * adblRandom[iDimension];
 
-				aadblSequence[iPath][iDimension] = _bLogNormal ? _adblMean[iDimension] * (1. + dblWander) :
-					_adblMean[iDimension] + dblWander;
+				aadblSequence[iPath][iDimension] = _bLogNormal ? _adblMean[iDimension] * java.lang.Math.exp
+					(dblWander) : _adblMean[iDimension] + dblWander;
 			}
 		}
 

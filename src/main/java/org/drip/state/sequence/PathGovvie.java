@@ -54,46 +54,12 @@ package org.drip.state.sequence;
  */
 
 public class PathGovvie extends org.drip.state.sequence.PathRd {
-	private double[] _adblTreasuryYield = null;
-	private double[] _adblTreasuryCoupon = null;
-	private java.lang.String[] _astrTenor = null;
-	private java.lang.String _strTreasuryCode = "";
-	private double[] _adblForwardYieldGround = null;
-	private org.drip.analytics.date.JulianDate _dtSpot = null;
-	private org.drip.state.curve.BasisSplineGovvieYield _bsgyGround = null;
-
-	private static final org.drip.state.curve.BasisSplineGovvieYield GovvieCurve (
-		final org.drip.analytics.date.JulianDate dtSpot,
-		final java.lang.String strCode,
-		final java.lang.String[] astrTenor,
-		final double[] adblCoupon,
-		final double[] adblYield)
-		throws Exception
-	{
-		int iNumInstrument = astrTenor.length;
-		org.drip.analytics.date.JulianDate[] adtMaturity = new
-			org.drip.analytics.date.JulianDate[iNumInstrument];
-		org.drip.analytics.date.JulianDate[] adtEffective = new
-			org.drip.analytics.date.JulianDate[iNumInstrument];
-
-		for (int i = 0; i < iNumInstrument; ++i)
-			adtMaturity[i] = (adtEffective[i] = dtSpot).addTenor (astrTenor[i]);
-
-		return (org.drip.state.curve.BasisSplineGovvieYield)
-			org.drip.service.template.LatentMarketStateBuilder.GovvieCurve (strCode, dtSpot, adtEffective,
-				adtMaturity, adblCoupon, adblYield, "Yield",
-					org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING);
-	}
+	private org.drip.state.sequence.GovvieBuilderSettings _gbs = null;
 
 	/**
 	 * PathGovvie Constructor
 	 * 
-	 * @param dtSpot The Spot Date
-	 * @param strTreasuryCode The Treasury Code
-	 * @param astrTenor Array of Maturity Tenors
-	 * @param adblTreasuryCoupon Array of Treasury Coupon
-	 * @param adblTreasuryYield Array of Treasury Yield
-	 * @param adblMean Array of Mean
+	 * @param gbs Govvie Builder Settings Instance
 	 * @param dblVolatility Volatility
 	 * @param bLogNormal TRUE - The Generated Random Numbers are Log Normal
 	 * 
@@ -101,104 +67,25 @@ public class PathGovvie extends org.drip.state.sequence.PathRd {
 	 */
 
 	public PathGovvie (
-		final org.drip.analytics.date.JulianDate dtSpot,
-		final java.lang.String strTreasuryCode,
-		final java.lang.String[] astrTenor,
-		final double[] adblTreasuryCoupon,
-		final double[] adblTreasuryYield,
-		final double[] adblMean,
+		final org.drip.state.sequence.GovvieBuilderSettings gbs,
 		final double dblVolatility,
 		final boolean bLogNormal)
 		throws java.lang.Exception
 	{
-		super (adblMean, dblVolatility, bLogNormal);
+		super (gbs.groundForwardYield(), dblVolatility, bLogNormal);
 
-		if (null == (_bsgyGround = GovvieCurve (_dtSpot = dtSpot, _strTreasuryCode = strTreasuryCode,
-			_astrTenor = astrTenor, _adblTreasuryCoupon = adblTreasuryCoupon, _adblTreasuryYield =
-				adblTreasuryYield)))
-			throw new java.lang.Exception ("PathGovvie Constructor => Invalid Inputs");
-
-		org.drip.state.nonlinear.FlatForwardDiscountCurve ffdcGround = _bsgyGround.flatForward (_astrTenor);
-
-		if (null == ffdcGround || null == (_adblForwardYieldGround = ffdcGround.nodeValues()))
-			throw new java.lang.Exception ("PathGovvie Constructor => Invalid Inputs");
+		if (null == (_gbs = gbs)) throw new java.lang.Exception ("PathGovvie Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Spot Date
+	 * Generate the Govvie Builder Settings Instance
 	 * 
-	 * @return The Spot Date
+	 * @return The Govvie Builder Settings Instance
 	 */
 
-	public org.drip.analytics.date.JulianDate spot()
+	public org.drip.state.sequence.GovvieBuilderSettings govvieBuilderSettings()
 	{
-		return _dtSpot;
-	}
-
-	/**
-	 * Retrieve the Treasury Code
-	 * 
-	 * @return The Treasury Code
-	 */
-
-	public java.lang.String code()
-	{
-		return _strTreasuryCode;
-	}
-
-	/**
-	 * Retrieve the Treasury Maturity Tenor Array
-	 * 
-	 * @return The Treasury Maturity Tenor Array
-	 */
-
-	public java.lang.String[] tenors()
-	{
-		return _astrTenor;
-	}
-
-	/**
-	 * Retrieve the Calibration Treasury Coupon Array
-	 * 
-	 * @return The Calibration Treasury Coupon Array
-	 */
-
-	public double[] coupon()
-	{
-		return _adblTreasuryCoupon;
-	}
-
-	/**
-	 * Retrieve the Calibration Treasury Yield Array
-	 * 
-	 * @return The Calibration Treasury Yield Array
-	 */
-
-	public double[] yield()
-	{
-		return _adblTreasuryYield;
-	}
-
-	/**
-	 * Retrieve the Ground State Govvie Curve
-	 * 
-	 * @return The Ground State Govvie Curve
-	 */
-
-	public org.drip.state.curve.BasisSplineGovvieYield groundState()
-	{
-		return _bsgyGround;
-	}
-
-	/**
-	 * Retrieve the Ground Forward Yield Array
-	 * 
-	 * @return The Ground Forward Yield Array
-	 */
-
-	public double[] groundForwardYield()
-	{
-		return _adblForwardYieldGround;
+		return _gbs;
 	}
 
 	/**
@@ -210,23 +97,27 @@ public class PathGovvie extends org.drip.state.sequence.PathRd {
 	public org.drip.state.govvie.GovvieCurve[] curveSequence (
 		final int iNumPath)
 	{
+		java.lang.String strCurrency = _gbs.groundState().currency();
+
+		org.drip.analytics.date.JulianDate dtSpot = _gbs.spot();
+
 		double[][] aadblPathSequence = sequence (iNumPath);
+
+		java.lang.String strTreasuryCode = _gbs.code();
+
+		java.lang.String[] astrTenor = _gbs.tenors();
 
 		if (null == aadblPathSequence) return null;
 
-		java.lang.String strCurrency = _bsgyGround.currency();
-
-		org.drip.analytics.date.JulianDate dtSpot = spot();
-
 		int iEpochDate = dtSpot.julian();
 
-		int iNumTenor = _astrTenor.length;
+		int iNumTenor = astrTenor.length;
 		int[] aiDate = new int[iNumTenor];
 		org.drip.state.nonlinear.FlatForwardGovvieCurve[] aFFGC = new
 			org.drip.state.nonlinear.FlatForwardGovvieCurve[iNumPath];
 
 		for (int iTenor = 0; iTenor < iNumTenor; ++iTenor) {
-			org.drip.analytics.date.JulianDate dtTenor = dtSpot.addTenor (_astrTenor[iTenor]);
+			org.drip.analytics.date.JulianDate dtTenor = dtSpot.addTenor (astrTenor[iTenor]);
 
 			if (null == dtTenor) return null;
 
@@ -236,7 +127,7 @@ public class PathGovvie extends org.drip.state.sequence.PathRd {
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
 			try {
 				if (null == (aFFGC[iPath] = new org.drip.state.nonlinear.FlatForwardGovvieCurve (iEpochDate,
-					_strTreasuryCode, strCurrency, aiDate, aadblPathSequence[iPath])))
+					strTreasuryCode, strCurrency, aiDate, aadblPathSequence[iPath])))
 					return null;
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
