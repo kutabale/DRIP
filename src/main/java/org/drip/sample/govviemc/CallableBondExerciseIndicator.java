@@ -16,7 +16,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
 import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.PathVertexForwardGovvie;
+import org.drip.state.sequence.PathVertexGovvie;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -149,7 +149,7 @@ public class CallableBondExerciseIndicator {
 		);
 	}
 
-	private static final PathVertexForwardGovvie ScenarioGovvieCurves (
+	private static final PathVertexGovvie ScenarioGovvieCurves (
 		final JulianDate dtSpot,
 		final int iNumPath,
 		final int iNumVertex)
@@ -199,7 +199,7 @@ public class CallableBondExerciseIndicator {
 				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		return PathVertexForwardGovvie.Standard (
+		return PathVertexGovvie.Standard (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,
@@ -337,7 +337,7 @@ public class CallableBondExerciseIndicator {
 			)
 		);
 
-		PathVertexForwardGovvie mcrg = ScenarioGovvieCurves (
+		PathVertexGovvie mcrg = ScenarioGovvieCurves (
 			dtSpot,
 			iNumPath,
 			iNumVertex

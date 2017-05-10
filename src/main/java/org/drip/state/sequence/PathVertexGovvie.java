@@ -47,12 +47,12 @@ package org.drip.state.sequence;
  */
 
 /**
- * PathVertexForwardGovvie exposes the Functionality to generate a Sequence of Path/Vertex Govvie Curves.
+ * PathVertexGovvie exposes the Functionality to generate a Sequence of Path/Vertex Govvie Curves.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class PathVertexForwardGovvie extends org.drip.state.sequence.PathVertexForwardRd {
+public class PathVertexGovvie extends org.drip.state.sequence.PathVertexRd {
 	private double[] _adblTreasuryYield = null;
 	private double[] _adblTreasuryCoupon = null;
 	private java.lang.String[] _astrTenor = null;
@@ -127,7 +127,7 @@ public class PathVertexForwardGovvie extends org.drip.state.sequence.PathVertexF
 	}
 
 	/**
-	 * Generate a Standard Instance of PathVertexForwardGovvie
+	 * Generate a Standard Instance of PathVertexGovvie
 	 * 
 	 * @param dtSpot The Spot Date
 	 * @param strTreasuryCode The Treasury Code
@@ -137,10 +137,10 @@ public class PathVertexForwardGovvie extends org.drip.state.sequence.PathVertexF
 	 * @param cpvd Latent State Evolver CPVD Instance
 	 * @param de The Latent State Diffusion Evolver
 	 * 
-	 * @return Standard Instance of PathVertexForwardGovvie
+	 * @return Standard Instance of PathVertexGovvie
 	 */
 
-	public static final PathVertexForwardGovvie Standard (
+	public static final PathVertexGovvie Standard (
 		final org.drip.analytics.date.JulianDate dtSpot,
 		final java.lang.String strTreasuryCode,
 		final java.lang.String[] astrTenor,
@@ -160,7 +160,7 @@ public class PathVertexForwardGovvie extends org.drip.state.sequence.PathVertexF
 			aDE[iDimension] = de;
 
 		try {
-			return new PathVertexForwardGovvie (dtSpot, strTreasuryCode, astrTenor, adblTreasuryCoupon,
+			return new PathVertexGovvie (dtSpot, strTreasuryCode, astrTenor, adblTreasuryCoupon,
 				adblTreasuryYield, cpvd, aDE);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -170,7 +170,7 @@ public class PathVertexForwardGovvie extends org.drip.state.sequence.PathVertexF
 	}
 
 	/**
-	 * PathVertexForwardGovvie Constructor
+	 * PathVertexGovvie Constructor
 	 * 
 	 * @param dtSpot The Spot Date
 	 * @param strTreasuryCode The Treasury Code
@@ -183,7 +183,7 @@ public class PathVertexForwardGovvie extends org.drip.state.sequence.PathVertexF
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public PathVertexForwardGovvie (
+	public PathVertexGovvie (
 		final org.drip.analytics.date.JulianDate dtSpot,
 		final java.lang.String strTreasuryCode,
 		final java.lang.String[] astrTenor,
@@ -198,12 +198,12 @@ public class PathVertexForwardGovvie extends org.drip.state.sequence.PathVertexF
 		if (null == (_bsgyGround = GovvieCurve (_dtSpot = dtSpot, _strTreasuryCode = strTreasuryCode,
 			_astrTenor = astrTenor, _adblTreasuryCoupon = adblTreasuryCoupon, _adblTreasuryYield =
 				adblTreasuryYield)))
-			throw new java.lang.Exception ("PathVertexForwardGovvie Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathVertexGovvie Constructor => Invalid Inputs");
 
 		org.drip.state.nonlinear.FlatForwardDiscountCurve ffdcGround = _bsgyGround.flatForward (_astrTenor);
 
 		if (null == ffdcGround || null == (_adblForwardYieldGround = ffdcGround.nodeValues()))
-			throw new java.lang.Exception ("PathVertexForwardGovvie Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathVertexGovvie Constructor => Invalid Inputs");
 	}
 
 	/**

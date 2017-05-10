@@ -47,26 +47,26 @@ package org.drip.state.sequence;
  */
 
 /**
- * PathVertexForwardRd exposes the Functionality to generate a Sequence of the Path Vertex Forward Latent
- *  State R^d Realizations.
+ * PathVertexRd exposes the Functionality to generate a Sequence of the Path Vertex Latent State R^d
+ *  Realizations across Multiple Paths.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class PathVertexForwardRd {
+public class PathVertexRd {
 	private org.drip.measure.process.DiffusionEvolver[] _aDE = null;
 	private org.drip.measure.discrete.CorrelatedPathVertexDimension _cpvd = null;
 
 	/**
-	 * Generate a Standard Instance of PathVertexForwardRd
+	 * Generate a Standard Instance of PathVertexRd
 	 * 
 	 * @param cpvd Latent State Evolver CPVD Instance
 	 * @param de The Latent State Diffusion Evolver
 	 * 
-	 * @return Standard Instance of PathVertexForwardRd
+	 * @return Standard Instance of PathVertexRd
 	 */
 
-	public static final PathVertexForwardRd Standard (
+	public static final PathVertexRd Standard (
 		final org.drip.measure.discrete.CorrelatedPathVertexDimension cpvd,
 		final org.drip.measure.process.DiffusionEvolver de)
 	{
@@ -81,7 +81,7 @@ public class PathVertexForwardRd {
 			aDE[iDimension] = de;
 
 		try {
-			return new PathVertexForwardRd (cpvd, aDE);
+			return new PathVertexRd (cpvd, aDE);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -90,7 +90,7 @@ public class PathVertexForwardRd {
 	}
 
 	/**
-	 * PathVertexForwardRd Constructor
+	 * PathVertexRd Constructor
 	 * 
 	 * @param cpvd Latent State Evolver CPVD Instance
 	 * @param aDE Array of the Latent State Diffusion Evolvers
@@ -98,22 +98,22 @@ public class PathVertexForwardRd {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public PathVertexForwardRd (
+	public PathVertexRd (
 		final org.drip.measure.discrete.CorrelatedPathVertexDimension cpvd,
 		final org.drip.measure.process.DiffusionEvolver[] aDE)
 		throws java.lang.Exception
 	{
 		if (null == (_cpvd = cpvd) || null == (_aDE = aDE))
-			throw new java.lang.Exception ("PathVertexForwardRd Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathVertexRd Constructor => Invalid Inputs");
 
 		int iNumDimension = _aDE.length;
 
 		if (iNumDimension != _cpvd.numDimension())
-			throw new java.lang.Exception ("PathVertexForwardRd Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("PathVertexRd Constructor => Invalid Inputs");
 
 		for (int iDimension = 0; iDimension < iNumDimension; ++iDimension) {
 			if (null == _aDE[iDimension])
-				throw new java.lang.Exception ("PathVertexForwardRd Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("PathVertexRd Constructor => Invalid Inputs");
 		}
 	}
 

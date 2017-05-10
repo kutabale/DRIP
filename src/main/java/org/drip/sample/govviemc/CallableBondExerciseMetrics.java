@@ -17,7 +17,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
 import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.PathVertexForwardGovvie;
+import org.drip.state.sequence.PathVertexGovvie;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -150,7 +150,7 @@ public class CallableBondExerciseMetrics {
 		);
 	}
 
-	private static final PathVertexForwardGovvie ScenarioGovvieCurves (
+	private static final PathVertexGovvie ScenarioGovvieCurves (
 		final JulianDate dtSpot,
 		final int iNumPath,
 		final int iNumVertex)
@@ -200,7 +200,7 @@ public class CallableBondExerciseMetrics {
 				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		return PathVertexForwardGovvie.Standard (
+		return PathVertexGovvie.Standard (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,
@@ -343,7 +343,7 @@ public class CallableBondExerciseMetrics {
 			)
 		);
 
-		PathVertexForwardGovvie mcrg = ScenarioGovvieCurves (
+		PathVertexGovvie mcrg = ScenarioGovvieCurves (
 			dtSpot,
 			iNumPath,
 			iNumVertex
@@ -424,13 +424,35 @@ public class CallableBondExerciseMetrics {
 			}
 		}
 
-		System.out.println();
+		System.out.println ("\n");
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||---------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                          FORWARD EXERCISE INDICATOR                           ||");
+		System.out.println ("\t||                        PATH-WISE EXERCISE METRICS                         ||");
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||---------------------------------------------------------------------------||");
+
+		System.out.println ("\t||    L -> R:                                                                ||");
+
+		System.out.println ("\t||        Path Number                                                        ||");
+
+		System.out.println ("\t||        Optimal Exercise Index                                             ||");
+
+		System.out.println ("\t||        Optimal Exercise Date                                              ||");
+
+		System.out.println ("\t||        Optimal Exercise Price                                             ||");
+
+		System.out.println ("\t||        Optimal Exercise Value                                             ||");
+
+		System.out.println ("\t||        Optimal Exercise OAS                                               ||");
+
+		System.out.println ("\t||        Optimal Exercise OAS Gap                                           ||");
+
+		System.out.println ("\t||        Optimal Exercise Duration                                          ||");
+
+		System.out.println ("\t||        Optimal Exercise Convexity                                         ||");
+
+		System.out.println ("\t||---------------------------------------------------------------------------||");
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
 			int iOptimalExerciseDate = adtOptimalExerciseDate[iPath].julian();
@@ -453,6 +475,15 @@ public class CallableBondExerciseMetrics {
 				dblCleanPrice
 			);
 
+			double dblOptimalExerciseConvexity = bond.convexityFromPrice (
+				valParamsSpot,
+				csqcSpot,
+				null,
+				iOptimalExerciseDate,
+				adblOptimalExercisePrice[iPath],
+				dblCleanPrice
+			);
+
 			System.out.println (
 				"\t|| " +
 				FormatUtil.FormatDouble (iPath, 2, 0, 1.) + " => " +
@@ -461,11 +492,13 @@ public class CallableBondExerciseMetrics {
 				FormatUtil.FormatDouble (adblOptimalExercisePrice[iPath], 3, 2, 100.) + " | " +
 				FormatUtil.FormatDouble (adblExercisePV[iPath], 2, 1, 100.) + " | " +
 				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath], 3, 0, 10000.) + " | " +
-				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath] - dblOASSpot, 3, 0, 10000.) + " ||"
+				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath] - dblOASSpot, 3, 0, 10000.) + " | " +
+				FormatUtil.FormatDouble (dblOptimalExerciseDuration, 2, 2, 10000.)  + " | " +
+				FormatUtil.FormatDouble (dblOptimalExerciseConvexity, 1, 2, 1000000.) + " ||"
 			);
 		}
 
-		System.out.println ("\t||-------------------------------------------------------------------------------||");
+		System.out.println ("\t||---------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

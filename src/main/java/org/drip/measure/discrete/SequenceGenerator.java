@@ -106,6 +106,37 @@ public class SequenceGenerator {
 	}
 
 	/**
+	 * Generate a Sequence of Log Normal Random Numbers
+	 * 
+	 * @param iCount The Count in the Sequence
+	 * 
+	 * @return The Sequence of Log Normal Random Numbers
+	 */
+
+	public static final double[] LogNormal (
+		final int iCount)
+	{
+		if (0 >= iCount) return null;
+
+		double[] adblRandom = new double[iCount];
+
+		double dblNormalizer = 1. / java.lang.Math.sqrt (java.lang.Math.E);
+
+		for (int i = 0; i < iCount; ++i) {
+			try {
+				adblRandom[i] = java.lang.Math.exp (org.drip.measure.gaussian.NormalQuadrature.Random()) *
+					dblNormalizer;
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+		}
+
+		return adblRandom;
+	}
+
+	/**
 	 * Generate a Sequence of R^d Correlated Gaussian Random Numbers
 	 * 
 	 * @param iCount The Count in the Sequence

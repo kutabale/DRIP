@@ -403,7 +403,7 @@ public class LatamCorp {
 		throws Exception
 	{
 		JulianDate dtSettle = dtValue.addBusDays (
-			0,
+			2,
 			aBond[0].currency()
 		);
 
@@ -500,7 +500,7 @@ public class LatamCorp {
 
 		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.print (strSecularMetrics);
+		System.out.println (strSecularMetrics);
 
 		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------||\n");
 
@@ -510,7 +510,7 @@ public class LatamCorp {
 
 		System.out.println ("\t|-----------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.print (strCurveMetrics);
+		System.out.println (strCurveMetrics);
 
 		System.out.println ("\t|-----------------------------------------------------------------------------------------------------------------------------------------------||");
 
@@ -525,8 +525,8 @@ public class LatamCorp {
 
 		JulianDate dtSpot = DateUtil.CreateFromYMD (
 			2017,
-			DateUtil.FEBRUARY,
-			2
+			DateUtil.MAY,
+			9
 		);
 
 		String strCurrency = "USD";
@@ -549,14 +549,14 @@ public class LatamCorp {
 		};
 
 		double[] adblTreasuryYield = new double[] {
-			0.0083,	//  1Y
-			0.0122, //  2Y
-			0.0149, //  3Y
-			0.0193, //  5Y
-			0.0227, //  7Y
-			0.0248, // 10Y
-			0.0280, // 20Y
-			0.0308  // 30Y
+			0.01109, //  1Y
+			0.01345, //  2Y
+			0.01552, //  3Y
+			0.01925, //  5Y
+			0.02205, //  7Y
+			0.02406, // 10Y
+			0.02717, // 20Y
+			0.03028  // 30Y
 		};
 
 		Map<String, GovvieCurve> mapGovvieCurve = GovvieCurve (
@@ -603,7 +603,7 @@ public class LatamCorp {
 
 		double[] adblCleanPrice = new double[] {
 			0.3850000,	// (2026, 11, 15)
-			0.3850000,	// (2027,  4, 12)
+			0.3823900,	// (2027,  4, 12)
 			0.4550000,	// (2035,  5, 17)
 			0.3850000,	// (2037,  4, 12)
 			1.3315000,	// (2033,  1, 15)
@@ -619,7 +619,7 @@ public class LatamCorp {
 		ValuationParams valParams = new ValuationParams (
 			dtSpot,
 			dtSpot.addBusDays (
-				0,
+				2,
 				dcFunding.currency()
 			),
 			dcFunding.currency()

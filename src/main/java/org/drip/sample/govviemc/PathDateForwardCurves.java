@@ -9,7 +9,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.state.govvie.GovvieCurve;
-import org.drip.state.sequence.PathVertexForwardGovvie;
+import org.drip.state.sequence.PathVertexGovvie;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -135,7 +135,7 @@ public class PathDateForwardCurves {
 				aadblCorrelation[i][j] = i == j ? 1. : 0.;
 		}
 
-		PathVertexForwardGovvie mcrg = PathVertexForwardGovvie.Standard (
+		PathVertexGovvie mcrg = PathVertexGovvie.Standard (
 			dtSpot,
 			strTreasuryCode,
 			astrTenor,
