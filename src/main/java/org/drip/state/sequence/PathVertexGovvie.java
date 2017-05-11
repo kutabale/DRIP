@@ -215,16 +215,14 @@ public class PathVertexGovvie extends org.drip.state.sequence.PathVertexRd {
 	/**
 	 * Generate the R^d Path/Vertex Govvie Curves using the Initial R^d and the Array of Event Tenors
 	 * 
-	 * @param iSpotDate The Spot Date
 	 * @param aiEventDate The Array of Event Dates
 	 * 
 	 * @return The R^d Path//Vertex Govvie Curves
 	 */
 
 	public org.drip.state.govvie.GovvieCurve[][] pathVertex (
-		final int iSpotDate,
 		final int[] aiEventDate)
 	{
-		return curveVertex (pathVertex (_gbs.groundForwardYield(), iSpotDate, aiEventDate));
+		return curveVertex (pathVertex (_gbs.groundForwardYield(), _gbs.spot().julian(), aiEventDate));
 	}
 }

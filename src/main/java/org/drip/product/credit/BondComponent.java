@@ -12148,6 +12148,304 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		}
 	}
 
+	/**
+	 * Generate the EOS Callable Option Adjusted Metrics
+	 * 
+	 * @param valParams The Valuation Parameters
+	 * @param csqc The Market Parameters
+	 * @param vcp The Valuation Customization Parameters
+	 * @param dblCleanPrice Clean Price
+	 * @param pvg The Path Vertex Govvie Curve Generator
+	 * 
+	 * @return The Bond EOS Metrics
+	 */
+
+	public org.drip.analytics.output.BondEOSMetrics callMetrics (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblCleanPrice,
+		final org.drip.state.sequence.GovvieBuilderSettings gbs,
+		final org.drip.measure.process.DiffusionEvolver deGovvieForward,
+		final int iNumPath)
+	{
+		if (null == valParams || null == csqc || null == gbs) return null;
+
+		org.drip.product.params.EmbeddedOptionSchedule eosCall = callSchedule();
+
+		if (null == eosCall) return null;
+
+		int[] aiExerciseDate = eosCall.dates();
+
+		double[] adblExercisePrice = eosCall.factors();
+
+		int iNumDimension = gbs.dimension();
+
+		double dblOAS = java.lang.Double.NaN;
+		int iNumVertex = aiExerciseDate.length;
+		org.drip.state.sequence.PathVertexGovvie pvg = null;
+		double[] adblOptimalExercisePV = new double[iNumPath];
+		int[] aiOptimalExerciseVertexIndex = new int[iNumPath];
+		double[] adblOptimalExerciseOAS = new double[iNumPath];
+		double[] adblOptimalExercisePrice = new double[iNumPath];
+		double[] adblOptimalExerciseOASGap = new double[iNumPath];
+		double[] adblOptimalExerciseDuration = new double[iNumPath];
+		double[] adblOptimalExerciseConvexity = new double[iNumPath];
+		double[][] aadblForwardPrice = new double[iNumPath][iNumVertex];
+		double[][] aadblCorrelation = new double[iNumDimension][iNumDimension];
+		org.drip.analytics.date.JulianDate[] adtOptimalExerciseDate = new
+			org.drip.analytics.date.JulianDate[iNumPath];
+		org.drip.param.valuation.ValuationParams[] aValParamsEvent = new
+			org.drip.param.valuation.ValuationParams[iNumVertex];
+
+		try {
+			if (null == (pvg = org.drip.state.sequence.PathVertexGovvie.Standard (gbs, new
+				org.drip.measure.discrete.CorrelatedPathVertexDimension (new
+					org.drip.measure.crng.RandomNumberGenerator(), aadblCorrelation, iNumVertex, iNumPath,
+						false, null), deGovvieForward)))
+				return null;
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		org.drip.state.govvie.GovvieCurve[][] aaGCPathEvent = pvg.pathVertex (aiExerciseDate);
+
+		if (null == aaGCPathEvent) return null;
+
+		try {
+			dblOAS = oasFromPrice (valParams, csqc, vcp, dblCleanPrice);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+			if (null == (aValParamsEvent[iVertex] = org.drip.param.valuation.ValuationParams.Spot
+				(aiExerciseDate[iVertex])))
+				return null;
+		}
+
+		org.drip.state.discount.MergedDiscountForwardCurve mdfcFunding = csqc.fundingState (fundingLabel());
+
+		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+				try {
+					aadblForwardPrice[iPath][iVertex] = priceFromOAS (aValParamsEvent[iVertex],
+						org.drip.param.creator.MarketParamsBuilder.Create (mdfcFunding,
+							aaGCPathEvent[iPath][iVertex], null, null, null, null, null), null, dblOAS);
+				} catch (java.lang.Exception e) {
+					e.printStackTrace();
+
+					return null;
+				}
+			}
+		}
+
+		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			adblOptimalExercisePV[iPath] = 0.;
+			adblOptimalExercisePrice[iPath] = 1.;
+			aiOptimalExerciseVertexIndex[iPath] = iNumVertex;
+
+			adtOptimalExerciseDate[iPath] = maturityDate();
+
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+				double dblExercisePV = java.lang.Double.NaN;
+
+				try {
+					dblExercisePV = (aadblForwardPrice[iPath][iVertex] - adblExercisePrice[iVertex]) *
+						mdfcFunding.df (aiExerciseDate[iVertex]);
+				} catch (java.lang.Exception e) {
+					e.printStackTrace();
+				}
+
+				if (dblExercisePV > adblOptimalExercisePV[iPath]) {
+					adtOptimalExerciseDate[iPath] = new org.drip.analytics.date.JulianDate
+						(aiExerciseDate[iVertex]);
+
+					adblOptimalExercisePrice[iPath] = adblExercisePrice[iVertex];
+					aiOptimalExerciseVertexIndex[iPath] = iVertex;
+					adblOptimalExercisePV[iPath] = dblExercisePV;
+				}
+			}
+		}
+
+		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			int iOptimalExerciseDate = adtOptimalExerciseDate[iPath].julian();
+
+			try {
+				adblOptimalExerciseOAS[iPath] = oasFromPrice (valParams, csqc, null, iOptimalExerciseDate,
+					adblOptimalExercisePrice[iPath], dblCleanPrice);
+
+				adblOptimalExerciseDuration[iPath] = modifiedDurationFromPrice (valParams, csqc, null,
+					iOptimalExerciseDate, adblOptimalExercisePrice[iPath], dblCleanPrice);
+
+				adblOptimalExerciseConvexity[iPath] = convexityFromPrice (valParams, csqc, null,
+					iOptimalExerciseDate, adblOptimalExercisePrice[iPath], dblCleanPrice);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+
+			adblOptimalExerciseOASGap[iPath] = adblOptimalExerciseOAS[iPath] - dblOAS;
+		}
+
+		try {
+			return new org.drip.analytics.output.BondEOSMetrics (adblOptimalExercisePrice,
+				adblOptimalExercisePV, adblOptimalExerciseOAS, adblOptimalExerciseOASGap,
+					adblOptimalExerciseDuration, adblOptimalExerciseConvexity);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate the EOS Putable Option Adjusted Metrics
+	 * 
+	 * @param valParams The Valuation Parameters
+	 * @param csqc The Market Parameters
+	 * @param vcp The Valuation Customization Parameters
+	 * @param dblCleanPrice Clean Price
+	 * @param pvg The Path Vertex Govvie Curve Generator
+	 * 
+	 * @return The Bond EOS Metrics
+	 */
+
+	public org.drip.analytics.output.BondEOSMetrics putMetrics (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblCleanPrice,
+		final org.drip.state.sequence.PathVertexGovvie pvg)
+	{
+		if (null == valParams || null == csqc || null == pvg || valParams.valueDate() !=
+			pvg.govvieBuilderSettings().spot().julian())
+			return null;
+
+		org.drip.product.params.EmbeddedOptionSchedule eosPut = putSchedule();
+
+		if (null == eosPut) return null;
+
+		int[] aiExerciseDate = eosPut.dates();
+
+		double[] adblExercisePrice = eosPut.factors();
+
+		int iNumPath = pvg.cpvd().numPath();
+
+		double dblOAS = java.lang.Double.NaN;
+		int iNumVertex = aiExerciseDate.length;
+		double[] adblOptimalExercisePV = new double[iNumPath];
+		int[] aiOptimalExerciseVertexIndex = new int[iNumPath];
+		double[] adblOptimalExerciseOAS = new double[iNumPath];
+		double[] adblOptimalExercisePrice = new double[iNumPath];
+		double[] adblOptimalExerciseOASGap = new double[iNumPath];
+		double[] adblOptimalExerciseDuration = new double[iNumPath];
+		double[] adblOptimalExerciseConvexity = new double[iNumPath];
+		double[][] aadblForwardPrice = new double[iNumPath][iNumVertex];
+		org.drip.analytics.date.JulianDate[] adtOptimalExerciseDate = new
+			org.drip.analytics.date.JulianDate[iNumPath];
+		org.drip.param.valuation.ValuationParams[] aValParamsEvent = new
+			org.drip.param.valuation.ValuationParams[iNumVertex];
+
+		org.drip.state.govvie.GovvieCurve[][] aaGCPathEvent = pvg.pathVertex (aiExerciseDate);
+
+		if (null == aaGCPathEvent) return null;
+
+		try {
+			dblOAS = oasFromPrice (valParams, csqc, vcp, dblCleanPrice);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+			if (null == (aValParamsEvent[iVertex] = org.drip.param.valuation.ValuationParams.Spot
+				(aiExerciseDate[iVertex])))
+				return null;
+		}
+
+		org.drip.state.discount.MergedDiscountForwardCurve mdfcFunding = csqc.fundingState (fundingLabel());
+
+		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+				try {
+					aadblForwardPrice[iPath][iVertex] = priceFromOAS (aValParamsEvent[iVertex],
+						org.drip.param.creator.MarketParamsBuilder.Create (mdfcFunding,
+							aaGCPathEvent[iPath][iVertex], null, null, null, null, null), null, dblOAS);
+				} catch (java.lang.Exception e) {
+					e.printStackTrace();
+
+					return null;
+				}
+			}
+		}
+
+		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			adblOptimalExercisePV[iPath] = 0.;
+			adblOptimalExercisePrice[iPath] = 1.;
+			aiOptimalExerciseVertexIndex[iPath] = iNumVertex;
+
+			adtOptimalExerciseDate[iPath] = maturityDate();
+
+			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+				double dblExercisePV = java.lang.Double.NaN;
+
+				try {
+					dblExercisePV = (adblExercisePrice[iVertex] - aadblForwardPrice[iPath][iVertex]) *
+						mdfcFunding.df (aiExerciseDate[iVertex]);
+				} catch (java.lang.Exception e) {
+					e.printStackTrace();
+				}
+
+				if (dblExercisePV > adblOptimalExercisePV[iPath]) {
+					adtOptimalExerciseDate[iPath] = new org.drip.analytics.date.JulianDate
+						(aiExerciseDate[iVertex]);
+
+					adblOptimalExercisePrice[iPath] = adblExercisePrice[iVertex];
+					aiOptimalExerciseVertexIndex[iPath] = iVertex;
+					adblOptimalExercisePV[iPath] = dblExercisePV;
+				}
+			}
+		}
+
+		for (int iPath = 0; iPath < iNumPath; ++iPath) {
+			int iOptimalExerciseDate = adtOptimalExerciseDate[iPath].julian();
+
+			try {
+				adblOptimalExerciseOAS[iPath] = oasFromPrice (valParams, csqc, null, iOptimalExerciseDate,
+					adblOptimalExercisePrice[iPath], dblCleanPrice);
+
+				adblOptimalExerciseDuration[iPath] = modifiedDurationFromPrice (valParams, csqc, null,
+					iOptimalExerciseDate, adblOptimalExercisePrice[iPath], dblCleanPrice);
+
+				adblOptimalExerciseConvexity[iPath] = convexityFromPrice (valParams, csqc, null,
+					iOptimalExerciseDate, adblOptimalExercisePrice[iPath], dblCleanPrice);
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
+
+			adblOptimalExerciseOASGap[iPath] = adblOptimalExerciseOAS[iPath] - dblOAS;
+		}
+
+		try {
+			return new org.drip.analytics.output.BondEOSMetrics (adblOptimalExercisePrice,
+				adblOptimalExercisePV, adblOptimalExerciseOAS, adblOptimalExerciseOASGap,
+					adblOptimalExerciseDuration, adblOptimalExerciseConvexity);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	@Override public void showPeriods()
 		throws java.lang.Exception
 	{

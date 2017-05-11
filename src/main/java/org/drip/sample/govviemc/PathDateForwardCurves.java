@@ -159,10 +159,7 @@ public class PathDateForwardCurves {
 			)
 		);
 
-		GovvieCurve[][] aaGC = mcrg.pathVertex (
-			dtSpot.julian(),
-			aiEventDate
-		);
+		GovvieCurve[][] aaGC = mcrg.pathVertex (aiEventDate);
 
 		System.out.println();
 

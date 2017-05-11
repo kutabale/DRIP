@@ -327,7 +327,7 @@ public class PathVertexExerciseMetrics {
 		};
 
 		int iNumVertex = aiExerciseDate.length;
-		double[] adblExercisePV = new double[iNumPath];
+		double[] adblOptimalExercisePV = new double[iNumPath];
 		int[] aiOptimalExerciseVertexIndex = new int[iNumPath];
 		double[] adblOptimalExerciseOAS = new double[iNumPath];
 		double[] adblOptimalExercisePrice = new double[iNumPath];
@@ -357,10 +357,7 @@ public class PathVertexExerciseMetrics {
 			iNumVertex
 		);
 
-		GovvieCurve[][] aaGCPathEvent = mcrg.pathVertex (
-			dtSpot.julian(),
-			aiExerciseDate
-		);
+		GovvieCurve[][] aaGCPathEvent = mcrg.pathVertex (aiExerciseDate);
 
 		MergedDiscountForwardCurve mdfc = FundingCurve (
 			dtSpot,
@@ -412,7 +409,7 @@ public class PathVertexExerciseMetrics {
 		}
 
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
-			adblExercisePV[iPath] = 0.;
+			adblOptimalExercisePV[iPath] = 0.;
 			adblOptimalExercisePrice[iPath] = 1.;
 			aiOptimalExerciseVertexIndex[0] = iNumVertex - 1;
 
@@ -422,12 +419,12 @@ public class PathVertexExerciseMetrics {
 				double dblExercisePV = (aadblForwardPrice[iPath][iVertex] - adblExercisePrice[iVertex])
 					* mdfc.df (aiExerciseDate[iVertex]);
 
-				if (dblExercisePV > adblExercisePV[iPath]) {
+				if (dblExercisePV > adblOptimalExercisePV[iPath]) {
 					adtOptimalExerciseDate[iPath] = new JulianDate (aiExerciseDate[iVertex]);
 
 					adblOptimalExercisePrice[iPath] = adblExercisePrice[iVertex];
 					aiOptimalExerciseVertexIndex[iPath] = iVertex;
-					adblExercisePV[iPath] = dblExercisePV;
+					adblOptimalExercisePV[iPath] = dblExercisePV;
 				}
 			}
 		}
@@ -500,7 +497,7 @@ public class PathVertexExerciseMetrics {
 				FormatUtil.FormatDouble (aiOptimalExerciseVertexIndex[iPath], 2, 0, 1.) + " | " +
 				adtOptimalExerciseDate[iPath] + " | " +
 				FormatUtil.FormatDouble (adblOptimalExercisePrice[iPath], 3, 2, 100.) + " | " +
-				FormatUtil.FormatDouble (adblExercisePV[iPath], 2, 1, 100.) + " | " +
+				FormatUtil.FormatDouble (adblOptimalExercisePV[iPath], 2, 1, 100.) + " | " +
 				FormatUtil.FormatDouble (adblOptimalExerciseOAS[iPath], 3, 0, 10000.) + " | " +
 				FormatUtil.FormatDouble (adblOptimalExerciseOASGap[iPath], 3, 0, 10000.) + " | " +
 				FormatUtil.FormatDouble (adblOptimalExerciseDuration[iPath], 2, 2, 10000.)  + " | " +
@@ -512,10 +509,72 @@ public class PathVertexExerciseMetrics {
 
 		System.out.println();
 
-		UnivariateDiscreteThin udtOptimalExerciseConvexity = new UnivariateDiscreteThin (adblOptimalExerciseConvexity);
+		UnivariateDiscreteThin udtOptimalExercisePrice = new UnivariateDiscreteThin (adblOptimalExercisePrice);
+
+		UnivariateDiscreteThin udtOptimalExercisePV = new UnivariateDiscreteThin (adblOptimalExercisePV);
+
+		UnivariateDiscreteThin udtOptimalExerciseOAS = new UnivariateDiscreteThin (adblOptimalExerciseOAS);
+
+		UnivariateDiscreteThin udtOptimalExerciseOASGap = new UnivariateDiscreteThin (adblOptimalExerciseOASGap);
 
 		UnivariateDiscreteThin udtOptimalExerciseDuration = new UnivariateDiscreteThin (adblOptimalExerciseDuration);
 
-		UnivariateDiscreteThin udtOptimalExerciseOASGap = new UnivariateDiscreteThin (adblOptimalExerciseOASGap);
+		UnivariateDiscreteThin udtOptimalExerciseConvexity = new UnivariateDiscreteThin (adblOptimalExerciseConvexity);
+
+		System.out.println ("\t||-------------------------------------------------------------||");
+
+		System.out.println ("\t||        Optimal Exercise Price                               ||");
+
+		System.out.println ("\t||        Optimal Exercise Value                               ||");
+
+		System.out.println ("\t||        Optimal Exercise OAS                                 ||");
+
+		System.out.println ("\t||        Optimal Exercise OAS Gap                             ||");
+
+		System.out.println ("\t||        Optimal Exercise Duration                            ||");
+
+		System.out.println ("\t||        Optimal Exercise Convexity                           ||");
+
+		System.out.println ("\t||-------------------------------------------------------------||");
+
+		System.out.println ("\t|| AVERAGE => " +
+			FormatUtil.FormatDouble (udtOptimalExercisePrice.average(), 3, 2, 100.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExercisePV.average(), 2, 1, 100.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseOAS.average(), 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseOASGap.average(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseDuration.average(), 2, 2, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseConvexity.average(), 1, 2, 1000000.) + " ||"
+		);
+
+		System.out.println ("\t||  ERROR  => " +
+			FormatUtil.FormatDouble (udtOptimalExercisePrice.error(), 3, 2, 100.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExercisePV.error(), 2, 1, 100.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseOAS.error(), 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseOASGap.error(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseDuration.error(), 2, 2, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseConvexity.error(), 1, 2, 1000000.) + " ||"
+		);
+
+		System.out.println ("\t|| MAXIMUM => " +
+			FormatUtil.FormatDouble (udtOptimalExercisePrice.maximum(), 3, 2, 100.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExercisePV.maximum(), 2, 1, 100.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseOAS.maximum(), 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseOASGap.maximum(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseDuration.maximum(), 2, 2, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseConvexity.maximum(), 1, 2, 1000000.) + " ||"
+		);
+
+		System.out.println ("\t|| MINIMUM => " +
+			FormatUtil.FormatDouble (udtOptimalExercisePrice.minimum(), 3, 2, 100.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExercisePV.minimum(), 2, 1, 100.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseOAS.minimum(), 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseOASGap.minimum(), 3, 0, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseDuration.minimum(), 2, 2, 10000.) + " | " +
+			FormatUtil.FormatDouble (udtOptimalExerciseConvexity.minimum(), 1, 2, 1000000.) + " ||"
+		);
+
+		System.out.println ("\t||-------------------------------------------------------------||");
+
+		System.out.println();
 	}
 }

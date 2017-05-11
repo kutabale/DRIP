@@ -349,10 +349,7 @@ public class PathVertexExerciseOptimal {
 			iNumVertex
 		);
 
-		GovvieCurve[][] aaGCPathEvent = mcrg.pathVertex (
-			dtSpot.julian(),
-			aiExerciseDate
-		);
+		GovvieCurve[][] aaGCPathEvent = mcrg.pathVertex (aiExerciseDate);
 
 		MergedDiscountForwardCurve mdfc = FundingCurve (
 			dtSpot,

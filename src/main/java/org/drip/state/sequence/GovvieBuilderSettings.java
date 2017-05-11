@@ -192,4 +192,15 @@ public class GovvieBuilderSettings {
 	{
 		return _adblForwardYieldGround;
 	}
+
+	/**
+	 * Retrieve the Calibration Instrument Dimension
+	 * 
+	 * @return The Calibration Instrument Dimension
+	 */
+
+	public int dimension()
+	{
+		return _astrTenor.length;
+	}
 }
