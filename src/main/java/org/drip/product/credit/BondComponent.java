@@ -12155,7 +12155,9 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 	 * @param csqc The Market Parameters
 	 * @param vcp The Valuation Customization Parameters
 	 * @param dblCleanPrice Clean Price
-	 * @param pvg The Path Vertex Govvie Curve Generator
+	 * @param gbs The Govvie Builder Settings
+	 * @param deGovvieForward The Govvie Forward Diffusion Evolver
+	 * @param iNumPath The Number of Paths
 	 * 
 	 * @return The Bond EOS Metrics
 	 */
@@ -12175,11 +12177,15 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		if (null == eosCall) return null;
 
-		int[] aiExerciseDate = eosCall.dates();
-
-		double[] adblExercisePrice = eosCall.factors();
-
 		int iNumDimension = gbs.dimension();
+
+		int iValueDate = valParams.valueDate();
+
+		int[] aiExerciseDate = eosCall.exerciseDates (iValueDate);
+
+		double[] adblExercisePrice = eosCall.exerciseFactors (iValueDate);
+
+		if (null == aiExerciseDate || null == adblExercisePrice) return null;
 
 		double dblOAS = java.lang.Double.NaN;
 		int iNumVertex = aiExerciseDate.length;
@@ -12192,11 +12198,17 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double[] adblOptimalExerciseDuration = new double[iNumPath];
 		double[] adblOptimalExerciseConvexity = new double[iNumPath];
 		double[][] aadblForwardPrice = new double[iNumPath][iNumVertex];
+		boolean[][] aabExerciseIndicator = new boolean[iNumPath][iNumVertex];
 		double[][] aadblCorrelation = new double[iNumDimension][iNumDimension];
 		org.drip.analytics.date.JulianDate[] adtOptimalExerciseDate = new
 			org.drip.analytics.date.JulianDate[iNumPath];
 		org.drip.param.valuation.ValuationParams[] aValParamsEvent = new
 			org.drip.param.valuation.ValuationParams[iNumVertex];
+
+		for (int i = 0; i < iNumDimension; ++i) {
+			for (int j = 0; j < iNumDimension; ++j)
+				aadblCorrelation[i][j] = i == j ? 1. : 0.;
+		}
 
 		try {
 			if (null == (pvg = org.drip.state.sequence.PathVertexGovvie.Standard (gbs, new
@@ -12253,6 +12265,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
 				double dblExercisePV = java.lang.Double.NaN;
+				aabExerciseIndicator[iPath][iVertex] = false;
 
 				try {
 					dblExercisePV = (aadblForwardPrice[iPath][iVertex] - adblExercisePrice[iVertex]) *
@@ -12268,6 +12281,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 					adblOptimalExercisePrice[iPath] = adblExercisePrice[iVertex];
 					aiOptimalExerciseVertexIndex[iPath] = iVertex;
 					adblOptimalExercisePV[iPath] = dblExercisePV;
+					aabExerciseIndicator[iPath][iVertex] = true;
 				}
 			}
 		}
@@ -12294,9 +12308,10 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		}
 
 		try {
-			return new org.drip.analytics.output.BondEOSMetrics (adblOptimalExercisePrice,
+			return new org.drip.analytics.output.BondEOSMetrics (dblOAS, adblOptimalExercisePrice,
 				adblOptimalExercisePV, adblOptimalExerciseOAS, adblOptimalExerciseOASGap,
-					adblOptimalExerciseDuration, adblOptimalExerciseConvexity);
+					adblOptimalExerciseDuration, adblOptimalExerciseConvexity, aadblForwardPrice,
+						aabExerciseIndicator);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -12311,7 +12326,9 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 	 * @param csqc The Market Parameters
 	 * @param vcp The Valuation Customization Parameters
 	 * @param dblCleanPrice Clean Price
-	 * @param pvg The Path Vertex Govvie Curve Generator
+	 * @param gbs The Govvie Builder Settings
+	 * @param deGovvieForward The Govvie Forward Diffusion Evolver
+	 * @param iNumPath The Number of Paths
 	 * 
 	 * @return The Bond EOS Metrics
 	 */
@@ -12321,24 +12338,29 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblCleanPrice,
-		final org.drip.state.sequence.PathVertexGovvie pvg)
+		final org.drip.state.sequence.GovvieBuilderSettings gbs,
+		final org.drip.measure.process.DiffusionEvolver deGovvieForward,
+		final int iNumPath)
 	{
-		if (null == valParams || null == csqc || null == pvg || valParams.valueDate() !=
-			pvg.govvieBuilderSettings().spot().julian())
-			return null;
+		if (null == valParams || null == csqc || null == gbs) return null;
 
 		org.drip.product.params.EmbeddedOptionSchedule eosPut = putSchedule();
 
 		if (null == eosPut) return null;
 
-		int[] aiExerciseDate = eosPut.dates();
+		int iNumDimension = gbs.dimension();
 
-		double[] adblExercisePrice = eosPut.factors();
+		int iValueDate = valParams.valueDate();
 
-		int iNumPath = pvg.cpvd().numPath();
+		int[] aiExerciseDate = eosPut.exerciseDates (iValueDate);
+
+		double[] adblExercisePrice = eosPut.exerciseFactors (iValueDate);
+
+		if (null == aiExerciseDate || null == adblExercisePrice) return null;
 
 		double dblOAS = java.lang.Double.NaN;
 		int iNumVertex = aiExerciseDate.length;
+		org.drip.state.sequence.PathVertexGovvie pvg = null;
 		double[] adblOptimalExercisePV = new double[iNumPath];
 		int[] aiOptimalExerciseVertexIndex = new int[iNumPath];
 		double[] adblOptimalExerciseOAS = new double[iNumPath];
@@ -12347,10 +12369,29 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double[] adblOptimalExerciseDuration = new double[iNumPath];
 		double[] adblOptimalExerciseConvexity = new double[iNumPath];
 		double[][] aadblForwardPrice = new double[iNumPath][iNumVertex];
+		boolean[][] aabExerciseIndicator = new boolean[iNumPath][iNumVertex];
+		double[][] aadblCorrelation = new double[iNumDimension][iNumDimension];
 		org.drip.analytics.date.JulianDate[] adtOptimalExerciseDate = new
 			org.drip.analytics.date.JulianDate[iNumPath];
 		org.drip.param.valuation.ValuationParams[] aValParamsEvent = new
 			org.drip.param.valuation.ValuationParams[iNumVertex];
+
+		for (int i = 0; i < iNumDimension; ++i) {
+			for (int j = 0; j < iNumDimension; ++j)
+				aadblCorrelation[i][j] = i == j ? 1. : 0.;
+		}
+
+		try {
+			if (null == (pvg = org.drip.state.sequence.PathVertexGovvie.Standard (gbs, new
+				org.drip.measure.discrete.CorrelatedPathVertexDimension (new
+					org.drip.measure.crng.RandomNumberGenerator(), aadblCorrelation, iNumVertex, iNumPath,
+						false, null), deGovvieForward)))
+				return null;
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		org.drip.state.govvie.GovvieCurve[][] aaGCPathEvent = pvg.pathVertex (aiExerciseDate);
 
@@ -12395,6 +12436,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 			for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
 				double dblExercisePV = java.lang.Double.NaN;
+				aabExerciseIndicator[iPath][iVertex] = false;
 
 				try {
 					dblExercisePV = (adblExercisePrice[iVertex] - aadblForwardPrice[iPath][iVertex]) *
@@ -12410,6 +12452,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 					adblOptimalExercisePrice[iPath] = adblExercisePrice[iVertex];
 					aiOptimalExerciseVertexIndex[iPath] = iVertex;
 					adblOptimalExercisePV[iPath] = dblExercisePV;
+					aabExerciseIndicator[iPath][iVertex] = true;
 				}
 			}
 		}
@@ -12436,9 +12479,10 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		}
 
 		try {
-			return new org.drip.analytics.output.BondEOSMetrics (adblOptimalExercisePrice,
+			return new org.drip.analytics.output.BondEOSMetrics (dblOAS, adblOptimalExercisePrice,
 				adblOptimalExercisePV, adblOptimalExerciseOAS, adblOptimalExerciseOASGap,
-					adblOptimalExerciseDuration, adblOptimalExerciseConvexity);
+					adblOptimalExerciseDuration, adblOptimalExerciseConvexity, aadblForwardPrice,
+						aabExerciseIndicator);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

@@ -53,6 +53,9 @@ package org.drip.analytics.output;
  */
 
 public class BondEOSMetrics {
+	private double[][] _aadblForwardPrice = null;
+	private double _dblOASTM = java.lang.Double.NaN;
+	private boolean[][] _aabExerciseIndicator = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtOptimalExerciseOAS = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtOptimalExercisePrice = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtOptimalExerciseValue = null;
@@ -63,25 +66,34 @@ public class BondEOSMetrics {
 	/**
 	 * BondEOSMetrics Constructor
 	 * 
+	 * @param dblOASTM The OAS To Maturity
 	 * @param adblOptimalExercisePrice Array of Optimal Exercise Price
 	 * @param adblOptimalExerciseValue Array of Optimal Exercise Value
 	 * @param adblOptimalExerciseOAS Array of Optimal Exercise OAS
 	 * @param adblOptimalExerciseOASGap Array of Optimal Exercise OAS Gap
 	 * @param adblOptimalExerciseDuration Array of Optimal Exercise Duration
 	 * @param adblOptimalExerciseConvexity Array of Optimal Exercise Convexity
+	 * @param aadblForwardPrice Double Array of Path/Vertex Forward Prices
+	 * @param aabExerciseIndicator Double Array of Path/Vertex Exercise Indicators
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public BondEOSMetrics (
+		final double dblOASTM,
 		final double[] adblOptimalExercisePrice,
 		final double[] adblOptimalExerciseValue,
 		final double[] adblOptimalExerciseOAS,
 		final double[] adblOptimalExerciseOASGap,
 		final double[] adblOptimalExerciseDuration,
-		final double[] adblOptimalExerciseConvexity)
+		final double[] adblOptimalExerciseConvexity,
+		final double[][] aadblForwardPrice,
+		final boolean[][] aabExerciseIndicator)
 		throws java.lang.Exception
 	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblOASTM = dblOASTM))
+			throw new java.lang.Exception ("BondEOSMetrics Constructor => Invalid Inputs");
+
 		_udtOptimalExercisePrice = new org.drip.measure.statistics.UnivariateDiscreteThin
 			(adblOptimalExercisePrice);
 
@@ -99,6 +111,9 @@ public class BondEOSMetrics {
 
 		_udtOptimalExerciseConvexity = new org.drip.measure.statistics.UnivariateDiscreteThin
 			(adblOptimalExerciseConvexity);
+
+		_aadblForwardPrice = aadblForwardPrice;
+		_aabExerciseIndicator = aabExerciseIndicator;
 	}
 
 	/**
@@ -179,6 +194,17 @@ public class BondEOSMetrics {
 	}
 
 	/**
+	 * Retrieve the Bond Option Adjusted Spread To Maturity
+	 * 
+	 * @return The Bond Option Adjusted Spread To Maturity
+	 */
+
+	public double oasTM()
+	{
+		return _dblOASTM;
+	}
+
+	/**
 	 * Retrieve the Bond Option Adjusted Spread Duration
 	 * 
 	 * @return The Bond Option Adjusted Spread Duration
@@ -198,5 +224,27 @@ public class BondEOSMetrics {
 	public double oasConvexity()
 	{
 		return _udtOptimalExerciseConvexity.average();
+	}
+
+	/**
+	 * Retrieve the Path/Vertex Forward Price Double Array
+	 * 
+	 * @return The Path/Vertex Forward Price Double Array
+	 */
+
+	public double[][] forwardPrice()
+	{
+		return _aadblForwardPrice;
+	}
+
+	/**
+	 * Retrieve the Path/Vertex Exercise Indicator Double Array
+	 * 
+	 * @return The Path/Vertex Exercise Indicator Double Array
+	 */
+
+	public boolean[][] exerciseIndicator()
+	{
+		return _aabExerciseIndicator;
 	}
 }

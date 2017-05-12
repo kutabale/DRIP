@@ -351,4 +351,68 @@ public class EmbeddedOptionSchedule {
 	{
 		return _bFixToFloatOnExercise;
 	}
+
+	/**
+	 * Generate the Possible Exercise Dates from the Spot Date and the Notice Period
+	 * 
+	 * @param iSpotDate The Spot Date
+	 * 
+	 * @return Array of Possible Exercise Dates from the Spot Date and the Notice Period
+	 */
+
+	public int[] exerciseDates (
+		final int iSpotDate)
+	{
+		java.util.List<java.lang.Integer> lsDate = new java.util.ArrayList<java.lang.Integer>();
+
+		int iExerciseSize = _aiDate.length;
+		int iExerciseCutOff = iSpotDate + _iNoticePeriod;
+
+		for (int i = 0; i < iExerciseSize; ++i) {
+			if (_aiDate[i] >= iExerciseCutOff) lsDate.add (_aiDate[i]);
+		}
+
+		int iSize = lsDate.size();
+
+		if (0 == iSize) return null;
+
+		int[] aiExerciseDate = new int[iSize];
+
+		for (int i = 0; i < iSize; ++i)
+			aiExerciseDate[i] = lsDate.get (i);
+
+		return aiExerciseDate;
+	}
+
+	/**
+	 * Generate the Possible Exercise Factors from the Spot Date and the Notice Period
+	 * 
+	 * @param iSpotDate The Spot Date
+	 * 
+	 * @return Array of Possible Exercise Factors from the Spot Date and the Notice Period
+	 */
+
+	public double[] exerciseFactors (
+		final int iSpotDate)
+	{
+		java.util.List<java.lang.Double> lsFactor = new java.util.ArrayList<java.lang.Double>();
+
+		int iExerciseSize = _aiDate.length;
+		int iExerciseCutOff = iSpotDate + _iNoticePeriod;
+
+		for (int i = 0; i < iExerciseSize; ++i) {
+			if (_aiDate[i] >= iExerciseCutOff) lsFactor.add (_adblFactor[i]);
+		}
+
+		int iSize = lsFactor.size();
+
+		if (0 == iSize) return null;
+
+		double[] aiExerciseFactor = new double[iSize];
+
+		for (int i = 0; i < iSize; ++i)
+			aiExerciseFactor[i] = lsFactor.get (i);
+
+		return aiExerciseFactor;
+	}
 }
