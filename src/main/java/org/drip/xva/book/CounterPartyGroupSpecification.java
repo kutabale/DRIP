@@ -66,10 +66,8 @@ package org.drip.xva.book;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyGroupSpecification {
+public class CounterPartyGroupSpecification extends org.drip.xva.book.RollUpGroupSpecification {
 	private int _iBankDefaultWindow = -1;
-	private java.lang.String _strID = "";
-	private java.lang.String _strName = "";
 	private int _iCounterPartyDefaultWindow = -1;
 
 	/**
@@ -98,7 +96,6 @@ public class CounterPartyGroupSpecification {
 	 * 
 	 * @param strID The Collateral Group ID
 	 * @param strName The Collateral Group Name
-	 * @param mpor The Margin Period Of Risk
 	 * @param iCounterPartyDefaultWindow The Counter Party Default Window
 	 * @param iBankDefaultWindow The Bank Default Window
 	 * 
@@ -112,32 +109,11 @@ public class CounterPartyGroupSpecification {
 		final int iBankDefaultWindow)
 		throws java.lang.Exception
 	{
-		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
-			_strName.isEmpty() || -1 >= (_iCounterPartyDefaultWindow = iCounterPartyDefaultWindow) || -1 >=
-				(_iBankDefaultWindow = iBankDefaultWindow))
+		super (strID, strName);
+
+		if (-1 >= (_iCounterPartyDefaultWindow = iCounterPartyDefaultWindow) || -1 >= (_iBankDefaultWindow =
+			iBankDefaultWindow))
 			throw new java.lang.Exception ("CounterPartyGroupSpecification Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the Collateral Group ID
-	 * 
-	 * @return The Collateral Group ID
-	 */
-
-	public java.lang.String id()
-	{
-		return _strID;
-	}
-
-	/**
-	 * Retrieve the Collateral Group Name
-	 * 
-	 * @return The Collateral Group Name
-	 */
-
-	public java.lang.String name()
-	{
-		return _strName;
 	}
 
 	/**

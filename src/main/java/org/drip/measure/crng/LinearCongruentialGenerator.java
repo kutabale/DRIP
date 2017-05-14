@@ -86,9 +86,7 @@ public class LinearCongruentialGenerator extends org.drip.measure.crng.RandomNum
 	/**
 	 * Construct a NumericalRecipes Version of LinearCongruentialGenerator
 	 * 
-	 * @param lA A
-	 * @param lB B
-	 * @param lM M
+	 * @param rg The Recursive Generator Instance
 	 * 
 	 * @return NumericalRecipes Version of LinearCongruentialGenerator
 	 */

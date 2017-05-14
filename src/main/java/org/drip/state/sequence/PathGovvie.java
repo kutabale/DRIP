@@ -91,6 +91,8 @@ public class PathGovvie extends org.drip.state.sequence.PathRd {
 	/**
 	 * Generate the R^d Path Govvie Curves using the Initial R^d and the Evolution Time Width
 	 * 
+	 * @param iNumPath Number of Paths
+	 * 
 	 * @return The R^d Path//Vertex Govvie Curves
 	 */
 

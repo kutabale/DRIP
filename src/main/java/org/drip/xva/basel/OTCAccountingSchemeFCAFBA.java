@@ -73,44 +73,45 @@ public class OTCAccountingSchemeFCAFBA extends org.drip.xva.basel.OTCAccountingS
 	/**
 	 * OTCAccountingSchemeFCAFBA Constructor
 	 * 
-	 * @param cpga The Counter Party Group Aggregator Instance
+	 * @param eaa The Counter Party Group Aggregator Instance
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception Thrown if Inputs are Invalid
 	 */
 
 	public OTCAccountingSchemeFCAFBA (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator cpga)
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaa)
 		throws java.lang.Exception
 	{
-		super (cpga);
+		super (eaa);
 	}
 
 	@Override public double contraAssetAdjustment()
 	{
-		org.drip.xva.cpty.ExposureAdjustmentAggregator cpga = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		return cpga.ucva() + cpga.fva();
+		return eaa.ucva().amount() + eaa.fva().amount();
 	}
 
 	@Override public double contraLiabilityAdjustment()
 	{
-		org.drip.xva.cpty.ExposureAdjustmentAggregator cpga = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		return cpga.cvacl() + cpga.fba();
+		return eaa.cvacl().amount() + eaa.fba();
 	}
 
 	@Override public org.drip.xva.basel.OTCAccountingPolicy feePolicy (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator cpgaNext)
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaaNext)
 	{
-		if (null == cpgaNext) return null;
+		if (null == eaaNext) return null;
 
-		org.drip.xva.cpty.ExposureAdjustmentAggregator cpga = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		double dblContraLiabilityChange = cpgaNext.fba() - cpga.fba();
+		double dblContraLiabilityChange = eaaNext.fba() - eaa.fba();
 
 		try {
-			return new org.drip.xva.basel.OTCAccountingPolicy (cpgaNext.ucva() + cpgaNext.sfva() -
-				cpga.ucva() - cpga.sfva(), -1. * dblContraLiabilityChange, dblContraLiabilityChange, 0.);
+			return new org.drip.xva.basel.OTCAccountingPolicy (eaaNext.ucva().amount() + eaaNext.sfva() -
+				eaa.ucva().amount() - eaa.sfva(), -1. * dblContraLiabilityChange, dblContraLiabilityChange,
+					0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

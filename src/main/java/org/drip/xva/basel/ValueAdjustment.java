@@ -112,6 +112,26 @@ public class ValueAdjustment {
 	}
 
 	/**
+	 * Construct the FTDCVA Value Adjustment Instance
+	 * 
+	 * @param dblAmount Valuation Adjustment Amount
+	 * 
+	 * @return The FTDCVA Value Adjustment Instance
+	 */
+
+	public static final ValueAdjustment FTDCVA (
+		final double dblAmount)
+	{
+		try {
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF2());
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Construct the DVA Value Adjustment Instance
 	 * 
 	 * @param dblAmount Valuation Adjustment Amount
@@ -184,6 +204,26 @@ public class ValueAdjustment {
 	{
 		try {
 			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF5());
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Construct the HYBRID Value Adjustment Instance
+	 * 
+	 * @param dblAmount Valuation Adjustment Amount
+	 * 
+	 * @return The HYBRID Value Adjustment Instance
+	 */
+
+	public static final ValueAdjustment HYBRID (
+		final double dblAmount)
+	{
+		try {
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.HYBRID());
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

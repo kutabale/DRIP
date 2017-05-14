@@ -68,13 +68,13 @@ package org.drip.xva.basel;
  */
 
 public abstract class OTCAccountingScheme {
-	private org.drip.xva.cpty.ExposureAdjustmentAggregator _cpga = null;
+	private org.drip.xva.cpty.ExposureAdjustmentAggregator _eaa = null;
 
 	protected OTCAccountingScheme (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator cpga)
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaa)
 		throws java.lang.Exception
 	{
-		if (null == (_cpga = cpga))
+		if (null == (_eaa = eaa))
 			throw new java.lang.Exception ("OTCAccountingScheme Contructor => Invalid Inputs");
 	}
 
@@ -86,7 +86,7 @@ public abstract class OTCAccountingScheme {
 
 	public org.drip.xva.cpty.ExposureAdjustmentAggregator aggregator()
 	{
-		return _cpga;
+		return _eaa;
 	}
 
 	/**
@@ -108,11 +108,11 @@ public abstract class OTCAccountingScheme {
 	/**
 	 * Generate the Fee Policy Based on the Aggregation Incremental
 	 * 
-	 * @param cpgaNext The "Next" Counter Party Group Aggregator Instance
+	 * @param eaaNext The "Next" Exposure Adjustment Aggregator Instance
 	 * 
 	 * @return The OTC Fee Policy
 	 */
 
 	public abstract org.drip.xva.basel.OTCAccountingPolicy feePolicy (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator cpgaNext);
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaaNext);
 }

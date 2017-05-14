@@ -405,19 +405,19 @@ public class PortfolioPathAggregationCorrelated {
 
 		System.out.println ("\t||-------------------||");
 
-		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ftdcva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ftdcva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.cva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.cva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  CVACL => " + FormatUtil.FormatDouble (cpga.cvacl(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVACL => " + FormatUtil.FormatDouble (cpga.cvacl().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (cpga.fda(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (cpga.fda().amount(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
 

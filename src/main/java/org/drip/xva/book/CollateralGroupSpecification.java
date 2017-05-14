@@ -66,9 +66,7 @@ package org.drip.xva.book;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupSpecification {
-	private java.lang.String _strID = "";
-	private java.lang.String _strName = "";
+public class CollateralGroupSpecification extends org.drip.xva.book.RollUpGroupSpecification {
 	private double _dblIndependentAmount = java.lang.Double.NaN;
 	private double _dblMinimumTransferAmount = java.lang.Double.NaN;
 	private org.drip.function.definition.R1ToR1 _r1ToR1BankThreshold = null;
@@ -131,8 +129,8 @@ public class CollateralGroupSpecification {
 	 * 
 	 * @param strID The Collateral Group ID
 	 * @param strName The Collateral Group Name
-	 * @param r1ToR1CounterPartyThreshold The Collateral Group Counter Party Threshold R^1 -> R^1 Function
-	 * @param r1ToR1BankThreshold The Collateral Group Bank Threshold R^1 -> R^1 Function
+	 * @param r1ToR1CounterPartyThreshold The Collateral Group Counter Party Threshold R^1 - R^1 Function
+	 * @param r1ToR1BankThreshold The Collateral Group Bank Threshold R^1 - R^1 Function
 	 * @param dblMinimumTransferAmount The Collateral Group Minimum Transfer Amount
 	 * @param dblIndependentAmount The Collateral Group Independent Amount
 	 * 
@@ -148,10 +146,10 @@ public class CollateralGroupSpecification {
 		final double dblIndependentAmount)
 		throws java.lang.Exception
 	{
-		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
-			_strName.isEmpty() || !org.drip.quant.common.NumberUtil.IsValid (_dblMinimumTransferAmount =
-				dblMinimumTransferAmount) || !org.drip.quant.common.NumberUtil.IsValid (_dblIndependentAmount
-					= dblIndependentAmount))
+		super (strID, strName);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblMinimumTransferAmount = dblMinimumTransferAmount)
+			|| !org.drip.quant.common.NumberUtil.IsValid (_dblIndependentAmount = dblIndependentAmount))
 			throw new java.lang.Exception ("CollateralGroupSpecification Constructor => Invalid Inputs");
 
 		_r1ToR1BankThreshold = r1ToR1BankThreshold;
@@ -159,31 +157,9 @@ public class CollateralGroupSpecification {
 	}
 
 	/**
-	 * Retrieve the Collateral Group ID
+	 * Retrieve the Collateral Group Counter Party Threshold R^1 - R^1 Function
 	 * 
-	 * @return The Collateral Group ID
-	 */
-
-	public java.lang.String id()
-	{
-		return _strID;
-	}
-
-	/**
-	 * Retrieve the Collateral Group Name
-	 * 
-	 * @return The Collateral Group Name
-	 */
-
-	public java.lang.String name()
-	{
-		return _strName;
-	}
-
-	/**
-	 * Retrieve the Collateral Group Counter Party Threshold R^1 -> R^1 Function
-	 * 
-	 * @return The Collateral Group Counter Party Threshold R^1 -> R^1 Function
+	 * @return The Collateral Group Counter Party Threshold R^1 - R^1 Function
 	 */
 
 	public org.drip.function.definition.R1ToR1 counterPartyThreshold()
@@ -192,9 +168,9 @@ public class CollateralGroupSpecification {
 	}
 
 	/**
-	 * Retrieve the Collateral Group Bank Threshold R^1 -> R^1 Function
+	 * Retrieve the Collateral Group Bank Threshold R^1 - R^1 Function
 	 * 
-	 * @return The Collateral Group Bank Threshold R^1 -> R^1 Function
+	 * @return The Collateral Group Bank Threshold R^1 - R^1 Function
 	 */
 
 	public org.drip.function.definition.R1ToR1 bankThreshold()

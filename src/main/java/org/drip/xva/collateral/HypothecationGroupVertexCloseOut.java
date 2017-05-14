@@ -106,6 +106,8 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	 * Retrieve the Collateralized Credit Exposure at the Path Vertex Time Node
 	 * 
 	 * @return The Collateralized Credit Exposure at the Path Vertex Time Node
+	 * 
+	 * @throws java.lang.Exception Thrown if the Exposure cannot be calculated
 	 */
 
 	public double collateralizedCreditExposure()
@@ -121,6 +123,8 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	 * Retrieve the Uncollateralized Credit Exposure at the Path Vertex Time Node
 	 * 
 	 * @return The Uncollateralized Credit Exposure at the Path Vertex Time Node
+	 * 
+	 * @throws java.lang.Exception Thrown if the Exposure cannot be calculated
 	 */
 
 	public double uncollateralizedCreditExposure()
@@ -135,6 +139,8 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	 * Retrieve the Collateralized Debt Exposure at the Path Vertex Time Node
 	 * 
 	 * @return The Collateralized Debt Exposure at the Path Vertex Time Node
+	 * 
+	 * @throws java.lang.Exception Thrown if the Exposure cannot be calculated
 	 */
 
 	public double collateralizedDebtExposure()
@@ -149,6 +155,8 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	 * Retrieve the Uncollateralized Debt Exposure at the Path Vertex Time Node
 	 * 
 	 * @return The Uncollateralized Debt Exposure at the Path Vertex Time Node
+	 * 
+	 * @throws java.lang.Exception Thrown if the Exposure cannot be calculated
 	 */
 
 	public double uncollateralizedDebtExposure()

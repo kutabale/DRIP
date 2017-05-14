@@ -479,7 +479,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected Unilateral CVA
 	 */
 
-	public double ucva()
+	public org.drip.xva.basel.ValueAdjustment ucva()
 	{
 		double dblUCVA = 0.;
 		int iNumPath = _aPEA.length;
@@ -487,7 +487,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblUCVA += _aPEA[iPathIndex].unilateralCreditAdjustment();
 
-		return dblUCVA / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.UCVA (dblUCVA / iNumPath);
 	}
 
 	/**
@@ -496,7 +496,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected Bilateral/FTD CVA
 	 */
 
-	public double ftdcva()
+	public org.drip.xva.basel.ValueAdjustment ftdcva()
 	{
 		double dblFTDCVA = 0.;
 		int iNumPath = _aPEA.length;
@@ -504,7 +504,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblFTDCVA += _aPEA[iPathIndex].bilateralCreditAdjustment();
 
-		return dblFTDCVA / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.FTDCVA (dblFTDCVA / iNumPath);
 	}
 
 	/**
@@ -513,7 +513,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected CVA
 	 */
 
-	public double cva()
+	public org.drip.xva.basel.ValueAdjustment cva()
 	{
 		return ftdcva();
 	}
@@ -524,7 +524,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected CVA Contra-Liability
 	 */
 
-	public double cvacl()
+	public org.drip.xva.basel.ValueAdjustment cvacl()
 	{
 		double dblCVACL = 0.;
 		int iNumPath = _aPEA.length;
@@ -532,7 +532,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblCVACL += _aPEA[iPathIndex].contraLiabilityCreditAdjustment();
 
-		return dblCVACL / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.CVACL (dblCVACL / iNumPath);
 	}
 
 	/**
@@ -541,7 +541,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected DVA
 	 */
 
-	public double dva()
+	public org.drip.xva.basel.ValueAdjustment dva()
 	{
 		double dblDVA = 0.;
 		int iNumPath = _aPEA.length;
@@ -549,7 +549,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblDVA += _aPEA[iPathIndex].debtAdjustment();
 
-		return dblDVA / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.DVA (dblDVA / iNumPath);
 	}
 
 	/**
@@ -558,7 +558,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected FVA
 	 */
 
-	public double fva()
+	public org.drip.xva.basel.ValueAdjustment fva()
 	{
 		double dblFVA = 0.;
 		int iNumPath = _aPEA.length;
@@ -566,7 +566,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblFVA += _aPEA[iPathIndex].fundingValueAdjustment();
 
-		return dblFVA / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.FVA (dblFVA / iNumPath);
 	}
 
 	/**
@@ -575,7 +575,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected FDA
 	 */
 
-	public double fda()
+	public org.drip.xva.basel.ValueAdjustment fda()
 	{
 		double dblFDA = 0.;
 		int iNumPath = _aPEA.length;
@@ -583,7 +583,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblFDA += _aPEA[iPathIndex].fundingDebtAdjustment();
 
-		return dblFDA / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.FDA (dblFDA / iNumPath);
 	}
 
 	/**
@@ -645,7 +645,7 @@ public class ExposureAdjustmentAggregator {
 
 	public double total()
 	{
-		return cva() + dva() + fva();
+		return cva().amount() + dva().amount() + fva().amount();
 	}
 
 	/**

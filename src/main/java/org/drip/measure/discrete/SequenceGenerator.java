@@ -140,6 +140,7 @@ public class SequenceGenerator {
 	 * Generate a Sequence of R^d Correlated Gaussian Random Numbers
 	 * 
 	 * @param iCount The Count in the Sequence
+	 * @param aadblCorrelation The Correlation Matrix
 	 * 
 	 * @return The Sequence of R^d Correlated Gaussian Random Numbers
 	 */

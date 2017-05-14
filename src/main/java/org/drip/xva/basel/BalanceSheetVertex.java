@@ -96,9 +96,10 @@ public class BalanceSheetVertex {
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAsset = dblAsset) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblLiability = dblLiability) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblContraAsset = dblContraAsset) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblContraLiability = dblContraLiability) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblRetainedEarnings = dblRetainedEarnings))
+				!org.drip.quant.common.NumberUtil.IsValid (_dblContraAsset = dblContraAsset) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblContraLiability = dblContraLiability) ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblRetainedEarnings =
+							dblRetainedEarnings))
 			throw new java.lang.Exception ("BalanceSheetVertex Constructor => Invalid Inputs");
 	}
 

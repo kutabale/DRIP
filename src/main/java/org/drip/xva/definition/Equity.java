@@ -73,7 +73,7 @@ public class Equity extends org.drip.xva.definition.Tradeable {
 	/**
 	 * Equity Constructor
 	 * 
-	 * @param eePriceNumeraire The Equity Price Numeraire
+	 * @param dePriceNumeraire The Equity Price Numeraire
 	 * @param dblRepoRate The Equity Repo Rate
 	 * @param dblDividendRate The Equity Dividend Rate
 	 * 

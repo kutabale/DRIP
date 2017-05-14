@@ -66,11 +66,9 @@ package org.drip.xva.book;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NettingGroupSpecification {
+public class NettingGroupSpecification extends org.drip.xva.book.RollUpGroupSpecification {
 	private boolean _bContractual = true;
 	private boolean _bEnforceable = true;
-	private java.lang.String _strID = "";
-	private java.lang.String _strName = "";
 
 	/**
 	 * NettingGroupSpecification Constructor
@@ -90,34 +88,10 @@ public class NettingGroupSpecification {
 		final boolean bEnforceable)
 		throws java.lang.Exception
 	{
-		if (null == (_strID = strID) || _strID.isEmpty() || null == (_strName = strName) ||
-			_strName.isEmpty())
-			throw new java.lang.Exception ("NettingGroupSpecification Constructor => Invalid Inputs");
+		super (strID, strName);
 
 		_bContractual = bContractual;
 		_bEnforceable = bEnforceable;
-	}
-
-	/**
-	 * Retrieve the Collateral Group ID
-	 * 
-	 * @return The Collateral Group ID
-	 */
-
-	public java.lang.String id()
-	{
-		return _strID;
-	}
-
-	/**
-	 * Retrieve the Collateral Group Name
-	 * 
-	 * @return The Collateral Group Name
-	 */
-
-	public java.lang.String name()
-	{
-		return _strName;
 	}
 
 	/**

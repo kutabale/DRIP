@@ -199,13 +199,13 @@ public class FixFloatVACounterParty {
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblCounterPartyHazardRate, 3, 0, 10000.) + " bp => " +
-			FormatUtil.FormatDouble (cpga.ucva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.ftdcva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.cva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.cvacl(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.dva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fva(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fda(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.ucva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.ftdcva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.cva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.cvacl().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.dva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fda().amount(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.fca(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.fba(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.sfva(), 1, 2, 100.) + "% | " +

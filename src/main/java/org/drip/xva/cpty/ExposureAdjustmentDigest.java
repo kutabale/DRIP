@@ -112,7 +112,7 @@ public class ExposureAdjustmentDigest {
 	 * @param adblFCA The Array of FCA
 	 * @param adblFBA The Array of FBA
 	 * @param adblSFVA The Array of SFVA
-	 * @param adblTotal The Array of Total
+	 * @param adblTotalVA The Array of Total VA
 	 * @param aadblCollateralizedExposure Double Array of Collateralized Exposure
 	 * @param aadblCollateralizedExposurePV Double Array of Collateralized Exposure PV
 	 * @param aadblCollateralizedPositiveExposure Double Array of Collateralized Positive Exposure

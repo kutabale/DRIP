@@ -525,7 +525,7 @@ public abstract class Bond extends CreditComponent {
 	 * Calculate the Bond's Weighted Average Life from the Valuation Date
 	 * 
 	 * @param valParams ValuationParams
-	 * @param csqs ComponentMarketParams
+	 * @param csqc ComponentMarketParams
 	 * @param iWorkoutDate Work-out date
 	 * @param dblWorkoutFactor Double Work-out factor
 	 * 
@@ -545,7 +545,7 @@ public abstract class Bond extends CreditComponent {
 	 * Calculate the Bond's Weighted Average Life To Maturity from the Valuation Date
 	 * 
 	 * @param valParams ValuationParams
-	 * @param csqs ComponentMarketParams
+	 * @param csqc ComponentMarketParams
 	 * 
 	 * @return The Bond's Weighted Average Life from the Valuation Date
 	 * 

@@ -158,6 +158,23 @@ public class ValueCategory {
 	}
 
 	/**
+	 * Retrieve an Instance of the HYBRID Cash Flow
+	 * 
+	 * @return An Instance of the HYBRID Cash Flow
+	 */
+
+	public static final ValueCategory HYBRID()
+	{
+		try {
+			return new ValueCategory ("HYBRID", "Mixed Cash Flow Types", false);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * ValueCategory Constructor
 	 * 
 	 * @param strID The Category ID

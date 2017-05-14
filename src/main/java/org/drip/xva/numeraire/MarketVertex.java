@@ -93,7 +93,6 @@ public class MarketVertex {
 		final double dblBankFundingSpread,
 		final double dblCounterPartySurvival,
 		final double dblCounterPartyRecovery)
-		throws java.lang.Exception
 	{
 		try {
 			return new MarketVertex (
@@ -127,7 +126,7 @@ public class MarketVertex {
 	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Numeraire
 	 * @param dblCSASpread The Realized CSA Spread Numeraire
 	 * @param emvBank Bank Entity Market Vertex Instance
-	 * @param cpmv Counter PartyMarket Vertex Instance
+	 * @param emvCounterParty Counter Party Market Vertex Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

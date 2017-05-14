@@ -70,6 +70,7 @@ public class CorrelatedPathVertexDimension {
 	 * @param iNumVertex Number of Vertexes
 	 * @param iNumPath Number of Paths
 	 * @param bApplyAntithetic TRUE - Apply Antithetic Variables Based Variance Reduction
+	 * @param qr Quadratic Resampler Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

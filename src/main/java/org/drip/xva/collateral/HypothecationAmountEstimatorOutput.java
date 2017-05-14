@@ -81,6 +81,8 @@ public class HypothecationAmountEstimatorOutput {
 	/**
 	 * HypothecationAmountEstimatorOutput Constructor
 	 * 
+	 * @param dtBankMargin The Bank Margin Date
+	 * @param dtCounterPartyMargin The Counter Party Margin Date
 	 * @param dblBankWindowMarginValue The Margin Value at the Bank Default Window
 	 * @param dblBankCollateralThreshold The Bank Collateral Threshold
 	 * @param dblBankPostingRequirement The Bank Collateral Posting Requirement
