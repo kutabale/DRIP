@@ -85,6 +85,39 @@ public class LatentStateProcessor {
 				astrFixFloatMaturityTenor, adblFixFloatQuote, "SwapRate");
 	}
 
+	static final org.drip.state.govvie.GovvieCurve TreasuryCurve (
+		final org.drip.json.simple.JSONObject jsonParameter)
+	{
+		org.drip.analytics.date.JulianDate dtSpot = org.drip.json.parser.Converter.DateEntry (jsonParameter,
+			"SpotDate");
+
+		java.lang.String strCode = org.drip.json.parser.Converter.StringEntry (jsonParameter,
+			"TreasuryCode");
+
+		java.lang.String[] astrTenor = org.drip.json.parser.Converter.StringArrayEntry (jsonParameter,
+			"TreasuryTenor");
+
+		double[] adblYield = org.drip.json.parser.Converter.DoubleArrayEntry (jsonParameter,
+			"TreasuryYield");
+
+		int iNumTenor = null == adblYield ? 0 : adblYield.length;
+		double[] adblCoupon = 0 == iNumTenor ? null : new double[iNumTenor];
+		org.drip.analytics.date.JulianDate[] adtMaturity = 0 == iNumTenor ? null : new
+			org.drip.analytics.date.JulianDate[iNumTenor];
+		org.drip.analytics.date.JulianDate[] adtEffective = 0 == iNumTenor ? null : new
+			org.drip.analytics.date.JulianDate[iNumTenor];
+
+		for (int i = 0; i < iNumTenor; ++i) {
+			adblCoupon[i] = adblYield[i];
+
+			adtMaturity[i] = (adtEffective[i] = dtSpot).addTenor (astrTenor[i]);
+		}
+
+		return org.drip.service.template.LatentMarketStateBuilder.GovvieCurve (strCode, dtSpot, adtEffective,
+			adtMaturity, adblCoupon, adblYield, "Yield",
+				org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING);
+	}
+
 	static final org.drip.state.credit.CreditCurve CreditCurve (
 		final org.drip.json.simple.JSONObject jsonParameter,
 		final org.drip.state.discount.MergedDiscountForwardCurve dcFunding)

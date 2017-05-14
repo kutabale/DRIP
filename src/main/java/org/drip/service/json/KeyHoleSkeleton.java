@@ -105,7 +105,13 @@ public class KeyHoleSkeleton {
 		if ("DEPOSIT::CURVEMETRICS".equalsIgnoreCase (strAPIName))
 			return org.drip.service.json.DepositProcessor.CurveMetrics (jsonParameter);
 
-		if ("FORWARDRATEFUTURES::SECULARMETRICS".equalsIgnoreCase (strAPIName)) return null;
+		if ("BOND::SECULARMETRICS".equalsIgnoreCase (strAPIName))
+			return org.drip.service.json.BondProcessor.SecularMetrics (jsonParameter);
+
+		if ("BOND::CURVEMETRICS".equalsIgnoreCase (strAPIName))
+			return org.drip.service.json.BondProcessor.CurveMetrics (jsonParameter);
+
+		if ("FORWARDRATEFUTURES::SECULARMETRICS".equalsIgnoreCase (strAPIName))
 
 		if ("FORWARDRATEFUTURES::CURVEMETRICS".equalsIgnoreCase (strAPIName))
 			return org.drip.service.json.ForwardRateFuturesProcessor.CurveMetrics (jsonParameter);

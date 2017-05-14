@@ -640,6 +640,8 @@ public class Helper {
 	 * @param astrTenor The Specified Tenor Array
 	 * @param bForward TRUE - Generated the Incremental Forward Year Fraction
 	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * 
 	 * @return The Year Fraction Array
 	 */
 
@@ -716,8 +718,6 @@ public class Helper {
 	 * @param astrTenor The Specified Tenor Array
 	 * 
 	 * @return The Date Array From the Tenor Array
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public static final int[] TenorToDate (
