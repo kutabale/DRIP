@@ -69,7 +69,7 @@ package org.drip.xva.netting;
 
 public class ExposureGroupPath {
 	private org.drip.xva.numeraire.MarketPath _mp = null;
-	private org.drip.xva.collateral.HypothecationGroupPathRegular[] _aHGP = null;
+	private org.drip.xva.collateral.HypothecationGroupPath[] _aHGP = null;
 
 	/**
 	 * ExposureGroupPath Constructor
@@ -81,7 +81,7 @@ public class ExposureGroupPath {
 	 */
 
 	public ExposureGroupPath (
-		final org.drip.xva.collateral.HypothecationGroupPathRegular[] aHGP,
+		final org.drip.xva.collateral.HypothecationGroupPath[] aHGP,
 		final org.drip.xva.numeraire.MarketPath mp)
 		throws java.lang.Exception
 	{
@@ -95,18 +95,18 @@ public class ExposureGroupPath {
 	 * @return Array of the Collateral Group Trajectory Paths
 	 */
 
-	public org.drip.xva.collateral.HypothecationGroupPathRegular[] collateralGroupPaths()
+	public org.drip.xva.collateral.HypothecationGroupPath[] collateralGroupPaths()
 	{
 		return _aHGP;
 	}
 
 	/**
-	 * Retrieve the Numeraire Paths
+	 * Retrieve the Market Path
 	 * 
-	 * @return The Numeraire Paths
+	 * @return The Market Path
 	 */
 
-	public org.drip.xva.numeraire.MarketPath numerairePath()
+	public org.drip.xva.numeraire.MarketPath marketPath()
 	{
 		return _mp;
 	}

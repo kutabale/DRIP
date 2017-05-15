@@ -66,21 +66,21 @@ package org.drip.xva.numeraire;
  */
 
 public class MarketPath {
-	private org.drip.xva.numeraire.MarketVertex[] _aNV = null;
+	private org.drip.xva.numeraire.MarketVertex[] _aMV = null;
 
 	/**
 	 * MarketPath Constructor
 	 * 
-	 * @param aNV Array of the Numeraire Vertexes
+	 * @param aMV Array of the Numeraire Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public MarketPath (
-		final org.drip.xva.numeraire.MarketVertex[] aNV)
+		final org.drip.xva.numeraire.MarketVertex[] aMV)
 		throws java.lang.Exception
 	{
-		if (null == (_aNV = aNV) || 0 == _aNV.length)
+		if (null == (_aMV = aMV) || 0 == _aMV.length)
 			throw new java.lang.Exception ("MarketPath Constructor => Invalid Inputs");
 	}
 
@@ -92,23 +92,23 @@ public class MarketPath {
 
 	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		int iNumVertex = _aNV.length;
+		int iNumVertex = _aMV.length;
 		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adtVertex[i] = _aNV[i].anchor();
+			adtVertex[i] = _aMV[i].anchor();
 
 		return adtVertex;
 	}
 
 	/**
-	 * Array of the Numeraire Vertexes
+	 * Array of the Market Vertexes
 	 * 
-	 * @return The Numeraire Vertexes
+	 * @return The Market Vertexes
 	 */
 
 	public org.drip.xva.numeraire.MarketVertex[] vertexes()
 	{
-		return _aNV;
+		return _aMV;
 	}
 }

@@ -73,19 +73,19 @@ public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroup
 	/**
 	 * Generate a "Mono" NettingGroupPathAA2014 Instance
 	 * 
-	 * @param cgp The "Mono" Collateral Group Path
-	 * @param np The Numeraire Path
+	 * @param hgp The "Mono" Hypothecation Group Path
+	 * @param mp The Market Path
 	 * 
 	 * @return The "Mono" NettingGroupPathAA2014 Instance
 	 */
 
 	public static final NettingGroupPathAA2014 Mono (
-		final org.drip.xva.collateral.HypothecationGroupPathRegular cgp,
-		final org.drip.xva.numeraire.MarketPath np)
+		final org.drip.xva.collateral.HypothecationGroupPath hgp,
+		final org.drip.xva.numeraire.MarketPath mp)
 	{
 		try {
 			return new org.drip.xva.strategy.NettingGroupPathAA2014 (new
-				org.drip.xva.collateral.HypothecationGroupPathRegular[] {cgp}, np);
+				org.drip.xva.collateral.HypothecationGroupPath[] {hgp}, mp);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -96,18 +96,18 @@ public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroup
 	/**
 	 * NettingGroupPathAA2014 Constructor
 	 * 
-	 * @param aCGP Array of the Collateral Group Trajectory Paths
-	 * @param np The Numeraire Path
+	 * @param aHGP Array of the Hypothecation Group Trajectory Paths
+	 * @param mp The Market Path
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public NettingGroupPathAA2014 (
-		final org.drip.xva.collateral.HypothecationGroupPathRegular[] aCGP,
-		final org.drip.xva.numeraire.MarketPath np)
+		final org.drip.xva.collateral.HypothecationGroupPath[] aHGP,
+		final org.drip.xva.numeraire.MarketPath mp)
 		throws java.lang.Exception
 	{
-		super (aCGP, np);
+		super (aHGP, mp);
 	}
 
 	@Override public double creditAdjustment()

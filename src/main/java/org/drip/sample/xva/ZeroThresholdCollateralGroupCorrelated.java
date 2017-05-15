@@ -11,7 +11,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.book.*;
-import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupPath;
 import org.drip.xva.collateral.HypothecationGroupVertexRegular;
 import org.drip.xva.collateral.HypothecationAmountEstimator;
 import org.drip.xva.cpty.*;
@@ -406,7 +406,7 @@ public class ZeroThresholdCollateralGroupCorrelated {
 
 			MarketPath np = new MarketPath (aNV);
 
-			HypothecationGroupPathRegular[] aCGP = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV)};
+			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
 
 			aCPGP[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
@@ -515,11 +515,11 @@ public class ZeroThresholdCollateralGroupCorrelated {
 
 		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (cpga.fda().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (cpga.fba(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (cpga.fba().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (cpga.sfva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (cpga.sfva().amount(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||-------------------||");
 	}

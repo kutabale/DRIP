@@ -79,16 +79,16 @@ import org.drip.xva.pde.*;
 
 public class XVAReplicationPortfolio {
 
-	private static final EdgeEvolutionTrajectory RunStep (
+	private static final EvolutionTrajectoryVertex RunStep (
 		final TrajectoryEvolutionScheme tes,
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
-		final EdgeEvolutionTrajectory eetStart)
+		final EvolutionTrajectoryVertex eetStart)
 		throws Exception
 	{
-		EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
+		AssetGreekVertex eagStart = eetStart.assetGreekVertex();
 
-		EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
+		ReplicationPortfolioVertex erpStart = eetStart.replicationPortfolioVertex();
 
 		double dblDerivativeXVAValueStart = eagStart.derivativeXVAValue();
 
@@ -98,13 +98,13 @@ public class XVAReplicationPortfolio {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		UniverseSnapshot usStart = eetStart.tradeableAssetSnapshot();
+		UniverseVertex usStart = eetStart.tradeableAssetSnapshot();
 
 		TwoWayRiskyUniverse twru = tes.universe();
 
 		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
 
-		UniverseSnapshot usFinish = new UniverseSnapshot (
+		UniverseVertex usFinish = new UniverseVertex (
 			twru.asset().priceNumeraire().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -145,7 +145,7 @@ public class XVAReplicationPortfolio {
 
 		CloseOutBilateral maco = tes.boundaryCondition();
 
-		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (
+		BurgardKjaerEdgeRun lbkr = bko.timeIncrementRun (
 			si,
 			eetStart
 		);
@@ -173,7 +173,7 @@ public class XVAReplicationPortfolio {
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.counterPartyDefault
 			(dblDerivativeXVAValueFinish));
 
-		org.drip.xva.derivative.LevelCashAccount lca = tes.rebalanceCash (
+		org.drip.xva.derivative.CashAccountEdge lca = tes.rebalanceCash (
 			eetStart,
 			usFinish
 		).cashAccount();
@@ -186,7 +186,7 @@ public class XVAReplicationPortfolio {
 
 		double dblZeroCouponCounterPartyPriceFinish = usFinish.zeroCouponCounterPartyBondNumeraire().finish();
 
-		EdgeReplicationPortfolio erpFinish = new EdgeReplicationPortfolio (
+		ReplicationPortfolioVertex erpFinish = new ReplicationPortfolioVertex (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
 			dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
@@ -210,11 +210,11 @@ public class XVAReplicationPortfolio {
 			FormatUtil.FormatDouble (lca.counterPartyAccumulation(), 1, 6, 1.) + " ||"
 		);
 
-		return new EdgeEvolutionTrajectory (
+		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
 			usFinish,
 			erpFinish,
-			new EdgeAssetGreek (
+			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
@@ -340,7 +340,7 @@ public class XVAReplicationPortfolio {
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
 
-		EdgeAssetGreek erugInitial = new EdgeAssetGreek (
+		AssetGreekVertex erugInitial = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
@@ -351,7 +351,7 @@ public class XVAReplicationPortfolio {
 
 		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue));
 
-		EdgeReplicationPortfolio erpInitial = new EdgeReplicationPortfolio (
+		ReplicationPortfolioVertex erpInitial = new ReplicationPortfolioVertex (
 			1.,
 			dblGainOnBankDefaultInitial,
 			dblGainOnCounterPartyDefaultInitial,
@@ -415,9 +415,9 @@ public class XVAReplicationPortfolio {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
-		EdgeEvolutionTrajectory eet = new EdgeEvolutionTrajectory (
+		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new UniverseSnapshot (
+			new UniverseVertex (
 				meAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -455,7 +455,7 @@ public class XVAReplicationPortfolio {
 					dblTimeWidth
 				)
 			),
-			new EdgeReplicationPortfolio (
+			new ReplicationPortfolioVertex (
 				1.,
 				0.,
 				0.,

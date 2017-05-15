@@ -10,7 +10,7 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
-import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupPath;
 import org.drip.xva.collateral.HypothecationGroupVertexRegular;
 import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
@@ -254,12 +254,12 @@ public class UncollateralizedFundingPayable {
 
 			MarketPath np = new MarketPath (aNV);
 
-			HypothecationGroupPathRegular[] aCGP1 = new HypothecationGroupPathRegular[] {
-				new HypothecationGroupPathRegular (aCGV1)
+			HypothecationGroupPath[] aCGP1 = new HypothecationGroupPath[] {
+				new HypothecationGroupPath (aCGV1)
 			};
 
-			HypothecationGroupPathRegular[] aCGP2 = new HypothecationGroupPathRegular[] {
-				new HypothecationGroupPathRegular (aCGV2)
+			HypothecationGroupPath[] aCGP2 = new HypothecationGroupPath[] {
+				new HypothecationGroupPath (aCGV2)
 			};
 
 			aCPGPGround[i] = new PathExposureAdjustment (
@@ -290,9 +290,9 @@ public class UncollateralizedFundingPayable {
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
-						new HypothecationGroupPathRegular[] {
-							new HypothecationGroupPathRegular (aCGV1),
-							new HypothecationGroupPathRegular (aCGV2)
+						new HypothecationGroupPath[] {
+							new HypothecationGroupPath (aCGV1),
+							new HypothecationGroupPath (aCGV2)
 						},
 						np
 					)

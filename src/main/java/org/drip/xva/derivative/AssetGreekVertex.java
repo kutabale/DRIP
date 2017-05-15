@@ -47,9 +47,8 @@ package org.drip.xva.derivative;
  */
 
 /**
- * LevelEvolutionTrajectory holds the Evolution Edges of the Trajectory, the Cash Account, and the Derivative
- * 	Values evolved in a Dynamically Adaptive Manner, as laid out in Burgard and Kjaer (2014). The References
- *  are:
+ * AssetGreekVertex holds the Derivative XVA Value, its Delta, and its Gamma to the Asset Value. The
+ *  References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,61 +68,80 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LevelEvolutionTrajectory {
-	private org.drip.xva.derivative.LevelCashAccount _lca = null;
-	private org.drip.xva.derivative.EdgeEvolutionTrajectory _eetStart = null;
-	private org.drip.xva.derivative.EdgeEvolutionTrajectory _eetFinish = null;
+public class AssetGreekVertex {
+	private double _dblDerivativeValue = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValue = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValueDelta = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValueGamma = java.lang.Double.NaN;
 
 	/**
-	 * LevelEvolutionTrajectory Constructor
+	 * AssetGreekVertex Constructor
 	 * 
-	 * @param eetStart The Starting Evolution Trajectory Edge Instance
-	 * @param eetFinish The Finishing Evolution Trajectory Edge Instance
-	 * @param lca The Level Cash Account Instance
+	 * @param dblDerivativeXVAValue The Derivative XVA Value
+	 * @param dblDerivativeXVAValueDelta The Derivative XVA Value Delta
+	 * @param dblDerivativeXVAValueGamma The Derivative XVA Value Gamma
+	 * @param dblDerivativeValue The Derivative Value
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public LevelEvolutionTrajectory (
-		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
-		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetFinish,
-		final org.drip.xva.derivative.LevelCashAccount lca)
+	public AssetGreekVertex (
+		final double dblDerivativeXVAValue,
+		final double dblDerivativeXVAValueDelta,
+		final double dblDerivativeXVAValueGamma,
+		final double dblDerivativeValue)
 		throws java.lang.Exception
 	{
-		if (null == (_eetStart = eetStart) || null == (_eetFinish = eetFinish) || null == (_lca = lca))
-			throw new java.lang.Exception ("LevelEvolutionTrajectory Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValue = dblDerivativeXVAValue) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValueDelta =
+				dblDerivativeXVAValueDelta) || !org.drip.quant.common.NumberUtil.IsValid
+					(_dblDerivativeXVAValueGamma = dblDerivativeXVAValueGamma))
+			throw new java.lang.Exception ("AssetGreekVertex Constructor => Invalid Inputs");
+
+		_dblDerivativeValue = dblDerivativeValue;
 	}
 
 	/**
-	 * Retrieve the Starting Evolution Trajectory Edge Instance
+	 * Retrieve the Derivative XVA Value
 	 * 
-	 * @return The Starting Evolution Trajectory Edge Instance
+	 * @return The Derivative XVA Value
 	 */
 
-	public org.drip.xva.derivative.EdgeEvolutionTrajectory edgeStart()
+	public double derivativeXVAValue()
 	{
-		return _eetStart;
+		return _dblDerivativeXVAValue;
 	}
 
 	/**
-	 * Retrieve the Finishing Evolution Trajectory Edge Instance
+	 * Retrieve the Derivative XVA Value Delta
 	 * 
-	 * @return The Finishing Evolution Trajectory Edge Instance
+	 * @return The Derivative XVA Value Delta
 	 */
 
-	public org.drip.xva.derivative.EdgeEvolutionTrajectory edgeFinish()
+	public double derivativeXVAValueDelta()
 	{
-		return _eetFinish;
+		return _dblDerivativeXVAValueDelta;
 	}
 
 	/**
-	 * Retrieve the Level Cash Account Instance
+	 * Retrieve the Derivative XVA Value Gamma
 	 * 
-	 * @return The Level Cash Account Instance
+	 * @return The Derivative XVA Value Gamma
 	 */
 
-	public org.drip.xva.derivative.LevelCashAccount cashAccount()
+	public double derivativeXVAValueGamma()
 	{
-		return _lca;
+		return _dblDerivativeXVAValueGamma;
+	}
+
+	/**
+	 * Retrieve the Derivative Non XVA Value
+	 * 
+	 * @return The Derivative Non XVA Value
+	 */
+
+	public double derivativeValue()
+	{
+		return _dblDerivativeValue;
 	}
 }

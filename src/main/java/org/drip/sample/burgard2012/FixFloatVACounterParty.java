@@ -8,7 +8,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupPath;
 import org.drip.xva.collateral.HypothecationGroupVertexRegular;
 import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
@@ -177,7 +177,7 @@ public class FixFloatVACounterParty {
 					0.
 				);
 
-			HypothecationGroupPathRegular[] aCGP = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV)};
+			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
 
 			aCPGP[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
@@ -206,9 +206,9 @@ public class FixFloatVACounterParty {
 			FormatUtil.FormatDouble (cpga.dva().amount(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.fva().amount(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.fda().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fca(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fba(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.sfva(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fca().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.fba().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (cpga.sfva().amount(), 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (cpga.total(), 1, 2, 100.) + "% ||"
 		);
 	}

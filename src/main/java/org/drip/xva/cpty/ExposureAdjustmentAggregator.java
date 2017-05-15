@@ -592,7 +592,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected FCA
 	 */
 
-	public double fca()
+	public org.drip.xva.basel.ValueAdjustment fca()
 	{
 		double dblFCA = 0.;
 		int iNumPath = _aPEA.length;
@@ -600,7 +600,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblFCA += _aPEA[iPathIndex].fundingCostAdjustment();
 
-		return dblFCA / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.HYBRID (dblFCA / iNumPath);
 	}
 
 	/**
@@ -609,7 +609,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected FBA
 	 */
 
-	public double fba()
+	public org.drip.xva.basel.ValueAdjustment fba()
 	{
 		double dblFBA = 0.;
 		int iNumPath = _aPEA.length;
@@ -617,7 +617,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblFBA += _aPEA[iPathIndex].fundingBenefitAdjustment();
 
-		return dblFBA / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.HYBRID (dblFBA / iNumPath);
 	}
 
 	/**
@@ -626,7 +626,7 @@ public class ExposureAdjustmentAggregator {
 	 * @return The Expected SFVA
 	 */
 
-	public double sfva()
+	public org.drip.xva.basel.ValueAdjustment sfva()
 	{
 		double dblSFVA = 0.;
 		int iNumPath = _aPEA.length;
@@ -634,7 +634,7 @@ public class ExposureAdjustmentAggregator {
 		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
 			dblSFVA += _aPEA[iPathIndex].symmetricFundingValueAdjustment();
 
-		return dblSFVA / iNumPath;
+		return org.drip.xva.basel.ValueAdjustment.HYBRID (dblSFVA / iNumPath);
 	}
 
 	/**

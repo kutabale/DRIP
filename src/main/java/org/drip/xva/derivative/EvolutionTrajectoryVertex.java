@@ -47,7 +47,7 @@ package org.drip.xva.derivative;
  */
 
 /**
- * EdgeEvolutionTrajectory holds the Evolution Snapshot of the Trade-able Prices, the Cash Account, the
+ * EvolutionTrajectoryVertex holds the Evolution Snapshot of the Trade-able Prices, the Cash Account, the
  *  Replication Portfolio, and the corresponding Derivative Value, as laid out in Burgard and Kjaer (2014).
  *   The References are:
  *  
@@ -69,41 +69,41 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EdgeEvolutionTrajectory {
+public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeAssetGreek _eag = null;
+	private org.drip.xva.definition.UniverseVertex _uv = null;
 	private double _dblGainOnBankDefault = java.lang.Double.NaN;
-	private org.drip.xva.definition.UniverseSnapshot _us = null;
+	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
 	private double _dblGainOnCounterPartyDefault = java.lang.Double.NaN;
-	private org.drip.xva.derivative.EdgeReplicationPortfolio _erp = null;
+	private org.drip.xva.derivative.ReplicationPortfolioVertex _rpv = null;
 
 	/**
-	 * EdgeEvolutionTrajectory Constructor
+	 * EvolutionTrajectoryVertex Constructor
 	 * 
 	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param us Realization of the Trade-able Asset Prices
-	 * @param erp The Edge Replication Portfolio Snapshot
-	 * @param eag The Edge Asset Greek Instance
+	 * @param uv Realization of the Trade-able Asset Prices
+	 * @param rpv The Replication Portfolio Vertex
+	 * @param agv The Asset Greek Vertex
 	 * @param dblGainOnBankDefault The Counter Party Gain On Bank Default
 	 * @param dblGainOnCounterPartyDefault The Bank Gain On Counter Party Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public EdgeEvolutionTrajectory (
+	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.definition.UniverseSnapshot us,
-		final org.drip.xva.derivative.EdgeReplicationPortfolio erp,
-		final org.drip.xva.derivative.EdgeAssetGreek eag,
+		final org.drip.xva.definition.UniverseVertex uv,
+		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
+		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double dblGainOnBankDefault,
 		final double dblGainOnCounterPartyDefault)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_us = us) || null ==
-			(_erp = erp) || null == (_eag = eag) || !org.drip.quant.common.NumberUtil.IsValid
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_uv = uv) || null ==
+			(_rpv = rpv) || null == (_agv = agv) || !org.drip.quant.common.NumberUtil.IsValid
 				(_dblGainOnBankDefault = dblGainOnBankDefault) || !org.drip.quant.common.NumberUtil.IsValid
 					(_dblGainOnCounterPartyDefault = dblGainOnCounterPartyDefault))
-			throw new java.lang.Exception ("EdgeEvolutionTrajectory Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("EvolutionTrajectoryVertex Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -123,31 +123,31 @@ public class EdgeEvolutionTrajectory {
 	 * @return Realization of the Trade-able Asset Prices
 	 */
 
-	public org.drip.xva.definition.UniverseSnapshot tradeableAssetSnapshot()
+	public org.drip.xva.definition.UniverseVertex tradeableAssetSnapshot()
 	{
-		return _us;
+		return _uv;
 	}
 
 	/**
-	 * Retrieve the Edge Replication Portfolio Snapshot
+	 * Retrieve the Replication Portfolio Vertex
 	 * 
-	 * @return The Edge Replication Portfolio Snapshot
+	 * @return The Replication Portfolio Vertex
 	 */
 
-	public org.drip.xva.derivative.EdgeReplicationPortfolio replicationPortfolio()
+	public org.drip.xva.derivative.ReplicationPortfolioVertex replicationPortfolioVertex()
 	{
-		return _erp;
+		return _rpv;
 	}
 
 	/**
-	 * Retrieve the EdgeAssetGreek Instance
+	 * Retrieve the Asset Greek Vertex
 	 * 
-	 * @return The EdgeAssetGreek Instance
+	 * @return The Asset Greek Vertex
 	 */
 
-	public org.drip.xva.derivative.EdgeAssetGreek edgeAssetGreek()
+	public org.drip.xva.derivative.AssetGreekVertex assetGreekVertex()
 	{
-		return _eag;
+		return _agv;
 	}
 
 	/**

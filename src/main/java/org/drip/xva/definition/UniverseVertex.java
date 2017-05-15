@@ -1,5 +1,5 @@
 
-package org.drip.xva.derivative;
+package org.drip.xva.definition;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,7 @@ package org.drip.xva.derivative;
  */
 
 /**
- * CashAccountRebalancer holds the Level Cash Account Increment and the Level Derivative Value Update for a
- *  Trajectory that has just undergone Cash Account Re-balancing, as laid out in Burgard and Kjaer (2014).
+ * UniverseVertex holds the current Realizations of the Traded Asset Numeraires of the Reference Universe.
  *  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -69,48 +68,80 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CashAccountRebalancer {
-	private org.drip.xva.derivative.CashAccountEdge _cae = null;
-	private double _dblLevelDerivativeXVAValue = java.lang.Double.NaN;
+public class UniverseVertex {
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondBankNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCollateralNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCounterPartyNumeraire = null;
 
 	/**
-	 * CashAccountRebalancer Constructor
+	 * UniverseVertex Constructor
 	 * 
-	 * @param cae The Cash Account Edge
-	 * @param dblLevelDerivativeXVAValue The Level XVA Derivative Value
+	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
+	 * @param jdeZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
+	 * 		Realization
+	 * @param jdeZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
+	 * @param jdeZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
+	 * 		Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CashAccountRebalancer (
-		final org.drip.xva.derivative.CashAccountEdge cae,
-		final double dblLevelDerivativeXVAValue)
+	public UniverseVertex (
+		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCollateralNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCounterPartyNumeraire)
 		throws java.lang.Exception
 	{
-		if (null == (_cae = cae) || !org.drip.quant.common.NumberUtil.IsValid (_dblLevelDerivativeXVAValue =
-			dblLevelDerivativeXVAValue))
-			throw new java.lang.Exception ("CashAccountRebalancer Constructor => Invalid Inputs");
+		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null ==
+			(_jdeZeroCouponBondCollateralNumeraire = jdeZeroCouponBondCollateralNumeraire) || null ==
+				(_jdeZeroCouponBondBankNumeraire = jdeZeroCouponBondBankNumeraire) || null ==
+					(_jdeZeroCouponBondCounterPartyNumeraire = jdeZeroCouponBondCounterPartyNumeraire))
+			throw new java.lang.Exception ("UniverseVertex Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Cash Account Edge Instance
+	 * Retrieve the Asset Numeraire Level Realization
 	 * 
-	 * @return The Cash Account Edge Instance
+	 * @return The Asset Numeraire Level Realization
 	 */
 
-	public org.drip.xva.derivative.CashAccountEdge cashAccount()
+	public org.drip.measure.realization.JumpDiffusionEdge assetNumeraire()
 	{
-		return _cae;
+		return _jdeAssetNumeraire;
 	}
 
 	/**
-	 * Retrieve the Derivative XVA Value Increment
+	 * Retrieve the Zero Coupon Collateral Bond Numeraire Level Realization
 	 * 
-	 * @return The Derivative XVA Value Increment
+	 * @return The Zero Coupon Collateral Bond Numeraire Level Realization
 	 */
 
-	public double levelDerivativeXVAValue()
+	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCollateralBondNumeraire()
 	{
-		return _dblLevelDerivativeXVAValue;
+		return _jdeZeroCouponBondCollateralNumeraire;
+	}
+
+	/**
+	 * Retrieve the Zero Coupon Bank Bond Numeraire Level Realization
+	 * 
+	 * @return The Zero Coupon Bank Bond Numeraire Level Realization
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponBankBondNumeraire()
+	{
+		return _jdeZeroCouponBondBankNumeraire;
+	}
+
+	/**
+	 * Retrieve the Zero Coupon Counter Party Bond Numeraire Level Realization
+	 * 
+	 * @return The Zero Coupon Counter Party Bond Numeraire Level Realization
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCounterPartyBondNumeraire()
+	{
+		return _jdeZeroCouponBondCounterPartyNumeraire;
 	}
 }

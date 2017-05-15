@@ -79,16 +79,16 @@ import org.drip.xva.pde.*;
 
 public class XVAGreeks {
 
-	private static final EdgeEvolutionTrajectory RunStep (
+	private static final EvolutionTrajectoryVertex RunStep (
 		final TrajectoryEvolutionScheme tes,
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
-		final EdgeEvolutionTrajectory eetStart)
+		final EvolutionTrajectoryVertex eetStart)
 		throws Exception
 	{
-		EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
+		AssetGreekVertex eagStart = eetStart.assetGreekVertex();
 
-		EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
+		ReplicationPortfolioVertex erpStart = eetStart.replicationPortfolioVertex();
 
 		double dblDerivativeXVAValueStart = eagStart.derivativeXVAValue();
 
@@ -98,13 +98,13 @@ public class XVAGreeks {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		UniverseSnapshot usStart = eetStart.tradeableAssetSnapshot();
+		UniverseVertex usStart = eetStart.tradeableAssetSnapshot();
 
 		TwoWayRiskyUniverse twru = tes.universe();
 
 		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
 
-		UniverseSnapshot usFinish = new UniverseSnapshot (
+		UniverseVertex usFinish = new UniverseVertex (
 			twru.asset().priceNumeraire().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -145,7 +145,7 @@ public class XVAGreeks {
 
 		CloseOutBilateral maco = tes.boundaryCondition();
 
-		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (
+		BurgardKjaerEdgeRun lbkr = bko.timeIncrementRun (
 			si,
 			eetStart
 		);
@@ -190,21 +190,21 @@ public class XVAGreeks {
 			FormatUtil.FormatDouble (dblThetaAssetNumeraireUp, 1, 6, 1.) + " ||"
 		);
 
-		org.drip.xva.derivative.LevelCashAccount lca = tes.rebalanceCash (
+		org.drip.xva.derivative.CashAccountEdge lca = tes.rebalanceCash (
 			eetStart,
 			usFinish
 		).cashAccount();
 
-		return new EdgeEvolutionTrajectory (
+		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
 			usFinish,
-			new EdgeReplicationPortfolio (
+			new ReplicationPortfolioVertex (
 				-1. * dblDerivativeXVAValueDeltaFinish,
 				dblGainOnBankDefaultFinish / usFinish.zeroCouponBankBondNumeraire().finish(),
 				dblGainOnCounterPartyDefaultFinish / usFinish.zeroCouponCounterPartyBondNumeraire().finish(),
 				erpStart.cashAccount() + lca.accumulation()
 			),
-			new EdgeAssetGreek (
+			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
@@ -330,7 +330,7 @@ public class XVAGreeks {
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
 
-		EdgeAssetGreek erug = new EdgeAssetGreek (
+		AssetGreekVertex erug = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
@@ -398,9 +398,9 @@ public class XVAGreeks {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
-		EdgeEvolutionTrajectory eet = new EdgeEvolutionTrajectory (
+		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new UniverseSnapshot (
+			new UniverseVertex (
 				meAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -438,7 +438,7 @@ public class XVAGreeks {
 					dblTimeWidth
 				)
 			),
-			new EdgeReplicationPortfolio (
+			new ReplicationPortfolioVertex (
 				1.,
 				0.,
 				0.,

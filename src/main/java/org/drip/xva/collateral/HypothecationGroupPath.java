@@ -47,8 +47,8 @@ package org.drip.xva.collateral;
  */
 
 /**
- * HypothecationGroupPathRegular accumulates the Vertex Realizations of the Sequence in a Single Path
- *  Projection Run along the Granularity of a Regular Collateral Hypothecation Group. The References are:
+ * HypothecationGroupPath accumulates the Vertex Realizations of the Sequence in a Single Path Projection Run
+ *  along the Granularity of a Regular Collateral Hypothecation Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,18 +67,18 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class HypothecationGroupPathRegular {
+public class HypothecationGroupPath {
 	private org.drip.xva.collateral.HypothecationGroupVertexRegular[] _aHGVR = null;
 
 	/**
-	 * HypothecationGroupPathRegular Constructor
+	 * HypothecationGroupPath Constructor
 	 * 
 	 * @param aHGVR The Array of Collateral Hypothecation Group Trajectory Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public HypothecationGroupPathRegular (
+	public HypothecationGroupPath (
 		final org.drip.xva.collateral.HypothecationGroupVertexRegular[] aHGVR)
 		throws java.lang.Exception
 	{

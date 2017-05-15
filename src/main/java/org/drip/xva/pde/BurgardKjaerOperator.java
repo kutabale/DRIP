@@ -70,27 +70,27 @@ package org.drip.xva.pde;
  */
 
 public class BurgardKjaerOperator {
-	private org.drip.xva.definition.PDEEvolutionControl _settings = null;
+	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
-	private org.drip.xva.definition.CloseOutBilateral _maco = null;
+	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
 
 	/**
 	 * BurgardKjaerOperator Constructor
 	 * 
 	 * @param twru The Universe of Trade-able Assets
-	 * @param maco The Master Agreement Close Out Boundary Conditions
-	 * @param settings The XVA Control Settings
+	 * @param cob The Master Agreement Close Out Boundary Conditions
+	 * @param pdeec The XVA Control Settings
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public BurgardKjaerOperator (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
-		final org.drip.xva.definition.CloseOutBilateral maco,
-		final org.drip.xva.definition.PDEEvolutionControl settings)
+		final org.drip.xva.definition.CloseOutBilateral cob,
+		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception
 	{
-		if (null == (_twru = twru) || null == (_maco = maco) || null == (_settings = settings))
+		if (null == (_twru = twru) || null == (_cob = cob) || null == (_pdeec = pdeec))
 			throw new java.lang.Exception ("BurgardKjaerOperator Constructor => Invalid Inputs");
 	}
 
@@ -113,7 +113,7 @@ public class BurgardKjaerOperator {
 
 	public org.drip.xva.definition.CloseOutBilateral boundaryCondition()
 	{
-		return _maco;
+		return _cob;
 	}
 
 	/**
@@ -122,47 +122,47 @@ public class BurgardKjaerOperator {
 	 * @return The XVA Control Settings
 	 */
 
-	public org.drip.xva.definition.PDEEvolutionControl settings()
+	public org.drip.xva.definition.PDEEvolutionControl pdeec()
 	{
-		return _settings;
+		return _pdeec;
 	}
 
 	/**
 	 * Generate the Time Increment using the Burgard Kjaer Scheme
 	 * 
 	 * @param si The Spread Intensity Instance
-	 * @param eet The Edge Evolution Trajectory Instance
+	 * @param etv The Evolution Trajectory Vertex
 	 * 
 	 * @return The Time Increment using the Burgard Kjaer Scheme
 	 */
 
-	public org.drip.xva.pde.LevelBurgardKjaerRun timeIncrementRun (
+	public org.drip.xva.pde.BurgardKjaerEdgeRun timeIncrementRun (
 		final org.drip.xva.definition.SpreadIntensity si,
-		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet)
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etv)
 	{
-		if (null == si || null == eet) return null;
+		if (null == si || null == etv) return null;
 
-		double dblTime = eet.time();
+		double dblTime = etv.time();
 
-		org.drip.xva.definition.UniverseSnapshot us = eet.tradeableAssetSnapshot();
+		org.drip.xva.definition.UniverseVertex us = etv.tradeableAssetSnapshot();
 
-		double dblBankDefaultCloseOut = eet.gainOnBankDefault();
+		double dblBankDefaultCloseOut = etv.gainOnBankDefault();
 
 		double dblAssetValue = us.assetNumeraire().finish();
 
-		double dblAssetBump = _settings.sensitivityShiftFactor() * dblAssetValue;
+		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
 
-		double dblDerivativeXVAValue = eet.edgeAssetGreek().derivativeXVAValue();
+		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
 		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblBankDefaultCloseOut;
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_twru.asset()).thetaUpDown (eet, dblAssetValue, dblAssetBump);
+				(_twru.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
-			return new org.drip.xva.pde.LevelBurgardKjaerRun (
+			return new org.drip.xva.pde.BurgardKjaerEdgeRun (
 				dblAssetBump,
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
@@ -179,7 +179,7 @@ public class BurgardKjaerOperator {
 					dblBankDefaultDerivativeValue > 0. ? dblBankDefaultDerivativeValue : 0.
 				),
 				-1. * si.bankDefaultIntensity() * dblBankDefaultCloseOut,
-				-1. * si.counterPartyDefaultIntensity() * eet.gainOnCounterPartyDefault()
+				-1. * si.counterPartyDefaultIntensity() * etv.gainOnCounterPartyDefault()
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -192,44 +192,44 @@ public class BurgardKjaerOperator {
 	 * Generate the Time Increment Run Attribution using the Burgard Kjaer Scheme
 	 * 
 	 * @param si The Spread Intensity Instance
-	 * @param eet The Edge Evolution Trajectory Instance
+	 * @param etv The Evolution Trajectory Vertex
 	 * 
 	 * @return The Time Increment Run Attribution using the Burgard Kjaer Scheme
 	 */
 
-	public org.drip.xva.pde.LevelBurgardKjaerAttribution timeIncrementRunAttribution (
+	public org.drip.xva.pde.BurgardKjaerEdgeAttribution timeIncrementRunAttribution (
 		final org.drip.xva.definition.SpreadIntensity si,
-		final org.drip.xva.derivative.EdgeEvolutionTrajectory eet)
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etv)
 	{
-		if (null == si || null == eet) return null;
+		if (null == si || null == etv) return null;
 
-		double dblTime = eet.time();
+		double dblTime = etv.time();
 
 		double dblBankDefaultIntensity = si.bankDefaultIntensity();
 
 		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
 
-		org.drip.xva.definition.UniverseSnapshot us = eet.tradeableAssetSnapshot();
+		org.drip.xva.definition.UniverseVertex us = etv.tradeableAssetSnapshot();
 
-		double dblDerivativeXVAValue = eet.edgeAssetGreek().derivativeXVAValue();
+		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
 		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
-			_settings.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
+			_pdeec.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
 
-		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _maco.bankRecovery() *
+		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _cob.bankRecovery() *
 			dblCloseOutMTM;
 
 		double dblAssetValue = us.assetNumeraire().finish();
 
-		double dblAssetBump = _settings.sensitivityShiftFactor() * dblAssetValue;
+		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_twru.asset()).thetaUpDown (eet, dblAssetValue, dblAssetBump);
+				(_twru.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
-			return new org.drip.xva.pde.LevelBurgardKjaerAttribution (
+			return new org.drip.xva.pde.BurgardKjaerEdgeAttribution (
 				dblAssetBump,
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
@@ -246,7 +246,7 @@ public class BurgardKjaerOperator {
 				si.bankFundingSpread() * dblBankExposure,
 				-1. * dblBankDefaultIntensity * dblBankExposure,
 				-1. * dblCounterPartyDefaultIntensity * (dblCloseOutMTM < 0. ? dblCloseOutMTM :
-					_maco.counterPartyRecovery() * dblCloseOutMTM)
+					_cob.counterPartyRecovery() * dblCloseOutMTM)
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

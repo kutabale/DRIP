@@ -82,20 +82,20 @@ import org.drip.xva.pde.*;
 
 public class CorrelatedNumeraireXVAGreeks {
 
-	private static final EdgeEvolutionTrajectory RunStep (
+	private static final EvolutionTrajectoryVertex RunStep (
 		final TrajectoryEvolutionScheme tes,
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
-		final EdgeEvolutionTrajectory eetStart,
+		final EvolutionTrajectoryVertex eetStart,
 		final JumpDiffusionEdge jdeAsset,
 		final JumpDiffusionEdge jdeCollateral,
 		final JumpDiffusionEdge jdeBank,
 		final JumpDiffusionEdge jdeCounterParty)
 		throws Exception
 	{
-		EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
+		AssetGreekVertex eagStart = eetStart.assetGreekVertex();
 
-		EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
+		ReplicationPortfolioVertex erpStart = eetStart.replicationPortfolioVertex();
 
 		double dblDerivativeXVAValueStart = eagStart.derivativeXVAValue();
 
@@ -105,13 +105,13 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		UniverseSnapshot usStart = eetStart.tradeableAssetSnapshot();
+		UniverseVertex usStart = eetStart.tradeableAssetSnapshot();
 
 		TwoWayRiskyUniverse twru = tes.universe();
 
 		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
 
-		UniverseSnapshot usFinish = new UniverseSnapshot (
+		UniverseVertex usFinish = new UniverseVertex (
 			jdeAsset,
 			jdeCollateral,
 			jdeBank,
@@ -120,7 +120,7 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		CloseOutBilateral maco = tes.boundaryCondition();
 
-		LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (
+		BurgardKjaerEdgeRun lbkr = bko.timeIncrementRun (
 			si,
 			eetStart
 		);
@@ -165,7 +165,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			FormatUtil.FormatDouble (dblThetaAssetNumeraireUp, 1, 6, 1.) + " ||"
 		);
 
-		org.drip.xva.derivative.LevelCashAccount lca = tes.rebalanceCash (
+		org.drip.xva.derivative.CashAccountEdge lca = tes.rebalanceCash (
 			eetStart,
 			usFinish
 		).cashAccount();
@@ -176,18 +176,18 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		double dblZeroCouponCounterPartyPriceFinish = jdeCounterParty.finish();
 
-		EdgeReplicationPortfolio erpFinish = new EdgeReplicationPortfolio (
+		ReplicationPortfolioVertex erpFinish = new ReplicationPortfolioVertex (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
 			dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
 			erpStart.cashAccount() + dblCashAccountAccumulationFinish
 		);
 
-		return new EdgeEvolutionTrajectory (
+		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
 			usFinish,
 			erpFinish,
-			new EdgeAssetGreek (
+			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
@@ -400,7 +400,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		EdgeAssetGreek eagInitial = new EdgeAssetGreek (
+		AssetGreekVertex eagInitial = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
@@ -468,15 +468,15 @@ public class CorrelatedNumeraireXVAGreeks {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
-		EdgeEvolutionTrajectory eet = new EdgeEvolutionTrajectory (
+		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new UniverseSnapshot (
+			new UniverseVertex (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
 				aJDECounterParty[iNumTimeStep - 1]
 			),
-			new EdgeReplicationPortfolio (
+			new ReplicationPortfolioVertex (
 				1.,
 				0.,
 				0.,

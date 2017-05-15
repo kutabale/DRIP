@@ -71,7 +71,7 @@ package org.drip.xva.netting;
 public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGroupPath {
 
 	protected FundingGroupPath (
-		final org.drip.xva.collateral.HypothecationGroupPathRegular[] aHGP,
+		final org.drip.xva.collateral.HypothecationGroupPath[] aHGP,
 		final org.drip.xva.numeraire.MarketPath mp)
 		throws java.lang.Exception
 	{
@@ -88,7 +88,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblUnilateralFundingCostAdjustment = 0.;
@@ -117,7 +117,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblBilateralFundingValueAdjustment = 0.;
@@ -148,7 +148,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
 		double dblUnilateralFundingBenefitAdjustment = 0.;
@@ -177,7 +177,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblBilateralFundingDebtAdjustment = 0.;
@@ -208,7 +208,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedExposurePV = collateralizedExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedExposurePV.length;
 		double dblSymmetricFundingValueAdjustment = 0.;
@@ -237,7 +237,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double[] adblUnilateralFundingDebtAdjustment = new double[iNumVertex - 1];
@@ -269,7 +269,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double[] adblBilateralFundingDebtAdjustment = new double[iNumVertex - 1];
@@ -301,7 +301,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
 		double[] adblUnilateralFundingDebtAdjustment = new double[iNumVertex - 1];
@@ -331,7 +331,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double[] adblBilateralFundingDebtAdjustment = new double[iNumVertex - 1];
@@ -363,7 +363,7 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	{
 		double[] adblCollateralizedExposurePV = collateralizedExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedExposurePV.length;
 		double[] adblSymmetricFundingValueAdjustment = new double[iNumVertex - 1];

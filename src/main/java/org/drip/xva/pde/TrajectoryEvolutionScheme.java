@@ -69,17 +69,17 @@ package org.drip.xva.pde;
  */
 
 public class TrajectoryEvolutionScheme {
-	private org.drip.xva.definition.PDEEvolutionControl _settings = null;
 	private double _dblTimeIncrement = java.lang.Double.NaN;
+	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.TwoWayRiskyUniverse _twru = null;
-	private org.drip.xva.definition.CloseOutBilateral _maco = null;
+	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
 
 	/**
 	 * TrajectoryEvolutionScheme Constructor
 	 * 
 	 * @param twru The Universe of Trade-able Assets
-	 * @param maco The Master Agreement Close Out Boundary Conditions
-	 * @param settings The XVA Control Settings
+	 * @param cob The Master Agreement Close Out Boundary Conditions
+	 * @param pdeec The XVA Control Settings
 	 * @param dblTimeIncrement The Time Increment
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -87,12 +87,12 @@ public class TrajectoryEvolutionScheme {
 
 	public TrajectoryEvolutionScheme (
 		final org.drip.xva.definition.TwoWayRiskyUniverse twru,
-		final org.drip.xva.definition.CloseOutBilateral maco,
-		final org.drip.xva.definition.PDEEvolutionControl settings,
+		final org.drip.xva.definition.CloseOutBilateral cob,
+		final org.drip.xva.definition.PDEEvolutionControl pdeec,
 		final double dblTimeIncrement)
 		throws java.lang.Exception
 	{
-		if (null == (_twru = twru) || null == (_maco = maco) || null == (_settings = settings) ||
+		if (null == (_twru = twru) || null == (_cob = cob) || null == (_pdeec = pdeec) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTimeIncrement = dblTimeIncrement))
 			throw new java.lang.Exception ("TrajectoryEvolutionScheme Constructor => Invalid Inputs");
 	}
@@ -116,7 +116,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.definition.CloseOutBilateral boundaryCondition()
 	{
-		return _maco;
+		return _cob;
 	}
 
 	/**
@@ -125,9 +125,9 @@ public class TrajectoryEvolutionScheme {
 	 * @return The XVA Control Settings
 	 */
 
-	public org.drip.xva.definition.PDEEvolutionControl settings()
+	public org.drip.xva.definition.PDEEvolutionControl pdeec()
 	{
-		return _settings;
+		return _pdeec;
 	}
 
 	/**
@@ -144,25 +144,25 @@ public class TrajectoryEvolutionScheme {
 	/**
 	 * Re-balance the Cash Account and generate the Derivative Value Update
 	 * 
-	 * @param eetStart The Starting Evolution Trajectory Edge
+	 * @param etvStart The Starting Evolution Trajectory Vertex
 	 * @param us The Universe Snap-shot
 	 * 
 	 * @return The LevelEvolutionTrajectoryRebalanced Instance
 	 */
 
 	public org.drip.xva.derivative.CashAccountRebalancer rebalanceCash (
-		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
-		final org.drip.xva.definition.UniverseSnapshot us)
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
+		final org.drip.xva.definition.UniverseVertex us)
 	{
-		if (null == eetStart || null == us) return null;
+		if (null == etvStart || null == us) return null;
 
-		org.drip.xva.derivative.EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
+		org.drip.xva.derivative.ReplicationPortfolioVertex rpvStart = etvStart.replicationPortfolioVertex();
 
-		double dblAssetUnitsStart = erpStart.assetUnits();
+		double dblAssetUnitsStart = rpvStart.assetUnits();
 
-		double dblBankBondUnitsStart = erpStart.bankBondUnits();
+		double dblBankBondUnitsStart = rpvStart.bankBondUnits();
 
-		double dblCounterPartyBondUnitsStart = erpStart.counterPartyBondUnits();
+		double dblCounterPartyBondUnitsStart = rpvStart.counterPartyBondUnits();
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeAsset = us.assetNumeraire();
 
@@ -178,7 +178,7 @@ public class TrajectoryEvolutionScheme {
 			_twru.zeroCouponCounterPartyBond().cashAccumulationRate() * jdeCounterPartyBond.finish() *
 				_dblTimeIncrement;
 
-		double dblCashAccountBalance = -1. * eetStart.edgeAssetGreek().derivativeXVAValue() -
+		double dblCashAccountBalance = -1. * etvStart.assetGreekVertex().derivativeXVAValue() -
 			dblBankBondUnitsStart * jdeBankBond.finish();
 
 		double dblLevelBankCash = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
@@ -194,7 +194,7 @@ public class TrajectoryEvolutionScheme {
 
 		try {
 			return new org.drip.xva.derivative.CashAccountRebalancer (new
-				org.drip.xva.derivative.LevelCashAccount (dblLevelAssetCash, dblLevelBankCash *
+				org.drip.xva.derivative.CashAccountEdge (dblLevelAssetCash, dblLevelBankCash *
 					 _dblTimeIncrement, dblLevelCounterPartyCash * _dblTimeIncrement),
 					 	dblLevelDerivativeXVAValue);
 		} catch (java.lang.Exception e) {
@@ -207,50 +207,50 @@ public class TrajectoryEvolutionScheme {
 	/**
 	 * Re-balance AND move the Cash Account and generate the Updated Derivative Value/Replication Portfolio
 	 * 
-	 * @param eetStart The Starting Evolution Trajectory Edge
+	 * @param etvStart The Starting Evolution Trajectory Vertex
 	 * @param us The Universe Snap-shot
-	 * @param eagFinish The Period End EdgeAssetGreek Instance
+	 * @param agvFinish The Period End Asset Greek Vertex
 	 * 
 	 * @return The LevelEvolutionTrajectory Instance
 	 */
 
-	public org.drip.xva.derivative.LevelEvolutionTrajectory move (
-		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart,
-		final org.drip.xva.definition.UniverseSnapshot us,
-		final org.drip.xva.derivative.EdgeAssetGreek eagFinish)
+	public org.drip.xva.derivative.EvolutionTrajectoryEdge move (
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
+		final org.drip.xva.definition.UniverseVertex us,
+		final org.drip.xva.derivative.AssetGreekVertex agvFinish)
 	{
-		if (null == eagFinish) return null;
+		if (null == agvFinish) return null;
 
-		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (eetStart, us);
+		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (etvStart, us);
 
 		if (null == car) return null;
 
-		org.drip.xva.derivative.LevelCashAccount lca = car.cashAccount();
+		org.drip.xva.derivative.CashAccountEdge cae = car.cashAccount();
 
-		double dblDerivativeXVAValue = eagFinish.derivativeXVAValue();
+		double dblDerivativeXVAValue = agvFinish.derivativeXVAValue();
 
 		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
-			_settings.closeOutScheme() ? eagFinish.derivativeValue() : dblDerivativeXVAValue;
+			_pdeec.closeOutScheme() ? agvFinish.derivativeValue() : dblDerivativeXVAValue;
 
 		try {
-			double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - _maco.bankDefault (dblCloseOutMTM));
+			double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - _cob.bankDefault (dblCloseOutMTM));
 
 			double dblBankBondUnits = dblGainOnBankDefault / us.zeroCouponBankBondNumeraire().finish();
 
-			double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - _maco.counterPartyDefault
+			double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - _cob.counterPartyDefault
 				(dblCloseOutMTM));
 
 			double dblCounterPartyBondUnits = dblGainOnCounterPartyDefault /
 				us.zeroCouponCounterPartyBondNumeraire().finish();
 
-			org.drip.xva.derivative.EdgeReplicationPortfolio erp = new
-				org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * eagFinish.derivativeXVAValueDelta(),
-					dblBankBondUnits, dblCounterPartyBondUnits, eetStart.replicationPortfolio().cashAccount()
-						+ lca.accumulation());
+			org.drip.xva.derivative.ReplicationPortfolioVertex prv = new
+				org.drip.xva.derivative.ReplicationPortfolioVertex (-1. *
+					agvFinish.derivativeXVAValueDelta(), dblBankBondUnits, dblCounterPartyBondUnits,
+						etvStart.replicationPortfolioVertex().cashAccount() + cae.accumulation());
 
-			return new org.drip.xva.derivative.LevelEvolutionTrajectory (eetStart, new
-				org.drip.xva.derivative.EdgeEvolutionTrajectory (eetStart.time() + _dblTimeIncrement, us,
-					erp, eagFinish, dblGainOnBankDefault, dblGainOnCounterPartyDefault), lca);
+			return new org.drip.xva.derivative.EvolutionTrajectoryEdge (etvStart, new
+				org.drip.xva.derivative.EvolutionTrajectoryVertex (etvStart.time() + _dblTimeIncrement, us,
+					prv, agvFinish, dblGainOnBankDefault, dblGainOnCounterPartyDefault), cae);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -264,24 +264,24 @@ public class TrajectoryEvolutionScheme {
 	 * @param si The Spread Intensity Instance
 	 * @param us The Universe Snapshot
 	 * @param bko The Burgard Kjaer Operator Instance
-	 * @param eetStart The Starting EET Instance
+	 * @param etvStart The Starting ETV Instance
 	 * 
-	 * @return The LevelEvolutionTrajectory Instance
+	 * @return The Evolution Trajectory Edge
 	 */
 
-	public org.drip.xva.derivative.LevelEvolutionTrajectory eulerWalk (
+	public org.drip.xva.derivative.EvolutionTrajectoryEdge eulerWalk (
 		final org.drip.xva.definition.SpreadIntensity si,
-		final org.drip.xva.definition.UniverseSnapshot us,
+		final org.drip.xva.definition.UniverseVertex us,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
-		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart)
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart)
 	{
-		if (null == si || null == us || null == bko || null == eetStart) return null;
+		if (null == si || null == us || null == bko || null == etvStart) return null;
 
-		org.drip.xva.derivative.EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
+		org.drip.xva.derivative.AssetGreekVertex agvStart = etvStart.assetGreekVertex();
 
-		org.drip.xva.pde.LevelBurgardKjaerRun lbkr = bko.timeIncrementRun (si, eetStart);
+		org.drip.xva.pde.BurgardKjaerEdgeRun lbkr = bko.timeIncrementRun (si, etvStart);
 
-		double dblTimeStart = eetStart.time();
+		double dblTimeStart = etvStart.time();
 
 		double dblTimeWidth = timeIncrement();
 
@@ -295,55 +295,53 @@ public class TrajectoryEvolutionScheme {
 
 		double dblThetaAssetNumeraireDown = lbkr.thetaAssetNumeraireDown();
 
-		double dblDerivativeXVAValueDeltaFinish = eagStart.derivativeXVAValueDelta() + 0.5 *
+		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() + 0.5 *
 			(dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
 		double dblGainOnBankDefaultFinish = java.lang.Double.NaN;
 		double dblGainOnCounterPartyDefaultFinish = java.lang.Double.NaN;
-		double dblDerivativeXVAValueFinish = eagStart.derivativeXVAValue() - dblTheta * dblTimeWidth;
+		double dblDerivativeXVAValueFinish = agvStart.derivativeXVAValue() - dblTheta * dblTimeWidth;
 
 		try {
-			dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - _maco.bankDefault
+			dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - _cob.bankDefault
 				(dblDerivativeXVAValueFinish));
 
 			dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-				_maco.counterPartyDefault (dblDerivativeXVAValueFinish));
+				_cob.counterPartyDefault (dblDerivativeXVAValueFinish));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
 			return null;
 		}
 
-		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (eetStart, us);
+		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (etvStart, us);
 
 		if (null == car) return null;
 
-		org.drip.xva.derivative.LevelCashAccount lca = car.cashAccount();
+		org.drip.xva.derivative.CashAccountEdge cae = car.cashAccount();
 
 		try {
-			org.drip.xva.derivative.EdgeEvolutionTrajectory eetFinish = new
-				org.drip.xva.derivative.EdgeEvolutionTrajectory (dblTimeStart - dblTimeWidth, us, new
-					org.drip.xva.derivative.EdgeReplicationPortfolio (-1. * dblDerivativeXVAValueDeltaFinish,
-						dblGainOnBankDefaultFinish / us.zeroCouponBankBondNumeraire().finish(),
-							dblGainOnCounterPartyDefaultFinish /
+			org.drip.xva.derivative.EvolutionTrajectoryVertex etvFinish = new
+				org.drip.xva.derivative.EvolutionTrajectoryVertex (dblTimeStart - dblTimeWidth, us, new
+					org.drip.xva.derivative.ReplicationPortfolioVertex (-1. *
+						dblDerivativeXVAValueDeltaFinish, dblGainOnBankDefaultFinish /
+							us.zeroCouponBankBondNumeraire().finish(), dblGainOnCounterPartyDefaultFinish /
 								us.zeroCouponCounterPartyBondNumeraire().finish(),
-									eetStart.replicationPortfolio().cashAccount() + lca.accumulation()), new
-										org.drip.xva.derivative.EdgeAssetGreek (dblDerivativeXVAValueFinish,
-											dblDerivativeXVAValueDeltaFinish,
-												eagStart.derivativeXVAValueGamma() +
+									etvStart.replicationPortfolioVertex().cashAccount() +
+										cae.accumulation()), new org.drip.xva.derivative.AssetGreekVertex
+											(dblDerivativeXVAValueFinish, dblDerivativeXVAValueDeltaFinish,
+												agvStart.derivativeXVAValueGamma() +
 													(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown -
 														2. * dblTheta) * dblTimeWidth /
 															(dblAssetNumeraireBump * dblAssetNumeraireBump),
-																eagStart.derivativeValue() * Math.exp (-1. *
+																agvStart.derivativeValue() * Math.exp (-1. *
 																	dblTimeWidth *
 																		_twru.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value
-																		(new
-																			org.drip.measure.realization.JumpDiffusionVertex
-																			(dblTimeStart - 0.5 * dblTimeWidth,
-				eetStart.tradeableAssetSnapshot().zeroCouponCollateralBondNumeraire().finish(), 0.,
-					false)))), dblGainOnBankDefaultFinish, dblGainOnCounterPartyDefaultFinish);
+				(new org.drip.measure.realization.JumpDiffusionVertex (dblTimeStart - 0.5 * dblTimeWidth,
+					etvStart.tradeableAssetSnapshot().zeroCouponCollateralBondNumeraire().finish(), 0.,
+						false)))), dblGainOnBankDefaultFinish, dblGainOnCounterPartyDefaultFinish);
 
-			return new org.drip.xva.derivative.LevelEvolutionTrajectory (eetStart, eetFinish, lca);
+			return new org.drip.xva.derivative.EvolutionTrajectoryEdge (etvStart, etvFinish, cae);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -351,39 +349,38 @@ public class TrajectoryEvolutionScheme {
 		return null;
 	}
 
-
 	/**
 	 * Execute a Sequential Array of Euler Time Step Walks
 	 * 
 	 * @param si The Spread Intensity Instance
 	 * @param aUS Array of Universe Snapshot
 	 * @param bko The Burgard Kjaer Operator Instance
-	 * @param eetStart The Starting EET Instance
+	 * @param etvStart The Starting EET Instance
 	 * 
 	 * @return Array of LevelEvolutionTrajectory Instances
 	 */
 
-	public org.drip.xva.derivative.LevelEvolutionTrajectory[] eulerWalk (
+	public org.drip.xva.derivative.EvolutionTrajectoryEdge[] eulerWalk (
 		final org.drip.xva.definition.SpreadIntensity si,
-		final org.drip.xva.definition.UniverseSnapshot[] aUS,
+		final org.drip.xva.definition.UniverseVertex[] aUS,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
-		final org.drip.xva.derivative.EdgeEvolutionTrajectory eetStart)
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart)
 	{
 		if (null == aUS) return null;
 
 		int iNumTimeStep = aUS.length;
-		org.drip.xva.derivative.EdgeEvolutionTrajectory eet = eetStart;
-		org.drip.xva.derivative.LevelEvolutionTrajectory[] aLET = 1 >= iNumTimeStep ? null : new
-			org.drip.xva.derivative.LevelEvolutionTrajectory[iNumTimeStep - 1];
+		org.drip.xva.derivative.EvolutionTrajectoryVertex etv = etvStart;
+		org.drip.xva.derivative.EvolutionTrajectoryEdge[] aETE = 1 >= iNumTimeStep ? null : new
+			org.drip.xva.derivative.EvolutionTrajectoryEdge[iNumTimeStep - 1];
 
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = iNumTimeStep - 2; i >= 0; --i) {
-			if (null == (aLET[i] = eulerWalk (si, aUS[i], bko, eet))) return null;
+			if (null == (aETE[i] = eulerWalk (si, aUS[i], bko, etv))) return null;
 
-			eet = aLET[i].edgeFinish();
+			etv = aETE[i].vertexFinish();
 		}
 
-		return aLET;
+		return aETE;
 	}
 }

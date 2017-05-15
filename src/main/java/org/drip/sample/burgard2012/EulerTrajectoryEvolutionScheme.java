@@ -128,7 +128,7 @@ public class EulerTrajectoryEvolutionScheme {
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
-		UniverseSnapshot[] aUS = new UniverseSnapshot[iNumTimeStep];
+		UniverseVertex[] aUS = new UniverseVertex[iNumTimeStep];
 
 		PDEEvolutionControl settings = new PDEEvolutionControl (
 			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
@@ -276,7 +276,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		EdgeAssetGreek eagInitial = new EdgeAssetGreek (
+		AssetGreekVertex eagInitial = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
@@ -287,7 +287,7 @@ public class EulerTrajectoryEvolutionScheme {
 
 		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue));
 
-		EdgeReplicationPortfolio erpInitial = new EdgeReplicationPortfolio (
+		ReplicationPortfolioVertex erpInitial = new ReplicationPortfolioVertex (
 			1.,
 			dblGainOnBankDefaultInitial,
 			dblGainOnCounterPartyDefaultInitial,
@@ -351,15 +351,15 @@ public class EulerTrajectoryEvolutionScheme {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
-		EdgeEvolutionTrajectory eet = new EdgeEvolutionTrajectory (
+		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new UniverseSnapshot (
+			new UniverseVertex (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
 				aJDECounterParty[iNumTimeStep - 1]
 			),
-			new EdgeReplicationPortfolio (
+			new ReplicationPortfolioVertex (
 				1.,
 				0.,
 				0.,
@@ -371,14 +371,14 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		for (int i = 0; i < iNumTimeStep; ++i)
-			aUS[i] = new UniverseSnapshot (
+			aUS[i] = new UniverseVertex (
 				aJDEAsset[i],
 				aJDECollateral[i],
 				aJDEBank[i],
 				aJDECounterParty[i]
 			);
 
-		LevelEvolutionTrajectory[] aLET = tes.eulerWalk (
+		EvolutionTrajectoryEdge[] aLET = tes.eulerWalk (
 			si,
 			aUS,
 			bko,
@@ -386,21 +386,21 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		for (int i = iNumTimeStep - 2; i >= 0; --i) {
-			eet = aLET[i].edgeFinish();
+			eet = aLET[i].vertexFinish();
 
-			LevelCashAccount lca = aLET[i].cashAccount();
+			CashAccountEdge lca = aLET[i].cashAccountEdge();
 
 			System.out.println ("\t||" +
 				FormatUtil.FormatDouble (eet.time(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (eet.edgeAssetGreek().derivativeXVAValue(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (eet.assetGreekVertex().derivativeXVAValue(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aUS[i].assetNumeraire().finish(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aUS[i].zeroCouponBankBondNumeraire().finish(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aUS[i].zeroCouponCounterPartyBondNumeraire().finish(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aUS[i].zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (eet.replicationPortfolio().assetUnits(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (eet.replicationPortfolio().bankBondUnits(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (eet.replicationPortfolio().counterPartyBondUnits(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (eet.replicationPortfolio().cashAccount(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (eet.replicationPortfolioVertex().assetUnits(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (eet.replicationPortfolioVertex().bankBondUnits(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (eet.replicationPortfolioVertex().counterPartyBondUnits(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (eet.replicationPortfolioVertex().cashAccount(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (lca.accumulation(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (lca.assetAccumulation(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (lca.bankAccumulation(), 1, 6, 1.) + " | " +
@@ -411,7 +411,5 @@ public class EulerTrajectoryEvolutionScheme {
 		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
-
-		System.out.println (aLET);
 	}
 }

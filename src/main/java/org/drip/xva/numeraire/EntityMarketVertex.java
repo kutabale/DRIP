@@ -77,7 +77,7 @@ public class EntityMarketVertex {
 	 * @param dblSurvival The Realized Bank Survival Numeraire
 	 * @param dblRecovery The Realized Bank Recovery Numeraire
 	 * @param dblHazard The Realized Bank Hazard Numeraire
-	 * @param dblFundingSpread The RealizedBank Funding Spread Numeraire
+	 * @param dblFundingSpread The Realized Bank Funding Spread Numeraire
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -91,8 +91,8 @@ public class EntityMarketVertex {
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSurvival = dblSurvival) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblRecovery = dblRecovery) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblHazard = dblHazard) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblFundingSpread = dblFundingSpread))
+				!org.drip.quant.common.NumberUtil.IsValid (_dblHazard = dblHazard) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblFundingSpread = dblFundingSpread))
 			throw new java.lang.Exception ("EntityMarketVertex Constructor => Invalid Inputs");
 	}
 

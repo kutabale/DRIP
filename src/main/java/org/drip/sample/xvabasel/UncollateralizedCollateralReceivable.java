@@ -10,7 +10,7 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
-import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupPath;
 import org.drip.xva.collateral.HypothecationGroupVertexRegular;
 import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
@@ -254,13 +254,13 @@ public class UncollateralizedCollateralReceivable {
 
 			MarketPath np = new MarketPath (aNV);
 
-			HypothecationGroupPathRegular[] aCGPGround = new HypothecationGroupPathRegular[] {
-				new HypothecationGroupPathRegular (aCGV1)
+			HypothecationGroupPath[] aCGPGround = new HypothecationGroupPath[] {
+				new HypothecationGroupPath (aCGV1)
 			};
 
-			HypothecationGroupPathRegular[] aCGPExtended = new HypothecationGroupPathRegular[] {
-				new HypothecationGroupPathRegular (aCGV1),
-				new HypothecationGroupPathRegular (aCGV2)
+			HypothecationGroupPath[] aCGPExtended = new HypothecationGroupPath[] {
+				new HypothecationGroupPath (aCGV1),
+				new HypothecationGroupPath (aCGV2)
 			};
 
 			aCPGPGround[i] = new PathExposureAdjustment (

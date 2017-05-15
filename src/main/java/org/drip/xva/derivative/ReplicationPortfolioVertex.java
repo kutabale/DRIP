@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.definition;
  */
 
 /**
- * UniverseSnapshot holds the current Realizations of the Traded Asset Numeraires of the Reference Universe.
- *  The References are:
+ * ReplicationPortfolioVertex contains the Dynamic Replicating Portfolio of the Pay-out using the Assets in
+ *  the Economy, from the Bank's View Point. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,80 +68,100 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class UniverseSnapshot {
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondBankNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCollateralNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCounterPartyNumeraire = null;
+public class ReplicationPortfolioVertex {
+	private double _dblAssetUnits = java.lang.Double.NaN;
+	private double _dblCashAccount = java.lang.Double.NaN;
+	private double _dblBankBondUnits = java.lang.Double.NaN;
+	private double _dblCounterPartyBondUnits = java.lang.Double.NaN;
 
 	/**
-	 * UniverseSnapshot Constructor
+	 * ReplicationPortfolioVertex Constructor
 	 * 
-	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
-	 * @param jdeZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
-	 * 		Realization
-	 * @param jdeZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
-	 * @param jdeZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
-	 * 		Realization
+	 * @param dblAssetUnits The Number of Asset Replication Units
+	 * @param dblBankBondUnits The Number of Bank Zero Coupon Bond Replication Units
+	 * @param dblCounterPartyBondUnits The Number of Counter Party Zero Coupon Bond Replication Units
+	 * @param dblCashAccount The Cash Account
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public UniverseSnapshot (
-		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCollateralNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCounterPartyNumeraire)
+	public ReplicationPortfolioVertex (
+		final double dblAssetUnits,
+		final double dblBankBondUnits,
+		final double dblCounterPartyBondUnits,
+		final double dblCashAccount)
 		throws java.lang.Exception
 	{
-		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null ==
-			(_jdeZeroCouponBondCollateralNumeraire = jdeZeroCouponBondCollateralNumeraire) || null ==
-				(_jdeZeroCouponBondBankNumeraire = jdeZeroCouponBondBankNumeraire) || null ==
-					(_jdeZeroCouponBondCounterPartyNumeraire = jdeZeroCouponBondCounterPartyNumeraire))
-			throw new java.lang.Exception ("UniverseSnapshot Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetUnits = dblAssetUnits) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankBondUnits = dblBankBondUnits) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyBondUnits =
+					dblCounterPartyBondUnits) || dblCounterPartyBondUnits > 0. ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblCashAccount = dblCashAccount))
+			throw new java.lang.Exception ("ReplicationPortfolioVertex Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Asset Numeraire Level Realization
+	 * Retrieve the Number of Asset Replication Units
 	 * 
-	 * @return The Asset Numeraire Level Realization
+	 * @return The Number of Asset Replication Units
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge assetNumeraire()
+	public double assetUnits()
 	{
-		return _jdeAssetNumeraire;
+		return _dblAssetUnits;
 	}
 
 	/**
-	 * Retrieve the Zero Coupon Collateral Bond Numeraire Level Realization
+	 * Retrieve the Number of Bank Zero Coupon Bond Replication Units
 	 * 
-	 * @return The Zero Coupon Collateral Bond Numeraire Level Realization
+	 * @return The Number of Bank Zero Coupon Bond Replication Units
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCollateralBondNumeraire()
+	public double bankBondUnits()
 	{
-		return _jdeZeroCouponBondCollateralNumeraire;
+		return _dblBankBondUnits;
 	}
 
 	/**
-	 * Retrieve the Zero Coupon Bank Bond Numeraire Level Realization
+	 * Retrieve the Number of Counter Party Zero Coupon Bond Replication Units
 	 * 
-	 * @return The Zero Coupon Bank Bond Numeraire Level Realization
+	 * @return The Number of Counter Party Zero Coupon Bond Replication Units
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponBankBondNumeraire()
+	public double counterPartyBondUnits()
 	{
-		return _jdeZeroCouponBondBankNumeraire;
+		return _dblCounterPartyBondUnits;
 	}
 
 	/**
-	 * Retrieve the Zero Coupon Counter Party Bond Numeraire Level Realization
+	 * Retrieve the Cash Account Amount
 	 * 
-	 * @return The Zero Coupon Counter Party Bond Numeraire Level Realization
+	 * @return The Cash Account Amount
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCounterPartyBondNumeraire()
+	public double cashAccount()
 	{
-		return _jdeZeroCouponBondCounterPartyNumeraire;
+		return _dblCashAccount;
+	}
+
+	/**
+	 * Compute the Market Value of the Portfolio
+	 * 
+	 * @param us The Trade-able Asset Market Snapshot
+	 * 
+	 * @return The Market Value of the Portfolio
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double value (
+		final org.drip.xva.definition.UniverseVertex us)
+		throws java.lang.Exception
+	{
+		if (null == us) throw new java.lang.Exception ("ReplicationPortfolioVertex::value => Invalid Inputs");
+
+		return -1. * (_dblAssetUnits * us.assetNumeraire().finish() + _dblBankBondUnits *
+			us.zeroCouponBankBondNumeraire().finish() + _dblCounterPartyBondUnits *
+				us.zeroCouponCounterPartyBondNumeraire().finish() + _dblCashAccount);
 	}
 }

@@ -47,8 +47,9 @@ package org.drip.xva.derivative;
  */
 
 /**
- * LevelCashAccount holds the Increments of the Cash Account Components resulting from the Dynamic
- * 	Replication Process. The References are:
+ * EvolutionTrajectoryEdge holds the Evolution Edges of the Trajectory, the Cash Account, and the Derivative
+ * 	Values evolved in a Dynamically Adaptive Manner, as laid out in Burgard and Kjaer (2014). The References
+ *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,77 +69,61 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LevelCashAccount {
-	private double _dblBankAccumulation = java.lang.Double.NaN;
-	private double _dblAssetAccumulation = java.lang.Double.NaN;
-	private double _dblCounterPartyAccumulation = java.lang.Double.NaN;
+public class EvolutionTrajectoryEdge {
+	private org.drip.xva.derivative.CashAccountEdge _cae = null;
+	private org.drip.xva.derivative.EvolutionTrajectoryVertex _etvStart = null;
+	private org.drip.xva.derivative.EvolutionTrajectoryVertex _etvFinish = null;
 
 	/**
-	 * LevelCashAccount Constructor
+	 * EvolutionTrajectoryEdge Constructor
 	 * 
-	 * @param dblAssetAccumulation The Incremental Amount added to the Cash Account coming from the Asset
-	 * @param dblBankAccumulation The Incremental Amount added to the Cash Account coming from the Bank
-	 * 	Borrowing/Funding
-	 * @param dblCounterPartyAccumulation The Incremental Amount added to the Cash Account coming from the
-	 *  Counter Party Repo
+	 * @param etvStart The Starting Evolution Trajectory Vertex
+	 * @param etvFinish The Finishing Evolution Trajectory Vertex
+	 * @param cae The Cash Account Edge
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public LevelCashAccount (
-		final double dblAssetAccumulation,
-		final double dblBankAccumulation,
-		final double dblCounterPartyAccumulation)
+	public EvolutionTrajectoryEdge (
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvFinish,
+		final org.drip.xva.derivative.CashAccountEdge cae)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetAccumulation = dblAssetAccumulation) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankAccumulation = dblBankAccumulation) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyAccumulation =
-					dblCounterPartyAccumulation))
-			throw new java.lang.Exception ("LevelCashAccount Constructor => Invalid Inputs");
+		if (null == (_etvStart = etvStart) || null == (_etvFinish = etvFinish) || null == (_cae = cae))
+			throw new java.lang.Exception ("EvolutionTrajectoryEdge Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Incremental Amount added to the Cash Account coming from the Asset
+	 * Retrieve the Starting Evolution Trajectory Vertex
 	 * 
-	 * @return The Incremental Amount added to the Cash Account coming from the Asset
+	 * @return The Starting Evolution Trajectory Vertex
 	 */
 
-	public double assetAccumulation()
+	public org.drip.xva.derivative.EvolutionTrajectoryVertex vertexStart()
 	{
-		return _dblAssetAccumulation;
+		return _etvStart;
 	}
 
 	/**
-	 * Retrieve the Incremental Amount added to the Cash Account coming from Borrowing/Funding
+	 * Retrieve the Finishing Evolution Trajectory Vertex
 	 * 
-	 * @return The Incremental Amount added to the Cash Account coming from Borrowing/Funding
+	 * @return The Finishing Evolution Trajectory Vertex
 	 */
 
-	public double bankAccumulation()
+	public org.drip.xva.derivative.EvolutionTrajectoryVertex vertexFinish()
 	{
-		return _dblBankAccumulation;
+		return _etvFinish;
 	}
 
 	/**
-	 * Retrieve the Incremental Amount added to the Cash Account coming from the Counter Party Repo
+	 * Retrieve the Cash Account Edge
 	 * 
-	 * @return The Incremental Amount added to the Cash Account coming from the Counter Party Repo
+	 * @return The Cash Account Edge
 	 */
 
-	public double counterPartyAccumulation()
+	public org.drip.xva.derivative.CashAccountEdge cashAccountEdge()
 	{
-		return _dblCounterPartyAccumulation;
-	}
-
-	/**
-	 * Retrieve the Cumulative Increment
-	 * 
-	 * @return The Cumulative Increment
-	 */
-
-	public double accumulation()
-	{
-		return _dblAssetAccumulation + _dblBankAccumulation + _dblCounterPartyAccumulation;
+		return _cae;
 	}
 }

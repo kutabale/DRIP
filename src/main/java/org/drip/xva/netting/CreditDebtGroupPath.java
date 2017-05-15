@@ -71,7 +71,7 @@ package org.drip.xva.netting;
 public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureGroupPath {
 
 	protected CreditDebtGroupPath (
-		final org.drip.xva.collateral.HypothecationGroupPathRegular[] aHGP,
+		final org.drip.xva.collateral.HypothecationGroupPath[] aHGP,
 		final org.drip.xva.numeraire.MarketPath mp)
 		throws java.lang.Exception
 	{
@@ -88,7 +88,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblUnilateralCreditAdjustment = 0.;
@@ -117,7 +117,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedPositiveExposurePV.length;
 		double dblBilateralCreditAdjustment = 0.;
@@ -157,7 +157,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
 		double dblUnilateralDebtAdjustment = 0.;
@@ -186,7 +186,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
 		double dblBilateralDebtAdjustment = 0.;
@@ -213,7 +213,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 
 	public double[] periodUnilateralCreditAdjustment()
 	{
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = aMV.length;
 		double[] adblPeriodUnilateralCreditAdjustment = new double[iNumVertex - 1];
@@ -243,7 +243,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 
 	public double[] periodBilateralCreditAdjustment()
 	{
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = aMV.length;
 		double[] adblPeriodBilateralCreditAdjustment = new double[iNumVertex - 1];
@@ -273,7 +273,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 
 	public double[] periodContraLiabilityCreditAdjustment()
 	{
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = aMV.length;
 		double[] adblPeriodContraLiabilityCreditAdjustment = new double[iNumVertex - 1];
@@ -305,7 +305,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = aMV.length;
 		double[] adblUnilateralDebtAdjustment = new double[iNumVertex - 1];
@@ -335,7 +335,7 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 	{
 		double[] adblCollateralizedNegativeExposurePV = collateralizedNegativeExposurePV();
 
-		org.drip.xva.numeraire.MarketVertex[] aMV = numerairePath().vertexes();
+		org.drip.xva.numeraire.MarketVertex[] aMV = marketPath().vertexes();
 
 		int iNumVertex = adblCollateralizedNegativeExposurePV.length;
 		double[] adblBilateralDebtAdjustment = new double[iNumVertex - 1];

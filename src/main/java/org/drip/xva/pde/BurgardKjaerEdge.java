@@ -1,5 +1,5 @@
 
-package org.drip.xva.derivative;
+package org.drip.xva.pde;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.derivative;
  */
 
 /**
- * EdgeReplicationPortfolio contains the Dynamic Replicating Portfolio of the Pay-out using the Assets in the
- * 	Economy, from the Bank's View Point. The References are:
+ * BurgardKjaerEdge holds the Underlier Stochastic and the Credit Risk Free Components of the XVA Derivative
+ * 	Value Growth, as laid out in Burgard and Kjaer (2014). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,100 +68,107 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EdgeReplicationPortfolio {
-	private double _dblAssetUnits = java.lang.Double.NaN;
-	private double _dblCashAccount = java.lang.Double.NaN;
-	private double _dblBankBondUnits = java.lang.Double.NaN;
-	private double _dblCounterPartyBondUnits = java.lang.Double.NaN;
+public abstract class BurgardKjaerEdge {
+	private double _dblAssetNumeraireBump = java.lang.Double.NaN;
+	private double _dblDerivativeXVACollateralGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVAStochasticGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVAStochasticGrowthUp = java.lang.Double.NaN;
+	private double _dblDerivativeXVAStochasticGrowthDown = java.lang.Double.NaN;
 
-	/**
-	 * EdgeReplicationPortfolio Constructor
-	 * 
-	 * @param dblAssetUnits The Number of Asset Replication Units
-	 * @param dblBankBondUnits The Number of Bank Zero Coupon Bond Replication Units
-	 * @param dblCounterPartyBondUnits The Number of Counter Party Zero Coupon Bond Replication Units
-	 * @param dblCashAccount The Cash Account
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public EdgeReplicationPortfolio (
-		final double dblAssetUnits,
-		final double dblBankBondUnits,
-		final double dblCounterPartyBondUnits,
-		final double dblCashAccount)
+	protected BurgardKjaerEdge (
+		final double dblAssetNumeraireBump,
+		final double dblDerivativeXVAStochasticGrowthDown,
+		final double dblDerivativeXVAStochasticGrowth,
+		final double dblDerivativeXVAStochasticGrowthUp,
+		final double dblDerivativeXVACollateralGrowth)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetUnits = dblAssetUnits) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankBondUnits = dblBankBondUnits) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyBondUnits =
-					dblCounterPartyBondUnits) || dblCounterPartyBondUnits > 0. ||
-						!org.drip.quant.common.NumberUtil.IsValid (_dblCashAccount = dblCashAccount))
-			throw new java.lang.Exception ("EdgeReplicationPortfolio Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetNumeraireBump = dblAssetNumeraireBump) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthDown =
+				dblDerivativeXVAStochasticGrowthDown) || !org.drip.quant.common.NumberUtil.IsValid
+					(_dblDerivativeXVAStochasticGrowth = dblDerivativeXVAStochasticGrowth) ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAStochasticGrowthUp =
+							dblDerivativeXVAStochasticGrowthUp) || !org.drip.quant.common.NumberUtil.IsValid
+								(_dblDerivativeXVACollateralGrowth = dblDerivativeXVACollateralGrowth))
+			throw new java.lang.Exception ("BurgardKjaerEdge Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Number of Asset Replication Units
+	 * Retrieve the Asset Numeraire Bump
 	 * 
-	 * @return The Number of Asset Replication Units
+	 * @return The Asset Numeraire Bump
 	 */
 
-	public double assetUnits()
+	public double assetNumeraireBump()
 	{
-		return _dblAssetUnits;
+		return _dblAssetNumeraireBump;
 	}
 
 	/**
-	 * Retrieve the Number of Bank Zero Coupon Bond Replication Units
+	 * Retrieve the Stochastic Down Component of the Derivative XVA Value
 	 * 
-	 * @return The Number of Bank Zero Coupon Bond Replication Units
+	 * @return The Stochastic Down Component of the Derivative XVA Value
 	 */
 
-	public double bankBondUnits()
+	public double derivativeXVAStochasticGrowthDown()
 	{
-		return _dblBankBondUnits;
+		return _dblDerivativeXVAStochasticGrowthDown;
 	}
 
 	/**
-	 * Retrieve the Number of Counter Party Zero Coupon Bond Replication Units
+	 * Retrieve the Stochastic Component of the Derivative XVA Value Growth
 	 * 
-	 * @return The Number of Counter Party Zero Coupon Bond Replication Units
+	 * @return The Stochastic Component of the Derivative XVA Value Growth
 	 */
 
-	public double counterPartyBondUnits()
+	public double derivativeXVAStochasticGrowth()
 	{
-		return _dblCounterPartyBondUnits;
+		return _dblDerivativeXVAStochasticGrowth;
 	}
 
 	/**
-	 * Retrieve the Cash Account Amount
+	 * Retrieve the Stochastic Up Component of the Derivative XVA Value
 	 * 
-	 * @return The Cash Account Amount
+	 * @return The Stochastic Up Component of the Derivative XVA Value
 	 */
 
-	public double cashAccount()
+	public double derivativeXVAStochasticGrowthUp()
 	{
-		return _dblCashAccount;
+		return _dblDerivativeXVAStochasticGrowthUp;
 	}
 
 	/**
-	 * Compute the Market Value of the Portfolio
+	 * Retrieve the Collateral Component of the Derivative XVA Value Growth
 	 * 
-	 * @param us The Trade-able Asset Market Snapshot
-	 * 
-	 * @return The Market Value of the Portfolio
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Collateral Component of the Derivative XVA Value Growth
 	 */
 
-	public double value (
-		final org.drip.xva.definition.UniverseSnapshot us)
-		throws java.lang.Exception
+	public double derivativeXVACollateralGrowth()
 	{
-		if (null == us) throw new java.lang.Exception ("EdgeReplicationPortfolio::value => Invalid Inputs");
-
-		return -1. * (_dblAssetUnits * us.assetNumeraire().finish() + _dblBankBondUnits *
-			us.zeroCouponBankBondNumeraire().finish() + _dblCounterPartyBondUnits *
-				us.zeroCouponCounterPartyBondNumeraire().finish() + _dblCashAccount);
+		return _dblDerivativeXVACollateralGrowth;
 	}
+
+	/**
+	 * Compute the Gross Theta from Asset Numeraire Down
+	 * 
+	 * @return The Gross Theta from Asset Numeraire Down
+	 */
+
+	public abstract double thetaAssetNumeraireDown();
+
+	/**
+	 * Compute the Gross Theta from Asset Numeraire Base
+	 * 
+	 * @return The Gross Theta from Asset Numeraire Base
+	 */
+
+	public abstract double theta();
+
+	/**
+	 * Compute the Gross Theta from Asset Numeraire Up
+	 * 
+	 * @return The Gross Theta from Asset Numeraire Up
+	 */
+
+	public abstract double thetaAssetNumeraireUp();
 }

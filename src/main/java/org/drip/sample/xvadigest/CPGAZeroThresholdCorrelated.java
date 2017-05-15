@@ -12,7 +12,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.book.*;
-import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupPath;
 import org.drip.xva.collateral.HypothecationGroupVertexRegular;
 import org.drip.xva.collateral.HypothecationAmountEstimator;
 import org.drip.xva.cpty.*;
@@ -473,7 +473,7 @@ public class CPGAZeroThresholdCorrelated {
 
 			MarketPath np = new MarketPath (aNV);
 
-			HypothecationGroupPathRegular[] aCGP = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV)};
+			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
 
 			aCPGP[i] = new PathExposureAdjustment (
 				new NettingGroupPathAA2014[] {

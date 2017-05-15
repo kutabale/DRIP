@@ -82,17 +82,17 @@ import org.drip.xva.pde.*;
 
 public class CorrelatedNumeraireXVAAttribution {
 
-	private static final EdgeEvolutionTrajectory RunStep (
+	private static final EvolutionTrajectoryVertex RunStep (
 		final TrajectoryEvolutionScheme tes,
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
-		final EdgeEvolutionTrajectory eetStart,
-		final UniverseSnapshot us)
+		final EvolutionTrajectoryVertex eetStart,
+		final UniverseVertex us)
 		throws Exception
 	{
-		EdgeAssetGreek eagStart = eetStart.edgeAssetGreek();
+		AssetGreekVertex eagStart = eetStart.assetGreekVertex();
 
-		EdgeReplicationPortfolio erpStart = eetStart.replicationPortfolio();
+		ReplicationPortfolioVertex erpStart = eetStart.replicationPortfolioVertex();
 
 		double dblDerivativeXVAValueStart = eagStart.derivativeXVAValue();
 
@@ -102,7 +102,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		UniverseSnapshot usStart = eetStart.tradeableAssetSnapshot();
+		UniverseVertex usStart = eetStart.tradeableAssetSnapshot();
 
 		TwoWayRiskyUniverse twru = tes.universe();
 
@@ -110,7 +110,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		CloseOutBilateral maco = tes.boundaryCondition();
 
-		LevelBurgardKjaerAttribution lbka = bko.timeIncrementRunAttribution (
+		BurgardKjaerEdgeAttribution lbka = bko.timeIncrementRunAttribution (
 			si,
 			eetStart
 		);
@@ -138,7 +138,7 @@ public class CorrelatedNumeraireXVAAttribution {
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.counterPartyDefault
 			(dblDerivativeXVAValueFinish));
 
-		org.drip.xva.derivative.LevelCashAccount lca = tes.rebalanceCash (
+		org.drip.xva.derivative.CashAccountEdge lca = tes.rebalanceCash (
 			eetStart,
 			us
 		).cashAccount();
@@ -151,7 +151,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblZeroCouponCounterPartyPriceFinish = us.zeroCouponCounterPartyBondNumeraire().finish();
 
-		EdgeReplicationPortfolio erpFinish = new EdgeReplicationPortfolio (
+		ReplicationPortfolioVertex erpFinish = new ReplicationPortfolioVertex (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
 			dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
@@ -175,11 +175,11 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (lbka.derivativeXVAEarlyTerminationGrowth(), 1, 6, 1.) + " ||"
 		);
 
-		return new EdgeEvolutionTrajectory (
+		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
 			us,
 			erpFinish,
-			new EdgeAssetGreek (
+			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
@@ -392,7 +392,7 @@ public class CorrelatedNumeraireXVAAttribution {
 			dblTimeWidth
 		);
 
-		EdgeAssetGreek eagInitial = new EdgeAssetGreek (
+		AssetGreekVertex eagInitial = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
@@ -403,7 +403,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue));
 
-		EdgeReplicationPortfolio erpInitial = new EdgeReplicationPortfolio (
+		ReplicationPortfolioVertex erpInitial = new ReplicationPortfolioVertex (
 			1.,
 			dblGainOnBankDefaultInitial,
 			dblGainOnCounterPartyDefaultInitial,
@@ -467,15 +467,15 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
-		EdgeEvolutionTrajectory eet = new EdgeEvolutionTrajectory (
+		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new UniverseSnapshot (
+			new UniverseVertex (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
 				aJDECounterParty[iNumTimeStep - 1]
 			),
-			new EdgeReplicationPortfolio (
+			new ReplicationPortfolioVertex (
 				1.,
 				0.,
 				0.,
@@ -492,7 +492,7 @@ public class CorrelatedNumeraireXVAAttribution {
 				si,
 				bko,
 				eet,
-				new UniverseSnapshot (
+				new UniverseVertex (
 					aJDEAsset[i],
 					aJDECollateral[i],
 					aJDEBank[i],

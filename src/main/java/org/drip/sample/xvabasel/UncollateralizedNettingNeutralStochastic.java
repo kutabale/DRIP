@@ -12,7 +12,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
-import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupPath;
 import org.drip.xva.collateral.HypothecationGroupVertexRegular;
 import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
@@ -426,8 +426,8 @@ public class UncollateralizedNettingNeutralStochastic {
 
 			MarketPath np = new MarketPath (aNV);
 
-			HypothecationGroupPathRegular[] aCGP1 = new HypothecationGroupPathRegular[] {
-				new HypothecationGroupPathRegular (aCGV1)
+			HypothecationGroupPath[] aCGP1 = new HypothecationGroupPath[] {
+				new HypothecationGroupPath (aCGV1)
 			};
 
 			aCPGPGround[i] = new PathExposureAdjustment (
@@ -445,8 +445,8 @@ public class UncollateralizedNettingNeutralStochastic {
 				}
 			);
 
-			HypothecationGroupPathRegular[] aCGP2 = new HypothecationGroupPathRegular[] {
-				new HypothecationGroupPathRegular (aCGV2)
+			HypothecationGroupPath[] aCGP2 = new HypothecationGroupPath[] {
+				new HypothecationGroupPath (aCGV2)
 			};
 
 			aCPGPExtended[i] = new PathExposureAdjustment (

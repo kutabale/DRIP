@@ -47,7 +47,8 @@ package org.drip.xva.definition;
  */
 
 /**
- * CloseOutGeneral exposes the General Close Out Amounts to be applied to the MTM at the Bank/Counter Party Default. The References are:
+ * CloseOutGeneral exposes the General Close Out Amounts to be applied to the MTM at the Bank/Counter Party
+ *  Default. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  

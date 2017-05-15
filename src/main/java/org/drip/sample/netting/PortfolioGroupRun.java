@@ -8,7 +8,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.HypothecationGroupPathRegular;
+import org.drip.xva.collateral.HypothecationGroupPath;
 import org.drip.xva.collateral.HypothecationGroupVertexRegular;
 import org.drip.xva.cpty.*;
 import org.drip.xva.numeraire.MarketPath;
@@ -240,9 +240,9 @@ public class PortfolioGroupRun {
 
 		MarketPath np = new MarketPath (aNV);
 
-		HypothecationGroupPathRegular[] aCGP1 = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV1)};
+		HypothecationGroupPath[] aCGP1 = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV1)};
 
-		HypothecationGroupPathRegular[] aCGP2 = new HypothecationGroupPathRegular[] {new HypothecationGroupPathRegular (aCGV2)};
+		HypothecationGroupPath[] aCGP2 = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV2)};
 
 		NettingGroupPathAA2014 ngp1 = new NettingGroupPathAA2014 (
 			aCGP1,
@@ -508,11 +508,11 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (cpga.fda().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (cpga.fba(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (cpga.fba().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (cpga.sfva(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (cpga.sfva().amount(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||-------------------||");
 	}

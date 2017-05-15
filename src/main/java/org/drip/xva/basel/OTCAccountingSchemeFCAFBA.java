@@ -96,7 +96,7 @@ public class OTCAccountingSchemeFCAFBA extends org.drip.xva.basel.OTCAccountingS
 	{
 		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		return eaa.cvacl().amount() + eaa.fba();
+		return eaa.cvacl().amount() + eaa.fba().amount();
 	}
 
 	@Override public org.drip.xva.basel.OTCAccountingPolicy feePolicy (
@@ -106,12 +106,12 @@ public class OTCAccountingSchemeFCAFBA extends org.drip.xva.basel.OTCAccountingS
 
 		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		double dblContraLiabilityChange = eaaNext.fba() - eaa.fba();
+		double dblContraLiabilityChange = eaaNext.fba().amount() - eaa.fba().amount();
 
 		try {
-			return new org.drip.xva.basel.OTCAccountingPolicy (eaaNext.ucva().amount() + eaaNext.sfva() -
-				eaa.ucva().amount() - eaa.sfva(), -1. * dblContraLiabilityChange, dblContraLiabilityChange,
-					0.);
+			return new org.drip.xva.basel.OTCAccountingPolicy (eaaNext.ucva().amount() +
+				eaaNext.sfva().amount() - eaa.ucva().amount() - eaa.sfva().amount(), -1. *
+					dblContraLiabilityChange, dblContraLiabilityChange, 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

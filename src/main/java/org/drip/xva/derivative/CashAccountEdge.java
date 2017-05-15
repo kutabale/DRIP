@@ -47,8 +47,8 @@ package org.drip.xva.derivative;
  */
 
 /**
- * EdgeAssetGreek holds the Derivative XVA Value, its Delta, and its Gamma to the Asset Value. The References
- *  are:
+ * CashAccountEdge holds the Increments of the Cash Account Components resulting from the Dynamic Replication
+ *  Process. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,80 +68,77 @@ package org.drip.xva.derivative;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EdgeAssetGreek {
-	private double _dblDerivativeValue = java.lang.Double.NaN;
-	private double _dblDerivativeXVAValue = java.lang.Double.NaN;
-	private double _dblDerivativeXVAValueDelta = java.lang.Double.NaN;
-	private double _dblDerivativeXVAValueGamma = java.lang.Double.NaN;
+public class CashAccountEdge {
+	private double _dblBankAccumulation = java.lang.Double.NaN;
+	private double _dblAssetAccumulation = java.lang.Double.NaN;
+	private double _dblCounterPartyAccumulation = java.lang.Double.NaN;
 
 	/**
-	 * EdgeAssetGreek Constructor
+	 * CashAccountEdge Constructor
 	 * 
-	 * @param dblDerivativeXVAValue The Derivative XVA Value
-	 * @param dblDerivativeXVAValueDelta The Derivative XVA Value Delta
-	 * @param dblDerivativeXVAValueGamma The Derivative XVA Value Gamma
-	 * @param dblDerivativeValue The Derivative Value
+	 * @param dblAssetAccumulation The Incremental Amount added to the Cash Account coming from the Asset
+	 * @param dblBankAccumulation The Incremental Amount added to the Cash Account coming from the Bank
+	 * 	Borrowing/Funding
+	 * @param dblCounterPartyAccumulation The Incremental Amount added to the Cash Account coming from the
+	 *  Counter Party Repo
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public EdgeAssetGreek (
-		final double dblDerivativeXVAValue,
-		final double dblDerivativeXVAValueDelta,
-		final double dblDerivativeXVAValueGamma,
-		final double dblDerivativeValue)
+	public CashAccountEdge (
+		final double dblAssetAccumulation,
+		final double dblBankAccumulation,
+		final double dblCounterPartyAccumulation)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValue = dblDerivativeXVAValue) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValueDelta =
-				dblDerivativeXVAValueDelta) || !org.drip.quant.common.NumberUtil.IsValid
-					(_dblDerivativeXVAValueGamma = dblDerivativeXVAValueGamma))
-			throw new java.lang.Exception ("EdgeAssetGreek Constructor => Invalid Inputs");
-
-		_dblDerivativeValue = dblDerivativeValue;
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetAccumulation = dblAssetAccumulation) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankAccumulation = dblBankAccumulation) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyAccumulation =
+					dblCounterPartyAccumulation))
+			throw new java.lang.Exception ("CashAccountEdge Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Derivative XVA Value
+	 * Retrieve the Incremental Amount added to the Cash Account coming from the Asset
 	 * 
-	 * @return The Derivative XVA Value
+	 * @return The Incremental Amount added to the Cash Account coming from the Asset
 	 */
 
-	public double derivativeXVAValue()
+	public double assetAccumulation()
 	{
-		return _dblDerivativeXVAValue;
+		return _dblAssetAccumulation;
 	}
 
 	/**
-	 * Retrieve the Derivative XVA Value Delta
+	 * Retrieve the Incremental Amount added to the Cash Account coming from Borrowing/Funding
 	 * 
-	 * @return The Derivative XVA Value Delta
+	 * @return The Incremental Amount added to the Cash Account coming from Borrowing/Funding
 	 */
 
-	public double derivativeXVAValueDelta()
+	public double bankAccumulation()
 	{
-		return _dblDerivativeXVAValueDelta;
+		return _dblBankAccumulation;
 	}
 
 	/**
-	 * Retrieve the Derivative XVA Value Gamma
+	 * Retrieve the Incremental Amount added to the Cash Account coming from the Counter Party Repo
 	 * 
-	 * @return The Derivative XVA Value Gamma
+	 * @return The Incremental Amount added to the Cash Account coming from the Counter Party Repo
 	 */
 
-	public double derivativeXVAValueGamma()
+	public double counterPartyAccumulation()
 	{
-		return _dblDerivativeXVAValueGamma;
+		return _dblCounterPartyAccumulation;
 	}
 
 	/**
-	 * Retrieve the Derivative Non XVA Value
+	 * Retrieve the Cumulative Increment
 	 * 
-	 * @return The Derivative Non XVA Value
+	 * @return The Cumulative Increment
 	 */
 
-	public double derivativeValue()
+	public double accumulation()
 	{
-		return _dblDerivativeValue;
+		return _dblAssetAccumulation + _dblBankAccumulation + _dblCounterPartyAccumulation;
 	}
 }
