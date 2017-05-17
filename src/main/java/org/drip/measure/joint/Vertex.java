@@ -47,17 +47,17 @@ package org.drip.measure.joint;
  */
 
 /**
- * Snap holds the Snapshot Joint Values of the Realized Joint R^1 Variate and Time.
+ * Vertex holds the Snapshot Joint Values of the Realized Joint R^1 Variate and Time.
  *
  * @author Lakshmi Krishnamurthy
  */
 
-public class Snap {
+public class Vertex {
 	private double[] _adblValue = null;
 	private double _dblTime = java.lang.Double.NaN;
 
 	/**
-	 * Snap Constructor
+	 * Vertex Constructor
 	 * 
 	 * @param dblTime The Time Instant
 	 * @param adblValue The Realized R^d Variate
@@ -65,14 +65,14 @@ public class Snap {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public Snap (
+	public Vertex (
 		final double dblTime,
 		final double[] adblValue)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_adblValue =
 			adblValue) || 0 == _adblValue.length || !org.drip.quant.common.NumberUtil.IsValid (_adblValue))
-			throw new java.lang.Exception ("Snap Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("Vertex Constructor => Invalid Inputs");
 	}
 
 	/**

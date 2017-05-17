@@ -125,8 +125,8 @@ public abstract class Evolver {
 	 * @return The Joint Level Realization
 	 */
 
-	public abstract org.drip.measure.joint.LevelRealization increment (
-		final org.drip.measure.joint.Snap js,
+	public abstract org.drip.measure.joint.Edge increment (
+		final org.drip.measure.joint.Vertex js,
 		final double[] adblRandomVariate,
 		final double[] adblRandomUnitRealization,
 		final double dblTimeIncrement);
@@ -142,8 +142,8 @@ public abstract class Evolver {
 	 * @return Array of the Joint Level Realization
 	 */
 
-	public abstract org.drip.measure.joint.LevelRealization[][] incrementSequence (
-		final org.drip.measure.joint.Snap[] aJS,
+	public abstract org.drip.measure.joint.Edge[][] incrementSequence (
+		final org.drip.measure.joint.Vertex[] aJS,
 		final double[][] aadblRandomVariate,
 		final double[][] aadblRandomUnitRealization,
 		final double dblTimeIncrement);

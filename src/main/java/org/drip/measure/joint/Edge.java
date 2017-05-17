@@ -47,8 +47,8 @@ package org.drip.measure.joint;
  */
 
 /**
- * LevelRealization implements the Deterministic and the Stochastic Components of a Joint R^1 Random
- *	Increment. The References are:
+ * Edge implements the Deterministic and the Stochastic Components of a Joint R^1 Random Increment. The
+ *  References are:
  * 
  * 	- Almgren, R. F., and N. Chriss (2000): Optimal Execution of Portfolio Transactions, Journal of Risk 3
  * 		(2) 5-39.
@@ -68,32 +68,29 @@ package org.drip.measure.joint;
  * @author Lakshmi Krishnamurthy
  */
 
-public class LevelRealization {
+public class Edge {
 	private org.drip.measure.realization.JumpDiffusionEdge[] _aMLR = null;
 
 	/**
-	 * LevelRealization Constructor
+	 * Edge Constructor
 	 * 
 	 * @param aMLR Array of the Marginal Level Realizations
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public LevelRealization (
+	public Edge (
 		final org.drip.measure.realization.JumpDiffusionEdge[] aMLR)
 		throws java.lang.Exception
 	{
-		if (null == (_aMLR = aMLR))
-			throw new java.lang.Exception ("LevelRealization Constructor => Invalid Inputs");
+		if (null == (_aMLR = aMLR)) throw new java.lang.Exception ("Edge Constructor => Invalid Inputs");
 
 		int iNumVariate = _aMLR.length;
 
-		if (0 == iNumVariate)
-			throw new java.lang.Exception ("LevelRealization Constructor => Invalid Inputs");
+		if (0 == iNumVariate) throw new java.lang.Exception ("Edge Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumVariate; ++i) {
-			if (null == _aMLR[i])
-				throw new java.lang.Exception ("LevelRealization Constructor => Invalid Inputs");
+			if (null == _aMLR[i]) throw new java.lang.Exception ("Edge Constructor => Invalid Inputs");
 		}
 	}
 
