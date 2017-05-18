@@ -1,5 +1,5 @@
 
-package org.drip.xva.book;
+package org.drip.xva.universe;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,12 +47,15 @@ package org.drip.xva.book;
  */
 
 /**
- * CounterPartyGroupSpecification contains the Specifications of a Counter Party Group. The References are:
+ * TradeableContainer describes the Economy with at least Four Traded Assets - the Default-free Zero Coupon
+ *  Bond, the Default-able Zero Coupon Bank Bond, onr or more Default-able Zero Coupon Counter-party Bond,
+ *  and an Asset that follows Brownian Motion. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
- *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
+ *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
+ *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
  *  
@@ -66,75 +69,52 @@ package org.drip.xva.book;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CounterPartyGroupSpecification extends org.drip.xva.book.RollUpGroupSpecification {
-	private int _iBankDefaultWindow = -1;
-	private int _iCounterPartyDefaultWindow = -1;
+public abstract class TradeableContainer implements org.drip.xva.universe.CounterPartySet {
+	private org.drip.xva.universe.Tradeable _tAsset = null;
+	private org.drip.xva.universe.Tradeable _tZeroCouponBankBond = null;
+	private org.drip.xva.universe.Tradeable _tZeroCouponCollateralBond = null;
 
-	/**
-	 * Construct a Standard Instance of CounterPartyGroupSpecification
-	 * 
-	 * @param strName The Collateral Group Name
-	 * 
-	 * @return The Standard Instance of CounterPartyGroupSpecification
-	 */
-
-	public static final CounterPartyGroupSpecification Standard (
-		final java.lang.String strName)
-	{
-		try {
-			return new CounterPartyGroupSpecification (org.drip.quant.common.StringUtil.GUID(), strName, 14,
-				14);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * CounterPartyGroup Constructor
-	 * 
-	 * @param strID The Collateral Group ID
-	 * @param strName The Collateral Group Name
-	 * @param iCounterPartyDefaultWindow The Counter Party Default Window
-	 * @param iBankDefaultWindow The Bank Default Window
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public CounterPartyGroupSpecification (
-		final java.lang.String strID,
-		final java.lang.String strName,
-		final int iCounterPartyDefaultWindow,
-		final int iBankDefaultWindow)
+	protected TradeableContainer (
+		final org.drip.xva.universe.Tradeable tAsset,
+		final org.drip.xva.universe.Tradeable tZeroCouponCollateralBond,
+		final org.drip.xva.universe.Tradeable tZeroCouponBankBond)
 		throws java.lang.Exception
 	{
-		super (strID, strName);
-
-		if (-1 >= (_iCounterPartyDefaultWindow = iCounterPartyDefaultWindow) || -1 >= (_iBankDefaultWindow =
-			iBankDefaultWindow))
-			throw new java.lang.Exception ("CounterPartyGroupSpecification Constructor => Invalid Inputs");
+		if (null == (_tAsset = tAsset) || null == (_tZeroCouponCollateralBond = tZeroCouponCollateralBond) ||
+			null == (_tZeroCouponBankBond = tZeroCouponBankBond))
+			throw new java.lang.Exception ("TradeableContainer Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Counter Party Default Window
+	 * Retrieve the Asset
 	 * 
-	 * @return The Counter Party Default Window
+	 * @return The Asset
 	 */
 
-	public int counterPartyDefaultWindow()
+	public org.drip.xva.universe.Tradeable asset()
 	{
-		return _iCounterPartyDefaultWindow;
+		return _tAsset;
 	}
 
 	/**
-	 * Retrieve the Bank Default Window
+	 * Retrieve the Zero Coupon Collateral Bond
 	 * 
-	 * @return The Bank Default Window
+	 * @return The Zero Coupon Collateral Bond
 	 */
 
-	public int bankDefaultWindow()
+	public org.drip.xva.universe.Tradeable zeroCouponCollateralBond()
 	{
-		return _iBankDefaultWindow;
+		return _tZeroCouponCollateralBond;
+	}
+
+	/**
+	 * Retrieve the Zero Coupon Credit Risky Bank Bond
+	 * 
+	 * @return The Zero Coupon Credit Risky Bank Bond
+	 */
+
+	public org.drip.xva.universe.Tradeable zeroCouponBankBond()
+	{
+		return _tZeroCouponBankBond;
 	}
 }

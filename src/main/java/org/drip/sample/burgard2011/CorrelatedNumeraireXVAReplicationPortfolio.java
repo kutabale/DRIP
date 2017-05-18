@@ -11,6 +11,9 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
 import org.drip.xva.pde.*;
+import org.drip.xva.universe.Tradeable;
+import org.drip.xva.universe.TradeableContainerBilateral;
+import org.drip.xva.universe.TradeableContainerVertexBilateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -106,13 +109,13 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		UniverseVertex usStart = eetStart.tradeableAssetSnapshot();
+		TradeableContainerVertexBilateral usStart = eetStart.tradeableAssetSnapshot();
 
-		TwoWayRiskyUniverse twru = tes.universe();
+		TradeableContainerBilateral twru = tes.universe();
 
 		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
 
-		UniverseVertex usFinish = new UniverseVertex (
+		TradeableContainerVertexBilateral usFinish = new TradeableContainerVertexBilateral (
 			jdeAsset,
 			jdeCollateral,
 			jdeBank,
@@ -301,7 +304,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			)
 		);
 
-		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (
+		TradeableContainerBilateral twru = new TradeableContainerBilateral (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -478,7 +481,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new UniverseVertex (
+			new TradeableContainerVertexBilateral (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],

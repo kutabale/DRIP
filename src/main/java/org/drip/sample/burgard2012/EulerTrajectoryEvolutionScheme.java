@@ -11,6 +11,9 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
 import org.drip.xva.pde.*;
+import org.drip.xva.universe.Tradeable;
+import org.drip.xva.universe.TradeableContainerBilateral;
+import org.drip.xva.universe.TradeableContainerVertexBilateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -128,7 +131,7 @@ public class EulerTrajectoryEvolutionScheme {
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
-		UniverseVertex[] aUS = new UniverseVertex[iNumTimeStep];
+		TradeableContainerVertexBilateral[] aUS = new TradeableContainerVertexBilateral[iNumTimeStep];
 
 		PDEEvolutionControl settings = new PDEEvolutionControl (
 			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
@@ -176,7 +179,7 @@ public class EulerTrajectoryEvolutionScheme {
 			)
 		);
 
-		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (
+		TradeableContainerBilateral twru = new TradeableContainerBilateral (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -353,7 +356,7 @@ public class EulerTrajectoryEvolutionScheme {
 
 		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new UniverseVertex (
+			new TradeableContainerVertexBilateral (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
@@ -371,7 +374,7 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		for (int i = 0; i < iNumTimeStep; ++i)
-			aUS[i] = new UniverseVertex (
+			aUS[i] = new TradeableContainerVertexBilateral (
 				aJDEAsset[i],
 				aJDECollateral[i],
 				aJDEBank[i],

@@ -9,6 +9,9 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
 import org.drip.xva.pde.*;
+import org.drip.xva.universe.Tradeable;
+import org.drip.xva.universe.TradeableContainerBilateral;
+import org.drip.xva.universe.TradeableContainerVertexBilateral;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -98,13 +101,13 @@ public class XVAReplicationPortfolio {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		UniverseVertex usStart = eetStart.tradeableAssetSnapshot();
+		TradeableContainerVertexBilateral usStart = eetStart.tradeableAssetSnapshot();
 
-		TwoWayRiskyUniverse twru = tes.universe();
+		TradeableContainerBilateral twru = tes.universe();
 
 		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
 
-		UniverseVertex usFinish = new UniverseVertex (
+		TradeableContainerVertexBilateral usFinish = new TradeableContainerVertexBilateral (
 			twru.asset().priceNumeraire().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -298,7 +301,7 @@ public class XVAReplicationPortfolio {
 			)
 		);
 
-		TwoWayRiskyUniverse twru = new TwoWayRiskyUniverse (
+		TradeableContainerBilateral twru = new TradeableContainerBilateral (
 			new Equity (
 				meAsset,
 				dblAssetRepo,
@@ -417,7 +420,7 @@ public class XVAReplicationPortfolio {
 
 		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new UniverseVertex (
+			new TradeableContainerVertexBilateral (
 				meAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,

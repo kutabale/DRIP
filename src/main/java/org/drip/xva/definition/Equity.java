@@ -67,7 +67,7 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class Equity extends org.drip.xva.definition.Tradeable {
+public class Equity extends org.drip.xva.universe.Tradeable {
 	private double _dblDividendRate = java.lang.Double.NaN;
 
 	/**

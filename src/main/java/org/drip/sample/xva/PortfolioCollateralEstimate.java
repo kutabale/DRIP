@@ -9,9 +9,9 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.book.*;
 import org.drip.xva.collateral.HypothecationAmountEstimator;
 import org.drip.xva.collateral.HypothecationAmountEstimatorOutput;
+import org.drip.xva.set.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-

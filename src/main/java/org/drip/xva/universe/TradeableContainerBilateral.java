@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.xva.universe;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,9 @@ package org.drip.xva.definition;
  */
 
 /**
- * TwoWayRiskyUniverse describes the Economy with Four Traded Assets - the Default-free Zero Coupon Bond, the
- * 	Default-able Zero Coupon Bank Bond, the Default-able Zero Coupon Counter-party, and an Asset the follows
- * 	Brownian Motion. The References are:
+ * TradeableContainerBilateral describes the Economy with Four Traded Assets - the Default-free Zero Coupon
+ *  Bond, the Default-able Zero Coupon Bank Bond, the Default-able Zero Coupon Counter-party Bond, and an
+ *  Asset that follows Brownian Motion. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -69,14 +69,11 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TwoWayRiskyUniverse {
-	private org.drip.xva.definition.Tradeable _tAsset = null;
-	private org.drip.xva.definition.Tradeable _tZeroCouponBankBond = null;
-	private org.drip.xva.definition.Tradeable _tZeroCouponCollateralBond = null;
-	private org.drip.xva.definition.Tradeable _tZeroCouponCounterPartyBond = null;
+public class TradeableContainerBilateral extends org.drip.xva.universe.TradeableContainer {
+	private org.drip.xva.universe.Tradeable _tZeroCouponCounterPartyBond = null;
 
 	/**
-	 * TwoWayRiskyUniverse Constructor
+	 * TradeableContainerBilateral Constructor
 	 * 
 	 * @param tAsset The Trade-able Asset
 	 * @param tZeroCouponCollateralBond The Zero Coupon Collateral Bond
@@ -86,50 +83,17 @@ public class TwoWayRiskyUniverse {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TwoWayRiskyUniverse (
-		final org.drip.xva.definition.Tradeable tAsset,
-		final org.drip.xva.definition.Tradeable tZeroCouponCollateralBond,
-		final org.drip.xva.definition.Tradeable tZeroCouponBankBond,
-		final org.drip.xva.definition.Tradeable tZeroCouponCounterPartyBond)
+	public TradeableContainerBilateral (
+		final org.drip.xva.universe.Tradeable tAsset,
+		final org.drip.xva.universe.Tradeable tZeroCouponCollateralBond,
+		final org.drip.xva.universe.Tradeable tZeroCouponBankBond,
+		final org.drip.xva.universe.Tradeable tZeroCouponCounterPartyBond)
 		throws java.lang.Exception
 	{
-		if (null == (_tAsset = tAsset) || null == (_tZeroCouponCollateralBond = tZeroCouponCollateralBond) ||
-			null == (_tZeroCouponBankBond = tZeroCouponBankBond) || null == (_tZeroCouponCounterPartyBond =
-				tZeroCouponCounterPartyBond))
-			throw new java.lang.Exception ("TwoWayRiskyUniverse Constructor => Invalid Inputs");
-	}
+		super (tAsset, tZeroCouponCollateralBond, tZeroCouponBankBond);
 
-	/**
-	 * Retrieve the Asset
-	 * 
-	 * @return The Asset
-	 */
-
-	public org.drip.xva.definition.Tradeable asset()
-	{
-		return _tAsset;
-	}
-
-	/**
-	 * Retrieve the Zero Coupon Collateral Bond
-	 * 
-	 * @return The Zero Coupon Collateral Bond
-	 */
-
-	public org.drip.xva.definition.Tradeable zeroCouponCollateralBond()
-	{
-		return _tZeroCouponCollateralBond;
-	}
-
-	/**
-	 * Retrieve the Zero Coupon Credit Risky Bank Bond
-	 * 
-	 * @return The Zero Coupon Credit Risky Bank Bond
-	 */
-
-	public org.drip.xva.definition.Tradeable zeroCouponBankBond()
-	{
-		return _tZeroCouponBankBond;
+		if (null == (_tZeroCouponCounterPartyBond = tZeroCouponCounterPartyBond))
+			throw new java.lang.Exception ("TradeableContainerBilateral Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -138,8 +102,13 @@ public class TwoWayRiskyUniverse {
 	 * @return The Zero Coupon Credit Risky Counter Party Bond
 	 */
 
-	public org.drip.xva.definition.Tradeable zeroCouponCounterPartyBond()
+	public org.drip.xva.universe.Tradeable zeroCouponCounterPartyBond()
 	{
 		return _tZeroCouponCounterPartyBond;
+	}
+
+	@Override public int numCounterParty()
+	{
+		return 1;
 	}
 }

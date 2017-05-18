@@ -70,8 +70,8 @@ package org.drip.xva.collateral;
 public class HypothecationAmountEstimator {
 	private double _dblCurrentBalance = java.lang.Double.NaN;
 	private org.drip.measure.bridge.BrokenDateInterpolator _bdi = null;
-	private org.drip.xva.book.CollateralGroupSpecification _cgs = null;
-	private org.drip.xva.book.CounterPartyGroupSpecification _cpgs = null;
+	private org.drip.xva.set.CollateralGroupSpecification _cgs = null;
+	private org.drip.xva.set.CounterPartyGroupSpecification _cpgs = null;
 
 	/**
 	 * HypothecationAmountEstimator Constructor
@@ -85,8 +85,8 @@ public class HypothecationAmountEstimator {
 	 */
 
 	public HypothecationAmountEstimator (
-		final org.drip.xva.book.CollateralGroupSpecification cgs,
-		final org.drip.xva.book.CounterPartyGroupSpecification cpgs,
+		final org.drip.xva.set.CollateralGroupSpecification cgs,
+		final org.drip.xva.set.CounterPartyGroupSpecification cpgs,
 		final org.drip.measure.bridge.BrokenDateInterpolator bdi,
 		final double dblCurrentBalance)
 		throws java.lang.Exception
@@ -103,7 +103,7 @@ public class HypothecationAmountEstimator {
 	 * @return The Collateral Group Specification
 	 */
 
-	public org.drip.xva.book.CollateralGroupSpecification collateralGroupSpecification()
+	public org.drip.xva.set.CollateralGroupSpecification collateralGroupSpecification()
 	{
 		return _cgs;
 	}
@@ -114,7 +114,7 @@ public class HypothecationAmountEstimator {
 	 * @return The Counter Party Group Specification
 	 */
 
-	public org.drip.xva.book.CounterPartyGroupSpecification counterPartyGroupSpecification()
+	public org.drip.xva.set.CounterPartyGroupSpecification counterPartyGroupSpecification()
 	{
 		return _cpgs;
 	}

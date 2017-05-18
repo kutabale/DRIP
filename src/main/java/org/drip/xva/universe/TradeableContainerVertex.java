@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.xva.universe;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.definition;
  */
 
 /**
- * Tradeable holds Definitions and Parameters that specify a Trade-able Entity in XVA Terms. The References
- *  are:
+ * TradeableContainerVertex holds the current Realizations of the Traded Asset Numeraires of the Tradeable
+ *  Universe. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,59 +68,53 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class Tradeable {
-	private double _dblRepoRate = java.lang.Double.NaN;
-	private org.drip.measure.process.DiffusionEvolver _dePriceNumeraire = null;
+public abstract class TradeableContainerVertex implements org.drip.xva.universe.CounterPartySet {
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondBankNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCollateralNumeraire = null;
 
-	/**
-	 * Trade-able Constructor
-	 * 
-	 * @param dePriceNumeraire The Trade-able Asset Price Numeraire Evolver
-	 * @param dblRepoRate The Trade-able Asset Repo Rate
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public Tradeable (
-		final org.drip.measure.process.DiffusionEvolver dePriceNumeraire,
-		final double dblRepoRate)
+	protected TradeableContainerVertex (
+		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCollateralNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire)
 		throws java.lang.Exception
 	{
-		if (null == (_dePriceNumeraire = dePriceNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblRepoRate = dblRepoRate))
-			throw new java.lang.Exception ("Tradeable Constructor => Invalid Inputs");
+		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null ==
+			(_jdeZeroCouponBondCollateralNumeraire = jdeZeroCouponBondCollateralNumeraire) || null ==
+				(_jdeZeroCouponBondBankNumeraire = jdeZeroCouponBondBankNumeraire))
+			throw new java.lang.Exception ("TradeableContainerVertex Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Price Numeraire Evolver
+	 * Retrieve the Asset Numeraire Level Realization
 	 * 
-	 * @return The Trade-able Asset Price Numeraire Evolver
+	 * @return The Asset Numeraire Level Realization
 	 */
 
-	public org.drip.measure.process.DiffusionEvolver priceNumeraire()
+	public org.drip.measure.realization.JumpDiffusionEdge assetNumeraire()
 	{
-		return _dePriceNumeraire;
+		return _jdeAssetNumeraire;
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Repo Rate
+	 * Retrieve the Zero Coupon Collateral Bond Numeraire Level Realization
 	 * 
-	 * @return The Trade-able Asset Repo Rate
+	 * @return The Zero Coupon Collateral Bond Numeraire Level Realization
 	 */
 
-	public double repoRate()
+	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCollateralBondNumeraire()
 	{
-		return _dblRepoRate;
+		return _jdeZeroCouponBondCollateralNumeraire;
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Cash Accumulation Rate
+	 * Retrieve the Zero Coupon Bank Bond Numeraire Level Realization
 	 * 
-	 * @return The Trade-able Asset Cash Accumulation Rate
+	 * @return The Zero Coupon Bank Bond Numeraire Level Realization
 	 */
 
-	public double cashAccumulationRate()
+	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponBankBondNumeraire()
 	{
-		return -1. * _dblRepoRate;
+		return _jdeZeroCouponBondBankNumeraire;
 	}
 }

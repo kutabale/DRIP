@@ -155,7 +155,7 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double value (
-		final org.drip.xva.definition.UniverseVertex us)
+		final org.drip.xva.universe.TradeableContainerVertexBilateral us)
 		throws java.lang.Exception
 	{
 		if (null == us) throw new java.lang.Exception ("ReplicationPortfolioVertex::value => Invalid Inputs");

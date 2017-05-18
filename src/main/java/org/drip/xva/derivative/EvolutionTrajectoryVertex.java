@@ -71,7 +71,7 @@ package org.drip.xva.derivative;
 
 public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
-	private org.drip.xva.definition.UniverseVertex _uv = null;
+	private org.drip.xva.universe.TradeableContainerVertexBilateral _uv = null;
 	private double _dblGainOnBankDefault = java.lang.Double.NaN;
 	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
 	private double _dblGainOnCounterPartyDefault = java.lang.Double.NaN;
@@ -92,7 +92,7 @@ public class EvolutionTrajectoryVertex {
 
 	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.definition.UniverseVertex uv,
+		final org.drip.xva.universe.TradeableContainerVertexBilateral uv,
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double dblGainOnBankDefault,
@@ -123,7 +123,7 @@ public class EvolutionTrajectoryVertex {
 	 * @return Realization of the Trade-able Asset Prices
 	 */
 
-	public org.drip.xva.definition.UniverseVertex tradeableAssetSnapshot()
+	public org.drip.xva.universe.TradeableContainerVertexBilateral tradeableAssetSnapshot()
 	{
 		return _uv;
 	}

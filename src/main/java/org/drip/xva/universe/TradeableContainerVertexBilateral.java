@@ -1,5 +1,5 @@
 
-package org.drip.xva.definition;
+package org.drip.xva.universe;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.definition;
  */
 
 /**
- * UniverseVertex holds the current Realizations of the Traded Asset Numeraires of the Reference Universe.
- *  The References are:
+ * TradeableContainerVertexBilateral holds the current Realizations of the Traded Asset Numeraires of the
+ *  Reference Bilateral Universe. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,14 +68,14 @@ package org.drip.xva.definition;
  * @author Lakshmi Krishnamurthy
  */
 
-public class UniverseVertex {
+public class TradeableContainerVertexBilateral extends org.drip.xva.universe.TradeableContainerVertex {
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondBankNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCollateralNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCounterPartyNumeraire = null;
 
 	/**
-	 * UniverseVertex Constructor
+	 * TradeableContainerVertexBilateral Constructor
 	 * 
 	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
 	 * @param jdeZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
@@ -87,18 +87,17 @@ public class UniverseVertex {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public UniverseVertex (
+	public TradeableContainerVertexBilateral (
 		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCollateralNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCounterPartyNumeraire)
 		throws java.lang.Exception
 	{
-		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null ==
-			(_jdeZeroCouponBondCollateralNumeraire = jdeZeroCouponBondCollateralNumeraire) || null ==
-				(_jdeZeroCouponBondBankNumeraire = jdeZeroCouponBondBankNumeraire) || null ==
-					(_jdeZeroCouponBondCounterPartyNumeraire = jdeZeroCouponBondCounterPartyNumeraire))
-			throw new java.lang.Exception ("UniverseVertex Constructor => Invalid Inputs");
+		super (jdeAssetNumeraire, jdeZeroCouponBondCollateralNumeraire, jdeZeroCouponBondBankNumeraire);
+
+		if (null == (_jdeZeroCouponBondCounterPartyNumeraire = jdeZeroCouponBondCounterPartyNumeraire))
+			throw new java.lang.Exception ("TradeableContainerVertexBilateral Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -143,5 +142,10 @@ public class UniverseVertex {
 	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCounterPartyBondNumeraire()
 	{
 		return _jdeZeroCouponBondCounterPartyNumeraire;
+	}
+
+	@Override public int numCounterParty()
+	{
+		return 1;
 	}
 }

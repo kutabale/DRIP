@@ -87,12 +87,12 @@ public class ExposureAdjustmentAggregator {
 	}
 
 	/**
-	 * Retrieve the Array of Counter Party Group Paths
+	 * Retrieve the Array of Counter Party Group Path Exposures
 	 * 
-	 * @return Array of Counter Party Group Paths
+	 * @return Array of Counter Party Group Path Exposures
 	 */
 
-	public org.drip.xva.cpty.PathExposureAdjustment[] counterPartyGroups()
+	public org.drip.xva.cpty.PathExposureAdjustment[] counterPartyPathExposures()
 	{
 		return _aPEA;
 	}

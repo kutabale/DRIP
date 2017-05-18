@@ -70,7 +70,7 @@ package org.drip.xva.pde;
  */
 
 public class ParabolicDifferentialOperator {
-	private org.drip.xva.definition.Tradeable _t = null;
+	private org.drip.xva.universe.Tradeable _t = null;
 
 	/**
 	 * ParabolicDifferentialOperator Constructor
@@ -81,7 +81,7 @@ public class ParabolicDifferentialOperator {
 	 */
 
 	public ParabolicDifferentialOperator (
-		final org.drip.xva.definition.Tradeable t)
+		final org.drip.xva.universe.Tradeable t)
 		throws java.lang.Exception
 	{
 		if (null == (_t = t))
@@ -94,7 +94,7 @@ public class ParabolicDifferentialOperator {
 	 * @return The Reference Trade-able Asset
 	 */
 
-	public org.drip.xva.definition.Tradeable asset()
+	public org.drip.xva.universe.Tradeable asset()
 	{
 		return _t;
 	}

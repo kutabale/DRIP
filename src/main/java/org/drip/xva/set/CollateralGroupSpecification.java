@@ -1,5 +1,5 @@
 
-package org.drip.xva.book;
+package org.drip.xva.set;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -66,7 +66,7 @@ package org.drip.xva.book;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupSpecification extends org.drip.xva.book.RollUpGroupSpecification {
+public class CollateralGroupSpecification extends org.drip.xva.set.RollUpGroupSpecification {
 	private double _dblIndependentAmount = java.lang.Double.NaN;
 	private double _dblMinimumTransferAmount = java.lang.Double.NaN;
 	private org.drip.function.definition.R1ToR1 _r1ToR1BankThreshold = null;
