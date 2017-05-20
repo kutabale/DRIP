@@ -73,7 +73,7 @@ public class CounterPartyGroupPathExposure {
 	/**
 	 * CounterPartyGroupPathExposure Constructor
 	 * 
-	 * @param aPEA Array of the Path Realizations, one per Counter Party Group
+	 * @param aPEACounterParty Array of the Path Realizations, one per Counter Party Group
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */

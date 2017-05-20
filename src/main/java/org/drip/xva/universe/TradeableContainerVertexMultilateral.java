@@ -79,7 +79,7 @@ public class TradeableContainerVertexMultilateral extends org.drip.xva.universe.
 	 * @param jdeZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
 	 * 		Realization
 	 * @param jdeZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
-	 * @param jdeZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
+	 * @param aJDEZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
 	 * 		Realization
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid

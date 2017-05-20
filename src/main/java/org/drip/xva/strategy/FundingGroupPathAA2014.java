@@ -74,7 +74,7 @@ public class FundingGroupPathAA2014 extends org.drip.xva.netting.FundingGroupPat
 	 * Generate a "Mono" FundingGroupPathAA2014 Instance
 	 * 
 	 * @param hgp The "Mono" Hypothecation Group Path
-	 * @param np The Market Path
+	 * @param mp The Market Path
 	 * 
 	 * @return The "Mono" FundingGroupPathAA2014 Instance
 	 */

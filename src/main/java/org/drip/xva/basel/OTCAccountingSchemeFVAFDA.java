@@ -73,7 +73,7 @@ public class OTCAccountingSchemeFVAFDA extends org.drip.xva.basel.OTCAccountingS
 	/**
 	 * OTCAccountingSchemeFVAFDA Constructor
 	 * 
-	 * @param eaa The Counter Party Group Aggregator Instance
+	 * @param esa The Counter Party Group Aggregator Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
