@@ -156,7 +156,7 @@ public class PortfolioPathAggregationCorrelated {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		PathExposureAdjustment[] aCPGP = new PathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGP = new MonoPathExposureAdjustment[iNumPath];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		double[][] aadblCollateralPortfolio = new double[iNumPath][iNumStep + 1];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
@@ -312,7 +312,7 @@ public class PortfolioPathAggregationCorrelated {
 
 			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
 
-			aCPGP[i] = new PathExposureAdjustment (
+			aCPGP[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP,

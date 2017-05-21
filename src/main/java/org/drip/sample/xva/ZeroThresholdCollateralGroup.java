@@ -194,7 +194,7 @@ public class ZeroThresholdCollateralGroup {
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
-		PathExposureAdjustment[] aCPGP = new PathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGP = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
@@ -272,7 +272,7 @@ public class ZeroThresholdCollateralGroup {
 
 			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
 
-			aCPGP[i] = new PathExposureAdjustment (
+			aCPGP[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP,

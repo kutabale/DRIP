@@ -134,7 +134,7 @@ public class FixFloatVABank {
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		MarketVertex[] aVN = new MarketVertex[iNumStep + 1];
-		PathExposureAdjustment[] aCPGP = new PathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGP = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
 		JulianDate dtSpot = DateUtil.Today();
@@ -179,7 +179,7 @@ public class FixFloatVABank {
 
 			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
 
-			aCPGP[i] = new PathExposureAdjustment (
+			aCPGP[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP,

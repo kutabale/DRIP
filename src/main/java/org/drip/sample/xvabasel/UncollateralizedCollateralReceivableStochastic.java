@@ -252,8 +252,8 @@ public class UncollateralizedCollateralReceivableStochastic {
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
-		PathExposureAdjustment[] aCPGPGround = new PathExposureAdjustment[iNumPath];
-		PathExposureAdjustment[] aCPGPExtended = new PathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGPGround = new MonoPathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGPExtended = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
@@ -427,7 +427,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 				new HypothecationGroupPath (aCGV1)
 			};
 
-			aCPGPGround[i] = new PathExposureAdjustment (
+			aCPGPGround[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGPGround,
@@ -447,7 +447,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 				new HypothecationGroupPath (aCGV2)
 			};
 
-			aCPGPExtended[i] = new PathExposureAdjustment (
+			aCPGPExtended[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGPExtended,

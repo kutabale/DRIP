@@ -1,6 +1,6 @@
 
 /**
- * Book - Aggregation across Counter Parties
+ * Book Level Multi CP XVA
  *
  * @author Lakshmi Krishnamurthy
  */

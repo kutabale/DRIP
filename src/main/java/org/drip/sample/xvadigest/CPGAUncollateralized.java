@@ -258,7 +258,7 @@ public class CPGAUncollateralized {
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
-		PathExposureAdjustment[] aCPGP = new PathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGP = new MonoPathExposureAdjustment[iNumPath];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
@@ -306,7 +306,7 @@ public class CPGAUncollateralized {
 
 			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
 
-			aCPGP[i] = new PathExposureAdjustment (
+			aCPGP[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP,

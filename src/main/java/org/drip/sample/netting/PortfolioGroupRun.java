@@ -409,12 +409,12 @@ public class PortfolioGroupRun {
 		System.out.println();
 
 		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (
-			new PathExposureAdjustment[] {
-				new PathExposureAdjustment (
+			new MonoPathExposureAdjustment[] {
+				new MonoPathExposureAdjustment (
 					new NettingGroupPathAA2014[] {ngp1},
 					new FundingGroupPathAA2014[] {fgp1}
 				),
-				new PathExposureAdjustment (
+				new MonoPathExposureAdjustment (
 					new NettingGroupPathAA2014[] {ngp2},
 					new FundingGroupPathAA2014[] {fgp2}
 				)

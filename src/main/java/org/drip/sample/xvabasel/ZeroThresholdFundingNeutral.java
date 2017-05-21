@@ -186,8 +186,8 @@ public class ZeroThresholdFundingNeutral {
 		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
-		PathExposureAdjustment[] aCPGPGround = new PathExposureAdjustment[iNumPath];
-		PathExposureAdjustment[] aCPGPExtended = new PathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGPGround = new MonoPathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGPExtended = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
@@ -312,7 +312,7 @@ public class ZeroThresholdFundingNeutral {
 				new HypothecationGroupPath (aCGV2)
 			};
 
-			aCPGPGround[i] = new PathExposureAdjustment (
+			aCPGPGround[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP1,
@@ -327,7 +327,7 @@ public class ZeroThresholdFundingNeutral {
 				}
 			);
 
-			aCPGPExtended[i] = new PathExposureAdjustment (
+			aCPGPExtended[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aCGP1,

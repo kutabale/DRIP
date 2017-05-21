@@ -67,49 +67,7 @@ package org.drip.xva.cpty;
  * @author Lakshmi Krishnamurthy
  */
 
-public class PathExposureAdjustment {
-	private org.drip.xva.netting.FundingGroupPath[] _aFGP = null;
-	private org.drip.xva.netting.CreditDebtGroupPath[] _aCDGP = null;
-
-	/**
-	 * PathExposureAdjustment Constructor
-	 * 
-	 * @param aCDGP The Array of Credit/Debt Netting Group Paths
-	 * @param aFGP The Array of Funding Group Paths
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public PathExposureAdjustment (
-		final org.drip.xva.netting.CreditDebtGroupPath[] aCDGP,
-		final org.drip.xva.netting.FundingGroupPath[] aFGP)
-		throws java.lang.Exception
-	{
-		if (null == (_aCDGP = aCDGP) || 0 == _aCDGP.length || null == (_aFGP = aFGP) || 0 == _aFGP.length)
-			throw new java.lang.Exception ("PathExposureAdjustment Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the Array of the Funding Group Trajectory Paths
-	 * 
-	 * @return The Array of the Funding Group Trajectory Paths
-	 */
-
-	public org.drip.xva.netting.FundingGroupPath[] fundingGroupTrajectoryPaths()
-	{
-		return _aFGP;
-	}
-
-	/**
-	 * Retrieve the Array of Credit/Debt Netting Group Trajectory Paths
-	 * 
-	 * @return The Array of Credit/Debt Netting Group Trajectory Paths
-	 */
-
-	public org.drip.xva.netting.CreditDebtGroupPath[] nettingGroupTrajectoryPaths()
-	{
-		return _aCDGP;
-	}
+public interface PathExposureAdjustment {
 
 	/**
 	 * Retrieve the Array of the Vertex Anchor Dates
@@ -117,10 +75,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of the Vertex Anchor Dates
 	 */
 
-	public org.drip.analytics.date.JulianDate[] anchors()
-	{
-		return _aCDGP[0].anchors();
-	}
+	abstract public org.drip.analytics.date.JulianDate[] anchors();
 
 	/**
 	 * Retrieve the Array of Collateralized Exposures
@@ -128,28 +83,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Collateralized Exposures
 	 */
 
-	public double[] collateralizedExposure()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblCollateralizedExposure = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblCollateralizedExposure[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupCollateralizedExposure =
-				_aCDGP[iCreditDebtGroupIndex].collateralizedExposure();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblCollateralizedExposure[iVertexIndex] +=
-					adblCreditDebtGroupCollateralizedExposure[iVertexIndex];
-		}
-
-		return adblCollateralizedExposure;
-	}
+	abstract public double[] collateralizedExposure();
 
 	/**
 	 * Retrieve the Array of Collateralized Exposure PVs
@@ -157,28 +91,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Collateralized Exposures PVs
 	 */
 
-	public double[] collateralizedExposurePV()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblCollateralizedExposurePV = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblCollateralizedExposurePV[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupCollateralizedExposurePV =
-				_aCDGP[iCreditDebtGroupIndex].collateralizedExposurePV();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblCollateralizedExposurePV[iVertexIndex] +=
-					adblCreditDebtGroupCollateralizedExposurePV[iVertexIndex];
-		}
-
-		return adblCollateralizedExposurePV;
-	}
+	abstract public double[] collateralizedExposurePV();
 
 	/**
 	 * Retrieve the Array of Collateralized Positive Exposures
@@ -186,28 +99,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Collateralized Positive Exposures
 	 */
 
-	public double[] collateralizedPositiveExposure()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblCollateralizedPositiveExposure = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblCollateralizedPositiveExposure[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupCollateralizedPositiveExposure =
-				_aCDGP[iCreditDebtGroupIndex].collateralizedPositiveExposure();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblCollateralizedPositiveExposure[iVertexIndex] +=
-					adblCreditDebtGroupCollateralizedPositiveExposure[iVertexIndex];
-		}
-
-		return adblCollateralizedPositiveExposure;
-	}
+	abstract public double[] collateralizedPositiveExposure();
 
 	/**
 	 * Retrieve the Array of Collateralized Positive Exposure PVs
@@ -215,28 +107,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Collateralized Positive Exposure PVs
 	 */
 
-	public double[] collateralizedPositiveExposurePV()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblCollateralizedPositiveExposurePV = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblCollateralizedPositiveExposurePV[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupCollateralizedPositiveExposurePV =
-				_aCDGP[iCreditDebtGroupIndex].collateralizedPositiveExposurePV();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblCollateralizedPositiveExposurePV[iVertexIndex] +=
-					adblCreditDebtGroupCollateralizedPositiveExposurePV[iVertexIndex];
-		}
-
-		return adblCollateralizedPositiveExposurePV;
-	}
+	abstract public double[] collateralizedPositiveExposurePV();
 
 	/**
 	 * Retrieve the Array of Collateralized Negative Exposures
@@ -244,28 +115,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Collateralized Negative Exposures
 	 */
 
-	public double[] collateralizedNegativeExposure()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblCollateralizedNegativeExposure = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblCollateralizedNegativeExposure[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupCollateralizedNegativeExposure =
-				_aCDGP[iCreditDebtGroupIndex].collateralizedNegativeExposure();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblCollateralizedNegativeExposure[iVertexIndex] +=
-					adblCreditDebtGroupCollateralizedNegativeExposure[iVertexIndex];
-		}
-
-		return adblCollateralizedNegativeExposure;
-	}
+	abstract public double[] collateralizedNegativeExposure();
 
 	/**
 	 * Retrieve the Array of Collateralized Negative Exposure PV
@@ -273,28 +123,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Collateralized Negative Exposure PV
 	 */
 
-	public double[] collateralizedNegativeExposurePV()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblCollateralizedNegativeExposurePV = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblCollateralizedNegativeExposurePV[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupCollateralizedNegativeExposurePV =
-				_aCDGP[iCreditDebtGroupIndex].collateralizedNegativeExposurePV();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblCollateralizedNegativeExposurePV[iVertexIndex] +=
-					adblCreditDebtGroupCollateralizedNegativeExposurePV[iVertexIndex];
-		}
-
-		return adblCollateralizedNegativeExposurePV;
-	}
+	abstract public double[] collateralizedNegativeExposurePV();
 
 	/**
 	 * Retrieve the Array of Uncollateralized Exposures
@@ -302,28 +131,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Uncollateralized Exposures
 	 */
 
-	public double[] uncollateralizedExposure()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblUncollateralizedExposure = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblUncollateralizedExposure[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupUncollateralizedExposure =
-				_aCDGP[iCreditDebtGroupIndex].uncollateralizedExposure();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblUncollateralizedExposure[iVertexIndex] +=
-					adblCreditDebtGroupUncollateralizedExposure[iVertexIndex];
-		}
-
-		return adblUncollateralizedExposure;
-	}
+	abstract public double[] uncollateralizedExposure();
 
 	/**
 	 * Retrieve the Array of Uncollateralized Exposure PV
@@ -331,28 +139,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Uncollateralized Exposure PV
 	 */
 
-	public double[] uncollateralizedExposurePV()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblUncollateralizedExposurePV = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblUncollateralizedExposurePV[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupUncollateralizedExposurePV =
-				_aCDGP[iCreditDebtGroupIndex].uncollateralizedExposurePV();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblUncollateralizedExposurePV[iVertexIndex] +=
-					adblCreditDebtGroupUncollateralizedExposurePV[iVertexIndex];
-		}
-
-		return adblUncollateralizedExposurePV;
-	}
+	abstract public double[] uncollateralizedExposurePV();
 
 	/**
 	 * Retrieve the Array of Uncollateralized Positive Exposures
@@ -360,28 +147,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Uncollateralized Positive Exposures
 	 */
 
-	public double[] uncollateralizedPositiveExposure()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblUncollateralizedPositiveExposure = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblUncollateralizedPositiveExposure[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupUncollateralizedPositiveExposure =
-				_aCDGP[iCreditDebtGroupIndex].uncollateralizedPositiveExposure();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblUncollateralizedPositiveExposure[iVertexIndex] +=
-					adblCreditDebtGroupUncollateralizedPositiveExposure[iVertexIndex];
-		}
-
-		return adblUncollateralizedPositiveExposure;
-	}
+	abstract public double[] uncollateralizedPositiveExposure();
 
 	/**
 	 * Retrieve the Array of Uncollateralized Positive Exposure PV
@@ -389,28 +155,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Uncollateralized Positive Exposure PV
 	 */
 
-	public double[] uncollateralizedPositiveExposurePV()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblUncollateralizedPositiveExposurePV = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblUncollateralizedPositiveExposurePV[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupUncollateralizedPositiveExposurePV =
-				_aCDGP[iCreditDebtGroupIndex].uncollateralizedPositiveExposurePV();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblUncollateralizedPositiveExposurePV[iVertexIndex] +=
-					adblCreditDebtGroupUncollateralizedPositiveExposurePV[iVertexIndex];
-		}
-
-		return adblUncollateralizedPositiveExposurePV;
-	}
+	abstract public double[] uncollateralizedPositiveExposurePV();
 
 	/**
 	 * Retrieve the Array of Uncollateralized Negative Exposures
@@ -418,28 +163,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Uncollateralized Negative Exposures
 	 */
 
-	public double[] uncollateralizedNegativeExposure()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblUncollateralizedNegativeExposure = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblUncollateralizedNegativeExposure[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupUncollateralizedNegativeExposure =
-				_aCDGP[iCreditDebtGroupIndex].uncollateralizedNegativeExposure();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblUncollateralizedNegativeExposure[iVertexIndex] +=
-					adblCreditDebtGroupUncollateralizedNegativeExposure[iVertexIndex];
-		}
-
-		return adblUncollateralizedNegativeExposure;
-	}
+	abstract public double[] uncollateralizedNegativeExposure();
 
 	/**
 	 * Retrieve the Array of Uncollateralized Negative Exposure PV
@@ -447,28 +171,7 @@ public class PathExposureAdjustment {
 	 * @return The Array of Uncollateralized Negative Exposure PV
 	 */
 
-	public double[] uncollateralizedNegativeExposurePV()
-	{
-		int iNumVertex = anchors().length;
-
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double[] adblUncollateralizedNegativeExposurePV = new double[iNumVertex];
-
-		for (int j = 0; j < iNumVertex; ++j)
-			adblUncollateralizedNegativeExposurePV[j] = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex) {
-			double[] adblCreditDebtGroupUncollateralizedNegativeExposurePV =
-				_aCDGP[iCreditDebtGroupIndex].uncollateralizedNegativeExposurePV();
-
-			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
-				adblUncollateralizedNegativeExposurePV[iVertexIndex] +=
-					adblCreditDebtGroupUncollateralizedNegativeExposurePV[iVertexIndex];
-		}
-
-		return adblUncollateralizedNegativeExposurePV;
-	}
+	abstract public double[] uncollateralizedNegativeExposurePV();
 
 	/**
 	 * Compute Path Unilateral Credit Adjustment
@@ -476,17 +179,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Unilateral Credit Adjustment
 	 */
 
-	public double unilateralCreditAdjustment()
-	{
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double dblUnilateralCreditAdjustment = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex)
-			dblUnilateralCreditAdjustment += _aCDGP[iCreditDebtGroupIndex].unilateralCreditAdjustment();
-
-		return dblUnilateralCreditAdjustment;
-	}
+	abstract public double unilateralCreditAdjustment();
 
 	/**
 	 * Compute Path Bilateral Credit Adjustment
@@ -494,17 +187,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Bilateral Credit Adjustment
 	 */
 
-	public double bilateralCreditAdjustment()
-	{
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double dblBilateralCreditAdjustment = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex)
-			dblBilateralCreditAdjustment += _aCDGP[iCreditDebtGroupIndex].bilateralCreditAdjustment();
-
-		return dblBilateralCreditAdjustment;
-	}
+	abstract public double bilateralCreditAdjustment();
 
 	/**
 	 * Compute Path Credit Adjustment
@@ -512,10 +195,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Credit Adjustment
 	 */
 
-	public double creditAdjustment()
-	{
-		return bilateralCreditAdjustment();
-	}
+	abstract public double creditAdjustment();
 
 	/**
 	 * Compute Path Contra-Liability Credit Adjustment
@@ -523,18 +203,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Contra-Liability Credit Adjustment
 	 */
 
-	public double contraLiabilityCreditAdjustment()
-	{
-		int iNumCreditDebtGroup = _aCDGP.length;
-		double dblContraLiabilityCreditAdjustment = 0.;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex)
-			dblContraLiabilityCreditAdjustment +=
-				_aCDGP[iCreditDebtGroupIndex].contraLiabilityCreditAdjustment();
-
-		return dblContraLiabilityCreditAdjustment;
-	}
+	abstract public double contraLiabilityCreditAdjustment();
 
 	/**
 	 * Compute Path Debt Adjustment
@@ -542,17 +211,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Debt Adjustment
 	 */
 
-	public double debtAdjustment()
-	{
-		double dblDebtAdjustment = 0.;
-		int iNumCreditDebtGroup = _aCDGP.length;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex)
-			dblDebtAdjustment += _aCDGP[iCreditDebtGroupIndex].debtAdjustment();
-
-		return dblDebtAdjustment;
-	}
+	abstract public double debtAdjustment();
 
 	/**
 	 * Compute Path Funding Value Adjustment
@@ -560,16 +219,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Funding Value Adjustment
 	 */
 
-	public double fundingValueAdjustment()
-	{
-		int iNumFundingGroup = _aFGP.length;
-		double dblFundingValueAdjustment = 0.;
-
-		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
-			dblFundingValueAdjustment += _aFGP[iFundingGroupIndex].fundingValueAdjustment();
-
-		return dblFundingValueAdjustment;
-	}
+	abstract public double fundingValueAdjustment();
 
 	/**
 	 * Compute Path Funding Debt Adjustment
@@ -577,16 +227,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Funding Debt Adjustment
 	 */
 
-	public double fundingDebtAdjustment()
-	{
-		int iNumFundingGroup = _aFGP.length;
-		double dblFundingDebtAdjustment = 0.;
-
-		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
-			dblFundingDebtAdjustment += _aFGP[iFundingGroupIndex].fundingDebtAdjustment();
-
-		return dblFundingDebtAdjustment;
-	}
+	abstract public double fundingDebtAdjustment();
 
 	/**
 	 * Compute Path Funding Cost Adjustment
@@ -594,16 +235,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Funding Cost Adjustment
 	 */
 
-	public double fundingCostAdjustment()
-	{
-		int iNumFundingGroup = _aFGP.length;
-		double dblFundingCostAdjustment = 0.;
-
-		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
-			dblFundingCostAdjustment += _aFGP[iFundingGroupIndex].fundingCostAdjustment();
-
-		return dblFundingCostAdjustment;
-	}
+	abstract public double fundingCostAdjustment();
 
 	/**
 	 * Compute Path Funding Benefit Adjustment
@@ -611,16 +243,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Funding Benefit Adjustment
 	 */
 
-	public double fundingBenefitAdjustment()
-	{
-		int iNumFundingGroup = _aFGP.length;
-		double dblFundingBenefitAdjustment = 0.;
-
-		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
-			dblFundingBenefitAdjustment += _aFGP[iFundingGroupIndex].fundingBenefitAdjustment();
-
-		return dblFundingBenefitAdjustment;
-	}
+	abstract public double fundingBenefitAdjustment();
 
 	/**
 	 * Compute Path Symmetric Funding Value Adjustment
@@ -628,17 +251,7 @@ public class PathExposureAdjustment {
 	 * @return The Path Symmetric Funding Value Adjustment
 	 */
 
-	public double symmetricFundingValueAdjustment()
-	{
-		int iNumFundingGroup = _aFGP.length;
-		double dblSymmetricFundingValueAdjustment = 0.;
-
-		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
-			dblSymmetricFundingValueAdjustment +=
-				_aFGP[iFundingGroupIndex].symmetricFundingValueAdjustment();
-
-		return dblSymmetricFundingValueAdjustment;
-	}
+	abstract public double symmetricFundingValueAdjustment();
 
 	/**
 	 * Compute Path Total Adjustment
@@ -646,20 +259,5 @@ public class PathExposureAdjustment {
 	 * @return The Path Total Adjustment
 	 */
 
-	public double totalAdjustment()
-	{
-		double dblTotalAdjustment = 0.;
-		int iNumFundingGroup = _aFGP.length;
-		int iNumCreditDebtGroup = _aCDGP.length;
-
-		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
-			++iCreditDebtGroupIndex)
-			dblTotalAdjustment += _aCDGP[iCreditDebtGroupIndex].creditAdjustment() +
-				_aCDGP[iCreditDebtGroupIndex].debtAdjustment();
-
-		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex)
-			dblTotalAdjustment += _aFGP[iFundingGroupIndex].fundingValueAdjustment();
-
-		return dblTotalAdjustment;
-	}
+	abstract public double totalAdjustment();
 }
