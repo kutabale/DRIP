@@ -69,16 +69,16 @@ package org.drip.xva.definition;
  */
 
 public class SpreadIntensity {
+	private double[] _adblCounterPartyDefaultIntensity = null;
 	private double _dblBankFundingSpread = java.lang.Double.NaN;
 	private double _dblBankDefaultIntensity = java.lang.Double.NaN;
-	private double _dblCounterPartyDefaultIntensity = java.lang.Double.NaN;
 
 	/**
 	 * SpreadIntensity Constructor
 	 * 
 	 * @param dblBankFundingSpread The Bank Funding Spread
 	 * @param dblBankDefaultIntensity The Bank Default Intensity
-	 * @param dblCounterPartyDefaultIntensity The Counter Party Default Intensity
+	 * @param adblCounterPartyDefaultIntensity Array of Counter Party Default Intensity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -86,13 +86,14 @@ public class SpreadIntensity {
 	public SpreadIntensity (
 		final double dblBankFundingSpread,
 		final double dblBankDefaultIntensity,
-		final double dblCounterPartyDefaultIntensity)
+		final double[] adblCounterPartyDefaultIntensity)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankFundingSpread = dblBankFundingSpread) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultIntensity = dblBankDefaultIntensity) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultIntensity =
-					dblCounterPartyDefaultIntensity))
+				null == (_adblCounterPartyDefaultIntensity = adblCounterPartyDefaultIntensity) || 0 ==
+					_adblCounterPartyDefaultIntensity.length || !org.drip.quant.common.NumberUtil.IsValid
+						(_adblCounterPartyDefaultIntensity))
 			throw new java.lang.Exception ("SpreadIntensity Constructor => Invalid Inputs");
 	}
 
@@ -119,13 +120,13 @@ public class SpreadIntensity {
 	}
 
 	/**
-	 * Retrieve the Counter Party Default Intensity
+	 * Retrieve the Array of Counter Party Default Intensities
 	 * 
-	 * @return The Counter Party Default Intensity
+	 * @return The Array of Counter Party Default Intensities
 	 */
 
-	public double counterPartyDefaultIntensity()
+	public double[] counterPartyDefaultIntensity()
 	{
-		return _dblCounterPartyDefaultIntensity;
+		return _adblCounterPartyDefaultIntensity;
 	}
 }

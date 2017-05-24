@@ -3,15 +3,13 @@ package org.drip.sample.burgard2011;
 
 import org.drip.measure.dynamics.DiffusionEvaluatorLogarithmic;
 import org.drip.measure.process.DiffusionEvolver;
-import org.drip.measure.realization.JumpDiffusionVertex;
+import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
 import org.drip.xva.pde.*;
-import org.drip.xva.universe.Tradeable;
-import org.drip.xva.universe.TradeableContainerBilateral;
-import org.drip.xva.universe.TradeableContainerVertexBilateral;
+import org.drip.xva.universe.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -86,38 +84,38 @@ public class XVAReplicationPortfolio {
 		final TrajectoryEvolutionScheme tes,
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
-		final EvolutionTrajectoryVertex eetStart)
+		final EvolutionTrajectoryVertex etvStart)
 		throws Exception
 	{
-		AssetGreekVertex eagStart = eetStart.assetGreekVertex();
+		AssetGreekVertex agvStart = etvStart.assetGreekVertex();
 
-		ReplicationPortfolioVertex erpStart = eetStart.replicationPortfolioVertex();
+		ReplicationPortfolioVertex rpvStart = etvStart.replicationPortfolioVertex();
 
-		double dblDerivativeXVAValueStart = eagStart.derivativeXVAValue();
+		double dblDerivativeXVAValueStart = agvStart.derivativeXVAValue();
 
 		double dblTimeWidth = tes.timeIncrement();
 
-		double dblTimeStart = eetStart.time();
+		double dblTimeStart = etvStart.time();
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeableContainerVertexBilateral usStart = eetStart.tradeableAssetSnapshot();
+		TradeableContainerVertexMultilateral tcvmStart = etvStart.tradeableAssetSnapshot();
 
-		TradeableContainerBilateral twru = tes.universe();
+		TradeableContainerMultilateral tcm = tes.universe();
 
-		double dblCollateralBondNumeraire = usStart.zeroCouponCollateralBondNumeraire().finish();
+		double dblCollateralBondNumeraire = tcvmStart.zeroCouponCollateralBondNumeraire().finish();
 
-		TradeableContainerVertexBilateral usFinish = new TradeableContainerVertexBilateral (
-			twru.asset().priceNumeraire().weinerIncrement (
+		TradeableContainerVertexMultilateral tcvmFinish = new TradeableContainerVertexMultilateral (
+			tcm.asset().priceNumeraire().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					usStart.assetNumeraire().finish(),
+					tcvmStart.assetNumeraire().finish(),
 					0.,
 					false
 				),
 				dblTimeWidth
 			),
-			twru.zeroCouponCollateralBond().priceNumeraire().weinerIncrement (
+			tcm.zeroCouponCollateralBond().priceNumeraire().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblCollateralBondNumeraire,
@@ -126,74 +124,76 @@ public class XVAReplicationPortfolio {
 				),
 				dblTimeWidth
 			),
-			twru.zeroCouponBankBond().priceNumeraire().weinerIncrement (
+			tcm.zeroCouponBankBond().priceNumeraire().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					usStart.zeroCouponBankBondNumeraire().finish(),
+					tcvmStart.zeroCouponBankBondNumeraire().finish(),
 					0.,
 					false
 				),
 				dblTimeWidth
 			),
-			twru.zeroCouponCounterPartyBond().priceNumeraire().weinerIncrement (
-				new JumpDiffusionVertex (
-					dblTime,
-					usStart.zeroCouponCounterPartyBondNumeraire().finish(),
-					0.,
-					false
-				),
-				dblTimeWidth
-			)
+			new JumpDiffusionEdge[] {
+				tcm.zeroCouponCounterPartyBond()[0].priceNumeraire().weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						tcvmStart.zeroCouponCounterPartyBondNumeraire()[0].finish(),
+						0.,
+						false
+					),
+					dblTimeWidth
+				)
+			}
 		);
 
-		CloseOutBilateral maco = tes.boundaryCondition();
+		CloseOutBilateral cob = tes.boundaryCondition();
 
-		BurgardKjaerEdgeRun lbkr = bko.timeIncrementRun (
+		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
 			si,
-			eetStart
+			etvStart
 		);
 
-		double dblTheta = lbkr.theta();
+		double dblTheta = bker.theta();
 
-		double dblAssetNumeraireBump = lbkr.assetNumeraireBump();
+		double dblAssetNumeraireBump = bker.assetNumeraireBump();
 
-		double dblThetaAssetNumeraireUp = lbkr.thetaAssetNumeraireUp();
+		double dblThetaAssetNumeraireUp = bker.thetaAssetNumeraireUp();
 
-		double dblThetaAssetNumeraireDown = lbkr.thetaAssetNumeraireDown();
+		double dblThetaAssetNumeraireDown = bker.thetaAssetNumeraireDown();
 
-		double dblDerivativeXVAValueDeltaFinish = eagStart.derivativeXVAValueDelta() +
+		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() +
 			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
-		double dblDerivativeXVAValueGammaFinish = eagStart.derivativeXVAValueGamma() +
+		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() +
 			(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
 				(dblAssetNumeraireBump * dblAssetNumeraireBump);
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
-		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.bankDefault
-			(dblDerivativeXVAValueFinish));
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
+			cob.bankDefaultGross (new double[] {dblDerivativeXVAValueFinish}));
 
-		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - maco.counterPartyDefault
-			(dblDerivativeXVAValueFinish));
+		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
+			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValueFinish}));
 
-		org.drip.xva.derivative.CashAccountEdge lca = tes.rebalanceCash (
-			eetStart,
-			usFinish
+		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
+			etvStart,
+			tcvmFinish
 		).cashAccount();
 
-		double dblCashAccountAccumulationFinish = lca.accumulation();
+		double dblCashAccountAccumulationFinish = cae.accumulation();
 
-		double dblAssetPriceFinish = usFinish.assetNumeraire().finish();
+		double dblAssetPriceFinish = tcvmFinish.assetNumeraire().finish();
 
-		double dblZeroCouponBankPriceFinish = usFinish.zeroCouponBankBondNumeraire().finish();
+		double dblZeroCouponBankPriceFinish = tcvmFinish.zeroCouponBankBondNumeraire().finish();
 
-		double dblZeroCouponCounterPartyPriceFinish = usFinish.zeroCouponCounterPartyBondNumeraire().finish();
+		double dblZeroCouponCounterPartyPriceFinish = tcvmFinish.zeroCouponCounterPartyBondNumeraire()[0].finish();
 
-		ReplicationPortfolioVertex erpFinish = new ReplicationPortfolioVertex (
+		ReplicationPortfolioVertex rpvFinish = new ReplicationPortfolioVertex (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
-			dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
-			erpStart.cashAccount() + dblCashAccountAccumulationFinish
+			new double[] {dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish},
+			rpvStart.cashAccount() + dblCashAccountAccumulationFinish
 		);
 
 		System.out.println ("\t||" +
@@ -202,27 +202,27 @@ public class XVAReplicationPortfolio {
 			FormatUtil.FormatDouble (dblAssetPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (usFinish.zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.counterPartyBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.cashAccount(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (tcvmFinish.zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.assetUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.bankBondUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.assetAccumulation(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.bankAccumulation(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.counterPartyAccumulation(), 1, 6, 1.) + " ||"
+			FormatUtil.FormatDouble (cae.assetAccumulation(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (cae.bankAccumulation(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (cae.counterPartyAccumulation(), 1, 6, 1.) + " ||"
 		);
 
 		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
-			usFinish,
-			erpFinish,
+			tcvmFinish,
+			rpvFinish,
 			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
-				eagStart.derivativeValue() * Math.exp (
-					-1. * dblTimeWidth * twru.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
+				agvStart.derivativeValue() * Math.exp (
+					-1. * dblTimeWidth * tcm.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -232,8 +232,8 @@ public class XVAReplicationPortfolio {
 					)
 				)
 			),
-			dblGainOnBankDefaultFinish,
-			dblGainOnCounterPartyDefaultFinish
+			new double[] {dblGainOnBankDefaultFinish},
+			new double[] {dblGainOnCounterPartyDefaultFinish}
 		);
 	}
 
@@ -263,14 +263,14 @@ public class XVAReplicationPortfolio {
 		double dblTime = 1.;
 		double dblTerminalXVADerivativeValue = 1.;
 
-		PDEEvolutionControl settings = new PDEEvolutionControl (
+		PDEEvolutionControl pdeec = new PDEEvolutionControl (
 			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral maco = new CloseOutBilateral (
+		CloseOutBilateral cob = new CloseOutBilateral (
 			dblBankRecovery,
-			dblCounterPartyRecovery
+			new double[] {dblCounterPartyRecovery}
 		);
 
 		DiffusionEvolver meAsset = new DiffusionEvolver (
@@ -301,7 +301,7 @@ public class XVAReplicationPortfolio {
 			)
 		);
 
-		TradeableContainerBilateral twru = new TradeableContainerBilateral (
+		TradeableContainerMultilateral tcm = new TradeableContainerMultilateral (
 			new Equity (
 				meAsset,
 				dblAssetRepo,
@@ -315,49 +315,53 @@ public class XVAReplicationPortfolio {
 				meZeroCouponBankBond,
 				dblZeroCouponBankBondRepo
 			),
-			new Tradeable (
-				meZeroCouponCounterPartyBond,
-				dblZeroCouponCounterPartyBondRepo
-			)
+			new Tradeable[] {
+				new Tradeable (
+					meZeroCouponCounterPartyBond,
+					dblZeroCouponCounterPartyBondRepo
+				)
+			}
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
-			twru,
-			maco,
-			settings,
+			tcm,
+			cob,
+			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new BurgardKjaerOperator (
-			twru,
-			maco,
-			settings
+			tcm,
+			cob,
+			pdeec
 		);
 
 		SpreadIntensity si = new SpreadIntensity (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecovery,
-			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery
+			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery}
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
 
-		AssetGreekVertex erugInitial = new AssetGreekVertex (
+		AssetGreekVertex agvInitial = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
 			dblDerivativeValue
 		);
 
-		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue - maco.bankDefault (dblDerivativeXVAValue));
+		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue -
+			cob.bankDefaultGross (new double[] {dblDerivativeXVAValue}));
 
-		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue - maco.counterPartyDefault (dblDerivativeXVAValue));
+		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue -
+			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValue}));
 
-		ReplicationPortfolioVertex erpInitial = new ReplicationPortfolioVertex (
+		ReplicationPortfolioVertex rpvInitial = new ReplicationPortfolioVertex (
 			1.,
 			dblGainOnBankDefaultInitial,
-			dblGainOnCounterPartyDefaultInitial,
+			new double[] {dblGainOnCounterPartyDefaultInitial},
 			0.
 		);
 
@@ -403,24 +407,24 @@ public class XVAReplicationPortfolio {
 
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erugInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (agvInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.counterPartyBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.cashAccount(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.assetUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.bankBondUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
-		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
+		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeableContainerVertexBilateral (
+			new TradeableContainerVertexMultilateral (
 				meAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -448,33 +452,35 @@ public class XVAReplicationPortfolio {
 					),
 					dblTimeWidth
 				),
-				meZeroCouponCounterPartyBond.weinerIncrement (
-					new JumpDiffusionVertex (
-						dblTime,
-						1.,
-						0.,
-						false
-					),
-					dblTimeWidth
-				)
+				new JumpDiffusionEdge[] {
+					meZeroCouponCounterPartyBond.weinerIncrement (
+						new JumpDiffusionVertex (
+							dblTime,
+							1.,
+							0.,
+							false
+						),
+						dblTimeWidth
+					)
+				}
 			),
 			new ReplicationPortfolioVertex (
 				1.,
 				0.,
-				0.,
+				new double[] {0.},
 				0.
 			),
-			erugInitial,
-			dblGainOnBankDefaultInitial,
-			dblGainOnCounterPartyDefaultInitial
+			agvInitial,
+			new double[] {dblGainOnBankDefaultInitial},
+			new double[] {dblGainOnCounterPartyDefaultInitial}
 		);
 
 		for (dblTime -= dblTimeWidth; dblTime >= 0.; dblTime -= dblTimeWidth)
-			eet = RunStep (
+			etv = RunStep (
 				tes,
 				si,
 				bko,
-				eet
+				etv
 			);
 
 		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");

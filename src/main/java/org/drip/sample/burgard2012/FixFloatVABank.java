@@ -8,13 +8,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.HypothecationGroupPath;
-import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
-import org.drip.xva.numeraire.MarketPath;
-import org.drip.xva.numeraire.MarketVertex;
-import org.drip.xva.strategy.FundingGroupPathAA2014;
-import org.drip.xva.strategy.NettingGroupPathAA2014;
+import org.drip.xva.numeraire.*;
+import org.drip.xva.strategy.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -132,9 +129,9 @@ public class FixFloatVABank {
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
+		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		MarketVertex[] aVN = new MarketVertex[iNumStep + 1];
-		MonoPathExposureAdjustment[] aCPGP = new MonoPathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 
 		JulianDate dtSpot = DateUtil.Today();
@@ -154,7 +151,7 @@ public class FixFloatVABank {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aVN[i] = MarketVertex.Standard (
+			aMV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -164,52 +161,52 @@ public class FixFloatVABank {
 				dblCounterPartyRecoveryRate
 			);
 
-		MarketPath np = new MarketPath (aVN);
+		MarketPath mp = new MarketPath (aMV);
 
 		for (int i = 0; i < iNumPath; ++i) {
-			HypothecationGroupVertexRegular[] aCGV = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j)
-				aCGV[j] = new HypothecationGroupVertexRegular (
+				aHGVR[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					dblTimeWidth * (iNumStep - j) * aaablATMSwapRateOffset[i][j],
 					0.,
 					0.
 				);
 
-			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
+			HypothecationGroupPath[] aHGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR)};
 
-			aCPGP[i] = new MonoPathExposureAdjustment (
+			aMPEA[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
-						aCGP,
-						np
+						aHGP,
+						mp
 					)
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
-						aCGP,
-						np
+						aHGP,
+						mp
 					)
 				}
 			);
 		}
 
-		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (aCPGP);
+		ExposureAdjustmentAggregator eaa = new ExposureAdjustmentAggregator (aMPEA);
 
 		System.out.println ("\t|| " +
 			FormatUtil.FormatDouble (dblBankHazardRate, 3, 0, 10000.) + " bp => " +
-			FormatUtil.FormatDouble (cpga.ucva().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.ftdcva().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.cva().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.cvacl().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.dva().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fva().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fda().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fca().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.fba().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.sfva().amount(), 1, 2, 100.) + "% | " +
-			FormatUtil.FormatDouble (cpga.total(), 1, 2, 100.) + "% ||"
+			FormatUtil.FormatDouble (eaa.ucva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.ftdcva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.cva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.cvacl().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.dva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.fva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.fda().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.fca().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.fba().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.sfva().amount(), 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (eaa.total(), 1, 2, 100.) + "% ||"
 		);
 	}
 

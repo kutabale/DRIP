@@ -71,13 +71,13 @@ package org.drip.xva.pde;
 
 public class BurgardKjaerOperator {
 	private org.drip.xva.definition.CloseOutBilateral _cob = null;
-	private org.drip.xva.universe.TradeableContainerBilateral _twru = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
+	private org.drip.xva.universe.TradeableContainerMultilateral _tcm = null;
 
 	/**
 	 * BurgardKjaerOperator Constructor
 	 * 
-	 * @param twru The Universe of Trade-able Assets
+	 * @param tcm The Universe of Trade-able Assets
 	 * @param cob The Master Agreement Close Out Boundary Conditions
 	 * @param pdeec The XVA Control Settings
 	 * 
@@ -85,12 +85,12 @@ public class BurgardKjaerOperator {
 	 */
 
 	public BurgardKjaerOperator (
-		final org.drip.xva.universe.TradeableContainerBilateral twru,
+		final org.drip.xva.universe.TradeableContainerMultilateral tcm,
 		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception
 	{
-		if (null == (_twru = twru) || null == (_cob = cob) || null == (_pdeec = pdeec))
+		if (null == (_tcm = tcm) || null == (_cob = cob) || null == (_pdeec = pdeec))
 			throw new java.lang.Exception ("BurgardKjaerOperator Constructor => Invalid Inputs");
 	}
 
@@ -100,9 +100,9 @@ public class BurgardKjaerOperator {
 	 * @return The Universe of Trade-able Assets
 	 */
 
-	public org.drip.xva.universe.TradeableContainerBilateral universe()
+	public org.drip.xva.universe.TradeableContainerMultilateral universe()
 	{
-		return _twru;
+		return _tcm;
 	}
 
 	/**
@@ -144,21 +144,33 @@ public class BurgardKjaerOperator {
 
 		double dblTime = etv.time();
 
-		org.drip.xva.universe.TradeableContainerVertexBilateral us = etv.tradeableAssetSnapshot();
-
-		double dblBankDefaultCloseOut = etv.gainOnBankDefault();
-
-		double dblAssetValue = us.assetNumeraire().finish();
-
-		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
+		org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm = etv.tradeableAssetSnapshot();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
-		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblBankDefaultCloseOut;
+		double dblGainOnBankDefault = etv.grossGainOnBankDefault();
+
+		double dblAssetValue = tcvm.assetNumeraire().finish();
+
+		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
+
+		double[] adblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
+
+		double[] adblBankGainOnCounterPartyDefault = etv.gainOnCounterPartyDefault();
+
+		double dblGainOnCounterPartyDefault = 0.;
+		int iNumCounterPartyGroup = adblCounterPartyDefaultIntensity.length;
+		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblGainOnBankDefault;
+
+		if (iNumCounterPartyGroup != adblBankGainOnCounterPartyDefault.length) return null;
+
+		for (int i = 0; i < iNumCounterPartyGroup; ++i)
+			dblGainOnCounterPartyDefault += adblCounterPartyDefaultIntensity[i] *
+				adblBankGainOnCounterPartyDefault[i];
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_twru.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
+				(_tcm.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
@@ -167,10 +179,10 @@ public class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
-				_twru.zeroCouponCollateralBond().priceNumeraire().evaluator().volatility().value (
+				_tcm.zeroCouponCollateralBond().priceNumeraire().evaluator().volatility().value (
 					new org.drip.measure.realization.JumpDiffusionVertex (
 						dblTime,
-						us.zeroCouponCollateralBondNumeraire().finish(),
+						tcvm.zeroCouponCollateralBondNumeraire().finish(),
 						0.,
 						false
 					)
@@ -178,8 +190,8 @@ public class BurgardKjaerOperator {
 				si.bankFundingSpread() * (
 					dblBankDefaultDerivativeValue > 0. ? dblBankDefaultDerivativeValue : 0.
 				),
-				-1. * si.bankDefaultIntensity() * dblBankDefaultCloseOut,
-				-1. * si.counterPartyDefaultIntensity() * etv.gainOnCounterPartyDefault()
+				-1. * si.bankDefaultIntensity() * dblGainOnBankDefault,
+				-1. * dblGainOnCounterPartyDefault
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -207,9 +219,9 @@ public class BurgardKjaerOperator {
 
 		double dblBankDefaultIntensity = si.bankDefaultIntensity();
 
-		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
+		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity()[0];
 
-		org.drip.xva.universe.TradeableContainerVertexBilateral us = etv.tradeableAssetSnapshot();
+		org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm = etv.tradeableAssetSnapshot();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
@@ -219,13 +231,13 @@ public class BurgardKjaerOperator {
 		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _cob.bankRecovery() *
 			dblCloseOutMTM;
 
-		double dblAssetValue = us.assetNumeraire().finish();
+		double dblAssetValue = tcvm.assetNumeraire().finish();
 
 		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_twru.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
+				(_tcm.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
@@ -234,10 +246,10 @@ public class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
-				_twru.zeroCouponCollateralBond().priceNumeraire().evaluator().volatility().value (
+				_tcm.zeroCouponCollateralBond().priceNumeraire().evaluator().volatility().value (
 					new org.drip.measure.realization.JumpDiffusionVertex (
 						dblTime,
-						us.zeroCouponCollateralBondNumeraire().finish(),
+						tcvm.zeroCouponCollateralBondNumeraire().finish(),
 						0.,
 						false
 					)
@@ -246,7 +258,7 @@ public class BurgardKjaerOperator {
 				si.bankFundingSpread() * dblBankExposure,
 				-1. * dblBankDefaultIntensity * dblBankExposure,
 				-1. * dblCounterPartyDefaultIntensity * (dblCloseOutMTM < 0. ? dblCloseOutMTM :
-					_cob.counterPartyRecovery() * dblCloseOutMTM)
+					_cob.counterPartyRecovery()[0] * dblCloseOutMTM)
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

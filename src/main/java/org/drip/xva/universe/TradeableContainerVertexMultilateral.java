@@ -67,9 +67,6 @@ package org.drip.xva.universe;
  */
 
 public class TradeableContainerVertexMultilateral extends org.drip.xva.universe.TradeableContainerVertex {
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondBankNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCollateralNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge[] _aJDEZeroCouponBondCounterPartyNumeraire = null;
 
 	/**
@@ -99,7 +96,7 @@ public class TradeableContainerVertexMultilateral extends org.drip.xva.universe.
 
 		int iNumCounterParty = aJDEZeroCouponBondCounterPartyNumeraire.length;
 
-		if (1 >= iNumCounterParty)
+		if (0 >= iNumCounterParty)
 			throw new java.lang.Exception ("TradeableContainerMultilateral Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumCounterParty; ++i) {
@@ -107,39 +104,6 @@ public class TradeableContainerVertexMultilateral extends org.drip.xva.universe.
 				throw new java.lang.Exception
 					("TradeableContainerMultilateral Constructor => Invalid Inputs");
 		}
-	}
-
-	/**
-	 * Retrieve the Asset Numeraire Level Realization
-	 * 
-	 * @return The Asset Numeraire Level Realization
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge assetNumeraire()
-	{
-		return _jdeAssetNumeraire;
-	}
-
-	/**
-	 * Retrieve the Zero Coupon Collateral Bond Numeraire Level Realization
-	 * 
-	 * @return The Zero Coupon Collateral Bond Numeraire Level Realization
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCollateralBondNumeraire()
-	{
-		return _jdeZeroCouponBondCollateralNumeraire;
-	}
-
-	/**
-	 * Retrieve the Zero Coupon Bank Bond Numeraire Level Realization
-	 * 
-	 * @return The Zero Coupon Bank Bond Numeraire Level Realization
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponBankBondNumeraire()
-	{
-		return _jdeZeroCouponBondBankNumeraire;
 	}
 
 	/**

@@ -67,25 +67,26 @@ package org.drip.xva.definition;
  */
 
 public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
+	private double[] _adblCounterPartyRecovery = null;
 	private double _dblBankRecovery = java.lang.Double.NaN;
-	private double _dblCounterPartyRecovery = java.lang.Double.NaN;
 
 	/**
 	 * CloseOutBilateral Constructor
 	 * 
 	 * @param dblBankRecovery The Bank Recovery Rate
-	 * @param dblCounterPartyRecovery The Counter Party Recovery Rate
+	 * @param adblCounterPartyRecovery Array of Counter Party Recovery Rates
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public CloseOutBilateral (
 		final double dblBankRecovery,
-		final double dblCounterPartyRecovery)
+		final double[] adblCounterPartyRecovery)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyRecovery = dblCounterPartyRecovery))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) || null ==
+			(_adblCounterPartyRecovery = adblCounterPartyRecovery) || 0 == _adblCounterPartyRecovery.length
+				|| !org.drip.quant.common.NumberUtil.IsValid (_adblCounterPartyRecovery))
 			throw new java.lang.Exception ("CloseOutBilateral Constructor => Invalid Inputs");
 	}
 
@@ -101,43 +102,95 @@ public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
 	}
 
 	/**
-	 * Retrieve the Counter Party Recovery Rate
+	 * Retrieve the Array of Counter Party Recovery Rates
 	 * 
-	 * @return The Counter Party Recovery Rate
+	 * @return The Array of Counter Party Recovery Rates
 	 */
 
-	public double counterPartyRecovery()
+	public double[] counterPartyRecovery()
 	{
-		return _dblCounterPartyRecovery;
+		return _adblCounterPartyRecovery;
 	}
 
-	@Override public double bankDefault (
-		final double dblMTM,
-		final double dblCollateralBalance)
+	@Override public double[] bankDefault (
+		final double[] adblUncollateralizedExposure,
+		final double[] adblCollateralAmount)
+	{
+		if (null == adblUncollateralizedExposure || null == adblCollateralAmount) return null;
+
+		int iNumCounterPartyGroup = _adblCounterPartyRecovery.length;
+		double[] adblBankDefaultCloseOut = new double[iNumCounterPartyGroup];
+
+		if (iNumCounterPartyGroup != adblUncollateralizedExposure.length || iNumCounterPartyGroup !=
+			adblCollateralAmount.length)
+			return null;
+
+		for (int i = 0; i < iNumCounterPartyGroup; ++i) {
+			double dblCollateralizedExposure = adblUncollateralizedExposure[i] - adblCollateralAmount[i];
+
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblCollateralizedExposure)) return null;
+
+			adblBankDefaultCloseOut[i] = (dblCollateralizedExposure > 0. ? dblCollateralizedExposure : 0.) +
+				_dblBankRecovery * (dblCollateralizedExposure < 0. ? dblCollateralizedExposure : 0.) +
+					adblCollateralAmount[i];
+		}
+
+		return adblBankDefaultCloseOut;
+	}
+
+	@Override public double bankDefaultGross (
+		final double[] adblUncollateralizedExposure,
+		final double[] adblCollateralAmount)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM) || !org.drip.quant.common.NumberUtil.IsValid
-			(dblCollateralBalance))
-			throw new java.lang.Exception ("CloseOutBilateral::bankDefault => Invalid Inputs");
+		double[] adblBankDefaultCloseOut = bankDefault (adblUncollateralizedExposure, adblCollateralAmount);
 
-		double dblNetMTM = dblMTM - dblCollateralBalance;
+		if (null == adblBankDefaultCloseOut)
+			throw new java.lang.Exception ("CloseOutBilateral::bankDefaultGross => Invalid Inputs");
 
-		return (dblNetMTM > 0. ? dblNetMTM : 0.) + _dblBankRecovery * (dblNetMTM < 0. ? dblNetMTM : 0.) +
-			dblCollateralBalance;
+		double dblBankDefaultCloseOut = 0.;
+		int iNumCounterPartyGroup = adblBankDefaultCloseOut.length;
+
+		if (0 == iNumCounterPartyGroup)
+			throw new java.lang.Exception ("CloseOutBilateral::bankDefaultGross => Invalid Inputs");
+
+		for (int i = 0; i < iNumCounterPartyGroup; ++i)
+			dblBankDefaultCloseOut += adblBankDefaultCloseOut[i];
+
+		return dblBankDefaultCloseOut;
 	}
 
 	@Override public double counterPartyDefault (
-		final double dblMTM,
-		final double dblCollateralBalance)
+		final int iCounterPartyGroupIndex,
+		final double[] adblUncollateralizedExposure,
+		final double[] adblCollateralAmount)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblMTM) || !org.drip.quant.common.NumberUtil.IsValid
-			(dblCollateralBalance))
+		if (null == adblUncollateralizedExposure || null == adblCollateralAmount)
 			throw new java.lang.Exception ("CloseOutBilateral::counterPartyDefault => Invalid Inputs");
 
-		double dblNetMTM = dblMTM - dblCollateralBalance;
+		int iNumCounterPartyGroup = _adblCounterPartyRecovery.length;
 
-		return _dblCounterPartyRecovery * (dblNetMTM > 0. ? dblNetMTM : 0.) + (dblNetMTM < 0. ? dblNetMTM :
-			0.) + dblCollateralBalance;
+		if (0 > iCounterPartyGroupIndex || iCounterPartyGroupIndex >= iNumCounterPartyGroup ||
+			iNumCounterPartyGroup != adblUncollateralizedExposure.length || iNumCounterPartyGroup !=
+				adblCollateralAmount.length || !org.drip.quant.common.NumberUtil.IsValid
+					(adblUncollateralizedExposure) || !org.drip.quant.common.NumberUtil.IsValid
+						(adblCollateralAmount))
+			throw new java.lang.Exception ("CloseOutBilateral::counterPartyDefault => Invalid Inputs!");
+
+		double dblCounterPartyGroupCollateralizedExposure =
+			adblUncollateralizedExposure[iCounterPartyGroupIndex] -
+				adblCollateralAmount[iCounterPartyGroupIndex];
+		double dblCounterPartyGroupDefaultCloseOut = _adblCounterPartyRecovery[iCounterPartyGroupIndex] *
+			(dblCounterPartyGroupCollateralizedExposure > 0. ? dblCounterPartyGroupCollateralizedExposure :
+				0.) + (dblCounterPartyGroupCollateralizedExposure < 0. ?
+					dblCounterPartyGroupCollateralizedExposure : 0.) +
+						adblCollateralAmount[iCounterPartyGroupIndex];
+
+		for (int i = 0; i < iNumCounterPartyGroup; ++i)
+			dblCounterPartyGroupDefaultCloseOut += i == iCounterPartyGroupIndex ? 0. :
+				adblUncollateralizedExposure[i];
+
+		return dblCounterPartyGroupDefaultCloseOut;
 	}
 }

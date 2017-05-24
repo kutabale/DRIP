@@ -71,39 +71,50 @@ package org.drip.xva.derivative;
 
 public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
-	private org.drip.xva.universe.TradeableContainerVertexBilateral _uv = null;
-	private double _dblGainOnBankDefault = java.lang.Double.NaN;
+	private double[] _adblBankGainOnCounterPartyDefault = null;
+	private double[] _adblCounterPartyGainOnBankDefault = null;
 	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
-	private double _dblGainOnCounterPartyDefault = java.lang.Double.NaN;
 	private org.drip.xva.derivative.ReplicationPortfolioVertex _rpv = null;
+	private org.drip.xva.universe.TradeableContainerVertexMultilateral _tcvm = null;
 
 	/**
 	 * EvolutionTrajectoryVertex Constructor
 	 * 
 	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param uv Realization of the Trade-able Asset Prices
+	 * @param tcvm Realization of the Trade-able Asset Prices
 	 * @param rpv The Replication Portfolio Vertex
 	 * @param agv The Asset Greek Vertex
-	 * @param dblGainOnBankDefault The Counter Party Gain On Bank Default
-	 * @param dblGainOnCounterPartyDefault The Bank Gain On Counter Party Default
+	 * @param adblCounterPartyGainOnBankDefault Array of Individual Counter Party Gain On Bank Default
+	 * @param adblBankGainOnCounterPartyDefault Array of Bank Gain On Default of Individual Counter Party
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.universe.TradeableContainerVertexBilateral uv,
+		final org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm,
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
-		final double dblGainOnBankDefault,
-		final double dblGainOnCounterPartyDefault)
+		final double[] adblCounterPartyGainOnBankDefault,
+		final double[] adblBankGainOnCounterPartyDefault)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_uv = uv) || null ==
-			(_rpv = rpv) || null == (_agv = agv) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblGainOnBankDefault = dblGainOnBankDefault) || !org.drip.quant.common.NumberUtil.IsValid
-					(_dblGainOnCounterPartyDefault = dblGainOnCounterPartyDefault))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_tcvm = tcvm) || null
+			== (_rpv = rpv) || null == (_agv = agv) || null == (_adblCounterPartyGainOnBankDefault =
+				adblCounterPartyGainOnBankDefault) || null == (_adblBankGainOnCounterPartyDefault =
+					adblBankGainOnCounterPartyDefault))
 			throw new java.lang.Exception ("EvolutionTrajectoryVertex Constructor => Invalid Inputs");
+
+		int iNumCounterPartyGroup = _adblBankGainOnCounterPartyDefault.length;
+
+		if (0 >= iNumCounterPartyGroup || iNumCounterPartyGroup != _adblCounterPartyGainOnBankDefault.length)
+			throw new java.lang.Exception ("EvolutionTrajectoryVertex Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumCounterPartyGroup; ++i) {
+			if (!org.drip.quant.common.NumberUtil.IsValid (_adblBankGainOnCounterPartyDefault[i]) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_adblCounterPartyGainOnBankDefault[i]))
+				throw new java.lang.Exception ("EvolutionTrajectoryVertex Constructor => Invalid Inputs");
+		}
 	}
 
 	/**
@@ -123,9 +134,9 @@ public class EvolutionTrajectoryVertex {
 	 * @return Realization of the Trade-able Asset Prices
 	 */
 
-	public org.drip.xva.universe.TradeableContainerVertexBilateral tradeableAssetSnapshot()
+	public org.drip.xva.universe.TradeableContainerVertexMultilateral tradeableAssetSnapshot()
 	{
-		return _uv;
+		return _tcvm;
 	}
 
 	/**
@@ -151,24 +162,41 @@ public class EvolutionTrajectoryVertex {
 	}
 
 	/**
-	 * Retrieve the Counter Party Gain On Bank Default
+	 * Retrieve the Array of Individual Counter Party Gain On Bank Default
 	 * 
-	 * @return The Counter Party Gain On Bank Default
+	 * @return The Array of Individual Counter Party Gain On Bank Default
 	 */
 
-	public double gainOnBankDefault()
+	public double[] gainOnBankDefault()
 	{
-		return _dblGainOnBankDefault;
+		return _adblCounterPartyGainOnBankDefault;
 	}
 
 	/**
-	 * Retrieve the Bank Gain On Counter Party Default
+	 * Retrieve the Gross Counter Party Gain On Bank Default
 	 * 
-	 * @return The Bank Gain On Counter Party Default
+	 * @return The Gross Counter Party Gain On Bank Default
 	 */
 
-	public double gainOnCounterPartyDefault()
+	public double grossGainOnBankDefault()
 	{
-		return _dblGainOnCounterPartyDefault;
+		double dblGrossGainOnBankDefault = 0.;
+		int iNumCounterPartyGroup = _adblBankGainOnCounterPartyDefault.length;
+
+		for (int i = 0; i < iNumCounterPartyGroup; ++i)
+			dblGrossGainOnBankDefault += _adblBankGainOnCounterPartyDefault[i];
+
+		return dblGrossGainOnBankDefault;
+	}
+
+	/**
+	 * Retrieve the Array of Bank Gains On Individual Counter Party Default
+	 * 
+	 * @return The Array of Bank Gains On Individual Counter Party Default
+	 */
+
+	public double[] gainOnCounterPartyDefault()
+	{
+		return _adblBankGainOnCounterPartyDefault;
 	}
 }

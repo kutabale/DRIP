@@ -115,8 +115,8 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	{
 		double dblForwardPV = forwardPV();
 
-		return dblForwardPV + realizedCashFlow() - _cog.counterPartyDefault (dblForwardPV,
-			collateralBalance());
+		return dblForwardPV + realizedCashFlow() - _cog.counterPartyDefault (0, new double[] {dblForwardPV},
+			new double[] {collateralBalance()});
 	}
 
 	/**
@@ -132,7 +132,8 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	{
 		double dblForwardPV = forwardPV();
 
-		return dblForwardPV + realizedCashFlow() - _cog.counterPartyDefault (dblForwardPV);
+		return dblForwardPV + realizedCashFlow() - _cog.counterPartyDefault (0, new double[]
+			{dblForwardPV});
 	}
 
 	/**
@@ -148,7 +149,8 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	{
 		double dblForwardPV = forwardPV();
 
-		return dblForwardPV + realizedCashFlow() - _cog.bankDefault (dblForwardPV, collateralBalance());
+		return dblForwardPV + realizedCashFlow() - _cog.bankDefaultGross (new double[] {dblForwardPV}, new
+			double[] {collateralBalance()});
 	}
 
 	/**
@@ -164,6 +166,6 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	{
 		double dblForwardPV = forwardPV();
 
-		return dblForwardPV + realizedCashFlow() - _cog.bankDefault (dblForwardPV);
+		return dblForwardPV + realizedCashFlow() - _cog.bankDefaultGross (new double[] {dblForwardPV});
 	}
 }

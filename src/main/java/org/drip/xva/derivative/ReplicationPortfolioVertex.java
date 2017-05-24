@@ -69,17 +69,17 @@ package org.drip.xva.derivative;
  */
 
 public class ReplicationPortfolioVertex {
+	private double[] _adblCounterPartyBondUnits = null;
 	private double _dblAssetUnits = java.lang.Double.NaN;
 	private double _dblCashAccount = java.lang.Double.NaN;
 	private double _dblBankBondUnits = java.lang.Double.NaN;
-	private double _dblCounterPartyBondUnits = java.lang.Double.NaN;
 
 	/**
 	 * ReplicationPortfolioVertex Constructor
 	 * 
-	 * @param dblAssetUnits The Number of Asset Replication Units
-	 * @param dblBankBondUnits The Number of Bank Zero Coupon Bond Replication Units
-	 * @param dblCounterPartyBondUnits The Number of Counter Party Zero Coupon Bond Replication Units
+	 * @param dblAssetUnits The Asset Replication Units
+	 * @param dblBankBondUnits The Bank Zero Coupon Bond Replication Units
+	 * @param adblCounterPartyBondUnits The Array of Counter Party Zero Coupon Bond Replication Units
 	 * @param dblCashAccount The Cash Account
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -88,14 +88,14 @@ public class ReplicationPortfolioVertex {
 	public ReplicationPortfolioVertex (
 		final double dblAssetUnits,
 		final double dblBankBondUnits,
-		final double dblCounterPartyBondUnits,
+		final double[] adblCounterPartyBondUnits,
 		final double dblCashAccount)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetUnits = dblAssetUnits) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBankBondUnits = dblBankBondUnits) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyBondUnits =
-					dblCounterPartyBondUnits) || dblCounterPartyBondUnits > 0. ||
+				!org.drip.quant.common.NumberUtil.IsValid (_adblCounterPartyBondUnits =
+					adblCounterPartyBondUnits) || 0 >= _adblCounterPartyBondUnits.length ||
 						!org.drip.quant.common.NumberUtil.IsValid (_dblCashAccount = dblCashAccount))
 			throw new java.lang.Exception ("ReplicationPortfolioVertex Constructor => Invalid Inputs");
 	}
@@ -128,9 +128,9 @@ public class ReplicationPortfolioVertex {
 	 * @return The Number of Counter Party Zero Coupon Bond Replication Units
 	 */
 
-	public double counterPartyBondUnits()
+	public double[] counterPartyBondUnits()
 	{
-		return _dblCounterPartyBondUnits;
+		return _adblCounterPartyBondUnits;
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class ReplicationPortfolioVertex {
 	/**
 	 * Compute the Market Value of the Portfolio
 	 * 
-	 * @param us The Trade-able Asset Market Snapshot
+	 * @param tcvm The Trade-able Asset Market Snapshot
 	 * 
 	 * @return The Market Value of the Portfolio
 	 * 
@@ -155,13 +155,21 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double value (
-		final org.drip.xva.universe.TradeableContainerVertexBilateral us)
+		final org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm)
 		throws java.lang.Exception
 	{
-		if (null == us) throw new java.lang.Exception ("ReplicationPortfolioVertex::value => Invalid Inputs");
+		if (null == tcvm)
+			throw new java.lang.Exception ("ReplicationPortfolioVertex::value => Invalid Inputs");
 
-		return -1. * (_dblAssetUnits * us.assetNumeraire().finish() + _dblBankBondUnits *
-			us.zeroCouponBankBondNumeraire().finish() + _dblCounterPartyBondUnits *
-				us.zeroCouponCounterPartyBondNumeraire().finish() + _dblCashAccount);
+		double dblCounterPartyBondValue = 0.;
+		int iNumCounterPartyBondUnits = _adblCounterPartyBondUnits.length;
+
+		org.drip.measure.realization.JumpDiffusionEdge[] aJDE = tcvm.zeroCouponCounterPartyBondNumeraire();
+
+		for (int i = 0; i < iNumCounterPartyBondUnits; ++i)
+			dblCounterPartyBondValue = _adblCounterPartyBondUnits[i] * aJDE[i].finish();
+
+		return -1. * (_dblAssetUnits * tcvm.assetNumeraire().finish() + _dblBankBondUnits *
+			tcvm.zeroCouponBankBondNumeraire().finish() + dblCounterPartyBondValue + _dblCashAccount);
 	}
 }

@@ -95,7 +95,7 @@ public class TradeableContainerMultilateral extends org.drip.xva.universe.Tradea
 
 		int iNumCounterParty = _aTZeroCouponCounterPartyBond.length;
 
-		if (1 >= iNumCounterParty)
+		if (0 >= iNumCounterParty)
 			throw new java.lang.Exception ("TradeableContainerMultilateral Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumCounterParty; ++i) {

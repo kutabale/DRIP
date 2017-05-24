@@ -47,8 +47,8 @@ package org.drip.xva.definition;
  */
 
 /**
- * CloseOutGeneral exposes the General Close Out Amounts to be applied to the MTM at the Bank/Counter Party
- *  Default. The References are:
+ * CloseOutGeneral exposes the General Close Out Amounts to be applied to the MTM Exposure at the
+ *  Bank/Counter Party Default. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  
@@ -68,69 +68,117 @@ package org.drip.xva.definition;
 
 public abstract class CloseOutGeneral {
 
+	private static final double[] ZeroCollateral (
+		final double[] adblExposure)
+	{
+		if (null == adblExposure) return null;
+
+		int iNumCounterPartyGroup = adblExposure.length;
+		double[] adblCounterPartyGroupCollateral = 0 == iNumCounterPartyGroup ? null : new
+			double[iNumCounterPartyGroup];
+
+		if (0 == iNumCounterPartyGroup) return null;
+
+		for (int i = 0; i < iNumCounterPartyGroup; ++i)
+			adblCounterPartyGroupCollateral[i] = 0.;
+
+		return adblCounterPartyGroupCollateral;
+	}
+
 	/**
-	 * Retrieve the Close-out from the MTM on the Bank Default
+	 * Retrieve the Close-out Array from the Exposure on Bank Default
 	 * 
-	 * @param dblMTM The MTM
-	 * @param dblCollateralBalance The Posted Collateral Balance
+	 * @param adblUncollateralizedExposure Array of the Counter Party Group Uncollateralized Exposures
+	 * @param adblCollateralAmount Array of the Counter Party Group Collateral Amounts
 	 * 
-	 * @return The Close-out from the MTM on the Bank Default
+	 * @return The Close-out Array from the Exposure on Bank Default
+	 */
+
+	public abstract double[] bankDefault (
+		final double[] adblUncollateralizedExposure,
+		final double[] adblCollateralAmount);
+
+	/**
+	 * Retrieve the Gross Close-out from the Exposure on Bank Default
+	 * 
+	 * @param adblUncollateralizedExposure Array of the Counter Party Group Uncollateralized Exposures
+	 * @param adblCollateralAmount Array of the Counter Party Group Collateral Amounts
+	 * 
+	 * @return The Gross Close-out from the Exposure on Bank Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double bankDefault (
-		final double dblMTM,
-		final double dblCollateralBalance)
+	public abstract double bankDefaultGross (
+		final double[] adblUncollateralizedExposure,
+		final double[] adblCollateralAmount)
 		throws java.lang.Exception;
 
 	/**
-	 * Retrieve the Close-out from the MTM on the Counter Party Default
+	 * Retrieve the Close-out from the Exposure on a specific Counter Party Default
 	 * 
-	 * @param dblMTM The MTM
-	 * @param dblCollateralBalance The Posted Collateral Balance
+	 * @param iCounterPartyGroupIndex The Counter Party Group Index
+	 * @param adblUncollateralizedExposure Array of the Counter Party Group Uncollateralized Exposures
+	 * @param adblCollateralAmount Array of the Counter Party Group Collateral Amounts
 	 * 
-	 * @return The Close-out from the MTM on the Counter Party Default
+	 * @return The Close-out from the Exposure on a specific Counter Party Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public abstract double counterPartyDefault (
-		final double dblMTM,
-		final double dblCollateralBalance)
+		final int iCounterPartyGroupIndex,
+		final double[] adblUncollateralizedExposure,
+		final double[] adblCollateralAmount)
 		throws java.lang.Exception;
 
 	/**
-	 * Retrieve the Close-out from the MTM on the Bank Default
+	 * Retrieve the Close-out Array from the Exposure on Bank Default
 	 * 
-	 * @param dblMTM The MTM
+	 * @param adblUncollateralizedExposure Array of the Counter Party Group Uncollateralized Exposures
 	 * 
-	 * @return The Close-out from the MTM on the Bank Default
+	 * @return The Close-out Array from the Exposure on Bank Default
+	 */
+
+	public double[] bankDefault (
+		final double[] adblUncollateralizedExposure)
+	{
+		return bankDefault (adblUncollateralizedExposure, ZeroCollateral (adblUncollateralizedExposure));
+	}
+
+	/**
+	 * Retrieve the Gross Close-out from the Exposure on Bank Default
+	 * 
+	 * @param adblExposure Array of the Counter Party Group Exposures
+	 * 
+	 * @return The Gross Close-out from the Exposure on Bank Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double bankDefault (
-		final double dblMTM)
+	public double bankDefaultGross (
+		final double[] adblExposure)
 		throws java.lang.Exception
 	{
-		return bankDefault (dblMTM, 0.);
+		return bankDefaultGross (adblExposure, ZeroCollateral (adblExposure));
 	}
 
 	/**
-	 * Retrieve the Close-out from the MTM on the Counter Party Default
+	 * Retrieve the Close-out from the Exposure on specific Counter Party Default
 	 * 
-	 * @param dblMTM The MTM
+	 * @param iCounterPartyGroupIndex The Counter Party Group Index
+	 * @param adblExposure Array of the Counter Party Group Exposures
 	 * 
-	 * @return The Close-out from the MTM on the Counter Party Default
+	 * @return The Close-out from the Exposure on specific Counter Party Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double counterPartyDefault (
-		final double dblMTM)
+		final int iCounterPartyGroupIndex,
+		final double[] adblExposure)
 		throws java.lang.Exception
 	{
-		return counterPartyDefault (dblMTM, 0.);
+		return counterPartyDefault (iCounterPartyGroupIndex, adblExposure, ZeroCollateral (adblExposure));
 	}
 }
