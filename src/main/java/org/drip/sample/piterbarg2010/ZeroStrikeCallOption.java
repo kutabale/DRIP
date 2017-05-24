@@ -5,8 +5,7 @@ import org.drip.analytics.date.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
-import org.drip.state.discount.DiscountCurve;
-import org.drip.state.discount.MergedDiscountForwardCurve;
+import org.drip.state.discount.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -350,9 +349,9 @@ public class ZeroStrikeCallOption {
 		for (String strTenor : astrTenor) {
 			JulianDate dt = dtSpot.addTenor (strTenor);
 
-			double dblOvernightZeroRate = dcOvernight.zero (strTenor);
-
 			double dblFundingZeroRate = dcFunding.zero (strTenor);
+
+			double dblOvernightZeroRate = dcOvernight.zero (strTenor);
 
 			System.out.println ("\t|| " + dt + " | " +
 				FormatUtil.FormatDouble (dcOvernight.df (dt), 3, 2, 100.) + " | " +

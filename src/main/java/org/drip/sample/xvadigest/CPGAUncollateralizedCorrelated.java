@@ -10,13 +10,10 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.HypothecationGroupPath;
-import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
-import org.drip.xva.numeraire.MarketPath;
-import org.drip.xva.numeraire.MarketVertex;
-import org.drip.xva.strategy.FundingGroupPathAA2014;
-import org.drip.xva.strategy.NettingGroupPathAA2014;
+import org.drip.xva.numeraire.*;
+import org.drip.xva.strategy.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -288,9 +285,9 @@ public class CPGAUncollateralizedCorrelated {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		MonoPathExposureAdjustment[] aCPGP = new MonoPathExposureAdjustment[iNumPath];
 		double[][] aadblPortfolioValue = new double[iNumPath][iNumStep + 1];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
+		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
@@ -414,11 +411,11 @@ public class CPGAUncollateralizedCorrelated {
 				iNumStep
 			);
 
-			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
-			HypothecationGroupVertexRegular[] aCGV = new HypothecationGroupVertexRegular[iNumStep + 1];
+			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
+			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aNV[j] = MarketVertex.Standard (
+				aMV[j] = MarketVertex.Standard (
 					adtVertex[j] = dtSpot.addMonths (6 * j + 6),
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -430,7 +427,7 @@ public class CPGAUncollateralizedCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV[j] = new HypothecationGroupVertexRegular (
+				aHGVR[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,
@@ -438,78 +435,78 @@ public class CPGAUncollateralizedCorrelated {
 				);
 			}
 
-			MarketPath np = new MarketPath (aNV);
+			MarketPath mp = new MarketPath (aMV);
 
-			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
+			HypothecationGroupPath[] aHGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR)};
 
-			aCPGP[i] = new MonoPathExposureAdjustment (
+			aMPEA[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
-						aCGP,
-						np
+						aHGP,
+						mp
 					)
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
-						aCGP,
-						np
+						aHGP,
+						mp
 					)
 				}
 			);
 		}
 
-		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (aCPGP);
+		ExposureAdjustmentAggregator eaa = new ExposureAdjustmentAggregator (aMPEA);
 
-		ExposureAdjustmentDigest cpgd = cpga.digest();
+		ExposureAdjustmentDigest ead = eaa.digest();
 
 		System.out.println();
 
 		UDTDump (
 			"\t|                                                                                COLLATERALIZED EXPOSURE                                                                                |",
-			cpga.anchors(),
-			cpgd.collateralizedExposure()
+			eaa.anchors(),
+			ead.collateralizedExposure()
 		);
 
 		UDTDump (
 			"\t|                                                                               UNCOLLATERALIZED EXPOSURE                                                                               |",
-			cpga.anchors(),
-			cpgd.uncollateralizedExposure()
+			eaa.anchors(),
+			ead.uncollateralizedExposure()
 		);
 
 		UDTDump (
 			"\t|                                                                                COLLATERALIZED EXPOSURE PV                                                                             |",
-			cpga.anchors(),
-			cpgd.collateralizedExposurePV()
+			eaa.anchors(),
+			ead.collateralizedExposurePV()
 		);
 
 		UDTDump (
 			"\t|                                                                               UNCOLLATERALIZED EXPOSURE PV                                                                            |",
-			cpga.anchors(),
-			cpgd.uncollateralizedExposurePV()
+			eaa.anchors(),
+			ead.uncollateralizedExposurePV()
 		);
 
 		UDTDump (
 			"\t|                                                                            COLLATERALIZED POSITIVE EXPOSURE PV                                                                        |",
-			cpga.anchors(),
-			cpgd.collateralizedPositiveExposure()
+			eaa.anchors(),
+			ead.collateralizedPositiveExposure()
 		);
 
 		UDTDump (
 			"\t|                                                                           UNCOLLATERALIZED POSITIVE EXPOSURE PV                                                                       |",
-			cpga.anchors(),
-			cpgd.uncollateralizedPositiveExposure()
+			eaa.anchors(),
+			ead.uncollateralizedPositiveExposure()
 		);
 
 		UDTDump (
 			"\t|                                                                            COLLATERALIZED NEGATIVE EXPOSURE PV                                                                        |",
-			cpga.anchors(),
-			cpgd.collateralizedNegativeExposure()
+			eaa.anchors(),
+			ead.collateralizedNegativeExposure()
 		);
 
 		UDTDump (
 			"\t|                                                                           UNCOLLATERALIZED NEGATIVE EXPOSURE PV                                                                       |",
-			cpga.anchors(),
-			cpgd.uncollateralizedNegativeExposure()
+			eaa.anchors(),
+			ead.uncollateralizedNegativeExposure()
 		);
 
 		System.out.println();
@@ -534,59 +531,59 @@ public class CPGAUncollateralizedCorrelated {
 
 		UDTDump (
 			"\t||  UCVA  => ",
-			cpgd.ucva()
+			ead.ucva()
 		);
 
 		UDTDump (
 			"\t|| FTDCVA => ",
-			cpgd.ftdcva()
+			ead.ftdcva()
 		);
 
 		UDTDump (
 			"\t||   CVA  => ",
-			cpgd.cva()
+			ead.cva()
 		);
 
 		UDTDump (
 			"\t||  CVACL => ",
-			cpgd.cvacl()
+			ead.cvacl()
 		);
 
 		UDTDump (
 			"\t||   DVA  => ",
-			cpgd.dva()
+			ead.dva()
 		);
 
 		UDTDump (
 			"\t||   FVA  => ",
-			cpgd.fva()
+			ead.fva()
 		);
 
 		UDTDump (
 			"\t||   FDA  => ",
-			cpgd.fda()
+			ead.fda()
 		);
 
 		UDTDump (
 			"\t||   FCA  => ",
-			cpgd.fca()
+			ead.fca()
 		);
 
 		UDTDump (
 			"\t||   FBA  => ",
-			cpgd.fba()
+			ead.fba()
 		);
 
 		UDTDump (
 			"\t||  SFVA  => ",
-			cpgd.sfva()
+			ead.sfva()
 		);
 
 		System.out.println ("\t||-----------------------------------------------------||");
 
 		UDTDump (
 			"\t||  Total => ",
-			cpgd.totalVA()
+			ead.totalVA()
 		);
 
 		System.out.println ("\t||-----------------------------------------------------||");

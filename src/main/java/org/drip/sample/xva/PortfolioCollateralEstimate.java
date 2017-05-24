@@ -9,8 +9,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.HypothecationAmountEstimator;
-import org.drip.xva.collateral.HypothecationAmountEstimatorOutput;
+import org.drip.xva.collateral.*;
 import org.drip.xva.set.*;
 
 /*
@@ -165,7 +164,7 @@ public class PortfolioCollateralEstimate {
 
 			double dblPortfolioValueFinish = dblTimeWidth * (iNumStep - i) * aJDESwapRate[i].finish();
 
-			HypothecationAmountEstimator cae = new HypothecationAmountEstimator (
+			HypothecationAmountEstimator hae = new HypothecationAmountEstimator (
 				cgs,
 				cpgs,
 				new BrokenDateInterpolatorLinearT (
@@ -177,21 +176,21 @@ public class PortfolioCollateralEstimate {
 				Double.NaN
 			);
 
-			HypothecationAmountEstimatorOutput caeo = cae.output (dtEnd);
+			HypothecationAmountEstimatorOutput haeo = hae.output (dtEnd);
 
 			System.out.println (
 				"\t|| " +
 				dtEnd + " => " +
 				FormatUtil.FormatDouble (dblPortfolioValueFinish, 1, 4, 1.) + " | " +
-				caeo.bankMarginDate() + " | " +
-				caeo.counterPartyMarginDate() + " | " +
-				FormatUtil.FormatDouble (caeo.bankWindowMarginValue(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (caeo.counterPartyWindowMarginValue(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (caeo.bankCollateralThreshold(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (caeo.counterPartyCollateralThreshold(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (caeo.bankPostingRequirement(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (caeo.counterPartyPostingRequirement(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (caeo.postingRequirement(), 1, 4, 1.) + " ||"
+				haeo.bankMarginDate() + " | " +
+				haeo.counterPartyMarginDate() + " | " +
+				FormatUtil.FormatDouble (haeo.bankWindowMarginValue(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (haeo.counterPartyWindowMarginValue(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (haeo.bankCollateralThreshold(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (haeo.counterPartyCollateralThreshold(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (haeo.bankPostingRequirement(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (haeo.counterPartyPostingRequirement(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (haeo.postingRequirement(), 1, 4, 1.) + " ||"
 			);
 
 			dtStart = dtEnd;

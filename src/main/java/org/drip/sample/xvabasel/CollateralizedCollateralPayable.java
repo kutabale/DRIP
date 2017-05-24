@@ -183,12 +183,12 @@ public class CollateralizedCollateralPayable {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
+		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
-		MonoPathExposureAdjustment[] aCPGPGround = new MonoPathExposureAdjustment[iNumPath];
-		MonoPathExposureAdjustment[] aCPGPExtended = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
+		MonoPathExposureAdjustment[] aMPEAGround = new MonoPathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aMPEAExtended = new MonoPathExposureAdjustment[iNumPath];
 
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
@@ -206,7 +206,7 @@ public class CollateralizedCollateralPayable {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = MarketVertex.Standard (
+			aMV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -242,8 +242,8 @@ public class CollateralizedCollateralPayable {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
-			HypothecationGroupVertexRegular[] aCGV2 = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aHGVR1 = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aHGVR2 = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
@@ -253,7 +253,7 @@ public class CollateralizedCollateralPayable {
 				double dblValueEnd2 = aadblPortfolio2Value[i][j];
 
 				if (0 != j) {
-					HypothecationAmountEstimator cae1 = new HypothecationAmountEstimator (
+					HypothecationAmountEstimator hae1 = new HypothecationAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -265,9 +265,9 @@ public class CollateralizedCollateralPayable {
 						Double.NaN
 					);
 
-					dblCollateralBalance1 = cae1.postingRequirement (dtEnd);
+					dblCollateralBalance1 = hae1.postingRequirement (dtEnd);
 
-					HypothecationAmountEstimator cae2 = new HypothecationAmountEstimator (
+					HypothecationAmountEstimator hae2 = new HypothecationAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -279,18 +279,18 @@ public class CollateralizedCollateralPayable {
 						Double.NaN
 					);
 
-					dblCollateralBalance2 = cae2.postingRequirement (dtEnd);
+					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
 				}
 
 
-				aCGV1[j] = new HypothecationGroupVertexRegular (
+				aHGVR1[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					dblCollateralBalance1
 				);
 
-				aCGV2[j] = new HypothecationGroupVertexRegular (
+				aHGVR2[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
@@ -302,80 +302,80 @@ public class CollateralizedCollateralPayable {
 				dblValueStart2 = dblValueEnd2;
 			}
 
-			MarketPath np = new MarketPath (aNV);
+			MarketPath mp = new MarketPath (aMV);
 
-			HypothecationGroupPath[] aCGPGround = new HypothecationGroupPath[] {
-				new HypothecationGroupPath (aCGV1)
+			HypothecationGroupPath[] aHGPGround = new HypothecationGroupPath[] {
+				new HypothecationGroupPath (aHGVR1)
 			};
 
-			HypothecationGroupPath[] aCGPExtended = new HypothecationGroupPath[] {
-				new HypothecationGroupPath (aCGV1),
-				new HypothecationGroupPath (aCGV2)
+			HypothecationGroupPath[] aHGPExtended = new HypothecationGroupPath[] {
+				new HypothecationGroupPath (aHGVR1),
+				new HypothecationGroupPath (aHGVR2)
 			};
 
-			aCPGPGround[i] = new MonoPathExposureAdjustment (
+			aMPEAGround[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
-						aCGPGround,
-						np
+						aHGPGround,
+						mp
 					)
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
-						aCGPGround,
-						np
+						aHGPGround,
+						mp
 					)
 				}
 			);
 
-			aCPGPExtended[i] = new MonoPathExposureAdjustment (
+			aMPEAExtended[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
-						aCGPExtended,
-						np
+						aHGPExtended,
+						mp
 					)
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
-						aCGPExtended,
-						np
+						aHGPExtended,
+						mp
 					)
 				}
 			);
 		}
 
 		return new ExposureAdjustmentAggregator[] {
-			new ExposureAdjustmentAggregator (aCPGPGround),
-			new ExposureAdjustmentAggregator (aCPGPExtended)
+			new ExposureAdjustmentAggregator (aMPEAGround),
+			new ExposureAdjustmentAggregator (aMPEAExtended)
 		};
 	}
 
 	private static final void CPGDDump (
 		final String strHeader,
-		final ExposureAdjustmentDigest cpgd)
+		final ExposureAdjustmentDigest ead)
 		throws Exception
 	{
 		System.out.println();
 
-		UnivariateDiscreteThin udtUCVA = cpgd.ucva();
+		UnivariateDiscreteThin udtUCVA = ead.ucva();
 
-		UnivariateDiscreteThin udtFTDCVA = cpgd.ftdcva();
+		UnivariateDiscreteThin udtFTDCVA = ead.ftdcva();
 
-		UnivariateDiscreteThin udtCVACL = cpgd.cvacl();
+		UnivariateDiscreteThin udtCVACL = ead.cvacl();
 
-		UnivariateDiscreteThin udtCVA = cpgd.cva();
+		UnivariateDiscreteThin udtCVA = ead.cva();
 
-		UnivariateDiscreteThin udtDVA = cpgd.dva();
+		UnivariateDiscreteThin udtDVA = ead.dva();
 
-		UnivariateDiscreteThin udtFVA = cpgd.fva();
+		UnivariateDiscreteThin udtFVA = ead.fva();
 
-		UnivariateDiscreteThin udtFDA = cpgd.fda();
+		UnivariateDiscreteThin udtFDA = ead.fda();
 
-		UnivariateDiscreteThin udtFCA = cpgd.fca();
+		UnivariateDiscreteThin udtFCA = ead.fca();
 
-		UnivariateDiscreteThin udtFBA = cpgd.fba();
+		UnivariateDiscreteThin udtFBA = ead.fba();
 
-		UnivariateDiscreteThin udtSFVA = cpgd.sfva();
+		UnivariateDiscreteThin udtSFVA = ead.sfva();
 
 		System.out.println (
 			"\t||--------------------------------------------------------------------------------------------------------------||"
@@ -458,8 +458,8 @@ public class CollateralizedCollateralPayable {
 
 	private static final void CPGDDiffDump (
 		final String strHeader,
-		final ExposureAdjustmentDigest cpgdGround,
-		final ExposureAdjustmentDigest cpgdExpanded)
+		final ExposureAdjustmentDigest eadGround,
+		final ExposureAdjustmentDigest eadExpanded)
 		throws Exception
 	{
 		System.out.println();
@@ -484,16 +484,16 @@ public class CollateralizedCollateralPayable {
 
 		System.out.println (
 			"\t|| Average => " +
-			FormatUtil.FormatDouble (cpgdExpanded.ucva().average() - cpgdGround.ucva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.ftdcva().average() - cpgdGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.cvacl().average() - cpgdGround.cvacl().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.cva().average() - cpgdGround.cva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.dva().average() - cpgdGround.dva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.fva().average() - cpgdGround.fva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.fda().average() - cpgdGround.fda().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.fca().average() - cpgdGround.fca().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.fba().average() - cpgdGround.fba().average(), 3, 1, 10000.) + "  | " + 
-			FormatUtil.FormatDouble (cpgdExpanded.sfva().average() - cpgdGround.sfva().average(), 3, 1, 10000.) + "  ||"
+			FormatUtil.FormatDouble (eadExpanded.ucva().average() - eadGround.ucva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.ftdcva().average() - eadGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.cvacl().average() - eadGround.cvacl().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.cva().average() - eadGround.cva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.dva().average() - eadGround.dva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.fva().average() - eadGround.fva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.fda().average() - eadGround.fda().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.fca().average() - eadGround.fca().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.fba().average() - eadGround.fba().average(), 3, 1, 10000.) + "  | " + 
+			FormatUtil.FormatDouble (eadExpanded.sfva().average() - eadGround.sfva().average(), 3, 1, 10000.) + "  ||"
 		);
 
 		System.out.println (
@@ -503,17 +503,17 @@ public class CollateralizedCollateralPayable {
 
 	private static final void BaselAccountingMetrics (
 		final String strHeader,
-		final ExposureAdjustmentAggregator cpgaGround,
-		final ExposureAdjustmentAggregator cpgaExpanded)
+		final ExposureAdjustmentAggregator eadGround,
+		final ExposureAdjustmentAggregator eadExpanded)
 		throws Exception
 	{
-		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (cpgaGround);
+		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (eadGround);
 
-		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (cpgaGround);
+		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (eadGround);
 
-		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (cpgaExpanded);
+		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (eadExpanded);
 
-		OTCAccountingPolicy oapFVAFDA = oasFVAFDA.feePolicy (cpgaExpanded);
+		OTCAccountingPolicy oapFVAFDA = oasFVAFDA.feePolicy (eadExpanded);
 
 		System.out.println();
 
@@ -603,33 +603,33 @@ public class CollateralizedCollateralPayable {
 			1.
 		);
 
-		ExposureAdjustmentAggregator cpgaGround = aCPGA[0];
-		ExposureAdjustmentAggregator cpgaExtended = aCPGA[1];
+		ExposureAdjustmentAggregator eaaGround = aCPGA[0];
+		ExposureAdjustmentAggregator eaaExtended = aCPGA[1];
 
-		ExposureAdjustmentDigest cpgdGround = cpgaGround.digest();
+		ExposureAdjustmentDigest eadGround = eaaGround.digest();
 
-		ExposureAdjustmentDigest cpgdExtended = cpgaExtended.digest();
+		ExposureAdjustmentDigest eadExtended = eaaExtended.digest();
 
 		CPGDDump (
 			"\t||                                        GROUND BOOK ADJUSTMENT METRICS                                        ||",
-			cpgdGround
+			eadGround
 		);
 
 		CPGDDump (
 			"\t||                                       EXTENDED BOOK ADJUSTMENT METRICS                                       ||",
-			cpgdExtended
+			eadExtended
 		);
 
 		CPGDDiffDump (
 			"\t||                                   TRADE INCREMENT ADJUSTMENT METRICS (bp)                                    ||",
-			cpgdGround,
-			cpgdExtended
+			eadGround,
+			eadExtended
 		);
 
 		BaselAccountingMetrics (
 			"\t||           ALBANESE & ANDERSEN (2015) BCBS OTC ACCOUNTING            ||",
-			cpgaGround,
-			cpgaExtended
+			eaaGround,
+			eaaExtended
 		);
 	}
 }

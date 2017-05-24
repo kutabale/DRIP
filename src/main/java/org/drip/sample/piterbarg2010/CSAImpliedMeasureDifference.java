@@ -283,21 +283,21 @@ public class CSAImpliedMeasureDifference {
 					adblCSAImpliedVolatility[i]
 				);
 
-				FundingBasisEvolver sftf = new FundingBasisEvolver (
+				FundingBasisEvolver fbe = new FundingBasisEvolver (
 					delUnderlying,
 					demrFundingSpread,
 					adblCorrelation[j]
 				);
 
-				aadblNoCSAForward[j][i] = dblCSAForward * sftf.CSANoCSARatio (strTenor);
+				aadblNoCSAForward[j][i] = dblCSAForward * fbe.CSANoCSARatio (strTenor);
 
-				NumeraireInducedMeasureShift cims = new NumeraireInducedMeasureShift (
+				NumeraireInducedMeasureShift nims = new NumeraireInducedMeasureShift (
 					dblCSAForward,
 					aadblNoCSAForward[j][i],
 					dblCSAForward * dblCSAForward * adblCSAImpliedVolatility[i] * adblCSAImpliedVolatility[i]
 				);
 
-				aadblMeasureShiftScale[j][i] = cims.densityRescale (adblStrike[i]);
+				aadblMeasureShiftScale[j][i] = nims.densityRescale (adblStrike[i]);
 
 				strDump = strDump + " " + FormatUtil.FormatDouble (aadblMeasureShiftScale[j][i], 1, 4, 1.) + " |";
 			}

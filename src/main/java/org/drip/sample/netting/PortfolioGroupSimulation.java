@@ -8,13 +8,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.HypothecationGroupPath;
-import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
-import org.drip.xva.numeraire.MarketPath;
-import org.drip.xva.numeraire.MarketVertex;
-import org.drip.xva.strategy.FundingGroupPathAA2014;
-import org.drip.xva.strategy.NettingGroupPathAA2014;
+import org.drip.xva.numeraire.*;
+import org.drip.xva.strategy.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -134,10 +131,10 @@ public class PortfolioGroupSimulation {
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
+		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
-		MonoPathExposureAdjustment[] aCPGP = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
+		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -158,7 +155,7 @@ public class PortfolioGroupSimulation {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = MarketVertex.Standard (
+			aMV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -168,13 +165,13 @@ public class PortfolioGroupSimulation {
 				dblCounterPartyRecoveryRate
 			);
 
-		MarketPath np = new MarketPath (aNV);
+		MarketPath mp = new MarketPath (aMV);
 
 		for (int i = 0; i < iNumPath; ++i) {
-			HypothecationGroupVertexRegular[] aCGV = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aCGV[j] = new HypothecationGroupVertexRegular (
+				aHGVR[j] = new HypothecationGroupVertexRegular (
 					adtVertex[j],
 					aadblCollateralPortfolioValue[i][j],
 					0.,
@@ -182,27 +179,27 @@ public class PortfolioGroupSimulation {
 				);
 			}
 
-			HypothecationGroupPath[] aCGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV)};
+			HypothecationGroupPath[] aHGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR)};
 
-			aCPGP[i] = new MonoPathExposureAdjustment (
+			aMPEA[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
-						aCGP,
-						np
+						aHGP,
+						mp
 					)
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
-						aCGP,
-						np
+						aHGP,
+						mp
 					)
 				}
 			);
 		}
 
-		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (aCPGP);
+		ExposureAdjustmentAggregator eaa = new ExposureAdjustmentAggregator (aMPEA);
 
-		JulianDate[] adtVertexNode = cpga.anchors();
+		JulianDate[] adtVertexNode = eaa.anchors();
 
 		System.out.println();
 
@@ -217,7 +214,7 @@ public class PortfolioGroupSimulation {
 
 		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
-		double[] adblExposure = cpga.collateralizedExposure();
+		double[] adblExposure = eaa.collateralizedExposure();
 
 		strDump = "\t|       EXPOSURE       =>";
 
@@ -226,7 +223,7 @@ public class PortfolioGroupSimulation {
 
 		System.out.println (strDump);
 
-		double[] adblPositiveExposure = cpga.collateralizedPositiveExposure();
+		double[] adblPositiveExposure = eaa.collateralizedPositiveExposure();
 
 		strDump = "\t|  POSITIVE EXPOSURE   =>";
 
@@ -235,7 +232,7 @@ public class PortfolioGroupSimulation {
 
 		System.out.println (strDump);
 
-		double[] adblNegativeExposure = cpga.collateralizedNegativeExposure();
+		double[] adblNegativeExposure = eaa.collateralizedNegativeExposure();
 
 		strDump = "\t|  NEGATIVE EXPOSURE   =>";
 
@@ -244,7 +241,7 @@ public class PortfolioGroupSimulation {
 
 		System.out.println (strDump);
 
-		double[] adblExposurePV = cpga.collateralizedExposurePV();
+		double[] adblExposurePV = eaa.collateralizedExposurePV();
 
 		strDump = "\t|      EXPOSURE PV     =>";
 
@@ -253,7 +250,7 @@ public class PortfolioGroupSimulation {
 
 		System.out.println (strDump);
 
-		double[] adblPositiveExposurePV = cpga.collateralizedPositiveExposurePV();
+		double[] adblPositiveExposurePV = eaa.collateralizedPositiveExposurePV();
 
 		strDump = "\t| POSITIVE EXPOSURE PV =>";
 
@@ -262,7 +259,7 @@ public class PortfolioGroupSimulation {
 
 		System.out.println (strDump);
 
-		double[] adblNegativeExposurePV = cpga.collateralizedNegativeExposurePV();
+		double[] adblNegativeExposurePV = eaa.collateralizedNegativeExposurePV();
 
 		strDump = "\t| NEGATIVE EXPOSURE PV =>";
 
@@ -277,25 +274,25 @@ public class PortfolioGroupSimulation {
 
 		System.out.println ("\t||-------------------||");
 
-		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (eaa.ucva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ftdcva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (eaa.ftdcva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.cva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (eaa.cva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  CVACL => " + FormatUtil.FormatDouble (cpga.cvacl().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVACL => " + FormatUtil.FormatDouble (eaa.cvacl().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (eaa.dva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (eaa.fva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (cpga.fda().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (eaa.fda().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (eaa.fca().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (cpga.fba().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (eaa.fba().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (cpga.sfva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (eaa.sfva().amount(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||-------------------||");
 	}

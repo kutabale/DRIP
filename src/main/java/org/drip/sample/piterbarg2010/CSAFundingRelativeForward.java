@@ -148,13 +148,13 @@ public class CSAFundingRelativeForward {
 			String strDump = "\t|| " + FormatUtil.FormatDouble (iTenor, 2, 0, 1.) + "Y => ";
 
 			for (double dblCorrelation : adblCorrelation) {
-				FundingBasisEvolver sftf = new FundingBasisEvolver (
+				FundingBasisEvolver fbe = new FundingBasisEvolver (
 					delUnderlying,
 					demrFundingSpread,
 					dblCorrelation
 				);
 
-				strDump = strDump + " " + FormatUtil.FormatDouble (sftf.CSANoCSARatio (iTenor + "Y") - 1., 1, 2, 100.) + "% |";
+				strDump = strDump + " " + FormatUtil.FormatDouble (fbe.CSANoCSARatio (iTenor + "Y") - 1., 1, 2, 100.) + "% |";
 			}
 
 			System.out.println (strDump + "|");

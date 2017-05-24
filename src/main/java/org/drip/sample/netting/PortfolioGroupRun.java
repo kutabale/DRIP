@@ -8,13 +8,10 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.HypothecationGroupPath;
-import org.drip.xva.collateral.HypothecationGroupVertexRegular;
+import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
-import org.drip.xva.numeraire.MarketPath;
-import org.drip.xva.numeraire.MarketVertex;
-import org.drip.xva.strategy.FundingGroupPathAA2014;
-import org.drip.xva.strategy.NettingGroupPathAA2014;
+import org.drip.xva.numeraire.*;
+import org.drip.xva.strategy.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -129,11 +126,11 @@ public class PortfolioGroupRun {
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
+		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
-		HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
-		HypothecationGroupVertexRegular[] aCGV2 = new HypothecationGroupVertexRegular[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
+		HypothecationGroupVertexRegular[] aHGVR1 = new HypothecationGroupVertexRegular[iNumStep + 1];
+		HypothecationGroupVertexRegular[] aHGVR2 = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -197,7 +194,7 @@ public class PortfolioGroupRun {
 		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 0; i <= iNumStep; ++i) {
-			aNV[i] = MarketVertex.Standard (
+			aMV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -207,14 +204,14 @@ public class PortfolioGroupRun {
 				dblCounterPartyRecoveryRate
 			);
 
-			aCGV1[i] = new HypothecationGroupVertexRegular (
+			aHGVR1[i] = new HypothecationGroupVertexRegular (
 				adtVertex[i],
 				adblAssetValuePath1[i],
 				0.,
 				0.
 			);
 
-			aCGV2[i] = new HypothecationGroupVertexRegular (
+			aHGVR2[i] = new HypothecationGroupVertexRegular (
 				adtVertex[i],
 				adblAssetValuePath2[i],
 				0.,
@@ -223,62 +220,62 @@ public class PortfolioGroupRun {
 
 			System.out.println (
 				"\t| " + adtVertex[i] + " => " +
-				FormatUtil.FormatDouble (aCGV1[i].collateralizedExposure(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV1[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV1[i].collateralBalance(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV2[i].collateralizedExposure(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV2[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV2[i].collateralBalance(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aNV[i].overnightPolicyIndex(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aNV[i].bankSurvival(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aNV[i].bankRecovery(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aNV[i].bankFundingSpread(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aNV[i].counterPartySurvival(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aNV[i].counterPartyRecovery(), 1, 6, 1.) + " ||"
+				FormatUtil.FormatDouble (aHGVR1[i].collateralizedExposure(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR1[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR1[i].collateralBalance(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR2[i].collateralizedExposure(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR2[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR2[i].collateralBalance(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].overnightPolicyIndex(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].bankSurvival(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].bankRecovery(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].bankFundingSpread(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].counterPartySurvival(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].counterPartyRecovery(), 1, 6, 1.) + " ||"
 			);
 		}
 
-		MarketPath np = new MarketPath (aNV);
+		MarketPath mp = new MarketPath (aMV);
 
-		HypothecationGroupPath[] aCGP1 = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV1)};
+		HypothecationGroupPath[] aHGP1 = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR1)};
 
-		HypothecationGroupPath[] aCGP2 = new HypothecationGroupPath[] {new HypothecationGroupPath (aCGV2)};
+		HypothecationGroupPath[] aHGP2 = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR2)};
 
-		NettingGroupPathAA2014 ngp1 = new NettingGroupPathAA2014 (
-			aCGP1,
-			np
+		NettingGroupPathAA2014 ngpaa2014_1 = new NettingGroupPathAA2014 (
+			aHGP1,
+			mp
 		);
 
-		FundingGroupPathAA2014 fgp1 = new FundingGroupPathAA2014 (
-			aCGP1,
-			np
+		FundingGroupPathAA2014 fgpaa2014_1 = new FundingGroupPathAA2014 (
+			aHGP1,
+			mp
 		);
 
-		NettingGroupPathAA2014 ngp2 = new NettingGroupPathAA2014 (
-			aCGP2,
-			np
+		NettingGroupPathAA2014 ngpaa2014_2 = new NettingGroupPathAA2014 (
+			aHGP2,
+			mp
 		);
 
-		FundingGroupPathAA2014 fgp2 = new FundingGroupPathAA2014 (
-			aCGP2,
-			np
+		FundingGroupPathAA2014 fgpaa2014_2 = new FundingGroupPathAA2014 (
+			aHGP2,
+			mp
 		);
 
-		double[] adblPeriodUnilateralCreditAdjustment1 = ngp1.periodUnilateralCreditAdjustment();
+		double[] adblPeriodUnilateralCreditAdjustment1 = ngpaa2014_1.periodUnilateralCreditAdjustment();
 
-		double[] adblPeriodBilateralCreditAdjustment1 = ngp1.periodBilateralCreditAdjustment();
+		double[] adblPeriodBilateralCreditAdjustment1 = ngpaa2014_1.periodBilateralCreditAdjustment();
 
-		double[] adblPeriodCreditAdjustment1 = ngp1.periodCreditAdjustment();
+		double[] adblPeriodCreditAdjustment1 = ngpaa2014_1.periodCreditAdjustment();
 
-		double[] adblPeriodContraLiabilityCreditAdjustment1 = ngp1.periodContraLiabilityCreditAdjustment();
+		double[] adblPeriodContraLiabilityCreditAdjustment1 = ngpaa2014_1.periodContraLiabilityCreditAdjustment();
 
-		double[] adblPeriodUnilateralCreditAdjustment2 = ngp2.periodUnilateralCreditAdjustment();
+		double[] adblPeriodUnilateralCreditAdjustment2 = ngpaa2014_2.periodUnilateralCreditAdjustment();
 
-		double[] adblPeriodBilateralCreditAdjustment2 = ngp2.periodBilateralCreditAdjustment();
+		double[] adblPeriodBilateralCreditAdjustment2 = ngpaa2014_2.periodBilateralCreditAdjustment();
 
-		double[] adblPeriodCreditAdjustment2 = ngp2.periodCreditAdjustment();
+		double[] adblPeriodCreditAdjustment2 = ngpaa2014_2.periodCreditAdjustment();
 
-		double[] adblPeriodContraLiabilityCreditAdjustment2 = ngp2.periodContraLiabilityCreditAdjustment();
+		double[] adblPeriodContraLiabilityCreditAdjustment2 = ngpaa2014_2.periodContraLiabilityCreditAdjustment();
 
 		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
@@ -328,29 +325,29 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		double[] adblPeriodDebtAdjustment1 = ngp1.periodDebtAdjustment();
+		double[] adblPeriodDebtAdjustment1 = ngpaa2014_1.periodDebtAdjustment();
 
-		double[] adblPeriodFundingValueAdjustment1 = fgp1.periodFundingValueAdjustment();
+		double[] adblPeriodFundingValueAdjustment1 = fgpaa2014_1.periodFundingValueAdjustment();
 
-		double[] adblPeriodFundingDebtAdjustment1 = fgp1.periodFundingDebtAdjustment();
+		double[] adblPeriodFundingDebtAdjustment1 = fgpaa2014_1.periodFundingDebtAdjustment();
 
-		double[] adblPeriodFundingCostAdjustment1 = fgp1.periodFundingCostAdjustment();
+		double[] adblPeriodFundingCostAdjustment1 = fgpaa2014_1.periodFundingCostAdjustment();
 
-		double[] adblPeriodFundingBenefitAdjustment1 = fgp1.periodFundingBenefitAdjustment();
+		double[] adblPeriodFundingBenefitAdjustment1 = fgpaa2014_1.periodFundingBenefitAdjustment();
 
-		double[] adblPeriodSymmetricFundingValueAdjustment1 = fgp1.periodSymmetricFundingValueAdjustment();
+		double[] adblPeriodSymmetricFundingValueAdjustment1 = fgpaa2014_1.periodSymmetricFundingValueAdjustment();
 
-		double[] adblPeriodDebtAdjustment2 = ngp2.periodDebtAdjustment();
+		double[] adblPeriodDebtAdjustment2 = ngpaa2014_2.periodDebtAdjustment();
 
-		double[] adblPeriodFundingValueAdjustment2 = fgp2.periodFundingValueAdjustment();
+		double[] adblPeriodFundingValueAdjustment2 = fgpaa2014_2.periodFundingValueAdjustment();
 
-		double[] adblPeriodFundingDebtAdjustment2 = fgp2.periodFundingDebtAdjustment();
+		double[] adblPeriodFundingDebtAdjustment2 = fgpaa2014_2.periodFundingDebtAdjustment();
 
-		double[] adblPeriodFundingCostAdjustment2 = fgp2.periodFundingCostAdjustment();
+		double[] adblPeriodFundingCostAdjustment2 = fgpaa2014_2.periodFundingCostAdjustment();
 
-		double[] adblPeriodFundingBenefitAdjustment2 = fgp2.periodFundingBenefitAdjustment();
+		double[] adblPeriodFundingBenefitAdjustment2 = fgpaa2014_2.periodFundingBenefitAdjustment();
 
-		double[] adblPeriodSymmetricFundingValueAdjustment2 = fgp2.periodSymmetricFundingValueAdjustment();
+		double[] adblPeriodSymmetricFundingValueAdjustment2 = fgpaa2014_2.periodSymmetricFundingValueAdjustment();
 
 		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
@@ -408,20 +405,20 @@ public class PortfolioGroupRun {
 
 		System.out.println();
 
-		ExposureAdjustmentAggregator cpga = new ExposureAdjustmentAggregator (
+		ExposureAdjustmentAggregator eaa = new ExposureAdjustmentAggregator (
 			new MonoPathExposureAdjustment[] {
 				new MonoPathExposureAdjustment (
-					new NettingGroupPathAA2014[] {ngp1},
-					new FundingGroupPathAA2014[] {fgp1}
+					new NettingGroupPathAA2014[] {ngpaa2014_1},
+					new FundingGroupPathAA2014[] {fgpaa2014_1}
 				),
 				new MonoPathExposureAdjustment (
-					new NettingGroupPathAA2014[] {ngp2},
-					new FundingGroupPathAA2014[] {fgp2}
+					new NettingGroupPathAA2014[] {ngpaa2014_2},
+					new FundingGroupPathAA2014[] {fgpaa2014_2}
 				)
 			}
 		);
 
-		JulianDate[] adtVertexNode = cpga.anchors();
+		JulianDate[] adtVertexNode = eaa.anchors();
 
 		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
@@ -434,7 +431,7 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|");
 
-		double[] adblExposure = cpga.collateralizedExposure();
+		double[] adblExposure = eaa.collateralizedExposure();
 
 		strDump = "\t|       EXPOSURE       =>";
 
@@ -443,7 +440,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblPositiveExposure = cpga.collateralizedPositiveExposure();
+		double[] adblPositiveExposure = eaa.collateralizedPositiveExposure();
 
 		strDump = "\t|  POSITIVE EXPOSURE   =>";
 
@@ -452,7 +449,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblNegativeExposure = cpga.collateralizedNegativeExposure();
+		double[] adblNegativeExposure = eaa.collateralizedNegativeExposure();
 
 		strDump = "\t|  NEGATIVE EXPOSURE   =>";
 
@@ -461,7 +458,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblExposurePV = cpga.collateralizedExposurePV();
+		double[] adblExposurePV = eaa.collateralizedExposurePV();
 
 		strDump = "\t|      EXPOSURE PV     =>";
 
@@ -470,7 +467,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblPositiveExposurePV = cpga.collateralizedPositiveExposurePV();
+		double[] adblPositiveExposurePV = eaa.collateralizedPositiveExposurePV();
 
 		strDump = "\t| POSITIVE EXPOSURE PV =>";
 
@@ -479,7 +476,7 @@ public class PortfolioGroupRun {
 
 		System.out.println (strDump);
 
-		double[] adblNegativeExposurePV = cpga.collateralizedNegativeExposurePV();
+		double[] adblNegativeExposurePV = eaa.collateralizedNegativeExposurePV();
 
 		strDump = "\t| NEGATIVE EXPOSURE PV =>";
 
@@ -494,25 +491,25 @@ public class PortfolioGroupRun {
 
 		System.out.println ("\t||-------------------||");
 
-		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (cpga.ucva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  UCVA  => " + FormatUtil.FormatDouble (eaa.ucva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (cpga.ftdcva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t|| FTDCVA => " + FormatUtil.FormatDouble (eaa.ftdcva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (cpga.cva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVA   => " + FormatUtil.FormatDouble (eaa.cva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  CVACL => " + FormatUtil.FormatDouble (cpga.cvacl().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  CVACL => " + FormatUtil.FormatDouble (eaa.cvacl().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (cpga.dva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  DVA   => " + FormatUtil.FormatDouble (eaa.dva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (cpga.fva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FVA   => " + FormatUtil.FormatDouble (eaa.fva().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (cpga.fda().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FDA   => " + FormatUtil.FormatDouble (eaa.fda().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (cpga.fca().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FCA   => " + FormatUtil.FormatDouble (eaa.fca().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (cpga.fba().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  FBA   => " + FormatUtil.FormatDouble (eaa.fba().amount(), 2, 2, 100.) + "% ||");
 
-		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (cpga.sfva().amount(), 2, 2, 100.) + "% ||");
+		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (eaa.sfva().amount(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||-------------------||");
 	}
