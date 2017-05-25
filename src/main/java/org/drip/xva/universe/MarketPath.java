@@ -47,69 +47,68 @@ package org.drip.xva.universe;
  */
 
 /**
- * TradeableContainerVertexBilateral holds the current Realizations of the Traded Asset Numeraires of the
- *  Reference Bilateral Universe. The References are:
+ * MarketPath holds the Vertex Market Numeraire Realizations at the Trajectory Vertexes along the Path of a
+ *  Simulation. The References are:
+ *  
+ *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
- *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
- *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
+ *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
  *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
- * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeableContainerVertexBilateral extends org.drip.xva.universe.TradeableContainerVertex {
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCounterPartyNumeraire = null;
+public class MarketPath {
+	private org.drip.xva.universe.MarketVertex[] _aMV = null;
 
 	/**
-	 * TradeableContainerVertexBilateral Constructor
+	 * MarketPath Constructor
 	 * 
-	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
-	 * @param jdeZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
-	 * 		Realization
-	 * @param jdeZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
-	 * @param jdeZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
-	 * 		Realization
+	 * @param aMV Array of the Numeraire Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradeableContainerVertexBilateral (
-		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCollateralNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCounterPartyNumeraire)
+	public MarketPath (
+		final org.drip.xva.universe.MarketVertex[] aMV)
 		throws java.lang.Exception
 	{
-		super (jdeAssetNumeraire, jdeZeroCouponBondCollateralNumeraire, jdeZeroCouponBondBankNumeraire);
-
-		if (null == (_jdeZeroCouponBondCounterPartyNumeraire = jdeZeroCouponBondCounterPartyNumeraire))
-			throw new java.lang.Exception ("TradeableContainerVertexBilateral Constructor => Invalid Inputs");
+		if (null == (_aMV = aMV) || 0 == _aMV.length)
+			throw new java.lang.Exception ("MarketPath Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Zero Coupon Counter Party Bond Numeraire Level Realization
+	 * Retrieve the Array of the Vertex Anchor Dates
 	 * 
-	 * @return The Zero Coupon Counter Party Bond Numeraire Level Realization
+	 * @return The Array of the Vertex Anchor Dates
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponCounterPartyBondNumeraire()
+	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		return _jdeZeroCouponBondCounterPartyNumeraire;
+		int iNumVertex = _aMV.length;
+		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
+
+		for (int i = 0; i < iNumVertex; ++i)
+			adtVertex[i] = _aMV[i].anchor();
+
+		return adtVertex;
 	}
 
-	@Override public int numCounterParty()
+	/**
+	 * Array of the Market Vertexes
+	 * 
+	 * @return The Market Vertexes
+	 */
+
+	public org.drip.xva.universe.MarketVertex[] vertexes()
 	{
-		return 1;
+		return _aMV;
 	}
 }

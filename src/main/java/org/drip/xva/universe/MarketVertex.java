@@ -1,5 +1,5 @@
 
-package org.drip.xva.numeraire;
+package org.drip.xva.universe;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -68,8 +68,8 @@ public class MarketVertex {
 	private double _dblCSASpread = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
 	private double _dblOvernightPolicyIndex = java.lang.Double.NaN;
-	private org.drip.xva.numeraire.EntityMarketVertex _emvBank = null;
-	private org.drip.xva.numeraire.EntityMarketVertex _emvCounterParty = null;
+	private org.drip.xva.universe.EntityMarketVertex _emvBank = null;
+	private org.drip.xva.universe.EntityMarketVertex _emvCounterParty = null;
 
 	/**
 	 * Construct a Standard Instance of the MarketVertex
@@ -99,13 +99,13 @@ public class MarketVertex {
 				dtAnchor,
 				dblOvernightPolicyIndex,
 				0.,
-				new org.drip.xva.numeraire.EntityMarketVertex (
+				new org.drip.xva.universe.EntityMarketVertex (
 					dblBankSurvival,
 					dblBankRecovery,
 					dblBankFundingSpread / (1. - dblBankRecovery),
 					dblBankFundingSpread
 				),
-				new org.drip.xva.numeraire.EntityMarketVertex (
+				new org.drip.xva.universe.EntityMarketVertex (
 					dblCounterPartySurvival,
 					dblCounterPartyRecovery,
 					0.,
@@ -135,8 +135,8 @@ public class MarketVertex {
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblOvernightPolicyIndex,
 		final double dblCSASpread,
-		final org.drip.xva.numeraire.EntityMarketVertex emvBank,
-		final org.drip.xva.numeraire.EntityMarketVertex emvCounterParty)
+		final org.drip.xva.universe.EntityMarketVertex emvBank,
+		final org.drip.xva.universe.EntityMarketVertex emvCounterParty)
 		throws java.lang.Exception
 	{
 		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
@@ -196,7 +196,7 @@ public class MarketVertex {
 	 * @return The Realized Bank Market Vertex
 	 */
 
-	public org.drip.xva.numeraire.EntityMarketVertex bankMarketVertex()
+	public org.drip.xva.universe.EntityMarketVertex bankMarketVertex()
 	{
 		return _emvBank;
 	}
@@ -207,7 +207,7 @@ public class MarketVertex {
 	 * @return The Realized Counter Party Market Vertex
 	 */
 
-	public org.drip.xva.numeraire.EntityMarketVertex counterPartyMarketVertex()
+	public org.drip.xva.universe.EntityMarketVertex counterPartyMarketVertex()
 	{
 		return _emvCounterParty;
 	}

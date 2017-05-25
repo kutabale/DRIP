@@ -107,13 +107,13 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeableContainerVertexMultilateral tcvmStart = etvStart.tradeableAssetSnapshot();
+		TradeablesVertex tcvmStart = etvStart.tradeableAssetSnapshot();
 
-		TradeableContainerMultilateral tcm = tes.universe();
+		TradeablesContainer tcm = tes.universe();
 
 		double dblCollateralBondNumeraire = tcvmStart.zeroCouponCollateralBondNumeraire().finish();
 
-		TradeableContainerVertexMultilateral tcvmFinish = new TradeableContainerVertexMultilateral (
+		TradeablesVertex tcvmFinish = new TradeablesVertex (
 			jdeAsset,
 			jdeCollateral,
 			jdeBank,
@@ -302,7 +302,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			)
 		);
 
-		TradeableContainerMultilateral tcm = new TradeableContainerMultilateral (
+		TradeablesContainer tcm = new TradeablesContainer (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -483,7 +483,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeableContainerVertexMultilateral (
+			new TradeablesVertex (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],

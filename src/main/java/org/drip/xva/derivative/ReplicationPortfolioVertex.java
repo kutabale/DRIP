@@ -155,7 +155,7 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double value (
-		final org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm)
+		final org.drip.xva.universe.TradeablesVertex tcvm)
 		throws java.lang.Exception
 	{
 		if (null == tcvm)

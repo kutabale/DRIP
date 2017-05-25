@@ -88,7 +88,7 @@ public class CorrelatedNumeraireXVAExplain {
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
 		final EvolutionTrajectoryVertex etvStart,
-		final TradeableContainerVertexMultilateral tcvm)
+		final TradeablesVertex tcvm)
 		throws Exception
 	{
 		AssetGreekVertex agvStart = etvStart.assetGreekVertex();
@@ -103,9 +103,9 @@ public class CorrelatedNumeraireXVAExplain {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeableContainerVertexMultilateral tcvmStart = etvStart.tradeableAssetSnapshot();
+		TradeablesVertex tcvmStart = etvStart.tradeableAssetSnapshot();
 
-		TradeableContainerMultilateral tcm = tes.universe();
+		TradeablesContainer tcm = tes.universe();
 
 		double dblCollateralBondNumeraire = tcvmStart.zeroCouponCollateralBondNumeraire().finish();
 
@@ -293,7 +293,7 @@ public class CorrelatedNumeraireXVAExplain {
 			)
 		);
 
-		TradeableContainerMultilateral tcm = new TradeableContainerMultilateral (
+		TradeablesContainer tcm = new TradeablesContainer (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -474,7 +474,7 @@ public class CorrelatedNumeraireXVAExplain {
 
 		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeableContainerVertexMultilateral (
+			new TradeablesVertex (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
@@ -497,7 +497,7 @@ public class CorrelatedNumeraireXVAExplain {
 				si,
 				bko,
 				eet,
-				new TradeableContainerVertexMultilateral (
+				new TradeablesVertex (
 					aJDEAsset[i],
 					aJDECollateral[i],
 					aJDEBank[i],

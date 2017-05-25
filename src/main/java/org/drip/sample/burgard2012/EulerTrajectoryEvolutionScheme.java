@@ -129,7 +129,7 @@ public class EulerTrajectoryEvolutionScheme {
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
-		TradeableContainerVertexMultilateral[] aTCVM = new TradeableContainerVertexMultilateral[iNumTimeStep];
+		TradeablesVertex[] aTCVM = new TradeablesVertex[iNumTimeStep];
 
 		PDEEvolutionControl pdeec = new PDEEvolutionControl (
 			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
@@ -177,7 +177,7 @@ public class EulerTrajectoryEvolutionScheme {
 			)
 		);
 
-		TradeableContainerMultilateral tcm = new TradeableContainerMultilateral (
+		TradeablesContainer tcm = new TradeablesContainer (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -358,7 +358,7 @@ public class EulerTrajectoryEvolutionScheme {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeableContainerVertexMultilateral (
+			new TradeablesVertex (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
@@ -376,7 +376,7 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		for (int i = 0; i < iNumTimeStep; ++i)
-			aTCVM[i] = new TradeableContainerVertexMultilateral (
+			aTCVM[i] = new TradeablesVertex (
 				aJDEAsset[i],
 				aJDECollateral[i],
 				aJDEBank[i],

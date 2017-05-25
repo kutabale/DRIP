@@ -72,7 +72,7 @@ public class TrajectoryEvolutionScheme {
 	private double _dblTimeIncrement = java.lang.Double.NaN;
 	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
-	private org.drip.xva.universe.TradeableContainerMultilateral _tcm = null;
+	private org.drip.xva.universe.TradeablesContainer _tcm = null;
 
 	/**
 	 * TrajectoryEvolutionScheme Constructor
@@ -86,7 +86,7 @@ public class TrajectoryEvolutionScheme {
 	 */
 
 	public TrajectoryEvolutionScheme (
-		final org.drip.xva.universe.TradeableContainerMultilateral tcm,
+		final org.drip.xva.universe.TradeablesContainer tcm,
 		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec,
 		final double dblTimeIncrement)
@@ -103,7 +103,7 @@ public class TrajectoryEvolutionScheme {
 	 * @return The Universe of Trade-able Assets
 	 */
 
-	public org.drip.xva.universe.TradeableContainerMultilateral universe()
+	public org.drip.xva.universe.TradeablesContainer universe()
 	{
 		return _tcm;
 	}
@@ -152,7 +152,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.derivative.CashAccountRebalancer rebalanceCash (
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
-		final org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm)
+		final org.drip.xva.universe.TradeablesVertex tcvm)
 	{
 		if (null == etvStart || null == tcvm) return null;
 
@@ -228,7 +228,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.derivative.EvolutionTrajectoryEdge move (
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
-		final org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm,
+		final org.drip.xva.universe.TradeablesVertex tcvm,
 		final org.drip.xva.derivative.AssetGreekVertex agvFinish)
 	{
 		if (null == agvFinish) return null;
@@ -318,7 +318,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.derivative.EvolutionTrajectoryEdge eulerWalk (
 		final org.drip.xva.definition.SpreadIntensity si,
-		final org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm,
+		final org.drip.xva.universe.TradeablesVertex tcvm,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart)
 	{
@@ -435,7 +435,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.derivative.EvolutionTrajectoryEdge[] eulerWalk (
 		final org.drip.xva.definition.SpreadIntensity si,
-		final org.drip.xva.universe.TradeableContainerVertexMultilateral[] aTCVM,
+		final org.drip.xva.universe.TradeablesVertex[] aTCVM,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart)
 	{

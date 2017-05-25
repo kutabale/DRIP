@@ -47,20 +47,18 @@ package org.drip.xva.universe;
  */
 
 /**
- * TradeableContainerVertex holds the current Realizations of the Traded Asset Numeraires of the Tradeable
- *  Universe. The References are:
+ * TradeablesVertex holds the current Realizations of the Traded Asset Numeraires of the Reference Universe.
+ *  The References are:
  *  
- *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
- *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
+ *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
+ *  	Re-Hypothecation Option, eSSRN, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955.
  *  
- *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
- *  	and Hedging Counter-party Credit Exposure - A Technical Guide, Springer Finance, New York.
+ *  - Burgard, C., and M. Kjaer (2013): Funding Costs, Funding Strategies, Risk, 23 (12) 82-87.
  *  
- *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
+ *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
  *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
+ *  - Burgard, C., and M. Kjaer (2017): Derivatives Funding, Netting, and Accounting, eSSRN,
+ *  	https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2534011.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -68,21 +66,47 @@ package org.drip.xva.universe;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class TradeableContainerVertex implements org.drip.xva.universe.CounterPartySet {
+public class TradeablesVertex {
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondBankNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroCouponBondCollateralNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge[] _aJDEZeroCouponBondCounterPartyNumeraire = null;
 
-	protected TradeableContainerVertex (
+	/**
+	 * TradeablesVertex Constructor
+	 * 
+	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
+	 * @param jdeZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
+	 * 		Realization
+	 * @param jdeZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
+	 * @param aJDEZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
+	 * 		Realization
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public TradeablesVertex (
 		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCollateralNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire)
+		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge[] aJDEZeroCouponBondCounterPartyNumeraire)
 		throws java.lang.Exception
 	{
 		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null ==
 			(_jdeZeroCouponBondCollateralNumeraire = jdeZeroCouponBondCollateralNumeraire) || null ==
-				(_jdeZeroCouponBondBankNumeraire = jdeZeroCouponBondBankNumeraire))
-			throw new java.lang.Exception ("TradeableContainerVertex Constructor => Invalid Inputs");
+				(_jdeZeroCouponBondBankNumeraire = jdeZeroCouponBondBankNumeraire) || null ==
+					(_aJDEZeroCouponBondCounterPartyNumeraire = aJDEZeroCouponBondCounterPartyNumeraire))
+			throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
+
+		int iNumCounterParty = aJDEZeroCouponBondCounterPartyNumeraire.length;
+
+		if (0 >= iNumCounterParty)
+			throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumCounterParty; ++i) {
+			if (null == aJDEZeroCouponBondCounterPartyNumeraire[i])
+				throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
+		}
 	}
 
 	/**
@@ -116,5 +140,27 @@ public abstract class TradeableContainerVertex implements org.drip.xva.universe.
 	public org.drip.measure.realization.JumpDiffusionEdge zeroCouponBankBondNumeraire()
 	{
 		return _jdeZeroCouponBondBankNumeraire;
+	}
+
+	/**
+	 * Retrieve the Array of Zero Coupon Counter Party Bond Numeraire Level Realization
+	 * 
+	 * @return The Array of Zero Coupon Counter Party Bond Numeraire Level Realization
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionEdge[] zeroCouponCounterPartyBondNumeraire()
+	{
+		return _aJDEZeroCouponBondCounterPartyNumeraire;
+	}
+
+	/**
+	 * Retrieve the Number of Counter Parties
+	 * 
+	 * @return The Number of Counter Parties
+	 */
+
+	public int numCounterParty()
+	{
+		return _aJDEZeroCouponBondCounterPartyNumeraire.length;
 	}
 }

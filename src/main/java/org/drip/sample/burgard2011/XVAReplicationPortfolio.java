@@ -99,13 +99,13 @@ public class XVAReplicationPortfolio {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeableContainerVertexMultilateral tcvmStart = etvStart.tradeableAssetSnapshot();
+		TradeablesVertex tcvmStart = etvStart.tradeableAssetSnapshot();
 
-		TradeableContainerMultilateral tcm = tes.universe();
+		TradeablesContainer tcm = tes.universe();
 
 		double dblCollateralBondNumeraire = tcvmStart.zeroCouponCollateralBondNumeraire().finish();
 
-		TradeableContainerVertexMultilateral tcvmFinish = new TradeableContainerVertexMultilateral (
+		TradeablesVertex tcvmFinish = new TradeablesVertex (
 			tcm.asset().priceNumeraire().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -301,7 +301,7 @@ public class XVAReplicationPortfolio {
 			)
 		);
 
-		TradeableContainerMultilateral tcm = new TradeableContainerMultilateral (
+		TradeablesContainer tcm = new TradeablesContainer (
 			new Equity (
 				meAsset,
 				dblAssetRepo,
@@ -424,7 +424,7 @@ public class XVAReplicationPortfolio {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeableContainerVertexMultilateral (
+			new TradeablesVertex (
 				meAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,

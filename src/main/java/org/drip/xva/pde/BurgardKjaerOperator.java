@@ -72,7 +72,7 @@ package org.drip.xva.pde;
 public class BurgardKjaerOperator {
 	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
-	private org.drip.xva.universe.TradeableContainerMultilateral _tcm = null;
+	private org.drip.xva.universe.TradeablesContainer _tcm = null;
 
 	/**
 	 * BurgardKjaerOperator Constructor
@@ -85,7 +85,7 @@ public class BurgardKjaerOperator {
 	 */
 
 	public BurgardKjaerOperator (
-		final org.drip.xva.universe.TradeableContainerMultilateral tcm,
+		final org.drip.xva.universe.TradeablesContainer tcm,
 		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception
@@ -100,7 +100,7 @@ public class BurgardKjaerOperator {
 	 * @return The Universe of Trade-able Assets
 	 */
 
-	public org.drip.xva.universe.TradeableContainerMultilateral universe()
+	public org.drip.xva.universe.TradeablesContainer universe()
 	{
 		return _tcm;
 	}
@@ -144,7 +144,7 @@ public class BurgardKjaerOperator {
 
 		double dblTime = etv.time();
 
-		org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm = etv.tradeableAssetSnapshot();
+		org.drip.xva.universe.TradeablesVertex tcvm = etv.tradeableAssetSnapshot();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
@@ -221,7 +221,7 @@ public class BurgardKjaerOperator {
 
 		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity()[0];
 
-		org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm = etv.tradeableAssetSnapshot();
+		org.drip.xva.universe.TradeablesVertex tcvm = etv.tradeableAssetSnapshot();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 

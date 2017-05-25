@@ -75,7 +75,7 @@ public class EvolutionTrajectoryVertex {
 	private double[] _adblCounterPartyGainOnBankDefault = null;
 	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
 	private org.drip.xva.derivative.ReplicationPortfolioVertex _rpv = null;
-	private org.drip.xva.universe.TradeableContainerVertexMultilateral _tcvm = null;
+	private org.drip.xva.universe.TradeablesVertex _tcvm = null;
 
 	/**
 	 * EvolutionTrajectoryVertex Constructor
@@ -92,7 +92,7 @@ public class EvolutionTrajectoryVertex {
 
 	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.universe.TradeableContainerVertexMultilateral tcvm,
+		final org.drip.xva.universe.TradeablesVertex tcvm,
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double[] adblCounterPartyGainOnBankDefault,
@@ -134,7 +134,7 @@ public class EvolutionTrajectoryVertex {
 	 * @return Realization of the Trade-able Asset Prices
 	 */
 
-	public org.drip.xva.universe.TradeableContainerVertexMultilateral tradeableAssetSnapshot()
+	public org.drip.xva.universe.TradeablesVertex tradeableAssetSnapshot()
 	{
 		return _tcvm;
 	}

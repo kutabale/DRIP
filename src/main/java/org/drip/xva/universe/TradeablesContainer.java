@@ -47,8 +47,9 @@ package org.drip.xva.universe;
  */
 
 /**
- * TradeableContainerVertexMultilateral holds the current Realizations of the Traded Asset Numeraires of the
- *  Reference Multilateral Universe. The References are:
+ * TradeablesContainer describes the Economy with the following Traded Assets - the Default-free Zero Coupon
+ *  Bond, the Default-able Zero Coupon Bank Bond, the Array of Default-able Zero Coupon Counter-party Bonds,
+ *  and an Asset that follows Brownian Motion. The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, eSSRN, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955.
@@ -66,59 +67,98 @@ package org.drip.xva.universe;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeableContainerVertexMultilateral extends org.drip.xva.universe.TradeableContainerVertex {
-	private org.drip.measure.realization.JumpDiffusionEdge[] _aJDEZeroCouponBondCounterPartyNumeraire = null;
+public class TradeablesContainer {
+	private org.drip.xva.universe.Tradeable _tAsset = null;
+	private org.drip.xva.universe.Tradeable _tZeroCouponBankBond = null;
+	private org.drip.xva.universe.Tradeable _tZeroCouponCollateralBond = null;
+	private org.drip.xva.universe.Tradeable[] _aTZeroCouponCounterPartyBond = null;
 
 	/**
-	 * TradeableContainerVertexMultilateral Constructor
+	 * TradeablesContainer Constructor
 	 * 
-	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
-	 * @param jdeZeroCouponBondCollateralNumeraire The Zero Coupon Collateral Bond Numeraire Level
-	 * 		Realization
-	 * @param jdeZeroCouponBondBankNumeraire The Zero Coupon Bank Bond Numeraire Level Realization
-	 * @param aJDEZeroCouponBondCounterPartyNumeraire The Zero Coupon Counter Party Bond Numeraire Level
-	 * 		Realization
+	 * @param tAsset Trade-able Asset
+	 * @param tZeroCouponCollateralBond Zero Coupon Collateral Bond
+	 * @param tZeroCouponBankBond Zero Coupon Credit Risky Bank Bond
+	 * @param aTZeroCouponCounterPartyBond Array of Zero Coupon Credit Risky Counter Party Bonds
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradeableContainerVertexMultilateral (
-		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondCollateralNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBondBankNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge[] aJDEZeroCouponBondCounterPartyNumeraire)
+	public TradeablesContainer (
+		final org.drip.xva.universe.Tradeable tAsset,
+		final org.drip.xva.universe.Tradeable tZeroCouponCollateralBond,
+		final org.drip.xva.universe.Tradeable tZeroCouponBankBond,
+		final org.drip.xva.universe.Tradeable[] aTZeroCouponCounterPartyBond)
 		throws java.lang.Exception
 	{
-		super (jdeAssetNumeraire, jdeZeroCouponBondCollateralNumeraire, jdeZeroCouponBondBankNumeraire);
+		if (null == (_tAsset = tAsset) || null == (_tZeroCouponCollateralBond = tZeroCouponCollateralBond) ||
+			null == (_tZeroCouponBankBond = tZeroCouponBankBond) || null == (_aTZeroCouponCounterPartyBond =
+				aTZeroCouponCounterPartyBond))
+			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 
-		if (null == (_aJDEZeroCouponBondCounterPartyNumeraire = aJDEZeroCouponBondCounterPartyNumeraire))
-			throw new java.lang.Exception ("TradeableContainerVertexBilateral Constructor => Invalid Inputs");
-
-		int iNumCounterParty = aJDEZeroCouponBondCounterPartyNumeraire.length;
+		int iNumCounterParty = _aTZeroCouponCounterPartyBond.length;
 
 		if (0 >= iNumCounterParty)
-			throw new java.lang.Exception ("TradeableContainerMultilateral Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumCounterParty; ++i) {
-			if (null == aJDEZeroCouponBondCounterPartyNumeraire[i])
-				throw new java.lang.Exception
-					("TradeableContainerMultilateral Constructor => Invalid Inputs");
+			if (null == _aTZeroCouponCounterPartyBond[i])
+				throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 		}
 	}
 
 	/**
-	 * Retrieve the Array of Zero Coupon Counter Party Bond Numeraire Level Realization
+	 * Retrieve the Asset
 	 * 
-	 * @return The Array of Zero Coupon Counter Party Bond Numeraire Level Realization
+	 * @return The Asset
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge[] zeroCouponCounterPartyBondNumeraire()
+	public org.drip.xva.universe.Tradeable asset()
 	{
-		return _aJDEZeroCouponBondCounterPartyNumeraire;
+		return _tAsset;
 	}
 
-	@Override public int numCounterParty()
+	/**
+	 * Retrieve the Zero Coupon Collateral Bond
+	 * 
+	 * @return The Zero Coupon Collateral Bond
+	 */
+
+	public org.drip.xva.universe.Tradeable zeroCouponCollateralBond()
 	{
-		return _aJDEZeroCouponBondCounterPartyNumeraire.length;
+		return _tZeroCouponCollateralBond;
+	}
+
+	/**
+	 * Retrieve the Zero Coupon Credit Risky Bank Bond
+	 * 
+	 * @return The Zero Coupon Credit Risky Bank Bond
+	 */
+
+	public org.drip.xva.universe.Tradeable zeroCouponBankBond()
+	{
+		return _tZeroCouponBankBond;
+	}
+
+	/**
+	 * Retrieve the Array of Zero Coupon Credit Risky Counter Party Bonds
+	 * 
+	 * @return The Array of Zero Coupon Credit Risky Counter Party Bonds
+	 */
+
+	public org.drip.xva.universe.Tradeable[] zeroCouponCounterPartyBond()
+	{
+		return _aTZeroCouponCounterPartyBond;
+	}
+
+	/**
+	 * Retrieve the Number of Counter Parties
+	 * 
+	 * @return The Number of Counter Parties
+	 */
+
+	public int numCounterParty()
+	{
+		return _aTZeroCouponCounterPartyBond.length;
 	}
 }
