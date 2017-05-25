@@ -47,8 +47,8 @@ package org.drip.xva.universe;
  */
 
 /**
- * MarketPath holds the Vertex Market Numeraire Realizations at the Trajectory Vertexes along the Path of a
- *  Simulation. The References are:
+ * NumerairePath holds the Vertex Market Numeraire Realizations at the Trajectory Vertexes along the Path of
+ *  a Simulation. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  
@@ -65,23 +65,23 @@ package org.drip.xva.universe;
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarketPath {
-	private org.drip.xva.universe.MarketVertex[] _aMV = null;
+public class NumerairePath {
+	private org.drip.xva.universe.NumeraireVertex[] _aNV = null;
 
 	/**
-	 * MarketPath Constructor
+	 * NumerairePath Constructor
 	 * 
-	 * @param aMV Array of the Numeraire Vertexes
+	 * @param aNV Array of the Numeraire Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarketPath (
-		final org.drip.xva.universe.MarketVertex[] aMV)
+	public NumerairePath (
+		final org.drip.xva.universe.NumeraireVertex[] aNV)
 		throws java.lang.Exception
 	{
-		if (null == (_aMV = aMV) || 0 == _aMV.length)
-			throw new java.lang.Exception ("MarketPath Constructor => Invalid Inputs");
+		if (null == (_aNV = aNV) || 0 == _aNV.length)
+			throw new java.lang.Exception ("NumerairePath Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -92,11 +92,11 @@ public class MarketPath {
 
 	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		int iNumVertex = _aMV.length;
+		int iNumVertex = _aNV.length;
 		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adtVertex[i] = _aMV[i].anchor();
+			adtVertex[i] = _aNV[i].anchor();
 
 		return adtVertex;
 	}
@@ -107,8 +107,8 @@ public class MarketPath {
 	 * @return The Market Vertexes
 	 */
 
-	public org.drip.xva.universe.MarketVertex[] vertexes()
+	public org.drip.xva.universe.NumeraireVertex[] vertexes()
 	{
-		return _aMV;
+		return _aNV;
 	}
 }

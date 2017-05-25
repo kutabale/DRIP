@@ -13,8 +13,8 @@ import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.NumerairePath;
+import org.drip.xva.universe.NumeraireVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -191,7 +191,7 @@ public class CollateralizedCollateralGroup {
 		JulianDate dtSpot = DateUtil.Today();
 
 		double dblTimeWidth = dblTime / iNumStep;
-		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
+		NumeraireVertex[] aMV = new NumeraireVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
@@ -220,7 +220,7 @@ public class CollateralizedCollateralGroup {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aMV[i] = MarketVertex.Standard (
+			aMV[i] = NumeraireVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -230,7 +230,7 @@ public class CollateralizedCollateralGroup {
 				dblCounterPartyRecoveryRate
 			);
 
-		MarketPath mp = new MarketPath (aMV);
+		NumerairePath mp = new NumerairePath (aMV);
 
 		for (int i = 0; i < iNumPath; ++i) {
 			JulianDate dtStart = dtSpot;

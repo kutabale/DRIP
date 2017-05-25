@@ -12,8 +12,8 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.NumerairePath;
+import org.drip.xva.universe.NumeraireVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -284,11 +284,11 @@ public class PortfolioPathAggregationCorrelated {
 				iNumStep
 			);
 
-			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
+			NumeraireVertex[] aMV = new NumeraireVertex [iNumStep + 1];
 			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aMV[j] = MarketVertex.Standard (
+				aMV[j] = NumeraireVertex.Standard (
 					adtVertex[j],
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -314,13 +314,13 @@ public class PortfolioPathAggregationCorrelated {
 				new NettingGroupPathAA2014[] {
 					new NettingGroupPathAA2014 (
 						aHGP,
-						new MarketPath (aMV)
+						new NumerairePath (aMV)
 					)
 				},
 				new FundingGroupPathAA2014[] {
 					new FundingGroupPathAA2014 (
 						aHGP,
-						new MarketPath (aMV)
+						new NumerairePath (aMV)
 					)
 				}
 			);

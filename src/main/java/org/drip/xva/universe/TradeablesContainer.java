@@ -72,6 +72,7 @@ public class TradeablesContainer {
 	private org.drip.xva.universe.Tradeable _tZeroCouponBankBond = null;
 	private org.drip.xva.universe.Tradeable _tZeroCouponCollateralBond = null;
 	private org.drip.xva.universe.Tradeable[] _aTZeroCouponCounterPartyBond = null;
+	private org.drip.xva.universe.Tradeable _tZeroCouponZeroRecoveryBankBond = null;
 
 	/**
 	 * TradeablesContainer Constructor
@@ -138,6 +139,17 @@ public class TradeablesContainer {
 	public org.drip.xva.universe.Tradeable zeroCouponBankBond()
 	{
 		return _tZeroCouponBankBond;
+	}
+
+	/**
+	 * Retrieve the Zero Coupon Zero Recovery Credit Risky Bank Bond
+	 * 
+	 * @return The Zero Coupon Zero Recovery Credit Risky Bank Bond
+	 */
+
+	public org.drip.xva.universe.Tradeable zeroCouponZeroRecoveryBankBond()
+	{
+		return _tZeroCouponZeroRecoveryBankBond;
 	}
 
 	/**

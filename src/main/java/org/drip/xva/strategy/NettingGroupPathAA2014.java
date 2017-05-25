@@ -81,7 +81,7 @@ public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroup
 
 	public static final NettingGroupPathAA2014 Mono (
 		final org.drip.xva.collateral.HypothecationGroupPath hgp,
-		final org.drip.xva.universe.MarketPath mp)
+		final org.drip.xva.universe.NumerairePath mp)
 	{
 		try {
 			return new org.drip.xva.strategy.NettingGroupPathAA2014 (new
@@ -104,7 +104,7 @@ public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroup
 
 	public NettingGroupPathAA2014 (
 		final org.drip.xva.collateral.HypothecationGroupPath[] aHGP,
-		final org.drip.xva.universe.MarketPath mp)
+		final org.drip.xva.universe.NumerairePath mp)
 		throws java.lang.Exception
 	{
 		super (aHGP, mp);

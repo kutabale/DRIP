@@ -47,7 +47,7 @@ package org.drip.xva.universe;
  */
 
 /**
- * EntityMarketVertex holds the Vertex Market Numeraire Realizations at a Trajectory Vertex of the given
+ * EntityNumeraireVertex holds the Vertex Market Numeraire Realizations at a Trajectory Vertex of the given
  *  Entity (i.e., Bank/Counter Party). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
@@ -65,14 +65,14 @@ package org.drip.xva.universe;
  * @author Lakshmi Krishnamurthy
  */
 
-public class EntityMarketVertex {
+public class EntityNumeraireVertex {
 	private double _dblHazard = java.lang.Double.NaN;
 	private double _dblRecovery = java.lang.Double.NaN;
 	private double _dblSurvival = java.lang.Double.NaN;
 	private double _dblFundingSpread = java.lang.Double.NaN;
 
 	/**
-	 * EntityMarketVertex Constructor
+	 * EntityNumeraireVertex Constructor
 	 * 
 	 * @param dblSurvival The Realized Bank Survival Numeraire
 	 * @param dblRecovery The Realized Bank Recovery Numeraire
@@ -82,7 +82,7 @@ public class EntityMarketVertex {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public EntityMarketVertex (
+	public EntityNumeraireVertex (
 		final double dblSurvival,
 		final double dblRecovery,
 		final double dblHazard,
@@ -93,7 +93,7 @@ public class EntityMarketVertex {
 			!org.drip.quant.common.NumberUtil.IsValid (_dblRecovery = dblRecovery) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblHazard = dblHazard) ||
 					!org.drip.quant.common.NumberUtil.IsValid (_dblFundingSpread = dblFundingSpread))
-			throw new java.lang.Exception ("EntityMarketVertex Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("EntityNumeraireVertex Constructor => Invalid Inputs");
 	}
 
 	/**

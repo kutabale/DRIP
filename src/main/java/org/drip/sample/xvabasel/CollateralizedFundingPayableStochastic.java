@@ -17,8 +17,8 @@ import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.NumerairePath;
+import org.drip.xva.universe.NumeraireVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -402,7 +402,7 @@ public class CollateralizedFundingPayableStochastic {
 			);
 
 			JulianDate dtStart = dtSpot;
-			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
+			NumeraireVertex[] aNV = new NumeraireVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
 			HypothecationGroupVertexRegular[] aHGVR1 = new HypothecationGroupVertexRegular[iNumStep + 1];
@@ -446,7 +446,7 @@ public class CollateralizedFundingPayableStochastic {
 					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
 				}
 
-				aNV[j] = MarketVertex.Standard (
+				aNV[j] = NumeraireVertex.Standard (
 					adtVertex[j],
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -471,7 +471,7 @@ public class CollateralizedFundingPayableStochastic {
 				);
 			}
 
-			MarketPath mp = new MarketPath (aNV);
+			NumerairePath mp = new NumerairePath (aNV);
 
 			HypothecationGroupPath[] aHGP1 = new HypothecationGroupPath[] {
 				new HypothecationGroupPath (aHGVR1)

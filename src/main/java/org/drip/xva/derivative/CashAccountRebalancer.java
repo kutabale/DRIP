@@ -47,7 +47,7 @@ package org.drip.xva.derivative;
  */
 
 /**
- * CashAccountRebalancer holds the Level Cash Account Increment and the Level Derivative Value Update for a
+ * CashAccountRebalancer holds the Edge Cash Account Increment and the Edge Derivative Value Update for a
  *  Trajectory that has just undergone Cash Account Re-balancing, as laid out in Burgard and Kjaer (2014).
  *  The References are:
  *  
@@ -71,24 +71,24 @@ package org.drip.xva.derivative;
 
 public class CashAccountRebalancer {
 	private org.drip.xva.derivative.CashAccountEdge _cae = null;
-	private double _dblLevelDerivativeXVAValue = java.lang.Double.NaN;
+	private double _dblDerivativeXVAValueEdge = java.lang.Double.NaN;
 
 	/**
 	 * CashAccountRebalancer Constructor
 	 * 
 	 * @param cae The Cash Account Edge
-	 * @param dblLevelDerivativeXVAValue The Level XVA Derivative Value
+	 * @param dblDerivativeXVAValueEdge The XVA Derivative Value Edge
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public CashAccountRebalancer (
 		final org.drip.xva.derivative.CashAccountEdge cae,
-		final double dblLevelDerivativeXVAValue)
+		final double dblDerivativeXVAValueEdge)
 		throws java.lang.Exception
 	{
-		if (null == (_cae = cae) || !org.drip.quant.common.NumberUtil.IsValid (_dblLevelDerivativeXVAValue =
-			dblLevelDerivativeXVAValue))
+		if (null == (_cae = cae) || !org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValueEdge =
+			dblDerivativeXVAValueEdge))
 			throw new java.lang.Exception ("CashAccountRebalancer Constructor => Invalid Inputs");
 	}
 
@@ -109,8 +109,8 @@ public class CashAccountRebalancer {
 	 * @return The Derivative XVA Value Increment
 	 */
 
-	public double levelDerivativeXVAValue()
+	public double derivativeXVAValueEdge()
 	{
-		return _dblLevelDerivativeXVAValue;
+		return _dblDerivativeXVAValueEdge;
 	}
 }

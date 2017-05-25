@@ -14,8 +14,8 @@ import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.NumerairePath;
+import org.drip.xva.universe.NumeraireVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -360,12 +360,12 @@ public class CollateralizedCollateralGroupCorrelated {
 			);
 
 			JulianDate dtStart = dtSpot;
-			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
+			NumeraireVertex[] aMV = new NumeraireVertex [iNumStep + 1];
 			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
 			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aMV[j] = MarketVertex.Standard (
+				aMV[j] = NumeraireVertex.Standard (
 					adtVertex[j] = dtSpot.addMonths (6 * j + 6),
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -406,7 +406,7 @@ public class CollateralizedCollateralGroupCorrelated {
 				dblValueStart = dblValueEnd;
 			}
 
-			MarketPath mp = new MarketPath (aMV);
+			NumerairePath mp = new NumerairePath (aMV);
 
 			HypothecationGroupPath[] aHGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR)};
 

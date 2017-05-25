@@ -18,8 +18,8 @@ import org.drip.xva.cpty.*;
 import org.drip.xva.set.CollateralGroupSpecification;
 import org.drip.xva.set.CounterPartyGroupSpecification;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.NumerairePath;
+import org.drip.xva.universe.NumeraireVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -403,7 +403,7 @@ public class ZeroThresholdCollateralReceivableStochastic {
 			);
 
 			JulianDate dtStart = dtSpot;
-			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
+			NumeraireVertex[] aNV = new NumeraireVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
 			HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
@@ -448,7 +448,7 @@ public class ZeroThresholdCollateralReceivableStochastic {
 				}
 
 
-				aNV[j] = MarketVertex.Standard (
+				aNV[j] = NumeraireVertex.Standard (
 					adtVertex[j],
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -473,7 +473,7 @@ public class ZeroThresholdCollateralReceivableStochastic {
 				);
 			}
 
-			MarketPath np = new MarketPath (aNV);
+			NumerairePath np = new NumerairePath (aNV);
 
 			HypothecationGroupPath[] aCGPGround = new HypothecationGroupPath[] {
 				new HypothecationGroupPath (aCGV1)

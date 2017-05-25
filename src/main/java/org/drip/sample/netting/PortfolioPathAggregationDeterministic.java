@@ -11,8 +11,8 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.NumerairePath;
+import org.drip.xva.universe.NumeraireVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -133,7 +133,7 @@ public class PortfolioPathAggregationDeterministic {
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
-		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
+		NumeraireVertex[] aMV = new NumeraireVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
@@ -156,7 +156,7 @@ public class PortfolioPathAggregationDeterministic {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i) {
-			aMV[i] = MarketVertex.Standard (
+			aMV[i] = NumeraireVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -170,7 +170,7 @@ public class PortfolioPathAggregationDeterministic {
 				aadblCollateralBalance[j][i] = 0.;
 		}
 
-		MarketPath mp = new MarketPath (aMV);
+		NumerairePath mp = new NumerairePath (aMV);
 
 		for (int i = 0; i < iNumPath; ++i) {
 			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];

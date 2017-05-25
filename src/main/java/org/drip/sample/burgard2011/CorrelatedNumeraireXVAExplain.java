@@ -184,7 +184,7 @@ public class CorrelatedNumeraireXVAExplain {
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
-				agvStart.derivativeValue() * Math.exp (
+				agvStart.derivativeFairValue() * Math.exp (
 					-1. * dblTimeWidth * tcm.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,

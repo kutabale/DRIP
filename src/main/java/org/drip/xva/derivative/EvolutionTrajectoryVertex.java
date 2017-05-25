@@ -71,17 +71,17 @@ package org.drip.xva.derivative;
 
 public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
+	private org.drip.xva.universe.TradeablesVertex _tv = null;
 	private double[] _adblBankGainOnCounterPartyDefault = null;
 	private double[] _adblCounterPartyGainOnBankDefault = null;
 	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
 	private org.drip.xva.derivative.ReplicationPortfolioVertex _rpv = null;
-	private org.drip.xva.universe.TradeablesVertex _tcvm = null;
 
 	/**
 	 * EvolutionTrajectoryVertex Constructor
 	 * 
 	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param tcvm Realization of the Trade-able Asset Prices
+	 * @param tv Realization of the Trade-able Asset Prices
 	 * @param rpv The Replication Portfolio Vertex
 	 * @param agv The Asset Greek Vertex
 	 * @param adblCounterPartyGainOnBankDefault Array of Individual Counter Party Gain On Bank Default
@@ -92,14 +92,14 @@ public class EvolutionTrajectoryVertex {
 
 	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.universe.TradeablesVertex tcvm,
+		final org.drip.xva.universe.TradeablesVertex tv,
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double[] adblCounterPartyGainOnBankDefault,
 		final double[] adblBankGainOnCounterPartyDefault)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_tcvm = tcvm) || null
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_tv = tv) || null
 			== (_rpv = rpv) || null == (_agv = agv) || null == (_adblCounterPartyGainOnBankDefault =
 				adblCounterPartyGainOnBankDefault) || null == (_adblBankGainOnCounterPartyDefault =
 					adblBankGainOnCounterPartyDefault))
@@ -136,7 +136,7 @@ public class EvolutionTrajectoryVertex {
 
 	public org.drip.xva.universe.TradeablesVertex tradeableAssetSnapshot()
 	{
-		return _tcvm;
+		return _tv;
 	}
 
 	/**

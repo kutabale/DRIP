@@ -47,7 +47,7 @@ package org.drip.xva.universe;
  */
 
 /**
- * MarketVertex holds the Vertex Market Numeraire Realizations at a Trajectory Vertex. The References are:
+ * NumeraireVertex holds the Vertex Market Numeraire Realizations at a Trajectory Vertex. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  
@@ -64,15 +64,15 @@ package org.drip.xva.universe;
  * @author Lakshmi Krishnamurthy
  */
 
-public class MarketVertex {
+public class NumeraireVertex {
 	private double _dblCSASpread = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
 	private double _dblOvernightPolicyIndex = java.lang.Double.NaN;
-	private org.drip.xva.universe.EntityMarketVertex _emvBank = null;
-	private org.drip.xva.universe.EntityMarketVertex _emvCounterParty = null;
+	private org.drip.xva.universe.EntityNumeraireVertex _envBank = null;
+	private org.drip.xva.universe.EntityNumeraireVertex _envCounterParty = null;
 
 	/**
-	 * Construct a Standard Instance of the MarketVertex
+	 * Construct a Standard Instance of the NumeraireVertex
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Numeraire
@@ -82,10 +82,10 @@ public class MarketVertex {
 	 * @param dblCounterPartySurvival The Realized Counter Party Survival Numeraire
 	 * @param dblCounterPartyRecovery The Realized Counter Party Recovery Numeraire
 	 * 
-	 * @return The Standard Instance of MarketVertex
+	 * @return The Standard Instance of NumeraireVertex
 	 */
 
-	public static final MarketVertex Standard (
+	public static final NumeraireVertex Standard (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblOvernightPolicyIndex,
 		final double dblBankSurvival,
@@ -95,17 +95,17 @@ public class MarketVertex {
 		final double dblCounterPartyRecovery)
 	{
 		try {
-			return new MarketVertex (
+			return new NumeraireVertex (
 				dtAnchor,
 				dblOvernightPolicyIndex,
 				0.,
-				new org.drip.xva.universe.EntityMarketVertex (
+				new org.drip.xva.universe.EntityNumeraireVertex (
 					dblBankSurvival,
 					dblBankRecovery,
 					dblBankFundingSpread / (1. - dblBankRecovery),
 					dblBankFundingSpread
 				),
-				new org.drip.xva.universe.EntityMarketVertex (
+				new org.drip.xva.universe.EntityNumeraireVertex (
 					dblCounterPartySurvival,
 					dblCounterPartyRecovery,
 					0.,
@@ -120,30 +120,30 @@ public class MarketVertex {
 	}
 
 	/**
-	 * MarketVertex Constructor
+	 * NumeraireVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Numeraire
 	 * @param dblCSASpread The Realized CSA Spread Numeraire
-	 * @param emvBank Bank Entity Market Vertex Instance
-	 * @param emvCounterParty Counter Party Market Vertex Instance
+	 * @param envBank Bank Entity Market Vertex Instance
+	 * @param envCounterParty Counter Party Market Vertex Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public MarketVertex (
+	public NumeraireVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblOvernightPolicyIndex,
 		final double dblCSASpread,
-		final org.drip.xva.universe.EntityMarketVertex emvBank,
-		final org.drip.xva.universe.EntityMarketVertex emvCounterParty)
+		final org.drip.xva.universe.EntityNumeraireVertex envBank,
+		final org.drip.xva.universe.EntityNumeraireVertex envCounterParty)
 		throws java.lang.Exception
 	{
 		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
 			(_dblOvernightPolicyIndex = dblOvernightPolicyIndex) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblCSASpread = dblCSASpread) || null == (_emvBank = emvBank) || null == (_emvCounterParty =
-					emvCounterParty))
-			throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
+				(_dblCSASpread = dblCSASpread) || null == (_envBank = envBank) || null == (_envCounterParty =
+					envCounterParty))
+			throw new java.lang.Exception ("NumeraireVertex Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -191,25 +191,25 @@ public class MarketVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Bank Market Vertex
+	 * Retrieve the Realized Bank Market Vertex Numeraire
 	 * 
-	 * @return The Realized Bank Market Vertex
+	 * @return The Realized Bank Market Vertex Numeraire
 	 */
 
-	public org.drip.xva.universe.EntityMarketVertex bankMarketVertex()
+	public org.drip.xva.universe.EntityNumeraireVertex bankMarket()
 	{
-		return _emvBank;
+		return _envBank;
 	}
 
 	/**
-	 * Retrieve the Realized Counter Party Market Vertex
+	 * Retrieve the Realized Counter Party Market Vertex Numeraire
 	 * 
-	 * @return The Realized Counter Party Market Vertex
+	 * @return The Realized Counter Party Market Vertex Numeraire
 	 */
 
-	public org.drip.xva.universe.EntityMarketVertex counterPartyMarketVertex()
+	public org.drip.xva.universe.EntityNumeraireVertex counterPartyMarket()
 	{
-		return _emvCounterParty;
+		return _envCounterParty;
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class MarketVertex {
 
 	public double bankHazard()
 	{
-		return _emvBank.hazard();
+		return _envBank.hazard();
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class MarketVertex {
 
 	public double bankSurvival()
 	{
-		return _emvBank.survival();
+		return _envBank.survival();
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class MarketVertex {
 
 	public double bankRecovery()
 	{
-		return _emvBank.recovery();
+		return _envBank.recovery();
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class MarketVertex {
 
 	public double bankFundingSpread()
 	{
-		return _emvBank.fundingSpread();
+		return _envBank.fundingSpread();
 	}
 
 	/**
@@ -264,7 +264,7 @@ public class MarketVertex {
 
 	public double counterPartySurvival()
 	{
-		return _emvCounterParty.survival();
+		return _envCounterParty.survival();
 	}
 
 	/**
@@ -275,6 +275,6 @@ public class MarketVertex {
 
 	public double counterPartyRecovery()
 	{
-		return _emvCounterParty.recovery();
+		return _envCounterParty.recovery();
 	}
 }

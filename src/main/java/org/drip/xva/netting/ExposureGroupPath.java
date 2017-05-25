@@ -68,7 +68,7 @@ package org.drip.xva.netting;
  */
 
 public class ExposureGroupPath {
-	private org.drip.xva.universe.MarketPath _mp = null;
+	private org.drip.xva.universe.NumerairePath _mp = null;
 	private org.drip.xva.collateral.HypothecationGroupPath[] _aHGP = null;
 
 	/**
@@ -82,7 +82,7 @@ public class ExposureGroupPath {
 
 	public ExposureGroupPath (
 		final org.drip.xva.collateral.HypothecationGroupPath[] aHGP,
-		final org.drip.xva.universe.MarketPath mp)
+		final org.drip.xva.universe.NumerairePath mp)
 		throws java.lang.Exception
 	{
 		if (null == (_aHGP = aHGP) || 0 == _aHGP.length || null == (_mp = mp))
@@ -106,7 +106,7 @@ public class ExposureGroupPath {
 	 * @return The Market Path
 	 */
 
-	public org.drip.xva.universe.MarketPath marketPath()
+	public org.drip.xva.universe.NumerairePath marketPath()
 	{
 		return _mp;
 	}
@@ -172,7 +172,7 @@ public class ExposureGroupPath {
 			double[] adblCollateralGroupCollateralizedExposure =
 				_aHGP[iCollateralGroupIndex].collateralizedExposure();
 
-			org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+			org.drip.xva.universe.NumeraireVertex[] aMV = _mp.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedExposurePV[iVertexIndex] +=
@@ -236,7 +236,7 @@ public class ExposureGroupPath {
 			double[] adblCollateralGroupCollateralizedExposure =
 				_aHGP[iCollateralGroupIndex].collateralizedExposure();
 
-			org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+			org.drip.xva.universe.NumeraireVertex[] aMV = _mp.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				double dblCollateralizedExposure = adblCollateralGroupCollateralizedExposure[iVertexIndex];
@@ -303,7 +303,7 @@ public class ExposureGroupPath {
 			double[] adblCollateralGroupCollateralizedExposure =
 				_aHGP[iCollateralGroupIndex].collateralizedExposure();
 
-			org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+			org.drip.xva.universe.NumeraireVertex[] aMV = _mp.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				double dblCollateralizedExposure = adblCollateralGroupCollateralizedExposure[iVertexIndex];
@@ -367,7 +367,7 @@ public class ExposureGroupPath {
 			double[] adblCollateralGroupUncollateralizedExposure =
 				_aHGP[iCollateralGroupIndex].uncollateralizedExposure();
 
-			org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+			org.drip.xva.universe.NumeraireVertex[] aMV = _mp.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedExposurePV[iVertexIndex] +=
@@ -432,7 +432,7 @@ public class ExposureGroupPath {
 			double[] adblUncollateralGroupCollateralizedExposure =
 				_aHGP[iCollateralGroupIndex].uncollateralizedExposure();
 
-			org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+			org.drip.xva.universe.NumeraireVertex[] aMV = _mp.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				double dblUncollateralizedExposure =
@@ -501,7 +501,7 @@ public class ExposureGroupPath {
 			double[] adblUncollateralGroupCollateralizedExposure =
 				_aHGP[iCollateralGroupIndex].uncollateralizedExposure();
 
-			org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+			org.drip.xva.universe.NumeraireVertex[] aMV = _mp.vertexes();
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				double dblUncollateralizedExposure =
@@ -551,7 +551,7 @@ public class ExposureGroupPath {
 
 	public double bilateralCollateralValueAdjustment()
 	{
-		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+		org.drip.xva.universe.NumeraireVertex[] aMV = _mp.vertexes();
 
 		double[] adblCollateralBalance = collateralBalance();
 
@@ -593,7 +593,7 @@ public class ExposureGroupPath {
 
 	public double[] periodBilateralCollateralValueAdjustment()
 	{
-		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+		org.drip.xva.universe.NumeraireVertex[] aMV = _mp.vertexes();
 
 		double[] adblCollateralBalance = collateralBalance();
 

@@ -69,8 +69,8 @@ package org.drip.xva.derivative;
  */
 
 public class AssetGreekVertex {
-	private double _dblDerivativeValue = java.lang.Double.NaN;
 	private double _dblDerivativeXVAValue = java.lang.Double.NaN;
+	private double _dblDerivativeFairValue = java.lang.Double.NaN;
 	private double _dblDerivativeXVAValueDelta = java.lang.Double.NaN;
 	private double _dblDerivativeXVAValueGamma = java.lang.Double.NaN;
 
@@ -80,7 +80,7 @@ public class AssetGreekVertex {
 	 * @param dblDerivativeXVAValue The Derivative XVA Value
 	 * @param dblDerivativeXVAValueDelta The Derivative XVA Value Delta
 	 * @param dblDerivativeXVAValueGamma The Derivative XVA Value Gamma
-	 * @param dblDerivativeValue The Derivative Value
+	 * @param dblDerivativeFairValue The Derivative "Fair" Value
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -89,7 +89,7 @@ public class AssetGreekVertex {
 		final double dblDerivativeXVAValue,
 		final double dblDerivativeXVAValueDelta,
 		final double dblDerivativeXVAValueGamma,
-		final double dblDerivativeValue)
+		final double dblDerivativeFairValue)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAValue = dblDerivativeXVAValue) ||
@@ -98,7 +98,7 @@ public class AssetGreekVertex {
 					(_dblDerivativeXVAValueGamma = dblDerivativeXVAValueGamma))
 			throw new java.lang.Exception ("AssetGreekVertex Constructor => Invalid Inputs");
 
-		_dblDerivativeValue = dblDerivativeValue;
+		_dblDerivativeFairValue = dblDerivativeFairValue;
 	}
 
 	/**
@@ -135,13 +135,13 @@ public class AssetGreekVertex {
 	}
 
 	/**
-	 * Retrieve the Derivative Non XVA Value
+	 * Retrieve the Derivative De-XVA "Fair" Value
 	 * 
-	 * @return The Derivative Non XVA Value
+	 * @return The Derivative De-XVA "Fair" Value
 	 */
 
-	public double derivativeValue()
+	public double derivativeFairValue()
 	{
-		return _dblDerivativeValue;
+		return _dblDerivativeFairValue;
 	}
 }
