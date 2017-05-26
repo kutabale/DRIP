@@ -17,8 +17,8 @@ import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.NumerairePath;
-import org.drip.xva.universe.NumeraireVertex;
+import org.drip.xva.universe.MarketPath;
+import org.drip.xva.universe.MarketVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -402,7 +402,7 @@ public class CollateralizedFundingPayableStochastic {
 			);
 
 			JulianDate dtStart = dtSpot;
-			NumeraireVertex[] aNV = new NumeraireVertex [iNumStep + 1];
+			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
 			HypothecationGroupVertexRegular[] aHGVR1 = new HypothecationGroupVertexRegular[iNumStep + 1];
@@ -446,7 +446,7 @@ public class CollateralizedFundingPayableStochastic {
 					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
 				}
 
-				aNV[j] = NumeraireVertex.Standard (
+				aNV[j] = MarketVertex.Standard (
 					adtVertex[j],
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -471,7 +471,7 @@ public class CollateralizedFundingPayableStochastic {
 				);
 			}
 
-			NumerairePath mp = new NumerairePath (aNV);
+			MarketPath mp = new MarketPath (aNV);
 
 			HypothecationGroupPath[] aHGP1 = new HypothecationGroupPath[] {
 				new HypothecationGroupPath (aHGVR1)
@@ -682,9 +682,9 @@ public class CollateralizedFundingPayableStochastic {
 		final ExposureAdjustmentAggregator eaaExpanded)
 		throws Exception
 	{
-		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (eaaGround);
+		OTCAccountingModus oasFCAFBA = new OTCAccountingModusFCAFBA (eaaGround);
 
-		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (eaaGround);
+		OTCAccountingModus oasFVAFDA = new OTCAccountingModusFVAFDA (eaaGround);
 
 		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (eaaExpanded);
 

@@ -103,10 +103,10 @@ public class XVAExplain {
 
 		TradeablesContainer tcm = tes.universe();
 
-		double dblCollateralBondNumeraire = tcvmStart.zeroCouponCollateralBondNumeraire().finish();
+		double dblCollateralBondNumeraire = tcvmStart.collateralSchemeNumeraire().finish();
 
-		TradeablesVertex tcvmFinish = new TradeablesVertex (
-			tcm.asset().priceNumeraire().weinerIncrement (
+		TradeablesVertex tcvmFinish = TradeablesVertex.Standard (
+			tcm.asset().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
 					tcvmStart.assetNumeraire().finish(),
@@ -115,7 +115,7 @@ public class XVAExplain {
 				),
 				dblTimeWidth
 			),
-			tcm.zeroCouponCollateralBond().priceNumeraire().weinerIncrement (
+			tcm.collateralScheme().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblCollateralBondNumeraire,
@@ -124,20 +124,20 @@ public class XVAExplain {
 				),
 				dblTimeWidth
 			),
-			tcm.zeroCouponBankBond().priceNumeraire().weinerIncrement (
+			tcm.bankFunding().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					tcvmStart.zeroCouponBankBondNumeraire().finish(),
+					tcvmStart.bankFundingNumeraire().finish(),
 					0.,
 					false
 				),
 				dblTimeWidth
 			),
 			new JumpDiffusionEdge[] {
-				tcm.zeroCouponCounterPartyBond()[0].priceNumeraire().weinerIncrement (
+				tcm.counterPartyFunding()[0].numeraireEvolver().weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
-						tcvmStart.zeroCouponCounterPartyBondNumeraire()[0].finish(),
+						tcvmStart.counterPartyFundingNumeraire()[0].finish(),
 						0.,
 						false
 					),
@@ -185,11 +185,11 @@ public class XVAExplain {
 
 		double dblAssetPriceFinish = tcvmFinish.assetNumeraire().finish();
 
-		double dblZeroCouponBankPriceFinish = tcvmFinish.zeroCouponBankBondNumeraire().finish();
+		double dblZeroCouponBankPriceFinish = tcvmFinish.bankFundingNumeraire().finish();
 
-		double dblZeroCouponCounterPartyPriceFinish = tcvmFinish.zeroCouponCounterPartyBondNumeraire()[0].finish();
+		double dblZeroCouponCounterPartyPriceFinish = tcvmFinish.counterPartyFundingNumeraire()[0].finish();
 
-		ReplicationPortfolioVertex rpvFinish = new ReplicationPortfolioVertex (
+		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
 			new double[] {dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish},
@@ -202,7 +202,7 @@ public class XVAExplain {
 			FormatUtil.FormatDouble (dblAssetPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (tcvmFinish.zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (tcvmFinish.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.bankBondUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
@@ -222,7 +222,7 @@ public class XVAExplain {
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				agvStart.derivativeFairValue() * Math.exp (
-					-1. * dblTimeWidth * tcm.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
+					-1. * dblTimeWidth * tcm.collateralScheme().numeraireEvolver().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -301,7 +301,7 @@ public class XVAExplain {
 			)
 		);
 
-		TradeablesContainer tcm = new TradeablesContainer (
+		TradeablesContainer tcm = TradeablesContainer.Standard (
 			new Equity (
 				meAsset,
 				dblAssetRepo,
@@ -358,7 +358,7 @@ public class XVAExplain {
 		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue -
 			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValue}));
 
-		ReplicationPortfolioVertex rpvInitial = new ReplicationPortfolioVertex (
+		ReplicationPortfolioVertex rpvInitial = ReplicationPortfolioVertex.Standard (
 			1.,
 			dblGainOnBankDefaultInitial,
 			new double[] {dblGainOnCounterPartyDefaultInitial},
@@ -424,7 +424,7 @@ public class XVAExplain {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeablesVertex (
+			TradeablesVertex.Standard (
 				meAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -464,7 +464,7 @@ public class XVAExplain {
 					)
 				}
 			),
-			new ReplicationPortfolioVertex (
+			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
 				new double[] {0.},

@@ -47,7 +47,7 @@ package org.drip.xva.universe;
  */
 
 /**
- * NumeraireVertex holds the Vertex Market Numeraire Realizations at a Trajectory Vertex. The References are:
+ * MarketVertex holds the Market Realizations at a Trajectory Vertex. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  
@@ -64,28 +64,28 @@ package org.drip.xva.universe;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NumeraireVertex {
+public class MarketVertex {
 	private double _dblCSASpread = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
 	private double _dblOvernightPolicyIndex = java.lang.Double.NaN;
-	private org.drip.xva.universe.EntityNumeraireVertex _envBank = null;
-	private org.drip.xva.universe.EntityNumeraireVertex _envCounterParty = null;
+	private org.drip.xva.universe.EntityMarketVertex _envBank = null;
+	private org.drip.xva.universe.EntityMarketVertex _envCounterParty = null;
 
 	/**
-	 * Construct a Standard Instance of the NumeraireVertex
+	 * Construct a Standard Instance of the MarketVertex
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Numeraire
-	 * @param dblBankSurvival The Realized Bank Survival Numeraire
-	 * @param dblBankRecovery The Realized Bank Recovery Numeraire
-	 * @param dblBankFundingSpread The Bank Funding Spread Numeraire
-	 * @param dblCounterPartySurvival The Realized Counter Party Survival Numeraire
-	 * @param dblCounterPartyRecovery The Realized Counter Party Recovery Numeraire
+	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Rate
+	 * @param dblBankSurvival The Realized Bank Survival Rate
+	 * @param dblBankRecovery The Realized Bank Recovery Rate
+	 * @param dblBankFundingSpread The Bank Funding Spread
+	 * @param dblCounterPartySurvival The Realized Counter Party Survival Rate
+	 * @param dblCounterPartyRecovery The Realized Counter Party Recovery Rate
 	 * 
-	 * @return The Standard Instance of NumeraireVertex
+	 * @return The Standard Instance of MarketVertex
 	 */
 
-	public static final NumeraireVertex Standard (
+	public static final MarketVertex Standard (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblOvernightPolicyIndex,
 		final double dblBankSurvival,
@@ -95,17 +95,17 @@ public class NumeraireVertex {
 		final double dblCounterPartyRecovery)
 	{
 		try {
-			return new NumeraireVertex (
+			return new MarketVertex (
 				dtAnchor,
 				dblOvernightPolicyIndex,
 				0.,
-				new org.drip.xva.universe.EntityNumeraireVertex (
+				new org.drip.xva.universe.EntityMarketVertex (
 					dblBankSurvival,
 					dblBankRecovery,
 					dblBankFundingSpread / (1. - dblBankRecovery),
 					dblBankFundingSpread
 				),
-				new org.drip.xva.universe.EntityNumeraireVertex (
+				new org.drip.xva.universe.EntityMarketVertex (
 					dblCounterPartySurvival,
 					dblCounterPartyRecovery,
 					0.,
@@ -120,30 +120,30 @@ public class NumeraireVertex {
 	}
 
 	/**
-	 * NumeraireVertex Constructor
+	 * MarketVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Numeraire
-	 * @param dblCSASpread The Realized CSA Spread Numeraire
+	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Rate
+	 * @param dblCSASpread The Realized CSA Spread
 	 * @param envBank Bank Entity Market Vertex Instance
 	 * @param envCounterParty Counter Party Market Vertex Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public NumeraireVertex (
+	public MarketVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblOvernightPolicyIndex,
 		final double dblCSASpread,
-		final org.drip.xva.universe.EntityNumeraireVertex envBank,
-		final org.drip.xva.universe.EntityNumeraireVertex envCounterParty)
+		final org.drip.xva.universe.EntityMarketVertex envBank,
+		final org.drip.xva.universe.EntityMarketVertex envCounterParty)
 		throws java.lang.Exception
 	{
 		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
 			(_dblOvernightPolicyIndex = dblOvernightPolicyIndex) || !org.drip.quant.common.NumberUtil.IsValid
 				(_dblCSASpread = dblCSASpread) || null == (_envBank = envBank) || null == (_envCounterParty =
 					envCounterParty))
-			throw new java.lang.Exception ("NumeraireVertex Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -158,9 +158,9 @@ public class NumeraireVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Overnight Policy Index Numeraire
+	 * Retrieve the Realized Overnight Policy Index Rate
 	 * 
-	 * @return The Realized Overnight Policy Index Numeraire
+	 * @return The Realized Overnight Policy Index Rate
 	 */
 
 	public double overnightPolicyIndex()
@@ -169,9 +169,9 @@ public class NumeraireVertex {
 	}
 
 	/**
-	 * Retrieve the Realized CSA Spread Numeraire
+	 * Retrieve the Realized CSA Spread Rate
 	 * 
-	 * @return The Realized CSA Spread Numeraire
+	 * @return The Realized CSA Spread Rate
 	 */
 
 	public double csaSpread()
@@ -180,9 +180,9 @@ public class NumeraireVertex {
 	}
 
 	/**
-	 * Retrieve the Realized CSA Numeraire
+	 * Retrieve the Realized CSA Rate
 	 * 
-	 * @return The Realized CSA Numeraire
+	 * @return The Realized CSA Rate
 	 */
 
 	public double csa()
@@ -191,31 +191,31 @@ public class NumeraireVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Bank Market Vertex Numeraire
+	 * Retrieve the Realized Bank Market Vertex
 	 * 
-	 * @return The Realized Bank Market Vertex Numeraire
+	 * @return The Realized Bank Market Vertex
 	 */
 
-	public org.drip.xva.universe.EntityNumeraireVertex bankMarket()
+	public org.drip.xva.universe.EntityMarketVertex bankMarket()
 	{
 		return _envBank;
 	}
 
 	/**
-	 * Retrieve the Realized Counter Party Market Vertex Numeraire
+	 * Retrieve the Realized Counter Party Market Vertex
 	 * 
-	 * @return The Realized Counter Party Market Vertex Numeraire
+	 * @return The Realized Counter Party Market Vertex
 	 */
 
-	public org.drip.xva.universe.EntityNumeraireVertex counterPartyMarket()
+	public org.drip.xva.universe.EntityMarketVertex counterPartyMarket()
 	{
 		return _envCounterParty;
 	}
 
 	/**
-	 * Retrieve the Realized Bank Hazard Numeraire
+	 * Retrieve the Realized Bank Hazard Rate
 	 * 
-	 * @return The Realized Bank Hazard Numeraire
+	 * @return The Realized Bank Hazard Rate
 	 */
 
 	public double bankHazard()
@@ -224,9 +224,9 @@ public class NumeraireVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Bank Survival Numeraire
+	 * Retrieve the Realized Bank Survival Probability
 	 * 
-	 * @return The Realized Bank Survival Numeraire
+	 * @return The Realized Bank Survival Probability
 	 */
 
 	public double bankSurvival()
@@ -268,9 +268,9 @@ public class NumeraireVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Counter Party Recovery Numeraire
+	 * Retrieve the Realized Counter Party Recovery Rate
 	 * 
-	 * @return The Realized Counter Party Recovery Numeraire
+	 * @return The Realized Counter Party Recovery Rate
 	 */
 
 	public double counterPartyRecovery()

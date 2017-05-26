@@ -177,7 +177,7 @@ public class EulerTrajectoryEvolutionScheme {
 			)
 		);
 
-		TradeablesContainer tcm = new TradeablesContainer (
+		TradeablesContainer tcm = TradeablesContainer.Standard (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -292,7 +292,7 @@ public class EulerTrajectoryEvolutionScheme {
 		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue -
 			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValue}));
 
-		ReplicationPortfolioVertex rpvInitial = new ReplicationPortfolioVertex (
+		ReplicationPortfolioVertex rpvInitial = ReplicationPortfolioVertex.Standard (
 			1.,
 			dblGainOnBankDefaultInitial,
 			new double[] {dblGainOnCounterPartyDefaultInitial},
@@ -358,13 +358,13 @@ public class EulerTrajectoryEvolutionScheme {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeablesVertex (
+			TradeablesVertex.Standard (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
 				new JumpDiffusionEdge[] {aJDECounterParty[iNumTimeStep - 1]}
 			),
-			new ReplicationPortfolioVertex (
+			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
 				new double[] {0.},
@@ -376,7 +376,7 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		for (int i = 0; i < iNumTimeStep; ++i)
-			aTCVM[i] = new TradeablesVertex (
+			aTCVM[i] = TradeablesVertex.Standard (
 				aJDEAsset[i],
 				aJDECollateral[i],
 				aJDEBank[i],
@@ -399,9 +399,9 @@ public class EulerTrajectoryEvolutionScheme {
 				FormatUtil.FormatDouble (etv.time(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.assetGreekVertex().derivativeXVAValue(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aTCVM[i].assetNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTCVM[i].zeroCouponBankBondNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTCVM[i].zeroCouponCounterPartyBondNumeraire()[0].finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTCVM[i].zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aTCVM[i].bankFundingNumeraire().finish(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aTCVM[i].counterPartyFundingNumeraire()[0].finish(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aTCVM[i].collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().assetUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().bankBondUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().counterPartyBondUnits()[0], 1, 6, 1.) + " | " +

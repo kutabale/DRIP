@@ -110,9 +110,9 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		TradeablesContainer tcm = tes.universe();
 
-		double dblCollateralBondNumeraire = tcvmStart.zeroCouponCollateralBondNumeraire().finish();
+		double dblCollateralBondNumeraire = tcvmStart.collateralSchemeNumeraire().finish();
 
-		TradeablesVertex tcvmFinish = new TradeablesVertex (
+		TradeablesVertex tcvmFinish = TradeablesVertex.Standard (
 			jdeAsset,
 			jdeCollateral,
 			jdeBank,
@@ -177,7 +177,7 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		double dblZeroCouponCounterPartyPriceFinish = jdeCounterParty.finish();
 
-		ReplicationPortfolioVertex rpvFinish = new ReplicationPortfolioVertex (
+		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
 			new double[] {dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish},
@@ -193,7 +193,7 @@ public class CorrelatedNumeraireXVAGreeks {
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				agvStart.derivativeFairValue() * Math.exp (
-					-1. * dblTimeWidth * tcm.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
+					-1. * dblTimeWidth * tcm.collateralScheme().numeraireEvolver().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -301,7 +301,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			)
 		);
 
-		TradeablesContainer tcm = new TradeablesContainer (
+		TradeablesContainer tcm = TradeablesContainer.Standard (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -475,13 +475,13 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeablesVertex (
+			TradeablesVertex.Standard (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
 				new JumpDiffusionEdge[] {aJDECounterParty[iNumTimeStep - 1]}
 			),
-			new ReplicationPortfolioVertex (
+			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
 				new double[] {0.},

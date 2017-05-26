@@ -1,5 +1,5 @@
 
-package org.drip.xva.universe;
+package org.drip.xva.basel;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,68 +47,72 @@ package org.drip.xva.universe;
  */
 
 /**
- * NumerairePath holds the Vertex Market Numeraire Realizations at the Trajectory Vertexes along the Path of
- *  a Simulation. The References are:
+ * OTCAccountingModus implements the Generic Basel Accounting Scheme using the Streamlined Accounting
+ *  Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The References are:
  *  
- *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
+ *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
+ *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
+ *  
+ *  - BCBS (2012): Consultative Document: Application of Own Credit Risk Adjustments to Derivatives, Basel
+ *  	Committee on Banking Supervision.
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
  *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
- *  
- *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
+ * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class NumerairePath {
-	private org.drip.xva.universe.NumeraireVertex[] _aNV = null;
+public abstract class OTCAccountingModus {
+	private org.drip.xva.cpty.ExposureAdjustmentAggregator _eaa = null;
 
-	/**
-	 * NumerairePath Constructor
-	 * 
-	 * @param aNV Array of the Numeraire Vertexes
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public NumerairePath (
-		final org.drip.xva.universe.NumeraireVertex[] aNV)
+	protected OTCAccountingModus (
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaa)
 		throws java.lang.Exception
 	{
-		if (null == (_aNV = aNV) || 0 == _aNV.length)
-			throw new java.lang.Exception ("NumerairePath Constructor => Invalid Inputs");
+		if (null == (_eaa = eaa))
+			throw new java.lang.Exception ("OTCAccountingModus Contructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Array of the Vertex Anchor Dates
+	 * Retrieve the Counter Party Group Aggregator Instance
 	 * 
-	 * @return The Array of the Vertex Anchor Dates
+	 * @return The Counter Party Group Aggregator Instance
 	 */
 
-	public org.drip.analytics.date.JulianDate[] anchors()
+	public org.drip.xva.cpty.ExposureAdjustmentAggregator aggregator()
 	{
-		int iNumVertex = _aNV.length;
-		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
-
-		for (int i = 0; i < iNumVertex; ++i)
-			adtVertex[i] = _aNV[i].anchor();
-
-		return adtVertex;
+		return _eaa;
 	}
 
 	/**
-	 * Array of the Market Vertexes
+	 * Compute the Contra-Asset Adjustment
 	 * 
-	 * @return The Market Vertexes
+	 * @return The Contra-Asset Adjustment
 	 */
 
-	public org.drip.xva.universe.NumeraireVertex[] vertexes()
-	{
-		return _aNV;
-	}
+	public abstract double contraAssetAdjustment();
+
+	/**
+	 * Compute the Contra-Liability Adjustment
+	 * 
+	 * @return The Contra-Liability Adjustment
+	 */
+
+	public abstract double contraLiabilityAdjustment();
+
+	/**
+	 * Generate the Fee Policy Based on the Aggregation Incremental
+	 * 
+	 * @param eaaNext The "Next" Exposure Adjustment Aggregator Instance
+	 * 
+	 * @return The OTC Fee Policy
+	 */
+
+	public abstract org.drip.xva.basel.OTCAccountingPolicy feePolicy (
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaaNext);
 }

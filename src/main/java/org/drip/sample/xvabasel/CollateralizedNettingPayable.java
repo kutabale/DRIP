@@ -15,8 +15,8 @@ import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.NumerairePath;
-import org.drip.xva.universe.NumeraireVertex;
+import org.drip.xva.universe.MarketPath;
+import org.drip.xva.universe.MarketVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -184,7 +184,7 @@ public class CollateralizedNettingPayable {
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		NumeraireVertex[] aNV = new NumeraireVertex[iNumStep + 1];
+		MarketVertex[] aNV = new MarketVertex[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
 		MonoPathExposureAdjustment[] aCPGPGround = new MonoPathExposureAdjustment[iNumPath];
@@ -207,7 +207,7 @@ public class CollateralizedNettingPayable {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = NumeraireVertex.Standard (
+			aNV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -303,7 +303,7 @@ public class CollateralizedNettingPayable {
 				dblValueStart2 = dblValueEnd2;
 			}
 
-			NumerairePath np = new NumerairePath (aNV);
+			MarketPath np = new MarketPath (aNV);
 
 			HypothecationGroupPath[] aCGP1 = new HypothecationGroupPath[] {
 				new HypothecationGroupPath (aCGV1)
@@ -515,9 +515,9 @@ public class CollateralizedNettingPayable {
 		final ExposureAdjustmentAggregator cpgaExpanded)
 		throws Exception
 	{
-		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (cpgaGround);
+		OTCAccountingModus oasFCAFBA = new OTCAccountingModusFCAFBA (cpgaGround);
 
-		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (cpgaGround);
+		OTCAccountingModus oasFVAFDA = new OTCAccountingModusFVAFDA (cpgaGround);
 
 		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (cpgaExpanded);
 

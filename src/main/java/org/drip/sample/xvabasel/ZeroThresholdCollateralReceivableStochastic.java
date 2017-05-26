@@ -18,8 +18,8 @@ import org.drip.xva.cpty.*;
 import org.drip.xva.set.CollateralGroupSpecification;
 import org.drip.xva.set.CounterPartyGroupSpecification;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.NumerairePath;
-import org.drip.xva.universe.NumeraireVertex;
+import org.drip.xva.universe.MarketPath;
+import org.drip.xva.universe.MarketVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -403,7 +403,7 @@ public class ZeroThresholdCollateralReceivableStochastic {
 			);
 
 			JulianDate dtStart = dtSpot;
-			NumeraireVertex[] aNV = new NumeraireVertex [iNumStep + 1];
+			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
 			HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
@@ -448,7 +448,7 @@ public class ZeroThresholdCollateralReceivableStochastic {
 				}
 
 
-				aNV[j] = NumeraireVertex.Standard (
+				aNV[j] = MarketVertex.Standard (
 					adtVertex[j],
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -473,7 +473,7 @@ public class ZeroThresholdCollateralReceivableStochastic {
 				);
 			}
 
-			NumerairePath np = new NumerairePath (aNV);
+			MarketPath np = new MarketPath (aNV);
 
 			HypothecationGroupPath[] aCGPGround = new HypothecationGroupPath[] {
 				new HypothecationGroupPath (aCGV1)
@@ -678,9 +678,9 @@ public class ZeroThresholdCollateralReceivableStochastic {
 		final ExposureAdjustmentAggregator cpgaExpanded)
 		throws Exception
 	{
-		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (cpgaGround);
+		OTCAccountingModus oasFCAFBA = new OTCAccountingModusFCAFBA (cpgaGround);
 
-		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (cpgaGround);
+		OTCAccountingModus oasFVAFDA = new OTCAccountingModusFVAFDA (cpgaGround);
 
 		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (cpgaExpanded);
 

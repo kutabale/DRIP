@@ -15,8 +15,8 @@ import org.drip.xva.basel.*;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.NumerairePath;
-import org.drip.xva.universe.NumeraireVertex;
+import org.drip.xva.universe.MarketPath;
+import org.drip.xva.universe.MarketVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -390,12 +390,12 @@ public class UncollateralizedNettingPayableStochastic {
 				iNumStep
 			);
 
-			NumeraireVertex[] aNV = new NumeraireVertex [iNumStep + 1];
+			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
 			HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
 			HypothecationGroupVertexRegular[] aCGV2 = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aNV[j] = NumeraireVertex.Standard (
+				aNV[j] = MarketVertex.Standard (
 					adtVertex[j] = dtSpot.addMonths (6 * j + 6),
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
@@ -422,7 +422,7 @@ public class UncollateralizedNettingPayableStochastic {
 				);
 			}
 
-			NumerairePath np = new NumerairePath (aNV);
+			MarketPath np = new MarketPath (aNV);
 
 			HypothecationGroupPath[] aCGP1 = new HypothecationGroupPath[] {
 				new HypothecationGroupPath (aCGV1)
@@ -627,9 +627,9 @@ public class UncollateralizedNettingPayableStochastic {
 		final ExposureAdjustmentAggregator cpgaExpanded)
 		throws Exception
 	{
-		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (cpgaGround);
+		OTCAccountingModus oasFCAFBA = new OTCAccountingModusFCAFBA (cpgaGround);
 
-		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (cpgaGround);
+		OTCAccountingModus oasFVAFDA = new OTCAccountingModusFVAFDA (cpgaGround);
 
 		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (cpgaExpanded);
 

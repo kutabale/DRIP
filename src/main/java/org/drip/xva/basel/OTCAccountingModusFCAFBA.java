@@ -47,8 +47,9 @@ package org.drip.xva.basel;
  */
 
 /**
- * OTCAccountingScheme implements the Generic Basel Accounting Scheme using the Streamlined Accounting
- *  Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The References are:
+ * OTCAccountingModusFCAFBA implements the Basel Accounting Scheme using the FCA/FBA Specification of the
+ *  Streamlined Accounting Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The
+ *  References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
@@ -67,52 +68,54 @@ package org.drip.xva.basel;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class OTCAccountingScheme {
-	private org.drip.xva.cpty.ExposureAdjustmentAggregator _eaa = null;
+public class OTCAccountingModusFCAFBA extends org.drip.xva.basel.OTCAccountingModus {
 
-	protected OTCAccountingScheme (
+	/**
+	 * OTCAccountingModusFCAFBA Constructor
+	 * 
+	 * @param eaa The Counter Party Group Aggregator Instance
+	 * 
+	 * @throws java.lang.Exception Thrown if Inputs are Invalid
+	 */
+
+	public OTCAccountingModusFCAFBA (
 		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaa)
 		throws java.lang.Exception
 	{
-		if (null == (_eaa = eaa))
-			throw new java.lang.Exception ("OTCAccountingScheme Contructor => Invalid Inputs");
+		super (eaa);
 	}
 
-	/**
-	 * Retrieve the Counter Party Group Aggregator Instance
-	 * 
-	 * @return The Counter Party Group Aggregator Instance
-	 */
-
-	public org.drip.xva.cpty.ExposureAdjustmentAggregator aggregator()
+	@Override public double contraAssetAdjustment()
 	{
-		return _eaa;
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
+
+		return eaa.ucva().amount() + eaa.fva().amount();
 	}
 
-	/**
-	 * Compute the Contra-Asset Adjustment
-	 * 
-	 * @return The Contra-Asset Adjustment
-	 */
+	@Override public double contraLiabilityAdjustment()
+	{
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-	public abstract double contraAssetAdjustment();
+		return eaa.cvacl().amount() + eaa.fba().amount();
+	}
 
-	/**
-	 * Compute the Contra-Liability Adjustment
-	 * 
-	 * @return The Contra-Liability Adjustment
-	 */
+	@Override public org.drip.xva.basel.OTCAccountingPolicy feePolicy (
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaaNext)
+	{
+		if (null == eaaNext) return null;
 
-	public abstract double contraLiabilityAdjustment();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-	/**
-	 * Generate the Fee Policy Based on the Aggregation Incremental
-	 * 
-	 * @param eaaNext The "Next" Exposure Adjustment Aggregator Instance
-	 * 
-	 * @return The OTC Fee Policy
-	 */
+		double dblContraLiabilityChange = eaaNext.fba().amount() - eaa.fba().amount();
 
-	public abstract org.drip.xva.basel.OTCAccountingPolicy feePolicy (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaaNext);
+		try {
+			return new org.drip.xva.basel.OTCAccountingPolicy (eaaNext.ucva().amount() +
+				eaaNext.sfva().amount() - eaa.ucva().amount() - eaa.sfva().amount(), -1. *
+					dblContraLiabilityChange, dblContraLiabilityChange, 0.);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

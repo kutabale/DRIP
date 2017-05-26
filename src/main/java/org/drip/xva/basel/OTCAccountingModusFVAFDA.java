@@ -47,7 +47,7 @@ package org.drip.xva.basel;
  */
 
 /**
- * OTCAccountingSchemeFCAFBA implements the Basel Accounting Scheme using the FCA/FBA Specification of the
+ * OTCAccountingModusFVAFDA implements the Basel Accounting Scheme using the FVA/FDA Specification of the
  *  Streamlined Accounting Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The
  *  References are:
  *  
@@ -68,50 +68,50 @@ package org.drip.xva.basel;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OTCAccountingSchemeFCAFBA extends org.drip.xva.basel.OTCAccountingScheme {
+public class OTCAccountingModusFVAFDA extends org.drip.xva.basel.OTCAccountingModus {
 
 	/**
-	 * OTCAccountingSchemeFCAFBA Constructor
+	 * OTCAccountingModusFVAFDA Constructor
 	 * 
-	 * @param eaa The Counter Party Group Aggregator Instance
+	 * @param esa The Counter Party Group Aggregator Instance
 	 * 
-	 * @throws java.lang.Exception Thrown if Inputs are Invalid
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public OTCAccountingSchemeFCAFBA (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaa)
+	public OTCAccountingModusFVAFDA (
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator esa)
 		throws java.lang.Exception
 	{
-		super (eaa);
+		super (esa);
 	}
 
 	@Override public double contraAssetAdjustment()
 	{
-		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
 
-		return eaa.ucva().amount() + eaa.fva().amount();
+		return esa.ucva().amount() + esa.fva().amount();
 	}
 
 	@Override public double contraLiabilityAdjustment()
 	{
-		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
 
-		return eaa.cvacl().amount() + eaa.fba().amount();
+		return esa.cvacl().amount() + esa.dva().amount() + esa.fda().amount();
 	}
 
 	@Override public org.drip.xva.basel.OTCAccountingPolicy feePolicy (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaaNext)
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator esaNext)
 	{
-		if (null == eaaNext) return null;
+		if (null == esaNext) return null;
 
-		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
 
-		double dblContraLiabilityChange = eaaNext.fba().amount() - eaa.fba().amount();
+		double dblIncome = esaNext.dva().amount() + esaNext.fda().amount() + esaNext.cvacl().amount() -
+			esa.dva().amount() - esa.fda().amount() - esa.cvacl().amount();
 
 		try {
-			return new org.drip.xva.basel.OTCAccountingPolicy (eaaNext.ucva().amount() +
-				eaaNext.sfva().amount() - eaa.ucva().amount() - eaa.sfva().amount(), -1. *
-					dblContraLiabilityChange, dblContraLiabilityChange, 0.);
+			return new org.drip.xva.basel.OTCAccountingPolicy (esaNext.ucva().amount() +
+				esaNext.fva().amount() - esa.ucva().amount() - esa.fva().amount(), 0., dblIncome, dblIncome);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

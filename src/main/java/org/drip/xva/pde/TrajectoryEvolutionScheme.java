@@ -166,10 +166,10 @@ public class TrajectoryEvolutionScheme {
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeAsset = tv.assetNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankBond = tv.zeroCouponBankBondNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankBond = tv.bankFundingNumeraire();
 
 		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyBond =
-			tv.zeroCouponCounterPartyBondNumeraire();
+			tv.counterPartyFundingNumeraire();
 
 		double dblAssetCashChange = dblAssetUnitsStart * _tc.asset().cashAccumulationRate() *
 			jdeAsset.finish() * _dblTimeIncrement;
@@ -178,7 +178,7 @@ public class TrajectoryEvolutionScheme {
 		double dblCounterPartyPositionValueChange = 0.;
 		int iNumCounterParty = aJDECounterPartyBond.length;
 
-		org.drip.xva.universe.Tradeable[] aTCounterPartyZeroCouponBond = _tc.zeroCouponCounterPartyBond();
+		org.drip.xva.universe.Tradeable[] aTCounterPartyZeroCouponBond = _tc.counterPartyFunding();
 
 		if (aTCounterPartyZeroCouponBond.length != iNumCounterParty) return null;
 
@@ -195,8 +195,8 @@ public class TrajectoryEvolutionScheme {
 			dblBankBondUnitsStart * jdeBankBond.finish();
 
 		double dblBankCashAccumulation = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
-			_tc.zeroCouponCollateralBond().cashAccumulationRate() :
-				_tc.zeroCouponBankBond().cashAccumulationRate()) * _dblTimeIncrement;
+			_tc.collateralScheme().cashAccumulationRate() : _tc.bankFunding().cashAccumulationRate()) *
+				_dblTimeIncrement;
 
 		double dblDerivativeXVAValueChange = -1. * (dblAssetUnitsStart * jdeAsset.grossChange() +
 			dblBankBondUnitsStart * jdeBankBond.grossChange() + dblCounterPartyPositionValueChange +
@@ -237,7 +237,7 @@ public class TrajectoryEvolutionScheme {
 		if (null == car) return null;
 
 		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterParty =
-			tv.zeroCouponCounterPartyBondNumeraire();
+			tv.counterPartyFundingNumeraire();
 
 		double dblGainOnBankDefault = 0.;
 		int iNumCounterParty = aJDECounterParty.length;
@@ -275,10 +275,10 @@ public class TrajectoryEvolutionScheme {
 		}
 
 		try {
-			double dblBankBondUnits = dblGainOnBankDefault / tv.zeroCouponBankBondNumeraire().finish();
+			double dblBankBondUnits = dblGainOnBankDefault / tv.bankFundingNumeraire().finish();
 
-			org.drip.xva.derivative.ReplicationPortfolioVertex prv = new
-				org.drip.xva.derivative.ReplicationPortfolioVertex (
+			org.drip.xva.derivative.ReplicationPortfolioVertex prv =
+				org.drip.xva.derivative.ReplicationPortfolioVertex.Standard (
 					-1. * agvFinish.derivativeXVAValueDelta(),
 					dblBankBondUnits,
 					adblCounterPartyBondUnits,
@@ -345,7 +345,7 @@ public class TrajectoryEvolutionScheme {
 			(dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
 		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterParty =
-			tv.zeroCouponCounterPartyBondNumeraire();
+			tv.counterPartyFundingNumeraire();
 
 		double dblGainOnBankDefaultFinish = 0.;
 		int iNumCounterParty = aJDECounterParty.length;
@@ -389,9 +389,9 @@ public class TrajectoryEvolutionScheme {
 				org.drip.xva.derivative.EvolutionTrajectoryVertex (
 				dblTimeStart - dblTimeWidth,
 				tv,
-				new org.drip.xva.derivative.ReplicationPortfolioVertex (
+				org.drip.xva.derivative.ReplicationPortfolioVertex.Standard (
 					-1. * dblDerivativeXVAValueDeltaFinish,
-					dblGainOnBankDefaultFinish / tv.zeroCouponBankBondNumeraire().finish(),
+					dblGainOnBankDefaultFinish / tv.bankFundingNumeraire().finish(),
 					adblCounterPartyBondUnitsFinish,
 					etvStart.replicationPortfolioVertex().cashAccount() + cae.accumulation()
 				),
@@ -403,10 +403,10 @@ public class TrajectoryEvolutionScheme {
 						dblTimeWidth / (dblAssetNumeraireBump * dblAssetNumeraireBump),
 					agvStart.derivativeFairValue() * java.lang.Math.exp (
 						-1. * dblTimeWidth *
-						_tc.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
+						_tc.collateralScheme().numeraireEvolver().evaluator().drift().value (
 							new org.drip.measure.realization.JumpDiffusionVertex (
 								dblTimeStart - 0.5 * dblTimeWidth,
-								etvStart.tradeableAssetSnapshot().zeroCouponCollateralBondNumeraire().finish(),
+								etvStart.tradeableAssetSnapshot().collateralSchemeNumeraire().finish(),
 								0.,
 								false
 							)

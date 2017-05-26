@@ -69,49 +69,78 @@ package org.drip.xva.universe;
 
 public class TradeablesContainer {
 	private org.drip.xva.universe.Tradeable _tAsset = null;
-	private org.drip.xva.universe.Tradeable _tZeroCouponBankBond = null;
-	private org.drip.xva.universe.Tradeable _tZeroCouponCollateralBond = null;
-	private org.drip.xva.universe.Tradeable[] _aTZeroCouponCounterPartyBond = null;
-	private org.drip.xva.universe.Tradeable _tZeroCouponZeroRecoveryBankBond = null;
+	private org.drip.xva.universe.Tradeable _tBankFunding = null;
+	private org.drip.xva.universe.Tradeable _tCollateralScheme = null;
+	private org.drip.xva.universe.Tradeable[] _aTCounterPartyFunding = null;
+	private org.drip.xva.universe.Tradeable _tZeroRecoveryBankFunding = null;
+
+	/**
+	 * Create a TradeablesContainer without the Zero Recovery Bank Funding Tradeable
+	 * 
+	 * @param tAsset The Asset Tradeable
+	 * @param tCollateralScheme The Collateral Scheme Tradeable
+	 * @param tBankFunding Bank Funding Tradeable
+	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
+	 * 
+	 * @return The TradeablesContainer without the Zero Recovery Bank Funding Tradeable
+	 */
+
+	public static final TradeablesContainer Standard (
+		final org.drip.xva.universe.Tradeable tAsset,
+		final org.drip.xva.universe.Tradeable tCollateralScheme,
+		final org.drip.xva.universe.Tradeable tBankFunding,
+		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding)
+	{
+		try {
+			return new TradeablesContainer (tAsset, tCollateralScheme, tBankFunding, null,
+				aTCounterPartyFunding);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	/**
 	 * TradeablesContainer Constructor
 	 * 
-	 * @param tAsset Trade-able Asset
-	 * @param tZeroCouponCollateralBond Zero Coupon Collateral Bond
-	 * @param tZeroCouponBankBond Zero Coupon Credit Risky Bank Bond
-	 * @param aTZeroCouponCounterPartyBond Array of Zero Coupon Credit Risky Counter Party Bonds
+	 * @param tAsset The Asset Tradeable
+	 * @param tCollateralScheme The Collateral Scheme Tradeable
+	 * @param tBankFunding Bank Funding Tradeable
+	 * @param tZeroRecoveryBankFunding Zero Recovery Bank Funding Tradeable
+	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public TradeablesContainer (
 		final org.drip.xva.universe.Tradeable tAsset,
-		final org.drip.xva.universe.Tradeable tZeroCouponCollateralBond,
-		final org.drip.xva.universe.Tradeable tZeroCouponBankBond,
-		final org.drip.xva.universe.Tradeable[] aTZeroCouponCounterPartyBond)
+		final org.drip.xva.universe.Tradeable tCollateralScheme,
+		final org.drip.xva.universe.Tradeable tBankFunding,
+		final org.drip.xva.universe.Tradeable tZeroRecoveryBankFunding,
+		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding)
 		throws java.lang.Exception
 	{
-		if (null == (_tAsset = tAsset) || null == (_tZeroCouponCollateralBond = tZeroCouponCollateralBond) ||
-			null == (_tZeroCouponBankBond = tZeroCouponBankBond) || null == (_aTZeroCouponCounterPartyBond =
-				aTZeroCouponCounterPartyBond))
+		if (null == (_tAsset = tAsset) || null == (_tCollateralScheme = tCollateralScheme) || null ==
+			(_tBankFunding = tBankFunding) || null == (_aTCounterPartyFunding = aTCounterPartyFunding))
 			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 
-		int iNumCounterParty = _aTZeroCouponCounterPartyBond.length;
+		int iNumCounterParty = _aTCounterPartyFunding.length;
+		_tZeroRecoveryBankFunding = tZeroRecoveryBankFunding;
 
 		if (0 >= iNumCounterParty)
 			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumCounterParty; ++i) {
-			if (null == _aTZeroCouponCounterPartyBond[i])
+			if (null == _aTCounterPartyFunding[i])
 				throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 		}
 	}
 
 	/**
-	 * Retrieve the Asset
+	 * Retrieve the Asset Tradeable
 	 * 
-	 * @return The Asset
+	 * @return The Asset Tradeable
 	 */
 
 	public org.drip.xva.universe.Tradeable asset()
@@ -120,47 +149,47 @@ public class TradeablesContainer {
 	}
 
 	/**
-	 * Retrieve the Zero Coupon Collateral Bond
+	 * Retrieve the Collateral Scheme Tradeable
 	 * 
-	 * @return The Zero Coupon Collateral Bond
+	 * @return The Collateral Scheme Tradeable
 	 */
 
-	public org.drip.xva.universe.Tradeable zeroCouponCollateralBond()
+	public org.drip.xva.universe.Tradeable collateralScheme()
 	{
-		return _tZeroCouponCollateralBond;
+		return _tCollateralScheme;
 	}
 
 	/**
-	 * Retrieve the Zero Coupon Credit Risky Bank Bond
+	 * Retrieve the Bank Funding Tradeable
 	 * 
-	 * @return The Zero Coupon Credit Risky Bank Bond
+	 * @return The Bank Funding Tradeable
 	 */
 
-	public org.drip.xva.universe.Tradeable zeroCouponBankBond()
+	public org.drip.xva.universe.Tradeable bankFunding()
 	{
-		return _tZeroCouponBankBond;
+		return _tBankFunding;
 	}
 
 	/**
-	 * Retrieve the Zero Coupon Zero Recovery Credit Risky Bank Bond
+	 * Retrieve the Zero Recovery Bank Funding Tradeable
 	 * 
-	 * @return The Zero Coupon Zero Recovery Credit Risky Bank Bond
+	 * @return The Zero Recovery Bank Funding Tradeable
 	 */
 
-	public org.drip.xva.universe.Tradeable zeroCouponZeroRecoveryBankBond()
+	public org.drip.xva.universe.Tradeable zeroRecoveryBankFunding()
 	{
-		return _tZeroCouponZeroRecoveryBankBond;
+		return _tZeroRecoveryBankFunding;
 	}
 
 	/**
-	 * Retrieve the Array of Zero Coupon Credit Risky Counter Party Bonds
+	 * Retrieve the Array of Counter Party Funding Tradeables
 	 * 
-	 * @return The Array of Zero Coupon Credit Risky Counter Party Bonds
+	 * @return The Array of Counter Party Funding Tradeables
 	 */
 
-	public org.drip.xva.universe.Tradeable[] zeroCouponCounterPartyBond()
+	public org.drip.xva.universe.Tradeable[] counterPartyFunding()
 	{
-		return _aTZeroCouponCounterPartyBond;
+		return _aTCounterPartyFunding;
 	}
 
 	/**
@@ -171,6 +200,6 @@ public class TradeablesContainer {
 
 	public int numCounterParty()
 	{
-		return _aTZeroCouponCounterPartyBond.length;
+		return _aTCounterPartyFunding.length;
 	}
 }

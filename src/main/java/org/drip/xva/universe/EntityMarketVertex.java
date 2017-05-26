@@ -1,5 +1,5 @@
 
-package org.drip.xva.basel;
+package org.drip.xva.universe;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,20 +47,17 @@ package org.drip.xva.basel;
  */
 
 /**
- * OTCAccountingSchemeFVAFDA implements the Basel Accounting Scheme using the FVA/FDA Specification of the
- *  Streamlined Accounting Framework for OTC Derivatives, as described in Albanese and Andersen (2014). The
- *  References are:
+ * EntityMarketVertex holds the Realizations at a Market Trajectory Vertex of the given Entity (i.e.,
+ *  Bank/Counter Party). The References are:
  *  
- *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
- *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
- *  
- *  - BCBS (2012): Consultative Document: Application of Own Credit Risk Adjustments to Derivatives, Basel
- *  	Committee on Banking Supervision.
+ *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
  *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
+ *  
+ *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -68,54 +65,78 @@ package org.drip.xva.basel;
  * @author Lakshmi Krishnamurthy
  */
 
-public class OTCAccountingSchemeFVAFDA extends org.drip.xva.basel.OTCAccountingScheme {
+public class EntityMarketVertex {
+	private double _dblHazard = java.lang.Double.NaN;
+	private double _dblRecovery = java.lang.Double.NaN;
+	private double _dblSurvival = java.lang.Double.NaN;
+	private double _dblFundingSpread = java.lang.Double.NaN;
 
 	/**
-	 * OTCAccountingSchemeFVAFDA Constructor
+	 * EntityMarketVertex Constructor
 	 * 
-	 * @param esa The Counter Party Group Aggregator Instance
+	 * @param dblSurvival The Realized Bank Survival
+	 * @param dblRecovery The Realized Bank Recovery
+	 * @param dblHazard The Realized Bank Hazard
+	 * @param dblFundingSpread The Realized Bank Funding Spread
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public OTCAccountingSchemeFVAFDA (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator esa)
+	public EntityMarketVertex (
+		final double dblSurvival,
+		final double dblRecovery,
+		final double dblHazard,
+		final double dblFundingSpread)
 		throws java.lang.Exception
 	{
-		super (esa);
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSurvival = dblSurvival) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblRecovery = dblRecovery) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblHazard = dblHazard) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblFundingSpread = dblFundingSpread))
+			throw new java.lang.Exception ("EntityMarketVertex Constructor => Invalid Inputs");
 	}
 
-	@Override public double contraAssetAdjustment()
-	{
-		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
+	/**
+	 * Retrieve the Realized Bank Hazard Rate
+	 * 
+	 * @return The Realized Bank Hazard Rate
+	 */
 
-		return esa.ucva().amount() + esa.fva().amount();
+	public double hazard()
+	{
+		return _dblHazard;
 	}
 
-	@Override public double contraLiabilityAdjustment()
-	{
-		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
+	/**
+	 * Retrieve the Realized Bank Survival Probability
+	 * 
+	 * @return The Realized Bank Survival Probability
+	 */
 
-		return esa.cvacl().amount() + esa.dva().amount() + esa.fda().amount();
+	public double survival()
+	{
+		return _dblSurvival;
 	}
 
-	@Override public org.drip.xva.basel.OTCAccountingPolicy feePolicy (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator esaNext)
+	/**
+	 * Retrieve the Realized Bank Recovery Rate
+	 * 
+	 * @return The Realized Bank Recovery Rate
+	 */
+
+	public double recovery()
 	{
-		if (null == esaNext) return null;
+		return _dblRecovery;
+	}
 
-		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
+	/**
+	 * Retrieve the Realized Bank Funding Spread
+	 * 
+	 * @return The Realized Bank Funding Spread
+	 */
 
-		double dblIncome = esaNext.dva().amount() + esaNext.fda().amount() + esaNext.cvacl().amount() -
-			esa.dva().amount() - esa.fda().amount() - esa.cvacl().amount();
-
-		try {
-			return new org.drip.xva.basel.OTCAccountingPolicy (esaNext.ucva().amount() +
-				esaNext.fva().amount() - esa.ucva().amount() - esa.fva().amount(), 0., dblIncome, dblIncome);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
+	public double fundingSpread()
+	{
+		return _dblFundingSpread;
 	}
 }

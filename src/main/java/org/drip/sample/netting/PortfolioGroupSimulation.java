@@ -11,8 +11,8 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.NumerairePath;
-import org.drip.xva.universe.NumeraireVertex;
+import org.drip.xva.universe.MarketPath;
+import org.drip.xva.universe.MarketVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -132,7 +132,7 @@ public class PortfolioGroupSimulation {
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
-		NumeraireVertex[] aMV = new NumeraireVertex[iNumStep + 1];
+		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
@@ -156,7 +156,7 @@ public class PortfolioGroupSimulation {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aMV[i] = NumeraireVertex.Standard (
+			aMV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -166,7 +166,7 @@ public class PortfolioGroupSimulation {
 				dblCounterPartyRecoveryRate
 			);
 
-		NumerairePath mp = new NumerairePath (aMV);
+		MarketPath mp = new MarketPath (aMV);
 
 		for (int i = 0; i < iNumPath; ++i) {
 			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];

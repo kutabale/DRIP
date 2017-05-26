@@ -47,7 +47,7 @@ package org.drip.xva.universe;
  */
 
 /**
- * Tradeable holds Definitions and Parameters that specify a Trade-able Entity in XVA Terms. The References
+ * Tradeable holds Definitions and Parameters that specify a Tradeable Entity in XVA Terms. The References
  *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -70,42 +70,42 @@ package org.drip.xva.universe;
 
 public class Tradeable {
 	private double _dblRepoRate = java.lang.Double.NaN;
-	private org.drip.measure.process.DiffusionEvolver _dePriceNumeraire = null;
+	private org.drip.measure.process.DiffusionEvolver _deNumeraire = null;
 
 	/**
-	 * Trade-able Constructor
+	 * Tradeable Constructor
 	 * 
-	 * @param dePriceNumeraire The Trade-able Asset Price Numeraire Evolver
-	 * @param dblRepoRate The Trade-able Asset Repo Rate
+	 * @param deNumeraire The Numeraire Evolver
+	 * @param dblRepoRate The Repo Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public Tradeable (
-		final org.drip.measure.process.DiffusionEvolver dePriceNumeraire,
+		final org.drip.measure.process.DiffusionEvolver deNumeraire,
 		final double dblRepoRate)
 		throws java.lang.Exception
 	{
-		if (null == (_dePriceNumeraire = dePriceNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblRepoRate = dblRepoRate))
+		if (null == (_deNumeraire = deNumeraire) || !org.drip.quant.common.NumberUtil.IsValid (_dblRepoRate =
+			dblRepoRate))
 			throw new java.lang.Exception ("Tradeable Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Price Numeraire Evolver
+	 * Retrieve the Numeraire Evolver
 	 * 
-	 * @return The Trade-able Asset Price Numeraire Evolver
+	 * @return The Numeraire Evolver
 	 */
 
-	public org.drip.measure.process.DiffusionEvolver priceNumeraire()
+	public org.drip.measure.process.DiffusionEvolver numeraireEvolver()
 	{
-		return _dePriceNumeraire;
+		return _deNumeraire;
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Repo Rate
+	 * Retrieve the Repo Rate
 	 * 
-	 * @return The Trade-able Asset Repo Rate
+	 * @return The Repo Rate
 	 */
 
 	public double repoRate()
@@ -114,9 +114,9 @@ public class Tradeable {
 	}
 
 	/**
-	 * Retrieve the Trade-able Asset Cash Accumulation Rate
+	 * Retrieve the Cash Accumulation Rate
 	 * 
-	 * @return The Trade-able Asset Cash Accumulation Rate
+	 * @return The Cash Accumulation Rate
 	 */
 
 	public double cashAccumulationRate()

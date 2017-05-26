@@ -49,7 +49,7 @@ package org.drip.xva.derivative;
 /**
  * EvolutionTrajectoryVertex holds the Evolution Snapshot of the Trade-able Prices, the Cash Account, the
  *  Replication Portfolio, and the corresponding Derivative Value, as laid out in Burgard and Kjaer (2014).
- *   The References are:
+ *  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -198,5 +198,38 @@ public class EvolutionTrajectoryVertex {
 	public double[] gainOnCounterPartyDefault()
 	{
 		return _adblBankGainOnCounterPartyDefault;
+	}
+
+	/**
+	 * Indicate whether Replication Portfolio satisfies the Funding Constraint implied by the Vertex
+	 * 	Numeraire
+	 * 
+	 * @return The Funding Constraint Verification Mismatch
+	 */
+
+	public double verifyFundingConstraint()
+	{
+		double dblFundingConstraint = _agv.derivativeXVAValue();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBankBondNumeraire =
+			_tv.bankFundingNumeraire();
+
+		if (null != jdeZeroCouponBankBondNumeraire)
+			dblFundingConstraint += jdeZeroCouponBankBondNumeraire.finish() * _rpv.bankBondUnits();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponZeroRecoveryBankBondNumeraire =
+			_tv.zeroRecoveryBankFundingNumeraire();
+
+		if (null != jdeZeroCouponZeroRecoveryBankBondNumeraire)
+			dblFundingConstraint += jdeZeroCouponZeroRecoveryBankBondNumeraire.finish() *
+				_rpv.bankBondUnits();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponCollateralBondNumeraire =
+			_tv.collateralSchemeNumeraire();
+
+		if (null != jdeZeroCouponCollateralBondNumeraire)
+			dblFundingConstraint += jdeZeroCouponCollateralBondNumeraire.finish() * _rpv.cashAccount();
+
+		return dblFundingConstraint;
 	}
 }

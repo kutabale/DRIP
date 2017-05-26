@@ -107,7 +107,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		TradeablesContainer tcm = tes.universe();
 
-		double dblCollateralBondNumeraire = tcvmStart.zeroCouponCollateralBondNumeraire().finish();
+		double dblCollateralBondNumeraire = tcvmStart.collateralSchemeNumeraire().finish();
 
 		CloseOutBilateral cob = tes.boundaryCondition();
 
@@ -148,11 +148,11 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblAssetPriceFinish = tcvm.assetNumeraire().finish();
 
-		double dblZeroCouponBankPriceFinish = tcvm.zeroCouponBankBondNumeraire().finish();
+		double dblZeroCouponBankPriceFinish = tcvm.bankFundingNumeraire().finish();
 
-		double dblZeroCouponCounterPartyPriceFinish = tcvm.zeroCouponCounterPartyBondNumeraire()[0].finish();
+		double dblZeroCouponCounterPartyPriceFinish = tcvm.counterPartyFundingNumeraire()[0].finish();
 
-		ReplicationPortfolioVertex erpFinish = new ReplicationPortfolioVertex (
+		ReplicationPortfolioVertex erpFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
 			new double[] {dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish},
@@ -165,7 +165,7 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (dblAssetPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (tcvm.zeroCouponCollateralBondNumeraire().finish(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (tcvm.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpFinish.assetUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpFinish.bankBondUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpFinish.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
@@ -185,7 +185,7 @@ public class CorrelatedNumeraireXVAAttribution {
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				agvStart.derivativeFairValue() * Math.exp (
-					-1. * dblTimeWidth * tcm.zeroCouponCollateralBond().priceNumeraire().evaluator().drift().value (
+					-1. * dblTimeWidth * tcm.collateralScheme().numeraireEvolver().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -293,7 +293,7 @@ public class CorrelatedNumeraireXVAAttribution {
 			)
 		);
 
-		TradeablesContainer tcm = new TradeablesContainer (
+		TradeablesContainer tcm = TradeablesContainer.Standard (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -410,7 +410,7 @@ public class CorrelatedNumeraireXVAAttribution {
 		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue -
 			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValue}));
 
-		ReplicationPortfolioVertex erpInitial = new ReplicationPortfolioVertex (
+		ReplicationPortfolioVertex erpInitial = ReplicationPortfolioVertex.Standard (
 			1.,
 			dblGainOnBankDefaultInitial,
 			new double[] {dblGainOnCounterPartyDefaultInitial},
@@ -476,13 +476,13 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
 			dblTime,
-			new TradeablesVertex (
+			TradeablesVertex.Standard (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
 				new JumpDiffusionEdge[] {aJDECounterParty[iNumTimeStep - 1]}
 			),
-			new ReplicationPortfolioVertex (
+			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
 				new double[] {0.},
@@ -499,7 +499,7 @@ public class CorrelatedNumeraireXVAAttribution {
 				si,
 				bko,
 				eet,
-				new TradeablesVertex (
+				TradeablesVertex.Standard (
 					aJDEAsset[i],
 					aJDECollateral[i],
 					aJDEBank[i],

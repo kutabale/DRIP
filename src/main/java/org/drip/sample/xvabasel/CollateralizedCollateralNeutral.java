@@ -15,8 +15,8 @@ import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.NumerairePath;
-import org.drip.xva.universe.NumeraireVertex;
+import org.drip.xva.universe.MarketPath;
+import org.drip.xva.universe.MarketVertex;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -183,7 +183,7 @@ public class CollateralizedCollateralNeutral {
 		JulianDate dtSpot = DateUtil.Today();
 
 		double dblTimeWidth = dblTime / iNumStep;
-		NumeraireVertex[] aMV = new NumeraireVertex[iNumStep + 1];
+		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
@@ -207,7 +207,7 @@ public class CollateralizedCollateralNeutral {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aMV[i] = NumeraireVertex.Standard (
+			aMV[i] = MarketVertex.Standard (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
@@ -303,7 +303,7 @@ public class CollateralizedCollateralNeutral {
 				dblValueStart2 = dblValueEnd2;
 			}
 
-			NumerairePath mp = new NumerairePath (aMV);
+			MarketPath mp = new MarketPath (aMV);
 
 			HypothecationGroupPath[] aHGPGround = new HypothecationGroupPath[] {
 				new HypothecationGroupPath (aHGVR1)
@@ -508,9 +508,9 @@ public class CollateralizedCollateralNeutral {
 		final ExposureAdjustmentAggregator eaaExpanded)
 		throws Exception
 	{
-		OTCAccountingScheme oasFCAFBA = new OTCAccountingSchemeFCAFBA (eaaGround);
+		OTCAccountingModus oasFCAFBA = new OTCAccountingModusFCAFBA (eaaGround);
 
-		OTCAccountingScheme oasFVAFDA = new OTCAccountingSchemeFVAFDA (eaaGround);
+		OTCAccountingModus oasFVAFDA = new OTCAccountingModusFVAFDA (eaaGround);
 
 		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (eaaExpanded);
 
