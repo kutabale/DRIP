@@ -121,11 +121,12 @@ public class TradeablesVertex {
 		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire)
 		throws java.lang.Exception
 	{
-		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null == (_jdeCollateralSchemeNumeraire =
-			jdeCollateralSchemeNumeraire) || null == (_jdeBankFundingNumeraire = jdeBankFundingNumeraire) ||
-				null == (_aJDECounterPartyFundingNumeraire = aJDECounterPartyFundingNumeraire))
+		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null == (_aJDECounterPartyFundingNumeraire =
+			aJDECounterPartyFundingNumeraire))
 			throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
 
+		_jdeBankFundingNumeraire = jdeBankFundingNumeraire;
+		_jdeCollateralSchemeNumeraire = jdeCollateralSchemeNumeraire;
 		int iNumCounterParty = _aJDECounterPartyFundingNumeraire.length;
 		_jdeZeroRecoveryBankFundingNumeraire = jdeZeroRecoveryBankFundingNumeraire;
 

@@ -99,7 +99,7 @@ public class XVAExplain {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeablesVertex tcvmStart = etvStart.tradeableAssetSnapshot();
+		TradeablesVertex tcvmStart = etvStart.tradeablesVertex();
 
 		TradeablesContainer tcm = tes.universe();
 
@@ -203,9 +203,9 @@ public class XVAExplain {
 			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (tcvmFinish.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvFinish.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvFinish.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvFinish.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (lca.assetAccumulation(), 1, 6, 1.) + " | " +
@@ -412,9 +412,9 @@ public class XVAExplain {
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +

@@ -158,50 +158,63 @@ public class TrajectoryEvolutionScheme {
 
 		org.drip.xva.derivative.ReplicationPortfolioVertex rpvStart = etvStart.replicationPortfolioVertex();
 
-		double dblAssetUnitsStart = rpvStart.assetUnits();
+		double dblAssetNumeraireUnitsStart = rpvStart.assetNumeraireUnits();
 
-		double dblBankBondUnitsStart = rpvStart.bankBondUnits();
+		double dblBankNumeraireUnitsStart = rpvStart.bankNumeraireUnits();
 
-		double[] adblCounterPartyBondUnitsStart = rpvStart.counterPartyBondUnits();
+		double dblZeroRecoveryBankNumeraireUnitsStart = rpvStart.zeroRecoveryBankNumeraireUnits();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeAsset = tv.assetNumeraire();
+		double[] adblCounterPartyNumeraireUnitsStart = rpvStart.counterPartyNumeraireUnits();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankBond = tv.bankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire = tv.assetNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyBond =
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankNumeraire = tv.bankFundingNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankNumeraire =
+			tv.zeroRecoveryBankFundingNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyNumeraire =
 			tv.counterPartyFundingNumeraire();
 
-		double dblAssetCashChange = dblAssetUnitsStart * _tc.asset().cashAccumulationRate() *
-			jdeAsset.finish() * _dblTimeIncrement;
+		double dblAssetCashChange = dblAssetNumeraireUnitsStart * _tc.asset().cashAccumulationRate() *
+			jdeAssetNumeraire.finish() * _dblTimeIncrement;
 
 		double dblCounterPartyCashAccumulation = 0.;
 		double dblCounterPartyPositionValueChange = 0.;
-		int iNumCounterParty = aJDECounterPartyBond.length;
+		int iNumCounterParty = aJDECounterPartyNumeraire.length;
 
-		org.drip.xva.universe.Tradeable[] aTCounterPartyZeroCouponBond = _tc.counterPartyFunding();
+		org.drip.xva.universe.Tradeable[] aTCounterPartyNumeraire = _tc.counterPartyFunding();
 
-		if (aTCounterPartyZeroCouponBond.length != iNumCounterParty) return null;
+		if (aTCounterPartyNumeraire.length != iNumCounterParty) return null;
 
 		for (int i = 0; i < iNumCounterParty; ++i) {
-			dblCounterPartyCashAccumulation += adblCounterPartyBondUnitsStart[i] *
-				aTCounterPartyZeroCouponBond[i].cashAccumulationRate() * aJDECounterPartyBond[i].finish() *
+			dblCounterPartyCashAccumulation += adblCounterPartyNumeraireUnitsStart[i] *
+				aTCounterPartyNumeraire[i].cashAccumulationRate() * aJDECounterPartyNumeraire[i].finish() *
 					_dblTimeIncrement;
 
-			dblCounterPartyPositionValueChange += adblCounterPartyBondUnitsStart[i] *
-				aJDECounterPartyBond[i].grossChange();
+			dblCounterPartyPositionValueChange += adblCounterPartyNumeraireUnitsStart[i] *
+				aJDECounterPartyNumeraire[i].grossChange();
 		}
 
-		double dblCashAccountBalance = -1. * etvStart.assetGreekVertex().derivativeXVAValue() -
-			dblBankBondUnitsStart * jdeBankBond.finish();
+		double dblCashAccountBalance = -1. * etvStart.assetGreekVertex().derivativeXVAValue() - (null ==
+			jdeBankNumeraire ? 0. : dblBankNumeraireUnitsStart * jdeBankNumeraire.finish()) - (null ==
+				jdeZeroRecoveryBankNumeraire ? 0. : dblZeroRecoveryBankNumeraireUnitsStart *
+					jdeZeroRecoveryBankNumeraire.finish());
 
-		double dblBankCashAccumulation = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
-			_tc.collateralScheme().cashAccumulationRate() : _tc.bankFunding().cashAccumulationRate()) *
-				_dblTimeIncrement;
+		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
 
-		double dblDerivativeXVAValueChange = -1. * (dblAssetUnitsStart * jdeAsset.grossChange() +
-			dblBankBondUnitsStart * jdeBankBond.grossChange() + dblCounterPartyPositionValueChange +
-				(dblAssetCashChange + dblCounterPartyCashAccumulation + dblBankCashAccumulation) *
-					_dblTimeIncrement);
+		org.drip.xva.universe.Tradeable tBankFunding = _tc.bankFunding();
+
+		double dblBankCashAccumulation = dblCashAccountBalance * (dblCashAccountBalance > 0. ? (null ==
+			tCollateralScheme ? 0. : tCollateralScheme.cashAccumulationRate()) : (null == tBankFunding ? 0. :
+				tBankFunding.cashAccumulationRate())) * _dblTimeIncrement;
+
+		double dblDerivativeXVAValueChange = -1. * (dblAssetNumeraireUnitsStart *
+			jdeAssetNumeraire.grossChange() + (null == jdeBankNumeraire ? 0. : dblBankNumeraireUnitsStart *
+				jdeBankNumeraire.grossChange()) + (null == jdeZeroRecoveryBankNumeraire ? 0. :
+					dblZeroRecoveryBankNumeraireUnitsStart * jdeZeroRecoveryBankNumeraire.grossChange()) +
+						dblCounterPartyPositionValueChange + (dblAssetCashChange +
+							dblCounterPartyCashAccumulation + dblBankCashAccumulation) * _dblTimeIncrement);
 
 		try {
 			return new org.drip.xva.derivative.CashAccountRebalancer (new
@@ -243,8 +256,8 @@ public class TrajectoryEvolutionScheme {
 		int iNumCounterParty = aJDECounterParty.length;
 		double[] adblCloseOutMTM = new double[iNumCounterParty];
 		double[] adblGainOnBankDefault = new double[iNumCounterParty];
-		double[] adblCounterPartyBondUnits = new double[iNumCounterParty];
 		double[] adblGainOnCounterPartyDefault = new double[iNumCounterParty];
+		double[] adblCounterPartyNumeraireUnits = new double[iNumCounterParty];
 
 		double dblDerivativeXVAValue = agvFinish.derivativeXVAValue();
 
@@ -271,26 +284,29 @@ public class TrajectoryEvolutionScheme {
 			dblGainOnBankDefault += (adblGainOnBankDefault[i] = -1. * (dblDerivativeXVAValue -
 				adblCounterPartyGainOnBankDefault[i]));
 
-			adblCounterPartyBondUnits[i] = adblGainOnCounterPartyDefault[i] / aJDECounterParty[i].finish();
+			adblCounterPartyNumeraireUnits[i] = adblGainOnCounterPartyDefault[i] /
+				aJDECounterParty[i].finish();
 		}
 
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankFunding = tv.bankFundingNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFunding =
+			tv.zeroRecoveryBankFundingNumeraire();
+
 		try {
-			double dblBankBondUnits = dblGainOnBankDefault / tv.bankFundingNumeraire().finish();
-
-			org.drip.xva.derivative.ReplicationPortfolioVertex prv =
-				org.drip.xva.derivative.ReplicationPortfolioVertex.Standard (
-					-1. * agvFinish.derivativeXVAValueDelta(),
-					dblBankBondUnits,
-					adblCounterPartyBondUnits,
-					etvStart.replicationPortfolioVertex().cashAccount() + cae.accumulation()
-				);
-
 			return new org.drip.xva.derivative.EvolutionTrajectoryEdge (
 				etvStart,
 				new org.drip.xva.derivative.EvolutionTrajectoryVertex (
 					etvStart.time() + _dblTimeIncrement,
 					tv,
-					prv,
+					new org.drip.xva.derivative.ReplicationPortfolioVertex (
+						-1. * agvFinish.derivativeXVAValueDelta(),
+						null == jdeBankFunding ? 0. : dblGainOnBankDefault / jdeBankFunding.finish(),
+						null == jdeZeroRecoveryBankFunding ? 0. : dblGainOnBankDefault /
+							jdeZeroRecoveryBankFunding.finish(),
+						adblCounterPartyNumeraireUnits,
+						etvStart.replicationPortfolioVertex().cashAccount() + cae.accumulation()
+					),
 					agvFinish,
 					adblGainOnBankDefault,
 					adblGainOnCounterPartyDefault
@@ -351,8 +367,8 @@ public class TrajectoryEvolutionScheme {
 		int iNumCounterParty = aJDECounterParty.length;
 		double[] adblCloseOutMTM = new double[iNumCounterParty];
 		double[] adblGainOnBankDefaultFinish = new double[iNumCounterParty];
-		double[] adblCounterPartyBondUnitsFinish = new double[iNumCounterParty];
 		double[] adblGainOnCounterPartyDefaultFinish = new double[iNumCounterParty];
+		double[] adblCounterPartyNumeraireUnitsFinish = new double[iNumCounterParty];
 
 		double dblDerivativeXVAValueFinish = agvStart.derivativeXVAValue() - dblTheta * dblTimeWidth;
 
@@ -374,7 +390,7 @@ public class TrajectoryEvolutionScheme {
 				return null;
 			}
 
-			adblCounterPartyBondUnitsFinish[i] = adblGainOnCounterPartyDefaultFinish[i] /
+			adblCounterPartyNumeraireUnitsFinish[i] = adblGainOnCounterPartyDefaultFinish[i] /
 				aJDECounterParty[i].finish();
 		}
 
@@ -384,15 +400,24 @@ public class TrajectoryEvolutionScheme {
 
 		org.drip.xva.derivative.CashAccountEdge cae = car.cashAccount();
 
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankFunding = tv.bankFundingNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFunding =
+			tv.zeroRecoveryBankFundingNumeraire();
+
+		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
+
 		try {
 			org.drip.xva.derivative.EvolutionTrajectoryVertex etvFinish = new
 				org.drip.xva.derivative.EvolutionTrajectoryVertex (
 				dblTimeStart - dblTimeWidth,
 				tv,
-				org.drip.xva.derivative.ReplicationPortfolioVertex.Standard (
+				new org.drip.xva.derivative.ReplicationPortfolioVertex (
 					-1. * dblDerivativeXVAValueDeltaFinish,
-					dblGainOnBankDefaultFinish / tv.bankFundingNumeraire().finish(),
-					adblCounterPartyBondUnitsFinish,
+					null == jdeBankFunding ? 0. : dblGainOnBankDefaultFinish / jdeBankFunding.finish(),
+					null == jdeZeroRecoveryBankFunding ? 0. : dblGainOnBankDefaultFinish /
+						jdeZeroRecoveryBankFunding.finish(),
+					adblCounterPartyNumeraireUnitsFinish,
 					etvStart.replicationPortfolioVertex().cashAccount() + cae.accumulation()
 				),
 				new org.drip.xva.derivative.AssetGreekVertex (
@@ -402,13 +427,14 @@ public class TrajectoryEvolutionScheme {
 						(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) *
 						dblTimeWidth / (dblAssetNumeraireBump * dblAssetNumeraireBump),
 					agvStart.derivativeFairValue() * java.lang.Math.exp (
-						-1. * dblTimeWidth *
-						_tc.collateralScheme().numeraireEvolver().evaluator().drift().value (
-							new org.drip.measure.realization.JumpDiffusionVertex (
-								dblTimeStart - 0.5 * dblTimeWidth,
-								etvStart.tradeableAssetSnapshot().collateralSchemeNumeraire().finish(),
-								0.,
-								false
+						-1. * dblTimeWidth * (null == tCollateralScheme ? 0. :
+							tCollateralScheme.numeraireEvolver().evaluator().drift().value (
+								new org.drip.measure.realization.JumpDiffusionVertex (
+									dblTimeStart - 0.5 * dblTimeWidth,
+									etvStart.tradeablesVertex().collateralSchemeNumeraire().finish(),
+									0.,
+									false
+								)
 							)
 						)
 					)

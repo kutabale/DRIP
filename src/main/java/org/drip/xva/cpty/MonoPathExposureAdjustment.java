@@ -394,6 +394,7 @@ public class MonoPathExposureAdjustment implements org.drip.xva.cpty.PathExposur
 	}
 
 	@Override public double unilateralCreditAdjustment()
+		throws java.lang.Exception
 	{
 		int iNumCreditDebtGroup = _aCDGP.length;
 		double dblUnilateralCreditAdjustment = 0.;
@@ -406,6 +407,7 @@ public class MonoPathExposureAdjustment implements org.drip.xva.cpty.PathExposur
 	}
 
 	@Override public double bilateralCreditAdjustment()
+		throws java.lang.Exception
 	{
 		int iNumCreditDebtGroup = _aCDGP.length;
 		double dblBilateralCreditAdjustment = 0.;
@@ -418,11 +420,13 @@ public class MonoPathExposureAdjustment implements org.drip.xva.cpty.PathExposur
 	}
 
 	@Override public double creditAdjustment()
+		throws java.lang.Exception
 	{
 		return bilateralCreditAdjustment();
 	}
 
 	@Override public double contraLiabilityCreditAdjustment()
+		throws java.lang.Exception
 	{
 		int iNumCreditDebtGroup = _aCDGP.length;
 		double dblContraLiabilityCreditAdjustment = 0.;
@@ -448,6 +452,7 @@ public class MonoPathExposureAdjustment implements org.drip.xva.cpty.PathExposur
 	}
 
 	@Override public double fundingValueAdjustment()
+		throws java.lang.Exception
 	{
 		int iNumFundingGroup = _aFGP.length;
 		double dblFundingValueAdjustment = 0.;
@@ -459,6 +464,7 @@ public class MonoPathExposureAdjustment implements org.drip.xva.cpty.PathExposur
 	}
 
 	@Override public double fundingDebtAdjustment()
+		throws java.lang.Exception
 	{
 		int iNumFundingGroup = _aFGP.length;
 		double dblFundingDebtAdjustment = 0.;
@@ -504,6 +510,7 @@ public class MonoPathExposureAdjustment implements org.drip.xva.cpty.PathExposur
 	}
 
 	@Override public double totalAdjustment()
+		throws java.lang.Exception
 	{
 		double dblTotalAdjustment = 0.;
 		int iNumFundingGroup = _aFGP.length;

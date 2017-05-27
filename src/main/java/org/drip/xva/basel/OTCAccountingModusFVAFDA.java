@@ -73,45 +73,45 @@ public class OTCAccountingModusFVAFDA extends org.drip.xva.basel.OTCAccountingMo
 	/**
 	 * OTCAccountingModusFVAFDA Constructor
 	 * 
-	 * @param esa The Counter Party Group Aggregator Instance
+	 * @param eaa The Counter Party Group Aggregator Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public OTCAccountingModusFVAFDA (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator esa)
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaa)
 		throws java.lang.Exception
 	{
-		super (esa);
+		super (eaa);
 	}
 
 	@Override public double contraAssetAdjustment()
 	{
-		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		return esa.ucva().amount() + esa.fva().amount();
+		return eaa.ucva().amount() + eaa.fva().amount();
 	}
 
 	@Override public double contraLiabilityAdjustment()
 	{
-		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		return esa.cvacl().amount() + esa.dva().amount() + esa.fda().amount();
+		return eaa.cvacl().amount() + eaa.dva().amount() + eaa.fda().amount();
 	}
 
 	@Override public org.drip.xva.basel.OTCAccountingPolicy feePolicy (
-		final org.drip.xva.cpty.ExposureAdjustmentAggregator esaNext)
+		final org.drip.xva.cpty.ExposureAdjustmentAggregator eaaNext)
 	{
-		if (null == esaNext) return null;
+		if (null == eaaNext) return null;
 
-		org.drip.xva.cpty.ExposureAdjustmentAggregator esa = aggregator();
+		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		double dblIncome = esaNext.dva().amount() + esaNext.fda().amount() + esaNext.cvacl().amount() -
-			esa.dva().amount() - esa.fda().amount() - esa.cvacl().amount();
+		double dblIncome = eaaNext.dva().amount() + eaaNext.fda().amount() + eaaNext.cvacl().amount() -
+			eaa.dva().amount() - eaa.fda().amount() - eaa.cvacl().amount();
 
 		try {
-			return new org.drip.xva.basel.OTCAccountingPolicy (esaNext.ucva().amount() +
-				esaNext.fva().amount() - esa.ucva().amount() - esa.fva().amount(), 0., dblIncome, dblIncome);
+			return new org.drip.xva.basel.OTCAccountingPolicy (eaaNext.ucva().amount() +
+				eaaNext.fva().amount() - eaa.ucva().amount() - eaa.fva().amount(), 0., dblIncome, dblIncome);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

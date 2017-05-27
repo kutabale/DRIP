@@ -99,7 +99,7 @@ public class XVAGreeks {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeablesVertex tcvmStart = etvStart.tradeableAssetSnapshot();
+		TradeablesVertex tcvmStart = etvStart.tradeablesVertex();
 
 		TradeablesContainer tcm = tes.universe();
 

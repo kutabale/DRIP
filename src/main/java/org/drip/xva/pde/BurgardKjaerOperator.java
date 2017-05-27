@@ -77,7 +77,7 @@ public class BurgardKjaerOperator {
 	/**
 	 * BurgardKjaerOperator Constructor
 	 * 
-	 * @param tc The Universe of Trade-able Assets
+	 * @param tc The Universe of Tradeable Assets
 	 * @param cob The Master Agreement Close Out Boundary Conditions
 	 * @param pdeec The XVA Control Settings
 	 * 
@@ -144,7 +144,7 @@ public class BurgardKjaerOperator {
 
 		double dblTime = etv.time();
 
-		org.drip.xva.universe.TradeablesVertex tv = etv.tradeableAssetSnapshot();
+		org.drip.xva.universe.TradeablesVertex tv = etv.tradeablesVertex();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
@@ -168,6 +168,8 @@ public class BurgardKjaerOperator {
 			dblGainOnCounterPartyDefault += adblCounterPartyDefaultIntensity[i] *
 				adblBankGainOnCounterPartyDefault[i];
 
+		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
+
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
 				(_tc.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
@@ -179,7 +181,7 @@ public class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
-				_tc.collateralScheme().numeraireEvolver().evaluator().volatility().value (
+				null == tCollateralScheme ? 0. : tCollateralScheme.numeraireEvolver().evaluator().volatility().value (
 					new org.drip.measure.realization.JumpDiffusionVertex (
 						dblTime,
 						tv.collateralSchemeNumeraire().finish(),
@@ -221,7 +223,7 @@ public class BurgardKjaerOperator {
 
 		double[] adblCounterPartyRecovery = _cob.counterPartyRecovery();
 
-		org.drip.xva.universe.TradeablesVertex tv = etv.tradeableAssetSnapshot();
+		org.drip.xva.universe.TradeablesVertex tv = etv.tradeablesVertex();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
@@ -246,6 +248,8 @@ public class BurgardKjaerOperator {
 				(dblCloseOutMTM < 0. ? dblCloseOutMTM : adblCounterPartyRecovery[i] * dblCloseOutMTM);
 		}
 
+		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
+
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
 				(_tc.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
@@ -257,7 +261,7 @@ public class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
-				_tc.collateralScheme().numeraireEvolver().evaluator().volatility().value (
+				null == tCollateralScheme ? 0. : tCollateralScheme.numeraireEvolver().evaluator().volatility().value (
 					new org.drip.measure.realization.JumpDiffusionVertex (
 						dblTime,
 						tv.collateralSchemeNumeraire().finish(),

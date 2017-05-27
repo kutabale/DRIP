@@ -69,32 +69,32 @@ package org.drip.xva.derivative;
  */
 
 public class ReplicationPortfolioVertex {
-	private double[] _adblCounterPartyBondUnits = null;
-	private double _dblAssetUnits = java.lang.Double.NaN;
 	private double _dblCashAccount = java.lang.Double.NaN;
-	private double _dblBankBondUnits = java.lang.Double.NaN;
-	private double _dblZeroRecoveryBankBondUnits = java.lang.Double.NaN;
+	private double[] _adblCounterPartyNumeraireUnits = null;
+	private double _dblBankNumeraireUnits = java.lang.Double.NaN;
+	private double _dblAssetNumeraireUnits = java.lang.Double.NaN;
+	private double _dblZeroRecoveryBankNumeraireUnits = java.lang.Double.NaN;
 
 	/**
-	 * Construct a ReplicationPortfolioVertex Instance without the Zero Recovery Bonds
+	 * Construct a ReplicationPortfolioVertex Instance without the Zero Recovery Bank Numeraire
 	 * 
-	 * @param dblAssetUnits The Asset Replication Units
-	 * @param dblBankBondUnits The Zero Coupon Bank Bond Replication Units
-	 * @param adblCounterPartyBondUnits The Array of Counter Party Zero Coupon Bond Replication Units
+	 * @param dblAssetNumeraireUnits The Asset Numeraire Units
+	 * @param dblBankNumeraireUnits The Bank Numeraire Units
+	 * @param adblCounterPartyNumeraireUnits The Array of Counter Party Numeraire Replication Units
 	 * @param dblCashAccount The Cash Account
 	 * 
-	 * @return The ReplicationPortfolioVertex Instance without the Zero Recovery Bonds
+	 * @return The ReplicationPortfolioVertex Instance without the Zero Recovery Bank Numeraire
 	 */
 
 	public static final ReplicationPortfolioVertex Standard (
-		final double dblAssetUnits,
-		final double dblBankBondUnits,
-		final double[] adblCounterPartyBondUnits,
+		final double dblAssetNumeraireUnits,
+		final double dblBankNumeraireUnits,
+		final double[] adblCounterPartyNumeraireUnits,
 		final double dblCashAccount)
 	{
 		try {
-			return new ReplicationPortfolioVertex (dblAssetUnits, dblBankBondUnits, 0.,
-				adblCounterPartyBondUnits, dblCashAccount);
+			return new ReplicationPortfolioVertex (dblAssetNumeraireUnits, dblBankNumeraireUnits, 0.,
+				adblCounterPartyNumeraireUnits, dblCashAccount);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -105,75 +105,76 @@ public class ReplicationPortfolioVertex {
 	/**
 	 * ReplicationPortfolioVertex Constructor
 	 * 
-	 * @param dblAssetUnits The Asset Replication Units
-	 * @param dblBankBondUnits The Zero Coupon Bank Bond Replication Units
-	 * @param dblZeroRecoveryBankBondUnits The Zero Coupon Zero Recovery Bank Bond Replication Units
-	 * @param adblCounterPartyBondUnits The Array of Counter Party Zero Coupon Bond Replication Units
+	 * @param dblAssetNumeraireUnits The Asset Numeraire Units
+	 * @param dblBankNumeraireUnits The Bank Numeraire Units
+	 * @param dblZeroRecoveryBankNumeraireUnits The Zero Recovery Bank Numeraire Units
+	 * @param adblCounterPartyNumeraireUnits The Array of Counter Party Numeraire Units
 	 * @param dblCashAccount The Cash Account
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public ReplicationPortfolioVertex (
-		final double dblAssetUnits,
-		final double dblBankBondUnits,
-		final double dblZeroRecoveryBankBondUnits,
-		final double[] adblCounterPartyBondUnits,
+		final double dblAssetNumeraireUnits,
+		final double dblBankNumeraireUnits,
+		final double dblZeroRecoveryBankNumeraireUnits,
+		final double[] adblCounterPartyNumeraireUnits,
 		final double dblCashAccount)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetUnits = dblAssetUnits) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankBondUnits = dblBankBondUnits) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblZeroRecoveryBankBondUnits =
-					dblZeroRecoveryBankBondUnits) || !org.drip.quant.common.NumberUtil.IsValid
-						(_adblCounterPartyBondUnits = adblCounterPartyBondUnits) || 0 >=
-							_adblCounterPartyBondUnits.length || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblCashAccount = dblCashAccount))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetNumeraireUnits = dblAssetNumeraireUnits) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankNumeraireUnits = dblBankNumeraireUnits) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblZeroRecoveryBankNumeraireUnits =
+					dblZeroRecoveryBankNumeraireUnits) || !org.drip.quant.common.NumberUtil.IsValid
+						(_adblCounterPartyNumeraireUnits = adblCounterPartyNumeraireUnits) || 0 >=
+							_adblCounterPartyNumeraireUnits.length ||
+								!org.drip.quant.common.NumberUtil.IsValid (_dblCashAccount =
+									dblCashAccount))
 			throw new java.lang.Exception ("ReplicationPortfolioVertex Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Number of Asset Replication Units
+	 * Retrieve the Number of Asset Numeraire Units
 	 * 
-	 * @return The Number of Asset Replication Units
+	 * @return The Number of Asset Numeraire Units
 	 */
 
-	public double assetUnits()
+	public double assetNumeraireUnits()
 	{
-		return _dblAssetUnits;
+		return _dblAssetNumeraireUnits;
 	}
 
 	/**
-	 * Retrieve the Number of Zero Coupon Bank Bond Replication Units
+	 * Retrieve the Number of Bank Numeraire Units
 	 * 
-	 * @return The Number of Zero Coupon Bank Bond Replication Units
+	 * @return The Number of Bank Numeraire Units
 	 */
 
-	public double bankBondUnits()
+	public double bankNumeraireUnits()
 	{
-		return _dblBankBondUnits;
+		return _dblBankNumeraireUnits;
 	}
 
 	/**
-	 * Retrieve the Number of Zero Coupon Zero Recovery Bank Bond Replication Units
+	 * Retrieve the Number of Zero Recovery Bank Numeraire Units
 	 * 
-	 * @return The Number of Zero Coupon Zero Recovery Bank Bond Replication Units
+	 * @return The Number of Zero Recovery Bank Numeraire Units
 	 */
 
-	public double zeroRecoveryBankBondUnits()
+	public double zeroRecoveryBankNumeraireUnits()
 	{
-		return _dblZeroRecoveryBankBondUnits;
+		return _dblZeroRecoveryBankNumeraireUnits;
 	}
 
 	/**
-	 * Retrieve the Number of Counter Party Zero Coupon Bond Replication Units
+	 * Retrieve the Array of Counter Party Numeraire Units
 	 * 
-	 * @return The Number of Counter Party Zero Coupon Bond Replication Units
+	 * @return The Array of Counter Party Numeraire Units
 	 */
 
-	public double[] counterPartyBondUnits()
+	public double[] counterPartyNumeraireUnits()
 	{
-		return _adblCounterPartyBondUnits;
+		return _adblCounterPartyNumeraireUnits;
 	}
 
 	/**
@@ -190,7 +191,7 @@ public class ReplicationPortfolioVertex {
 	/**
 	 * Compute the Market Value of the Portfolio
 	 * 
-	 * @param tcvm The Trade-able Asset Market Snapshot
+	 * @param tv The Trade-able Asset Market Snapshot
 	 * 
 	 * @return The Market Value of the Portfolio
 	 * 
@@ -198,21 +199,32 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double value (
-		final org.drip.xva.universe.TradeablesVertex tcvm)
+		final org.drip.xva.universe.TradeablesVertex tv)
 		throws java.lang.Exception
 	{
-		if (null == tcvm)
+		if (null == tv)
 			throw new java.lang.Exception ("ReplicationPortfolioVertex::value => Invalid Inputs");
 
-		double dblCounterPartyBondValue = 0.;
-		int iNumCounterPartyBondUnits = _adblCounterPartyBondUnits.length;
+		double dblValue = -1. * _dblAssetNumeraireUnits * tv.assetNumeraire().finish() - _dblCashAccount;
 
-		org.drip.measure.realization.JumpDiffusionEdge[] aJDE = tcvm.counterPartyFundingNumeraire();
+		int iNumCounterParty = _adblCounterPartyNumeraireUnits.length;
 
-		for (int i = 0; i < iNumCounterPartyBondUnits; ++i)
-			dblCounterPartyBondValue = _adblCounterPartyBondUnits[i] * aJDE[i].finish();
+		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterParty =
+			tv.counterPartyFundingNumeraire();
 
-		return -1. * (_dblAssetUnits * tcvm.assetNumeraire().finish() + _dblBankBondUnits *
-			tcvm.bankFundingNumeraire().finish() + dblCounterPartyBondValue + _dblCashAccount);
+		for (int i = 0; i < iNumCounterParty; ++i)
+			dblValue -= _adblCounterPartyNumeraireUnits[i] * aJDECounterParty[i].finish();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankFunding = tv.bankFundingNumeraire();
+
+		if (null != jdeBankFunding) dblValue -= jdeBankFunding.finish() * _dblBankNumeraireUnits;
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFunding =
+			tv.zeroRecoveryBankFundingNumeraire();
+
+		if (null != jdeZeroRecoveryBankFunding)
+			dblValue -= jdeZeroRecoveryBankFunding.finish() * _dblZeroRecoveryBankNumeraireUnits;
+
+		return dblValue;
 	}
 }

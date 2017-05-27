@@ -110,5 +110,4 @@ public class RollUpGroupSpecification {
 	{
 		return _strName;
 	}
-
 }

@@ -111,6 +111,7 @@ public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroup
 	}
 
 	@Override public double creditAdjustment()
+		throws java.lang.Exception
 	{
 		return bilateralCreditAdjustment();
 	}
@@ -121,6 +122,7 @@ public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroup
 	}
 
 	@Override public double[] periodCreditAdjustment()
+		throws java.lang.Exception
 	{
 		return periodBilateralCreditAdjustment();
 	}

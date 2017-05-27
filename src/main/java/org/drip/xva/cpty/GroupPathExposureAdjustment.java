@@ -388,6 +388,7 @@ public class GroupPathExposureAdjustment implements org.drip.xva.cpty.PathExposu
 	}
 
 	@Override public double unilateralCreditAdjustment()
+		throws java.lang.Exception
 	{
 		double dblUnilateralCreditAdjustment = 0.;
 		int iNumCounterPartyGroup = _aMPEA.length;
@@ -400,6 +401,7 @@ public class GroupPathExposureAdjustment implements org.drip.xva.cpty.PathExposu
 	}
 
 	@Override public double bilateralCreditAdjustment()
+		throws java.lang.Exception
 	{
 		double dblBilateralCreditAdjustment = 0.;
 		int iNumCounterPartyGroup = _aMPEA.length;
@@ -412,11 +414,13 @@ public class GroupPathExposureAdjustment implements org.drip.xva.cpty.PathExposu
 	}
 
 	@Override public double creditAdjustment()
+		throws java.lang.Exception
 	{
 		return bilateralCreditAdjustment();
 	}
 
 	@Override public double contraLiabilityCreditAdjustment()
+		throws java.lang.Exception
 	{
 		int iNumCounterPartyGroup = _aMPEA.length;
 		double dblContraLiabilityCreditAdjustment = 0.;
@@ -442,6 +446,7 @@ public class GroupPathExposureAdjustment implements org.drip.xva.cpty.PathExposu
 	}
 
 	@Override public double fundingValueAdjustment()
+		throws java.lang.Exception
 	{
 		double dblFundingValueAdjustment = 0.;
 		int iNumCounterPartyGroup = _aMPEA.length;
@@ -454,6 +459,7 @@ public class GroupPathExposureAdjustment implements org.drip.xva.cpty.PathExposu
 	}
 
 	@Override public double fundingDebtAdjustment()
+			throws java.lang.Exception
 	{
 		double dblFundingDebtAdjustment = 0.;
 		int iNumCounterPartyGroup = _aMPEA.length;
@@ -503,6 +509,7 @@ public class GroupPathExposureAdjustment implements org.drip.xva.cpty.PathExposu
 	}
 
 	@Override public double totalAdjustment()
+		throws java.lang.Exception
 	{
 		double dblTotalAdjustment = 0.;
 		int iNumCounterPartyGroup = _aMPEA.length;

@@ -65,21 +65,21 @@ package org.drip.xva.universe;
  */
 
 public class MarketVertex {
-	private double _dblCSASpread = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
-	private double _dblOvernightPolicyIndex = java.lang.Double.NaN;
-	private org.drip.xva.universe.EntityMarketVertex _envBank = null;
-	private org.drip.xva.universe.EntityMarketVertex _envCounterParty = null;
+	private double _dblCollateralSchemeSpread = java.lang.Double.NaN;
+	private org.drip.xva.universe.EntityMarketVertex _emvBank = null;
+	private double _dblOvernightPolicyIndexRate = java.lang.Double.NaN;
+	private org.drip.xva.universe.EntityMarketVertex[] _aEMVCounterParty = null;
 
 	/**
 	 * Construct a Standard Instance of the MarketVertex
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Rate
+	 * @param dblOvernightPolicyIndexRate The Realized Overnight Policy Index Rate
 	 * @param dblBankSurvival The Realized Bank Survival Rate
 	 * @param dblBankRecovery The Realized Bank Recovery Rate
 	 * @param dblBankFundingSpread The Bank Funding Spread
-	 * @param dblCounterPartySurvival The Realized Counter Party Survival Rate
+	 * @param dblCounterPartySurvival The Realized Counter Party Survival Probaility
 	 * @param dblCounterPartyRecovery The Realized Counter Party Recovery Rate
 	 * 
 	 * @return The Standard Instance of MarketVertex
@@ -87,7 +87,7 @@ public class MarketVertex {
 
 	public static final MarketVertex Standard (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblOvernightPolicyIndex,
+		final double dblOvernightPolicyIndexRate,
 		final double dblBankSurvival,
 		final double dblBankRecovery,
 		final double dblBankFundingSpread,
@@ -97,7 +97,7 @@ public class MarketVertex {
 		try {
 			return new MarketVertex (
 				dtAnchor,
-				dblOvernightPolicyIndex,
+				dblOvernightPolicyIndexRate,
 				0.,
 				new org.drip.xva.universe.EntityMarketVertex (
 					dblBankSurvival,
@@ -105,12 +105,14 @@ public class MarketVertex {
 					dblBankFundingSpread / (1. - dblBankRecovery),
 					dblBankFundingSpread
 				),
-				new org.drip.xva.universe.EntityMarketVertex (
-					dblCounterPartySurvival,
-					dblCounterPartyRecovery,
-					0.,
-					0.
-				)
+				new org.drip.xva.universe.EntityMarketVertex[] {
+					new org.drip.xva.universe.EntityMarketVertex (
+						dblCounterPartySurvival,
+						dblCounterPartyRecovery,
+						0.,
+						0.
+					)
+				}
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -123,27 +125,38 @@ public class MarketVertex {
 	 * MarketVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblOvernightPolicyIndex The Realized Overnight Policy Index Rate
-	 * @param dblCSASpread The Realized CSA Spread
-	 * @param envBank Bank Entity Market Vertex Instance
-	 * @param envCounterParty Counter Party Market Vertex Instance
+	 * @param dblOvernightPolicyIndexRate The Realized Overnight Policy Index Rate
+	 * @param dblCollateralSchemeSpread The Realized Collateral Scheme Spread
+	 * @param emvBank Bank Entity Market Vertex Instance
+	 * @param aEMVCounterParty Array of Counter Party Market Vertex Instances
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public MarketVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblOvernightPolicyIndex,
-		final double dblCSASpread,
-		final org.drip.xva.universe.EntityMarketVertex envBank,
-		final org.drip.xva.universe.EntityMarketVertex envCounterParty)
+		final double dblOvernightPolicyIndexRate,
+		final double dblCollateralSchemeSpread,
+		final org.drip.xva.universe.EntityMarketVertex emvBank,
+		final org.drip.xva.universe.EntityMarketVertex[] aEMVCounterParty)
 		throws java.lang.Exception
 	{
 		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblOvernightPolicyIndex = dblOvernightPolicyIndex) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblCSASpread = dblCSASpread) || null == (_envBank = envBank) || null == (_envCounterParty =
-					envCounterParty))
+			(_dblOvernightPolicyIndexRate = dblOvernightPolicyIndexRate) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralSchemeSpread =
+					dblCollateralSchemeSpread) || null == (_emvBank = emvBank) || null ==
+						(_aEMVCounterParty = aEMVCounterParty))
 			throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
+
+		int iNumCounterParty = _aEMVCounterParty.length;
+
+		if (0 == iNumCounterParty)
+			throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumCounterParty; ++i) {
+			if (null == _aEMVCounterParty[i])
+				throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
+		}
 	}
 
 	/**
@@ -163,31 +176,31 @@ public class MarketVertex {
 	 * @return The Realized Overnight Policy Index Rate
 	 */
 
-	public double overnightPolicyIndex()
+	public double overnightPolicyIndexRate()
 	{
-		return _dblOvernightPolicyIndex;
+		return _dblOvernightPolicyIndexRate;
 	}
 
 	/**
-	 * Retrieve the Realized CSA Spread Rate
+	 * Retrieve the Realized Spread over the Overnight Policy Rate corresponding to the Collateral Scheme
 	 * 
-	 * @return The Realized CSA Spread Rate
+	 * @return The Realized Spread over the Overnight Policy Rate corresponding to the Collateral Scheme
 	 */
 
-	public double csaSpread()
+	public double collateralSchemeSpread()
 	{
-		return _dblCSASpread;
+		return _dblCollateralSchemeSpread;
 	}
 
 	/**
-	 * Retrieve the Realized CSA Rate
+	 * Retrieve the Realized Collateral Scheme Rate
 	 * 
-	 * @return The Realized CSA Rate
+	 * @return The Realized Collateral Scheme Rate
 	 */
 
-	public double csa()
+	public double collateralSchemeRate()
 	{
-		return _dblOvernightPolicyIndex * _dblCSASpread;
+		return _dblOvernightPolicyIndexRate + _dblCollateralSchemeSpread;
 	}
 
 	/**
@@ -198,18 +211,18 @@ public class MarketVertex {
 
 	public org.drip.xva.universe.EntityMarketVertex bankMarket()
 	{
-		return _envBank;
+		return _emvBank;
 	}
 
 	/**
-	 * Retrieve the Realized Counter Party Market Vertex
+	 * Retrieve the Array of Realized Counter Party Market Vertexes
 	 * 
-	 * @return The Realized Counter Party Market Vertex
+	 * @return The Array of Realized Counter Party Market Vertexes
 	 */
 
-	public org.drip.xva.universe.EntityMarketVertex counterPartyMarket()
+	public org.drip.xva.universe.EntityMarketVertex[] counterPartyMarket()
 	{
-		return _envCounterParty;
+		return _aEMVCounterParty;
 	}
 
 	/**
@@ -220,7 +233,7 @@ public class MarketVertex {
 
 	public double bankHazard()
 	{
-		return _envBank.hazard();
+		return _emvBank.hazard();
 	}
 
 	/**
@@ -231,7 +244,7 @@ public class MarketVertex {
 
 	public double bankSurvival()
 	{
-		return _envBank.survival();
+		return _emvBank.survival();
 	}
 
 	/**
@@ -242,7 +255,7 @@ public class MarketVertex {
 
 	public double bankRecovery()
 	{
-		return _envBank.recovery();
+		return _emvBank.recovery();
 	}
 
 	/**
@@ -253,28 +266,80 @@ public class MarketVertex {
 
 	public double bankFundingSpread()
 	{
-		return _envBank.fundingSpread();
+		return _emvBank.fundingSpread();
 	}
 
 	/**
-	 * Retrieve the Realized Counter Party Survival Numeraire
+	 * Retrieve the Array of Realized Counter Party Survival Probabilities
 	 * 
-	 * @return The Realized Counter Party Survival Numeraire
+	 * @return The Array of Realized Counter Party Survival Probabilities
 	 */
 
-	public double counterPartySurvival()
+	public double[] counterPartySurvival()
 	{
-		return _envCounterParty.survival();
+		int iNumCounterParty = _aEMVCounterParty.length;
+		double[] adblCounterPartySurvival = new double[iNumCounterParty];
+
+		for (int i = 0; i < iNumCounterParty; ++i)
+			adblCounterPartySurvival[i] = _aEMVCounterParty[i].survival();
+
+		return adblCounterPartySurvival;
+	}
+
+	/**
+	 * Retrieve the Array of Realized Counter Party Recovery Rates
+	 * 
+	 * @return The Array of Realized Counter Party Recovery Rates
+	 */
+
+	public double[] counterPartyRecovery()
+	{
+		int iNumCounterParty = _aEMVCounterParty.length;
+		double[] adblCounterPartyRecovery = new double[iNumCounterParty];
+
+		for (int i = 0; i < iNumCounterParty; ++i)
+			adblCounterPartyRecovery[i] = _aEMVCounterParty[i].recovery();
+
+		return adblCounterPartyRecovery;
+	}
+
+	/**
+	 * Retrieve the Realized Counter Party Survival Probability
+	 * 
+	 * @param iCounterParty The Counter Party Index
+	 * 
+	 * @return The Realized Counter Party Survival Probability
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double counterPartySurvival (
+		final int iCounterParty)
+		throws java.lang.Exception
+	{
+		if (iCounterParty >= _aEMVCounterParty.length)
+			throw new java.lang.Exception ("MarketVertex::counterPartySurvival => Invalid Inputs");
+
+		return _aEMVCounterParty[iCounterParty].survival();
 	}
 
 	/**
 	 * Retrieve the Realized Counter Party Recovery Rate
 	 * 
+	 * @param iCounterParty The Counter Party Index
+	 * 
 	 * @return The Realized Counter Party Recovery Rate
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double counterPartyRecovery()
+	public double counterPartyRecovery (
+		final int iCounterParty)
+		throws java.lang.Exception
 	{
-		return _envCounterParty.recovery();
+		if (iCounterParty >= _aEMVCounterParty.length)
+			throw new java.lang.Exception ("MarketVertex::counterPartyRecovery => Invalid Inputs");
+
+		return _aEMVCounterParty[iCounterParty].recovery();
 	}
 }

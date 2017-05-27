@@ -47,9 +47,9 @@ package org.drip.xva.definition;
  */
 
 /**
- * Equity describes a Trade-able Equity. The References are:
+ * Equity describes a Tradeable Equity. The References are:
  *  
- *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
+ *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter Party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
  *  - Cesari, G., J. Aquilina, N. Charpillon, X. Filipovic, G. Lee, and L. Manda (2009): Modeling, Pricing,
@@ -73,7 +73,7 @@ public class Equity extends org.drip.xva.universe.Tradeable {
 	/**
 	 * Equity Constructor
 	 * 
-	 * @param dePriceNumeraire The Equity Price Numeraire
+	 * @param deNumeraire The Equity Price Numeraire
 	 * @param dblRepoRate The Equity Repo Rate
 	 * @param dblDividendRate The Equity Dividend Rate
 	 * 
@@ -81,12 +81,12 @@ public class Equity extends org.drip.xva.universe.Tradeable {
 	 */
 
 	public Equity (
-		final org.drip.measure.process.DiffusionEvolver dePriceNumeraire,
+		final org.drip.measure.process.DiffusionEvolver deNumeraire,
 		final double dblRepoRate,
 		final double dblDividendRate)
 		throws java.lang.Exception
 	{
-		super (dePriceNumeraire, dblRepoRate);
+		super (deNumeraire, dblRepoRate);
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblDividendRate = dblDividendRate))
 			throw new java.lang.Exception ("Equity Constructor => Invalid Inputs");

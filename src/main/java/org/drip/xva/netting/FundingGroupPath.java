@@ -111,9 +111,12 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	 * Compute Path Bilateral Funding Value Adjustment
 	 * 
 	 * @return The Path Bilateral Funding Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double bilateralFundingValueAdjustment()
+		throws java.lang.Exception
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -125,11 +128,11 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bankSurvival() * aMV[iVertexIndex - 1].bankFundingSpread() *
-					aMV[iVertexIndex - 1].counterPartySurvival();
+					aMV[iVertexIndex - 1].counterPartySurvival (0);
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bankSurvival() * aMV[iVertexIndex].bankFundingSpread() *
-					aMV[iVertexIndex].counterPartySurvival();
+					aMV[iVertexIndex].counterPartySurvival (0);
 
 			dblBilateralFundingValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -171,9 +174,12 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	 * Compute Path Bilateral Funding Debt Adjustment
 	 * 
 	 * @return The Path Bilateral Funding Debt Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double bilateralFundingDebtAdjustment()
+		throws java.lang.Exception
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -185,11 +191,11 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bankSurvival() * (1. - aMV[iVertexIndex - 1].bankRecovery()) *
-					aMV[iVertexIndex - 1].bankHazard() * aMV[iVertexIndex - 1].counterPartySurvival();
+					aMV[iVertexIndex - 1].bankHazard() * aMV[iVertexIndex - 1].counterPartySurvival (0);
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bankSurvival() * (1. - aMV[iVertexIndex].bankRecovery()) *
-					aMV[iVertexIndex].bankHazard() * aMV[iVertexIndex].counterPartySurvival();
+					aMV[iVertexIndex].bankHazard() * aMV[iVertexIndex].counterPartySurvival (0);
 
 			dblBilateralFundingDebtAdjustment += 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -263,9 +269,12 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	 * Compute Period-wise Bilateral Path Funding Value Adjustment
 	 * 
 	 * @return The Period-wise Bilateral Path Funding Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double[] periodBilateralFundingValueAdjustment()
+		throws java.lang.Exception
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -277,11 +286,11 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bankSurvival() * (1. - aMV[iVertexIndex - 1].bankRecovery()) *
-					aMV[iVertexIndex - 1].bankHazard() * aMV[iVertexIndex - 1].counterPartySurvival();
+					aMV[iVertexIndex - 1].bankHazard() * aMV[iVertexIndex - 1].counterPartySurvival (0);
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bankSurvival() * (1. - aMV[iVertexIndex].bankRecovery()) *
-					aMV[iVertexIndex].bankHazard() * aMV[iVertexIndex].counterPartySurvival();
+					aMV[iVertexIndex].bankHazard() * aMV[iVertexIndex].counterPartySurvival (0);
 
 			adblBilateralFundingDebtAdjustment[iVertexIndex - 1] = 0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -
@@ -325,9 +334,12 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	 * Compute Period-wise Path Bilateral Funding Debt Adjustment
 	 * 
 	 * @return The Period-wise Path Bilateral Funding Debt Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double[] periodBilateralFundingDebtAdjustment()
+		throws java.lang.Exception
 	{
 		double[] adblCollateralizedPositiveExposurePV = collateralizedPositiveExposurePV();
 
@@ -339,11 +351,11 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bankSurvival() * (1. - aMV[iVertexIndex - 1].bankRecovery()) *
-					aMV[iVertexIndex - 1].bankHazard() * aMV[iVertexIndex - 1].counterPartySurvival();
+					aMV[iVertexIndex - 1].bankHazard() * aMV[iVertexIndex - 1].counterPartySurvival (0);
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bankSurvival() * (1. - aMV[iVertexIndex].bankRecovery()) *
-					aMV[iVertexIndex].bankHazard() * aMV[iVertexIndex].counterPartySurvival();
+					aMV[iVertexIndex].bankHazard() * aMV[iVertexIndex].counterPartySurvival (0);
 
 			adblBilateralFundingDebtAdjustment[iVertexIndex - 1] = 0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -
@@ -387,17 +399,23 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	 * Compute Path Funding Value Adjustment
 	 * 
 	 * @return The Path Funding Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double fundingValueAdjustment();
+	public abstract double fundingValueAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Path Funding Debt Adjustment
 	 * 
 	 * @return The Path Funding Debt Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double fundingDebtAdjustment();
+	public abstract double fundingDebtAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Path Funding Cost Adjustment
@@ -419,17 +437,23 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 	 * Compute Period-wise Path Funding Value Adjustment
 	 * 
 	 * @return The Period-wise Path Funding Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double[] periodFundingValueAdjustment();
+	public abstract double[] periodFundingValueAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Period-wise Path Funding Debt Adjustment
 	 * 
 	 * @return The Period-wise Path Funding Debt Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double[] periodFundingDebtAdjustment();
+	public abstract double[] periodFundingDebtAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Period-wise Path Funding Cost Adjustment

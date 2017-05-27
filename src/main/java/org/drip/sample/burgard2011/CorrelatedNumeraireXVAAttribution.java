@@ -103,7 +103,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeablesVertex tcvmStart = etvStart.tradeableAssetSnapshot();
+		TradeablesVertex tcvmStart = etvStart.tradeablesVertex();
 
 		TradeablesContainer tcm = tes.universe();
 
@@ -166,9 +166,9 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (tcvm.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erpFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erpFinish.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erpFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (bkea.derivativeXVAFundingGrowth(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (bkea.derivativeXVABankDefaultGrowth(), 1, 6, 1.) + " | " +
@@ -464,9 +464,9 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (aJDEBank[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aJDECounterParty[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aJDECollateral[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erpInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erpInitial.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erpInitial.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +

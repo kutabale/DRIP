@@ -69,8 +69,8 @@ package org.drip.xva.collateral;
 
 public class HypothecationAmountEstimator {
 	private double _dblCurrentBalance = java.lang.Double.NaN;
-	private org.drip.measure.bridge.BrokenDateInterpolator _bdi = null;
 	private org.drip.xva.set.CollateralGroupSpecification _cgs = null;
+	private org.drip.measure.bridge.BrokenDateInterpolator _bdi = null;
 	private org.drip.xva.set.CounterPartyGroupSpecification _cpgs = null;
 
 	/**
@@ -248,10 +248,10 @@ public class HypothecationAmountEstimator {
 		final org.drip.analytics.date.JulianDate dtValue)
 		throws java.lang.Exception
 	{
-		org.drip.function.definition.R1ToR1 r1ToR1CounterPartyThreshold = _cgs.counterPartyThreshold();
+		org.drip.function.definition.R1ToR1[] aR1ToR1CounterPartyThreshold = _cgs.counterPartyThreshold();
 
-		return null == r1ToR1CounterPartyThreshold ? 0. : r1ToR1CounterPartyThreshold.evaluate
-			(dtValue.julian());
+		return null == aR1ToR1CounterPartyThreshold || null == aR1ToR1CounterPartyThreshold[0] ? 0. :
+			aR1ToR1CounterPartyThreshold[0].evaluate (dtValue.julian());
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class HypothecationAmountEstimator {
 
 		if (null == dtBankMargin || null == dtCounterPartyMargin) return null;
 
-		org.drip.function.definition.R1ToR1 r1ToR1CounterPartyThreshold = _cgs.counterPartyThreshold();
+		org.drip.function.definition.R1ToR1[] aR1ToR1CounterPartyThreshold = _cgs.counterPartyThreshold();
 
 		org.drip.function.definition.R1ToR1 r1ToR1BankThreshold = _cgs.bankThreshold();
 
@@ -326,8 +326,9 @@ public class HypothecationAmountEstimator {
 			double dblBankThresholdValue = null == r1ToR1BankThreshold ? 0. : r1ToR1BankThreshold.evaluate
 				(dblValueDate);
 
-			double dblCounterPartyThresholdValue = null == r1ToR1CounterPartyThreshold ? 0. :
-				r1ToR1CounterPartyThreshold.evaluate (dblValueDate);
+			double dblCounterPartyThresholdValue = null == aR1ToR1CounterPartyThreshold || null ==
+				aR1ToR1CounterPartyThreshold[0] ? 0. : aR1ToR1CounterPartyThreshold[0].evaluate
+					(dblValueDate);
 
 			double dblBankPostingRequirement = dblBankWindowMarginValue - dblBankThresholdValue;
 			dblBankPostingRequirement = 0. < dblBankPostingRequirement ? 0. : dblBankPostingRequirement;

@@ -177,33 +177,45 @@ public interface PathExposureAdjustment {
 	 * Compute Path Unilateral Credit Adjustment
 	 * 
 	 * @return The Path Unilateral Credit Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	abstract public double unilateralCreditAdjustment();
+	abstract public double unilateralCreditAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Path Bilateral Credit Adjustment
 	 * 
 	 * @return The Path Bilateral Credit Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	abstract public double bilateralCreditAdjustment();
+	abstract public double bilateralCreditAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Path Credit Adjustment
 	 * 
 	 * @return The Path Credit Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	abstract public double creditAdjustment();
+	abstract public double creditAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Path Contra-Liability Credit Adjustment
 	 * 
 	 * @return The Path Contra-Liability Credit Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	abstract public double contraLiabilityCreditAdjustment();
+	abstract public double contraLiabilityCreditAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Path Debt Adjustment
@@ -217,17 +229,23 @@ public interface PathExposureAdjustment {
 	 * Compute Path Funding Value Adjustment
 	 * 
 	 * @return The Path Funding Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	abstract public double fundingValueAdjustment();
+	abstract public double fundingValueAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Path Funding Debt Adjustment
 	 * 
 	 * @return The Path Funding Debt Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	abstract public double fundingDebtAdjustment();
+	abstract public double fundingDebtAdjustment()
+		throws java.lang.Exception;
 
 	/**
 	 * Compute Path Funding Cost Adjustment
@@ -257,7 +275,10 @@ public interface PathExposureAdjustment {
 	 * Compute Path Total Adjustment
 	 * 
 	 * @return The Path Total Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	abstract public double totalAdjustment();
+	abstract public double totalAdjustment()
+		throws java.lang.Exception;
 }

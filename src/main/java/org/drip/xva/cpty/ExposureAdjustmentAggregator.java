@@ -484,8 +484,14 @@ public class ExposureAdjustmentAggregator {
 		double dblUCVA = 0.;
 		int iNumPath = _aPEA.length;
 
-		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblUCVA += _aPEA[iPathIndex].unilateralCreditAdjustment();
+		try {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+				dblUCVA += _aPEA[iPathIndex].unilateralCreditAdjustment();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		return org.drip.xva.basel.ValueAdjustment.UCVA (dblUCVA / iNumPath);
 	}
@@ -501,8 +507,14 @@ public class ExposureAdjustmentAggregator {
 		double dblFTDCVA = 0.;
 		int iNumPath = _aPEA.length;
 
-		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblFTDCVA += _aPEA[iPathIndex].bilateralCreditAdjustment();
+		try {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+				dblFTDCVA += _aPEA[iPathIndex].bilateralCreditAdjustment();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		return org.drip.xva.basel.ValueAdjustment.FTDCVA (dblFTDCVA / iNumPath);
 	}
@@ -529,8 +541,14 @@ public class ExposureAdjustmentAggregator {
 		double dblCVACL = 0.;
 		int iNumPath = _aPEA.length;
 
-		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblCVACL += _aPEA[iPathIndex].contraLiabilityCreditAdjustment();
+		try {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+				dblCVACL += _aPEA[iPathIndex].contraLiabilityCreditAdjustment();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		return org.drip.xva.basel.ValueAdjustment.CVACL (dblCVACL / iNumPath);
 	}
@@ -563,8 +581,14 @@ public class ExposureAdjustmentAggregator {
 		double dblFVA = 0.;
 		int iNumPath = _aPEA.length;
 
-		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblFVA += _aPEA[iPathIndex].fundingValueAdjustment();
+		try {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+				dblFVA += _aPEA[iPathIndex].fundingValueAdjustment();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		return org.drip.xva.basel.ValueAdjustment.FVA (dblFVA / iNumPath);
 	}
@@ -580,8 +604,14 @@ public class ExposureAdjustmentAggregator {
 		double dblFDA = 0.;
 		int iNumPath = _aPEA.length;
 
-		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
-			dblFDA += _aPEA[iPathIndex].fundingDebtAdjustment();
+		try {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+				dblFDA += _aPEA[iPathIndex].fundingDebtAdjustment();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
 
 		return org.drip.xva.basel.ValueAdjustment.FDA (dblFDA / iNumPath);
 	}
@@ -733,27 +763,33 @@ public class ExposureAdjustmentAggregator {
 			double[] adblPathUncollateralizedNegativeExposurePV =
 				_aPEA[iPathIndex].uncollateralizedNegativeExposurePV();
 
-			adblCVA[iPathIndex] = _aPEA[iPathIndex].creditAdjustment();
+			try {
+				adblCVA[iPathIndex] = _aPEA[iPathIndex].creditAdjustment();
 
-			adblDVA[iPathIndex] = _aPEA[iPathIndex].debtAdjustment();
+				adblDVA[iPathIndex] = _aPEA[iPathIndex].debtAdjustment();
 
-			adblFCA[iPathIndex] = _aPEA[iPathIndex].fundingCostAdjustment();
+				adblFCA[iPathIndex] = _aPEA[iPathIndex].fundingCostAdjustment();
 
-			adblFDA[iPathIndex] = _aPEA[iPathIndex].fundingDebtAdjustment();
+				adblFDA[iPathIndex] = _aPEA[iPathIndex].fundingDebtAdjustment();
 
-			adblFVA[iPathIndex] = _aPEA[iPathIndex].fundingValueAdjustment();
+				adblFVA[iPathIndex] = _aPEA[iPathIndex].fundingValueAdjustment();
 
-			adblFBA[iPathIndex] = _aPEA[iPathIndex].fundingBenefitAdjustment();
+				adblFBA[iPathIndex] = _aPEA[iPathIndex].fundingBenefitAdjustment();
 
-			adblUCVA[iPathIndex] = _aPEA[iPathIndex].unilateralCreditAdjustment();
+				adblUCVA[iPathIndex] = _aPEA[iPathIndex].unilateralCreditAdjustment();
 
-			adblSFVA[iPathIndex] = _aPEA[iPathIndex].symmetricFundingValueAdjustment();
+				adblSFVA[iPathIndex] = _aPEA[iPathIndex].symmetricFundingValueAdjustment();
 
-			adblCVACL[iPathIndex] = _aPEA[iPathIndex].contraLiabilityCreditAdjustment();
+				adblCVACL[iPathIndex] = _aPEA[iPathIndex].contraLiabilityCreditAdjustment();
 
-			adblFTDCVA[iPathIndex] = _aPEA[iPathIndex].bilateralCreditAdjustment();
+				adblFTDCVA[iPathIndex] = _aPEA[iPathIndex].bilateralCreditAdjustment();
 
-			adblTotalVA[iPathIndex] = _aPEA[iPathIndex].totalAdjustment();
+				adblTotalVA[iPathIndex] = _aPEA[iPathIndex].totalAdjustment();
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+
+				return null;
+			}
 
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex) {
 				aadblCollateralizedExposure[iVertexIndex][iPathIndex] =

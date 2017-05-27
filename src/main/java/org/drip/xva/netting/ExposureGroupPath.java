@@ -75,7 +75,7 @@ public class ExposureGroupPath {
 	 * ExposureGroupPath Constructor
 	 * 
 	 * @param aHGP Array of the Collateral Group Trajectory Paths
-	 * @param mp The Numeraire Path
+	 * @param mp The Market Path
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -85,8 +85,18 @@ public class ExposureGroupPath {
 		final org.drip.xva.universe.MarketPath mp)
 		throws java.lang.Exception
 	{
-		if (null == (_aHGP = aHGP) || 0 == _aHGP.length || null == (_mp = mp))
+		if (null == (_aHGP = aHGP) || null == (_mp = mp))
 			throw new java.lang.Exception ("ExposureGroupPath Constructor => Invalid Inputs");
+
+		int iNumHypothecationGroup = _aHGP.length;
+
+		if (0 == iNumHypothecationGroup)
+			throw new java.lang.Exception ("ExposureGroupPath Constructor => Invalid Inputs");
+
+		for (int i = 0; i < iNumHypothecationGroup; ++i) {
+			if (null == _aHGP[i])
+				throw new java.lang.Exception ("ExposureGroupPath Constructor => Invalid Inputs");
+		}
 	}
 
 	/**
@@ -177,7 +187,7 @@ public class ExposureGroupPath {
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedExposurePV[iVertexIndex] +=
 					adblCollateralGroupCollateralizedExposure[iVertexIndex] /
-						aMV[iVertexIndex].overnightPolicyIndex();
+						aMV[iVertexIndex].overnightPolicyIndexRate();
 		}
 
 		return adblCollateralizedExposurePV;
@@ -243,7 +253,7 @@ public class ExposureGroupPath {
 
 				if (0. < dblCollateralizedExposure)
 					adblCollateralizedPositiveExposurePV[iVertexIndex] += dblCollateralizedExposure /
-						aMV[iVertexIndex].overnightPolicyIndex();
+						aMV[iVertexIndex].overnightPolicyIndexRate();
 			}
 		}
 
@@ -310,7 +320,7 @@ public class ExposureGroupPath {
 
 				if (0. > dblCollateralizedExposure)
 					adblCollateralizedNegativeExposurePV[iVertexIndex] += dblCollateralizedExposure /
-						aMV[iVertexIndex].overnightPolicyIndex();
+						aMV[iVertexIndex].overnightPolicyIndexRate();
 			}
 		}
 
@@ -372,7 +382,7 @@ public class ExposureGroupPath {
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedExposurePV[iVertexIndex] +=
 					adblCollateralGroupUncollateralizedExposure[iVertexIndex] /
-						aMV[iVertexIndex].overnightPolicyIndex();
+						aMV[iVertexIndex].overnightPolicyIndexRate();
 		}
 
 		return adblUncollateralizedExposurePV;
@@ -440,7 +450,7 @@ public class ExposureGroupPath {
 
 				if (0. < dblUncollateralizedExposure)
 					adblUncollateralizedPositiveExposurePV[iVertexIndex] += dblUncollateralizedExposure /
-						aMV[iVertexIndex].overnightPolicyIndex();
+						aMV[iVertexIndex].overnightPolicyIndexRate();
 			}
 		}
 
@@ -509,7 +519,7 @@ public class ExposureGroupPath {
 
 				if (0. > dblUncollateralizedExposure)
 					adblUncollateralizedNegativeExposurePV[iVertexIndex] += dblUncollateralizedExposure /
-						aMV[iVertexIndex].overnightPolicyIndex();
+						aMV[iVertexIndex].overnightPolicyIndexRate();
 			}
 		}
 
@@ -547,9 +557,12 @@ public class ExposureGroupPath {
 	 * Compute Path Bilateral Collateral Value Adjustment
 	 * 
 	 * @return The Path Bilateral Collateral Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double bilateralCollateralValueAdjustment()
+		throws java.lang.Exception
 	{
 		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
 
@@ -560,12 +573,12 @@ public class ExposureGroupPath {
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
-				aMV[iVertexIndex - 1].bankSurvival() * aMV[iVertexIndex - 1].counterPartySurvival() *
-					aMV[iVertexIndex - 1].csaSpread();
+				aMV[iVertexIndex - 1].bankSurvival() * aMV[iVertexIndex - 1].counterPartySurvival (0) *
+					aMV[iVertexIndex - 1].collateralSchemeSpread();
 
 			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
-				aMV[iVertexIndex].bankSurvival() * aMV[iVertexIndex].counterPartySurvival() *
-					aMV[iVertexIndex].csaSpread();
+				aMV[iVertexIndex].bankSurvival() * aMV[iVertexIndex].counterPartySurvival (0) *
+					aMV[iVertexIndex].collateralSchemeSpread();
 
 			dblBilateralCollateralValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd)
 				* (aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -578,9 +591,12 @@ public class ExposureGroupPath {
 	 * Compute Path Collateral Value Adjustment
 	 * 
 	 * @return The Path Collateral Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double collateralValueAdjustment()
+		throws java.lang.Exception
 	{
 		return bilateralCollateralValueAdjustment();
 	}
@@ -589,9 +605,12 @@ public class ExposureGroupPath {
 	 * Compute Period-wise Path Bilateral Collateral Value Adjustment
 	 * 
 	 * @return The Period-wise Path Bilateral Collateral Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double[] periodBilateralCollateralValueAdjustment()
+		throws java.lang.Exception
 	{
 		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
 
@@ -602,12 +621,12 @@ public class ExposureGroupPath {
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
-				aMV[iVertexIndex - 1].bankSurvival() * aMV[iVertexIndex - 1].counterPartySurvival() *
-					aMV[iVertexIndex - 1].csaSpread();
+				aMV[iVertexIndex - 1].bankSurvival() * aMV[iVertexIndex - 1].counterPartySurvival (0) *
+					aMV[iVertexIndex - 1].collateralSchemeSpread();
 
 			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
-				aMV[iVertexIndex].bankSurvival() * aMV[iVertexIndex].counterPartySurvival() *
-					aMV[iVertexIndex].csaSpread();
+				aMV[iVertexIndex].bankSurvival() * aMV[iVertexIndex].counterPartySurvival (0) *
+					aMV[iVertexIndex].collateralSchemeSpread();
 
 			adblBilateralCollateralValueAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -
@@ -621,9 +640,12 @@ public class ExposureGroupPath {
 	 * Compute Period-wise Path Collateral Value Adjustment
 	 * 
 	 * @return The Period-wise Path Collateral Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public double[] periodCollateralValueAdjustment()
+		throws java.lang.Exception
 	{
 		return periodBilateralCollateralValueAdjustment();
 	}

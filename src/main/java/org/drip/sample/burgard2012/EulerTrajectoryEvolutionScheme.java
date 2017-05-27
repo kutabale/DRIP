@@ -346,9 +346,9 @@ public class EulerTrajectoryEvolutionScheme {
 			FormatUtil.FormatDouble (aJDEBank[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aJDECounterParty[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aJDECollateral[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.assetUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.bankBondUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
@@ -402,9 +402,9 @@ public class EulerTrajectoryEvolutionScheme {
 				FormatUtil.FormatDouble (aTCVM[i].bankFundingNumeraire().finish(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aTCVM[i].counterPartyFundingNumeraire()[0].finish(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aTCVM[i].collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().assetUnits(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().bankBondUnits(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().counterPartyBondUnits()[0], 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().assetNumeraireUnits(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().bankNumeraireUnits(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().cashAccount(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (lca.accumulation(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (lca.assetAccumulation(), 1, 6, 1.) + " | " +

@@ -111,11 +111,13 @@ public class FundingGroupPathAA2014 extends org.drip.xva.netting.FundingGroupPat
 	}
 
 	@Override public double fundingValueAdjustment()
+		throws java.lang.Exception
 	{
 		return bilateralFundingValueAdjustment();
 	}
 
 	@Override public double fundingDebtAdjustment()
+		throws java.lang.Exception
 	{
 		return bilateralFundingDebtAdjustment();
 	}
@@ -131,11 +133,13 @@ public class FundingGroupPathAA2014 extends org.drip.xva.netting.FundingGroupPat
 	}
 
 	@Override public double[] periodFundingValueAdjustment()
+		throws java.lang.Exception
 	{
 		return periodBilateralFundingValueAdjustment();
 	}
 
 	@Override public double[] periodFundingDebtAdjustment()
+		throws java.lang.Exception
 	{
 		return periodBilateralFundingDebtAdjustment();
 	}

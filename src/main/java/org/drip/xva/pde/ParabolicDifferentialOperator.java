@@ -118,14 +118,13 @@ public class ParabolicDifferentialOperator {
 		if (null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblAsset))
 			throw new java.lang.Exception ("ParabolicDifferentialOperator::theta => Invalid Inputs");
 
-		org.drip.xva.derivative.AssetGreekVertex agvDerivative = etv.assetGreekVertex();
+		org.drip.xva.derivative.AssetGreekVertex agv = etv.assetGreekVertex();
 
 		double dblVolatility = _t.numeraireEvolver().evaluator().volatility().value (new
 			org.drip.measure.realization.JumpDiffusionVertex (etv.time(), dblAsset, 0., false));
 
-		return 0.5 * dblVolatility * dblVolatility * dblAsset * dblAsset *
-			agvDerivative.derivativeXVAValueGamma() - _t.cashAccumulationRate() * dblAsset *
-				agvDerivative.derivativeXVAValueDelta();
+		return 0.5 * dblVolatility * dblVolatility * dblAsset * dblAsset * agv.derivativeXVAValueGamma() -
+			_t.cashAccumulationRate() * dblAsset * agv.derivativeXVAValueDelta();
 	}
 
 	/**
@@ -147,7 +146,7 @@ public class ParabolicDifferentialOperator {
 			!org.drip.quant.common.NumberUtil.IsValid (dblShift))
 			return null;
 
-		org.drip.xva.derivative.AssetGreekVertex agvDerivative = etv.assetGreekVertex();
+		org.drip.xva.derivative.AssetGreekVertex agv = etv.assetGreekVertex();
 
 		double dblAssetUp = dblAsset + dblShift;
 		double dblAssetDown = dblAsset - dblShift;
@@ -162,11 +161,9 @@ public class ParabolicDifferentialOperator {
 			return null;
 		}
 
-		double dblGammaCoefficient = 0.5 * dblVolatility * dblVolatility *
-			agvDerivative.derivativeXVAValueGamma();
+		double dblGammaCoefficient = 0.5 * dblVolatility * dblVolatility * agv.derivativeXVAValueGamma();
 
-		double dblDeltaCoefficient = -1. * _t.cashAccumulationRate() *
-			agvDerivative.derivativeXVAValueDelta();
+		double dblDeltaCoefficient = -1. * _t.cashAccumulationRate() * agv.derivativeXVAValueDelta();
 
 		return new double[] {dblGammaCoefficient * dblAssetDown * dblAssetDown + dblDeltaCoefficient *
 			dblAssetDown, dblGammaCoefficient * dblAsset * dblAsset + dblDeltaCoefficient * dblAsset,

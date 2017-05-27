@@ -121,10 +121,11 @@ public class TradeablesContainer {
 		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding)
 		throws java.lang.Exception
 	{
-		if (null == (_tAsset = tAsset) || null == (_tCollateralScheme = tCollateralScheme) || null ==
-			(_tBankFunding = tBankFunding) || null == (_aTCounterPartyFunding = aTCounterPartyFunding))
+		if (null == (_tAsset = tAsset) || null == (_aTCounterPartyFunding = aTCounterPartyFunding))
 			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 
+		_tBankFunding = tBankFunding;
+		_tCollateralScheme = tCollateralScheme;
 		int iNumCounterParty = _aTCounterPartyFunding.length;
 		_tZeroRecoveryBankFunding = tZeroRecoveryBankFunding;
 

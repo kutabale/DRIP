@@ -99,8 +99,8 @@ public class EvolutionTrajectoryVertex {
 		final double[] adblBankGainOnCounterPartyDefault)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_tv = tv) || null
-			== (_rpv = rpv) || null == (_agv = agv) || null == (_adblCounterPartyGainOnBankDefault =
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_tv = tv) || null ==
+			(_rpv = rpv) || null == (_agv = agv) || null == (_adblCounterPartyGainOnBankDefault =
 				adblCounterPartyGainOnBankDefault) || null == (_adblBankGainOnCounterPartyDefault =
 					adblBankGainOnCounterPartyDefault))
 			throw new java.lang.Exception ("EvolutionTrajectoryVertex Constructor => Invalid Inputs");
@@ -129,12 +129,12 @@ public class EvolutionTrajectoryVertex {
 	}
 
 	/**
-	 * Retrieve the Realization of the Trade-able Asset Prices
+	 * Retrieve the Vertex of Tradeable Numeraire Realization
 	 * 
-	 * @return Realization of the Trade-able Asset Prices
+	 * @return Vertex of Tradeable Numeraire Realization
 	 */
 
-	public org.drip.xva.universe.TradeablesVertex tradeableAssetSnapshot()
+	public org.drip.xva.universe.TradeablesVertex tradeablesVertex()
 	{
 		return _tv;
 	}
@@ -211,24 +211,23 @@ public class EvolutionTrajectoryVertex {
 	{
 		double dblFundingConstraint = _agv.derivativeXVAValue();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponBankBondNumeraire =
-			_tv.bankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankFundingNumeraire = _tv.bankFundingNumeraire();
 
-		if (null != jdeZeroCouponBankBondNumeraire)
-			dblFundingConstraint += jdeZeroCouponBankBondNumeraire.finish() * _rpv.bankBondUnits();
+		if (null != jdeBankFundingNumeraire)
+			dblFundingConstraint += jdeBankFundingNumeraire.finish() * _rpv.bankNumeraireUnits();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponZeroRecoveryBankBondNumeraire =
+		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFundingNumeraire =
 			_tv.zeroRecoveryBankFundingNumeraire();
 
-		if (null != jdeZeroCouponZeroRecoveryBankBondNumeraire)
-			dblFundingConstraint += jdeZeroCouponZeroRecoveryBankBondNumeraire.finish() *
-				_rpv.bankBondUnits();
+		if (null != jdeZeroRecoveryBankFundingNumeraire)
+			dblFundingConstraint += jdeZeroRecoveryBankFundingNumeraire.finish() *
+				_rpv.zeroRecoveryBankNumeraireUnits();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeZeroCouponCollateralBondNumeraire =
+		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire =
 			_tv.collateralSchemeNumeraire();
 
-		if (null != jdeZeroCouponCollateralBondNumeraire)
-			dblFundingConstraint += jdeZeroCouponCollateralBondNumeraire.finish() * _rpv.cashAccount();
+		if (null != jdeCollateralSchemeNumeraire)
+			dblFundingConstraint += jdeCollateralSchemeNumeraire.finish() * _rpv.cashAccount();
 
 		return dblFundingConstraint;
 	}
