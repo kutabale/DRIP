@@ -68,37 +68,76 @@ package org.drip.xva.definition;
 
 public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
 	private double[] _adblCounterPartyRecovery = null;
-	private double _dblBankRecovery = java.lang.Double.NaN;
+	private double _dblBankSeniorFundingRecovery = java.lang.Double.NaN;
+	private double _dblBankSubordinateFundingRecovery = java.lang.Double.NaN;
+
+	/**
+	 * CloseOutBilateral Instance without the Subordinate Funding
+	 * 
+	 * @param dblBankSeniorFundingRecovery The Bank Senior Funding Recovery Rate
+	 * @param adblCounterPartyRecovery Array of Counter Party Recovery Rates
+	 * 
+	 * @return The CloseOutBilateral Instance without the Subordinate Funding
+	 */
+
+	public static final CloseOutBilateral Standard (
+		final double dblBankSeniorFundingRecovery,
+		final double[] adblCounterPartyRecovery)
+	{
+		try {
+			return new CloseOutBilateral (dblBankSeniorFundingRecovery, 0., adblCounterPartyRecovery);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	/**
 	 * CloseOutBilateral Constructor
 	 * 
-	 * @param dblBankRecovery The Bank Recovery Rate
+	 * @param dblBankSeniorFundingRecovery The Bank Senior Funding Recovery Rate
+	 * @param dblBankSubordinateFundingRecovery The Bank Subordinate Funding Recovery Rate
 	 * @param adblCounterPartyRecovery Array of Counter Party Recovery Rates
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public CloseOutBilateral (
-		final double dblBankRecovery,
+		final double dblBankSeniorFundingRecovery,
+		final double dblBankSubordinateFundingRecovery,
 		final double[] adblCounterPartyRecovery)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankRecovery = dblBankRecovery) || null ==
-			(_adblCounterPartyRecovery = adblCounterPartyRecovery) || 0 == _adblCounterPartyRecovery.length
-				|| !org.drip.quant.common.NumberUtil.IsValid (_adblCounterPartyRecovery))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankSeniorFundingRecovery =
+			dblBankSeniorFundingRecovery) || null == (_adblCounterPartyRecovery = adblCounterPartyRecovery)
+				|| 0 == _adblCounterPartyRecovery.length || !org.drip.quant.common.NumberUtil.IsValid
+					(_adblCounterPartyRecovery))
 			throw new java.lang.Exception ("CloseOutBilateral Constructor => Invalid Inputs");
+
+		_dblBankSubordinateFundingRecovery = dblBankSubordinateFundingRecovery;
 	}
 
 	/**
-	 * Retrieve the Bank Recovery Rate
+	 * Retrieve the Bank Senior Funding Recovery Rate
 	 * 
-	 * @return The Bank Recovery Rate
+	 * @return The Bank Senior Funding Recovery Rate
 	 */
 
-	public double bankRecovery()
+	public double bankSeniorFundingRecovery()
 	{
-		return _dblBankRecovery;
+		return _dblBankSeniorFundingRecovery;
+	}
+
+	/**
+	 * Retrieve the Bank Subordinate Funding Recovery Rate
+	 * 
+	 * @return The Bank Subordinate Funding Recovery Rate
+	 */
+
+	public double bankSubordinateFundingRecovery()
+	{
+		return _dblBankSubordinateFundingRecovery;
 	}
 
 	/**
@@ -131,8 +170,8 @@ public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
 			if (!org.drip.quant.common.NumberUtil.IsValid (dblCollateralizedExposure)) return null;
 
 			adblBankDefaultCloseOut[i] = (dblCollateralizedExposure > 0. ? dblCollateralizedExposure : 0.) +
-				_dblBankRecovery * (dblCollateralizedExposure < 0. ? dblCollateralizedExposure : 0.) +
-					adblCollateralAmount[i];
+				_dblBankSeniorFundingRecovery * (dblCollateralizedExposure < 0. ? dblCollateralizedExposure :
+					0.) + adblCollateralAmount[i];
 		}
 
 		return adblBankDefaultCloseOut;

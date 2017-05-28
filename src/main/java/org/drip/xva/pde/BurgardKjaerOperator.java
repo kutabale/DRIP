@@ -189,10 +189,10 @@ public class BurgardKjaerOperator {
 						false
 					)
 				) * dblDerivativeXVAValue,
-				si.bankFundingSpread() * (
+				si.bankSeniorFundingSpread() * (
 					dblBankDefaultDerivativeValue > 0. ? dblBankDefaultDerivativeValue : 0.
 				),
-				-1. * si.bankDefaultIntensity() * dblGainOnBankDefault,
+				-1. * si.bankSeniorDefaultIntensity() * dblGainOnBankDefault,
 				-1. * dblGainOnCounterPartyDefault
 			);
 		} catch (java.lang.Exception e) {
@@ -219,7 +219,7 @@ public class BurgardKjaerOperator {
 
 		double dblTime = etv.time();
 
-		double dblBankDefaultIntensity = si.bankDefaultIntensity();
+		double dblBankDefaultIntensity = si.bankSeniorDefaultIntensity();
 
 		double[] adblCounterPartyRecovery = _cob.counterPartyRecovery();
 
@@ -232,7 +232,8 @@ public class BurgardKjaerOperator {
 		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
 			_pdeec.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
 
-		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _cob.bankRecovery() * dblCloseOutMTM;
+		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _cob.bankSeniorFundingRecovery() *
+			dblCloseOutMTM;
 
 		double dblAssetValue = tv.assetNumeraire().finish();
 
@@ -270,7 +271,7 @@ public class BurgardKjaerOperator {
 					)
 				) * dblDerivativeXVAValue,
 				(dblBankDefaultIntensity + dblCumulativeCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
-				si.bankFundingSpread() * dblBankExposure,
+				si.bankSeniorFundingSpread() * dblBankExposure,
 				-1. * dblBankDefaultIntensity * dblBankExposure,
 				dblDerivativeXVACounterPartyDefaultGrowth
 			);

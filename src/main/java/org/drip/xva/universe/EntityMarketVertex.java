@@ -74,10 +74,10 @@ public class EntityMarketVertex {
 	/**
 	 * EntityMarketVertex Constructor
 	 * 
-	 * @param dblSurvival The Realized Bank Survival
-	 * @param dblRecovery The Realized Bank Recovery
-	 * @param dblHazard The Realized Bank Hazard
-	 * @param dblFundingSpread The Realized Bank Funding Spread
+	 * @param dblSurvival The Realized Entity Survival
+	 * @param dblRecovery The Realized Entity Recovery
+	 * @param dblHazard The Realized Entity Hazard
+	 * @param dblFundingSpread The Realized Entity Funding Spread
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -97,9 +97,9 @@ public class EntityMarketVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Bank Hazard Rate
+	 * Retrieve the Realized Entity Hazard Rate
 	 * 
-	 * @return The Realized Bank Hazard Rate
+	 * @return The Realized Entity Hazard Rate
 	 */
 
 	public double hazard()
@@ -108,9 +108,9 @@ public class EntityMarketVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Bank Survival Probability
+	 * Retrieve the Realized Entity Survival Probability
 	 * 
-	 * @return The Realized Bank Survival Probability
+	 * @return The Realized Entity Survival Probability
 	 */
 
 	public double survival()
@@ -119,9 +119,9 @@ public class EntityMarketVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Bank Recovery Rate
+	 * Retrieve the Realized Entity Recovery Rate
 	 * 
-	 * @return The Realized Bank Recovery Rate
+	 * @return The Realized Entity Recovery Rate
 	 */
 
 	public double recovery()
@@ -130,9 +130,9 @@ public class EntityMarketVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Bank Funding Spread
+	 * Retrieve the Realized Entity Funding Spread
 	 * 
-	 * @return The Realized Bank Funding Spread
+	 * @return The Realized Entity Funding Spread
 	 */
 
 	public double fundingSpread()

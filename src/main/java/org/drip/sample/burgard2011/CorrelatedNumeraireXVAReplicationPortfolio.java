@@ -176,7 +176,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (tcvmFinish.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvFinish.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
@@ -261,7 +261,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral cob = new CloseOutBilateral (
+		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblBankRecoveryRate,
 			new double[] {dblCounterPartyRecoveryRate}
 		);
@@ -337,7 +337,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			pdeec
 		);
 
-		SpreadIntensity si = new SpreadIntensity (
+		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecoveryRate,
 			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecoveryRate}
@@ -472,7 +472,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			FormatUtil.FormatDouble (aJDECounterParty[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (erpInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpInitial.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (erpInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +

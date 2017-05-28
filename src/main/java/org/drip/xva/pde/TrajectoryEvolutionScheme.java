@@ -160,18 +160,19 @@ public class TrajectoryEvolutionScheme {
 
 		double dblAssetNumeraireUnitsStart = rpvStart.assetNumeraireUnits();
 
-		double dblBankNumeraireUnitsStart = rpvStart.bankNumeraireUnits();
+		double dblBankNumeraireUnitsStart = rpvStart.bankSeniorNumeraireUnits();
 
-		double dblZeroRecoveryBankNumeraireUnitsStart = rpvStart.zeroRecoveryBankNumeraireUnits();
+		double dblZeroRecoveryBankNumeraireUnitsStart = rpvStart.bankSubordinateNumeraireUnits();
 
 		double[] adblCounterPartyNumeraireUnitsStart = rpvStart.counterPartyNumeraireUnits();
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire = tv.assetNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankNumeraire = tv.bankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire =
+			tv.bankSeniorFundingNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankNumeraire =
-			tv.zeroRecoveryBankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire =
+			tv.bankSubordinateFundingNumeraire();
 
 		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyNumeraire =
 			tv.counterPartyFundingNumeraire();
@@ -197,24 +198,25 @@ public class TrajectoryEvolutionScheme {
 		}
 
 		double dblCashAccountBalance = -1. * etvStart.assetGreekVertex().derivativeXVAValue() - (null ==
-			jdeBankNumeraire ? 0. : dblBankNumeraireUnitsStart * jdeBankNumeraire.finish()) - (null ==
-				jdeZeroRecoveryBankNumeraire ? 0. : dblZeroRecoveryBankNumeraireUnitsStart *
-					jdeZeroRecoveryBankNumeraire.finish());
+			jdeBankSeniorFundingNumeraire ? 0. : dblBankNumeraireUnitsStart *
+				jdeBankSeniorFundingNumeraire.finish()) - (null == jdeBankSubordinateFundingNumeraire ? 0. :
+					dblZeroRecoveryBankNumeraireUnitsStart * jdeBankSubordinateFundingNumeraire.finish());
 
 		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
 
-		org.drip.xva.universe.Tradeable tBankFunding = _tc.bankFunding();
+		org.drip.xva.universe.Tradeable tBankSeniorFunding = _tc.bankSeniorFunding();
 
 		double dblBankCashAccumulation = dblCashAccountBalance * (dblCashAccountBalance > 0. ? (null ==
-			tCollateralScheme ? 0. : tCollateralScheme.cashAccumulationRate()) : (null == tBankFunding ? 0. :
-				tBankFunding.cashAccumulationRate())) * _dblTimeIncrement;
+			tCollateralScheme ? 0. : tCollateralScheme.cashAccumulationRate()) : (null == tBankSeniorFunding
+				? 0. : tBankSeniorFunding.cashAccumulationRate())) * _dblTimeIncrement;
 
 		double dblDerivativeXVAValueChange = -1. * (dblAssetNumeraireUnitsStart *
-			jdeAssetNumeraire.grossChange() + (null == jdeBankNumeraire ? 0. : dblBankNumeraireUnitsStart *
-				jdeBankNumeraire.grossChange()) + (null == jdeZeroRecoveryBankNumeraire ? 0. :
-					dblZeroRecoveryBankNumeraireUnitsStart * jdeZeroRecoveryBankNumeraire.grossChange()) +
-						dblCounterPartyPositionValueChange + (dblAssetCashChange +
-							dblCounterPartyCashAccumulation + dblBankCashAccumulation) * _dblTimeIncrement);
+			jdeAssetNumeraire.grossChange() + (null == jdeBankSeniorFundingNumeraire ? 0. :
+				dblBankNumeraireUnitsStart * jdeBankSeniorFundingNumeraire.grossChange()) + (null ==
+					jdeBankSubordinateFundingNumeraire ? 0. : dblZeroRecoveryBankNumeraireUnitsStart *
+						jdeBankSubordinateFundingNumeraire.grossChange()) + dblCounterPartyPositionValueChange +
+							(dblAssetCashChange + dblCounterPartyCashAccumulation + dblBankCashAccumulation)
+								* _dblTimeIncrement);
 
 		try {
 			return new org.drip.xva.derivative.CashAccountRebalancer (new
@@ -288,10 +290,11 @@ public class TrajectoryEvolutionScheme {
 				aJDECounterParty[i].finish();
 		}
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankFunding = tv.bankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire =
+			tv.bankSeniorFundingNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFunding =
-			tv.zeroRecoveryBankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire =
+			tv.bankSubordinateFundingNumeraire();
 
 		try {
 			return new org.drip.xva.derivative.EvolutionTrajectoryEdge (
@@ -301,9 +304,10 @@ public class TrajectoryEvolutionScheme {
 					tv,
 					new org.drip.xva.derivative.ReplicationPortfolioVertex (
 						-1. * agvFinish.derivativeXVAValueDelta(),
-						null == jdeBankFunding ? 0. : dblGainOnBankDefault / jdeBankFunding.finish(),
-						null == jdeZeroRecoveryBankFunding ? 0. : dblGainOnBankDefault /
-							jdeZeroRecoveryBankFunding.finish(),
+						null == jdeBankSeniorFundingNumeraire ? 0. : dblGainOnBankDefault /
+							jdeBankSeniorFundingNumeraire.finish(),
+						null == jdeBankSubordinateFundingNumeraire ? 0. : dblGainOnBankDefault /
+							jdeBankSubordinateFundingNumeraire.finish(),
 						adblCounterPartyNumeraireUnits,
 						etvStart.replicationPortfolioVertex().cashAccount() + cae.accumulation()
 					),
@@ -400,10 +404,11 @@ public class TrajectoryEvolutionScheme {
 
 		org.drip.xva.derivative.CashAccountEdge cae = car.cashAccount();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankFunding = tv.bankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire =
+			tv.bankSeniorFundingNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFunding =
-			tv.zeroRecoveryBankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire =
+			tv.bankSubordinateFundingNumeraire();
 
 		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
 
@@ -414,9 +419,10 @@ public class TrajectoryEvolutionScheme {
 				tv,
 				new org.drip.xva.derivative.ReplicationPortfolioVertex (
 					-1. * dblDerivativeXVAValueDeltaFinish,
-					null == jdeBankFunding ? 0. : dblGainOnBankDefaultFinish / jdeBankFunding.finish(),
-					null == jdeZeroRecoveryBankFunding ? 0. : dblGainOnBankDefaultFinish /
-						jdeZeroRecoveryBankFunding.finish(),
+					null == jdeBankSeniorFundingNumeraire ? 0. : dblGainOnBankDefaultFinish /
+						jdeBankSeniorFundingNumeraire.finish(),
+					null == jdeBankSubordinateFundingNumeraire ? 0. : dblGainOnBankDefaultFinish /
+						jdeBankSubordinateFundingNumeraire.finish(),
 					adblCounterPartyNumeraireUnitsFinish,
 					etvStart.replicationPortfolioVertex().cashAccount() + cae.accumulation()
 				),

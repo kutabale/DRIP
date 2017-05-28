@@ -69,17 +69,17 @@ package org.drip.xva.universe;
 
 public class TradeablesContainer {
 	private org.drip.xva.universe.Tradeable _tAsset = null;
-	private org.drip.xva.universe.Tradeable _tBankFunding = null;
 	private org.drip.xva.universe.Tradeable _tCollateralScheme = null;
+	private org.drip.xva.universe.Tradeable _tBankSeniorFunding = null;
+	private org.drip.xva.universe.Tradeable _tBankSubordinateFunding = null;
 	private org.drip.xva.universe.Tradeable[] _aTCounterPartyFunding = null;
-	private org.drip.xva.universe.Tradeable _tZeroRecoveryBankFunding = null;
 
 	/**
 	 * Create a TradeablesContainer without the Zero Recovery Bank Funding Tradeable
 	 * 
 	 * @param tAsset The Asset Tradeable
 	 * @param tCollateralScheme The Collateral Scheme Tradeable
-	 * @param tBankFunding Bank Funding Tradeable
+	 * @param tBankSeniorFunding Bank Senior Funding Tradeable
 	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
 	 * 
 	 * @return The TradeablesContainer without the Zero Recovery Bank Funding Tradeable
@@ -88,11 +88,11 @@ public class TradeablesContainer {
 	public static final TradeablesContainer Standard (
 		final org.drip.xva.universe.Tradeable tAsset,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
-		final org.drip.xva.universe.Tradeable tBankFunding,
+		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
 		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding)
 	{
 		try {
-			return new TradeablesContainer (tAsset, tCollateralScheme, tBankFunding, null,
+			return new TradeablesContainer (tAsset, tCollateralScheme, tBankSeniorFunding, null,
 				aTCounterPartyFunding);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -106,8 +106,8 @@ public class TradeablesContainer {
 	 * 
 	 * @param tAsset The Asset Tradeable
 	 * @param tCollateralScheme The Collateral Scheme Tradeable
-	 * @param tBankFunding Bank Funding Tradeable
-	 * @param tZeroRecoveryBankFunding Zero Recovery Bank Funding Tradeable
+	 * @param tBankSeniorFunding Bank Senior Funding Tradeable
+	 * @param tBankSubordinateFunding Bank Subordinate Funding Tradeable
 	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -116,18 +116,18 @@ public class TradeablesContainer {
 	public TradeablesContainer (
 		final org.drip.xva.universe.Tradeable tAsset,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
-		final org.drip.xva.universe.Tradeable tBankFunding,
-		final org.drip.xva.universe.Tradeable tZeroRecoveryBankFunding,
+		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
+		final org.drip.xva.universe.Tradeable tBankSubordinateFunding,
 		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding)
 		throws java.lang.Exception
 	{
 		if (null == (_tAsset = tAsset) || null == (_aTCounterPartyFunding = aTCounterPartyFunding))
 			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 
-		_tBankFunding = tBankFunding;
 		_tCollateralScheme = tCollateralScheme;
+		_tBankSeniorFunding = tBankSeniorFunding;
+		_tBankSubordinateFunding = tBankSubordinateFunding;
 		int iNumCounterParty = _aTCounterPartyFunding.length;
-		_tZeroRecoveryBankFunding = tZeroRecoveryBankFunding;
 
 		if (0 >= iNumCounterParty)
 			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
@@ -161,25 +161,25 @@ public class TradeablesContainer {
 	}
 
 	/**
-	 * Retrieve the Bank Funding Tradeable
+	 * Retrieve the Bank Senior Funding Tradeable
 	 * 
-	 * @return The Bank Funding Tradeable
+	 * @return The Bank Senior Funding Tradeable
 	 */
 
-	public org.drip.xva.universe.Tradeable bankFunding()
+	public org.drip.xva.universe.Tradeable bankSeniorFunding()
 	{
-		return _tBankFunding;
+		return _tBankSeniorFunding;
 	}
 
 	/**
-	 * Retrieve the Zero Recovery Bank Funding Tradeable
+	 * Retrieve the Bank Subordinate Funding Tradeable
 	 * 
-	 * @return The Zero Recovery Bank Funding Tradeable
+	 * @return The Bank Subordinate Funding Tradeable
 	 */
 
-	public org.drip.xva.universe.Tradeable zeroRecoveryBankFunding()
+	public org.drip.xva.universe.Tradeable bankSubordinateFunding()
 	{
-		return _tZeroRecoveryBankFunding;
+		return _tBankSubordinateFunding;
 	}
 
 	/**

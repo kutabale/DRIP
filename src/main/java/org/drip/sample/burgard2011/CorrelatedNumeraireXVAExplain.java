@@ -148,7 +148,7 @@ public class CorrelatedNumeraireXVAExplain {
 
 		double dblAssetPriceFinish = tcvm.assetNumeraire().finish();
 
-		double dblZeroCouponBankPriceFinish = tcvm.bankFundingNumeraire().finish();
+		double dblZeroCouponBankPriceFinish = tcvm.bankSeniorFundingNumeraire().finish();
 
 		double dblZeroCouponCounterPartyPriceFinish = tcvm.counterPartyFundingNumeraire()[0].finish();
 
@@ -167,7 +167,7 @@ public class CorrelatedNumeraireXVAExplain {
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (tcvm.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvFinish.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
@@ -252,7 +252,7 @@ public class CorrelatedNumeraireXVAExplain {
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral cob = new CloseOutBilateral (
+		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblBankRecoveryRate,
 			new double[] {dblCounterPartyRecoveryRate}
 		);
@@ -328,7 +328,7 @@ public class CorrelatedNumeraireXVAExplain {
 			pdeec
 		);
 
-		SpreadIntensity si = new SpreadIntensity (
+		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecoveryRate,
 			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecoveryRate}
@@ -463,7 +463,7 @@ public class CorrelatedNumeraireXVAExplain {
 			FormatUtil.FormatDouble (aJDECounterParty[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aJDECollateral[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +

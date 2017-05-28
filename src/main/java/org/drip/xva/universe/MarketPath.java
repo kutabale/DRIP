@@ -47,8 +47,8 @@ package org.drip.xva.universe;
  */
 
 /**
- * MarketPath holds the Vertex Market Realizations at the Trajectory Vertexes along the Path of a
- *  Simulation. The References are:
+ * MarketPath holds the Vertex Market Realizations at the Trajectory Vertexes along the Path of a Simulation.
+ *  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
  *  

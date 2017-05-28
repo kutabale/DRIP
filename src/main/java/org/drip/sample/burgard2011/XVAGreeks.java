@@ -124,10 +124,10 @@ public class XVAGreeks {
 				),
 				dblTimeWidth
 			),
-			tcm.bankFunding().numeraireEvolver().weinerIncrement (
+			tcm.bankSeniorFunding().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					tcvmStart.bankFundingNumeraire().finish(),
+					tcvmStart.bankSeniorFundingNumeraire().finish(),
 					0.,
 					false
 				),
@@ -203,7 +203,7 @@ public class XVAGreeks {
 			tcvmFinish,
 			ReplicationPortfolioVertex.Standard (
 				-1. * dblDerivativeXVAValueDeltaFinish,
-				dblGainOnBankDefaultFinish / tcvmFinish.bankFundingNumeraire().finish(),
+				dblGainOnBankDefaultFinish / tcvmFinish.bankSeniorFundingNumeraire().finish(),
 				new double[] {dblGainOnCounterPartyDefaultFinish / tcvmFinish.counterPartyFundingNumeraire()[0].finish()},
 				rpvStart.cashAccount() + lca.accumulation()
 			),
@@ -258,7 +258,7 @@ public class XVAGreeks {
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral cob = new CloseOutBilateral (
+		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblBankRecovery,
 			new double[] {dblCounterPartyRecovery}
 		);
@@ -326,7 +326,7 @@ public class XVAGreeks {
 			pdeec
 		);
 
-		SpreadIntensity si = new SpreadIntensity (
+		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecovery,
 			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery}

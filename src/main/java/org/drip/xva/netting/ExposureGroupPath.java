@@ -573,12 +573,14 @@ public class ExposureGroupPath {
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
-				aMV[iVertexIndex - 1].bankSurvival() * aMV[iVertexIndex - 1].counterPartySurvival (0) *
-					aMV[iVertexIndex - 1].collateralSchemeSpread();
+				aMV[iVertexIndex - 1].bankMarketSeniorFunding().survival() *
+					aMV[iVertexIndex - 1].counterPartySurvival (0) *
+						aMV[iVertexIndex - 1].collateralSchemeSpread();
 
 			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
-				aMV[iVertexIndex].bankSurvival() * aMV[iVertexIndex].counterPartySurvival (0) *
-					aMV[iVertexIndex].collateralSchemeSpread();
+				aMV[iVertexIndex].bankMarketSeniorFunding().survival() *
+					aMV[iVertexIndex].counterPartySurvival (0) *
+						aMV[iVertexIndex].collateralSchemeSpread();
 
 			dblBilateralCollateralValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd)
 				* (aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -621,12 +623,14 @@ public class ExposureGroupPath {
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
-				aMV[iVertexIndex - 1].bankSurvival() * aMV[iVertexIndex - 1].counterPartySurvival (0) *
-					aMV[iVertexIndex - 1].collateralSchemeSpread();
+				aMV[iVertexIndex - 1].bankMarketSeniorFunding().survival() *
+					aMV[iVertexIndex - 1].counterPartySurvival (0) *
+						aMV[iVertexIndex - 1].collateralSchemeSpread();
 
 			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
-				aMV[iVertexIndex].bankSurvival() * aMV[iVertexIndex].counterPartySurvival (0) *
-					aMV[iVertexIndex].collateralSchemeSpread();
+				aMV[iVertexIndex].bankMarketSeniorFunding().survival() *
+					aMV[iVertexIndex].counterPartySurvival (0) *
+						aMV[iVertexIndex].collateralSchemeSpread();
 
 			adblBilateralCollateralValueAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -

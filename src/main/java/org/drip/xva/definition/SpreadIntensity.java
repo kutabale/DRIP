@@ -70,53 +70,111 @@ package org.drip.xva.definition;
 
 public class SpreadIntensity {
 	private double[] _adblCounterPartyDefaultIntensity = null;
-	private double _dblBankFundingSpread = java.lang.Double.NaN;
-	private double _dblBankDefaultIntensity = java.lang.Double.NaN;
+	private double _dblBankSeniorFundingSpread = java.lang.Double.NaN;
+	private double _dblBankSeniorDefaultIntensity = java.lang.Double.NaN;
+	private double _dblBankSubordinateFundingSpread = java.lang.Double.NaN;
+	private double _dblBankSubordinateDefaultIntensity = java.lang.Double.NaN;
+
+	/**
+	 * Construct a Standard SpreadIntensity Instance
+	 * 
+	 * @param dblBankSeniorFundingSpread The Bank Senior Funding Spread
+	 * @param dblBankSeniorDefaultIntensity The Bank Senior Funding Default Intensity
+	 * @param adblCounterPartyDefaultIntensity Array of Counter Party Default Intensity
+	 * 
+	 * @return The Standard SpreadIntensity Instance
+	 */
+
+	public static final SpreadIntensity Standard (
+		final double dblBankSeniorFundingSpread,
+		final double dblBankSeniorDefaultIntensity,
+		final double[] adblCounterPartyDefaultIntensity)
+		throws java.lang.Exception
+	{
+		try {
+			return new SpreadIntensity (dblBankSeniorFundingSpread, dblBankSeniorDefaultIntensity,
+				java.lang.Double.NaN, java.lang.Double.NaN, adblCounterPartyDefaultIntensity);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	/**
 	 * SpreadIntensity Constructor
 	 * 
-	 * @param dblBankFundingSpread The Bank Funding Spread
-	 * @param dblBankDefaultIntensity The Bank Default Intensity
+	 * @param dblBankSeniorFundingSpread The Bank Senior Funding Spread
+	 * @param dblBankSeniorDefaultIntensity The Bank Senior Funding Default Intensity
+	 * @param dblBankSubordinateFundingSpread The Bank Subordinate Funding Spread
+	 * @param dblBankSubordinateDefaultIntensity The Bank Subordinate Funding Default Intensity
 	 * @param adblCounterPartyDefaultIntensity Array of Counter Party Default Intensity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public SpreadIntensity (
-		final double dblBankFundingSpread,
-		final double dblBankDefaultIntensity,
+	private SpreadIntensity (
+		final double dblBankSeniorFundingSpread,
+		final double dblBankSeniorDefaultIntensity,
+		final double dblBankSubordinateFundingSpread,
+		final double dblBankSubordinateDefaultIntensity,
 		final double[] adblCounterPartyDefaultIntensity)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankFundingSpread = dblBankFundingSpread) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultIntensity = dblBankDefaultIntensity) ||
-				null == (_adblCounterPartyDefaultIntensity = adblCounterPartyDefaultIntensity) || 0 ==
-					_adblCounterPartyDefaultIntensity.length || !org.drip.quant.common.NumberUtil.IsValid
-						(_adblCounterPartyDefaultIntensity))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankSeniorFundingSpread =
+			dblBankSeniorFundingSpread) || !org.drip.quant.common.NumberUtil.IsValid
+				(_dblBankSeniorDefaultIntensity = dblBankSeniorDefaultIntensity) || null ==
+					(_adblCounterPartyDefaultIntensity = adblCounterPartyDefaultIntensity) || 0 ==
+						_adblCounterPartyDefaultIntensity.length || !org.drip.quant.common.NumberUtil.IsValid
+							(_adblCounterPartyDefaultIntensity))
 			throw new java.lang.Exception ("SpreadIntensity Constructor => Invalid Inputs");
+
+		_dblBankSubordinateFundingSpread = dblBankSubordinateFundingSpread;
+		_dblBankSubordinateDefaultIntensity = dblBankSubordinateDefaultIntensity;
 	}
 
 	/**
-	 * Retrieve the Bank Funding Spread
+	 * Retrieve the Bank Senior Funding Spread
 	 * 
-	 * @return The Bank Funding Spread
+	 * @return The Bank Senior Funding Spread
 	 */
 
-	public double bankFundingSpread()
+	public double bankSeniorFundingSpread()
 	{
-		return _dblBankFundingSpread;
+		return _dblBankSeniorFundingSpread;
 	}
 
 	/**
-	 * Retrieve the Bank Default Intensity
+	 * Retrieve the Bank Senior Default Intensity
 	 * 
-	 * @return The Bank Default Intensity
+	 * @return The Bank Senior Default Intensity
 	 */
 
-	public double bankDefaultIntensity()
+	public double bankSeniorDefaultIntensity()
 	{
-		return _dblBankDefaultIntensity;
+		return _dblBankSeniorDefaultIntensity;
+	}
+
+	/**
+	 * Retrieve the Bank Subordinate Funding Spread
+	 * 
+	 * @return The Bank Subordinate Funding Spread
+	 */
+
+	public double bankSubordinateFundingSpread()
+	{
+		return _dblBankSubordinateFundingSpread;
+	}
+
+	/**
+	 * Retrieve the Bank Subordinate Default Intensity
+	 * 
+	 * @return The Bank Subordinate Default Intensity
+	 */
+
+	public double bankSubordinateDefaultIntensity()
+	{
+		return _dblBankSubordinateDefaultIntensity;
 	}
 
 	/**

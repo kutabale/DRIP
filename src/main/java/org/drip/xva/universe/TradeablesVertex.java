@@ -68,17 +68,17 @@ package org.drip.xva.universe;
 
 public class TradeablesVertex {
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankFundingNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeCollateralSchemeNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSeniorFundingNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSubordinateFundingNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge[] _aJDECounterPartyFundingNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeZeroRecoveryBankFundingNumeraire = null;
 
 	/**
 	 * Create a TradeablesVertex Instance without the Zero Recovery Bank Funding Numeraire
 	 * 
 	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
 	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
-	 * @param jdeBankFundingNumeraire The Realized Bank Funding Numeraire
+	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire
 	 * @param aJDECounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire Array
 	 * 
 	 * @return The TradeablesVertex Instance without the Zero Recovery Bank Numeraire
@@ -87,12 +87,12 @@ public class TradeablesVertex {
 	public static final TradeablesVertex Standard (
 		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankFundingNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire)
 	{
 		try {
 			return new TradeablesVertex (jdeAssetNumeraire, jdeCollateralSchemeNumeraire,
-				jdeBankFundingNumeraire, null, aJDECounterPartyFundingNumeraire);
+				jdeBankSeniorFundingNumeraire, null, aJDECounterPartyFundingNumeraire);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -103,11 +103,10 @@ public class TradeablesVertex {
 	/**
 	 * TradeablesVertex Constructor
 	 * 
-	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
+	 * @param jdeAssetNumeraire The Asset Numeraire
 	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
-	 * @param jdeBankFundingNumeraire The Realized Bank Funding Numeraire
-	 * @param jdeZeroRecoveryBankFundingNumeraire The Realized Zero Recovery Bank Funding Numeraire Level
-	 * 		Realization
+	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire
+	 * @param jdeBankSubordinateFundingNumeraire The Realized Bank Subordinate Funding Numeraire
 	 * @param aJDECounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire Array
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -116,8 +115,8 @@ public class TradeablesVertex {
 	public TradeablesVertex (
 		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFundingNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire)
 		throws java.lang.Exception
 	{
@@ -125,10 +124,10 @@ public class TradeablesVertex {
 			aJDECounterPartyFundingNumeraire))
 			throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
 
-		_jdeBankFundingNumeraire = jdeBankFundingNumeraire;
 		_jdeCollateralSchemeNumeraire = jdeCollateralSchemeNumeraire;
+		_jdeBankSeniorFundingNumeraire = jdeBankSeniorFundingNumeraire;
 		int iNumCounterParty = _aJDECounterPartyFundingNumeraire.length;
-		_jdeZeroRecoveryBankFundingNumeraire = jdeZeroRecoveryBankFundingNumeraire;
+		_jdeBankSubordinateFundingNumeraire = jdeBankSubordinateFundingNumeraire;
 
 		if (0 >= iNumCounterParty)
 			throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
@@ -140,9 +139,9 @@ public class TradeablesVertex {
 	}
 
 	/**
-	 * Retrieve the Asset Numeraire Realization
+	 * Retrieve the Asset Numeraire
 	 * 
-	 * @return The Asset Numeraire Realization
+	 * @return The Asset Numeraire
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge assetNumeraire()
@@ -162,25 +161,25 @@ public class TradeablesVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Bank Funding Numeraire
+	 * Retrieve the Realized Bank Senior Funding Numeraire
 	 * 
-	 * @return The Realized Bank Funding Numeraire
+	 * @return The Realized Bank Senior Funding Numeraire
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge bankFundingNumeraire()
+	public org.drip.measure.realization.JumpDiffusionEdge bankSeniorFundingNumeraire()
 	{
-		return _jdeBankFundingNumeraire;
+		return _jdeBankSeniorFundingNumeraire;
 	}
 
 	/**
-	 * Retrieve the Realized Zero Recovery Bank Funding Numeraire
+	 * Retrieve the Realized Bank Subordinate Funding Numeraire
 	 * 
-	 * @return The Realized Zero Recovery Bank Funding Numeraire
+	 * @return The Realized Bank Subordinate Funding Numeraire
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge zeroRecoveryBankFundingNumeraire()
+	public org.drip.measure.realization.JumpDiffusionEdge bankSubordinateFundingNumeraire()
 	{
-		return _jdeZeroRecoveryBankFundingNumeraire;
+		return _jdeBankSubordinateFundingNumeraire;
 	}
 
 	/**

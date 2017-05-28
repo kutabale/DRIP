@@ -124,10 +124,10 @@ public class XVAReplicationPortfolio {
 				),
 				dblTimeWidth
 			),
-			tcm.bankFunding().numeraireEvolver().weinerIncrement (
+			tcm.bankSeniorFunding().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					tcvmStart.bankFundingNumeraire().finish(),
+					tcvmStart.bankSeniorFundingNumeraire().finish(),
 					0.,
 					false
 				),
@@ -185,7 +185,7 @@ public class XVAReplicationPortfolio {
 
 		double dblAssetPriceFinish = tcvmFinish.assetNumeraire().finish();
 
-		double dblZeroCouponBankPriceFinish = tcvmFinish.bankFundingNumeraire().finish();
+		double dblZeroCouponBankPriceFinish = tcvmFinish.bankSeniorFundingNumeraire().finish();
 
 		double dblZeroCouponCounterPartyPriceFinish = tcvmFinish.counterPartyFundingNumeraire()[0].finish();
 
@@ -204,7 +204,7 @@ public class XVAReplicationPortfolio {
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (tcvmFinish.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvFinish.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
@@ -268,7 +268,7 @@ public class XVAReplicationPortfolio {
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral cob = new CloseOutBilateral (
+		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblBankRecovery,
 			new double[] {dblCounterPartyRecovery}
 		);
@@ -336,7 +336,7 @@ public class XVAReplicationPortfolio {
 			pdeec
 		);
 
-		SpreadIntensity si = new SpreadIntensity (
+		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecovery,
 			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery}
@@ -413,7 +413,7 @@ public class XVAReplicationPortfolio {
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.bankNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +

@@ -211,17 +211,18 @@ public class EvolutionTrajectoryVertex {
 	{
 		double dblFundingConstraint = _agv.derivativeXVAValue();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankFundingNumeraire = _tv.bankFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire =
+			_tv.bankSeniorFundingNumeraire();
 
-		if (null != jdeBankFundingNumeraire)
-			dblFundingConstraint += jdeBankFundingNumeraire.finish() * _rpv.bankNumeraireUnits();
+		if (null != jdeBankSeniorFundingNumeraire)
+			dblFundingConstraint += jdeBankSeniorFundingNumeraire.finish() * _rpv.bankSeniorNumeraireUnits();
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFundingNumeraire =
-			_tv.zeroRecoveryBankFundingNumeraire();
+			_tv.bankSubordinateFundingNumeraire();
 
 		if (null != jdeZeroRecoveryBankFundingNumeraire)
 			dblFundingConstraint += jdeZeroRecoveryBankFundingNumeraire.finish() *
-				_rpv.zeroRecoveryBankNumeraireUnits();
+				_rpv.bankSubordinateNumeraireUnits();
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire =
 			_tv.collateralSchemeNumeraire();
