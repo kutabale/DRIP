@@ -10,6 +10,7 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
+import org.drip.xva.hedgeerror.PerfectReplication;
 import org.drip.xva.pde.*;
 import org.drip.xva.universe.*;
 
@@ -113,7 +114,8 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		BurgardKjaerEdgeAttribution bkea = bko.timeIncrementRunAttribution (
 			si,
-			etvStart
+			etvStart,
+			0.
 		);
 
 		double dblTheta = bkea.theta();
@@ -322,7 +324,7 @@ public class CorrelatedNumeraireXVAAttribution {
 			dblTimeWidth
 		);
 
-		BurgardKjaerOperator bko = new BurgardKjaerOperator (
+		BurgardKjaerOperator bko = new PerfectReplication (
 			tc,
 			cob,
 			pdeec

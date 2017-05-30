@@ -8,6 +8,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
+import org.drip.xva.hedgeerror.PerfectReplication;
 import org.drip.xva.pde.*;
 import org.drip.xva.universe.*;
 
@@ -150,7 +151,8 @@ public class XVAGreeks {
 
 		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
 			si,
-			etvStart
+			etvStart,
+			0.
 		);
 
 		double dblTheta = bker.theta();
@@ -320,7 +322,7 @@ public class XVAGreeks {
 			dblTimeWidth
 		);
 
-		BurgardKjaerOperator bko = new BurgardKjaerOperator (
+		BurgardKjaerOperator bko = new PerfectReplication (
 			tc,
 			cob,
 			pdeec

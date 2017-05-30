@@ -144,4 +144,15 @@ public class AssetGreekVertex {
 	{
 		return _dblDerivativeFairValue;
 	}
+
+	/**
+	 * Retrieve the Derivative XVA Adjustment
+	 * 
+	 * @return The Derivative XVA Adjustment
+	 */
+
+	public double derivativeXVA()
+	{
+		return _dblDerivativeXVAValue - _dblDerivativeXVAValue;
+	}
 }

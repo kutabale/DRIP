@@ -10,6 +10,7 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
+import org.drip.xva.hedgeerror.PerfectReplication;
 import org.drip.xva.pde.*;
 import org.drip.xva.universe.*;
 
@@ -206,7 +207,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		BurgardKjaerOperator bko = new BurgardKjaerOperator (
+		BurgardKjaerOperator bko = new PerfectReplication (
 			tc,
 			cob,
 			pdeec
@@ -387,7 +388,8 @@ public class EulerTrajectoryEvolutionScheme {
 			si,
 			aTV,
 			bko,
-			etv
+			etv,
+			0.
 		);
 
 		for (int i = iNumTimeStep - 2; i >= 0; --i) {
