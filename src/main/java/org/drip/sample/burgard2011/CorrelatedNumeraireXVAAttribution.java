@@ -88,7 +88,7 @@ public class CorrelatedNumeraireXVAAttribution {
 		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
 		final EvolutionTrajectoryVertex etvStart,
-		final TradeablesVertex tcvm)
+		final TradeablesVertex tv)
 		throws Exception
 	{
 		AssetGreekVertex agvStart = etvStart.assetGreekVertex();
@@ -103,11 +103,11 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeablesVertex tcvmStart = etvStart.tradeablesVertex();
+		TradeablesVertex tvStart = etvStart.tradeablesVertex();
 
-		TradeablesContainer tcm = tes.universe();
+		TradeablesContainer tc = tes.universe();
 
-		double dblCollateralBondNumeraire = tcvmStart.collateralSchemeNumeraire().finish();
+		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
 		CloseOutBilateral cob = tes.boundaryCondition();
 
@@ -139,20 +139,20 @@ public class CorrelatedNumeraireXVAAttribution {
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.counterPartyDefault
 			(0, new double[] {dblDerivativeXVAValueFinish}));
 
-		org.drip.xva.derivative.CashAccountEdge lca = tes.rebalanceCash (
+		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
-			tcvm
+			tv
 		).cashAccount();
 
-		double dblCashAccountAccumulationFinish = lca.accumulation();
+		double dblCashAccountAccumulationFinish = cae.accumulation();
 
-		double dblAssetPriceFinish = tcvm.assetNumeraire().finish();
+		double dblAssetPriceFinish = tv.assetNumeraire().finish();
 
-		double dblZeroCouponBankPriceFinish = tcvm.bankSeniorFundingNumeraire().finish();
+		double dblZeroCouponBankPriceFinish = tv.bankSeniorFundingNumeraire().finish();
 
-		double dblZeroCouponCounterPartyPriceFinish = tcvm.counterPartyFundingNumeraire()[0].finish();
+		double dblZeroCouponCounterPartyPriceFinish = tv.counterPartyFundingNumeraire()[0].finish();
 
-		ReplicationPortfolioVertex erpFinish = ReplicationPortfolioVertex.Standard (
+		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
 			new double[] {dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish},
@@ -165,11 +165,11 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (dblAssetPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (tcvm.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpFinish.cashAccount(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (tv.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (bkea.derivativeXVAFundingGrowth(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (bkea.derivativeXVABankDefaultGrowth(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (bkea.derivativeXVACounterPartyDefaultGrowth(), 1, 6, 1.) + " | " +
@@ -178,14 +178,14 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
-			tcvm,
-			erpFinish,
+			tv,
+			rpvFinish,
 			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				agvStart.derivativeFairValue() * Math.exp (
-					-1. * dblTimeWidth * tcm.collateralScheme().numeraireEvolver().evaluator().drift().value (
+					-1. * dblTimeWidth * tc.collateralScheme().numeraireEvolver().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -293,7 +293,7 @@ public class CorrelatedNumeraireXVAAttribution {
 			)
 		);
 
-		TradeablesContainer tcm = TradeablesContainer.Standard (
+		TradeablesContainer tc = TradeablesContainer.Standard (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -316,14 +316,14 @@ public class CorrelatedNumeraireXVAAttribution {
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
-			tcm,
+			tc,
 			cob,
 			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new BurgardKjaerOperator (
-			tcm,
+			tc,
 			cob,
 			pdeec
 		);
@@ -474,7 +474,7 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
-		EvolutionTrajectoryVertex eet = new EvolutionTrajectoryVertex (
+		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
 			TradeablesVertex.Standard (
 				aJDEAsset[iNumTimeStep - 1],
@@ -494,11 +494,11 @@ public class CorrelatedNumeraireXVAAttribution {
 		);
 
 		for (int i = iNumTimeStep - 2; i >= 0; --i)
-			eet = RunStep (
+			etv = RunStep (
 				tes,
 				si,
 				bko,
-				eet,
+				etv,
 				TradeablesVertex.Standard (
 					aJDEAsset[i],
 					aJDECollateral[i],

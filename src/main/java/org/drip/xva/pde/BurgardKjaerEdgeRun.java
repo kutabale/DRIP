@@ -70,6 +70,7 @@ package org.drip.xva.pde;
 
 public class BurgardKjaerEdgeRun extends org.drip.xva.pde.BurgardKjaerEdge {
 	private double _dblDerivativeXVAFundingGrowth = java.lang.Double.NaN;
+	private double _dblDerivativeXVAHedgeErrorGrowth = java.lang.Double.NaN;
 	private double _dblDerivativeXVABankDefaultGrowth = java.lang.Double.NaN;
 	private double _dblDerivativeXVACounterPartyDefaultGrowth = java.lang.Double.NaN;
 
@@ -87,6 +88,7 @@ public class BurgardKjaerEdgeRun extends org.drip.xva.pde.BurgardKjaerEdge {
 	 * @param dblDerivativeXVABankDefaultGrowth The Bank Default Component of the Derivative XVA Value Growth
 	 * @param dblDerivativeXVACounterPartyDefaultGrowth The Counter Party Default Component of the Derivative
 	 * 		XVA Value Growth
+	 * @param dblDerivativeXVAHedgeErrorGrowth The Hedge Error Component of the Derivaitve XVA Growth
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -99,7 +101,8 @@ public class BurgardKjaerEdgeRun extends org.drip.xva.pde.BurgardKjaerEdge {
 		final double dblDerivativeXVACollateralGrowth,
 		final double dblDerivativeXVAFundingGrowth,
 		final double dblDerivativeXVABankDefaultGrowth,
-		final double dblDerivativeXVACounterPartyDefaultGrowth)
+		final double dblDerivativeXVACounterPartyDefaultGrowth,
+		final double dblDerivativeXVAHedgeErrorGrowth)
 		throws java.lang.Exception
 	{
 		super (dblAssetNumeraireBump, dblDerivativeXVAStochasticGrowthDown, dblDerivativeXVAStochasticGrowth,
@@ -109,8 +112,21 @@ public class BurgardKjaerEdgeRun extends org.drip.xva.pde.BurgardKjaerEdge {
 			dblDerivativeXVAFundingGrowth) || !org.drip.quant.common.NumberUtil.IsValid
 				(_dblDerivativeXVABankDefaultGrowth = dblDerivativeXVABankDefaultGrowth) ||
 					!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVACounterPartyDefaultGrowth =
-						dblDerivativeXVACounterPartyDefaultGrowth))
+						dblDerivativeXVACounterPartyDefaultGrowth) ||
+							!org.drip.quant.common.NumberUtil.IsValid (_dblDerivativeXVAHedgeErrorGrowth =
+								dblDerivativeXVAHedgeErrorGrowth))
 			throw new java.lang.Exception ("BurgardKjaerEdgeRun Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Hedge Error Component of the Derivative XVA Value Growth
+	 * 
+	 * @return The Hedge Error Component of the Derivative XVA Value Growth
+	 */
+
+	public double derivativeXVAHedgeErrorGrowth()
+	{
+		return _dblDerivativeXVAHedgeErrorGrowth;
 	}
 
 	/**
@@ -150,20 +166,20 @@ public class BurgardKjaerEdgeRun extends org.drip.xva.pde.BurgardKjaerEdge {
 	{
 		return super.derivativeXVAStochasticGrowthDown() + super.derivativeXVACollateralGrowth() +
 			_dblDerivativeXVAFundingGrowth + _dblDerivativeXVABankDefaultGrowth +
-				_dblDerivativeXVACounterPartyDefaultGrowth;
+				_dblDerivativeXVACounterPartyDefaultGrowth + _dblDerivativeXVAHedgeErrorGrowth;
 	}
 
 	@Override public double theta()
 	{
 		return super.derivativeXVAStochasticGrowth() + super.derivativeXVACollateralGrowth() +
 			_dblDerivativeXVAFundingGrowth + _dblDerivativeXVABankDefaultGrowth +
-				_dblDerivativeXVACounterPartyDefaultGrowth;
+				_dblDerivativeXVACounterPartyDefaultGrowth + _dblDerivativeXVAHedgeErrorGrowth;
 	}
 
 	@Override public double thetaAssetNumeraireUp()
 	{
 		return super.derivativeXVAStochasticGrowthUp() + super.derivativeXVACollateralGrowth() +
 			_dblDerivativeXVAFundingGrowth + _dblDerivativeXVABankDefaultGrowth +
-				_dblDerivativeXVACounterPartyDefaultGrowth;
+				_dblDerivativeXVACounterPartyDefaultGrowth + _dblDerivativeXVAHedgeErrorGrowth;
 	}
 }

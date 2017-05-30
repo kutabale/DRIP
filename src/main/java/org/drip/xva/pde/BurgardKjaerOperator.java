@@ -159,16 +159,22 @@ public class BurgardKjaerOperator {
 		double[] adblBankGainOnCounterPartyDefault = etv.gainOnCounterPartyDefault();
 
 		double dblGainOnCounterPartyDefault = 0.;
+		double dblCounterPartyDefaultIntensity = 0.;
 		int iNumCounterPartyGroup = adblCounterPartyDefaultIntensity.length;
-		double dblBankDefaultDerivativeValue = dblDerivativeXVAValue + dblGainOnBankDefault;
 
 		if (iNumCounterPartyGroup != adblBankGainOnCounterPartyDefault.length) return null;
 
-		for (int i = 0; i < iNumCounterPartyGroup; ++i)
+		for (int i = 0; i < iNumCounterPartyGroup; ++i) {
+			dblCounterPartyDefaultIntensity += adblCounterPartyDefaultIntensity[i];
 			dblGainOnCounterPartyDefault += adblCounterPartyDefaultIntensity[i] *
 				adblBankGainOnCounterPartyDefault[i];
+		}
 
 		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralScheme = tv.collateralSchemeNumeraire();
+
+		double dblBankSeniorDefaultIntensity = si.bankSeniorDefaultIntensity();
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
@@ -181,19 +187,21 @@ public class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[0],
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
-				null == tCollateralScheme ? 0. : tCollateralScheme.numeraireEvolver().evaluator().volatility().value (
-					new org.drip.measure.realization.JumpDiffusionVertex (
-						dblTime,
-						tv.collateralSchemeNumeraire().finish(),
-						0.,
-						false
+				null == tCollateralScheme || null == jdeCollateralScheme ? 0. :
+					tCollateralScheme.numeraireEvolver().evaluator().drift().value (
+						new org.drip.measure.realization.JumpDiffusionVertex (
+							dblTime,
+							jdeCollateralScheme.finish(),
+							0.,
+							false
+						)
 					)
-				) * dblDerivativeXVAValue,
-				si.bankSeniorFundingSpread() * (
-					dblBankDefaultDerivativeValue > 0. ? dblBankDefaultDerivativeValue : 0.
-				),
-				-1. * si.bankSeniorDefaultIntensity() * dblGainOnBankDefault,
-				-1. * dblGainOnCounterPartyDefault
+				// * dblCollateralValue,
+				* 0.,
+				(dblBankSeniorDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
+				-1. * dblBankSeniorDefaultIntensity * dblGainOnBankDefault,
+				-1. * dblGainOnCounterPartyDefault,
+				0. * dblDerivativeXVAValue
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

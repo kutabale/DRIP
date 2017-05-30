@@ -129,7 +129,7 @@ public class EulerTrajectoryEvolutionScheme {
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
-		TradeablesVertex[] aTCVM = new TradeablesVertex[iNumTimeStep];
+		TradeablesVertex[] aTV = new TradeablesVertex[iNumTimeStep];
 
 		PDEEvolutionControl pdeec = new PDEEvolutionControl (
 			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
@@ -177,7 +177,7 @@ public class EulerTrajectoryEvolutionScheme {
 			)
 		);
 
-		TradeablesContainer tcm = TradeablesContainer.Standard (
+		TradeablesContainer tc = TradeablesContainer.Standard (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -200,14 +200,14 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
-			tcm,
+			tc,
 			cob,
 			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new BurgardKjaerOperator (
-			tcm,
+			tc,
 			cob,
 			pdeec
 		);
@@ -376,32 +376,32 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		for (int i = 0; i < iNumTimeStep; ++i)
-			aTCVM[i] = TradeablesVertex.Standard (
+			aTV[i] = TradeablesVertex.Standard (
 				aJDEAsset[i],
 				aJDECollateral[i],
 				aJDEBank[i],
 				new JumpDiffusionEdge[] {aJDECounterParty[i]}
 			);
 
-		EvolutionTrajectoryEdge[] aLET = tes.eulerWalk (
+		EvolutionTrajectoryEdge[] aETE = tes.eulerWalk (
 			si,
-			aTCVM,
+			aTV,
 			bko,
 			etv
 		);
 
 		for (int i = iNumTimeStep - 2; i >= 0; --i) {
-			etv = aLET[i].vertexFinish();
+			etv = aETE[i].vertexFinish();
 
-			CashAccountEdge lca = aLET[i].cashAccountEdge();
+			CashAccountEdge lca = aETE[i].cashAccountEdge();
 
 			System.out.println ("\t||" +
 				FormatUtil.FormatDouble (etv.time(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.assetGreekVertex().derivativeXVAValue(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTCVM[i].assetNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTCVM[i].bankSeniorFundingNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTCVM[i].counterPartyFundingNumeraire()[0].finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTCVM[i].collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aTV[i].assetNumeraire().finish(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aTV[i].bankSeniorFundingNumeraire().finish(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aTV[i].counterPartyFundingNumeraire()[0].finish(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aTV[i].collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().assetNumeraireUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +

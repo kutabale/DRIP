@@ -99,23 +99,23 @@ public class XVAGreeks {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeablesVertex tcvmStart = etvStart.tradeablesVertex();
+		TradeablesVertex tvStart = etvStart.tradeablesVertex();
 
-		TradeablesContainer tcm = tes.universe();
+		TradeablesContainer tc = tes.universe();
 
-		double dblCollateralBondNumeraire = tcvmStart.collateralSchemeNumeraire().finish();
+		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
-		TradeablesVertex tcvmFinish = TradeablesVertex.Standard (
-			tcm.asset().numeraireEvolver().weinerIncrement (
+		TradeablesVertex tvFinish = TradeablesVertex.Standard (
+			tc.asset().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					tcvmStart.assetNumeraire().finish(),
+					tvStart.assetNumeraire().finish(),
 					0.,
 					false
 				),
 				dblTimeWidth
 			),
-			tcm.collateralScheme().numeraireEvolver().weinerIncrement (
+			tc.collateralScheme().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblCollateralBondNumeraire,
@@ -124,20 +124,20 @@ public class XVAGreeks {
 				),
 				dblTimeWidth
 			),
-			tcm.bankSeniorFunding().numeraireEvolver().weinerIncrement (
+			tc.bankSeniorFunding().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					tcvmStart.bankSeniorFundingNumeraire().finish(),
+					tvStart.bankSeniorFundingNumeraire().finish(),
 					0.,
 					false
 				),
 				dblTimeWidth
 			),
 			new JumpDiffusionEdge[] {
-				tcm.counterPartyFunding()[0].numeraireEvolver().weinerIncrement (
+				tc.counterPartyFunding()[0].numeraireEvolver().weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
-						tcvmStart.counterPartyFundingNumeraire()[0].finish(),
+						tvStart.counterPartyFundingNumeraire()[0].finish(),
 						0.,
 						false
 					),
@@ -193,26 +193,26 @@ public class XVAGreeks {
 			FormatUtil.FormatDouble (dblThetaAssetNumeraireUp, 1, 6, 1.) + " ||"
 		);
 
-		org.drip.xva.derivative.CashAccountEdge lca = tes.rebalanceCash (
+		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
-			tcvmFinish
+			tvFinish
 		).cashAccount();
 
 		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
-			tcvmFinish,
+			tvFinish,
 			ReplicationPortfolioVertex.Standard (
 				-1. * dblDerivativeXVAValueDeltaFinish,
-				dblGainOnBankDefaultFinish / tcvmFinish.bankSeniorFundingNumeraire().finish(),
-				new double[] {dblGainOnCounterPartyDefaultFinish / tcvmFinish.counterPartyFundingNumeraire()[0].finish()},
-				rpvStart.cashAccount() + lca.accumulation()
+				dblGainOnBankDefaultFinish / tvFinish.bankSeniorFundingNumeraire().finish(),
+				new double[] {dblGainOnCounterPartyDefaultFinish / tvFinish.counterPartyFundingNumeraire()[0].finish()},
+				rpvStart.cashAccount() + cae.accumulation()
 			),
 			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				agvStart.derivativeFairValue() * Math.exp (
-					-1. * dblTimeWidth * tcm.collateralScheme().numeraireEvolver().evaluator().drift().value (
+					-1. * dblTimeWidth * tc.collateralScheme().numeraireEvolver().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -291,7 +291,7 @@ public class XVAGreeks {
 			)
 		);
 
-		TradeablesContainer tcm = TradeablesContainer.Standard (
+		TradeablesContainer tc = TradeablesContainer.Standard (
 			new Equity (
 				meAsset,
 				dblAssetRepo,
@@ -314,14 +314,14 @@ public class XVAGreeks {
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
-			tcm,
+			tc,
 			cob,
 			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new BurgardKjaerOperator (
-			tcm,
+			tc,
 			cob,
 			pdeec
 		);

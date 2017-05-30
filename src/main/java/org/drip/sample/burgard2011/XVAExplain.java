@@ -99,23 +99,23 @@ public class XVAExplain {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeablesVertex tcvmStart = etvStart.tradeablesVertex();
+		TradeablesVertex tvStart = etvStart.tradeablesVertex();
 
-		TradeablesContainer tcm = tes.universe();
+		TradeablesContainer tc = tes.universe();
 
-		double dblCollateralBondNumeraire = tcvmStart.collateralSchemeNumeraire().finish();
+		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
-		TradeablesVertex tcvmFinish = TradeablesVertex.Standard (
-			tcm.asset().numeraireEvolver().weinerIncrement (
+		TradeablesVertex tvFinish = TradeablesVertex.Standard (
+			tc.asset().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					tcvmStart.assetNumeraire().finish(),
+					tvStart.assetNumeraire().finish(),
 					0.,
 					false
 				),
 				dblTimeWidth
 			),
-			tcm.collateralScheme().numeraireEvolver().weinerIncrement (
+			tc.collateralScheme().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
 					dblCollateralBondNumeraire,
@@ -124,20 +124,20 @@ public class XVAExplain {
 				),
 				dblTimeWidth
 			),
-			tcm.bankSeniorFunding().numeraireEvolver().weinerIncrement (
+			tc.bankSeniorFunding().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					tcvmStart.bankSeniorFundingNumeraire().finish(),
+					tvStart.bankSeniorFundingNumeraire().finish(),
 					0.,
 					false
 				),
 				dblTimeWidth
 			),
 			new JumpDiffusionEdge[] {
-				tcm.counterPartyFunding()[0].numeraireEvolver().weinerIncrement (
+				tc.counterPartyFunding()[0].numeraireEvolver().weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
-						tcvmStart.counterPartyFundingNumeraire()[0].finish(),
+						tvStart.counterPartyFundingNumeraire()[0].finish(),
 						0.,
 						false
 					),
@@ -148,18 +148,18 @@ public class XVAExplain {
 
 		CloseOutBilateral cob = tes.boundaryCondition();
 
-		BurgardKjaerEdgeRun lbkr = bko.timeIncrementRun (
+		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
 			si,
 			etvStart
 		);
 
-		double dblTheta = lbkr.theta();
+		double dblTheta = bker.theta();
 
-		double dblAssetNumeraireBump = lbkr.assetNumeraireBump();
+		double dblAssetNumeraireBump = bker.assetNumeraireBump();
 
-		double dblThetaAssetNumeraireUp = lbkr.thetaAssetNumeraireUp();
+		double dblThetaAssetNumeraireUp = bker.thetaAssetNumeraireUp();
 
-		double dblThetaAssetNumeraireDown = lbkr.thetaAssetNumeraireDown();
+		double dblThetaAssetNumeraireDown = bker.thetaAssetNumeraireDown();
 
 		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() +
 			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
@@ -176,18 +176,18 @@ public class XVAExplain {
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
 			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValueFinish}));
 
-		org.drip.xva.derivative.CashAccountEdge lca = tes.rebalanceCash (
+		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
-			tcvmFinish
+			tvFinish
 		).cashAccount();
 
-		double dblCashAccountAccumulationFinish = lca.accumulation();
+		double dblCashAccountAccumulationFinish = cae.accumulation();
 
-		double dblAssetPriceFinish = tcvmFinish.assetNumeraire().finish();
+		double dblAssetPriceFinish = tvFinish.assetNumeraire().finish();
 
-		double dblZeroCouponBankPriceFinish = tcvmFinish.bankSeniorFundingNumeraire().finish();
+		double dblZeroCouponBankPriceFinish = tvFinish.bankSeniorFundingNumeraire().finish();
 
-		double dblZeroCouponCounterPartyPriceFinish = tcvmFinish.counterPartyFundingNumeraire()[0].finish();
+		double dblZeroCouponCounterPartyPriceFinish = tvFinish.counterPartyFundingNumeraire()[0].finish();
 
 		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
@@ -202,27 +202,27 @@ public class XVAExplain {
 			FormatUtil.FormatDouble (dblAssetPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponBankPriceFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblZeroCouponCounterPartyPriceFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (tcvmFinish.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (tvFinish.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.assetAccumulation(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.bankAccumulation(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (lca.counterPartyAccumulation(), 1, 6, 1.) + " ||"
+			FormatUtil.FormatDouble (cae.assetAccumulation(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (cae.bankAccumulation(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (cae.counterPartyAccumulation(), 1, 6, 1.) + " ||"
 		);
 
 		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
-			tcvmFinish,
+			tvFinish,
 			rpvFinish,
 			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
 				dblDerivativeXVAValueDeltaFinish,
 				dblDerivativeXVAValueGammaFinish,
 				agvStart.derivativeFairValue() * Math.exp (
-					-1. * dblTimeWidth * tcm.collateralScheme().numeraireEvolver().evaluator().drift().value (
+					-1. * dblTimeWidth * tc.collateralScheme().numeraireEvolver().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
 							dblCollateralBondNumeraire,
@@ -273,65 +273,65 @@ public class XVAExplain {
 			new double[] {dblCounterPartyRecovery}
 		);
 
-		DiffusionEvolver meAsset = new DiffusionEvolver (
+		DiffusionEvolver deAsset = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblAssetDrift,
 				dblAssetVolatility
 			)
 		);
 
-		DiffusionEvolver meZeroCouponCollateralBond = new DiffusionEvolver (
+		DiffusionEvolver deZeroCouponCollateralBond = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblZeroCouponCollateralBondDrift,
 				dblZeroCouponCollateralBondVolatility
 			)
 		);
 
-		DiffusionEvolver meZeroCouponBankBond = new DiffusionEvolver (
+		DiffusionEvolver deZeroCouponBankBond = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblZeroCouponBankBondDrift,
 				dblZeroCouponBankBondVolatility
 			)
 		);
 
-		DiffusionEvolver meZeroCouponCounterPartyBond = new DiffusionEvolver (
+		DiffusionEvolver deZeroCouponCounterPartyBond = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblZeroCouponCounterPartyBondDrift,
 				dblZeroCouponCounterPartyBondVolatility
 			)
 		);
 
-		TradeablesContainer tcm = TradeablesContainer.Standard (
+		TradeablesContainer tc = TradeablesContainer.Standard (
 			new Equity (
-				meAsset,
+				deAsset,
 				dblAssetRepo,
 				dblAssetDividend
 			),
 			new Tradeable (
-				meZeroCouponCollateralBond,
+				deZeroCouponCollateralBond,
 				dblZeroCouponCollateralBondRepo
 			),
 			new Tradeable (
-				meZeroCouponBankBond,
+				deZeroCouponBankBond,
 				dblZeroCouponBankBondRepo
 			),
 			new Tradeable[] {
 				new Tradeable (
-					meZeroCouponCounterPartyBond,
+					deZeroCouponCounterPartyBond,
 					dblZeroCouponCounterPartyBondRepo
 				)
 			}
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
-			tcm,
+			tc,
 			cob,
 			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new BurgardKjaerOperator (
-			tcm,
+			tc,
 			cob,
 			pdeec
 		);
@@ -425,7 +425,7 @@ public class XVAExplain {
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
 			TradeablesVertex.Standard (
-				meAsset.weinerIncrement (
+				deAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
 						dblDerivativeValue,
@@ -434,7 +434,7 @@ public class XVAExplain {
 					),
 					dblTimeWidth
 				),
-				meZeroCouponCollateralBond.weinerIncrement (
+				deZeroCouponCollateralBond.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
 						1.,
@@ -443,7 +443,7 @@ public class XVAExplain {
 					),
 					dblTimeWidth
 				),
-				meZeroCouponBankBond.weinerIncrement (
+				deZeroCouponBankBond.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
 						1.,
@@ -453,7 +453,7 @@ public class XVAExplain {
 					dblTimeWidth
 				),
 				new JumpDiffusionEdge[] {
-					meZeroCouponCounterPartyBond.weinerIncrement (
+					deZeroCouponCounterPartyBond.weinerIncrement (
 						new JumpDiffusionVertex (
 							dblTime,
 							1.,

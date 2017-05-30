@@ -217,18 +217,12 @@ public class EvolutionTrajectoryVertex {
 		if (null != jdeBankSeniorFundingNumeraire)
 			dblFundingConstraint += jdeBankSeniorFundingNumeraire.finish() * _rpv.bankSeniorNumeraireUnits();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeZeroRecoveryBankFundingNumeraire =
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire =
 			_tv.bankSubordinateFundingNumeraire();
 
-		if (null != jdeZeroRecoveryBankFundingNumeraire)
-			dblFundingConstraint += jdeZeroRecoveryBankFundingNumeraire.finish() *
+		if (null != jdeBankSubordinateFundingNumeraire)
+			dblFundingConstraint += jdeBankSubordinateFundingNumeraire.finish() *
 				_rpv.bankSubordinateNumeraireUnits();
-
-		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire =
-			_tv.collateralSchemeNumeraire();
-
-		if (null != jdeCollateralSchemeNumeraire)
-			dblFundingConstraint += jdeCollateralSchemeNumeraire.finish() * _rpv.cashAccount();
 
 		return dblFundingConstraint;
 	}

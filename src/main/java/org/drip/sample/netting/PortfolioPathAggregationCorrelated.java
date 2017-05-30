@@ -12,8 +12,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-

@@ -264,4 +264,50 @@ public class ReplicationPortfolioVertex {
 
 		return dblValue;
 	}
+
+	/**
+	 * Compute the Market Value of the Bank Position Post-Default
+	 * 
+	 * @param tv The Trade-able Asset Market Snapshot
+	 * @param cob The Bilateral Close-out Instance
+	 * 
+	 * @return The Market Value of the Bank Position Post-Default
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double bankPostDefaultPositionValue (
+		final org.drip.xva.universe.TradeablesVertex tv,
+		final org.drip.xva.definition.CloseOutBilateral cob)
+		throws java.lang.Exception
+	{
+		if (null == tv || null == cob)
+			throw new java.lang.Exception
+				("ReplicationPortfolioVertex::bankPostDefaultPositionValue => Invalid Inputs");
+
+		double dblValue = 0.;
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFunding =
+			tv.bankSeniorFundingNumeraire();
+
+		if (null != jdeBankSeniorFunding)
+			dblValue += jdeBankSeniorFunding.finish() * _dblBankSeniorNumeraireUnits *
+				cob.bankSeniorFundingRecovery();
+
+		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFunding =
+			tv.bankSubordinateFundingNumeraire();
+
+		if (null != jdeBankSubordinateFunding) {
+			double dblBankSubordinateFundingRecovery = cob.bankSubordinateFundingRecovery();
+
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFundingRecovery))
+				throw new java.lang.Exception
+					("ReplicationPortfolioVertex::bankPostDefaultPositionValue => Invalid Inputs");
+
+			dblValue -= jdeBankSubordinateFunding.finish() * _dblBankSubordinateNumeraireUnits *
+				dblBankSubordinateFundingRecovery;
+		}
+
+		return dblValue;
+	}
 }
