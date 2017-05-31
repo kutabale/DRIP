@@ -47,9 +47,9 @@ package org.drip.xva.universe;
  */
 
 /**
- * TradeablesContainer describes the Economy with the following Traded Assets - the Default-free Zero Coupon
- *  Bond, the Default-able Zero Coupon Bank Bond, the Array of Default-able Zero Coupon Counter-party Bonds,
- *  and an Asset that follows Brownian Motion. The References are:
+ * LatentStateDynamicsContainer describes the Economy with the following Traded Assets - the Overnight Index
+ *  Numeraire, the Collateral Scheme Numeraire, the Default-able Bank Bond Numeraire, the Array of
+ *  Default-able Counter-party Numeraires, and an Asset that follows Brownian Motion. The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, eSSRN, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955.
@@ -67,36 +67,42 @@ package org.drip.xva.universe;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeablesContainer {
+public class LatentStateDynamicsContainer {
 	private org.drip.xva.universe.Tradeable _tAsset = null;
 	private org.drip.xva.universe.Tradeable _tOvernightIndex = null;
 	private org.drip.xva.universe.Tradeable _tCollateralScheme = null;
 	private org.drip.xva.universe.Tradeable _tBankSeniorFunding = null;
 	private org.drip.xva.universe.Tradeable _tBankSubordinateFunding = null;
 	private org.drip.xva.universe.Tradeable[] _aTCounterPartyFunding = null;
+	private org.drip.measure.process.DiffusionEvolver _deBankHazardRate = null;
+	private org.drip.measure.process.DiffusionEvolver _deBankRecoveryRate = null;
 
 	/**
-	 * Create a TradeablesContainer without the Zero Recovery Bank Funding Tradeable
+	 * Create a LatentStateDynamicsContainer without the Zero Recovery Bank Funding Tradeable
 	 * 
 	 * @param tAsset The Asset Tradeable
 	 * @param tOvernightIndex The Overnight Index Tradeable
 	 * @param tCollateralScheme The Collateral Scheme Tradeable
 	 * @param tBankSeniorFunding Bank Senior Funding Tradeable
 	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
+	 * @param deBankHazardRate The Bank Hazard Rate Evolver
+	 * @param deBankRecoveryRate The Bank Recovery Rate Evolver
 	 * 
-	 * @return The TradeablesContainer without the Zero Recovery Bank Funding Tradeable
+	 * @return The LatentStateDynamicsContainer without the Zero Recovery Bank Funding Tradeable
 	 */
 
-	public static final TradeablesContainer Standard (
+	public static final LatentStateDynamicsContainer Standard (
 		final org.drip.xva.universe.Tradeable tAsset,
 		final org.drip.xva.universe.Tradeable tOvernightIndex,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
 		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
-		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding)
+		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding,
+		final org.drip.measure.process.DiffusionEvolver deBankHazardRate,
+		final org.drip.measure.process.DiffusionEvolver deBankRecoveryRate)
 	{
 		try {
-			return new TradeablesContainer (tAsset, tOvernightIndex, tCollateralScheme, tBankSeniorFunding,
-				null, aTCounterPartyFunding);
+			return new LatentStateDynamicsContainer (tAsset, tOvernightIndex, tCollateralScheme,
+				tBankSeniorFunding, null, aTCounterPartyFunding, deBankHazardRate, deBankRecoveryRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -105,7 +111,7 @@ public class TradeablesContainer {
 	}
 
 	/**
-	 * TradeablesContainer Constructor
+	 * LatentStateDynamicsContainer Constructor
 	 * 
 	 * @param tAsset The Asset Tradeable
 	 * @param tOvernightIndex The Overnight Index Tradeable
@@ -113,34 +119,40 @@ public class TradeablesContainer {
 	 * @param tBankSeniorFunding Bank Senior Funding Tradeable
 	 * @param tBankSubordinateFunding Bank Subordinate Funding Tradeable
 	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
+	 * @param deBankHazardRate The Bank Hazard Rate Evolver
+	 * @param deBankRecoveryRate The Bank Recovery Rate Evolver
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradeablesContainer (
+	public LatentStateDynamicsContainer (
 		final org.drip.xva.universe.Tradeable tAsset,
 		final org.drip.xva.universe.Tradeable tOvernightIndex,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
 		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
 		final org.drip.xva.universe.Tradeable tBankSubordinateFunding,
-		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding)
+		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding,
+		final org.drip.measure.process.DiffusionEvolver deBankHazardRate,
+		final org.drip.measure.process.DiffusionEvolver deBankRecoveryRate)
 		throws java.lang.Exception
 	{
 		if (null == (_tAsset = tAsset) || null == (_aTCounterPartyFunding = aTCounterPartyFunding))
-			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("LatentStateDynamicsContainer Constructor => Invalid Inputs");
 
 		_tOvernightIndex = tOvernightIndex;
+		_deBankHazardRate = deBankHazardRate;
 		_tCollateralScheme = tCollateralScheme;
 		_tBankSeniorFunding = tBankSeniorFunding;
+		_deBankRecoveryRate = deBankRecoveryRate;
 		_tBankSubordinateFunding = tBankSubordinateFunding;
 		int iNumCounterParty = _aTCounterPartyFunding.length;
 
 		if (0 >= iNumCounterParty)
-			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("LatentStateDynamicsContainer Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumCounterParty; ++i) {
 			if (null == _aTCounterPartyFunding[i])
-				throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("LatentStateDynamicsContainer Constructor => Invalid Inputs");
 		}
 	}
 
@@ -219,5 +231,27 @@ public class TradeablesContainer {
 	public int numCounterParty()
 	{
 		return _aTCounterPartyFunding.length;
+	}
+
+	/**
+	 * Retrieve the Bank Hazard Rate Evolver
+	 * 
+	 * @return The Bank Hazard Rate Evolver
+	 */
+
+	public org.drip.measure.process.DiffusionEvolver bankHazardRateEvolver()
+	{
+		return _deBankHazardRate;
+	}
+
+	/**
+	 * Retrieve the Bank Recovery Rate Evolver
+	 * 
+	 * @return The Bank Recovery Rate Evolver
+	 */
+
+	public org.drip.measure.process.DiffusionEvolver bankRecoveryRateEvolver()
+	{
+		return _deBankRecoveryRate;
 	}
 }

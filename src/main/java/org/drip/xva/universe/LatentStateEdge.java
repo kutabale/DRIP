@@ -47,8 +47,8 @@ package org.drip.xva.universe;
  */
 
 /**
- * TradeablesVertex holds the current Realizations of the Traded Numeraires of the Reference Universe. The
- *  References are:
+ * LatentStateEdge holds the Edge Realizations of the Latent States of the Reference Universe. The References
+ *  are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, eSSRN, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955.
@@ -66,8 +66,10 @@ package org.drip.xva.universe;
  * @author Lakshmi Krishnamurthy
  */
 
-public class TradeablesVertex {
+public class LatentStateEdge {
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankHazardRate = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankRecoveryRate = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeOvernightIndexNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeCollateralSchemeNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSeniorFundingNumeraire = null;
@@ -75,28 +77,32 @@ public class TradeablesVertex {
 	private org.drip.measure.realization.JumpDiffusionEdge[] _aJDECounterPartyFundingNumeraire = null;
 
 	/**
-	 * Create a TradeablesVertex Instance without the Zero Recovery Bank Funding Numeraire
+	 * Create a LatentStateEdge Instance without the Zero Recovery Bank Funding Numeraire
 	 * 
 	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
 	 * @param jdeOvernightIndexNumeraire The Realized Overnight Index Numeraire
 	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
 	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire
 	 * @param aJDECounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire Array
+	 * @param jdeBankHazardRate The Realized Bank Hazard Rate JDE
+	 * @param jdeBankRecoveryRate The Realized Bank Recovery Rate JDE
 	 * 
-	 * @return The TradeablesVertex Instance without the Zero Recovery Bank Numeraire
+	 * @return The LatentStateEdge Instance without the Zero Recovery Bank Numeraire
 	 */
 
-	public static final TradeablesVertex Standard (
+	public static final LatentStateEdge Standard (
 		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeOvernightIndexNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire)
+		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankHazardRate,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankRecoveryRate)
 	{
 		try {
-			return new TradeablesVertex (jdeAssetNumeraire, jdeOvernightIndexNumeraire,
+			return new LatentStateEdge (jdeAssetNumeraire, jdeOvernightIndexNumeraire,
 				jdeCollateralSchemeNumeraire, jdeBankSeniorFundingNumeraire, null,
-					aJDECounterPartyFundingNumeraire);
+					aJDECounterPartyFundingNumeraire, jdeBankHazardRate, jdeBankRecoveryRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -105,31 +111,37 @@ public class TradeablesVertex {
 	}
 
 	/**
-	 * TradeablesVertex Constructor
+	 * LatentStateEdge Constructor
 	 * 
-	 * @param jdeAssetNumeraire The Asset Numeraire
-	 * @param jdeOvernightIndexNumeraire The Realized Overnight Index Numeraire
-	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
-	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire
-	 * @param jdeBankSubordinateFundingNumeraire The Realized Bank Subordinate Funding Numeraire
-	 * @param aJDECounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire Array
+	 * @param jdeAssetNumeraire The Asset Numeraire JDE
+	 * @param jdeOvernightIndexNumeraire The Realized Overnight Index Numeraire JDE
+	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire JDE
+	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire JDE
+	 * @param jdeBankSubordinateFundingNumeraire The Realized Bank Subordinate Funding Numeraire JDE
+	 * @param aJDECounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire JDE Array
+	 * @param jdeBankHazardRate The Realized Bank Hazard Rate JDE
+	 * @param jdeBankRecoveryRate The Realized Bank Recovery Rate JDE
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public TradeablesVertex (
+	public LatentStateEdge (
 		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeOvernightIndexNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire)
+		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankHazardRate,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankRecoveryRate)
 		throws java.lang.Exception
 	{
 		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null == (_aJDECounterPartyFundingNumeraire =
 			aJDECounterPartyFundingNumeraire))
-			throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("LatentStateEdge Constructor => Invalid Inputs");
 
+		_jdeBankHazardRate = jdeBankHazardRate;
+		_jdeBankRecoveryRate= jdeBankRecoveryRate;
 		_jdeOvernightIndexNumeraire = jdeOvernightIndexNumeraire;
 		_jdeCollateralSchemeNumeraire = jdeCollateralSchemeNumeraire;
 		_jdeBankSeniorFundingNumeraire = jdeBankSeniorFundingNumeraire;
@@ -137,11 +149,11 @@ public class TradeablesVertex {
 		_jdeBankSubordinateFundingNumeraire = jdeBankSubordinateFundingNumeraire;
 
 		if (0 >= iNumCounterParty)
-			throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("LatentStateEdge Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumCounterParty; ++i) {
 			if (null == _aJDECounterPartyFundingNumeraire[i])
-				throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("LatentStateEdge Constructor => Invalid Inputs");
 		}
 	}
 
@@ -220,5 +232,27 @@ public class TradeablesVertex {
 	public int numCounterParty()
 	{
 		return _aJDECounterPartyFundingNumeraire.length;
+	}
+
+	/**
+	 * Retrieve the Bank Hazard Rate Edge
+	 * 
+	 * @return The Bank Hazard Rate Edge
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionEdge bankHazardRate()
+	{
+		return _jdeBankHazardRate;
+	}
+
+	/**
+	 * Retrieve the Bank Recovery Rate Edge
+	 * 
+	 * @return The Bank Recovery Rate Edge
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionEdge bankRecoveryRate()
+	{
+		return _jdeBankRecoveryRate;
 	}
 }

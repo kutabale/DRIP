@@ -93,11 +93,13 @@ public class EulerTrajectoryEvolutionScheme {
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
 		double[][] aadblCorrelation = new double[][] {
-			{1.00, 0.00, 0.20, 0.15, 0.05}, // #0 ASSET
-			{0.00, 1.00, 0.00, 0.00, 0.00}, // #1 OVERNIGHT
-			{0.20, 0.00, 1.00, 0.13, 0.25}, // #2 COLLATERAL
-			{0.15, 0.00, 0.13, 1.00, 0.00}, // #3 BANK
-			{0.05, 0.00, 0.25, 0.00, 1.00}  // #4 COUNTER PARTY
+			{1.00, 0.00, 0.20, 0.15, 0.05, 0.00, 0.00}, // #0 ASSET
+			{0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #1 OVERNIGHT
+			{0.20, 0.00, 1.00, 0.13, 0.25, 0.00, 0.00}, // #2 COLLATERAL
+			{0.15, 0.00, 0.13, 1.00, 0.00, 0.00, 0.00}, // #3 BANK
+			{0.05, 0.00, 0.25, 0.00, 1.00, 0.00, 0.00}, // #4 COUNTER PARTY
+			{0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00}, // #5 BANK HAZARD
+			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00}  // #6 BANK RECOVERY
 		};
 
 		double dblAssetDrift = 0.06;
@@ -123,9 +125,18 @@ public class EulerTrajectoryEvolutionScheme {
 		double dblBankRecoveryRate = 0.45;
 		double dblInitialBankNumeraire = 1.;
 
+		double dblBankInitialHazardRate = 0.03;
+		double dblBankHazardRateDrift = 0.00;
+		double dblBankHazardRateVolatility = 0.005;
+
+		double dblInitialBankRecoveryRate = 0.45;
+		double dblBankRecoveryRateDrift = 0.0;
+		double dblBankRecoveryRateVolatility = 0.0;
+
 		double dblZeroCouponCounterPartyBondDrift = 0.03;
 		double dblZeroCouponCounterPartyBondVolatility = 0.10;
 		double dblZeroCouponCounterPartyBondRepo = 0.028;
+
 		double dblCounterPartyHazardRate = 0.05;
 		double dblCounterPartyRecoveryRate = 0.30;
 		double dblInitialCounterPartyNumeraire = 1.;
@@ -137,7 +148,7 @@ public class EulerTrajectoryEvolutionScheme {
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
-		TradeablesVertex[] aTV = new TradeablesVertex[iNumTimeStep];
+		LatentStateEdge[] aTV = new LatentStateEdge[iNumTimeStep];
 
 		PDEEvolutionControl pdeec = new PDEEvolutionControl (
 			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
@@ -192,7 +203,21 @@ public class EulerTrajectoryEvolutionScheme {
 			)
 		);
 
-		TradeablesContainer tc = TradeablesContainer.Standard (
+		DiffusionEvolver deBankHazardRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblBankHazardRateDrift,
+				dblBankHazardRateVolatility
+			)
+		);
+
+		DiffusionEvolver deBankRecoveryRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblBankRecoveryRateDrift,
+				dblBankRecoveryRateVolatility
+			)
+		);
+
+		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.Standard (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -215,7 +240,9 @@ public class EulerTrajectoryEvolutionScheme {
 					deZeroCouponCounterPartyBond,
 					dblZeroCouponCounterPartyBondRepo
 				)
-			}
+			},
+			deBankHazardRate,
+			deBankRecoveryRate
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
@@ -309,6 +336,28 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
+		JumpDiffusionEdge[] aJDEBankHazardRate = deBankHazardRate.incrementSequence (
+			new JumpDiffusionVertex (
+				0.,
+				dblBankInitialHazardRate,
+				0.,
+				false
+			),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[5]),
+			dblTimeWidth
+		);
+
+		JumpDiffusionEdge[] aJDEBankRecoveryRate = deBankRecoveryRate.incrementSequence (
+			new JumpDiffusionVertex (
+				0.,
+				dblInitialBankRecoveryRate,
+				0.,
+				false
+			),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[6]),
+			dblTimeWidth
+		);
+
 		AssetGreekVertex agvInitial = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
@@ -388,12 +437,14 @@ public class EulerTrajectoryEvolutionScheme {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			TradeablesVertex.Standard (
+			LatentStateEdge.Standard (
 				aJDEAsset[iNumTimeStep - 1],
 				aJDEOvernightIndex[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
-				new JumpDiffusionEdge[] {aJDECounterParty[iNumTimeStep - 1]}
+				new JumpDiffusionEdge[] {aJDECounterParty[iNumTimeStep - 1]},
+				aJDEBankHazardRate[iNumTimeStep - 1],
+				aJDEBankRecoveryRate[iNumTimeStep - 1]
 			),
 			ReplicationPortfolioVertex.Standard (
 				1.,
@@ -409,12 +460,14 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		for (int i = 0; i < iNumTimeStep; ++i)
-			aTV[i] = TradeablesVertex.Standard (
+			aTV[i] = LatentStateEdge.Standard (
 				aJDEAsset[i],
 				aJDEOvernightIndex[i],
 				aJDECollateral[i],
 				aJDEBank[i],
-				new JumpDiffusionEdge[] {aJDECounterParty[i]}
+				new JumpDiffusionEdge[] {aJDECounterParty[i]},
+				aJDEBankHazardRate[i],
+				aJDEBankRecoveryRate[i]
 			);
 
 		EvolutionTrajectoryEdge[] aETE = tes.eulerWalk (

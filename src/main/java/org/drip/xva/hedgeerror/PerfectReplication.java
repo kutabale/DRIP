@@ -88,7 +88,7 @@ public class PerfectReplication extends org.drip.xva.pde.BurgardKjaerOperator {
 	 */
 
 	public PerfectReplication (
-		final org.drip.xva.universe.TradeablesContainer tc,
+		final org.drip.xva.universe.LatentStateDynamicsContainer tc,
 		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception

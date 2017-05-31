@@ -91,7 +91,7 @@ public class SemiReplicationCapitalStructure extends org.drip.xva.pde.BurgardKja
 	 */
 
 	public SemiReplicationCapitalStructure (
-		final org.drip.xva.universe.TradeablesContainer tc,
+		final org.drip.xva.universe.LatentStateDynamicsContainer tc,
 		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception

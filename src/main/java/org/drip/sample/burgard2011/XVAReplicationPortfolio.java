@@ -100,15 +100,15 @@ public class XVAReplicationPortfolio {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		TradeablesVertex tvStart = etvStart.tradeablesVertex();
+		LatentStateEdge tvStart = etvStart.tradeablesVertex();
 
-		TradeablesContainer tc = tes.universe();
+		LatentStateDynamicsContainer tc = tes.universe();
 
 		double dblOvernightIndexBondNumeraire = tvStart.overnightIndexNumeraire().finish();
 
 		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
-		TradeablesVertex tvFinish = TradeablesVertex.Standard (
+		LatentStateEdge tvFinish = LatentStateEdge.Standard (
 			tc.asset().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -155,7 +155,25 @@ public class XVAReplicationPortfolio {
 					),
 					dblTimeWidth
 				)
-			}
+			},
+			tc.bankHazardRateEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					tvStart.bankHazardRate().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
+			),
+			tc.bankRecoveryRateEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					tvStart.bankRecoveryRate().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
+			)
 		);
 
 		CloseOutBilateral cob = tes.boundaryCondition();
@@ -282,6 +300,14 @@ public class XVAReplicationPortfolio {
 		double dblZeroCouponCounterPartyBondVolatility = 0.10;
 		double dblZeroCouponCounterPartyBondRepo = 0.028;
 
+		double dblInitialBankHazardRate = 0.01;
+		double dblBankHazardRateDrift = 0.00;
+		double dblBankHazardRateVolatility = 0.001;
+
+		double dblInitialBankRecoveryRate = 0.45;
+		double dblBankRecoveryRateDrift = 0.0;
+		double dblBankRecoveryRateVolatility = 0.0;
+
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
 		double dblTerminalXVADerivativeValue = 1.;
@@ -331,7 +357,21 @@ public class XVAReplicationPortfolio {
 			)
 		);
 
-		TradeablesContainer tc = TradeablesContainer.Standard (
+		DiffusionEvolver deBankHazardRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblBankHazardRateDrift,
+				dblBankHazardRateVolatility
+			)
+		);
+
+		DiffusionEvolver deBankRecoveryRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblBankRecoveryRateDrift,
+				dblBankRecoveryRateVolatility
+			)
+		);
+
+		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.Standard (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -354,7 +394,9 @@ public class XVAReplicationPortfolio {
 					deZeroCouponCounterPartyBond,
 					dblZeroCouponCounterPartyBondRepo
 				)
-			}
+			},
+			deBankHazardRate,
+			deBankRecoveryRate
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
@@ -458,7 +500,7 @@ public class XVAReplicationPortfolio {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			TradeablesVertex.Standard (
+			LatentStateEdge.Standard (
 				deAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -505,7 +547,25 @@ public class XVAReplicationPortfolio {
 						),
 						dblTimeWidth
 					)
-				}
+				},
+				deBankHazardRate.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						dblInitialBankHazardRate,
+						0.,
+						false
+					),
+					dblTimeWidth
+				),
+				deBankRecoveryRate.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						dblInitialBankRecoveryRate,
+						0.,
+						false
+					),
+					dblTimeWidth
+				)
 			),
 			ReplicationPortfolioVertex.Standard (
 				1.,

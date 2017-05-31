@@ -73,7 +73,7 @@ public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
 	private double _dblCollateral = java.lang.Double.NaN;
 	private double _dblHedgeError = java.lang.Double.NaN;
-	private org.drip.xva.universe.TradeablesVertex _tv = null;
+	private org.drip.xva.universe.LatentStateEdge _tv = null;
 	private double[] _adblBankGainOnCounterPartyDefault = null;
 	private double[] _adblCounterPartyGainOnBankDefault = null;
 	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
@@ -96,7 +96,7 @@ public class EvolutionTrajectoryVertex {
 
 	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.universe.TradeablesVertex tv,
+		final org.drip.xva.universe.LatentStateEdge tv,
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double[] adblCounterPartyGainOnBankDefault,
@@ -164,7 +164,7 @@ public class EvolutionTrajectoryVertex {
 	 * @return Vertex of Tradeable Numeraire Realization
 	 */
 
-	public org.drip.xva.universe.TradeablesVertex tradeablesVertex()
+	public org.drip.xva.universe.LatentStateEdge tradeablesVertex()
 	{
 		return _tv;
 	}

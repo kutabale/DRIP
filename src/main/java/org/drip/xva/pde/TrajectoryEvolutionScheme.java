@@ -70,7 +70,7 @@ package org.drip.xva.pde;
 
 public class TrajectoryEvolutionScheme {
 	private double _dblTimeIncrement = java.lang.Double.NaN;
-	private org.drip.xva.universe.TradeablesContainer _tc = null;
+	private org.drip.xva.universe.LatentStateDynamicsContainer _tc = null;
 	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
 
@@ -86,7 +86,7 @@ public class TrajectoryEvolutionScheme {
 	 */
 
 	public TrajectoryEvolutionScheme (
-		final org.drip.xva.universe.TradeablesContainer tc,
+		final org.drip.xva.universe.LatentStateDynamicsContainer tc,
 		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec,
 		final double dblTimeIncrement)
@@ -103,7 +103,7 @@ public class TrajectoryEvolutionScheme {
 	 * @return The Universe of Trade-able Assets
 	 */
 
-	public org.drip.xva.universe.TradeablesContainer universe()
+	public org.drip.xva.universe.LatentStateDynamicsContainer universe()
 	{
 		return _tc;
 	}
@@ -152,7 +152,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.derivative.CashAccountRebalancer rebalanceCash (
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
-		final org.drip.xva.universe.TradeablesVertex tv)
+		final org.drip.xva.universe.LatentStateEdge tv)
 	{
 		if (null == etvStart || null == tv) return null;
 
@@ -244,7 +244,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.derivative.EvolutionTrajectoryEdge eulerWalk (
 		final org.drip.xva.definition.SpreadIntensity si,
-		final org.drip.xva.universe.TradeablesVertex tv,
+		final org.drip.xva.universe.LatentStateEdge tv,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
 		final double dblCollateral)
@@ -381,7 +381,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.derivative.EvolutionTrajectoryEdge[] eulerWalk (
 		final org.drip.xva.definition.SpreadIntensity si,
-		final org.drip.xva.universe.TradeablesVertex[] aTV,
+		final org.drip.xva.universe.LatentStateEdge[] aTV,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
 		final double dblCollateral)

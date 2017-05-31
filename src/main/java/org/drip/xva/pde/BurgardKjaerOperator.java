@@ -70,7 +70,7 @@ package org.drip.xva.pde;
  */
 
 public abstract class BurgardKjaerOperator {
-	private org.drip.xva.universe.TradeablesContainer _tc = null;
+	private org.drip.xva.universe.LatentStateDynamicsContainer _tc = null;
 	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
 
@@ -92,7 +92,7 @@ public abstract class BurgardKjaerOperator {
 	 */
 
 	public BurgardKjaerOperator (
-		final org.drip.xva.universe.TradeablesContainer tc,
+		final org.drip.xva.universe.LatentStateDynamicsContainer tc,
 		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception
@@ -107,7 +107,7 @@ public abstract class BurgardKjaerOperator {
 	 * @return The Universe of Trade-able Assets
 	 */
 
-	public org.drip.xva.universe.TradeablesContainer universe()
+	public org.drip.xva.universe.LatentStateDynamicsContainer universe()
 	{
 		return _tc;
 	}
@@ -152,7 +152,7 @@ public abstract class BurgardKjaerOperator {
 		if (null == si || null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblCollateral))
 			return null;
 
-		org.drip.xva.universe.TradeablesVertex tv = etv.tradeablesVertex();
+		org.drip.xva.universe.LatentStateEdge tv = etv.tradeablesVertex();
 
 		org.drip.xva.derivative.AssetGreekVertex agv = etv.assetGreekVertex();
 
@@ -235,7 +235,7 @@ public abstract class BurgardKjaerOperator {
 
 		double[] adblCounterPartyRecovery = _cob.counterPartyRecovery();
 
-		org.drip.xva.universe.TradeablesVertex tv = etv.tradeablesVertex();
+		org.drip.xva.universe.LatentStateEdge tv = etv.tradeablesVertex();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 

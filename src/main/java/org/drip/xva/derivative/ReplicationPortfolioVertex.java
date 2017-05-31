@@ -199,7 +199,7 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double value (
-		final org.drip.xva.universe.TradeablesVertex tv)
+		final org.drip.xva.universe.LatentStateEdge tv)
 		throws java.lang.Exception
 	{
 		if (null == tv)
@@ -241,7 +241,7 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double bankPreDefaultPositionValue (
-		final org.drip.xva.universe.TradeablesVertex tv)
+		final org.drip.xva.universe.LatentStateEdge tv)
 		throws java.lang.Exception
 	{
 		if (null == tv)
@@ -277,7 +277,7 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double bankPostDefaultPositionValue (
-		final org.drip.xva.universe.TradeablesVertex tv,
+		final org.drip.xva.universe.LatentStateEdge tv,
 		final org.drip.xva.definition.CloseOutBilateral cob)
 		throws java.lang.Exception
 	{
