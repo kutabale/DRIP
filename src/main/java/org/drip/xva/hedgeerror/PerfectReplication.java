@@ -67,7 +67,7 @@ package org.drip.xva.hedgeerror;
 
 public class PerfectReplication extends org.drip.xva.pde.BurgardKjaerOperator {
 
-	protected double hedgeError (
+	@Override protected double hedgeError (
 		final double dblBankRecovery,
 		final double dblBankDefaultBoundaryCondition,
 		final double dblDerivativeFairValue,

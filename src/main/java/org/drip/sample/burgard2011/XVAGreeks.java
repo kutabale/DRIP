@@ -104,6 +104,8 @@ public class XVAGreeks {
 
 		TradeablesContainer tc = tes.universe();
 
+		double dblOvernightIndexBondNumeraire = tvStart.overnightIndexNumeraire().finish();
+
 		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
 		TradeablesVertex tvFinish = TradeablesVertex.Standard (
@@ -111,6 +113,15 @@ public class XVAGreeks {
 				new JumpDiffusionVertex (
 					dblTime,
 					tvStart.assetNumeraire().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
+			),
+			tc.overnightIndex().numeraireEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					dblOvernightIndexBondNumeraire,
 					0.,
 					false
 				),
@@ -225,7 +236,9 @@ public class XVAGreeks {
 				)
 			),
 			new double[] {dblGainOnBankDefaultFinish},
-			new double[] {dblGainOnCounterPartyDefaultFinish}
+			new double[] {dblGainOnCounterPartyDefaultFinish},
+			0.,
+			0.
 		);
 	}
 
@@ -242,15 +255,23 @@ public class XVAGreeks {
 		double dblAssetVolatility = 0.15;
 		double dblAssetRepo = 0.03;
 		double dblAssetDividend = 0.02;
+
+		double dblZeroCouponOvernightIndexBondDrift = 0.0025;
+		double dblZeroCouponOvernightIndexBondVolatility = 0.01;
+		double dblZeroCouponOvernightIndexBondRepo = 0.0;
+
 		double dblZeroCouponCollateralBondDrift = 0.01;
 		double dblZeroCouponCollateralBondVolatility = 0.05;
 		double dblZeroCouponCollateralBondRepo = 0.005;
+
 		double dblZeroCouponBankBondDrift = 0.03;
 		double dblZeroCouponBankBondVolatility = 0.10;
 		double dblZeroCouponBankBondRepo = 0.028;
+
 		double dblZeroCouponCounterPartyBondDrift = 0.03;
 		double dblZeroCouponCounterPartyBondVolatility = 0.10;
 		double dblZeroCouponCounterPartyBondRepo = 0.028;
+
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
 		double dblTerminalXVADerivativeValue = 1.;
@@ -269,6 +290,13 @@ public class XVAGreeks {
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblAssetDrift,
 				dblAssetVolatility
+			)
+		);
+
+		DiffusionEvolver deZeroCouponOvernightIndexBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponOvernightIndexBondDrift,
+				dblZeroCouponOvernightIndexBondVolatility
 			)
 		);
 
@@ -298,6 +326,10 @@ public class XVAGreeks {
 				meAsset,
 				dblAssetRepo,
 				dblAssetDividend
+			),
+			new Tradeable (
+				deZeroCouponOvernightIndexBond,
+				dblZeroCouponOvernightIndexBondRepo
 			),
 			new Tradeable (
 				meZeroCouponCollateralBond,
@@ -419,6 +451,15 @@ public class XVAGreeks {
 					),
 					dblTimeWidth
 				),
+				deZeroCouponOvernightIndexBond.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						1.,
+						0.,
+						false
+					),
+					dblTimeWidth
+				),
 				meZeroCouponCollateralBond.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -457,7 +498,9 @@ public class XVAGreeks {
 			),
 			agv,
 			new double[] {dblGainOnBankDefault},
-			new double[] {dblGainOnCounterPartyDefault}
+			new double[] {dblGainOnCounterPartyDefault},
+			0.,
+			0.
 		);
 
 		for (dblTime -= dblTimeWidth; dblTime >= 0.; dblTime -= dblTimeWidth)

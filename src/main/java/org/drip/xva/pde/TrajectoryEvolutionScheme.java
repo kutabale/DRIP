@@ -354,7 +354,9 @@ public class TrajectoryEvolutionScheme {
 					)
 				),
 				adblGainOnBankDefaultFinish,
-				adblGainOnCounterPartyDefaultFinish
+				adblGainOnCounterPartyDefaultFinish,
+				dblCollateral,
+				bker.derivativeXVAHedgeErrorGrowth()
 			);
 
 			return new org.drip.xva.derivative.EvolutionTrajectoryEdge (etvStart, etvFinish, cae);

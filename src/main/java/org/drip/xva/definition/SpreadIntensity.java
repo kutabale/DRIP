@@ -187,4 +187,21 @@ public class SpreadIntensity {
 	{
 		return _adblCounterPartyDefaultIntensity;
 	}
+
+	/**
+	 * Retrieve the Gross Counter Party Default Intensity
+	 * 
+	 * @return The Gross Counter Party Default Intensity
+	 */
+
+	public double grossCounterPartyDefaultIntensity()
+	{
+		double dblGrossCounterPartyDefaultIntensity = 0.;
+		int iNumCounterParty = _adblCounterPartyDefaultIntensity.length;
+
+		for (int i = 0; i < iNumCounterParty; ++i)
+			dblGrossCounterPartyDefaultIntensity += _adblCounterPartyDefaultIntensity[i];
+
+		return dblGrossCounterPartyDefaultIntensity;
+	}
 }

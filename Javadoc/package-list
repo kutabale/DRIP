@@ -271,6 +271,7 @@ org.drip.xva.cpty
 org.drip.xva.csa
 org.drip.xva.definition
 org.drip.xva.derivative
+org.drip.xva.hedgeerror
 org.drip.xva.netting
 org.drip.xva.pde
 org.drip.xva.set

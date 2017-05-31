@@ -91,6 +91,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 		final BurgardKjaerOperator bko,
 		final EvolutionTrajectoryVertex etvStart,
 		final JumpDiffusionEdge jdeAsset,
+		final JumpDiffusionEdge jdeOvernightIndex,
 		final JumpDiffusionEdge jdeCollateral,
 		final JumpDiffusionEdge jdeBank,
 		final JumpDiffusionEdge jdeCounterParty)
@@ -116,6 +117,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		TradeablesVertex tvFinish = TradeablesVertex.Standard (
 			jdeAsset,
+			jdeOvernightIndex,
 			jdeCollateral,
 			jdeBank,
 			new JumpDiffusionEdge[] {jdeCounterParty}
@@ -207,7 +209,9 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				)
 			),
 			new double[] {dblGainOnBankDefaultFinish},
-			new double[] {dblGainOnCounterPartyDefaultFinish}
+			new double[] {dblGainOnCounterPartyDefaultFinish},
+			0.,
+			0.
 		);
 	}
 
@@ -220,16 +224,22 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
 		double[][] aadblCorrelation = new double[][] {
-			{1.00, 0.20, 0.15, 0.05}, // #0 ASSET
-			{0.20, 1.00, 0.13, 0.25}, // #1 COLLATERAL
-			{0.15, 0.13, 1.00, 0.00}, // #2 BANK
-			{0.05, 0.25, 0.00, 1.00}  // #3 COUNTER PARTY
+			{1.00, 0.00, 0.20, 0.15, 0.05}, // #0 ASSET
+			{0.00, 1.00, 0.00, 0.00, 0.00}, // #1 OVERNIGHT
+			{0.20, 0.00, 1.00, 0.13, 0.25}, // #2 COLLATERAL
+			{0.15, 0.00, 0.13, 1.00, 0.00}, // #3 BANK
+			{0.05, 0.00, 0.25, 0.00, 1.00}  // #4 COUNTER PARTY
 		};
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
 		double dblAssetRepo = 0.03;
 		double dblAssetDividend = 0.02;
 		double dblInitialAssetNumeraire = 1.;
+
+		double dblZeroCouponOvernightIndexBondDrift = 0.0025;
+		double dblZeroCouponOvernightIndexBondVolatility = 0.01;
+		double dblZeroCouponOvernightIndexBondRepo = 0.0;
+		double dblZeroCouponOvernightIndexNumeraire = 1.;
 
 		double dblZeroCouponCollateralBondDrift = 0.01;
 		double dblZeroCouponCollateralBondVolatility = 0.05;
@@ -275,6 +285,13 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			)
 		);
 
+		DiffusionEvolver deZeroCouponOvernightIndexBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponOvernightIndexBondDrift,
+				dblZeroCouponOvernightIndexBondVolatility
+			)
+		);
+
 		DiffusionEvolver deZeroCouponCollateralBond = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblZeroCouponCollateralBondDrift,
@@ -309,6 +326,10 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				deAsset,
 				dblAssetRepo,
 				dblAssetDividend
+			),
+			new Tradeable (
+				deZeroCouponOvernightIndexBond,
+				dblZeroCouponOvernightIndexBondRepo
 			),
 			new Tradeable (
 				deZeroCouponCollateralBond,
@@ -367,6 +388,17 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			dblTimeWidth
 		);
 
+		JumpDiffusionEdge[] aJDEOvernightIndex = deZeroCouponOvernightIndexBond.incrementSequence (
+			new JumpDiffusionVertex (
+				0.,
+				dblZeroCouponOvernightIndexNumeraire,
+				0.,
+				false
+			),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[1]),
+			dblTimeWidth
+		);
+
 		JumpDiffusionEdge[] aJDECollateral = deZeroCouponCollateralBond.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
@@ -374,7 +406,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[1]),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[2]),
 			dblTimeWidth
 		);
 
@@ -386,7 +418,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				false
 			),
 			UnitRandomEdge.JumpDiffusion (
-				aadblNumeraireTimeSeries[2],
+				aadblNumeraireTimeSeries[3],
 				adblBankDefaultIndicator
 			),
 			dblTimeWidth
@@ -400,7 +432,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				false
 			),
 			UnitRandomEdge.JumpDiffusion (
-				aadblNumeraireTimeSeries[3],
+				aadblNumeraireTimeSeries[4],
 				adblCounterPartyDefaultIndicator
 			),
 			dblTimeWidth
@@ -487,6 +519,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			dblTime,
 			TradeablesVertex.Standard (
 				aJDEAsset[iNumTimeStep - 1],
+				aJDEOvernightIndex[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
 				new JumpDiffusionEdge[] {aJDECounterParty[iNumTimeStep - 1]}
@@ -499,7 +532,9 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			),
 			agvInitial,
 			new double[] {dblGainOnBankDefaultInitial},
-			new double[] {dblGainOnCounterPartyDefaultInitial}
+			new double[] {dblGainOnCounterPartyDefaultInitial},
+			0.,
+			0.
 		);
 
 		for (int i = iNumTimeStep - 2; i >= 0; --i)
@@ -509,6 +544,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				bko,
 				etv,
 				aJDEAsset[i],
+				aJDEOvernightIndex[i],
 				aJDECollateral[i],
 				aJDEBank[i],
 				aJDECounterParty[i]

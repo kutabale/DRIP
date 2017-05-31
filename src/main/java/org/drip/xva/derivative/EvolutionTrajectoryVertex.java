@@ -71,6 +71,8 @@ package org.drip.xva.derivative;
 
 public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
+	private double _dblCollateral = java.lang.Double.NaN;
+	private double _dblHedgeError = java.lang.Double.NaN;
 	private org.drip.xva.universe.TradeablesVertex _tv = null;
 	private double[] _adblBankGainOnCounterPartyDefault = null;
 	private double[] _adblCounterPartyGainOnBankDefault = null;
@@ -86,6 +88,8 @@ public class EvolutionTrajectoryVertex {
 	 * @param agv The Asset Greek Vertex
 	 * @param adblCounterPartyGainOnBankDefault Array of Individual Counter Party Gain On Bank Default
 	 * @param adblBankGainOnCounterPartyDefault Array of Bank Gain On Default of Individual Counter Party
+	 * @param dblCollateral The Vertex Collateral
+	 * @param dblHedgeError The Vertex Hedge Error
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -96,13 +100,17 @@ public class EvolutionTrajectoryVertex {
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double[] adblCounterPartyGainOnBankDefault,
-		final double[] adblBankGainOnCounterPartyDefault)
+		final double[] adblBankGainOnCounterPartyDefault,
+		final double dblCollateral,
+		final double dblHedgeError)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_tv = tv) || null ==
 			(_rpv = rpv) || null == (_agv = agv) || null == (_adblCounterPartyGainOnBankDefault =
 				adblCounterPartyGainOnBankDefault) || null == (_adblBankGainOnCounterPartyDefault =
-					adblBankGainOnCounterPartyDefault))
+					adblBankGainOnCounterPartyDefault) || !org.drip.quant.common.NumberUtil.IsValid
+						(_dblCollateral = dblCollateral) || !org.drip.quant.common.NumberUtil.IsValid
+							(_dblHedgeError = dblHedgeError))
 			throw new java.lang.Exception ("EvolutionTrajectoryVertex Constructor => Invalid Inputs");
 
 		int iNumCounterPartyGroup = _adblBankGainOnCounterPartyDefault.length;
@@ -126,6 +134,28 @@ public class EvolutionTrajectoryVertex {
 	public double time()
 	{
 		return _dblTime;
+	}
+
+	/**
+	 * Retrieve the Collateral
+	 * 
+	 * @return The Collateral
+	 */
+
+	public double collateral()
+	{
+		return _dblCollateral;
+	}
+
+	/**
+	 * Retrieve the Hedge Error
+	 * 
+	 * @return The Hedge Error
+	 */
+
+	public double hedgeError()
+	{
+		return _dblHedgeError;
 	}
 
 	/**

@@ -104,6 +104,8 @@ public class XVAReplicationPortfolio {
 
 		TradeablesContainer tc = tes.universe();
 
+		double dblOvernightIndexBondNumeraire = tvStart.overnightIndexNumeraire().finish();
+
 		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
 		TradeablesVertex tvFinish = TradeablesVertex.Standard (
@@ -111,6 +113,15 @@ public class XVAReplicationPortfolio {
 				new JumpDiffusionVertex (
 					dblTime,
 					tvStart.assetNumeraire().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
+			),
+			tc.overnightIndex().numeraireEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					dblOvernightIndexBondNumeraire,
 					0.,
 					false
 				),
@@ -235,7 +246,9 @@ public class XVAReplicationPortfolio {
 				)
 			),
 			new double[] {dblGainOnBankDefaultFinish},
-			new double[] {dblGainOnCounterPartyDefaultFinish}
+			new double[] {dblGainOnCounterPartyDefaultFinish},
+			0.,
+			0.
 		);
 	}
 
@@ -252,15 +265,23 @@ public class XVAReplicationPortfolio {
 		double dblAssetVolatility = 0.15;
 		double dblAssetRepo = 0.03;
 		double dblAssetDividend = 0.02;
+
+		double dblZeroCouponOvernightIndexBondDrift = 0.0025;
+		double dblZeroCouponOvernightIndexBondVolatility = 0.01;
+		double dblZeroCouponOvernightIndexBondRepo = 0.0;
+
 		double dblZeroCouponCollateralBondDrift = 0.01;
 		double dblZeroCouponCollateralBondVolatility = 0.05;
 		double dblZeroCouponCollateralBondRepo = 0.005;
+
 		double dblZeroCouponBankBondDrift = 0.03;
 		double dblZeroCouponBankBondVolatility = 0.10;
 		double dblZeroCouponBankBondRepo = 0.028;
+
 		double dblZeroCouponCounterPartyBondDrift = 0.03;
 		double dblZeroCouponCounterPartyBondVolatility = 0.10;
 		double dblZeroCouponCounterPartyBondRepo = 0.028;
+
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
 		double dblTerminalXVADerivativeValue = 1.;
@@ -279,6 +300,13 @@ public class XVAReplicationPortfolio {
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblAssetDrift,
 				dblAssetVolatility
+			)
+		);
+
+		DiffusionEvolver deZeroCouponOvernightIndexBond = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblZeroCouponOvernightIndexBondDrift,
+				dblZeroCouponOvernightIndexBondVolatility
 			)
 		);
 
@@ -308,6 +336,10 @@ public class XVAReplicationPortfolio {
 				deAsset,
 				dblAssetRepo,
 				dblAssetDividend
+			),
+			new Tradeable (
+				deZeroCouponOvernightIndexBond,
+				dblZeroCouponOvernightIndexBondRepo
 			),
 			new Tradeable (
 				deZeroCouponCollateralBond,
@@ -436,6 +468,15 @@ public class XVAReplicationPortfolio {
 					),
 					dblTimeWidth
 				),
+				deZeroCouponOvernightIndexBond.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						1.,
+						0.,
+						false
+					),
+					dblTimeWidth
+				),
 				deZeroCouponCollateralBond.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -474,7 +515,9 @@ public class XVAReplicationPortfolio {
 			),
 			agvInitial,
 			new double[] {dblGainOnBankDefaultInitial},
-			new double[] {dblGainOnCounterPartyDefaultInitial}
+			new double[] {dblGainOnCounterPartyDefaultInitial},
+			0.,
+			0.
 		);
 
 		for (dblTime -= dblTimeWidth; dblTime >= 0.; dblTime -= dblTimeWidth)

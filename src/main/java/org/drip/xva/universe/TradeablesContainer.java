@@ -69,6 +69,7 @@ package org.drip.xva.universe;
 
 public class TradeablesContainer {
 	private org.drip.xva.universe.Tradeable _tAsset = null;
+	private org.drip.xva.universe.Tradeable _tOvernightIndex = null;
 	private org.drip.xva.universe.Tradeable _tCollateralScheme = null;
 	private org.drip.xva.universe.Tradeable _tBankSeniorFunding = null;
 	private org.drip.xva.universe.Tradeable _tBankSubordinateFunding = null;
@@ -78,6 +79,7 @@ public class TradeablesContainer {
 	 * Create a TradeablesContainer without the Zero Recovery Bank Funding Tradeable
 	 * 
 	 * @param tAsset The Asset Tradeable
+	 * @param tOvernightIndex The Overnight Index Tradeable
 	 * @param tCollateralScheme The Collateral Scheme Tradeable
 	 * @param tBankSeniorFunding Bank Senior Funding Tradeable
 	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
@@ -87,13 +89,14 @@ public class TradeablesContainer {
 
 	public static final TradeablesContainer Standard (
 		final org.drip.xva.universe.Tradeable tAsset,
+		final org.drip.xva.universe.Tradeable tOvernightIndex,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
 		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
 		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding)
 	{
 		try {
-			return new TradeablesContainer (tAsset, tCollateralScheme, tBankSeniorFunding, null,
-				aTCounterPartyFunding);
+			return new TradeablesContainer (tAsset, tOvernightIndex, tCollateralScheme, tBankSeniorFunding,
+				null, aTCounterPartyFunding);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -105,6 +108,7 @@ public class TradeablesContainer {
 	 * TradeablesContainer Constructor
 	 * 
 	 * @param tAsset The Asset Tradeable
+	 * @param tOvernightIndex The Overnight Index Tradeable
 	 * @param tCollateralScheme The Collateral Scheme Tradeable
 	 * @param tBankSeniorFunding Bank Senior Funding Tradeable
 	 * @param tBankSubordinateFunding Bank Subordinate Funding Tradeable
@@ -115,6 +119,7 @@ public class TradeablesContainer {
 
 	public TradeablesContainer (
 		final org.drip.xva.universe.Tradeable tAsset,
+		final org.drip.xva.universe.Tradeable tOvernightIndex,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
 		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
 		final org.drip.xva.universe.Tradeable tBankSubordinateFunding,
@@ -124,6 +129,7 @@ public class TradeablesContainer {
 		if (null == (_tAsset = tAsset) || null == (_aTCounterPartyFunding = aTCounterPartyFunding))
 			throw new java.lang.Exception ("TradeablesContainer Constructor => Invalid Inputs");
 
+		_tOvernightIndex = tOvernightIndex;
 		_tCollateralScheme = tCollateralScheme;
 		_tBankSeniorFunding = tBankSeniorFunding;
 		_tBankSubordinateFunding = tBankSubordinateFunding;
@@ -147,6 +153,17 @@ public class TradeablesContainer {
 	public org.drip.xva.universe.Tradeable asset()
 	{
 		return _tAsset;
+	}
+
+	/**
+	 * Retrieve the Overnight Index Tradeable
+	 * 
+	 * @return The Overnight Index Tradeable
+	 */
+
+	public org.drip.xva.universe.Tradeable overnightIndex()
+	{
+		return _tOvernightIndex;
 	}
 
 	/**

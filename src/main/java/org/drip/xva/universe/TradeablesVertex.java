@@ -68,6 +68,7 @@ package org.drip.xva.universe;
 
 public class TradeablesVertex {
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeOvernightIndexNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeCollateralSchemeNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSeniorFundingNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSubordinateFundingNumeraire = null;
@@ -77,6 +78,7 @@ public class TradeablesVertex {
 	 * Create a TradeablesVertex Instance without the Zero Recovery Bank Funding Numeraire
 	 * 
 	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization
+	 * @param jdeOvernightIndexNumeraire The Realized Overnight Index Numeraire
 	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
 	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire
 	 * @param aJDECounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire Array
@@ -86,13 +88,15 @@ public class TradeablesVertex {
 
 	public static final TradeablesVertex Standard (
 		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeOvernightIndexNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire)
 	{
 		try {
-			return new TradeablesVertex (jdeAssetNumeraire, jdeCollateralSchemeNumeraire,
-				jdeBankSeniorFundingNumeraire, null, aJDECounterPartyFundingNumeraire);
+			return new TradeablesVertex (jdeAssetNumeraire, jdeOvernightIndexNumeraire,
+				jdeCollateralSchemeNumeraire, jdeBankSeniorFundingNumeraire, null,
+					aJDECounterPartyFundingNumeraire);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -104,6 +108,7 @@ public class TradeablesVertex {
 	 * TradeablesVertex Constructor
 	 * 
 	 * @param jdeAssetNumeraire The Asset Numeraire
+	 * @param jdeOvernightIndexNumeraire The Realized Overnight Index Numeraire
 	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
 	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire
 	 * @param jdeBankSubordinateFundingNumeraire The Realized Bank Subordinate Funding Numeraire
@@ -114,6 +119,7 @@ public class TradeablesVertex {
 
 	public TradeablesVertex (
 		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeOvernightIndexNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire,
@@ -124,6 +130,7 @@ public class TradeablesVertex {
 			aJDECounterPartyFundingNumeraire))
 			throw new java.lang.Exception ("TradeablesVertex Constructor => Invalid Inputs");
 
+		_jdeOvernightIndexNumeraire = jdeOvernightIndexNumeraire;
 		_jdeCollateralSchemeNumeraire = jdeCollateralSchemeNumeraire;
 		_jdeBankSeniorFundingNumeraire = jdeBankSeniorFundingNumeraire;
 		int iNumCounterParty = _aJDECounterPartyFundingNumeraire.length;
@@ -147,6 +154,17 @@ public class TradeablesVertex {
 	public org.drip.measure.realization.JumpDiffusionEdge assetNumeraire()
 	{
 		return _jdeAssetNumeraire;
+	}
+
+	/**
+	 * Retrieve the Realized Overnight Index Numeraire
+	 * 
+	 * @return The Realized Overnight Index Numeraire
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionEdge overnightIndexNumeraire()
+	{
+		return _jdeOvernightIndexNumeraire;
 	}
 
 	/**
