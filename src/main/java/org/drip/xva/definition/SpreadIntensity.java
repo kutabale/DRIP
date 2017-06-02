@@ -69,9 +69,9 @@ package org.drip.xva.definition;
  */
 
 public class SpreadIntensity {
-	private double[] _adblCounterPartyDefaultIntensity = null;
 	private double _dblBankSeniorFundingSpread = java.lang.Double.NaN;
 	private double _dblBankSeniorDefaultIntensity = java.lang.Double.NaN;
+	private double _dblCounterPartyDefaultIntensity = java.lang.Double.NaN;
 	private double _dblBankSubordinateFundingSpread = java.lang.Double.NaN;
 	private double _dblBankSubordinateDefaultIntensity = java.lang.Double.NaN;
 
@@ -80,7 +80,7 @@ public class SpreadIntensity {
 	 * 
 	 * @param dblBankSeniorFundingSpread The Bank Senior Funding Spread
 	 * @param dblBankSeniorDefaultIntensity The Bank Senior Funding Default Intensity
-	 * @param adblCounterPartyDefaultIntensity Array of Counter Party Default Intensity
+	 * @param dblCounterPartyDefaultIntensity The Counter Party Default Intensity
 	 * 
 	 * @return The Standard SpreadIntensity Instance
 	 */
@@ -88,12 +88,12 @@ public class SpreadIntensity {
 	public static final SpreadIntensity Standard (
 		final double dblBankSeniorFundingSpread,
 		final double dblBankSeniorDefaultIntensity,
-		final double[] adblCounterPartyDefaultIntensity)
+		final double dblCounterPartyDefaultIntensity)
 		throws java.lang.Exception
 	{
 		try {
 			return new SpreadIntensity (dblBankSeniorFundingSpread, dblBankSeniorDefaultIntensity,
-				java.lang.Double.NaN, java.lang.Double.NaN, adblCounterPartyDefaultIntensity);
+				java.lang.Double.NaN, java.lang.Double.NaN, dblCounterPartyDefaultIntensity);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -108,7 +108,7 @@ public class SpreadIntensity {
 	 * @param dblBankSeniorDefaultIntensity The Bank Senior Funding Default Intensity
 	 * @param dblBankSubordinateFundingSpread The Bank Subordinate Funding Spread
 	 * @param dblBankSubordinateDefaultIntensity The Bank Subordinate Funding Default Intensity
-	 * @param adblCounterPartyDefaultIntensity Array of Counter Party Default Intensity
+	 * @param dblCounterPartyDefaultIntensity The Counter Party Default Intensity
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -118,15 +118,14 @@ public class SpreadIntensity {
 		final double dblBankSeniorDefaultIntensity,
 		final double dblBankSubordinateFundingSpread,
 		final double dblBankSubordinateDefaultIntensity,
-		final double[] adblCounterPartyDefaultIntensity)
+		final double dblCounterPartyDefaultIntensity)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankSeniorFundingSpread =
 			dblBankSeniorFundingSpread) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblBankSeniorDefaultIntensity = dblBankSeniorDefaultIntensity) || null ==
-					(_adblCounterPartyDefaultIntensity = adblCounterPartyDefaultIntensity) || 0 ==
-						_adblCounterPartyDefaultIntensity.length || !org.drip.quant.common.NumberUtil.IsValid
-							(_adblCounterPartyDefaultIntensity))
+				(_dblBankSeniorDefaultIntensity = dblBankSeniorDefaultIntensity) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultIntensity =
+						dblCounterPartyDefaultIntensity))
 			throw new java.lang.Exception ("SpreadIntensity Constructor => Invalid Inputs");
 
 		_dblBankSubordinateFundingSpread = dblBankSubordinateFundingSpread;
@@ -178,30 +177,13 @@ public class SpreadIntensity {
 	}
 
 	/**
-	 * Retrieve the Array of Counter Party Default Intensities
+	 * Retrieve the Counter Party Default Intensity
 	 * 
-	 * @return The Array of Counter Party Default Intensities
+	 * @return The Counter Party Default Intensity
 	 */
 
-	public double[] counterPartyDefaultIntensity()
+	public double counterPartyDefaultIntensity()
 	{
-		return _adblCounterPartyDefaultIntensity;
-	}
-
-	/**
-	 * Retrieve the Gross Counter Party Default Intensity
-	 * 
-	 * @return The Gross Counter Party Default Intensity
-	 */
-
-	public double grossCounterPartyDefaultIntensity()
-	{
-		double dblGrossCounterPartyDefaultIntensity = 0.;
-		int iNumCounterParty = _adblCounterPartyDefaultIntensity.length;
-
-		for (int i = 0; i < iNumCounterParty; ++i)
-			dblGrossCounterPartyDefaultIntensity += _adblCounterPartyDefaultIntensity[i];
-
-		return dblGrossCounterPartyDefaultIntensity;
+		return _dblCounterPartyDefaultIntensity;
 	}
 }

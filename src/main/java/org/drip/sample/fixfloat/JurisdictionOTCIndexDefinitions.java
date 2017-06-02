@@ -87,6 +87,10 @@ public class JurisdictionOTCIndexDefinitions {
 
 		DisplayIRSOTCInfo ("AUD", "ALL", "5Y", "MAIN");
 
+		DisplayIRSOTCInfo ("BRL", "ALL", "1Y", "MAIN");
+
+		DisplayIRSOTCInfo ("BRL", "ALL", "5Y", "MAIN");
+
 		DisplayIRSOTCInfo ("CAD", "ALL", "1Y", "MAIN");
 
 		DisplayIRSOTCInfo ("CAD", "ALL", "5Y", "MAIN");
@@ -127,6 +131,14 @@ public class JurisdictionOTCIndexDefinitions {
 
 		DisplayIRSOTCInfo ("JPY", "ALL", "5Y", "TIBOR");
 
+		DisplayIRSOTCInfo ("KRW", "ALL", "1Y", "MAIN");
+
+		DisplayIRSOTCInfo ("KRW", "ALL", "5Y", "MAIN");
+
+		DisplayIRSOTCInfo ("MYR", "ALL", "1Y", "MAIN");
+
+		DisplayIRSOTCInfo ("MYR", "ALL", "5Y", "MAIN");
+
 		DisplayIRSOTCInfo ("NOK", "ALL", "1Y", "MAIN");
 
 		DisplayIRSOTCInfo ("NOK", "ALL", "5Y", "MAIN");
@@ -146,6 +158,14 @@ public class JurisdictionOTCIndexDefinitions {
 		DisplayIRSOTCInfo ("SGD", "ALL", "1Y", "MAIN");
 
 		DisplayIRSOTCInfo ("SGD", "ALL", "5Y", "MAIN");
+
+		DisplayIRSOTCInfo ("THB", "ALL", "1Y", "MAIN");
+
+		DisplayIRSOTCInfo ("THB", "ALL", "5Y", "MAIN");
+
+		DisplayIRSOTCInfo ("TWD", "ALL", "1Y", "MAIN");
+
+		DisplayIRSOTCInfo ("TWD", "ALL", "5Y", "MAIN");
 
 		DisplayIRSOTCInfo ("USD", "LON", "1Y", "MAIN");
 

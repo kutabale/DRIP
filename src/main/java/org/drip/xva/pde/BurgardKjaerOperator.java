@@ -158,27 +158,18 @@ public abstract class BurgardKjaerOperator {
 
 		double dblDerivativeXVAValue = agv.derivativeXVAValue();
 
-		double dblGainOnBankDefault = etv.grossGainOnBankDefault();
+		double dblGainOnBankDefault = etv.gainOnBankDefault();
 
 		double dblAssetValue = tv.assetNumeraire().finish();
 
 		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
 
-		double[] adblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
+		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
 
-		double[] adblBankGainOnCounterPartyDefault = etv.gainOnCounterPartyDefault();
+		double dblBankGainOnCounterPartyDefault = etv.gainOnCounterPartyDefault();
 
-		double dblGainOnCounterPartyDefault = 0.;
-		double dblCounterPartyDefaultIntensity = 0.;
-		int iNumCounterPartyGroup = adblCounterPartyDefaultIntensity.length;
-
-		if (iNumCounterPartyGroup != adblBankGainOnCounterPartyDefault.length) return null;
-
-		for (int i = 0; i < iNumCounterPartyGroup; ++i) {
-			dblCounterPartyDefaultIntensity += adblCounterPartyDefaultIntensity[i];
-			dblGainOnCounterPartyDefault += adblCounterPartyDefaultIntensity[i] *
-				adblBankGainOnCounterPartyDefault[i];
-		}
+		double dblGainOnCounterPartyDefault = dblCounterPartyDefaultIntensity *
+			dblBankGainOnCounterPartyDefault;
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralScheme = tv.collateralSchemeNumeraire();
 
@@ -233,13 +224,13 @@ public abstract class BurgardKjaerOperator {
 
 		double dblBankDefaultIntensity = si.bankSeniorDefaultIntensity();
 
-		double[] adblCounterPartyRecovery = _cob.counterPartyRecovery();
+		double dblCounterPartyRecovery = _cob.counterPartyRecovery();
 
 		org.drip.xva.universe.LatentStateEdge tv = etv.tradeablesVertex();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
-		double[] adblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
+		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
 
 		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
 			_pdeec.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
@@ -251,15 +242,8 @@ public abstract class BurgardKjaerOperator {
 
 		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
 
-		int iNumCounterPartyGroup = 0;
-		double dblCumulativeCounterPartyDefaultIntensity = 0.;
-		double dblDerivativeXVACounterPartyDefaultGrowth = 0.;
-
-		for (int i = 0; i < iNumCounterPartyGroup; ++i) {
-			dblCumulativeCounterPartyDefaultIntensity += adblCounterPartyDefaultIntensity[i];
-			dblDerivativeXVACounterPartyDefaultGrowth -= adblCounterPartyDefaultIntensity[i] *
-				(dblCloseOutMTM < 0. ? dblCloseOutMTM : adblCounterPartyRecovery[i] * dblCloseOutMTM);
-		}
+		double dblDerivativeXVACounterPartyDefaultGrowth = -1. * dblCounterPartyDefaultIntensity *
+			(dblCloseOutMTM < 0. ? dblCloseOutMTM : dblCounterPartyRecovery * dblCloseOutMTM);
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralScheme = tv.collateralSchemeNumeraire();
 
@@ -275,7 +259,7 @@ public abstract class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[1],
 				-1. * adblBumpedTheta[2],
 				null == jdeCollateralScheme ? 0. : jdeCollateralScheme.finish() * dblCollateral,
-				(dblBankDefaultIntensity + dblCumulativeCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
+				(dblBankDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
 				si.bankSeniorFundingSpread() * dblBankExposure,
 				-1. * dblBankDefaultIntensity * dblBankExposure,
 				dblDerivativeXVACounterPartyDefaultGrowth

@@ -145,17 +145,15 @@ public class XVAReplicationPortfolio {
 				),
 				dblTimeWidth
 			),
-			new JumpDiffusionEdge[] {
-				tc.counterPartyFunding()[0].numeraireEvolver().weinerIncrement (
-					new JumpDiffusionVertex (
-						dblTime,
-						tvStart.counterPartyFundingNumeraire()[0].finish(),
-						0.,
-						false
-					),
-					dblTimeWidth
-				)
-			},
+			tc.counterPartyFunding().numeraireEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					tvStart.counterPartyFundingNumeraire().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
+			),
 			tc.bankHazardRateEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -201,11 +199,10 @@ public class XVAReplicationPortfolio {
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
-		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.bankDefaultGross (new double[] {dblDerivativeXVAValueFinish}));
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.bankDefault (dblDerivativeXVAValueFinish));
 
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValueFinish}));
+			cob.counterPartyDefault (dblDerivativeXVAValueFinish));
 
 		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
@@ -218,12 +215,12 @@ public class XVAReplicationPortfolio {
 
 		double dblZeroCouponBankPriceFinish = tvFinish.bankSeniorFundingNumeraire().finish();
 
-		double dblZeroCouponCounterPartyPriceFinish = tvFinish.counterPartyFundingNumeraire()[0].finish();
+		double dblZeroCouponCounterPartyPriceFinish = tvFinish.counterPartyFundingNumeraire().finish();
 
 		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
-			new double[] {dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish},
+			dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
 			rpvStart.cashAccount() + dblCashAccountAccumulationFinish
 		);
 
@@ -236,7 +233,7 @@ public class XVAReplicationPortfolio {
 			FormatUtil.FormatDouble (tvFinish.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (cae.assetAccumulation(), 1, 6, 1.) + " | " +
@@ -263,8 +260,8 @@ public class XVAReplicationPortfolio {
 					)
 				)
 			),
-			new double[] {dblGainOnBankDefaultFinish},
-			new double[] {dblGainOnCounterPartyDefaultFinish},
+			dblGainOnBankDefaultFinish,
+			dblGainOnCounterPartyDefaultFinish,
 			0.,
 			0.
 		);
@@ -319,7 +316,7 @@ public class XVAReplicationPortfolio {
 
 		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblBankRecovery,
-			new double[] {dblCounterPartyRecovery}
+			dblCounterPartyRecovery
 		);
 
 		DiffusionEvolver deAsset = new DiffusionEvolver (
@@ -389,12 +386,10 @@ public class XVAReplicationPortfolio {
 				deZeroCouponBankBond,
 				dblZeroCouponBankBondRepo
 			),
-			new Tradeable[] {
-				new Tradeable (
-					deZeroCouponCounterPartyBond,
-					dblZeroCouponCounterPartyBondRepo
-				)
-			},
+			new Tradeable (
+				deZeroCouponCounterPartyBond,
+				dblZeroCouponCounterPartyBondRepo
+			),
 			deBankHazardRate,
 			deBankRecoveryRate
 		);
@@ -415,7 +410,7 @@ public class XVAReplicationPortfolio {
 		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecovery,
-			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery}
+			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
@@ -428,16 +423,15 @@ public class XVAReplicationPortfolio {
 			dblDerivativeValue
 		);
 
-		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue -
-			cob.bankDefaultGross (new double[] {dblDerivativeXVAValue}));
+		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue - cob.bankDefault (dblDerivativeXVAValue));
 
 		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue -
-			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValue}));
+			cob.counterPartyDefault (dblDerivativeXVAValue));
 
 		ReplicationPortfolioVertex rpvInitial = ReplicationPortfolioVertex.Standard (
 			1.,
 			dblGainOnBankDefaultInitial,
-			new double[] {dblGainOnCounterPartyDefaultInitial},
+			dblGainOnCounterPartyDefaultInitial,
 			0.
 		);
 
@@ -490,7 +484,7 @@ public class XVAReplicationPortfolio {
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
@@ -537,17 +531,15 @@ public class XVAReplicationPortfolio {
 					),
 					dblTimeWidth
 				),
-				new JumpDiffusionEdge[] {
-					deZeroCouponCounterPartyBond.weinerIncrement (
-						new JumpDiffusionVertex (
-							dblTime,
-							1.,
-							0.,
-							false
-						),
-						dblTimeWidth
-					)
-				},
+				deZeroCouponCounterPartyBond.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						1.,
+						0.,
+						false
+					),
+					dblTimeWidth
+				),
 				deBankHazardRate.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -570,12 +562,12 @@ public class XVAReplicationPortfolio {
 			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
-				new double[] {0.},
+				0.,
 				0.
 			),
 			agvInitial,
-			new double[] {dblGainOnBankDefaultInitial},
-			new double[] {dblGainOnCounterPartyDefaultInitial},
+			dblGainOnBankDefaultInitial,
+			dblGainOnCounterPartyDefaultInitial,
 			0.,
 			0.
 		);

@@ -70,9 +70,9 @@ package org.drip.xva.derivative;
 
 public class ReplicationPortfolioVertex {
 	private double _dblCashAccount = java.lang.Double.NaN;
-	private double[] _adblCounterPartyNumeraireUnits = null;
 	private double _dblAssetNumeraireUnits = java.lang.Double.NaN;
 	private double _dblBankSeniorNumeraireUnits = java.lang.Double.NaN;
+	private double _dblCounterPartyNumeraireUnits = java.lang.Double.NaN;
 	private double _dblBankSubordinateNumeraireUnits = java.lang.Double.NaN;
 
 	/**
@@ -80,7 +80,7 @@ public class ReplicationPortfolioVertex {
 	 * 
 	 * @param dblAssetNumeraireUnits The Asset Numeraire Units
 	 * @param dblBankSeniorNumeraireUnits The Bank Senior Numeraire Units
-	 * @param adblCounterPartyNumeraireUnits The Array of Counter Party Numeraire Replication Units
+	 * @param dblCounterPartyNumeraireUnits The Counter Party Numeraire Replication Units
 	 * @param dblCashAccount The Cash Account
 	 * 
 	 * @return The ReplicationPortfolioVertex Instance without the Zero Recovery Bank Numeraire
@@ -89,12 +89,12 @@ public class ReplicationPortfolioVertex {
 	public static final ReplicationPortfolioVertex Standard (
 		final double dblAssetNumeraireUnits,
 		final double dblBankSeniorNumeraireUnits,
-		final double[] adblCounterPartyNumeraireUnits,
+		final double dblCounterPartyNumeraireUnits,
 		final double dblCashAccount)
 	{
 		try {
 			return new ReplicationPortfolioVertex (dblAssetNumeraireUnits, dblBankSeniorNumeraireUnits, 0.,
-				adblCounterPartyNumeraireUnits, dblCashAccount);
+				dblCounterPartyNumeraireUnits, dblCashAccount);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -108,7 +108,7 @@ public class ReplicationPortfolioVertex {
 	 * @param dblAssetNumeraireUnits The Asset Numeraire Units
 	 * @param dblBankSeniorNumeraireUnits The Bank Senior Numeraire Units
 	 * @param dblBankSubordinateNumeraireUnits The Bank Subordinate Numeraire Units
-	 * @param adblCounterPartyNumeraireUnits The Array of Counter Party Numeraire Units
+	 * @param dblCounterPartyNumeraireUnits The Counter Party Numeraire Units
 	 * @param dblCashAccount The Cash Account
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -118,7 +118,7 @@ public class ReplicationPortfolioVertex {
 		final double dblAssetNumeraireUnits,
 		final double dblBankSeniorNumeraireUnits,
 		final double dblBankSubordinateNumeraireUnits,
-		final double[] adblCounterPartyNumeraireUnits,
+		final double dblCounterPartyNumeraireUnits,
 		final double dblCashAccount)
 		throws java.lang.Exception
 	{
@@ -126,10 +126,9 @@ public class ReplicationPortfolioVertex {
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBankSeniorNumeraireUnits =
 				dblBankSeniorNumeraireUnits) || !org.drip.quant.common.NumberUtil.IsValid
 					(_dblBankSubordinateNumeraireUnits = dblBankSubordinateNumeraireUnits) ||
-						!org.drip.quant.common.NumberUtil.IsValid (_adblCounterPartyNumeraireUnits =
-							adblCounterPartyNumeraireUnits) || 0 >= _adblCounterPartyNumeraireUnits.length ||
-								!org.drip.quant.common.NumberUtil.IsValid (_dblCashAccount =
-									dblCashAccount))
+						!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyNumeraireUnits =
+							dblCounterPartyNumeraireUnits) || !org.drip.quant.common.NumberUtil.IsValid
+								(_dblCashAccount = dblCashAccount))
 			throw new java.lang.Exception ("ReplicationPortfolioVertex Constructor => Invalid Inputs");
 	}
 
@@ -167,14 +166,14 @@ public class ReplicationPortfolioVertex {
 	}
 
 	/**
-	 * Retrieve the Array of Counter Party Numeraire Units
+	 * Retrieve the Counter Party Numeraire Units
 	 * 
-	 * @return The Array of Counter Party Numeraire Units
+	 * @return The Counter Party Numeraire Units
 	 */
 
-	public double[] counterPartyNumeraireUnits()
+	public double counterPartyNumeraireUnits()
 	{
-		return _adblCounterPartyNumeraireUnits;
+		return _dblCounterPartyNumeraireUnits;
 	}
 
 	/**
@@ -205,15 +204,8 @@ public class ReplicationPortfolioVertex {
 		if (null == tv)
 			throw new java.lang.Exception ("ReplicationPortfolioVertex::value => Invalid Inputs");
 
-		double dblValue = -1. * _dblAssetNumeraireUnits * tv.assetNumeraire().finish() - _dblCashAccount;
-
-		int iNumCounterParty = _adblCounterPartyNumeraireUnits.length;
-
-		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterParty =
-			tv.counterPartyFundingNumeraire();
-
-		for (int i = 0; i < iNumCounterParty; ++i)
-			dblValue -= _adblCounterPartyNumeraireUnits[i] * aJDECounterParty[i].finish();
+		double dblValue = -1. * _dblAssetNumeraireUnits * tv.assetNumeraire().finish() - _dblCashAccount -
+			_dblCounterPartyNumeraireUnits * tv.counterPartyFundingNumeraire().finish();
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFunding =
 			tv.bankSeniorFundingNumeraire();

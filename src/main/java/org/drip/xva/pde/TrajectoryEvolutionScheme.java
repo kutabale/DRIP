@@ -70,9 +70,9 @@ package org.drip.xva.pde;
 
 public class TrajectoryEvolutionScheme {
 	private double _dblTimeIncrement = java.lang.Double.NaN;
-	private org.drip.xva.universe.LatentStateDynamicsContainer _tc = null;
 	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
+	private org.drip.xva.universe.LatentStateDynamicsContainer _tc = null;
 
 	/**
 	 * TrajectoryEvolutionScheme Constructor
@@ -162,9 +162,9 @@ public class TrajectoryEvolutionScheme {
 
 		double dblBankNumeraireUnitsStart = rpvStart.bankSeniorNumeraireUnits();
 
-		double dblZeroRecoveryBankNumeraireUnitsStart = rpvStart.bankSubordinateNumeraireUnits();
+		double dblCounterPartyNumeraireUnitsStart = rpvStart.counterPartyNumeraireUnits();
 
-		double[] adblCounterPartyNumeraireUnitsStart = rpvStart.counterPartyNumeraireUnits();
+		double dblZeroRecoveryBankNumeraireUnitsStart = rpvStart.bankSubordinateNumeraireUnits();
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire = tv.assetNumeraire();
 
@@ -174,28 +174,20 @@ public class TrajectoryEvolutionScheme {
 		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire =
 			tv.bankSubordinateFundingNumeraire();
 
-		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyNumeraire =
+		org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyNumeraire =
 			tv.counterPartyFundingNumeraire();
 
 		double dblAssetCashChange = dblAssetNumeraireUnitsStart * _tc.asset().cashAccumulationRate() *
 			jdeAssetNumeraire.finish() * _dblTimeIncrement;
 
-		double dblCounterPartyCashAccumulation = 0.;
-		double dblCounterPartyPositionValueChange = 0.;
-		int iNumCounterParty = aJDECounterPartyNumeraire.length;
+		org.drip.xva.universe.Tradeable tCounterPartyNumeraire = _tc.counterPartyFunding();
 
-		org.drip.xva.universe.Tradeable[] aTCounterPartyNumeraire = _tc.counterPartyFunding();
+		double dblCounterPartyCashAccumulation = dblCounterPartyNumeraireUnitsStart *
+			tCounterPartyNumeraire.cashAccumulationRate() * jdeCounterPartyNumeraire.finish() *
+				_dblTimeIncrement;
 
-		if (aTCounterPartyNumeraire.length != iNumCounterParty) return null;
-
-		for (int i = 0; i < iNumCounterParty; ++i) {
-			dblCounterPartyCashAccumulation += adblCounterPartyNumeraireUnitsStart[i] *
-				aTCounterPartyNumeraire[i].cashAccumulationRate() * aJDECounterPartyNumeraire[i].finish() *
-					_dblTimeIncrement;
-
-			dblCounterPartyPositionValueChange += adblCounterPartyNumeraireUnitsStart[i] *
-				aJDECounterPartyNumeraire[i].grossChange();
-		}
+		double dblCounterPartyPositionValueChange = dblCounterPartyNumeraireUnitsStart *
+			jdeCounterPartyNumeraire.grossChange();
 
 		double dblCashAccountBalance = -1. * etvStart.assetGreekVertex().derivativeXVAValue() - (null ==
 			jdeBankSeniorFundingNumeraire ? 0. : dblBankNumeraireUnitsStart *
@@ -272,39 +264,29 @@ public class TrajectoryEvolutionScheme {
 		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() + 0.5 *
 			(dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
-		org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterParty =
-			tv.counterPartyFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionEdge jdeCounterParty = tv.counterPartyFundingNumeraire();
 
-		double dblGainOnBankDefaultFinish = 0.;
-		int iNumCounterParty = aJDECounterParty.length;
-		double[] adblCloseOutMTM = new double[iNumCounterParty];
-		double[] adblGainOnBankDefaultFinish = new double[iNumCounterParty];
-		double[] adblGainOnCounterPartyDefaultFinish = new double[iNumCounterParty];
-		double[] adblCounterPartyNumeraireUnitsFinish = new double[iNumCounterParty];
+		double dblCounterPartyGainOnBankDefault = java.lang.Double.NaN;
+		double dblGainOnCounterPartyDefaultFinish = java.lang.Double.NaN;
 
 		double dblDerivativeXVAValueFinish = agvStart.derivativeXVAValue() - dblTheta * dblTimeWidth;
 
-		for (int i = 0; i < iNumCounterParty; ++i)
-			adblCloseOutMTM[i] = dblDerivativeXVAValueFinish;
+		try {
+			dblCounterPartyGainOnBankDefault = _cob.bankDefault (dblDerivativeXVAValueFinish);
 
-		double[] adblCounterPartyGainOnBankDefault = _cob.bankDefault (adblCloseOutMTM);
+			dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
+				_cob.counterPartyDefault (dblDerivativeXVAValueFinish));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
 
-		for (int i = 0; i < iNumCounterParty; ++i) {
-			dblGainOnBankDefaultFinish += (adblGainOnBankDefaultFinish[i] = -1. *
-				(dblDerivativeXVAValueFinish - adblCounterPartyGainOnBankDefault[i]));
-
-			try {
-				adblGainOnCounterPartyDefaultFinish[i] = -1. * (dblDerivativeXVAValueFinish -
-					_cob.counterPartyDefault (i, adblCloseOutMTM));
-			} catch (java.lang.Exception e) {
-				e.printStackTrace();
-
-				return null;
-			}
-
-			adblCounterPartyNumeraireUnitsFinish[i] = adblGainOnCounterPartyDefaultFinish[i] /
-				aJDECounterParty[i].finish();
+			return null;
 		}
+
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
+			dblCounterPartyGainOnBankDefault);
+
+		double dblCounterPartyNumeraireUnitsFinish = dblGainOnCounterPartyDefaultFinish /
+			jdeCounterParty.finish();
 
 		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (etvStart, tv);
 
@@ -331,7 +313,7 @@ public class TrajectoryEvolutionScheme {
 						jdeBankSeniorFundingNumeraire.finish(),
 					null == jdeBankSubordinateFundingNumeraire ? 0. : dblGainOnBankDefaultFinish /
 						jdeBankSubordinateFundingNumeraire.finish(),
-					adblCounterPartyNumeraireUnitsFinish,
+					dblCounterPartyNumeraireUnitsFinish,
 					etvStart.replicationPortfolioVertex().cashAccount() + cae.accumulation()
 				),
 				new org.drip.xva.derivative.AssetGreekVertex (
@@ -353,8 +335,8 @@ public class TrajectoryEvolutionScheme {
 						)
 					)
 				),
-				adblGainOnBankDefaultFinish,
-				adblGainOnCounterPartyDefaultFinish,
+				dblGainOnBankDefaultFinish,
+				dblGainOnCounterPartyDefaultFinish,
 				dblCollateral,
 				bker.derivativeXVAHedgeErrorGrowth()
 			);

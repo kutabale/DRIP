@@ -68,58 +68,27 @@ package org.drip.xva.definition;
 
 public abstract class CloseOutGeneral {
 
-	private static final double[] ZeroCollateral (
-		final double[] adblExposure)
-	{
-		if (null == adblExposure) return null;
-
-		int iNumCounterPartyGroup = adblExposure.length;
-		double[] adblCounterPartyGroupCollateral = 0 == iNumCounterPartyGroup ? null : new
-			double[iNumCounterPartyGroup];
-
-		if (0 == iNumCounterPartyGroup) return null;
-
-		for (int i = 0; i < iNumCounterPartyGroup; ++i)
-			adblCounterPartyGroupCollateral[i] = 0.;
-
-		return adblCounterPartyGroupCollateral;
-	}
-
 	/**
-	 * Retrieve the Close-out Array from the Exposure on Bank Default
+	 * Retrieve the Close-out from the Exposure on Bank Default
 	 * 
-	 * @param adblUncollateralizedExposure Array of the Counter Party Group Uncollateralized Exposures
-	 * @param adblCollateralAmount Array of the Counter Party Group Collateral Amounts
+	 * @param dblUncollateralizedExposure Counter Party Group Uncollateralized Exposure
+	 * @param dblCollateralAmount Counter Party Group Collateral Amount
 	 * 
-	 * @return The Close-out Array from the Exposure on Bank Default
-	 */
-
-	public abstract double[] bankDefault (
-		final double[] adblUncollateralizedExposure,
-		final double[] adblCollateralAmount);
-
-	/**
-	 * Retrieve the Gross Close-out from the Exposure on Bank Default
-	 * 
-	 * @param adblUncollateralizedExposure Array of the Counter Party Group Uncollateralized Exposures
-	 * @param adblCollateralAmount Array of the Counter Party Group Collateral Amounts
-	 * 
-	 * @return The Gross Close-out from the Exposure on Bank Default
+	 * @return Close-out from the Exposure on Bank Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double bankDefaultGross (
-		final double[] adblUncollateralizedExposure,
-		final double[] adblCollateralAmount)
+	public abstract double bankDefault (
+		final double dblUncollateralizedExposure,
+		final double dblCollateralAmount)
 		throws java.lang.Exception;
 
 	/**
 	 * Retrieve the Close-out from the Exposure on a specific Counter Party Default
 	 * 
-	 * @param iCounterPartyGroupIndex The Counter Party Group Index
-	 * @param adblUncollateralizedExposure Array of the Counter Party Group Uncollateralized Exposures
-	 * @param adblCollateralAmount Array of the Counter Party Group Collateral Amounts
+	 * @param dblUncollateralizedExposure Counter Party Group Uncollateralized Exposure
+	 * @param dblCollateralAmount Counter Party Group Collateral Amount
 	 * 
 	 * @return The Close-out from the Exposure on a specific Counter Party Default
 	 * 
@@ -127,47 +96,31 @@ public abstract class CloseOutGeneral {
 	 */
 
 	public abstract double counterPartyDefault (
-		final int iCounterPartyGroupIndex,
-		final double[] adblUncollateralizedExposure,
-		final double[] adblCollateralAmount)
+		final double dblUncollateralizedExposure,
+		final double dblCollateralAmount)
 		throws java.lang.Exception;
 
 	/**
-	 * Retrieve the Close-out Array from the Exposure on Bank Default
+	 * Retrieve the Close-out from the Exposure on Bank Default
 	 * 
-	 * @param adblUncollateralizedExposure Array of the Counter Party Group Uncollateralized Exposures
+	 * @param dblUncollateralizedExposure Counter Party Group Uncollateralized Exposure
 	 * 
-	 * @return The Close-out Array from the Exposure on Bank Default
-	 */
-
-	public double[] bankDefault (
-		final double[] adblUncollateralizedExposure)
-	{
-		return bankDefault (adblUncollateralizedExposure, ZeroCollateral (adblUncollateralizedExposure));
-	}
-
-	/**
-	 * Retrieve the Gross Close-out from the Exposure on Bank Default
-	 * 
-	 * @param adblExposure Array of the Counter Party Group Exposures
-	 * 
-	 * @return The Gross Close-out from the Exposure on Bank Default
+	 * @return Close-out from the Exposure on Bank Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double bankDefaultGross (
-		final double[] adblExposure)
+	public double bankDefault (
+		final double dblUncollateralizedExposure)
 		throws java.lang.Exception
 	{
-		return bankDefaultGross (adblExposure, ZeroCollateral (adblExposure));
+		return bankDefault (dblUncollateralizedExposure, 0.);
 	}
 
 	/**
 	 * Retrieve the Close-out from the Exposure on specific Counter Party Default
 	 * 
-	 * @param iCounterPartyGroupIndex The Counter Party Group Index
-	 * @param adblExposure Array of the Counter Party Group Exposures
+	 * @param dblExposure Counter Party Group Exposure
 	 * 
 	 * @return The Close-out from the Exposure on specific Counter Party Default
 	 * 
@@ -175,10 +128,9 @@ public abstract class CloseOutGeneral {
 	 */
 
 	public double counterPartyDefault (
-		final int iCounterPartyGroupIndex,
-		final double[] adblExposure)
+		final double dblExposure)
 		throws java.lang.Exception
 	{
-		return counterPartyDefault (iCounterPartyGroupIndex, adblExposure, ZeroCollateral (adblExposure));
+		return counterPartyDefault (dblExposure, 0.);
 	}
 }

@@ -416,7 +416,11 @@ public class JurisdictionOTCIndexSwaps {
 		JulianDate dtToday = DateUtil.Today().addTenor ("0D");
 
 		String[] astrOTCMaturityTenor = new String[] {
-			"1Y", "3Y", "5Y", "7Y", "10Y"
+			"1Y",
+			"3Y",
+			"5Y",
+			"7Y",
+			"10Y"
 		};
 
 		System.out.println ("\n\t--------------------------------------------------------------------------------------------------------------------------------");
@@ -447,6 +451,10 @@ public class JurisdictionOTCIndexSwaps {
 
 		OTCRun (dtToday, "JPY", "ALL", astrOTCMaturityTenor, "TIBOR");
 
+		OTCRun (dtToday, "KRW", "ALL", astrOTCMaturityTenor, "MAIN");
+
+		OTCRun (dtToday, "MYR", "ALL", astrOTCMaturityTenor, "MAIN");
+
 		OTCRun (dtToday, "NOK", "ALL", astrOTCMaturityTenor, "MAIN");
 
 		OTCRun (dtToday, "NZD", "ALL", astrOTCMaturityTenor, "MAIN");
@@ -456,6 +464,10 @@ public class JurisdictionOTCIndexSwaps {
 		OTCRun (dtToday, "SEK", "ALL", astrOTCMaturityTenor, "MAIN");
 
 		OTCRun (dtToday, "SGD", "ALL", astrOTCMaturityTenor, "MAIN");
+
+		OTCRun (dtToday, "THB", "ALL", astrOTCMaturityTenor, "MAIN");
+
+		OTCRun (dtToday, "TWD", "ALL", astrOTCMaturityTenor, "MAIN");
 
 		OTCRun (dtToday, "USD", "LON", astrOTCMaturityTenor, "MAIN");
 

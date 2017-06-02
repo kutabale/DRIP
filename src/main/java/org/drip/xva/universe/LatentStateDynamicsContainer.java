@@ -72,8 +72,8 @@ public class LatentStateDynamicsContainer {
 	private org.drip.xva.universe.Tradeable _tOvernightIndex = null;
 	private org.drip.xva.universe.Tradeable _tCollateralScheme = null;
 	private org.drip.xva.universe.Tradeable _tBankSeniorFunding = null;
+	private org.drip.xva.universe.Tradeable _tCounterPartyFunding = null;
 	private org.drip.xva.universe.Tradeable _tBankSubordinateFunding = null;
-	private org.drip.xva.universe.Tradeable[] _aTCounterPartyFunding = null;
 	private org.drip.measure.process.DiffusionEvolver _deBankHazardRate = null;
 	private org.drip.measure.process.DiffusionEvolver _deBankRecoveryRate = null;
 
@@ -84,7 +84,7 @@ public class LatentStateDynamicsContainer {
 	 * @param tOvernightIndex The Overnight Index Tradeable
 	 * @param tCollateralScheme The Collateral Scheme Tradeable
 	 * @param tBankSeniorFunding Bank Senior Funding Tradeable
-	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
+	 * @param tCounterPartyFunding Counter Party Funding Tradeable
 	 * @param deBankHazardRate The Bank Hazard Rate Evolver
 	 * @param deBankRecoveryRate The Bank Recovery Rate Evolver
 	 * 
@@ -96,13 +96,13 @@ public class LatentStateDynamicsContainer {
 		final org.drip.xva.universe.Tradeable tOvernightIndex,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
 		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
-		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding,
+		final org.drip.xva.universe.Tradeable tCounterPartyFunding,
 		final org.drip.measure.process.DiffusionEvolver deBankHazardRate,
 		final org.drip.measure.process.DiffusionEvolver deBankRecoveryRate)
 	{
 		try {
 			return new LatentStateDynamicsContainer (tAsset, tOvernightIndex, tCollateralScheme,
-				tBankSeniorFunding, null, aTCounterPartyFunding, deBankHazardRate, deBankRecoveryRate);
+				tBankSeniorFunding, null, tCounterPartyFunding, deBankHazardRate, deBankRecoveryRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -118,7 +118,7 @@ public class LatentStateDynamicsContainer {
 	 * @param tCollateralScheme The Collateral Scheme Tradeable
 	 * @param tBankSeniorFunding Bank Senior Funding Tradeable
 	 * @param tBankSubordinateFunding Bank Subordinate Funding Tradeable
-	 * @param aTCounterPartyFunding Array of Counter Party Funding Tradeables
+	 * @param tCounterPartyFunding Counter Party Funding Tradeable
 	 * @param deBankHazardRate The Bank Hazard Rate Evolver
 	 * @param deBankRecoveryRate The Bank Recovery Rate Evolver
 	 * 
@@ -131,12 +131,12 @@ public class LatentStateDynamicsContainer {
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
 		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
 		final org.drip.xva.universe.Tradeable tBankSubordinateFunding,
-		final org.drip.xva.universe.Tradeable[] aTCounterPartyFunding,
+		final org.drip.xva.universe.Tradeable tCounterPartyFunding,
 		final org.drip.measure.process.DiffusionEvolver deBankHazardRate,
 		final org.drip.measure.process.DiffusionEvolver deBankRecoveryRate)
 		throws java.lang.Exception
 	{
-		if (null == (_tAsset = tAsset) || null == (_aTCounterPartyFunding = aTCounterPartyFunding))
+		if (null == (_tAsset = tAsset) || null == (_tCounterPartyFunding = tCounterPartyFunding))
 			throw new java.lang.Exception ("LatentStateDynamicsContainer Constructor => Invalid Inputs");
 
 		_tOvernightIndex = tOvernightIndex;
@@ -145,15 +145,6 @@ public class LatentStateDynamicsContainer {
 		_tBankSeniorFunding = tBankSeniorFunding;
 		_deBankRecoveryRate = deBankRecoveryRate;
 		_tBankSubordinateFunding = tBankSubordinateFunding;
-		int iNumCounterParty = _aTCounterPartyFunding.length;
-
-		if (0 >= iNumCounterParty)
-			throw new java.lang.Exception ("LatentStateDynamicsContainer Constructor => Invalid Inputs");
-
-		for (int i = 0; i < iNumCounterParty; ++i) {
-			if (null == _aTCounterPartyFunding[i])
-				throw new java.lang.Exception ("LatentStateDynamicsContainer Constructor => Invalid Inputs");
-		}
 	}
 
 	/**
@@ -212,25 +203,14 @@ public class LatentStateDynamicsContainer {
 	}
 
 	/**
-	 * Retrieve the Array of Counter Party Funding Tradeables
+	 * Retrieve the Counter Party Funding Tradeable
 	 * 
-	 * @return The Array of Counter Party Funding Tradeables
+	 * @return The Counter Party Funding Tradeable
 	 */
 
-	public org.drip.xva.universe.Tradeable[] counterPartyFunding()
+	public org.drip.xva.universe.Tradeable counterPartyFunding()
 	{
-		return _aTCounterPartyFunding;
-	}
-
-	/**
-	 * Retrieve the Number of Counter Parties
-	 * 
-	 * @return The Number of Counter Parties
-	 */
-
-	public int numCounterParty()
-	{
-		return _aTCounterPartyFunding.length;
+		return _tCounterPartyFunding;
 	}
 
 	/**

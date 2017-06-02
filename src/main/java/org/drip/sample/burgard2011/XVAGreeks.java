@@ -145,17 +145,15 @@ public class XVAGreeks {
 				),
 				dblTimeWidth
 			),
-			new JumpDiffusionEdge[] {
-				tc.counterPartyFunding()[0].numeraireEvolver().weinerIncrement (
-					new JumpDiffusionVertex (
-						dblTime,
-						tvStart.counterPartyFundingNumeraire()[0].finish(),
-						0.,
-						false
-					),
-					dblTimeWidth
-				)
-			},
+			tc.counterPartyFunding().numeraireEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					tvStart.counterPartyFundingNumeraire().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
+			),
 			tc.bankHazardRateEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -201,11 +199,10 @@ public class XVAGreeks {
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
-		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.bankDefaultGross (new double[] {dblDerivativeXVAValueFinish}));
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.bankDefault (dblDerivativeXVAValueFinish));
 
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValueFinish}));
+			cob.counterPartyDefault (dblDerivativeXVAValueFinish));
 
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
@@ -235,7 +232,7 @@ public class XVAGreeks {
 			ReplicationPortfolioVertex.Standard (
 				-1. * dblDerivativeXVAValueDeltaFinish,
 				dblGainOnBankDefaultFinish / tvFinish.bankSeniorFundingNumeraire().finish(),
-				new double[] {dblGainOnCounterPartyDefaultFinish / tvFinish.counterPartyFundingNumeraire()[0].finish()},
+				dblGainOnCounterPartyDefaultFinish / tvFinish.counterPartyFundingNumeraire().finish(),
 				rpvStart.cashAccount() + cae.accumulation()
 			),
 			new AssetGreekVertex (
@@ -253,8 +250,8 @@ public class XVAGreeks {
 					)
 				)
 			),
-			new double[] {dblGainOnBankDefaultFinish},
-			new double[] {dblGainOnCounterPartyDefaultFinish},
+			dblGainOnBankDefaultFinish,
+			dblGainOnCounterPartyDefaultFinish,
 			0.,
 			0.
 		);
@@ -309,7 +306,7 @@ public class XVAGreeks {
 
 		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblBankRecovery,
-			new double[] {dblCounterPartyRecovery}
+			dblCounterPartyRecovery
 		);
 
 		DiffusionEvolver meAsset = new DiffusionEvolver (
@@ -379,12 +376,10 @@ public class XVAGreeks {
 				meZeroCouponBankBond,
 				dblZeroCouponBankBondRepo
 			),
-			new Tradeable[] {
-				new Tradeable (
-					meZeroCouponCounterPartyBond,
-					dblZeroCouponCounterPartyBondRepo
-				)
-			},
+			new Tradeable (
+				meZeroCouponCounterPartyBond,
+				dblZeroCouponCounterPartyBondRepo
+			),
 			deBankHazardRate,
 			deBankRecoveryRate
 		);
@@ -405,7 +400,7 @@ public class XVAGreeks {
 		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecovery,
-			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery}
+			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
@@ -418,11 +413,9 @@ public class XVAGreeks {
 			dblDerivativeValue
 		);
 
-		double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue -
-			cob.bankDefaultGross (new double[] {dblDerivativeXVAValue}));
+		double dblGainOnBankDefault = -1. * (dblDerivativeXVAValue - cob.bankDefault (dblDerivativeXVAValue));
 
-		double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue -
-			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValue}));
+		double dblGainOnCounterPartyDefault = -1. * (dblDerivativeXVAValue - cob.counterPartyDefault (dblDerivativeXVAValue));
 
 		System.out.println();
 
@@ -520,17 +513,15 @@ public class XVAGreeks {
 					),
 					dblTimeWidth
 				),
-				new JumpDiffusionEdge[] {
-					meZeroCouponCounterPartyBond.weinerIncrement (
-						new JumpDiffusionVertex (
-							dblTime,
-							1.,
-							0.,
-							false
-						),
-						dblTimeWidth
-					)
-				},
+				meZeroCouponCounterPartyBond.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						1.,
+						0.,
+						false
+					),
+					dblTimeWidth
+				),
 				deBankHazardRate.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -553,12 +544,12 @@ public class XVAGreeks {
 			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
-				new double[] {0.},
+				0.,
 				0.
 			),
 			agv,
-			new double[] {dblGainOnBankDefault},
-			new double[] {dblGainOnCounterPartyDefault},
+			dblGainOnBankDefault,
+			dblGainOnCounterPartyDefault,
 			0.,
 			0.
 		);

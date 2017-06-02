@@ -73,8 +73,8 @@ public class LatentStateEdge {
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeOvernightIndexNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeCollateralSchemeNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSeniorFundingNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeCounterPartyFundingNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSubordinateFundingNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge[] _aJDECounterPartyFundingNumeraire = null;
 
 	/**
 	 * Create a LatentStateEdge Instance without the Zero Recovery Bank Funding Numeraire
@@ -83,7 +83,7 @@ public class LatentStateEdge {
 	 * @param jdeOvernightIndexNumeraire The Realized Overnight Index Numeraire
 	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
 	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire
-	 * @param aJDECounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire Array
+	 * @param jdeCounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire
 	 * @param jdeBankHazardRate The Realized Bank Hazard Rate JDE
 	 * @param jdeBankRecoveryRate The Realized Bank Recovery Rate JDE
 	 * 
@@ -95,14 +95,14 @@ public class LatentStateEdge {
 		final org.drip.measure.realization.JumpDiffusionEdge jdeOvernightIndexNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankHazardRate,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankRecoveryRate)
 	{
 		try {
 			return new LatentStateEdge (jdeAssetNumeraire, jdeOvernightIndexNumeraire,
 				jdeCollateralSchemeNumeraire, jdeBankSeniorFundingNumeraire, null,
-					aJDECounterPartyFundingNumeraire, jdeBankHazardRate, jdeBankRecoveryRate);
+					jdeCounterPartyFundingNumeraire, jdeBankHazardRate, jdeBankRecoveryRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -118,7 +118,7 @@ public class LatentStateEdge {
 	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire JDE
 	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire JDE
 	 * @param jdeBankSubordinateFundingNumeraire The Realized Bank Subordinate Funding Numeraire JDE
-	 * @param aJDECounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire JDE Array
+	 * @param jdeCounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire JDE
 	 * @param jdeBankHazardRate The Realized Bank Hazard Rate JDE
 	 * @param jdeBankRecoveryRate The Realized Bank Recovery Rate JDE
 	 * 
@@ -131,13 +131,13 @@ public class LatentStateEdge {
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge[] aJDECounterPartyFundingNumeraire,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankHazardRate,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankRecoveryRate)
 		throws java.lang.Exception
 	{
-		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null == (_aJDECounterPartyFundingNumeraire =
-			aJDECounterPartyFundingNumeraire))
+		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null == (_jdeCounterPartyFundingNumeraire =
+			jdeCounterPartyFundingNumeraire))
 			throw new java.lang.Exception ("LatentStateEdge Constructor => Invalid Inputs");
 
 		_jdeBankHazardRate = jdeBankHazardRate;
@@ -145,16 +145,7 @@ public class LatentStateEdge {
 		_jdeOvernightIndexNumeraire = jdeOvernightIndexNumeraire;
 		_jdeCollateralSchemeNumeraire = jdeCollateralSchemeNumeraire;
 		_jdeBankSeniorFundingNumeraire = jdeBankSeniorFundingNumeraire;
-		int iNumCounterParty = _aJDECounterPartyFundingNumeraire.length;
 		_jdeBankSubordinateFundingNumeraire = jdeBankSubordinateFundingNumeraire;
-
-		if (0 >= iNumCounterParty)
-			throw new java.lang.Exception ("LatentStateEdge Constructor => Invalid Inputs");
-
-		for (int i = 0; i < iNumCounterParty; ++i) {
-			if (null == _aJDECounterPartyFundingNumeraire[i])
-				throw new java.lang.Exception ("LatentStateEdge Constructor => Invalid Inputs");
-		}
 	}
 
 	/**
@@ -213,25 +204,14 @@ public class LatentStateEdge {
 	}
 
 	/**
-	 * Retrieve the Array of Realized Counter Party Funding Numeraires
+	 * Retrieve the Realized Counter Party Funding Numeraires
 	 * 
-	 * @return The Array of Realized Counter Party Funding Numeraires
+	 * @return The Realized Counter Party Funding Numeraires
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge[] counterPartyFundingNumeraire()
+	public org.drip.measure.realization.JumpDiffusionEdge counterPartyFundingNumeraire()
 	{
-		return _aJDECounterPartyFundingNumeraire;
-	}
-
-	/**
-	 * Retrieve the Number of Counter Parties
-	 * 
-	 * @return The Number of Counter Parties
-	 */
-
-	public int numCounterParty()
-	{
-		return _aJDECounterPartyFundingNumeraire.length;
+		return _jdeCounterPartyFundingNumeraire;
 	}
 
 	/**

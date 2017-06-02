@@ -135,11 +135,10 @@ public class CorrelatedNumeraireXVAExplain {
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
-		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.bankDefaultGross
-			(new double[] {dblDerivativeXVAValueFinish}));
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.bankDefault (dblDerivativeXVAValueFinish));
 
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.counterPartyDefault
-			(0, new double[] {dblDerivativeXVAValueFinish}));
+			(dblDerivativeXVAValueFinish));
 
 		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
@@ -152,12 +151,12 @@ public class CorrelatedNumeraireXVAExplain {
 
 		double dblZeroCouponBankPriceFinish = tv.bankSeniorFundingNumeraire().finish();
 
-		double dblZeroCouponCounterPartyPriceFinish = tv.counterPartyFundingNumeraire()[0].finish();
+		double dblZeroCouponCounterPartyPriceFinish = tv.counterPartyFundingNumeraire().finish();
 
 		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
-			new double[] {dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish},
+			dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
 			rpvStart.cashAccount() + dblCashAccountAccumulationFinish
 		);
 
@@ -170,7 +169,7 @@ public class CorrelatedNumeraireXVAExplain {
 			FormatUtil.FormatDouble (tv.collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCashAccountAccumulationFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (cae.assetAccumulation(), 1, 6, 1.) + " | " +
@@ -197,8 +196,8 @@ public class CorrelatedNumeraireXVAExplain {
 					)
 				)
 			),
-			new double[] {dblGainOnBankDefaultFinish},
-			new double[] {dblGainOnCounterPartyDefaultFinish},
+			dblGainOnBankDefaultFinish,
+			dblGainOnCounterPartyDefaultFinish,
 			0.,
 			0.
 		);
@@ -273,7 +272,7 @@ public class CorrelatedNumeraireXVAExplain {
 
 		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblInitialBankRecoveryRate,
-			new double[] {dblCounterPartyRecoveryRate}
+			dblCounterPartyRecoveryRate
 		);
 
 		DiffusionEvolver deAsset = new DiffusionEvolver (
@@ -351,12 +350,10 @@ public class CorrelatedNumeraireXVAExplain {
 				deZeroCouponBankBond,
 				dblZeroCouponBankBondRepo
 			),
-			new Tradeable[] {
-				new Tradeable (
-					deZeroCouponCounterPartyBond,
-					dblZeroCouponCounterPartyBondRepo
-				)
-			},
+			new Tradeable (
+				deZeroCouponCounterPartyBond,
+				dblZeroCouponCounterPartyBondRepo
+			),
 			deBankHazardRate,
 			deBankRecoveryRate
 		);
@@ -377,7 +374,7 @@ public class CorrelatedNumeraireXVAExplain {
 		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankRecoveryRate,
-			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecoveryRate}
+			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecoveryRate
 		);
 
 		double[][] aadblNumeraireTimeSeries = Matrix.Transpose (
@@ -481,16 +478,14 @@ public class CorrelatedNumeraireXVAExplain {
 			dblDerivativeValue
 		);
 
-		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue -
-			cob.bankDefaultGross (new double[] {dblDerivativeXVAValue}));
+		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue - cob.bankDefault (dblDerivativeXVAValue));
 
-		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue -
-			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValue}));
+		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue - cob.counterPartyDefault (dblDerivativeXVAValue));
 
 		ReplicationPortfolioVertex rpvInitial = ReplicationPortfolioVertex.Standard (
 			1.,
 			dblGainOnBankDefaultInitial,
-			new double[] {dblGainOnCounterPartyDefaultInitial},
+			dblGainOnCounterPartyDefaultInitial,
 			0.
 		);
 
@@ -543,7 +538,7 @@ public class CorrelatedNumeraireXVAExplain {
 			FormatUtil.FormatDouble (aJDECollateral[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits()[0], 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
@@ -558,19 +553,19 @@ public class CorrelatedNumeraireXVAExplain {
 				aJDEOvernightIndex[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
-				new JumpDiffusionEdge[] {aJDECounterParty[iNumTimeStep - 1]},
+				aJDECounterParty[iNumTimeStep - 1],
 				aJDEBankHazardRate[iNumTimeStep - 1],
 				aJDEBankRecoveryRate[iNumTimeStep - 1]
 			),
 			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
-				new double[] {0.},
+				0.,
 				0.
 			),
 			agvInitial,
-			new double[] {dblGainOnBankDefaultInitial},
-			new double[] {dblGainOnCounterPartyDefaultInitial},
+			dblGainOnBankDefaultInitial,
+			dblGainOnCounterPartyDefaultInitial,
 			0.,
 			0.
 		);
@@ -586,7 +581,7 @@ public class CorrelatedNumeraireXVAExplain {
 					aJDEOvernightIndex[i],
 					aJDECollateral[i],
 					aJDEBank[i],
-					new JumpDiffusionEdge[] {aJDECounterParty[i]},
+					aJDECounterParty[i],
 					aJDEBankHazardRate[i],
 					aJDEBankRecoveryRate[i]
 				)

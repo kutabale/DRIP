@@ -121,7 +121,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			jdeOvernightIndex,
 			jdeCollateral,
 			jdeBank,
-			new JumpDiffusionEdge[] {jdeCounterParty},
+			jdeCounterParty,
 			jdeBankHazardRate,
 			jdeBankRecoveryRate
 		);
@@ -151,11 +151,10 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
-		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.bankDefaultGross (new double[] {dblDerivativeXVAValueFinish}));
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.bankDefault (dblDerivativeXVAValueFinish));
 
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.counterPartyDefault
-			(0, new double[] {dblDerivativeXVAValueFinish}));
+			(dblDerivativeXVAValueFinish));
 
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
@@ -188,7 +187,7 @@ public class CorrelatedNumeraireXVAGreeks {
 		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
 			dblGainOnBankDefaultFinish / dblZeroCouponBankPriceFinish,
-			new double[] {dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish},
+			dblGainOnCounterPartyDefaultFinish / dblZeroCouponCounterPartyPriceFinish,
 			rpvStart.cashAccount() + dblCashAccountAccumulationFinish
 		);
 
@@ -211,8 +210,8 @@ public class CorrelatedNumeraireXVAGreeks {
 					)
 				)
 			),
-			new double[] {dblGainOnBankDefaultFinish},
-			new double[] {dblGainOnCounterPartyDefaultFinish},
+			dblGainOnBankDefaultFinish,
+			dblGainOnCounterPartyDefaultFinish,
 			0.,
 			0.
 		);
@@ -286,7 +285,7 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblInitialBankRecoveryRate,
-			new double[] {dblCounterPartyRecoveryRate}
+			dblCounterPartyRecoveryRate
 		);
 
 		DiffusionEvolver deAsset = new DiffusionEvolver (
@@ -364,12 +363,10 @@ public class CorrelatedNumeraireXVAGreeks {
 				deZeroCouponBankBond,
 				dblZeroCouponBankBondRepo
 			),
-			new Tradeable[] {
-				new Tradeable (
-					deZeroCouponCounterPartyBond,
-					dblZeroCouponCounterPartyBondRepo
-				)
-			},
+			new Tradeable (
+				deZeroCouponCounterPartyBond,
+				dblZeroCouponCounterPartyBondRepo
+			),
 			deBankHazardRate,
 			deBankRecoveryRate
 		);
@@ -390,7 +387,7 @@ public class CorrelatedNumeraireXVAGreeks {
 		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankRecoveryRate,
-			new double[] {(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecoveryRate}
+			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecoveryRate
 		);
 
 		double[][] aadblNumeraireTimeSeries = Matrix.Transpose (
@@ -494,11 +491,9 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblDerivativeValue
 		);
 
-		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue -
-			cob.bankDefaultGross (new double[] {dblDerivativeXVAValue}));
+		double dblGainOnBankDefaultInitial = -1. * (dblDerivativeXVAValue - cob.bankDefault (dblDerivativeXVAValue));
 
-		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue -
-			cob.counterPartyDefault (0, new double[] {dblDerivativeXVAValue}));
+		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue - cob.counterPartyDefault (dblDerivativeXVAValue));
 
 		System.out.println();
 
@@ -564,19 +559,19 @@ public class CorrelatedNumeraireXVAGreeks {
 				aJDEOvernightIndex[iNumTimeStep - 1],
 				aJDECollateral[iNumTimeStep - 1],
 				aJDEBank[iNumTimeStep - 1],
-				new JumpDiffusionEdge[] {aJDECounterParty[iNumTimeStep - 1]},
+				aJDECounterParty[iNumTimeStep - 1],
 				aJDEBankHazardRate[iNumTimeStep - 1],
 				aJDEBankRecoveryRate[iNumTimeStep - 1]
 			),
 			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
-				new double[] {0.},
+				0.,
 				0.
 			),
 			agvInitial,
-			new double[] {dblGainOnBankDefaultInitial},
-			new double[] {dblGainOnCounterPartyDefaultInitial},
+			dblGainOnBankDefaultInitial,
+			dblGainOnCounterPartyDefaultInitial,
 			0.,
 			0.
 		);
