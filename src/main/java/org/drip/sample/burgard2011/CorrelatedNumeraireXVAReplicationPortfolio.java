@@ -96,7 +96,8 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 		final JumpDiffusionEdge jdeBank,
 		final JumpDiffusionEdge jdeCounterParty,
 		final JumpDiffusionEdge jdeBankHazardRate,
-		final JumpDiffusionEdge jdeBankRecoveryRate)
+		final JumpDiffusionEdge jdeBankRecoveryRate,
+		final JumpDiffusionEdge jdeCounterPartyRecoveryRate)
 		throws Exception
 	{
 		AssetGreekVertex agvStart = etvStart.assetGreekVertex();
@@ -124,7 +125,8 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			jdeBank,
 			jdeCounterParty,
 			jdeBankHazardRate,
-			jdeBankRecoveryRate
+			jdeBankRecoveryRate,
+			jdeCounterPartyRecoveryRate
 		);
 
 		CloseOutBilateral cob = tes.boundaryCondition();
@@ -228,14 +230,16 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
 		double[][] aadblCorrelation = new double[][] {
-			{1.00, 0.00, 0.20, 0.15, 0.05, 0.00, 0.00}, // #0 ASSET
-			{0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #1 OVERNIGHT
-			{0.20, 0.00, 1.00, 0.13, 0.25, 0.00, 0.00}, // #2 COLLATERAL
-			{0.15, 0.00, 0.13, 1.00, 0.00, 0.00, 0.00}, // #3 BANK
-			{0.05, 0.00, 0.25, 0.00, 1.00, 0.00, 0.00}, // #4 COUNTER PARTY
-			{0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00}, // #5 BANK HAZARD
-			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00}  // #6 BANK RECOVERY
+			{1.00, 0.00, 0.20, 0.15, 0.05, 0.00, 0.00, 0.00}, // #0 ASSET
+			{0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #1 OVERNIGHT
+			{0.20, 0.00, 1.00, 0.13, 0.25, 0.00, 0.00, 0.00}, // #2 COLLATERAL
+			{0.15, 0.00, 0.13, 1.00, 0.00, 0.00, 0.00, 0.00}, // #3 BANK
+			{0.05, 0.00, 0.25, 0.00, 1.00, 0.00, 0.00, 0.00}, // #4 COUNTER PARTY
+			{0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00}, // #5 BANK HAZARD
+			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00}, // #6 BANK RECOVERY
+			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00}  // #8 COUNTER PARTY RECOVERY
 		};
+
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
 		double dblAssetRepo = 0.03;
@@ -257,7 +261,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 		double dblZeroCouponBankBondRepo = 0.028;
 		double dblTerminalBankNumeraire = 1.;
 
-		double dblBankInitialHazardRate = 0.03;
+		double dblInitialBankHazardRate = 0.03;
 		double dblBankHazardRateDrift = 0.00;
 		double dblBankHazardRateVolatility = 0.005;
 
@@ -270,8 +274,13 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 		double dblZeroCouponCounterPartyBondRepo = 0.028;
 		double dblTerminalCounterPartyNumeraire = 1.;
 
-		double dblCounterPartyHazardRate = 0.05;
-		double dblCounterPartyRecoveryRate = 0.30;
+		double dblInitialCounterPartyHazardRate = 0.05;
+		double dblCounterPartyHazardRateDrift = 0.00;
+		double dblCounterPartyHazardRateVolatility = 0.005;
+
+		double dblInitialCounterPartyRecoveryRate = 0.30;
+		double dblCounterPartyRecoveryRateDrift = 0.0;
+		double dblCounterPartyRecoveryRateVolatility = 0.0;
 
 		double dblTerminalXVADerivativeValue = 1.;
 
@@ -288,7 +297,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		CloseOutBilateral cob = CloseOutBilateral.Standard (
 			dblInitialBankRecoveryRate,
-			dblCounterPartyRecoveryRate
+			dblInitialCounterPartyRecoveryRate
 		);
 
 		DiffusionEvolver deAsset = new DiffusionEvolver (
@@ -318,7 +327,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				dblZeroCouponBankBondVolatility
 			),
 			HazardJumpEvaluator.Standard (
-				dblBankInitialHazardRate,
+				dblInitialBankHazardRate,
 				dblInitialBankRecoveryRate
 			)
 		);
@@ -329,8 +338,8 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				dblZeroCouponCounterPartyBondVolatility
 			),
 			HazardJumpEvaluator.Standard (
-				dblCounterPartyHazardRate,
-				dblCounterPartyRecoveryRate
+				dblInitialCounterPartyHazardRate,
+				dblInitialCounterPartyRecoveryRate
 			)
 		);
 
@@ -345,6 +354,20 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblBankRecoveryRateDrift,
 				dblBankRecoveryRateVolatility
+			)
+		);
+
+		DiffusionEvolver deCounterPartyHazardRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblCounterPartyHazardRateDrift,
+				dblCounterPartyHazardRateVolatility
+			)
+		);
+
+		DiffusionEvolver deCounterPartyRecoveryRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblCounterPartyRecoveryRateDrift,
+				dblCounterPartyRecoveryRateVolatility
 			)
 		);
 
@@ -371,7 +394,9 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				dblZeroCouponCounterPartyBondRepo
 			),
 			deBankHazardRate,
-			deBankRecoveryRate
+			deBankRecoveryRate,
+			deCounterPartyHazardRate,
+			deCounterPartyRecoveryRate
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
@@ -390,7 +415,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
 			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankRecoveryRate,
-			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecoveryRate
+			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialCounterPartyRecoveryRate
 		);
 
 		double[][] aadblNumeraireTimeSeries = Matrix.Transpose (
@@ -468,7 +493,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 		JumpDiffusionEdge[] aJDEBankHazardRate = deBankHazardRate.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
-				dblBankInitialHazardRate,
+				dblInitialBankHazardRate,
 				0.,
 				false
 			),
@@ -484,6 +509,17 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				false
 			),
 			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[6]),
+			dblTimeWidth
+		);
+
+		JumpDiffusionEdge[] aJDECounterPartyRecoveryRate = deCounterPartyRecoveryRate.incrementSequence (
+			new JumpDiffusionVertex (
+				0.,
+				dblInitialCounterPartyRecoveryRate,
+				0.,
+				false
+			),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[7]),
 			dblTimeWidth
 		);
 
@@ -571,7 +607,8 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				aJDEBank[iNumTimeStep - 1],
 				aJDECounterParty[iNumTimeStep - 1],
 				aJDEBankHazardRate[iNumTimeStep - 1],
-				aJDEBankRecoveryRate[iNumTimeStep - 1]
+				aJDEBankRecoveryRate[iNumTimeStep - 1],
+				aJDECounterPartyRecoveryRate[iNumTimeStep - 1]
 			),
 			ReplicationPortfolioVertex.Standard (
 				1.,
@@ -598,7 +635,8 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				aJDEBank[i],
 				aJDECounterParty[i],
 				aJDEBankHazardRate[i],
-				aJDEBankRecoveryRate[i]
+				aJDEBankRecoveryRate[i],
+				aJDECounterPartyRecoveryRate[i]
 			);
 
 		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");

@@ -76,6 +76,8 @@ public class LatentStateDynamicsContainer {
 	private org.drip.xva.universe.Tradeable _tBankSubordinateFunding = null;
 	private org.drip.measure.process.DiffusionEvolver _deBankHazardRate = null;
 	private org.drip.measure.process.DiffusionEvolver _deBankRecoveryRate = null;
+	private org.drip.measure.process.DiffusionEvolver _deCounterPartyHazardRate = null;
+	private org.drip.measure.process.DiffusionEvolver _deCounterPartyRecoveryRate = null;
 
 	/**
 	 * Create a LatentStateDynamicsContainer without the Zero Recovery Bank Funding Tradeable
@@ -87,6 +89,8 @@ public class LatentStateDynamicsContainer {
 	 * @param tCounterPartyFunding Counter Party Funding Tradeable
 	 * @param deBankHazardRate The Bank Hazard Rate Evolver
 	 * @param deBankRecoveryRate The Bank Recovery Rate Evolver
+	 * @param deCounterPartyHazardRate The Counter Party Hazard Rate Evolver
+	 * @param deCounterPartyRecoveryRate The Counter Party Recovery Rate Evolver
 	 * 
 	 * @return The LatentStateDynamicsContainer without the Zero Recovery Bank Funding Tradeable
 	 */
@@ -98,11 +102,14 @@ public class LatentStateDynamicsContainer {
 		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
 		final org.drip.xva.universe.Tradeable tCounterPartyFunding,
 		final org.drip.measure.process.DiffusionEvolver deBankHazardRate,
-		final org.drip.measure.process.DiffusionEvolver deBankRecoveryRate)
+		final org.drip.measure.process.DiffusionEvolver deBankRecoveryRate,
+		final org.drip.measure.process.DiffusionEvolver deCounterPartyHazardRate,
+		final org.drip.measure.process.DiffusionEvolver deCounterPartyRecoveryRate)
 	{
 		try {
 			return new LatentStateDynamicsContainer (tAsset, tOvernightIndex, tCollateralScheme,
-				tBankSeniorFunding, null, tCounterPartyFunding, deBankHazardRate, deBankRecoveryRate);
+				tBankSeniorFunding, null, tCounterPartyFunding, deBankHazardRate, deBankRecoveryRate,
+					deCounterPartyHazardRate, deCounterPartyRecoveryRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -121,6 +128,8 @@ public class LatentStateDynamicsContainer {
 	 * @param tCounterPartyFunding Counter Party Funding Tradeable
 	 * @param deBankHazardRate The Bank Hazard Rate Evolver
 	 * @param deBankRecoveryRate The Bank Recovery Rate Evolver
+	 * @param deCounterPartyHazardRate The Counter Party Hazard Rate Evolver
+	 * @param deCounterPartyRecoveryRate The Counter Party Recovery Rate Evolver
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -133,7 +142,9 @@ public class LatentStateDynamicsContainer {
 		final org.drip.xva.universe.Tradeable tBankSubordinateFunding,
 		final org.drip.xva.universe.Tradeable tCounterPartyFunding,
 		final org.drip.measure.process.DiffusionEvolver deBankHazardRate,
-		final org.drip.measure.process.DiffusionEvolver deBankRecoveryRate)
+		final org.drip.measure.process.DiffusionEvolver deBankRecoveryRate,
+		final org.drip.measure.process.DiffusionEvolver deCounterPartyHazardRate,
+		final org.drip.measure.process.DiffusionEvolver deCounterPartyRecoveryRate)
 		throws java.lang.Exception
 	{
 		if (null == (_tAsset = tAsset) || null == (_tCounterPartyFunding = tCounterPartyFunding))
@@ -145,6 +156,8 @@ public class LatentStateDynamicsContainer {
 		_tBankSeniorFunding = tBankSeniorFunding;
 		_deBankRecoveryRate = deBankRecoveryRate;
 		_tBankSubordinateFunding = tBankSubordinateFunding;
+		_deCounterPartyHazardRate = deCounterPartyHazardRate;
+		_deCounterPartyRecoveryRate = deCounterPartyRecoveryRate;
 	}
 
 	/**
@@ -233,5 +246,27 @@ public class LatentStateDynamicsContainer {
 	public org.drip.measure.process.DiffusionEvolver bankRecoveryRateEvolver()
 	{
 		return _deBankRecoveryRate;
+	}
+
+	/**
+	 * Retrieve the Counter Party Hazard Rate Evolver
+	 * 
+	 * @return The Counter Party Hazard Rate Evolver
+	 */
+
+	public org.drip.measure.process.DiffusionEvolver counterPartyHazardRateEvolver()
+	{
+		return _deCounterPartyHazardRate;
+	}
+
+	/**
+	 * Retrieve the Counter Party Recovery Rate Evolver
+	 * 
+	 * @return The Counter Party Recovery Rate Evolver
+	 */
+
+	public org.drip.measure.process.DiffusionEvolver counterPartyRecoveryRateEvolver()
+	{
+		return _deCounterPartyRecoveryRate;
 	}
 }

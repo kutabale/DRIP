@@ -171,6 +171,15 @@ public class XVAGreeks {
 					false
 				),
 				dblTimeWidth
+			),
+			tc.counterPartyRecoveryRateEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					tvStart.counterPartyRecoveryRate().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
 			)
 		);
 
@@ -264,8 +273,7 @@ public class XVAGreeks {
 		EnvManager.InitEnv ("");
 
 		double dblSensitivityShiftFactor = 0.001;
-		double dblBankRecovery = 0.4;
-		double dblCounterPartyRecovery = 0.4;
+
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
 		double dblAssetRepo = 0.03;
@@ -295,6 +303,13 @@ public class XVAGreeks {
 		double dblZeroCouponCounterPartyBondVolatility = 0.10;
 		double dblZeroCouponCounterPartyBondRepo = 0.028;
 
+		double dblCounterPartyHazardRateDrift = 0.00;
+		double dblCounterPartyHazardRateVolatility = 0.001;
+
+		double dblInitialCounterPartyRecoveryRate = 0.4;
+		double dblCounterPartyRecoveryRateDrift = 0.0;
+		double dblCounterPartyRecoveryRateVolatility = 0.0;
+
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
 		double dblTerminalXVADerivativeValue = 1.;
@@ -305,8 +320,8 @@ public class XVAGreeks {
 		);
 
 		CloseOutBilateral cob = CloseOutBilateral.Standard (
-			dblBankRecovery,
-			dblCounterPartyRecovery
+			dblInitialBankRecoveryRate,
+			dblInitialCounterPartyRecoveryRate
 		);
 
 		DiffusionEvolver meAsset = new DiffusionEvolver (
@@ -358,6 +373,20 @@ public class XVAGreeks {
 			)
 		);
 
+		DiffusionEvolver deCounterPartyHazardRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblCounterPartyHazardRateDrift,
+				dblCounterPartyHazardRateVolatility
+			)
+		);
+
+		DiffusionEvolver deCounterPartyRecoveryRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblCounterPartyRecoveryRateDrift,
+				dblCounterPartyRecoveryRateVolatility
+			)
+		);
+
 		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.Standard (
 			new Equity (
 				meAsset,
@@ -381,7 +410,9 @@ public class XVAGreeks {
 				dblZeroCouponCounterPartyBondRepo
 			),
 			deBankHazardRate,
-			deBankRecoveryRate
+			deBankRecoveryRate,
+			deCounterPartyHazardRate,
+			deCounterPartyRecoveryRate
 		);
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
@@ -399,8 +430,8 @@ public class XVAGreeks {
 
 		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
-			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblBankRecovery,
-			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblCounterPartyRecovery
+			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankRecoveryRate,
+			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialCounterPartyRecoveryRate
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
@@ -535,6 +566,15 @@ public class XVAGreeks {
 					new JumpDiffusionVertex (
 						dblTime,
 						dblInitialBankRecoveryRate,
+						0.,
+						false
+					),
+					dblTimeWidth
+				),
+				deCounterPartyRecoveryRate.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						dblInitialCounterPartyRecoveryRate,
 						0.,
 						false
 					),
