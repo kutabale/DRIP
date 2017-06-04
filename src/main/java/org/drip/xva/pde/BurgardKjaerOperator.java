@@ -152,7 +152,7 @@ public abstract class BurgardKjaerOperator {
 		if (null == si || null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblCollateral))
 			return null;
 
-		org.drip.xva.universe.LatentStateEdge tv = etv.tradeablesVertex();
+		org.drip.xva.universe.LatentStateEdge tv = etv.latentStateEdge();
 
 		org.drip.xva.derivative.AssetGreekVertex agv = etv.assetGreekVertex();
 
@@ -164,7 +164,11 @@ public abstract class BurgardKjaerOperator {
 
 		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
 
-		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
+		org.drip.xva.universe.LatentStateEdge lse = etv.latentStateEdge();
+
+		double dblBankSeniorDefaultIntensity = lse.bankHazardRate().finish();
+
+		double dblCounterPartyDefaultIntensity = lse.counterPartyHazardRate().finish();
 
 		double dblBankGainOnCounterPartyDefault = etv.gainOnCounterPartyDefault();
 
@@ -172,8 +176,6 @@ public abstract class BurgardKjaerOperator {
 			dblBankGainOnCounterPartyDefault;
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralScheme = tv.collateralSchemeNumeraire();
-
-		double dblBankSeniorDefaultIntensity = si.bankSeniorDefaultIntensity();
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
@@ -226,11 +228,13 @@ public abstract class BurgardKjaerOperator {
 
 		double dblCounterPartyRecovery = _cob.counterPartyRecovery();
 
-		org.drip.xva.universe.LatentStateEdge tv = etv.tradeablesVertex();
+		org.drip.xva.universe.LatentStateEdge tv = etv.latentStateEdge();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
-		double dblCounterPartyDefaultIntensity = si.counterPartyDefaultIntensity();
+		org.drip.xva.universe.LatentStateEdge lse = etv.latentStateEdge();
+
+		double dblCounterPartyDefaultIntensity = lse.counterPartyHazardRate().finish();
 
 		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
 			_pdeec.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;

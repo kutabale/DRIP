@@ -327,7 +327,7 @@ public class TrajectoryEvolutionScheme {
 							tCollateralScheme.numeraireEvolver().evaluator().drift().value (
 								new org.drip.measure.realization.JumpDiffusionVertex (
 									dblTimeStart - 0.5 * dblTimeWidth,
-									etvStart.tradeablesVertex().collateralSchemeNumeraire().finish(),
+									etvStart.latentStateEdge().collateralSchemeNumeraire().finish(),
 									0.,
 									false
 								)

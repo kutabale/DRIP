@@ -93,14 +93,16 @@ public class EulerTrajectoryEvolutionScheme {
 		double dblTimeWidth = 1. / 24.;
 		double dblTime = 1.;
 		double[][] aadblCorrelation = new double[][] {
-			{1.00, 0.00, 0.20, 0.15, 0.05, 0.00, 0.00, 0.00}, // #0 ASSET
-			{0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #1 OVERNIGHT
-			{0.20, 0.00, 1.00, 0.13, 0.25, 0.00, 0.00, 0.00}, // #2 COLLATERAL
-			{0.15, 0.00, 0.13, 1.00, 0.00, 0.00, 0.00, 0.00}, // #3 BANK
-			{0.05, 0.00, 0.25, 0.00, 1.00, 0.00, 0.00, 0.00}, // #4 COUNTER PARTY
-			{0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00}, // #5 BANK HAZARD
-			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00}, // #6 BANK RECOVERY
-			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00}  // #8 COUNTER PARTY RECOVERY
+			{1.00, 0.00, 0.20, 0.15, 0.05, 0.00, 0.00, 0.00, 0.00, 0.00}, // #0 ASSET
+			{0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #1 OVERNIGHT
+			{0.20, 0.00, 1.00, 0.13, 0.25, 0.00, 0.00, 0.00, 0.00, 0.00}, // #2 COLLATERAL
+			{0.15, 0.00, 0.13, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #3 BANK
+			{0.05, 0.00, 0.25, 0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #4 COUNTER PARTY
+			{0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00, 0.00, 0.00}, // #5 BANK HAZARD
+			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00, 0.00}, // #6 BANK SENIOR RECOVERY
+			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00}, // #7 BANK SUBORDINATE RECOVERY
+			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00}, // #8 COUNTER PARTY HAZARD
+			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00}  // #9 COUNTER PARTY RECOVERY
 		};
 
 		double dblAssetDrift = 0.06;
@@ -128,9 +130,13 @@ public class EulerTrajectoryEvolutionScheme {
 		double dblBankHazardRateDrift = 0.00;
 		double dblBankHazardRateVolatility = 0.005;
 
-		double dblInitialBankRecoveryRate = 0.45;
-		double dblBankRecoveryRateDrift = 0.0;
-		double dblBankRecoveryRateVolatility = 0.0;
+		double dblInitialBankSeniorRecoveryRate = 0.45;
+		double dblBankSeniorRecoveryRateDrift = 0.0;
+		double dblBankSeniorRecoveryRateVolatility = 0.0;
+
+		double dblInitialBankSubordinateRecoveryRate = 0.00;
+		double dblBankSubordinateRecoveryRateDrift = 0.0;
+		double dblBankSubordinateRecoveryRateVolatility = 0.0;
 
 		double dblInitialCounterPartyNumeraire = 1.;
 		double dblZeroCouponCounterPartyBondDrift = 0.03;
@@ -160,7 +166,7 @@ public class EulerTrajectoryEvolutionScheme {
 		);
 
 		CloseOutBilateral cob = CloseOutBilateral.Standard (
-			dblInitialBankRecoveryRate,
+			dblInitialBankSeniorRecoveryRate,
 			dblInitialCounterPartyRecoveryRate
 		);
 
@@ -192,7 +198,7 @@ public class EulerTrajectoryEvolutionScheme {
 			),
 			HazardJumpEvaluator.Standard (
 				dblInitialBankHazardRate,
-				dblInitialBankRecoveryRate
+				dblInitialBankSeniorRecoveryRate
 			)
 		);
 
@@ -214,10 +220,17 @@ public class EulerTrajectoryEvolutionScheme {
 			)
 		);
 
-		DiffusionEvolver deBankRecoveryRate = new DiffusionEvolver (
+		DiffusionEvolver deBankSeniorRecoveryRate = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
-				dblBankRecoveryRateDrift,
-				dblBankRecoveryRateVolatility
+				dblBankSeniorRecoveryRateDrift,
+				dblBankSeniorRecoveryRateVolatility
+			)
+		);
+
+		DiffusionEvolver deBankSubordinateRecoveryRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblBankSubordinateRecoveryRateDrift,
+				dblBankSubordinateRecoveryRateVolatility
 			)
 		);
 
@@ -258,7 +271,8 @@ public class EulerTrajectoryEvolutionScheme {
 				dblZeroCouponCounterPartyBondRepo
 			),
 			deBankHazardRate,
-			deBankRecoveryRate,
+			deBankSeniorRecoveryRate,
+			deBankSubordinateRecoveryRate,
 			deCounterPartyHazardRate,
 			deCounterPartyRecoveryRate
 		);
@@ -278,7 +292,7 @@ public class EulerTrajectoryEvolutionScheme {
 
 		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
-			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankRecoveryRate,
+			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankSeniorRecoveryRate,
 			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialCounterPartyRecoveryRate
 		);
 
@@ -365,14 +379,36 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEBankRecoveryRate = deBankRecoveryRate.incrementSequence (
+		JumpDiffusionEdge[] aJDEBankSeniorRecoveryRate = deBankSeniorRecoveryRate.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
-				dblInitialBankRecoveryRate,
+				dblInitialBankSeniorRecoveryRate,
 				0.,
 				false
 			),
 			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[6]),
+			dblTimeWidth
+		);
+
+		JumpDiffusionEdge[] aJDEBankSubordinateRecoveryRate = deBankSubordinateRecoveryRate.incrementSequence (
+			new JumpDiffusionVertex (
+				0.,
+				dblInitialBankSubordinateRecoveryRate,
+				0.,
+				false
+			),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[7]),
+			dblTimeWidth
+		);
+
+		JumpDiffusionEdge[] aJDECounterPartyHazardRate = deCounterPartyHazardRate.incrementSequence (
+			new JumpDiffusionVertex (
+				0.,
+				dblInitialCounterPartyHazardRate,
+				0.,
+				false
+			),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[8]),
 			dblTimeWidth
 		);
 
@@ -383,7 +419,7 @@ public class EulerTrajectoryEvolutionScheme {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[7]),
+			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[9]),
 			dblTimeWidth
 		);
 
@@ -472,7 +508,9 @@ public class EulerTrajectoryEvolutionScheme {
 				aJDEBank[iNumTimeStep - 1],
 				aJDECounterParty[iNumTimeStep - 1],
 				aJDEBankHazardRate[iNumTimeStep - 1],
-				aJDEBankRecoveryRate[iNumTimeStep - 1],
+				aJDEBankSeniorRecoveryRate[iNumTimeStep - 1],
+				aJDEBankSubordinateRecoveryRate[iNumTimeStep - 1],
+				aJDECounterPartyHazardRate[iNumTimeStep - 1],
 				aJDECounterPartyRecoveryRate[iNumTimeStep - 1]
 			),
 			ReplicationPortfolioVertex.Standard (
@@ -496,7 +534,9 @@ public class EulerTrajectoryEvolutionScheme {
 				aJDEBank[i],
 				aJDECounterParty[i],
 				aJDEBankHazardRate[i],
-				aJDEBankRecoveryRate[i],
+				aJDEBankSeniorRecoveryRate[i],
+				aJDEBankSubordinateRecoveryRate[i],
+				aJDECounterPartyHazardRate[i],
 				aJDECounterPartyRecoveryRate[i]
 			);
 

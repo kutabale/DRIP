@@ -69,11 +69,13 @@ package org.drip.xva.universe;
 public class LatentStateEdge {
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankHazardRate = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankRecoveryRate = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSeniorRecoveryRate = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeCounterPartyHazardRate = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeOvernightIndexNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeCounterPartyRecoveryRate = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeCollateralSchemeNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSeniorFundingNumeraire = null;
+	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSubordinateRecoveryRate = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeCounterPartyFundingNumeraire = null;
 	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSubordinateFundingNumeraire = null;
 
@@ -86,8 +88,10 @@ public class LatentStateEdge {
 	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire JDE
 	 * @param jdeCounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire JDE
 	 * @param jdeBankHazardRate The Realized Bank Hazard Rate JDE
-	 * @param jdeBankRecoveryRate The Realized Bank Recovery Rate JDE
-	 * @param jdeCounterPartyRecoveryRate The Realized Bank Recovery Rate JDE
+	 * @param jdeBankSeniorRecoveryRate The Realized Bank Senior Recovery Rate JDE
+	 * @param jdeBankSubordinateRecoveryRate The Realized Bank Subordinate Recovery Rate JDE
+	 * @param jdeCounterPartyHazardRate The Realized Counter Party Hazard Rate JDE
+	 * @param jdeCounterPartyRecoveryRate The Realized Counter Party Recovery Rate JDE
 	 * 
 	 * @return The LatentStateEdge Instance without the Zero Recovery Bank Numeraire
 	 */
@@ -99,14 +103,17 @@ public class LatentStateEdge {
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankHazardRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankRecoveryRate,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorRecoveryRate,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateRecoveryRate,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyHazardRate,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyRecoveryRate)
 	{
 		try {
 			return new LatentStateEdge (jdeAssetNumeraire, jdeOvernightIndexNumeraire,
 				jdeCollateralSchemeNumeraire, jdeBankSeniorFundingNumeraire, null,
-					jdeCounterPartyFundingNumeraire, jdeBankHazardRate, jdeBankRecoveryRate,
-						jdeCounterPartyRecoveryRate);
+					jdeCounterPartyFundingNumeraire, jdeBankHazardRate, jdeBankSeniorRecoveryRate,
+						jdeBankSubordinateRecoveryRate, jdeCounterPartyHazardRate,
+							jdeCounterPartyRecoveryRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -124,8 +131,10 @@ public class LatentStateEdge {
 	 * @param jdeBankSubordinateFundingNumeraire The Realized Bank Subordinate Funding Numeraire JDE
 	 * @param jdeCounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire JDE
 	 * @param jdeBankHazardRate The Realized Bank Hazard Rate JDE
-	 * @param jdeBankRecoveryRate The Realized Bank Recovery Rate JDE
-	 * @param jdeCounterPartyRecoveryRate The Realized Bank Recovery Rate JDE
+	 * @param jdeBankSeniorRecoveryRate The Realized Bank Senior Recovery Rate JDE
+	 * @param jdeBankSubordinateRecoveryRate The Realized Bank Subordinate Recovery Rate JDE
+	 * @param jdeCounterPartyHazardRate The Realized Counter Party Hazard Rate JDE
+	 * @param jdeCounterPartyRecoveryRate The Realized Counter Party Recovery Rate JDE
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -138,7 +147,9 @@ public class LatentStateEdge {
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyFundingNumeraire,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeBankHazardRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankRecoveryRate,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorRecoveryRate,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateRecoveryRate,
+		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyHazardRate,
 		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyRecoveryRate)
 		throws java.lang.Exception
 	{
@@ -147,11 +158,13 @@ public class LatentStateEdge {
 			throw new java.lang.Exception ("LatentStateEdge Constructor => Invalid Inputs");
 
 		_jdeBankHazardRate = jdeBankHazardRate;
-		_jdeBankRecoveryRate= jdeBankRecoveryRate;
+		_jdeBankSeniorRecoveryRate = jdeBankSeniorRecoveryRate;
+		_jdeCounterPartyHazardRate = jdeCounterPartyHazardRate;
 		_jdeOvernightIndexNumeraire = jdeOvernightIndexNumeraire;
 		_jdeCounterPartyRecoveryRate = jdeCounterPartyRecoveryRate;
 		_jdeCollateralSchemeNumeraire = jdeCollateralSchemeNumeraire;
 		_jdeBankSeniorFundingNumeraire = jdeBankSeniorFundingNumeraire;
+		_jdeBankSubordinateRecoveryRate = jdeBankSubordinateRecoveryRate;
 		_jdeBankSubordinateFundingNumeraire = jdeBankSubordinateFundingNumeraire;
 	}
 
@@ -233,14 +246,36 @@ public class LatentStateEdge {
 	}
 
 	/**
-	 * Retrieve the Bank Recovery Rate Edge
+	 * Retrieve the Bank Senior Recovery Rate Edge
 	 * 
-	 * @return The Bank Recovery Rate Edge
+	 * @return The Bank Senior Recovery Rate Edge
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge bankRecoveryRate()
+	public org.drip.measure.realization.JumpDiffusionEdge bankSeniorRecoveryRate()
 	{
-		return _jdeBankRecoveryRate;
+		return _jdeBankSeniorRecoveryRate;
+	}
+
+	/**
+	 * Retrieve the Bank Subordinate Recovery Rate Edge
+	 * 
+	 * @return The Bank Subordinate Recovery Rate Edge
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionEdge bankSubordinateRecoveryRate()
+	{
+		return _jdeBankSubordinateRecoveryRate;
+	}
+
+	/**
+	 * Retrieve the Counter Party Hazard Rate Edge
+	 * 
+	 * @return The Counter Party Hazard Rate Edge
+	 */
+
+	public org.drip.measure.realization.JumpDiffusionEdge counterPartyHazardRate()
+	{
+		return _jdeCounterPartyHazardRate;
 	}
 
 	/**

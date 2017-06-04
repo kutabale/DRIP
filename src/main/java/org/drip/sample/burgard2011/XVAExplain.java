@@ -100,7 +100,7 @@ public class XVAExplain {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		LatentStateEdge tvStart = etvStart.tradeablesVertex();
+		LatentStateEdge tvStart = etvStart.latentStateEdge();
 
 		LatentStateDynamicsContainer tc = tes.universe();
 
@@ -163,10 +163,28 @@ public class XVAExplain {
 				),
 				dblTimeWidth
 			),
-			tc.bankRecoveryRateEvolver().weinerIncrement (
+			tc.bankSeniorRecoveryRateEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
-					tvStart.bankRecoveryRate().finish(),
+					tvStart.bankSeniorRecoveryRate().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
+			),
+			tc.bankSubordinateRecoveryRateEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					tvStart.bankSubordinateRecoveryRate().finish(),
+					0.,
+					false
+				),
+				dblTimeWidth
+			),
+			tc.counterPartyHazardRateEvolver().weinerIncrement (
+				new JumpDiffusionVertex (
+					dblTime,
+					tvStart.counterPartyHazardRate().finish(),
 					0.,
 					false
 				),
@@ -310,10 +328,15 @@ public class XVAExplain {
 		double dblBankHazardRateDrift = 0.00;
 		double dblBankHazardRateVolatility = 0.001;
 
-		double dblInitialBankRecoveryRate = 0.45;
-		double dblBankRecoveryRateDrift = 0.0;
-		double dblBankRecoveryRateVolatility = 0.0;
+		double dblInitialBankSeniorRecoveryRate = 0.45;
+		double dblBankSeniorRecoveryRateDrift = 0.0;
+		double dblBankSeniorRecoveryRateVolatility = 0.0;
 
+		double dblInitialBankSubordinateRecoveryRate = 0.00;
+		double dblBankSubordinateRecoveryRateDrift = 0.0;
+		double dblBankSubordinateRecoveryRateVolatility = 0.0;
+
+		double dblInitialCounterPartyHazardRate = 0.02;
 		double dblCounterPartyHazardRateDrift = 0.00;
 		double dblCounterPartyHazardRateVolatility = 0.001;
 
@@ -331,7 +354,7 @@ public class XVAExplain {
 		);
 
 		CloseOutBilateral cob = CloseOutBilateral.Standard (
-			dblInitialBankRecoveryRate,
+			dblInitialBankSeniorRecoveryRate,
 			dblInitialCounterPartyRecoveryRate
 		);
 
@@ -377,10 +400,17 @@ public class XVAExplain {
 			)
 		);
 
-		DiffusionEvolver deBankRecoveryRate = new DiffusionEvolver (
+		DiffusionEvolver deBankSeniorRecoveryRate = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
-				dblBankRecoveryRateDrift,
-				dblBankRecoveryRateVolatility
+				dblBankSeniorRecoveryRateDrift,
+				dblBankSeniorRecoveryRateVolatility
+			)
+		);
+
+		DiffusionEvolver deBankSubordinateRecoveryRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblBankSubordinateRecoveryRateDrift,
+				dblBankSubordinateRecoveryRateVolatility
 			)
 		);
 
@@ -421,7 +451,8 @@ public class XVAExplain {
 				dblZeroCouponCounterPartyBondRepo
 			),
 			deBankHazardRate,
-			deBankRecoveryRate,
+			deBankSeniorRecoveryRate,
+			deBankSubordinateRecoveryRate,
 			deCounterPartyHazardRate,
 			deCounterPartyRecoveryRate
 		);
@@ -441,7 +472,7 @@ public class XVAExplain {
 
 		SpreadIntensity si = SpreadIntensity.Standard (
 			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
-			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankRecoveryRate,
+			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankSeniorRecoveryRate,
 			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialCounterPartyRecoveryRate
 		);
 
@@ -581,10 +612,28 @@ public class XVAExplain {
 					),
 					dblTimeWidth
 				),
-				deBankRecoveryRate.weinerIncrement (
+				deBankSeniorRecoveryRate.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
-						dblInitialBankRecoveryRate,
+						dblInitialBankSeniorRecoveryRate,
+						0.,
+						false
+					),
+					dblTimeWidth
+				),
+				deBankSubordinateRecoveryRate.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						dblInitialBankSubordinateRecoveryRate,
+						0.,
+						false
+					),
+					dblTimeWidth
+				),
+				deCounterPartyHazardRate.weinerIncrement (
+					new JumpDiffusionVertex (
+						dblTime,
+						dblInitialCounterPartyHazardRate,
 						0.,
 						false
 					),

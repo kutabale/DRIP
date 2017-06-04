@@ -73,7 +73,7 @@ public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
 	private double _dblCollateral = java.lang.Double.NaN;
 	private double _dblHedgeError = java.lang.Double.NaN;
-	private org.drip.xva.universe.LatentStateEdge _tv = null;
+	private org.drip.xva.universe.LatentStateEdge _lse = null;
 	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
 	private org.drip.xva.derivative.ReplicationPortfolioVertex _rpv = null;
 	private double _dblBankGainOnCounterPartyDefault = java.lang.Double.NaN;
@@ -83,7 +83,7 @@ public class EvolutionTrajectoryVertex {
 	 * EvolutionTrajectoryVertex Constructor
 	 * 
 	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param tv Realization of the Trade-able Asset Prices
+	 * @param lse The Realized Latent State Edge
 	 * @param rpv The Replication Portfolio Vertex
 	 * @param agv The Asset Greek Vertex
 	 * @param dblCounterPartyGainOnBankDefault Counter Party Gain On Bank Default
@@ -96,7 +96,7 @@ public class EvolutionTrajectoryVertex {
 
 	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.universe.LatentStateEdge tv,
+		final org.drip.xva.universe.LatentStateEdge lse,
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double dblCounterPartyGainOnBankDefault,
@@ -105,7 +105,7 @@ public class EvolutionTrajectoryVertex {
 		final double dblHedgeError)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_tv = tv) || null ==
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_lse = lse) || null ==
 			(_rpv = rpv) || null == (_agv = agv) || !org.drip.quant.common.NumberUtil.IsValid
 				(_dblCounterPartyGainOnBankDefault = dblCounterPartyGainOnBankDefault) ||
 					!org.drip.quant.common.NumberUtil.IsValid (_dblBankGainOnCounterPartyDefault =
@@ -149,14 +149,14 @@ public class EvolutionTrajectoryVertex {
 	}
 
 	/**
-	 * Retrieve the Vertex of Tradeable Numeraire Realization
+	 * Retrieve the Realized Latent State Edge
 	 * 
-	 * @return Vertex of Tradeable Numeraire Realization
+	 * @return The Realized Latent State Edge
 	 */
 
-	public org.drip.xva.universe.LatentStateEdge tradeablesVertex()
+	public org.drip.xva.universe.LatentStateEdge latentStateEdge()
 	{
-		return _tv;
+		return _lse;
 	}
 
 	/**
@@ -215,13 +215,13 @@ public class EvolutionTrajectoryVertex {
 		double dblFundingConstraint = _agv.derivativeXVAValue();
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire =
-			_tv.bankSeniorFundingNumeraire();
+			_lse.bankSeniorFundingNumeraire();
 
 		if (null != jdeBankSeniorFundingNumeraire)
 			dblFundingConstraint += jdeBankSeniorFundingNumeraire.finish() * _rpv.bankSeniorNumeraireUnits();
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire =
-			_tv.bankSubordinateFundingNumeraire();
+			_lse.bankSubordinateFundingNumeraire();
 
 		if (null != jdeBankSubordinateFundingNumeraire)
 			dblFundingConstraint += jdeBankSubordinateFundingNumeraire.finish() *

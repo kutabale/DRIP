@@ -89,7 +89,6 @@ public class SpreadIntensity {
 		final double dblBankSeniorFundingSpread,
 		final double dblBankSeniorDefaultIntensity,
 		final double dblCounterPartyDefaultIntensity)
-		throws java.lang.Exception
 	{
 		try {
 			return new SpreadIntensity (dblBankSeniorFundingSpread, dblBankSeniorDefaultIntensity,
