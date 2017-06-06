@@ -87,7 +87,7 @@ public class DiffusionEvolver {
 	 * Generate the JumpDiffusionEdge Instance from the specified Jump Diffusion Instance
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
-	 * @param ur The Random Unit Realization
+	 * @param jdeu The Random Unit Realization
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The JumpDiffusionEdge Instance
@@ -95,10 +95,10 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionEdge increment (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.JumpDiffusionEdgeUnit ur,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit jdeu,
 		final double dblTimeIncrement)
 	{
-		if (null == jdv || null == ur || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
+		if (null == jdv || null == jdeu || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
 			return null;
 
 		double dblPreviousValue = jdv.value();
@@ -108,8 +108,8 @@ public class DiffusionEvolver {
 
 			return org.drip.measure.realization.JumpDiffusionEdge.Standard (dblPreviousValue,
 				_de.drift().value (jdv) * dblTimeIncrement, null == leVolatility ? 0. : leVolatility.value
-					(jdv) * ur.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs (dblTimeIncrement)),
-						null, ur);
+					(jdv) * jdeu.diffusion() * java.lang.Math.sqrt (java.lang.Math.abs (dblTimeIncrement)),
+						null, jdeu);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -121,7 +121,7 @@ public class DiffusionEvolver {
 	 * Generate the Array of Adjacent JumpDiffusionEdge from the specified Random Variate Array
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
-	 * @param aUR Array of Random Unit Realizations
+	 * @param aJDEU Array of Random Unit Realizations
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Array of Adjacent JumpDiffusionEdge
@@ -129,12 +129,12 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionEdge[] incrementSequence (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aUR,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aJDEU,
 		final double dblTimeIncrement)
 	{
-		if (null == aUR) return null;
+		if (null == aJDEU) return null;
 
-		int iNumTimeStep = aUR.length;
+		int iNumTimeStep = aJDEU.length;
 		org.drip.measure.realization.JumpDiffusionVertex jdvIter = jdv;
 		org.drip.measure.realization.JumpDiffusionEdge[] aJDE = 0 == iNumTimeStep ? null : new
 			org.drip.measure.realization.JumpDiffusionEdge[iNumTimeStep];
@@ -142,7 +142,7 @@ public class DiffusionEvolver {
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			if (null == (aJDE[i] = increment (jdvIter, aUR[i], dblTimeIncrement))) return null;
+			if (null == (aJDE[i] = increment (jdvIter, aJDEU[i], dblTimeIncrement))) return null;
 
 			try {
 				boolean bJumpOccurred = false;
@@ -173,7 +173,7 @@ public class DiffusionEvolver {
 	 * Generate the Array of JumpDiffusionVertex Snaps from the specified Random Variate Array
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
-	 * @param aUR Array of Random Unit Realizations
+	 * @param aJDEU Array of Random Unit Realizations
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
 	 * @return The Array of JumpDiffusionVertex Snaps
@@ -181,12 +181,12 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionVertex[] vertexSequence (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aUR,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aJDEU,
 		final double dblTimeIncrement)
 	{
-		if (null == aUR) return null;
+		if (null == aJDEU) return null;
 
-		int iNumTimeStep = aUR.length;
+		int iNumTimeStep = aJDEU.length;
 		org.drip.measure.realization.JumpDiffusionVertex jdvPrev = jdv;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDV = 0 == iNumTimeStep ? null : new
 			org.drip.measure.realization.JumpDiffusionVertex[iNumTimeStep];
@@ -194,7 +194,7 @@ public class DiffusionEvolver {
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			org.drip.measure.realization.JumpDiffusionEdge jde = increment (jdvPrev, aUR[i],
+			org.drip.measure.realization.JumpDiffusionEdge jde = increment (jdvPrev, aJDEU[i],
 				dblTimeIncrement);
 
 			if (null == jde) return null;
@@ -228,7 +228,7 @@ public class DiffusionEvolver {
 	 * Generate the Array of JumpDiffusionVertex Snaps from the specified Random Variate Array
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
-	 * @param aUR Array of Random Unit Realizations
+	 * @param aJDEU Array of Random Unit Realizations
 	 * @param adblTimeIncrement Array of Time Increment Evolution Units
 	 * 
 	 * @return The Array of JumpDiffusionVertex Snaps
@@ -236,12 +236,12 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionVertex[] vertexSequence (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aUR,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aJDEU,
 		final double[] adblTimeIncrement)
 	{
-		if (null == aUR || null == adblTimeIncrement) return null;
+		if (null == aJDEU || null == adblTimeIncrement) return null;
 
-		int iNumTimeStep = aUR.length;
+		int iNumTimeStep = aJDEU.length;
 		org.drip.measure.realization.JumpDiffusionVertex jdvPrev = jdv;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDV = 0 == iNumTimeStep ? null : new
 			org.drip.measure.realization.JumpDiffusionVertex[iNumTimeStep];
@@ -249,7 +249,7 @@ public class DiffusionEvolver {
 		if (0 == iNumTimeStep || iNumTimeStep != adblTimeIncrement.length) return null;
 
 		for (int i = 0; i < iNumTimeStep; ++i) {
-			org.drip.measure.realization.JumpDiffusionEdge jde = increment (jdvPrev, aUR[i],
+			org.drip.measure.realization.JumpDiffusionEdge jde = increment (jdvPrev, aJDEU[i],
 				adblTimeIncrement[i]);
 
 			if (null == jde) return null;
@@ -280,12 +280,12 @@ public class DiffusionEvolver {
 	}
 
 	/**
-	 * Generate the Adjacent JumpDiffusionDAG Increment from the specified Random Variate and a Weiner Driver
+	 * Generate the Adjacent JumpDiffusionEdge Instance from the specified Random Variate and a Weiner Driver
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Adjacent JumpDiffusionDAG Increment
+	 * @return The Adjacent JumpDiffusionEdge Instance
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge weinerIncrement (
@@ -303,12 +303,12 @@ public class DiffusionEvolver {
 	}
 
 	/**
-	 * Generate the Adjacent JumpDiffusionDAG Increment from the specified Random Variate and a Jump Driver
+	 * Generate the Adjacent JumpDiffusionEdge Instance from the specified Random Variate and a Jump Driver
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Adjacent JumpDiffusionDAG Increment
+	 * @return The Adjacent JumpDiffusionEdge Instance
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge jumpIncrement (
@@ -320,13 +320,13 @@ public class DiffusionEvolver {
 	}
 
 	/**
-	 * Generate the Adjacent JumpDiffusionDAG Increment from the specified Random Variate and Jump/Weiner
-	 * 		Drivers
+	 * Generate the Adjacent JumpDiffusionEdge Instance from the specified Random Variate and Jump/Weiner
+	 * 	Drivers
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Adjacent JumpDiffusionDAG Increment
+	 * @return The Adjacent JumpDiffusionEdge Instance
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge jumpWeinerIncrement (
@@ -345,13 +345,13 @@ public class DiffusionEvolver {
 	}
 
 	/**
-	 * Generate the Adjacent JumpDiffusionDAG Increment from the specified Random Variate and Weiner/Jump
-	 * 		Drivers
+	 * Generate the Adjacent JumpDiffusionEdge Instance from the specified Random Variate and Weiner/Jump
+	 * 	Drivers
 	 * 
 	 * @param jdv The JumpDiffusionVertex Instance
 	 * @param dblTimeIncrement The Time Increment Evolution Unit
 	 * 
-	 * @return The Adjacent JumpDiffusionDAG Increment
+	 * @return The Adjacent JumpDiffusionEdge Instance
 	 */
 
 	public org.drip.measure.realization.JumpDiffusionEdge weinerJumpIncrement (

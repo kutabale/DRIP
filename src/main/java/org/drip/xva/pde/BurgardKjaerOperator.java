@@ -195,19 +195,15 @@ public abstract class BurgardKjaerOperator {
 	 * 
 	 * @param etv The Evolution Trajectory Vertex
 	 * @param dblCollateral The Off-setting Collateral
-	 * @param dblTimeIncrement The Time Increment
 	 * 
 	 * @return The Time Increment Run Attribution using the Burgard Kjaer Scheme
 	 */
 
 	public org.drip.xva.pde.BurgardKjaerEdgeAttribution timeIncrementRunAttribution (
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etv,
-		final double dblCollateral,
-		final double dblTimeIncrement)
+		final double dblCollateral)
 	{
-		if (null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. ==
-			dblTimeIncrement)
-			return null;
+		if (null == etv) return null;
 
 		org.drip.xva.universe.LatentStateEdge tv = etv.latentStateEdge();
 
@@ -236,7 +232,8 @@ public abstract class BurgardKjaerOperator {
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralScheme = tv.collateralSchemeNumeraire();
 
-		double dblBankSeniorFundingSpread = lse.bankSeniorFundingSpread() / dblTimeIncrement;
+		double dblBankSeniorFundingSpread = lse.bankSeniorFundingSpread() /
+			jdeCollateralScheme.timeIncrement();
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator

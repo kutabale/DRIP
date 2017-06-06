@@ -111,8 +111,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		BurgardKjaerEdgeAttribution bkea = bko.timeIncrementRunAttribution (
 			etvStart,
-			0.,
-			dblTimeWidth
+			0.
 		);
 
 		double dblTheta = bkea.theta();

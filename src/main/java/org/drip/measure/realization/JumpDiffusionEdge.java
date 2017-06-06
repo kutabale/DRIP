@@ -178,6 +178,17 @@ public class JumpDiffusionEdge {
 	}
 
 	/**
+	 * Retrieve the Edge Time Increment
+	 * 
+	 * @return The Edge Time Increment
+	 */
+
+	public double timeIncrement()
+	{
+		return _jdeu.timeIncrement();
+	}
+
+	/**
 	 * Retrieve the Start Realization
 	 * 
 	 * @return The Start Realization
