@@ -83,7 +83,6 @@ public class XVAReplicationPortfolio {
 
 	private static final EvolutionTrajectoryVertex RunStep (
 		final TrajectoryEvolutionScheme tes,
-		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
 		final EvolutionTrajectoryVertex etvStart)
 		throws Exception
@@ -108,7 +107,7 @@ public class XVAReplicationPortfolio {
 
 		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
-		LatentStateEdge tvFinish = LatentStateEdge.Standard (
+		LatentStateEdge tvFinish = LatentStateEdge.BankSenior (
 			tc.asset().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -172,15 +171,6 @@ public class XVAReplicationPortfolio {
 				),
 				dblTimeWidth
 			),
-			tc.bankSubordinateRecoveryRateEvolver().weinerIncrement (
-				new JumpDiffusionVertex (
-					dblTime,
-					tvStart.bankSubordinateRecoveryRate().finish(),
-					0.,
-					false
-				),
-				dblTimeWidth
-			),
 			tc.counterPartyHazardRateEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -204,7 +194,6 @@ public class XVAReplicationPortfolio {
 		CloseOutBilateral cob = tes.boundaryCondition();
 
 		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
-			si,
 			etvStart,
 			0.
 		);
@@ -331,10 +320,6 @@ public class XVAReplicationPortfolio {
 		double dblBankSeniorRecoveryRateDrift = 0.0;
 		double dblBankSeniorRecoveryRateVolatility = 0.0;
 
-		double dblInitialBankSubordinateRecoveryRate = 0.45;
-		double dblBankSubordinateRecoveryRateDrift = 0.0;
-		double dblBankSubordinateRecoveryRateVolatility = 0.0;
-
 		double dblInitialCounterPartyHazardRate = 0.03;
 		double dblCounterPartyHazardRateDrift = 0.00;
 		double dblCounterPartyHazardRateVolatility = 0.001;
@@ -406,13 +391,6 @@ public class XVAReplicationPortfolio {
 			)
 		);
 
-		DiffusionEvolver deBankSubordinateRecoveryRate = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblBankSubordinateRecoveryRateDrift,
-				dblBankSubordinateRecoveryRateVolatility
-			)
-		);
-
 		DiffusionEvolver deCounterPartyHazardRate = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblCounterPartyHazardRateDrift,
@@ -427,7 +405,7 @@ public class XVAReplicationPortfolio {
 			)
 		);
 
-		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.Standard (
+		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.BankSenior (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -451,7 +429,6 @@ public class XVAReplicationPortfolio {
 			),
 			deBankHazardRate,
 			deBankSeniorRecoveryRate,
-			deBankSubordinateRecoveryRate,
 			deCounterPartyHazardRate,
 			deCounterPartyRecoveryRate
 		);
@@ -467,12 +444,6 @@ public class XVAReplicationPortfolio {
 			tc,
 			cob,
 			pdeec
-		);
-
-		SpreadIntensity si = SpreadIntensity.Standard (
-			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
-			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankSeniorRecoveryRate,
-			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialCounterPartyRecoveryRate
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
@@ -556,7 +527,7 @@ public class XVAReplicationPortfolio {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			LatentStateEdge.Standard (
+			LatentStateEdge.BankSenior (
 				deAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -620,15 +591,6 @@ public class XVAReplicationPortfolio {
 					),
 					dblTimeWidth
 				),
-				deBankSubordinateRecoveryRate.weinerIncrement (
-					new JumpDiffusionVertex (
-						dblTime,
-						dblInitialBankSubordinateRecoveryRate,
-						0.,
-						false
-					),
-					dblTimeWidth
-				),
 				deCounterPartyHazardRate.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -664,7 +626,6 @@ public class XVAReplicationPortfolio {
 		for (dblTime -= dblTimeWidth; dblTime >= 0.; dblTime -= dblTimeWidth)
 			etv = RunStep (
 				tes,
-				si,
 				bko,
 				etv
 			);

@@ -225,7 +225,6 @@ public class TrajectoryEvolutionScheme {
 	/**
 	 * Execute a Single Euler Time Step Walk
 	 * 
-	 * @param si The Spread Intensity Instance
 	 * @param tv The Universe Snapshot
 	 * @param bko The Burgard Kjaer Operator Instance
 	 * @param etvStart The Starting ETV Instance
@@ -235,17 +234,16 @@ public class TrajectoryEvolutionScheme {
 	 */
 
 	public org.drip.xva.derivative.EvolutionTrajectoryEdge eulerWalk (
-		final org.drip.xva.definition.SpreadIntensity si,
 		final org.drip.xva.universe.LatentStateEdge tv,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
 		final double dblCollateral)
 	{
-		if (null == si || null == tv || null == bko || null == etvStart) return null;
+		if (null == tv || null == bko || null == etvStart) return null;
 
 		org.drip.xva.derivative.AssetGreekVertex agvStart = etvStart.assetGreekVertex();
 
-		org.drip.xva.pde.BurgardKjaerEdgeRun bker = bko.timeIncrementRun (si, etvStart, dblCollateral);
+		org.drip.xva.pde.BurgardKjaerEdgeRun bker = bko.timeIncrementRun (etvStart, dblCollateral);
 
 		double dblTimeStart = etvStart.time();
 
@@ -352,7 +350,6 @@ public class TrajectoryEvolutionScheme {
 	/**
 	 * Execute a Sequential Array of Euler Time Step Walks
 	 * 
-	 * @param si The Spread Intensity Instance
 	 * @param aTV Array of Universe Snapshot
 	 * @param bko The Burgard Kjaer Operator Instance
 	 * @param etvStart The Starting EET Instance
@@ -362,7 +359,6 @@ public class TrajectoryEvolutionScheme {
 	 */
 
 	public org.drip.xva.derivative.EvolutionTrajectoryEdge[] eulerWalk (
-		final org.drip.xva.definition.SpreadIntensity si,
 		final org.drip.xva.universe.LatentStateEdge[] aTV,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
@@ -378,7 +374,7 @@ public class TrajectoryEvolutionScheme {
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = iNumTimeStep - 2; i >= 0; --i) {
-			if (null == (aETE[i] = eulerWalk (si, aTV[i], bko, etv, dblCollateral))) return null;
+			if (null == (aETE[i] = eulerWalk (aTV[i], bko, etv, dblCollateral))) return null;
 
 			etv = aETE[i].vertexFinish();
 		}

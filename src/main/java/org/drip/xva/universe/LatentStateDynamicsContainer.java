@@ -90,14 +90,13 @@ public class LatentStateDynamicsContainer {
 	 * @param tCounterPartyFunding Counter Party Funding Tradeable
 	 * @param deBankHazardRate The Bank Hazard Rate Evolver
 	 * @param deBankSeniorRecoveryRate The Bank Senior Recovery Rate Evolver
-	 * @param deBankSubordinateRecoveryRate The Bank Subordinate Recovery Rate Evolver
 	 * @param deCounterPartyHazardRate The Counter Party Hazard Rate Evolver
 	 * @param deCounterPartyRecoveryRate The Counter Party Recovery Rate Evolver
 	 * 
 	 * @return The LatentStateDynamicsContainer without the Zero Recovery Bank Funding Tradeable
 	 */
 
-	public static final LatentStateDynamicsContainer Standard (
+	public static final LatentStateDynamicsContainer BankSenior (
 		final org.drip.xva.universe.Tradeable tAsset,
 		final org.drip.xva.universe.Tradeable tOvernightIndex,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
@@ -105,14 +104,13 @@ public class LatentStateDynamicsContainer {
 		final org.drip.xva.universe.Tradeable tCounterPartyFunding,
 		final org.drip.measure.process.DiffusionEvolver deBankHazardRate,
 		final org.drip.measure.process.DiffusionEvolver deBankSeniorRecoveryRate,
-		final org.drip.measure.process.DiffusionEvolver deBankSubordinateRecoveryRate,
 		final org.drip.measure.process.DiffusionEvolver deCounterPartyHazardRate,
 		final org.drip.measure.process.DiffusionEvolver deCounterPartyRecoveryRate)
 	{
 		try {
 			return new LatentStateDynamicsContainer (tAsset, tOvernightIndex, tCollateralScheme,
 				tBankSeniorFunding, null, tCounterPartyFunding, deBankHazardRate, deBankSeniorRecoveryRate,
-					deBankSubordinateRecoveryRate, deCounterPartyHazardRate, deCounterPartyRecoveryRate);
+					null, deCounterPartyHazardRate, deCounterPartyRecoveryRate);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -152,17 +150,15 @@ public class LatentStateDynamicsContainer {
 		final org.drip.measure.process.DiffusionEvolver deCounterPartyRecoveryRate)
 		throws java.lang.Exception
 	{
-		if (null == (_tAsset = tAsset) || null == (_tCounterPartyFunding = tCounterPartyFunding))
+		if (null == (_tAsset = tAsset) || null == (_tOvernightIndex = tOvernightIndex) || null ==
+			(_tCollateralScheme = tCollateralScheme) || null == (_tBankSeniorFunding = tBankSeniorFunding) ||
+				null == (_tCounterPartyFunding = tCounterPartyFunding) || null == (_deBankHazardRate =
+					deBankHazardRate) || null == (_deBankSeniorRecoveryRate = deBankSeniorRecoveryRate) ||
+						null == (_deCounterPartyHazardRate = deCounterPartyHazardRate) || null ==
+							(_deCounterPartyRecoveryRate = deCounterPartyRecoveryRate))
 			throw new java.lang.Exception ("LatentStateDynamicsContainer Constructor => Invalid Inputs");
 
-		_tOvernightIndex = tOvernightIndex;
-		_deBankHazardRate = deBankHazardRate;
-		_tCollateralScheme = tCollateralScheme;
-		_tBankSeniorFunding = tBankSeniorFunding;
 		_tBankSubordinateFunding = tBankSubordinateFunding;
-		_deBankSeniorRecoveryRate = deBankSeniorRecoveryRate;
-		_deCounterPartyHazardRate = deCounterPartyHazardRate;
-		_deCounterPartyRecoveryRate = deCounterPartyRecoveryRate;
 		_deBankSubordinateRecoveryRate = deBankSubordinateRecoveryRate;
 	}
 
@@ -244,17 +240,6 @@ public class LatentStateDynamicsContainer {
 	}
 
 	/**
-	 * Retrieve the Bank Subordinate Recovery Rate Evolver
-	 * 
-	 * @return The Bank Subordinate Recovery Rate Evolver
-	 */
-
-	public org.drip.measure.process.DiffusionEvolver bankSubordinateRecoveryRateEvolver()
-	{
-		return _deBankSubordinateRecoveryRate;
-	}
-
-	/**
 	 * Retrieve the Bank Senior Recovery Rate Evolver
 	 * 
 	 * @return The Bank Senior Recovery Rate Evolver
@@ -263,6 +248,17 @@ public class LatentStateDynamicsContainer {
 	public org.drip.measure.process.DiffusionEvolver bankSeniorRecoveryRateEvolver()
 	{
 		return _deBankSeniorRecoveryRate;
+	}
+
+	/**
+	 * Retrieve the Bank Subordinate Recovery Rate Evolver
+	 * 
+	 * @return The Bank Subordinate Recovery Rate Evolver
+	 */
+
+	public org.drip.measure.process.DiffusionEvolver bankSubordinateRecoveryRateEvolver()
+	{
+		return _deBankSubordinateRecoveryRate;
 	}
 
 	/**

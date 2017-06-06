@@ -137,7 +137,6 @@ public abstract class BurgardKjaerOperator {
 	/**
 	 * Generate the Derivative Value Time Increment using the Burgard Kjaer Scheme
 	 * 
-	 * @param si The Spread Intensity Instance
 	 * @param etv The Evolution Trajectory Vertex
 	 * @param dblCollateral The Off-setting Collateral
 	 * 
@@ -145,12 +144,10 @@ public abstract class BurgardKjaerOperator {
 	 */
 
 	public org.drip.xva.pde.BurgardKjaerEdgeRun timeIncrementRun (
-		final org.drip.xva.definition.SpreadIntensity si,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etv,
 		final double dblCollateral)
 	{
-		if (null == si || null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblCollateral))
-			return null;
+		if (null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblCollateral)) return null;
 
 		org.drip.xva.universe.LatentStateEdge tv = etv.latentStateEdge();
 
@@ -210,21 +207,21 @@ public abstract class BurgardKjaerOperator {
 	/**
 	 * Generate the Time Increment Run Attribution using the Burgard Kjaer Scheme
 	 * 
-	 * @param si The Spread Intensity Instance
 	 * @param etv The Evolution Trajectory Vertex
 	 * @param dblCollateral The Off-setting Collateral
+	 * @param dblTimeIncrement The Time Increment
 	 * 
 	 * @return The Time Increment Run Attribution using the Burgard Kjaer Scheme
 	 */
 
 	public org.drip.xva.pde.BurgardKjaerEdgeAttribution timeIncrementRunAttribution (
-		final org.drip.xva.definition.SpreadIntensity si,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etv,
-		final double dblCollateral)
+		final double dblCollateral,
+		final double dblTimeIncrement)
 	{
-		if (null == si || null == etv) return null;
-
-		double dblBankDefaultIntensity = si.bankSeniorDefaultIntensity();
+		if (null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement) || 0. ==
+			dblTimeIncrement)
+			return null;
 
 		double dblCounterPartyRecovery = _cob.counterPartyRecovery();
 
@@ -233,6 +230,8 @@ public abstract class BurgardKjaerOperator {
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
 		org.drip.xva.universe.LatentStateEdge lse = etv.latentStateEdge();
+
+		double dblBankDefaultIntensity = lse.bankHazardRate().finish();
 
 		double dblCounterPartyDefaultIntensity = lse.counterPartyHazardRate().finish();
 
@@ -251,6 +250,8 @@ public abstract class BurgardKjaerOperator {
 
 		org.drip.measure.realization.JumpDiffusionEdge jdeCollateralScheme = tv.collateralSchemeNumeraire();
 
+		double dblBankSeniorFundingSpread = lse.bankSeniorFundingSpread() / dblTimeIncrement;
+
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
 				(_tc.asset()).thetaUpDown (etv, dblAssetValue, dblAssetBump);
@@ -264,7 +265,7 @@ public abstract class BurgardKjaerOperator {
 				-1. * adblBumpedTheta[2],
 				null == jdeCollateralScheme ? 0. : jdeCollateralScheme.finish() * dblCollateral,
 				(dblBankDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
-				si.bankSeniorFundingSpread() * dblBankExposure,
+				dblBankSeniorFundingSpread * dblBankExposure,
 				-1. * dblBankDefaultIntensity * dblBankExposure,
 				dblDerivativeXVACounterPartyDefaultGrowth
 			);

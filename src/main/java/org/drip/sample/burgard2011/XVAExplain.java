@@ -83,7 +83,6 @@ public class XVAExplain {
 
 	private static final EvolutionTrajectoryVertex RunStep (
 		final TrajectoryEvolutionScheme tes,
-		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
 		final EvolutionTrajectoryVertex etvStart)
 		throws Exception
@@ -108,7 +107,7 @@ public class XVAExplain {
 
 		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
-		LatentStateEdge tvFinish = LatentStateEdge.Standard (
+		LatentStateEdge tvFinish = LatentStateEdge.BankSenior (
 			tc.asset().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -172,15 +171,6 @@ public class XVAExplain {
 				),
 				dblTimeWidth
 			),
-			tc.bankSubordinateRecoveryRateEvolver().weinerIncrement (
-				new JumpDiffusionVertex (
-					dblTime,
-					tvStart.bankSubordinateRecoveryRate().finish(),
-					0.,
-					false
-				),
-				dblTimeWidth
-			),
 			tc.counterPartyHazardRateEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -204,7 +194,6 @@ public class XVAExplain {
 		CloseOutBilateral cob = tes.boundaryCondition();
 
 		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
-			si,
 			etvStart,
 			0.
 		);
@@ -332,10 +321,6 @@ public class XVAExplain {
 		double dblBankSeniorRecoveryRateDrift = 0.0;
 		double dblBankSeniorRecoveryRateVolatility = 0.0;
 
-		double dblInitialBankSubordinateRecoveryRate = 0.00;
-		double dblBankSubordinateRecoveryRateDrift = 0.0;
-		double dblBankSubordinateRecoveryRateVolatility = 0.0;
-
 		double dblInitialCounterPartyHazardRate = 0.02;
 		double dblCounterPartyHazardRateDrift = 0.00;
 		double dblCounterPartyHazardRateVolatility = 0.001;
@@ -407,13 +392,6 @@ public class XVAExplain {
 			)
 		);
 
-		DiffusionEvolver deBankSubordinateRecoveryRate = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblBankSubordinateRecoveryRateDrift,
-				dblBankSubordinateRecoveryRateVolatility
-			)
-		);
-
 		DiffusionEvolver deCounterPartyHazardRate = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblCounterPartyHazardRateDrift,
@@ -428,7 +406,7 @@ public class XVAExplain {
 			)
 		);
 
-		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.Standard (
+		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.BankSenior (
 			new Equity (
 				deAsset,
 				dblAssetRepo,
@@ -452,7 +430,6 @@ public class XVAExplain {
 			),
 			deBankHazardRate,
 			deBankSeniorRecoveryRate,
-			deBankSubordinateRecoveryRate,
 			deCounterPartyHazardRate,
 			deCounterPartyRecoveryRate
 		);
@@ -468,12 +445,6 @@ public class XVAExplain {
 			tc,
 			cob,
 			pdeec
-		);
-
-		SpreadIntensity si = SpreadIntensity.Standard (
-			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
-			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankSeniorRecoveryRate,
-			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialCounterPartyRecoveryRate
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
@@ -557,7 +528,7 @@ public class XVAExplain {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			LatentStateEdge.Standard (
+			LatentStateEdge.BankSenior (
 				deAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -621,15 +592,6 @@ public class XVAExplain {
 					),
 					dblTimeWidth
 				),
-				deBankSubordinateRecoveryRate.weinerIncrement (
-					new JumpDiffusionVertex (
-						dblTime,
-						dblInitialBankSubordinateRecoveryRate,
-						0.,
-						false
-					),
-					dblTimeWidth
-				),
 				deCounterPartyHazardRate.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -665,7 +627,6 @@ public class XVAExplain {
 		for (dblTime -= dblTimeWidth; dblTime >= 0.; dblTime -= dblTimeWidth)
 			etv = RunStep (
 				tes,
-				si,
 				bko,
 				etv
 			);

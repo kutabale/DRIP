@@ -83,7 +83,6 @@ public class XVAGreeks {
 
 	private static final EvolutionTrajectoryVertex RunStep (
 		final TrajectoryEvolutionScheme tes,
-		final SpreadIntensity si,
 		final BurgardKjaerOperator bko,
 		final EvolutionTrajectoryVertex etvStart)
 		throws Exception
@@ -108,7 +107,7 @@ public class XVAGreeks {
 
 		double dblCollateralBondNumeraire = tvStart.collateralSchemeNumeraire().finish();
 
-		LatentStateEdge tvFinish = LatentStateEdge.Standard (
+		LatentStateEdge tvFinish = LatentStateEdge.BankSenior (
 			tc.asset().numeraireEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -172,15 +171,6 @@ public class XVAGreeks {
 				),
 				dblTimeWidth
 			),
-			tc.bankSubordinateRecoveryRateEvolver().weinerIncrement (
-				new JumpDiffusionVertex (
-					dblTime,
-					tvStart.bankSubordinateRecoveryRate().finish(),
-					0.,
-					false
-				),
-				dblTimeWidth
-			),
 			tc.counterPartyHazardRateEvolver().weinerIncrement (
 				new JumpDiffusionVertex (
 					dblTime,
@@ -204,7 +194,6 @@ public class XVAGreeks {
 		CloseOutBilateral cob = tes.boundaryCondition();
 
 		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
-			si,
 			etvStart,
 			0.
 		);
@@ -317,10 +306,6 @@ public class XVAGreeks {
 		double dblBankSeniorRecoveryRateDrift = 0.0;
 		double dblBankSeniorRecoveryRateVolatility = 0.0;
 
-		double dblInitialBankSubordinateRecoveryRate = 0.00;
-		double dblBankSubordinateRecoveryRateDrift = 0.0;
-		double dblBankSubordinateRecoveryRateVolatility = 0.0;
-
 		double dblZeroCouponCounterPartyBondDrift = 0.03;
 		double dblZeroCouponCounterPartyBondVolatility = 0.10;
 		double dblZeroCouponCounterPartyBondRepo = 0.028;
@@ -396,13 +381,6 @@ public class XVAGreeks {
 			)
 		);
 
-		DiffusionEvolver deBankSubordinateRecoveryRate = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblBankSubordinateRecoveryRateDrift,
-				dblBankSubordinateRecoveryRateVolatility
-			)
-		);
-
 		DiffusionEvolver deCounterPartyHazardRate = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblCounterPartyHazardRateDrift,
@@ -417,7 +395,7 @@ public class XVAGreeks {
 			)
 		);
 
-		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.Standard (
+		LatentStateDynamicsContainer tc = LatentStateDynamicsContainer.BankSenior (
 			new Equity (
 				meAsset,
 				dblAssetRepo,
@@ -441,7 +419,6 @@ public class XVAGreeks {
 			),
 			deBankHazardRate,
 			deBankRecoveryRate,
-			deBankSubordinateRecoveryRate,
 			deCounterPartyHazardRate,
 			deCounterPartyRecoveryRate
 		);
@@ -457,12 +434,6 @@ public class XVAGreeks {
 			tc,
 			cob,
 			pdeec
-		);
-
-		SpreadIntensity si = SpreadIntensity.Standard (
-			dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift,
-			(dblZeroCouponBankBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialBankSeniorRecoveryRate,
-			(dblZeroCouponCounterPartyBondDrift - dblZeroCouponCollateralBondDrift) / dblInitialCounterPartyRecoveryRate
 		);
 
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
@@ -538,7 +509,7 @@ public class XVAGreeks {
 
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			LatentStateEdge.Standard (
+			LatentStateEdge.BankSenior (
 				meAsset.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -602,15 +573,6 @@ public class XVAGreeks {
 					),
 					dblTimeWidth
 				),
-				deBankSubordinateRecoveryRate.weinerIncrement (
-					new JumpDiffusionVertex (
-						dblTime,
-						dblInitialBankSubordinateRecoveryRate,
-						0.,
-						false
-					),
-					dblTimeWidth
-				),
 				deCounterPartyHazardRate.weinerIncrement (
 					new JumpDiffusionVertex (
 						dblTime,
@@ -646,7 +608,6 @@ public class XVAGreeks {
 		for (dblTime -= dblTimeWidth; dblTime >= 0.; dblTime -= dblTimeWidth)
 			etv = RunStep (
 				tes,
-				si,
 				bko,
 				etv
 			);
