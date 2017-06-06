@@ -95,6 +95,10 @@ public class CPGAZeroThreshold {
 	{
 		double[] adblATMSwapRateOffset = new double[iNumStep + 1];
 		adblATMSwapRateOffset[0] = dblATMSwapRateOffsetInitial;
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		JumpDiffusionEdge[] aJDE = deATMSwapRateOffset.incrementSequence (
 			new JumpDiffusionVertex (
@@ -103,7 +107,10 @@ public class CPGAZeroThreshold {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				SequenceGenerator.Gaussian (iNumStep)
+			),
 			dblTimeWidth
 		);
 

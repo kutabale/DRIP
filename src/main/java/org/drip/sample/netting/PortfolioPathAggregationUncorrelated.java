@@ -91,6 +91,10 @@ public class PortfolioPathAggregationUncorrelated {
 	{
 		double[] adblNumeraireValue = new double[iNumStep + 1];
 		adblNumeraireValue[0] = dblNumeraireValueInitial;
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		JumpDiffusionEdge[] aJDE = deNumeraireValue.incrementSequence (
 			new JumpDiffusionVertex (
@@ -99,7 +103,10 @@ public class PortfolioPathAggregationUncorrelated {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				SequenceGenerator.Gaussian (iNumStep)
+			),
 			dblTimeWidth
 		);
 
@@ -119,6 +126,10 @@ public class PortfolioPathAggregationUncorrelated {
 		throws Exception
 	{
 		double[][] aablCollateralPortfolioValue = new double[iNumPath][iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		for (int i = 0; i < iNumPath; ++i) {
 			JumpDiffusionEdge[] aJDE = deCollateralPortfolioValue.incrementSequence (
@@ -128,7 +139,10 @@ public class PortfolioPathAggregationUncorrelated {
 					0.,
 					false
 				),
-				UnitRandomEdge.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
+				JumpDiffusionEdgeUnit.Diffusion (
+					adblTimeWidth,
+					SequenceGenerator.Gaussian (iNumStep)
+				),
 				dblTimeWidth
 			);
 

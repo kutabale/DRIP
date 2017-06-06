@@ -196,6 +196,11 @@ public class R1JointJumpDiffusion {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
+		double[] adblTimeWidth = new double[iNumTimeStep + 1];
+
+		for (int i = 0; i < iNumTimeStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
+
 		JumpDiffusionEdge[] aR1AssetLR = meAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				dblTime,
@@ -203,7 +208,10 @@ public class R1JointJumpDiffusion {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[0]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[0]
+			),
 			dblTimeWidth
 		);
 
@@ -214,7 +222,10 @@ public class R1JointJumpDiffusion {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[1]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[1]
+			),
 			dblTimeWidth
 		);
 
@@ -225,7 +236,8 @@ public class R1JointJumpDiffusion {
 				0.,
 				false
 			),
-			UnitRandomEdge.JumpDiffusion (
+			JumpDiffusionEdgeUnit.JumpDiffusion (
+				adblTimeWidth,
 				aadblNumeraireTimeSeries[2],
 				adblBankDefaultIndicator
 			),
@@ -239,7 +251,8 @@ public class R1JointJumpDiffusion {
 				0.,
 				false
 			),
-			UnitRandomEdge.JumpDiffusion (
+			JumpDiffusionEdgeUnit.JumpDiffusion (
+				adblTimeWidth,
 				aadblNumeraireTimeSeries[3],
 				adblCounterPartyDefaultIndicator
 			),

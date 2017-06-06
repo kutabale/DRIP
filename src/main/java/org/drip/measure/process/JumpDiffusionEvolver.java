@@ -89,7 +89,7 @@ public class JumpDiffusionEvolver extends org.drip.measure.process.DiffusionEvol
 
 	@Override public org.drip.measure.realization.JumpDiffusionEdge increment (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.UnitRandomEdge ur,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit ur,
 		final double dblTimeIncrement)
 	{
 		if (null == jdv || null == ur || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))

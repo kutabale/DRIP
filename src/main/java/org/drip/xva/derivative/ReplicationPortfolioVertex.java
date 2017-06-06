@@ -290,14 +290,14 @@ public class ReplicationPortfolioVertex {
 			tv.bankSubordinateFundingNumeraire();
 
 		if (null != jdeBankSubordinateFunding) {
-			double dblBankSubordinateFundingRecovery = cob.bankSubordinateFundingRecovery();
+			/* double dblBankSubordinateFundingRecovery = cob.bankSubordinateFundingRecovery();
 
 			if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFundingRecovery))
 				throw new java.lang.Exception
 					("ReplicationPortfolioVertex::bankPostDefaultPositionValue => Invalid Inputs");
 
 			dblValue -= jdeBankSubordinateFunding.finish() * _dblBankSubordinateNumeraireUnits *
-				dblBankSubordinateFundingRecovery;
+				dblBankSubordinateFundingRecovery; */
 		}
 
 		return dblValue;

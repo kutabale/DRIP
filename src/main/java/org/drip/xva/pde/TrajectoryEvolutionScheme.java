@@ -70,15 +70,13 @@ package org.drip.xva.pde;
 
 public class TrajectoryEvolutionScheme {
 	private double _dblTimeIncrement = java.lang.Double.NaN;
-	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
-	private org.drip.xva.universe.LatentStateDynamicsContainer _tc = null;
+	private org.drip.xva.universe.LatentStateDynamicsContainer _lsdc = null;
 
 	/**
 	 * TrajectoryEvolutionScheme Constructor
 	 * 
-	 * @param tc The Universe of Trade-able Assets
-	 * @param cob The Master Agreement Close Out Boundary Conditions
+	 * @param lsdc The Universe of Trade-able Assets
 	 * @param pdeec The XVA Control Settings
 	 * @param dblTimeIncrement The Time Increment
 	 * 
@@ -86,13 +84,12 @@ public class TrajectoryEvolutionScheme {
 	 */
 
 	public TrajectoryEvolutionScheme (
-		final org.drip.xva.universe.LatentStateDynamicsContainer tc,
-		final org.drip.xva.definition.CloseOutBilateral cob,
+		final org.drip.xva.universe.LatentStateDynamicsContainer lsdc,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec,
 		final double dblTimeIncrement)
 		throws java.lang.Exception
 	{
-		if (null == (_tc = tc) || null == (_cob = cob) || null == (_pdeec = pdeec) ||
+		if (null == (_lsdc = lsdc) || null == (_pdeec = pdeec) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTimeIncrement = dblTimeIncrement))
 			throw new java.lang.Exception ("TrajectoryEvolutionScheme Constructor => Invalid Inputs");
 	}
@@ -105,18 +102,7 @@ public class TrajectoryEvolutionScheme {
 
 	public org.drip.xva.universe.LatentStateDynamicsContainer universe()
 	{
-		return _tc;
-	}
-
-	/**
-	 * Retrieve the Close Out Boundary Condition
-	 * 
-	 * @return The Close Out Boundary Condition
-	 */
-
-	public org.drip.xva.definition.CloseOutBilateral boundaryCondition()
-	{
-		return _cob;
+		return _lsdc;
 	}
 
 	/**
@@ -177,10 +163,10 @@ public class TrajectoryEvolutionScheme {
 		org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyNumeraire =
 			tv.counterPartyFundingNumeraire();
 
-		double dblAssetCashChange = dblAssetNumeraireUnitsStart * _tc.asset().cashAccumulationRate() *
+		double dblAssetCashChange = dblAssetNumeraireUnitsStart * _lsdc.asset().cashAccumulationRate() *
 			jdeAssetNumeraire.finish() * _dblTimeIncrement;
 
-		org.drip.xva.universe.Tradeable tCounterPartyNumeraire = _tc.counterPartyFunding();
+		org.drip.xva.universe.Tradeable tCounterPartyNumeraire = _lsdc.counterPartyFunding();
 
 		double dblCounterPartyCashAccumulation = dblCounterPartyNumeraireUnitsStart *
 			tCounterPartyNumeraire.cashAccumulationRate() * jdeCounterPartyNumeraire.finish() *
@@ -189,26 +175,27 @@ public class TrajectoryEvolutionScheme {
 		double dblCounterPartyPositionValueChange = dblCounterPartyNumeraireUnitsStart *
 			jdeCounterPartyNumeraire.grossChange();
 
-		double dblCashAccountBalance = -1. * etvStart.assetGreekVertex().derivativeXVAValue() - (null ==
-			jdeBankSeniorFundingNumeraire ? 0. : dblBankNumeraireUnitsStart *
-				jdeBankSeniorFundingNumeraire.finish()) - (null == jdeBankSubordinateFundingNumeraire ? 0. :
-					dblZeroRecoveryBankNumeraireUnitsStart * jdeBankSubordinateFundingNumeraire.finish());
+		double dblCashAccountBalance = -1. * etvStart.assetGreekVertex().derivativeXVAValue() -
+			dblBankNumeraireUnitsStart * jdeBankSeniorFundingNumeraire.finish() - (null ==
+				jdeBankSubordinateFundingNumeraire ? 0. : dblZeroRecoveryBankNumeraireUnitsStart *
+					jdeBankSubordinateFundingNumeraire.finish());
 
-		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
+		org.drip.xva.universe.Tradeable tCollateralScheme = _lsdc.collateralScheme();
 
-		org.drip.xva.universe.Tradeable tBankSeniorFunding = _tc.bankSeniorFunding();
+		org.drip.xva.universe.Tradeable tBankSeniorFunding = _lsdc.bankSeniorFunding();
 
-		double dblBankCashAccumulation = dblCashAccountBalance * (dblCashAccountBalance > 0. ? (null ==
-			tCollateralScheme ? 0. : tCollateralScheme.cashAccumulationRate()) : (null == tBankSeniorFunding
-				? 0. : tBankSeniorFunding.cashAccumulationRate())) * _dblTimeIncrement;
+		double dblBankCashAccumulation = dblCashAccountBalance * (dblCashAccountBalance > 0. ?
+			tCollateralScheme.cashAccumulationRate() : tBankSeniorFunding.cashAccumulationRate()) *
+				_dblTimeIncrement;
 
 		double dblDerivativeXVAValueChange = -1. * (dblAssetNumeraireUnitsStart *
-			jdeAssetNumeraire.grossChange() + (null == jdeBankSeniorFundingNumeraire ? 0. :
-				dblBankNumeraireUnitsStart * jdeBankSeniorFundingNumeraire.grossChange()) + (null ==
-					jdeBankSubordinateFundingNumeraire ? 0. : dblZeroRecoveryBankNumeraireUnitsStart *
-						jdeBankSubordinateFundingNumeraire.grossChange()) + dblCounterPartyPositionValueChange +
-							(dblAssetCashChange + dblCounterPartyCashAccumulation + dblBankCashAccumulation)
-								* _dblTimeIncrement);
+			jdeAssetNumeraire.grossChange() + dblBankNumeraireUnitsStart *
+				jdeBankSeniorFundingNumeraire.grossChange() + (null == jdeBankSubordinateFundingNumeraire ?
+					0. : dblZeroRecoveryBankNumeraireUnitsStart *
+						jdeBankSubordinateFundingNumeraire.grossChange()) +
+							dblCounterPartyPositionValueChange + (dblAssetCashChange +
+								dblCounterPartyCashAccumulation + dblBankCashAccumulation) *
+									_dblTimeIncrement);
 
 		try {
 			return new org.drip.xva.derivative.CashAccountRebalancer (new
@@ -270,10 +257,13 @@ public class TrajectoryEvolutionScheme {
 		double dblDerivativeXVAValueFinish = agvStart.derivativeXVAValue() - dblTheta * dblTimeWidth;
 
 		try {
-			dblCounterPartyGainOnBankDefault = _cob.bankDefault (dblDerivativeXVAValueFinish);
+			org.drip.xva.definition.CloseOutGeneral cog = new org.drip.xva.definition.CloseOutBilateral
+				(tv.bankSeniorRecoveryRate().finish(), tv.counterPartyRecoveryRate().finish());
+
+			dblCounterPartyGainOnBankDefault = cog.bankDefault (dblDerivativeXVAValueFinish);
 
 			dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-				_cob.counterPartyDefault (dblDerivativeXVAValueFinish));
+				cog.counterPartyDefault (dblDerivativeXVAValueFinish));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
@@ -298,7 +288,7 @@ public class TrajectoryEvolutionScheme {
 		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire =
 			tv.bankSubordinateFundingNumeraire();
 
-		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
+		org.drip.xva.universe.Tradeable tCollateralScheme = _lsdc.collateralScheme();
 
 		try {
 			org.drip.xva.derivative.EvolutionTrajectoryVertex etvFinish = new
@@ -307,8 +297,7 @@ public class TrajectoryEvolutionScheme {
 				tv,
 				new org.drip.xva.derivative.ReplicationPortfolioVertex (
 					-1. * dblDerivativeXVAValueDeltaFinish,
-					null == jdeBankSeniorFundingNumeraire ? 0. : dblGainOnBankDefaultFinish /
-						jdeBankSeniorFundingNumeraire.finish(),
+					dblGainOnBankDefaultFinish / jdeBankSeniorFundingNumeraire.finish(),
 					null == jdeBankSubordinateFundingNumeraire ? 0. : dblGainOnBankDefaultFinish /
 						jdeBankSubordinateFundingNumeraire.finish(),
 					dblCounterPartyNumeraireUnitsFinish,
@@ -321,14 +310,13 @@ public class TrajectoryEvolutionScheme {
 						(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) *
 						dblTimeWidth / (dblAssetNumeraireBump * dblAssetNumeraireBump),
 					agvStart.derivativeFairValue() * java.lang.Math.exp (
-						-1. * dblTimeWidth * (null == tCollateralScheme ? 0. :
-							tCollateralScheme.numeraireEvolver().evaluator().drift().value (
-								new org.drip.measure.realization.JumpDiffusionVertex (
-									dblTimeStart - 0.5 * dblTimeWidth,
-									etvStart.latentStateEdge().collateralSchemeNumeraire().finish(),
-									0.,
-									false
-								)
+						-1. * dblTimeWidth *
+						tCollateralScheme.numeraireEvolver().evaluator().drift().value (
+							new org.drip.measure.realization.JumpDiffusionVertex (
+								dblTimeStart - 0.5 * dblTimeWidth,
+								etvStart.latentStateEdge().collateralSchemeNumeraire().finish(),
+								0.,
+								false
 							)
 						)
 					)

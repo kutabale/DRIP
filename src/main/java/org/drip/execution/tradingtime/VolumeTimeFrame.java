@@ -76,6 +76,7 @@ public class VolumeTimeFrame extends org.drip.measure.realization.JumpDiffusionE
 	/**
 	 * VolumeTimeFrame Constructor
 	 * 
+	 * @param dblTimeIncrement Time Increment
 	 * @param dblPrevious The Previous Realization
 	 * @param dblTemporal The Temporal Increment
 	 * @param dblBrownian The Brownian Increment
@@ -87,6 +88,7 @@ public class VolumeTimeFrame extends org.drip.measure.realization.JumpDiffusionE
 	 */
 
 	public VolumeTimeFrame (
+		final double dblTimeIncrement,
 		final double dblPrevious,
 		final double dblTemporal,
 		final double dblBrownian,
@@ -97,7 +99,7 @@ public class VolumeTimeFrame extends org.drip.measure.realization.JumpDiffusionE
 	{
 		super (dblPrevious, dblVolatility * dblVolatility * dblTemporal, new
 			org.drip.measure.realization.StochasticEdgeDiffusion (dblVolatility * dblBrownian), null, new
-				org.drip.measure.realization.UnitRandomEdge (dblBrownian, 0.));
+				org.drip.measure.realization.JumpDiffusionEdgeUnit (dblTimeIncrement, dblBrownian, 0.));
 
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHoldings = dblHoldings) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblTradeRate = dblTradeRate / (dblVolatility *

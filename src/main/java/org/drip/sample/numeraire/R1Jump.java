@@ -91,6 +91,10 @@ public class R1Jump {
 		double dblTerminalAssetNumeraire = 1.;
 
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
+		double[] adblTimeWidth = new double[iNumTimeStep + 1];
+
+		for (int i = 0; i < iNumTimeStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		JumpDiffusionEvolver meAsset = new JumpDiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
@@ -114,7 +118,8 @@ public class R1Jump {
 				0.,
 				false
 			),
-			UnitRandomEdge.JumpDiffusion (
+			JumpDiffusionEdgeUnit.JumpDiffusion (
+				adblTimeWidth,
 				adblAssetNumeraireTimeSeries,
 				adblDefaultIndicatorTimeSeries
 			),

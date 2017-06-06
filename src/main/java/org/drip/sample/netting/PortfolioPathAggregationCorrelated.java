@@ -93,6 +93,10 @@ public class PortfolioPathAggregationCorrelated {
 	{
 		double[] adblNumeraireValue = new double[iNumStep + 1];
 		adblNumeraireValue[0] = dblNumeraireValueInitial;
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		JumpDiffusionEdge[] aJDE = deNumeraireValue.incrementSequence (
 			new JumpDiffusionVertex (
@@ -101,7 +105,10 @@ public class PortfolioPathAggregationCorrelated {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (adblRandom),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				adblRandom
+			),
 			dblTimeWidth
 		);
 

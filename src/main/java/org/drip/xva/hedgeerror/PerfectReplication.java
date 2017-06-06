@@ -81,7 +81,6 @@ public class PerfectReplication extends org.drip.xva.pde.BurgardKjaerOperator {
 	 * PerfectReplication Constructor
 	 * 
 	 * @param tc The Universe of Tradeable Assets
-	 * @param cob The Master Agreement Close Out Boundary Conditions
 	 * @param pdeec The XVA Control Settings
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -89,10 +88,9 @@ public class PerfectReplication extends org.drip.xva.pde.BurgardKjaerOperator {
 
 	public PerfectReplication (
 		final org.drip.xva.universe.LatentStateDynamicsContainer tc,
-		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception
 	{
-		super (tc, cob, pdeec);
+		super (tc, pdeec);
 	}
 }

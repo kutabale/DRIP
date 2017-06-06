@@ -218,14 +218,15 @@ public class PathVertexForwardRealization {
 		for (int iPath = 0; iPath < iNumPath; ++iPath) {
 			List<double[]> lsVertexRd = aVertexRd[iPath].vertexList();
 
-			UnitRandomEdge[][] aaUR = new UnitRandomEdge[iNumDimension][iNumVertex];
+			JumpDiffusionEdgeUnit[][] aaUR = new JumpDiffusionEdgeUnit[iNumDimension][iNumVertex];
 			JumpDiffusionVertex[][] aaJDV = new JumpDiffusionVertex[iNumDimension][iNumVertex + 1];
 
 			for (int iTimeVertex = 0; iTimeVertex < iNumVertex; ++iTimeVertex) {
 				double[] adblRd = lsVertexRd.get (iTimeVertex);
 
 				for (int iDimension = 0; iDimension < iNumDimension; ++iDimension)
-					aaUR[iDimension][iTimeVertex] = new UnitRandomEdge (
+					aaUR[iDimension][iTimeVertex] = new JumpDiffusionEdgeUnit (
+						dblTimeWidth,							
 						adblRd[iDimension],
 						0.
 					);

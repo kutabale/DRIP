@@ -98,6 +98,10 @@ public class PortfolioCollateralEstimate {
 
 		JulianDate dtStart = dtSpot;
 		double dblTimeWidth = dblTime / iNumStep;
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
@@ -121,7 +125,10 @@ public class PortfolioCollateralEstimate {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				SequenceGenerator.Gaussian (iNumStep)
+			),
 			dblTimeWidth
 		);
 

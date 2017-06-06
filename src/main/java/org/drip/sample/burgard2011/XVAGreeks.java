@@ -191,8 +191,6 @@ public class XVAGreeks {
 			)
 		);
 
-		CloseOutBilateral cob = tes.boundaryCondition();
-
 		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
 			etvStart,
 			0.
@@ -215,10 +213,15 @@ public class XVAGreeks {
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
-		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.bankDefault (dblDerivativeXVAValueFinish));
+		CloseOutGeneral cog = new CloseOutBilateral (
+			tvStart.bankSeniorRecoveryRate().finish(),
+			tvStart.counterPartyRecoveryRate().finish()
+		);
+
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cog.bankDefault (dblDerivativeXVAValueFinish));
 
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.counterPartyDefault (dblDerivativeXVAValueFinish));
+			cog.counterPartyDefault (dblDerivativeXVAValueFinish));
 
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
@@ -327,7 +330,7 @@ public class XVAGreeks {
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral cob = CloseOutBilateral.Standard (
+		CloseOutBilateral cob = new CloseOutBilateral (
 			dblInitialBankSeniorRecoveryRate,
 			dblInitialCounterPartyRecoveryRate
 		);
@@ -425,14 +428,12 @@ public class XVAGreeks {
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
 			tc,
-			cob,
 			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new PerfectReplication (
 			tc,
-			cob,
 			pdeec
 		);
 

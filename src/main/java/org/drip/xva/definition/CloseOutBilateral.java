@@ -69,35 +69,11 @@ package org.drip.xva.definition;
 public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
 	private double _dblCounterPartyRecovery = java.lang.Double.NaN;;
 	private double _dblBankSeniorFundingRecovery = java.lang.Double.NaN;
-	private double _dblBankSubordinateFundingRecovery = java.lang.Double.NaN;
-
-	/**
-	 * CloseOutBilateral Instance without the Subordinate Funding
-	 * 
-	 * @param dblBankSeniorFundingRecovery The Bank Senior Funding Recovery Rate
-	 * @param dblCounterPartyRecovery Counter Party Recovery Rate
-	 * 
-	 * @return The CloseOutBilateral Instance without the Subordinate Funding
-	 */
-
-	public static final CloseOutBilateral Standard (
-		final double dblBankSeniorFundingRecovery,
-		final double dblCounterPartyRecovery)
-	{
-		try {
-			return new CloseOutBilateral (dblBankSeniorFundingRecovery, 0., dblCounterPartyRecovery);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
 
 	/**
 	 * CloseOutBilateral Constructor
 	 * 
 	 * @param dblBankSeniorFundingRecovery The Bank Senior Funding Recovery Rate
-	 * @param dblBankSubordinateFundingRecovery The Bank Subordinate Funding Recovery Rate
 	 * @param dblCounterPartyRecovery Counter Party Recovery Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -105,7 +81,6 @@ public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
 
 	public CloseOutBilateral (
 		final double dblBankSeniorFundingRecovery,
-		final double dblBankSubordinateFundingRecovery,
 		final double dblCounterPartyRecovery)
 		throws java.lang.Exception
 	{
@@ -113,8 +88,6 @@ public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
 			dblBankSeniorFundingRecovery) || !org.drip.quant.common.NumberUtil.IsValid
 				(_dblCounterPartyRecovery = dblCounterPartyRecovery))
 			throw new java.lang.Exception ("CloseOutBilateral Constructor => Invalid Inputs");
-
-		_dblBankSubordinateFundingRecovery = dblBankSubordinateFundingRecovery;
 	}
 
 	/**
@@ -126,17 +99,6 @@ public class CloseOutBilateral extends org.drip.xva.definition.CloseOutGeneral {
 	public double bankSeniorFundingRecovery()
 	{
 		return _dblBankSeniorFundingRecovery;
-	}
-
-	/**
-	 * Retrieve the Bank Subordinate Funding Recovery Rate
-	 * 
-	 * @return The Bank Subordinate Funding Recovery Rate
-	 */
-
-	public double bankSubordinateFundingRecovery()
-	{
-		return _dblBankSubordinateFundingRecovery;
 	}
 
 	/**

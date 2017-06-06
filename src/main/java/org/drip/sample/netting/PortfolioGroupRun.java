@@ -90,6 +90,10 @@ public class PortfolioGroupRun {
 	{
 		double[] ablAssetValue = new double[iNumStep + 1];
 		ablAssetValue[0] = dblAssetValueInitial;
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		JumpDiffusionEdge[] aJDE = deAssetValue.incrementSequence (
 			new JumpDiffusionVertex (
@@ -98,7 +102,10 @@ public class PortfolioGroupRun {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				SequenceGenerator.Gaussian (iNumStep)
+			),
 			dblTimeWidth
 		);
 

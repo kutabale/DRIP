@@ -135,6 +135,10 @@ public class R1JointDiffusion {
 		double dblTerminalCollateralNumeraire = 1.;
 
 		int iNumTimeStep = (int) (dblTime / dblTimeWidth);
+		double[] adblTimeWidth = new double[iNumTimeStep + 1];
+
+		for (int i = 0; i < iNumTimeStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		DiffusionEvolver meAsset = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
@@ -156,7 +160,10 @@ public class R1JointDiffusion {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[0]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[0]
+			),
 			-1. * dblTimeWidth
 		);
 
@@ -167,7 +174,10 @@ public class R1JointDiffusion {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[1]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[1]
+			),
 			-1. * dblTimeWidth
 		);
 
@@ -178,7 +188,10 @@ public class R1JointDiffusion {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[2]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[2]
+			),
 			-1. * dblTimeWidth
 		);
 
@@ -189,7 +202,10 @@ public class R1JointDiffusion {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[3]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[3]
+			),
 			-1. * dblTimeWidth
 		);
 

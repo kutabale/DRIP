@@ -184,8 +184,8 @@ public class PathVertexRd {
 
 			java.util.List<double[]> lsVertexRd = aVertexRd[iPath].vertexList();
 
-			org.drip.measure.realization.UnitRandomEdge[][] aaUR = new
-				org.drip.measure.realization.UnitRandomEdge[iNumDimension][iNumVertex];
+			org.drip.measure.realization.JumpDiffusionEdgeUnit[][] aaJDEU = new
+				org.drip.measure.realization.JumpDiffusionEdgeUnit[iNumDimension][iNumVertex];
 			org.drip.measure.realization.JumpDiffusionVertex[][] aaJDV = new
 				org.drip.measure.realization.JumpDiffusionVertex[iNumDimension][iNumVertex + 1];
 
@@ -196,8 +196,9 @@ public class PathVertexRd {
 
 				for (int iDimension = 0; iDimension < iNumDimension; ++iDimension) {
 					try {
-						aaUR[iDimension][iTimeVertex] = new org.drip.measure.realization.UnitRandomEdge
-							(adblRd[iDimension], 0.);
+						aaJDEU[iDimension][iTimeVertex] = new
+							org.drip.measure.realization.JumpDiffusionEdgeUnit
+								(adblTimeIncrement[iDimension], adblRd[iDimension], 0.);
 					} catch (java.lang.Exception e) {
 						e.printStackTrace();
 
@@ -210,7 +211,7 @@ public class PathVertexRd {
 				try {
 					aaJDV[iDimension] = _aDE[iDimension].vertexSequence (new
 						org.drip.measure.realization.JumpDiffusionVertex (0., adblPathInitial[iDimension],
-							0., false), aaUR[iDimension], adblTimeIncrement);
+							0., false), aaJDEU[iDimension], adblTimeIncrement);
 				} catch (java.lang.Exception e) {
 					e.printStackTrace();
 

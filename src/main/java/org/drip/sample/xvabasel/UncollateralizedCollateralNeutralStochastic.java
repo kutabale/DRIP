@@ -106,6 +106,10 @@ public class UncollateralizedCollateralNeutralStochastic {
 	{
 		double[] adblNumeraireValue = new double[iNumStep + 1];
 		adblNumeraireValue[0] = dblNumeraireValueInitial;
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		JumpDiffusionEdge[] aJDE = deNumeraireValue.incrementSequence (
 			new JumpDiffusionVertex (
@@ -114,7 +118,10 @@ public class UncollateralizedCollateralNeutralStochastic {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (adblRandom),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				adblRandom
+			),
 			dblTimeWidth
 		);
 
@@ -135,6 +142,10 @@ public class UncollateralizedCollateralNeutralStochastic {
 	{
 		double[] adblATMSwapRateOffset = new double[iNumStep + 1];
 		adblATMSwapRateOffset[0] = dblATMSwapRateOffsetInitial;
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		JumpDiffusionEdge[] aJDE = deATMSwapRateOffset.incrementSequence (
 			new JumpDiffusionVertex (
@@ -143,7 +154,10 @@ public class UncollateralizedCollateralNeutralStochastic {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (adblRandom),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				adblRandom
+			),
 			dblTimeWidth
 		);
 

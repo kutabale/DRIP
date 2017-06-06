@@ -90,6 +90,10 @@ public class PortfolioGroupSimulation {
 		throws Exception
 	{
 		double[][] aablCollateralPortfolioValue = new double[iNumPath][iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		for (int i = 0; i < iNumPath; ++i) {
 			JumpDiffusionEdge[] aJDE = deCollateralPortfolioValue.incrementSequence (
@@ -99,7 +103,10 @@ public class PortfolioGroupSimulation {
 					0.,
 					false
 				),
-				UnitRandomEdge.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
+				JumpDiffusionEdgeUnit.Diffusion (
+					adblTimeWidth,
+					SequenceGenerator.Gaussian (iNumStep)
+				),
 				dblTimeWidth
 			);
 

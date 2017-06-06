@@ -95,7 +95,7 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionEdge increment (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.UnitRandomEdge ur,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit ur,
 		final double dblTimeIncrement)
 	{
 		if (null == jdv || null == ur || !org.drip.quant.common.NumberUtil.IsValid (dblTimeIncrement))
@@ -129,7 +129,7 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionEdge[] incrementSequence (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.UnitRandomEdge[] aUR,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aUR,
 		final double dblTimeIncrement)
 	{
 		if (null == aUR) return null;
@@ -181,7 +181,7 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionVertex[] vertexSequence (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.UnitRandomEdge[] aUR,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aUR,
 		final double dblTimeIncrement)
 	{
 		if (null == aUR) return null;
@@ -236,7 +236,7 @@ public class DiffusionEvolver {
 
 	public org.drip.measure.realization.JumpDiffusionVertex[] vertexSequence (
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
-		final org.drip.measure.realization.UnitRandomEdge[] aUR,
+		final org.drip.measure.realization.JumpDiffusionEdgeUnit[] aUR,
 		final double[] adblTimeIncrement)
 	{
 		if (null == aUR || null == adblTimeIncrement) return null;
@@ -293,8 +293,8 @@ public class DiffusionEvolver {
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (jdv, org.drip.measure.realization.UnitRandomEdge.GaussianDiffusion(),
-				dblTimeIncrement);
+			return increment (jdv, org.drip.measure.realization.JumpDiffusionEdgeUnit.GaussianDiffusion
+				(dblTimeIncrement), dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -315,7 +315,8 @@ public class DiffusionEvolver {
 		final org.drip.measure.realization.JumpDiffusionVertex jdv,
 		final double dblTimeIncrement)
 	{
-		return increment (jdv, org.drip.measure.realization.UnitRandomEdge.UniformJump(), dblTimeIncrement);
+		return increment (jdv, org.drip.measure.realization.JumpDiffusionEdgeUnit.UniformJump
+			(dblTimeIncrement), dblTimeIncrement);
 	}
 
 	/**
@@ -333,8 +334,8 @@ public class DiffusionEvolver {
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (jdv, new org.drip.measure.realization.UnitRandomEdge
-				(org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
+			return increment (jdv, new org.drip.measure.realization.JumpDiffusionEdgeUnit (dblTimeIncrement,
+				org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
 					dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -358,8 +359,8 @@ public class DiffusionEvolver {
 		final double dblTimeIncrement)
 	{
 		try {
-			return increment (jdv, new org.drip.measure.realization.UnitRandomEdge
-				(org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
+			return increment (jdv, new org.drip.measure.realization.JumpDiffusionEdgeUnit (dblTimeIncrement,
+				org.drip.measure.gaussian.NormalQuadrature.Random(), java.lang.Math.random()),
 					dblTimeIncrement);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

@@ -91,6 +91,10 @@ public class FixFloatVABank {
 		throws Exception
 	{
 		double[][] aablATMSwapRateOffset = new double[iNumSimulation][iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep + 1];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
 
 		for (int i = 0; i < iNumSimulation; ++i) {
 			JumpDiffusionEdge[] aJDE = deATMSwapRateOffset.incrementSequence (
@@ -100,7 +104,10 @@ public class FixFloatVABank {
 					0.,
 					false
 				),
-				UnitRandomEdge.Diffusion (SequenceGenerator.Gaussian (iNumStep)),
+				JumpDiffusionEdgeUnit.Diffusion (
+					adblTimeWidth,
+					SequenceGenerator.Gaussian (iNumStep)
+				),
 				dblTimeWidth
 			);
 

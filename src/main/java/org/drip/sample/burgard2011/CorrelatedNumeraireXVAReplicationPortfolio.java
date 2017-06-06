@@ -130,8 +130,6 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			jdeCounterPartyRecoveryRate
 		);
 
-		CloseOutBilateral cob = tes.boundaryCondition();
-
 		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
 			etvStart,
 			0.
@@ -154,11 +152,16 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
+		CloseOutGeneral cog = new CloseOutBilateral (
+			jdeBankSeniorRecoveryRate.finish(),
+			jdeCounterPartyRecoveryRate.finish()
+		);
+
 		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.bankDefault (dblDerivativeXVAValueFinish));
+			cog.bankDefault (dblDerivativeXVAValueFinish));
 
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.counterPartyDefault (dblDerivativeXVAValueFinish));
+			cog.counterPartyDefault (dblDerivativeXVAValueFinish));
 
 		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
@@ -296,7 +299,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral cob = CloseOutBilateral.Standard (
+		CloseOutBilateral cob = new CloseOutBilateral (
 			dblInitialBankSeniorRecoveryRate,
 			dblInitialCounterPartyRecoveryRate
 		);
@@ -402,14 +405,12 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
 			tc,
-			cob,
 			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new PerfectReplication (
 			tc,
-			cob,
 			pdeec
 		);
 
@@ -424,6 +425,11 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
+		double[] adblTimeWidth = new double[iNumTimeStep + 1];
+
+		for (int i = 0; i < iNumTimeStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
+
 		JumpDiffusionEdge[] aJDEAsset = deAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
@@ -431,7 +437,10 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[0]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[0]
+			),
 			dblTimeWidth
 		);
 
@@ -442,7 +451,10 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[1]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[1]
+			),
 			dblTimeWidth
 		);
 
@@ -453,7 +465,10 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[2]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[2]
+			),
 			dblTimeWidth
 		);
 
@@ -464,7 +479,8 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.JumpDiffusion (
+			JumpDiffusionEdgeUnit.JumpDiffusion (
+				adblTimeWidth,
 				aadblNumeraireTimeSeries[3],
 				adblBankDefaultIndicator
 			),
@@ -478,7 +494,8 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.JumpDiffusion (
+			JumpDiffusionEdgeUnit.JumpDiffusion (
+				adblTimeWidth,
 				aadblNumeraireTimeSeries[4],
 				adblCounterPartyDefaultIndicator
 			),
@@ -492,7 +509,10 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[5]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[5]
+			),
 			dblTimeWidth
 		);
 
@@ -503,7 +523,10 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[6]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[6]
+			),
 			dblTimeWidth
 		);
 
@@ -514,7 +537,10 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[7]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[7]
+			),
 			dblTimeWidth
 		);
 
@@ -525,7 +551,10 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[8]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[8]
+			),
 			dblTimeWidth
 		);
 

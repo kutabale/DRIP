@@ -191,8 +191,6 @@ public class XVAExplain {
 			)
 		);
 
-		CloseOutBilateral cob = tes.boundaryCondition();
-
 		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
 			etvStart,
 			0.
@@ -215,11 +213,16 @@ public class XVAExplain {
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
+		CloseOutGeneral cog = new CloseOutBilateral (
+			tvStart.bankSeniorRecoveryRate().finish(),
+			tvStart.counterPartyRecoveryRate().finish()
+		);
+
 		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.bankDefault (dblDerivativeXVAValueFinish));
+			cog.bankDefault (dblDerivativeXVAValueFinish));
 
 		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
-			cob.counterPartyDefault (dblDerivativeXVAValueFinish));
+			cog.counterPartyDefault (dblDerivativeXVAValueFinish));
 
 		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
@@ -338,7 +341,7 @@ public class XVAExplain {
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral cob = CloseOutBilateral.Standard (
+		CloseOutBilateral cob = new CloseOutBilateral (
 			dblInitialBankSeniorRecoveryRate,
 			dblInitialCounterPartyRecoveryRate
 		);
@@ -436,14 +439,12 @@ public class XVAExplain {
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
 			tc,
-			cob,
 			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new PerfectReplication (
 			tc,
-			cob,
 			pdeec
 		);
 

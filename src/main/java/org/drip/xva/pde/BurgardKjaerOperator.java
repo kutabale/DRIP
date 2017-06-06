@@ -70,9 +70,8 @@ package org.drip.xva.pde;
  */
 
 public abstract class BurgardKjaerOperator {
-	private org.drip.xva.universe.LatentStateDynamicsContainer _tc = null;
-	private org.drip.xva.definition.CloseOutBilateral _cob = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
+	private org.drip.xva.universe.LatentStateDynamicsContainer _tc = null;
 
 	protected abstract double hedgeError (
 		final double dblBankRecovery,
@@ -85,7 +84,6 @@ public abstract class BurgardKjaerOperator {
 	 * BurgardKjaerOperator Constructor
 	 * 
 	 * @param tc The Universe of Tradeable Assets
-	 * @param cob The Master Agreement Close Out Boundary Conditions
 	 * @param pdeec The XVA Control Settings
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -93,11 +91,10 @@ public abstract class BurgardKjaerOperator {
 
 	public BurgardKjaerOperator (
 		final org.drip.xva.universe.LatentStateDynamicsContainer tc,
-		final org.drip.xva.definition.CloseOutBilateral cob,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception
 	{
-		if (null == (_tc = tc) || null == (_cob = cob) || null == (_pdeec = pdeec))
+		if (null == (_tc = tc) || null == (_pdeec = pdeec))
 			throw new java.lang.Exception ("BurgardKjaerOperator Constructor => Invalid Inputs");
 	}
 
@@ -110,17 +107,6 @@ public abstract class BurgardKjaerOperator {
 	public org.drip.xva.universe.LatentStateDynamicsContainer universe()
 	{
 		return _tc;
-	}
-
-	/**
-	 * Retrieve the Close Out Boundary Condition
-	 * 
-	 * @return The Close Out Boundary Condition
-	 */
-
-	public org.drip.xva.definition.CloseOutBilateral boundaryCondition()
-	{
-		return _cob;
 	}
 
 	/**
@@ -190,7 +176,7 @@ public abstract class BurgardKjaerOperator {
 				-1. * dblBankSeniorDefaultIntensity * dblGainOnBankDefault,
 				-1. * dblGainOnCounterPartyDefault,
 				dblDerivativeXVAValue * hedgeError (
-					_cob.bankSeniorFundingRecovery(),
+					lse.bankSeniorRecoveryRate().finish(),
 					dblGainOnBankDefault,
 					agv.derivativeFairValue(),
 					dblDerivativeXVAValue,
@@ -223,13 +209,13 @@ public abstract class BurgardKjaerOperator {
 			dblTimeIncrement)
 			return null;
 
-		double dblCounterPartyRecovery = _cob.counterPartyRecovery();
-
 		org.drip.xva.universe.LatentStateEdge tv = etv.latentStateEdge();
 
 		double dblDerivativeXVAValue = etv.assetGreekVertex().derivativeXVAValue();
 
 		org.drip.xva.universe.LatentStateEdge lse = etv.latentStateEdge();
+
+		double dblCounterPartyRecovery = lse.counterPartyRecoveryRate().finish();
 
 		double dblBankDefaultIntensity = lse.bankHazardRate().finish();
 
@@ -238,8 +224,8 @@ public abstract class BurgardKjaerOperator {
 		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
 			_pdeec.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
 
-		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : _cob.bankSeniorFundingRecovery() *
-			dblCloseOutMTM;
+		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : lse.bankSeniorRecoveryRate().finish()
+			* dblCloseOutMTM;
 
 		double dblAssetValue = tv.assetNumeraire().finish();
 

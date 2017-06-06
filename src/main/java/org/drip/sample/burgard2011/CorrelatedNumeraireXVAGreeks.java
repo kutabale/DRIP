@@ -129,8 +129,6 @@ public class CorrelatedNumeraireXVAGreeks {
 			jdeCounterPartyRecoveryRate
 		);
 
-		CloseOutBilateral cob = tes.boundaryCondition();
-
 		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
 			etvStart,
 			0.
@@ -153,9 +151,14 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
-		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.bankDefault (dblDerivativeXVAValueFinish));
+		CloseOutGeneral cog = new CloseOutBilateral (
+			jdeBankSeniorRecoveryRate.finish(),
+			jdeCounterPartyRecoveryRate.finish()
+		);
 
-		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cob.counterPartyDefault
+		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cog.bankDefault (dblDerivativeXVAValueFinish));
+
+		double dblGainOnCounterPartyDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cog.counterPartyDefault
 			(dblDerivativeXVAValueFinish));
 
 		System.out.println ("\t||" +
@@ -294,7 +297,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblSensitivityShiftFactor
 		);
 
-		CloseOutBilateral cob = CloseOutBilateral.Standard (
+		CloseOutBilateral cob = new CloseOutBilateral (
 			dblInitialBankSeniorRecoveryRate,
 			dblInitialCounterPartyRecoveryRate
 		);
@@ -400,14 +403,12 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		TrajectoryEvolutionScheme tes = new TrajectoryEvolutionScheme (
 			tcm,
-			cob,
 			pdeec,
 			dblTimeWidth
 		);
 
 		BurgardKjaerOperator bko = new PerfectReplication (
 			tcm,
-			cob,
 			pdeec
 		);
 
@@ -422,6 +423,11 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
+		double[] adblTimeWidth = new double[iNumTimeStep + 1];
+
+		for (int i = 0; i < iNumTimeStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
+
 		JumpDiffusionEdge[] aJDEAsset = deAsset.incrementSequence (
 			new JumpDiffusionVertex (
 				0.,
@@ -429,7 +435,10 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[0]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[0]
+			),
 			dblTimeWidth
 		);
 
@@ -440,7 +449,10 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[1]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[1]
+			),
 			dblTimeWidth
 		);
 
@@ -451,7 +463,10 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[2]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[2]
+			),
 			dblTimeWidth
 		);
 
@@ -462,7 +477,8 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.JumpDiffusion (
+			JumpDiffusionEdgeUnit.JumpDiffusion (
+				adblTimeWidth,
 				aadblNumeraireTimeSeries[3],
 				adblBankDefaultIndicator
 			),
@@ -476,7 +492,8 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.JumpDiffusion (
+			JumpDiffusionEdgeUnit.JumpDiffusion (
+				adblTimeWidth,
 				aadblNumeraireTimeSeries[4],
 				adblCounterPartyDefaultIndicator
 			),
@@ -490,7 +507,10 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[5]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[5]
+			),
 			dblTimeWidth
 		);
 
@@ -501,7 +521,10 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[6]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[6]
+			),
 			dblTimeWidth
 		);
 
@@ -512,7 +535,10 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[7]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[7]
+			),
 			dblTimeWidth
 		);
 
@@ -523,7 +549,10 @@ public class CorrelatedNumeraireXVAGreeks {
 				0.,
 				false
 			),
-			UnitRandomEdge.Diffusion (aadblNumeraireTimeSeries[8]),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				aadblNumeraireTimeSeries[8]
+			),
 			dblTimeWidth
 		);
 
