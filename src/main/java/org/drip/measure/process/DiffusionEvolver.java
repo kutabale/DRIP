@@ -186,14 +186,13 @@ public class DiffusionEvolver {
 	{
 		if (null == aJDEU) return null;
 
-		int iNumTimeStep = aJDEU.length;
+		int iNumVertex = aJDEU.length + 1;
 		org.drip.measure.realization.JumpDiffusionVertex jdvPrev = jdv;
-		org.drip.measure.realization.JumpDiffusionVertex[] aJDV = 0 == iNumTimeStep ? null : new
-			org.drip.measure.realization.JumpDiffusionVertex[iNumTimeStep];
+		org.drip.measure.realization.JumpDiffusionVertex[] aJDV = new
+			org.drip.measure.realization.JumpDiffusionVertex[iNumVertex];
+		aJDV[0] = jdv;
 
-		if (0 == iNumTimeStep) return null;
-
-		for (int i = 0; i < iNumTimeStep; ++i) {
+		for (int i = 0; i < iNumVertex - 1; ++i) {
 			org.drip.measure.realization.JumpDiffusionEdge jde = increment (jdvPrev, aJDEU[i],
 				dblTimeIncrement);
 
@@ -211,8 +210,8 @@ public class DiffusionEvolver {
 					dblHazardIntegral = sej.hazardIntegral();
 				}
 
-				jdvPrev = aJDV[i] = new org.drip.measure.realization.JumpDiffusionVertex (jdvPrev.time() +
-					dblTimeIncrement, jde.finish(), jdvPrev.cumulativeHazardIntegral() + dblHazardIntegral,
+				jdvPrev = aJDV[i + 1] = new org.drip.measure.realization.JumpDiffusionVertex (jdvPrev.time()
+					+ dblTimeIncrement, jde.finish(), jdvPrev.cumulativeHazardIntegral() + dblHazardIntegral,
 						bJumpOccurred || jdvPrev.jumpOccurred());
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
@@ -241,14 +240,15 @@ public class DiffusionEvolver {
 	{
 		if (null == aJDEU || null == adblTimeIncrement) return null;
 
-		int iNumTimeStep = aJDEU.length;
+		int iNumVertex = aJDEU.length + 1;
 		org.drip.measure.realization.JumpDiffusionVertex jdvPrev = jdv;
-		org.drip.measure.realization.JumpDiffusionVertex[] aJDV = 0 == iNumTimeStep ? null : new
-			org.drip.measure.realization.JumpDiffusionVertex[iNumTimeStep];
+		org.drip.measure.realization.JumpDiffusionVertex[] aJDV = new
+			org.drip.measure.realization.JumpDiffusionVertex[iNumVertex];
+		aJDV[0] = jdv;
 
-		if (0 == iNumTimeStep || iNumTimeStep != adblTimeIncrement.length) return null;
+		if (iNumVertex != adblTimeIncrement.length - 1) return null;
 
-		for (int i = 0; i < iNumTimeStep; ++i) {
+		for (int i = 0; i < iNumVertex - 1; ++i) {
 			org.drip.measure.realization.JumpDiffusionEdge jde = increment (jdvPrev, aJDEU[i],
 				adblTimeIncrement[i]);
 
@@ -266,8 +266,8 @@ public class DiffusionEvolver {
 					dblHazardIntegral = sej.hazardIntegral();
 				}
 
-				jdvPrev = aJDV[i] = new org.drip.measure.realization.JumpDiffusionVertex (jdvPrev.time() +
-					adblTimeIncrement[i], jde.finish(), jdvPrev.cumulativeHazardIntegral() +
+				jdvPrev = aJDV[i + 1] = new org.drip.measure.realization.JumpDiffusionVertex (jdvPrev.time()
+					+ adblTimeIncrement[i], jde.finish(), jdvPrev.cumulativeHazardIntegral() +
 						dblHazardIntegral, bJumpOccurred || jdvPrev.jumpOccurred());
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();

@@ -190,7 +190,7 @@ public class ReplicationPortfolioVertex {
 	/**
 	 * Compute the Market Value of the Portfolio
 	 * 
-	 * @param tv The Trade-able Asset Market Snapshot
+	 * @param lsv The Latent State Vertex
 	 * 
 	 * @return The Market Value of the Portfolio
 	 * 
@@ -198,26 +198,21 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double value (
-		final org.drip.xva.universe.LatentStateEdge tv)
+		final org.drip.xva.universe.LatentStateVertex lsv)
 		throws java.lang.Exception
 	{
-		if (null == tv)
+		if (null == lsv)
 			throw new java.lang.Exception ("ReplicationPortfolioVertex::value => Invalid Inputs");
 
-		double dblValue = -1. * _dblAssetNumeraireUnits * tv.assetNumeraire().finish() - _dblCashAccount -
-			_dblCounterPartyNumeraireUnits * tv.counterPartyFundingNumeraire().finish();
+		double dblValue = -1. * _dblAssetNumeraireUnits * lsv.assetNumeraire().value() - _dblCashAccount -
+			_dblCounterPartyNumeraireUnits * lsv.counterPartyFundingNumeraire().value() -
+				lsv.bankSeniorFundingNumeraire().value() * _dblBankSeniorNumeraireUnits;
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFunding =
-			tv.bankSeniorFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFunding =
+			lsv.bankSubordinateFundingNumeraire();
 
-		if (null != jdeBankSeniorFunding)
-			dblValue -= jdeBankSeniorFunding.finish() * _dblBankSeniorNumeraireUnits;
-
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFunding =
-			tv.bankSubordinateFundingNumeraire();
-
-		if (null != jdeBankSubordinateFunding)
-			dblValue -= jdeBankSubordinateFunding.finish() * _dblBankSubordinateNumeraireUnits;
+		if (null != jdvBankSubordinateFunding)
+			dblValue -= jdvBankSubordinateFunding.value() * _dblBankSubordinateNumeraireUnits;
 
 		return dblValue;
 	}
@@ -225,7 +220,7 @@ public class ReplicationPortfolioVertex {
 	/**
 	 * Compute the Market Value of the Bank Position Pre-Default
 	 * 
-	 * @param tv The Trade-able Asset Market Snapshot
+	 * @param lsv The Latent State Vertex
 	 * 
 	 * @return The Market Value of the Bank Position Pre-Default
 	 * 
@@ -233,26 +228,20 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double bankPreDefaultPositionValue (
-		final org.drip.xva.universe.LatentStateEdge tv)
+		final org.drip.xva.universe.LatentStateVertex lsv)
 		throws java.lang.Exception
 	{
-		if (null == tv)
+		if (null == lsv)
 			throw new java.lang.Exception
 				("ReplicationPortfolioVertex::bankPreDefaultPositionValue => Invalid Inputs");
 
-		double dblValue = 0.;
+		double dblValue = -1. * lsv.bankSeniorFundingNumeraire().value() * _dblBankSeniorNumeraireUnits;
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFunding =
-			tv.bankSeniorFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFunding =
+			lsv.bankSubordinateFundingNumeraire();
 
-		if (null != jdeBankSeniorFunding)
-			dblValue -= jdeBankSeniorFunding.finish() * _dblBankSeniorNumeraireUnits;
-
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFunding =
-			tv.bankSubordinateFundingNumeraire();
-
-		if (null != jdeBankSubordinateFunding)
-			dblValue -= jdeBankSubordinateFunding.finish() * _dblBankSubordinateNumeraireUnits;
+		if (null != jdvBankSubordinateFunding)
+			dblValue -= jdvBankSubordinateFunding.value() * _dblBankSubordinateNumeraireUnits;
 
 		return dblValue;
 	}
@@ -260,8 +249,7 @@ public class ReplicationPortfolioVertex {
 	/**
 	 * Compute the Market Value of the Bank Position Post-Default
 	 * 
-	 * @param tv The Trade-able Asset Market Snapshot
-	 * @param cob The Bilateral Close-out Instance
+	 * @param lsv The Latent State Vertex
 	 * 
 	 * @return The Market Value of the Bank Position Post-Default
 	 * 
@@ -269,36 +257,25 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double bankPostDefaultPositionValue (
-		final org.drip.xva.universe.LatentStateEdge tv,
-		final org.drip.xva.definition.CloseOutBilateral cob)
+		final org.drip.xva.universe.LatentStateVertex lsv)
 		throws java.lang.Exception
 	{
-		if (null == tv || null == cob)
+		if (null == lsv)
 			throw new java.lang.Exception
 				("ReplicationPortfolioVertex::bankPostDefaultPositionValue => Invalid Inputs");
 
-		double dblValue = 0.;
+		double dblValue = lsv.bankSeniorFundingNumeraire().value() * _dblBankSeniorNumeraireUnits *
+			lsv.bankSeniorRecoveryRate().value();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFunding =
-			tv.bankSeniorFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFunding =
+			lsv.bankSubordinateFundingNumeraire();
 
-		if (null != jdeBankSeniorFunding)
-			dblValue += jdeBankSeniorFunding.finish() * _dblBankSeniorNumeraireUnits *
-				cob.bankSeniorFundingRecovery();
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateRecovery =
+			lsv.bankSubordinateRecoveryRate();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFunding =
-			tv.bankSubordinateFundingNumeraire();
-
-		if (null != jdeBankSubordinateFunding) {
-			/* double dblBankSubordinateFundingRecovery = cob.bankSubordinateFundingRecovery();
-
-			if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFundingRecovery))
-				throw new java.lang.Exception
-					("ReplicationPortfolioVertex::bankPostDefaultPositionValue => Invalid Inputs");
-
-			dblValue -= jdeBankSubordinateFunding.finish() * _dblBankSubordinateNumeraireUnits *
-				dblBankSubordinateFundingRecovery; */
-		}
+		if (null != jdvBankSubordinateFunding && null != jdvBankSubordinateRecovery)
+			dblValue -= jdvBankSubordinateFunding.value() * _dblBankSubordinateNumeraireUnits *
+				jdvBankSubordinateRecovery.value();
 
 		return dblValue;
 	}

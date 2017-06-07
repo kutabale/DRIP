@@ -73,7 +73,7 @@ public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
 	private double _dblCollateral = java.lang.Double.NaN;
 	private double _dblHedgeError = java.lang.Double.NaN;
-	private org.drip.xva.universe.LatentStateEdge _lse = null;
+	private org.drip.xva.universe.LatentStateVertex _lsv = null;
 	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
 	private org.drip.xva.derivative.ReplicationPortfolioVertex _rpv = null;
 	private double _dblBankGainOnCounterPartyDefault = java.lang.Double.NaN;
@@ -83,7 +83,7 @@ public class EvolutionTrajectoryVertex {
 	 * EvolutionTrajectoryVertex Constructor
 	 * 
 	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param lse The Realized Latent State Edge
+	 * @param lsv The Realized Latent State Vertex
 	 * @param rpv The Replication Portfolio Vertex
 	 * @param agv The Asset Greek Vertex
 	 * @param dblCounterPartyGainOnBankDefault Counter Party Gain On Bank Default
@@ -96,7 +96,7 @@ public class EvolutionTrajectoryVertex {
 
 	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.universe.LatentStateEdge lse,
+		final org.drip.xva.universe.LatentStateVertex lsv,
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double dblCounterPartyGainOnBankDefault,
@@ -105,7 +105,7 @@ public class EvolutionTrajectoryVertex {
 		final double dblHedgeError)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_lse = lse) || null ==
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_lsv = lsv) || null ==
 			(_rpv = rpv) || null == (_agv = agv) || !org.drip.quant.common.NumberUtil.IsValid
 				(_dblCounterPartyGainOnBankDefault = dblCounterPartyGainOnBankDefault) ||
 					!org.drip.quant.common.NumberUtil.IsValid (_dblBankGainOnCounterPartyDefault =
@@ -149,14 +149,14 @@ public class EvolutionTrajectoryVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Latent State Edge
+	 * Retrieve the Realized Latent State Vertex
 	 * 
-	 * @return The Realized Latent State Edge
+	 * @return The Realized Latent State Vertex
 	 */
 
-	public org.drip.xva.universe.LatentStateEdge latentStateEdge()
+	public org.drip.xva.universe.LatentStateVertex latentStateVertex()
 	{
-		return _lse;
+		return _lsv;
 	}
 
 	/**
@@ -212,19 +212,14 @@ public class EvolutionTrajectoryVertex {
 
 	public double verifyFundingConstraint()
 	{
-		double dblFundingConstraint = _agv.derivativeXVAValue();
+		double dblFundingConstraint = _agv.derivativeXVAValue() + _lsv.bankSeniorFundingNumeraire().value() *
+			_rpv.bankSeniorNumeraireUnits();
 
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire =
-			_lse.bankSeniorFundingNumeraire();
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFundingNumeraire =
+			_lsv.bankSubordinateFundingNumeraire();
 
-		if (null != jdeBankSeniorFundingNumeraire)
-			dblFundingConstraint += jdeBankSeniorFundingNumeraire.finish() * _rpv.bankSeniorNumeraireUnits();
-
-		org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire =
-			_lse.bankSubordinateFundingNumeraire();
-
-		if (null != jdeBankSubordinateFundingNumeraire)
-			dblFundingConstraint += jdeBankSubordinateFundingNumeraire.finish() *
+		if (null != jdvBankSubordinateFundingNumeraire)
+			dblFundingConstraint += jdvBankSubordinateFundingNumeraire.value() *
 				_rpv.bankSubordinateNumeraireUnits();
 
 		return dblFundingConstraint;

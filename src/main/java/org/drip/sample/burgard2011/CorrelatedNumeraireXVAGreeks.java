@@ -88,15 +88,8 @@ public class CorrelatedNumeraireXVAGreeks {
 		final TrajectoryEvolutionScheme tes,
 		final BurgardKjaerOperator bko,
 		final EvolutionTrajectoryVertex etvStart,
-		final JumpDiffusionEdge jdeAsset,
-		final JumpDiffusionEdge jdeOvernightIndex,
-		final JumpDiffusionEdge jdeCollateral,
-		final JumpDiffusionEdge jdeBank,
-		final JumpDiffusionEdge jdeCounterParty,
-		final JumpDiffusionEdge jdeBankHazardRate,
-		final JumpDiffusionEdge jdeBankSeniorRecoveryRate,
-		final JumpDiffusionEdge jdeCounterPartyHazardRate,
-		final JumpDiffusionEdge jdeCounterPartyRecoveryRate)
+		final LatentStateVertex lsvStart,
+		final LatentStateVertex lsvFinish)
 		throws Exception
 	{
 		AssetGreekVertex agvStart = etvStart.assetGreekVertex();
@@ -111,25 +104,13 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		double dblTime = dblTimeStart - 0.5 * dblTimeWidth;
 
-		LatentStateEdge tcvmStart = etvStart.latentStateEdge();
+		LatentStateVertex tcvmStart = etvStart.latentStateVertex();
 
 		LatentStateDynamicsContainer tcm = tes.universe();
 
-		double dblCollateralBondNumeraire = tcvmStart.collateralSchemeNumeraire().finish();
+		double dblCollateralBondNumeraire = tcvmStart.collateralSchemeNumeraire().value();
 
-		LatentStateEdge tcvmFinish = LatentStateEdge.BankSenior (
-			jdeAsset,
-			jdeOvernightIndex,
-			jdeCollateral,
-			jdeBank,
-			jdeCounterParty,
-			jdeBankHazardRate,
-			jdeBankSeniorRecoveryRate,
-			jdeCounterPartyHazardRate,
-			jdeCounterPartyRecoveryRate
-		);
-
-		BurgardKjaerEdgeRun bker = bko.timeIncrementRun (
+		BurgardKjaerEdgeRun bker = bko.edgeRun (
 			etvStart,
 			0.
 		);
@@ -152,8 +133,8 @@ public class CorrelatedNumeraireXVAGreeks {
 		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
 
 		CloseOutGeneral cog = new CloseOutBilateral (
-			jdeBankSeniorRecoveryRate.finish(),
-			jdeCounterPartyRecoveryRate.finish()
+			lsvFinish.bankSeniorRecoveryRate().value(),
+			lsvFinish.counterPartyRecoveryRate().value()
 		);
 
 		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish - cog.bankDefault (dblDerivativeXVAValueFinish));
@@ -180,14 +161,15 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
-			tcvmFinish
+			lsvStart,
+			lsvFinish
 		).cashAccount();
 
 		double dblCashAccountAccumulationFinish = cae.accumulation();
 
-		double dblZeroCouponBankPriceFinish = jdeBank.finish();
+		double dblZeroCouponBankPriceFinish = lsvFinish.bankSeniorFundingNumeraire().value();
 
-		double dblZeroCouponCounterPartyPriceFinish = jdeCounterParty.finish();
+		double dblZeroCouponCounterPartyPriceFinish = lsvFinish.counterPartyFundingNumeraire().value();
 
 		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
@@ -198,7 +180,7 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		return new EvolutionTrajectoryVertex (
 			dblTimeStart - dblTimeWidth,
-			tcvmFinish,
+			lsvFinish,
 			rpvFinish,
 			new AssetGreekVertex (
 				dblDerivativeXVAValueFinish,
@@ -352,7 +334,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			)
 		);
 
-		DiffusionEvolver deBankRecoveryRate = new DiffusionEvolver (
+		DiffusionEvolver deBankSeniorRecoveryRate = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblBankSeniorRecoveryRateDrift,
 				dblBankSeniorRecoveryRateVolatility
@@ -396,7 +378,7 @@ public class CorrelatedNumeraireXVAGreeks {
 				dblZeroCouponCounterPartyBondRepo
 			),
 			deBankHazardRate,
-			deBankRecoveryRate,
+			deBankSeniorRecoveryRate,
 			deCounterPartyHazardRate,
 			deCounterPartyRecoveryRate
 		);
@@ -423,12 +405,13 @@ public class CorrelatedNumeraireXVAGreeks {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
-		double[] adblTimeWidth = new double[iNumTimeStep + 1];
+		LatentStateVertex[] aLSV = new LatentStateVertex[iNumTimeStep + 1];
+		double[] adblTimeWidth = new double[iNumTimeStep];
 
 		for (int i = 0; i < iNumTimeStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
 
-		JumpDiffusionEdge[] aJDEAsset = deAsset.incrementSequence (
+		JumpDiffusionVertex[] aJDVAsset = deAsset.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialAssetNumeraire,
@@ -442,7 +425,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEOvernightIndex = deZeroCouponOvernightIndexBond.incrementSequence (
+		JumpDiffusionVertex[] aJDVOvernightIndex = deZeroCouponOvernightIndexBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblZeroCouponOvernightIndexNumeraire,
@@ -456,7 +439,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDECollateral = deZeroCouponCollateralBond.incrementSequence (
+		JumpDiffusionVertex[] aJDVCollateral = deZeroCouponCollateralBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCollateralNumeraire,
@@ -470,7 +453,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEBank = deZeroCouponBankBond.incrementSequence (
+		JumpDiffusionVertex[] aJDVBank = deZeroCouponBankBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblTerminalBankNumeraire,
@@ -485,7 +468,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDECounterParty = deZeroCouponCounterPartyBond.incrementSequence (
+		JumpDiffusionVertex[] aJDVCounterParty = deZeroCouponCounterPartyBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblTerminalCounterPartyNumeraire,
@@ -500,7 +483,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEBankHazardRate = deBankHazardRate.incrementSequence (
+		JumpDiffusionVertex[] aJDVBankHazardRate = deBankHazardRate.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialBankHazardRate,
@@ -514,7 +497,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEBankRecoveryRate = deBankRecoveryRate.incrementSequence (
+		JumpDiffusionVertex[] aJDVBankSeniorRecoveryRate = deBankSeniorRecoveryRate.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialBankSeniorRecoveryRate,
@@ -528,7 +511,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDECounterPartyHazardRate = deCounterPartyHazardRate.incrementSequence (
+		JumpDiffusionVertex[] aJDVCounterPartyHazardRate = deCounterPartyHazardRate.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCounterPartyHazardRate,
@@ -542,7 +525,7 @@ public class CorrelatedNumeraireXVAGreeks {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDECounterPartyRecoveryRate = deCounterPartyRecoveryRate.incrementSequence (
+		JumpDiffusionVertex[] aJDVCounterPartyRecoveryRate = deCounterPartyRecoveryRate.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCounterPartyRecoveryRate,
@@ -624,19 +607,22 @@ public class CorrelatedNumeraireXVAGreeks {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
+		for (int i = 0; i <= iNumTimeStep; ++i)
+			aLSV[i] = LatentStateVertex.BankSenior (
+				aJDVAsset[i],
+				aJDVOvernightIndex[i],
+				aJDVCollateral[i],
+				aJDVBank[i],
+				aJDVCounterParty[i],
+				aJDVBankHazardRate[i],
+				aJDVBankSeniorRecoveryRate[i],
+				aJDVCounterPartyHazardRate[i],
+				aJDVCounterPartyRecoveryRate[i]
+			);
+
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			LatentStateEdge.BankSenior (
-				aJDEAsset[iNumTimeStep - 1],
-				aJDEOvernightIndex[iNumTimeStep - 1],
-				aJDECollateral[iNumTimeStep - 1],
-				aJDEBank[iNumTimeStep - 1],
-				aJDECounterParty[iNumTimeStep - 1],
-				aJDEBankHazardRate[iNumTimeStep - 1],
-				aJDEBankRecoveryRate[iNumTimeStep - 1],
-				aJDECounterPartyHazardRate[iNumTimeStep - 1],
-				aJDECounterPartyRecoveryRate[iNumTimeStep - 1]
-			),
+			aLSV[iNumTimeStep],
 			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
@@ -650,20 +636,13 @@ public class CorrelatedNumeraireXVAGreeks {
 			0.
 		);
 
-		for (int i = iNumTimeStep - 2; i >= 0; --i)
+		for (int i = iNumTimeStep - 1; i >= 1; --i)
 			etv = RunStep (
 				tes,
 				bko,
 				etv,
-				aJDEAsset[i],
-				aJDEOvernightIndex[i],
-				aJDECollateral[i],
-				aJDEBank[i],
-				aJDECounterParty[i],
-				aJDEBankHazardRate[i],
-				aJDEBankRecoveryRate[i],
-				aJDECounterPartyHazardRate[i],
-				aJDECounterPartyRecoveryRate[i]
+				aLSV[i + 1],
+				aLSV[i]
 			);
 
 		System.out.println ("\t||-----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");

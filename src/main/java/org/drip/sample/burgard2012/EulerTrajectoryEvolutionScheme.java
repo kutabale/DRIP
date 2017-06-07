@@ -153,7 +153,6 @@ public class EulerTrajectoryEvolutionScheme {
 		int iNumTimeStep = (int) (1. / dblTimeWidth);
 		double dblDerivativeValue = dblTerminalXVADerivativeValue;
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
-		LatentStateEdge[] aTV = new LatentStateEdge[iNumTimeStep];
 
 		PDEEvolutionControl pdeec = new PDEEvolutionControl (
 			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
@@ -286,12 +285,13 @@ public class EulerTrajectoryEvolutionScheme {
 
 		double[] adblCounterPartyDefaultIndicator = SequenceGenerator.Uniform (iNumTimeStep);
 
-		double[] adblTimeWidth = new double[iNumTimeStep + 1];
+		LatentStateVertex[] aLSV = new LatentStateVertex[iNumTimeStep + 1];
+		double[] adblTimeWidth = new double[iNumTimeStep];
 
 		for (int i = 0; i < iNumTimeStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
 
-		JumpDiffusionEdge[] aJDEAsset = deAsset.incrementSequence (
+		JumpDiffusionVertex[] aJDVAsset = deAsset.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialAssetNumeraire,
@@ -305,7 +305,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEOvernightIndex = deZeroCouponOvernightIndexBond.incrementSequence (
+		JumpDiffusionVertex[] aJDVOvernightIndex = deZeroCouponOvernightIndexBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblZeroCouponOvernightIndexNumeraire,
@@ -319,7 +319,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDECollateral = deZeroCouponCollateralBond.incrementSequence (
+		JumpDiffusionVertex[] aJDVCollateral = deZeroCouponCollateralBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCollateralNumeraire,
@@ -333,7 +333,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEBank = deZeroCouponBankBond.incrementSequence (
+		JumpDiffusionVertex[] aJDVBank = deZeroCouponBankBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialBankNumeraire,
@@ -348,7 +348,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDECounterParty = deZeroCouponCounterPartyBond.incrementSequence (
+		JumpDiffusionVertex[] aJDVCounterParty = deZeroCouponCounterPartyBond.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCounterPartyNumeraire,
@@ -363,7 +363,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEBankHazardRate = deBankHazardRate.incrementSequence (
+		JumpDiffusionVertex[] aJDVBankHazardRate = deBankHazardRate.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialBankHazardRate,
@@ -377,7 +377,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDEBankSeniorRecoveryRate = deBankSeniorRecoveryRate.incrementSequence (
+		JumpDiffusionVertex[] aJDVBankSeniorRecoveryRate = deBankSeniorRecoveryRate.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialBankSeniorRecoveryRate,
@@ -391,7 +391,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDECounterPartyHazardRate = deCounterPartyHazardRate.incrementSequence (
+		JumpDiffusionVertex[] aJDVCounterPartyHazardRate = deCounterPartyHazardRate.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCounterPartyHazardRate,
@@ -405,7 +405,7 @@ public class EulerTrajectoryEvolutionScheme {
 			dblTimeWidth
 		);
 
-		JumpDiffusionEdge[] aJDECounterPartyRecoveryRate = deCounterPartyRecoveryRate.incrementSequence (
+		JumpDiffusionVertex[] aJDVCounterPartyRecoveryRate = deCounterPartyRecoveryRate.vertexSequence (
 			new JumpDiffusionVertex (
 				0.,
 				dblInitialCounterPartyRecoveryRate,
@@ -481,10 +481,10 @@ public class EulerTrajectoryEvolutionScheme {
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (dblTime, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (agvInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aJDEAsset[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aJDEBank[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aJDECounterParty[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aJDECollateral[iNumTimeStep - 1].finish(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aJDVAsset[iNumTimeStep - 1].value(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aJDVBank[iNumTimeStep - 1].value(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aJDVCounterParty[iNumTimeStep - 1].value(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aJDVCollateral[iNumTimeStep - 1].value(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
@@ -495,19 +495,22 @@ public class EulerTrajectoryEvolutionScheme {
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " ||"
 		);
 
+		for (int i = 0; i <= iNumTimeStep; ++i)
+			aLSV[i] = LatentStateVertex.BankSenior (
+				aJDVAsset[i],
+				aJDVOvernightIndex[i],
+				aJDVCollateral[i],
+				aJDVBank[i],
+				aJDVCounterParty[i],
+				aJDVBankHazardRate[i],
+				aJDVBankSeniorRecoveryRate[i],
+				aJDVCounterPartyHazardRate[i],
+				aJDVCounterPartyRecoveryRate[i]
+			);
+
 		EvolutionTrajectoryVertex etv = new EvolutionTrajectoryVertex (
 			dblTime,
-			LatentStateEdge.BankSenior (
-				aJDEAsset[iNumTimeStep - 1],
-				aJDEOvernightIndex[iNumTimeStep - 1],
-				aJDECollateral[iNumTimeStep - 1],
-				aJDEBank[iNumTimeStep - 1],
-				aJDECounterParty[iNumTimeStep - 1],
-				aJDEBankHazardRate[iNumTimeStep - 1],
-				aJDEBankSeniorRecoveryRate[iNumTimeStep - 1],
-				aJDECounterPartyHazardRate[iNumTimeStep - 1],
-				aJDECounterPartyRecoveryRate[iNumTimeStep - 1]
-			),
+			aLSV[iNumTimeStep],
 			ReplicationPortfolioVertex.Standard (
 				1.,
 				0.,
@@ -521,21 +524,8 @@ public class EulerTrajectoryEvolutionScheme {
 			0.
 		);
 
-		for (int i = 0; i < iNumTimeStep; ++i)
-			aTV[i] = LatentStateEdge.BankSenior (
-				aJDEAsset[i],
-				aJDEOvernightIndex[i],
-				aJDECollateral[i],
-				aJDEBank[i],
-				aJDECounterParty[i],
-				aJDEBankHazardRate[i],
-				aJDEBankSeniorRecoveryRate[i],
-				aJDECounterPartyHazardRate[i],
-				aJDECounterPartyRecoveryRate[i]
-			);
-
 		EvolutionTrajectoryEdge[] aETE = tes.eulerWalk (
-			aTV,
+			aLSV,
 			bko,
 			etv,
 			0.
@@ -549,10 +539,10 @@ public class EulerTrajectoryEvolutionScheme {
 			System.out.println ("\t||" +
 				FormatUtil.FormatDouble (etv.time(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.assetGreekVertex().derivativeXVAValue(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTV[i].assetNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTV[i].bankSeniorFundingNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTV[i].counterPartyFundingNumeraire().finish(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aTV[i].collateralSchemeNumeraire().finish(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aLSV[i].assetNumeraire().value(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aLSV[i].bankSeniorFundingNumeraire().value(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aLSV[i].counterPartyFundingNumeraire().value(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aLSV[i].collateralSchemeNumeraire().value(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().assetNumeraireUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
