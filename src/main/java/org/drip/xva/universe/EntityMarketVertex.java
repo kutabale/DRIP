@@ -70,8 +70,10 @@ public class EntityMarketVertex {
 	private double _dblSeniorRecoveryRate = java.lang.Double.NaN;
 	private double _dblSeniorFundingSpread = java.lang.Double.NaN;
 	private double _dblSurvivalProbability = java.lang.Double.NaN;
+	private double _dblSeniorFundingNumeraire = java.lang.Double.NaN;
 	private double _dblSubordinateRecoveryRate = java.lang.Double.NaN;
 	private double _dblSubordinateFundingSpread = java.lang.Double.NaN;
+	private double _dblSubordinateFundingNumeraire = java.lang.Double.NaN;
 
 	/**
 	 * EntityMarketVertex Constructor
@@ -80,8 +82,10 @@ public class EntityMarketVertex {
 	 * @param dblHazardRate The Realized Entity Hazard Rate
 	 * @param dblSeniorRecoveryRate The Entity Senior Recovery Rate
 	 * @param dblSeniorFundingSpread The Entity Senior Funding Spread
+	 * @param dblSeniorFundingNumeraire The Entity Senior Funding Numeraire
 	 * @param dblSubordinateRecoveryRate The Entity Subordinate Recovery Rate
 	 * @param dblSubordinateFundingSpread The Entity Subordinate Funding Spread
+	 * @param dblSubordinateFundingNumeraire The Entity Subordinate Funding Numeraire
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -91,19 +95,23 @@ public class EntityMarketVertex {
 		final double dblHazardRate,
 		final double dblSeniorRecoveryRate,
 		final double dblSeniorFundingSpread,
+		final double dblSeniorFundingNumeraire,
 		final double dblSubordinateRecoveryRate,
-		final double dblSubordinateFundingSpread)
+		final double dblSubordinateFundingSpread,
+		final double dblSubordinateFundingNumeraire)
 		throws java.lang.Exception
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSurvivalProbability = dblSurvivalProbability) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblSeniorRecoveryRate = dblSeniorRecoveryRate) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
 					!org.drip.quant.common.NumberUtil.IsValid (_dblSeniorFundingSpread =
-						dblSeniorFundingSpread))
+						dblSeniorFundingSpread) || !org.drip.quant.common.NumberUtil.IsValid
+							(_dblSeniorFundingNumeraire = dblSeniorFundingNumeraire))
 			throw new java.lang.Exception ("EntityMarketVertex Constructor => Invalid Inputs");
 
 		_dblSubordinateRecoveryRate = dblSubordinateRecoveryRate;
 		_dblSubordinateFundingSpread = dblSubordinateFundingSpread;
+		_dblSubordinateFundingNumeraire = dblSubordinateFundingNumeraire;
 	}
 
 	/**
@@ -151,6 +159,17 @@ public class EntityMarketVertex {
 	}
 
 	/**
+	 * Retrieve the Realized Entity Senior Funding Numeraire
+	 * 
+	 * @return The Realized Entity Senior Funding Numeraire
+	 */
+
+	public double seniorFundingNumeraire()
+	{
+		return _dblSeniorFundingNumeraire;
+	}
+
+	/**
 	 * Retrieve the Realized Entity Subordinate Recovery Rate
 	 * 
 	 * @return The Realized Entity Subordinate Recovery Rate
@@ -170,5 +189,16 @@ public class EntityMarketVertex {
 	public double subordinateFundingSpread()
 	{
 		return _dblSubordinateFundingSpread;
+	}
+
+	/**
+	 * Retrieve the Realized Entity Subordinate Funding Numeraire
+	 * 
+	 * @return The Realized Entity Subordinate Funding Numeraire
+	 */
+
+	public double subordinateFundingNumeraire()
+	{
+		return _dblSubordinateFundingNumeraire;
 	}
 }

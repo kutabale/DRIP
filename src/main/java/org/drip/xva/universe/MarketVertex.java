@@ -71,6 +71,8 @@ public class MarketVertex {
 	private org.drip.xva.universe.EntityMarketVertex _emvBank = null;
 	private double _dblCollateralSchemeSpread = java.lang.Double.NaN;
 	private double _dblOvernightPolicyIndexRate = java.lang.Double.NaN;
+	private double _dblCollateralSchemeNumeraire = java.lang.Double.NaN;
+	private double _dblOvernightPolicyIndexNumeraire = java.lang.Double.NaN;
 	private org.drip.xva.universe.EntityMarketVertex _emvCounterParty = null;
 
 	/**
@@ -101,20 +103,26 @@ public class MarketVertex {
 				dtAnchor,
 				java.lang.Double.NaN,
 				dblOvernightPolicyIndexRate,
+				1.,
 				0.,
+				1.,
 				new org.drip.xva.universe.EntityMarketVertex (
 					dblBankSurvival,
 					dblBankSeniorFundingSpread / (1. - dblBankSeniorRecoveryRate),
 					dblBankSeniorRecoveryRate,
+					1.,
 					dblBankSeniorFundingSpread,
 					0.,
-					dblBankSeniorFundingSpread
+					dblBankSeniorFundingSpread,
+					1.
 				),
 				new org.drip.xva.universe.EntityMarketVertex (
 					dblCounterPartySurvival,
 					0.,
 					dblCounterPartyRecoveryRate,
 					0.,
+					1.,
+					java.lang.Double.NaN,
 					java.lang.Double.NaN,
 					java.lang.Double.NaN
 				)
@@ -132,7 +140,9 @@ public class MarketVertex {
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblAssetNumeraire The Asset Numeraire Realization
 	 * @param dblOvernightPolicyIndexRate The Realized Overnight Policy Index Rate
+	 * @param dblOvernightPolicyIndexNumeraire The Realized Overnight Policy Index Numeraire
 	 * @param dblCollateralSchemeSpread The Realized Collateral Scheme Spread
+	 * @param dblCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
 	 * @param emvBank Bank Entity Market Vertex Instance
 	 * @param emvCounterParty Counter Party Market Vertex Instance
 	 * 
@@ -143,25 +153,30 @@ public class MarketVertex {
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblAssetNumeraire,
 		final double dblOvernightPolicyIndexRate,
+		final double dblOvernightPolicyIndexNumeraire,
 		final double dblCollateralSchemeSpread,
+		final double dblCollateralSchemeNumeraire,
 		final org.drip.xva.universe.EntityMarketVertex emvBank,
 		final org.drip.xva.universe.EntityMarketVertex emvCounterParty)
 		throws java.lang.Exception
 	{
 		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
 			(_dblOvernightPolicyIndexRate = dblOvernightPolicyIndexRate) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralSchemeSpread =
-					dblCollateralSchemeSpread) || null == (_emvBank = emvBank) || null == (_emvCounterParty =
-						emvCounterParty))
+				!org.drip.quant.common.NumberUtil.IsValid (_dblOvernightPolicyIndexNumeraire =
+					dblOvernightPolicyIndexNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
+						(_dblCollateralSchemeSpread = dblCollateralSchemeSpread) ||
+							!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralSchemeNumeraire =
+								dblCollateralSchemeNumeraire) || null == (_emvBank = emvBank) || null ==
+									(_emvCounterParty = emvCounterParty))
 			throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
 
 		_dblAssetNumeraire = dblAssetNumeraire;
 	}
 
 	/**
-	 * Retrieve the Asset Numeraire Realization
+	 * Retrieve the Asset Numeraire
 	 * 
-	 * @return The Asset Numeraire Realization
+	 * @return The Asset Numeraire
 	 */
 
 	public double assetNumeraire()
@@ -192,6 +207,17 @@ public class MarketVertex {
 	}
 
 	/**
+	 * Retrieve the Realized Overnight Policy Index Numeraire
+	 * 
+	 * @return The Realized Overnight Policy Index Numeraire
+	 */
+
+	public double overnightPolicyIndexNumeraire()
+	{
+		return _dblOvernightPolicyIndexNumeraire;
+	}
+
+	/**
 	 * Retrieve the Realized Spread over the Overnight Policy Rate corresponding to the Collateral Scheme
 	 * 
 	 * @return The Realized Spread over the Overnight Policy Rate corresponding to the Collateral Scheme
@@ -200,6 +226,17 @@ public class MarketVertex {
 	public double collateralSchemeSpread()
 	{
 		return _dblCollateralSchemeSpread;
+	}
+
+	/**
+	 * Retrieve the Realized Collateral Scheme Numeraire
+	 * 
+	 * @return The Realized Collateral Scheme Numeraire
+	 */
+
+	public double collateralSchemeNumeraire()
+	{
+		return _dblCollateralSchemeNumeraire;
 	}
 
 	/**
