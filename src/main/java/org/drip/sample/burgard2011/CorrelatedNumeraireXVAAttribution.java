@@ -109,8 +109,10 @@ public class CorrelatedNumeraireXVAAttribution {
 		double dblCollateralBondNumeraire = lsvStart.collateralSchemeNumeraire().value();
 
 		BurgardKjaerEdgeAttribution bkea = bko.edgeRunAttribution (
-			lsvStart,
-			lsvFinish,
+			new LatentStateEdge (
+				lsvStart,
+				lsvFinish
+			),
 			etvStart,
 			0.
 		);
@@ -145,8 +147,10 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
-			lsvStart,
-			lsvFinish
+			new LatentStateEdge (
+				lsvStart,
+				lsvFinish
+			)
 		).cashAccount();
 
 		double dblCashAccountAccumulationFinish = cae.accumulation();

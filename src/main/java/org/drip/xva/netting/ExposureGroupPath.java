@@ -573,13 +573,13 @@ public class ExposureGroupPath {
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
-				aMV[iVertexIndex - 1].bankMarketSeniorFunding().survival() *
-					aMV[iVertexIndex - 1].counterPartySurvival (0) *
+				aMV[iVertexIndex - 1].bank().survivalProbability() *
+					aMV[iVertexIndex - 1].counterParty().survivalProbability() *
 						aMV[iVertexIndex - 1].collateralSchemeSpread();
 
 			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
-				aMV[iVertexIndex].bankMarketSeniorFunding().survival() *
-					aMV[iVertexIndex].counterPartySurvival (0) *
+				aMV[iVertexIndex].bank().survivalProbability() *
+					aMV[iVertexIndex].counterParty().survivalProbability() *
 						aMV[iVertexIndex].collateralSchemeSpread();
 
 			dblBilateralCollateralValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd)
@@ -623,13 +623,13 @@ public class ExposureGroupPath {
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
-				aMV[iVertexIndex - 1].bankMarketSeniorFunding().survival() *
-					aMV[iVertexIndex - 1].counterPartySurvival (0) *
+				aMV[iVertexIndex - 1].bank().survivalProbability() *
+					aMV[iVertexIndex - 1].counterParty().survivalProbability() *
 						aMV[iVertexIndex - 1].collateralSchemeSpread();
 
 			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
-				aMV[iVertexIndex].bankMarketSeniorFunding().survival() *
-					aMV[iVertexIndex].counterPartySurvival (0) *
+				aMV[iVertexIndex].bank().survivalProbability() *
+					aMV[iVertexIndex].counterParty().survivalProbability() *
 						aMV[iVertexIndex].collateralSchemeSpread();
 
 			adblBilateralCollateralValueAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +

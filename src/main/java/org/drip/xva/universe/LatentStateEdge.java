@@ -47,8 +47,8 @@ package org.drip.xva.universe;
  */
 
 /**
- * LatentStateEdge holds the Edge Realizations of the Latent States of the Reference Universe. The References
- *  are:
+ * LatentStateEdge holds the Vertex Realizations of the Latent States of the Reference Universe along an
+ * 	Evolution Edge. The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, eSSRN, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955.
@@ -67,234 +67,116 @@ package org.drip.xva.universe;
  */
 
 public class LatentStateEdge {
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeAssetNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankHazardRate = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSeniorRecoveryRate = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeCounterPartyHazardRate = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeOvernightIndexNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeCounterPartyRecoveryRate = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeCollateralSchemeNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSeniorFundingNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSubordinateRecoveryRate = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeCounterPartyFundingNumeraire = null;
-	private org.drip.measure.realization.JumpDiffusionEdge _jdeBankSubordinateFundingNumeraire = null;
-
-	/**
-	 * Create a LatentStateEdge Instance with Single Bank Senior Funding Instrument
-	 * 
-	 * @param jdeAssetNumeraire The Asset Numeraire Level Realization JDE
-	 * @param jdeOvernightIndexNumeraire The Realized Overnight Index Numeraire JDE
-	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire JDE
-	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire JDE
-	 * @param jdeCounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire JDE
-	 * @param jdeBankHazardRate The Realized Bank Hazard Rate JDE
-	 * @param jdeBankSeniorRecoveryRate The Realized Bank Senior Recovery Rate JDE
-	 * @param jdeCounterPartyHazardRate The Realized Counter Party Hazard Rate JDE
-	 * @param jdeCounterPartyRecoveryRate The Realized Counter Party Recovery Rate JDE
-	 * 
-	 * @return The LatentStateEdge Instance with Single Bank Senior Funding Instrument
-	 */
-
-	public static final LatentStateEdge BankSenior (
-		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeOvernightIndexNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankHazardRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorRecoveryRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyHazardRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyRecoveryRate)
-	{
-		try {
-			return new LatentStateEdge (jdeAssetNumeraire, jdeOvernightIndexNumeraire,
-				jdeCollateralSchemeNumeraire, jdeBankSeniorFundingNumeraire, null,
-					jdeCounterPartyFundingNumeraire, jdeBankHazardRate, jdeBankSeniorRecoveryRate,
-						null, jdeCounterPartyHazardRate, jdeCounterPartyRecoveryRate);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
+	private org.drip.xva.universe.LatentStateVertex _lsvStart = null;
+	private org.drip.xva.universe.LatentStateVertex _lsvFinish = null;
 
 	/**
 	 * LatentStateEdge Constructor
 	 * 
-	 * @param jdeAssetNumeraire The Asset Numeraire JDE
-	 * @param jdeOvernightIndexNumeraire The Realized Overnight Index Numeraire JDE
-	 * @param jdeCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire JDE
-	 * @param jdeBankSeniorFundingNumeraire The Realized Bank Senior Funding Numeraire JDE
-	 * @param jdeBankSubordinateFundingNumeraire The Realized Bank Subordinate Funding Numeraire JDE
-	 * @param jdeCounterPartyFundingNumeraire The Realized Counter Party Funding Numeraire JDE
-	 * @param jdeBankHazardRate The Realized Bank Hazard Rate JDE
-	 * @param jdeBankSeniorRecoveryRate The Realized Bank Senior Recovery Rate JDE
-	 * @param jdeBankSubordinateRecoveryRate The Realized Bank Subordinate Recovery Rate JDE
-	 * @param jdeCounterPartyHazardRate The Realized Counter Party Hazard Rate JDE
-	 * @param jdeCounterPartyRecoveryRate The Realized Counter Party Recovery Rate JDE
+	 * @param lsvStart The Starting Latent State Vertex
+	 * @param lsvFinish The Ending Latent State Vertex
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public LatentStateEdge (
-		final org.drip.measure.realization.JumpDiffusionEdge jdeAssetNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeOvernightIndexNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeCollateralSchemeNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyFundingNumeraire,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankHazardRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSeniorRecoveryRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeBankSubordinateRecoveryRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyHazardRate,
-		final org.drip.measure.realization.JumpDiffusionEdge jdeCounterPartyRecoveryRate)
+		final org.drip.xva.universe.LatentStateVertex lsvStart,
+		final org.drip.xva.universe.LatentStateVertex lsvFinish)
 		throws java.lang.Exception
 	{
-		if (null == (_jdeAssetNumeraire = jdeAssetNumeraire) || null == (_jdeOvernightIndexNumeraire =
-			jdeOvernightIndexNumeraire) || null == (_jdeCollateralSchemeNumeraire =
-				jdeCollateralSchemeNumeraire) || null == (_jdeBankSeniorFundingNumeraire =
-					jdeBankSeniorFundingNumeraire) || null == (_jdeCounterPartyFundingNumeraire =
-						jdeCounterPartyFundingNumeraire) || null == (_jdeBankHazardRate = jdeBankHazardRate)
-							|| null == (_jdeBankSeniorRecoveryRate = jdeBankSeniorRecoveryRate) || null ==
-								(_jdeCounterPartyHazardRate = jdeCounterPartyHazardRate) || null ==
-									(_jdeCounterPartyRecoveryRate = jdeCounterPartyRecoveryRate) )
+		if (null == (_lsvStart = lsvStart) || null == (_lsvFinish = lsvFinish) || _lsvStart.time() >=
+			_lsvFinish.time())
 			throw new java.lang.Exception ("LatentStateEdge Constructor => Invalid Inputs");
-
-		_jdeBankSubordinateRecoveryRate = jdeBankSubordinateRecoveryRate;
-		_jdeBankSubordinateFundingNumeraire = jdeBankSubordinateFundingNumeraire;
 	}
 
 	/**
-	 * Retrieve the Asset Numeraire
+	 * Retrieve the Latent State Vertex Increment
 	 * 
-	 * @return The Asset Numeraire
+	 * @return The Latent State Vertex Increment
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge assetNumeraire()
+	public double vertexIncrement()
 	{
-		return _jdeAssetNumeraire;
+		return _lsvFinish.time() - _lsvStart.time();
 	}
 
 	/**
-	 * Retrieve the Realized Overnight Index Numeraire
+	 * Retrieve the Start Latent State Vertex
 	 * 
-	 * @return The Realized Overnight Index Numeraire
+	 * @return The Start Latent State Vertex
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge overnightIndexNumeraire()
+	public org.drip.xva.universe.LatentStateVertex start()
 	{
-		return _jdeOvernightIndexNumeraire;
+		return _lsvStart;
 	}
 
 	/**
-	 * Retrieve the Realized Collateral Scheme Numeraire
+	 * Retrieve the Finish Latent State Vertex
 	 * 
-	 * @return The Realized Collateral Scheme Numeraire
+	 * @return The Finish Latent State Vertex
 	 */
 
-	public org.drip.measure.realization.JumpDiffusionEdge collateralSchemeNumeraire()
+	public org.drip.xva.universe.LatentStateVertex finish()
 	{
-		return _jdeCollateralSchemeNumeraire;
+		return _lsvFinish;
 	}
 
 	/**
-	 * Retrieve the Realized Bank Senior Funding Numeraire
+	 * Compute the Bank Senior Funding Spread
 	 * 
-	 * @return The Realized Bank Senior Funding Numeraire
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge bankSeniorFundingNumeraire()
-	{
-		return _jdeBankSeniorFundingNumeraire;
-	}
-
-	/**
-	 * Retrieve the Realized Bank Subordinate Funding Numeraire
-	 * 
-	 * @return The Realized Bank Subordinate Funding Numeraire
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge bankSubordinateFundingNumeraire()
-	{
-		return _jdeBankSubordinateFundingNumeraire;
-	}
-
-	/**
-	 * Retrieve the Realized Counter Party Funding Numeraires
-	 * 
-	 * @return The Realized Counter Party Funding Numeraires
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge counterPartyFundingNumeraire()
-	{
-		return _jdeCounterPartyFundingNumeraire;
-	}
-
-	/**
-	 * Retrieve the Bank Hazard Rate Edge
-	 * 
-	 * @return The Bank Hazard Rate Edge
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge bankHazardRate()
-	{
-		return _jdeBankHazardRate;
-	}
-
-	/**
-	 * Retrieve the Bank Senior Recovery Rate Edge
-	 * 
-	 * @return The Bank Senior Recovery Rate Edge
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge bankSeniorRecoveryRate()
-	{
-		return _jdeBankSeniorRecoveryRate;
-	}
-
-	/**
-	 * Retrieve the Bank Subordinate Recovery Rate Edge
-	 * 
-	 * @return The Bank Subordinate Recovery Rate Edge
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge bankSubordinateRecoveryRate()
-	{
-		return _jdeBankSubordinateRecoveryRate;
-	}
-
-	/**
-	 * Retrieve the Counter Party Hazard Rate Edge
-	 * 
-	 * @return The Counter Party Hazard Rate Edge
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge counterPartyHazardRate()
-	{
-		return _jdeCounterPartyHazardRate;
-	}
-
-	/**
-	 * Retrieve the Counter Party Recovery Rate Edge
-	 * 
-	 * @return The Counter Party Recovery Rate Edge
-	 */
-
-	public org.drip.measure.realization.JumpDiffusionEdge counterPartyRecoveryRate()
-	{
-		return _jdeCounterPartyRecoveryRate;
-	}
-
-	/**
-	 * Compute the Realized Bank Senior Funding Spread
-	 * 
-	 * @return The Realized Bank Senior Funding Spread
+	 * @return The Bank Senior Funding Spread
 	 */
 
 	public double bankSeniorFundingSpread()
 	{
-		return java.lang.Math.log (_jdeBankSeniorFundingNumeraire.start() /
-			_jdeBankSeniorFundingNumeraire.finish()) - java.lang.Math.log
-				(_jdeOvernightIndexNumeraire.start() / _jdeOvernightIndexNumeraire.finish());
+		org.drip.measure.realization.JumpDiffusionVertex jdvOvernightIndexNumeraireStart =
+			_lsvStart.overnightIndexNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSeniorFundingNumeraireStart =
+			_lsvStart.bankSeniorFundingNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionVertex jdvOvernightIndexNumeraireFinish =
+			_lsvFinish.overnightIndexNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSeniorFundingNumeraireFinish =
+			_lsvFinish.bankSeniorFundingNumeraire();
+
+		return java.lang.Math.log (jdvBankSeniorFundingNumeraireStart.value() /
+			jdvBankSeniorFundingNumeraireFinish.value()) - java.lang.Math.log
+				(jdvOvernightIndexNumeraireStart.value() / jdvOvernightIndexNumeraireFinish.value());
+	}
+
+	/**
+	 * Compute the Bank Subordinate Funding Spread
+	 * 
+	 * @return The Bank Subordinate Funding Spread
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double bankSubordinateFundingSpread()
+		throws java.lang.Exception
+	{
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFundingNumeraireStart =
+			_lsvStart.bankSubordinateFundingNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFundingNumeraireFinish =
+			_lsvFinish.bankSubordinateFundingNumeraire();
+
+		if (null == jdvBankSubordinateFundingNumeraireStart || null ==
+			jdvBankSubordinateFundingNumeraireFinish)
+			throw new java.lang.Exception
+				("LatentStateEdge::bankSubordinateFundingSpread => Invalid Inputs");
+
+		org.drip.measure.realization.JumpDiffusionVertex jdvOvernightIndexNumeraireStart =
+			_lsvStart.overnightIndexNumeraire();
+
+		org.drip.measure.realization.JumpDiffusionVertex jdvOvernightIndexNumeraireFinish =
+			_lsvFinish.overnightIndexNumeraire();
+
+		return java.lang.Math.log (jdvBankSubordinateFundingNumeraireStart.value() /
+			jdvBankSubordinateFundingNumeraireFinish.value()) - java.lang.Math.log
+				(jdvOvernightIndexNumeraireStart.value() / jdvOvernightIndexNumeraireFinish.value());
 	}
 }

@@ -131,18 +131,16 @@ public class TrajectoryEvolutionScheme {
 	 * Re-balance the Cash Account and generate the Derivative Value Update
 	 * 
 	 * @param etvStart The Starting Evolution Trajectory Vertex
-	 * @param lsvStart The Initial Latent State Vertex
-	 * @param lsvFinish The Final Latent State Vertex
+	 * @param lse Latent State Edge Instance
 	 * 
 	 * @return The CashAccountRebalancer Instance
 	 */
 
 	public org.drip.xva.derivative.CashAccountRebalancer rebalanceCash (
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
-		final org.drip.xva.universe.LatentStateVertex lsvStart,
-		final org.drip.xva.universe.LatentStateVertex lsvFinish)
+		final org.drip.xva.universe.LatentStateEdge lse)
 	{
-		if (null == etvStart || null == lsvStart || null == lsvFinish) return null;
+		if (null == etvStart || null == lse) return null;
 
 		org.drip.xva.derivative.ReplicationPortfolioVertex rpvStart = etvStart.replicationPortfolioVertex();
 
@@ -153,6 +151,10 @@ public class TrajectoryEvolutionScheme {
 		double dblCounterPartyNumeraireUnitsStart = rpvStart.counterPartyNumeraireUnits();
 
 		double dblZeroRecoveryBankNumeraireUnitsStart = rpvStart.bankSubordinateNumeraireUnits();
+
+		org.drip.xva.universe.LatentStateVertex lsvStart = lse.start();
+
+		org.drip.xva.universe.LatentStateVertex lsvFinish = lse.finish();
 
 		double dblAssetNumeraireFinish = lsvFinish.assetNumeraire().value();
 
@@ -219,8 +221,7 @@ public class TrajectoryEvolutionScheme {
 	/**
 	 * Execute a Single Euler Time Step Walk
 	 * 
-	 * @param lsvStart The Initial Latent State Vertex
-	 * @param lsvFinish The Final Latent State Vertex
+	 * @param lse Latent State Edge Instance
 	 * @param bko The Burgard Kjaer Operator Instance
 	 * @param etvStart The Starting ETV Instance
 	 * @param dblCollateral The Applicable Collateral
@@ -229,13 +230,12 @@ public class TrajectoryEvolutionScheme {
 	 */
 
 	public org.drip.xva.derivative.EvolutionTrajectoryEdge eulerWalk (
-		final org.drip.xva.universe.LatentStateVertex lsvStart,
-		final org.drip.xva.universe.LatentStateVertex lsvFinish,
+		final org.drip.xva.universe.LatentStateEdge lse,
 		final org.drip.xva.pde.BurgardKjaerOperator bko,
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
 		final double dblCollateral)
 	{
-		if (null == lsvStart || null == lsvFinish || null == bko || null == etvStart) return null;
+		if (null == lse || null == bko || null == etvStart) return null;
 
 		org.drip.xva.derivative.AssetGreekVertex agvStart = etvStart.assetGreekVertex();
 
@@ -254,6 +254,8 @@ public class TrajectoryEvolutionScheme {
 		double dblThetaAssetNumeraireUp = bker.thetaAssetNumeraireUp();
 
 		double dblThetaAssetNumeraireDown = bker.thetaAssetNumeraireDown();
+
+		org.drip.xva.universe.LatentStateVertex lsvFinish = lse.finish();
 
 		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() + 0.5 *
 			(dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
@@ -286,7 +288,7 @@ public class TrajectoryEvolutionScheme {
 		double dblCounterPartyNumeraireUnitsFinish = dblGainOnCounterPartyDefaultFinish /
 			jdvCounterParty.value();
 
-		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (etvStart, lsvStart, lsvFinish);
+		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (etvStart, lse);
 
 		if (null == car) return null;
 
@@ -372,7 +374,13 @@ public class TrajectoryEvolutionScheme {
 		if (0 == iNumTimeStep) return null;
 
 		for (int i = iNumTimeStep - 2; i >= 0; --i) {
-			if (null == (aETE[i] = eulerWalk (aLSV[i], aLSV[i + 1], bko, etv, dblCollateral))) return null;
+			try {
+				if (null == (aETE[i] = eulerWalk (new org.drip.xva.universe.LatentStateEdge (aLSV[i],
+					aLSV[i + 1]), bko, etv, dblCollateral)))
+					return null;
+			} catch (java.lang.Exception e) {
+				e.printStackTrace();
+			}
 
 			etv = aETE[i].vertexFinish();
 		}

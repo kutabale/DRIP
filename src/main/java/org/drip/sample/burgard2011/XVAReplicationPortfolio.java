@@ -141,8 +141,10 @@ public class XVAReplicationPortfolio {
 
 		org.drip.xva.derivative.CashAccountEdge cae = tes.rebalanceCash (
 			etvStart,
-			lsvStart,
-			lsvFinish
+			new LatentStateEdge (
+				lsvStart,
+				lsvFinish
+			)
 		).cashAccount();
 
 		double dblCashAccountAccumulationFinish = cae.accumulation();

@@ -66,34 +66,44 @@ package org.drip.xva.universe;
  */
 
 public class EntityMarketVertex {
-	private double _dblHazard = java.lang.Double.NaN;
-	private double _dblRecovery = java.lang.Double.NaN;
-	private double _dblSurvival = java.lang.Double.NaN;
-	private double _dblFundingSpread = java.lang.Double.NaN;
+	private double _dblHazardRate = java.lang.Double.NaN;
+	private double _dblSeniorRecoveryRate = java.lang.Double.NaN;
+	private double _dblSeniorFundingSpread = java.lang.Double.NaN;
+	private double _dblSurvivalProbability = java.lang.Double.NaN;
+	private double _dblSubordinateRecoveryRate = java.lang.Double.NaN;
+	private double _dblSubordinateFundingSpread = java.lang.Double.NaN;
 
 	/**
 	 * EntityMarketVertex Constructor
 	 * 
-	 * @param dblSurvival The Realized Entity Survival
-	 * @param dblRecovery The Realized Entity Recovery
-	 * @param dblHazard The Realized Entity Hazard
-	 * @param dblFundingSpread The Realized Entity Funding Spread
+	 * @param dblSurvivalProbability The Realized Entity Survival Probability
+	 * @param dblHazardRate The Realized Entity Hazard Rate
+	 * @param dblSeniorRecoveryRate The Entity Senior Recovery Rate
+	 * @param dblSeniorFundingSpread The Entity Senior Funding Spread
+	 * @param dblSubordinateRecoveryRate The Entity Subordinate Recovery Rate
+	 * @param dblSubordinateFundingSpread The Entity Subordinate Funding Spread
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public EntityMarketVertex (
-		final double dblSurvival,
-		final double dblRecovery,
-		final double dblHazard,
-		final double dblFundingSpread)
+		final double dblSurvivalProbability,
+		final double dblHazardRate,
+		final double dblSeniorRecoveryRate,
+		final double dblSeniorFundingSpread,
+		final double dblSubordinateRecoveryRate,
+		final double dblSubordinateFundingSpread)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSurvival = dblSurvival) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblRecovery = dblRecovery) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblHazard = dblHazard) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblFundingSpread = dblFundingSpread))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSurvivalProbability = dblSurvivalProbability) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblSeniorRecoveryRate = dblSeniorRecoveryRate) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblHazardRate = dblHazardRate) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblSeniorFundingSpread =
+						dblSeniorFundingSpread))
 			throw new java.lang.Exception ("EntityMarketVertex Constructor => Invalid Inputs");
+
+		_dblSubordinateRecoveryRate = dblSubordinateRecoveryRate;
+		_dblSubordinateFundingSpread = dblSubordinateFundingSpread;
 	}
 
 	/**
@@ -102,9 +112,9 @@ public class EntityMarketVertex {
 	 * @return The Realized Entity Hazard Rate
 	 */
 
-	public double hazard()
+	public double hazardRate()
 	{
-		return _dblHazard;
+		return _dblHazardRate;
 	}
 
 	/**
@@ -113,30 +123,52 @@ public class EntityMarketVertex {
 	 * @return The Realized Entity Survival Probability
 	 */
 
-	public double survival()
+	public double survivalProbability()
 	{
-		return _dblSurvival;
+		return _dblSurvivalProbability;
 	}
 
 	/**
-	 * Retrieve the Realized Entity Recovery Rate
+	 * Retrieve the Realized Entity Senior Recovery Rate
 	 * 
-	 * @return The Realized Entity Recovery Rate
+	 * @return The Realized Entity Senior Recovery Rate
 	 */
 
-	public double recovery()
+	public double seniorRecoveryRate()
 	{
-		return _dblRecovery;
+		return _dblSeniorRecoveryRate;
 	}
 
 	/**
-	 * Retrieve the Realized Entity Funding Spread
+	 * Retrieve the Realized Entity Senior Funding Spread
 	 * 
-	 * @return The Realized Entity Funding Spread
+	 * @return The Realized Entity Senior Funding Spread
 	 */
 
-	public double fundingSpread()
+	public double seniorFundingSpread()
 	{
-		return _dblFundingSpread;
+		return _dblSeniorFundingSpread;
+	}
+
+	/**
+	 * Retrieve the Realized Entity Subordinate Recovery Rate
+	 * 
+	 * @return The Realized Entity Subordinate Recovery Rate
+	 */
+
+	public double subordinateRecoveryRate()
+	{
+		return _dblSubordinateRecoveryRate;
+	}
+
+	/**
+	 * Retrieve the Realized Entity Subordinate Funding Spread
+	 * 
+	 * @return The Realized Entity Subordinate Funding Spread
+	 */
+
+	public double subordinateFundingSpread()
+	{
+		return _dblSubordinateFundingSpread;
 	}
 }

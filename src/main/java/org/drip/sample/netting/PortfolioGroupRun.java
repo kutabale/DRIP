@@ -234,11 +234,11 @@ public class PortfolioGroupRun {
 				FormatUtil.FormatDouble (aHGVR2[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aHGVR2[i].collateralBalance(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].overnightPolicyIndexRate(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].bankMarketSeniorFunding().survival(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].bankMarketSeniorFunding().recovery(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].bankMarketSeniorFunding().fundingSpread(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].counterPartySurvival (0), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].counterPartyRecovery (0), 1, 6, 1.) + " ||"
+				FormatUtil.FormatDouble (aMV[i].bank().survivalProbability(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].bank().seniorRecoveryRate(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].bank().seniorFundingSpread(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].counterParty().survivalProbability(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].counterParty().seniorRecoveryRate(), 1, 6, 1.) + " ||"
 			);
 		}
 

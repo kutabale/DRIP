@@ -106,7 +106,7 @@ public class LatentStatePath {
 		double[] adblTimeVertex = new double[iNumVertex];
 
 		for (int iVertex = 0; iVertex < iNumVertex; ++iVertex)
-			adblTimeVertex[iVertex] = _aLSV[iVertex].vertex();
+			adblTimeVertex[iVertex] = _aLSV[iVertex].time();
 
 		return adblTimeVertex;
 	}
@@ -120,83 +120,5 @@ public class LatentStatePath {
 	public org.drip.xva.universe.LatentStateVertex[] nodes()
 	{
 		return _aLSV;
-	}
-
-	/**
-	 * Compute the Realized Bank Senior Funding Spread Edge Array
-	 * 
-	 * @return The Realized Bank Senior Funding Spread Edge Array
-	 */
-
-	public double[] bankSeniorFundingSpreadEdge()
-	{
-		int iNumVertex = _aLSV.length;
-		double[] adblBankSeniorFundingSpreadEdge = new double[iNumVertex - 1];
-
-		org.drip.measure.realization.JumpDiffusionVertex jdvOvernightIndexNumerairePrevious =
-			_aLSV[0].overnightIndexNumeraire();
-
-		org.drip.measure.realization.JumpDiffusionVertex jdvBankSeniorFundingNumerairePrevious =
-			_aLSV[0].bankSeniorFundingNumeraire();
-
-		for (int i = 1; i < iNumVertex; ++i) {
-			org.drip.measure.realization.JumpDiffusionVertex jdvOvernightIndexNumeraireCurrent =
-				_aLSV[i].overnightIndexNumeraire();
-
-			org.drip.measure.realization.JumpDiffusionVertex jdvBankSeniorFundingNumeraireCurrent =
-				_aLSV[i].bankSeniorFundingNumeraire();
-
-			adblBankSeniorFundingSpreadEdge[i - 1] = java.lang.Math.log
-				(jdvBankSeniorFundingNumerairePrevious.value() /
-					jdvBankSeniorFundingNumeraireCurrent.value()) - java.lang.Math.log
-						(jdvOvernightIndexNumerairePrevious.value() /
-							jdvOvernightIndexNumeraireCurrent.value());
-
-			jdvOvernightIndexNumerairePrevious = jdvOvernightIndexNumeraireCurrent;
-			jdvBankSeniorFundingNumerairePrevious = jdvBankSeniorFundingNumeraireCurrent;
-		}
-
-		return adblBankSeniorFundingSpreadEdge;
-	}
-
-	/**
-	 * Compute the Realized Subordinate Senior Funding Spread Edge Array
-	 * 
-	 * @return The Realized Subordinate Senior Funding Spread Edge Array
-	 */
-
-	public double[] bankSubordinateFundingSpreadEdge()
-	{
-		int iNumVertex = _aLSV.length;
-		double[] adblBankSubordinateFundingSpreadEdge = new double[iNumVertex - 1];
-
-		org.drip.measure.realization.JumpDiffusionVertex jdvOvernightIndexNumerairePrevious =
-			_aLSV[0].overnightIndexNumeraire();
-
-		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFundingNumerairePrevious =
-			_aLSV[0].bankSubordinateFundingNumeraire();
-
-		if (null == jdvBankSubordinateFundingNumerairePrevious) return null;
-
-		for (int i = 1; i < iNumVertex; ++i) {
-			org.drip.measure.realization.JumpDiffusionVertex jdvOvernightIndexNumeraireCurrent =
-				_aLSV[i].overnightIndexNumeraire();
-
-			org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFundingNumeraireCurrent =
-				_aLSV[i].bankSubordinateFundingNumeraire();
-
-			if (null == jdvBankSubordinateFundingNumeraireCurrent) return null;
-
-			adblBankSubordinateFundingSpreadEdge[i - 1] = java.lang.Math.log
-				(jdvBankSubordinateFundingNumerairePrevious.value() /
-					jdvBankSubordinateFundingNumeraireCurrent.value()) - java.lang.Math.log
-						(jdvOvernightIndexNumerairePrevious.value() /
-							jdvOvernightIndexNumeraireCurrent.value());
-
-			jdvOvernightIndexNumerairePrevious = jdvOvernightIndexNumeraireCurrent;
-			jdvBankSubordinateFundingNumerairePrevious = jdvBankSubordinateFundingNumeraireCurrent;
-		}
-
-		return adblBankSubordinateFundingSpreadEdge;
 	}
 }

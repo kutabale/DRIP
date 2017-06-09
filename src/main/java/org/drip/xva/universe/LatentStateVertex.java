@@ -166,12 +166,12 @@ public class LatentStateVertex {
 	}
 
 	/**
-	 * Retrieve the Latent State Vertex Instant
+	 * Retrieve the Latent State Vertex Time Instant
 	 * 
-	 * @return The Latent State Vertex Instant
+	 * @return The Latent State Vertex TimeInstant
 	 */
 
-	public double vertex()
+	public double time()
 	{
 		return _jdvAssetNumeraire.time();
 	}
