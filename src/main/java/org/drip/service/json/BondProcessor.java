@@ -103,11 +103,11 @@ public class BondProcessor {
 
 		jsonResponse.put ("BondName", bond.name());
 
-		jsonResponse.put ("BondEffectiveDate", bond.effectiveDate());
+		jsonResponse.put ("BondEffectiveDate", bond.effectiveDate().toString());
 
-		jsonResponse.put ("BondMaturityDate", bond.maturityDate());
+		jsonResponse.put ("BondMaturityDate", bond.maturityDate().toString());
 
-		jsonResponse.put ("BondFirstCouponDate", bond.firstCouponDate());
+		jsonResponse.put ("BondFirstCouponDate", bond.firstCouponDate().toString());
 
 		jsonResponse.put ("BondCleanPrice", dblCleanPrice);
 
@@ -124,7 +124,7 @@ public class BondProcessor {
 
 			jsonResponse.put ("BondYield01", 10000. * dblYield01);
 
-			jsonResponse.put ("BondDV01", 1000000. * dblYield01);
+			jsonResponse.put ("BondDV01", 10000. * dblYield01);
 
 			jsonResponse.put ("BondConvexity", 1000000. * bond.convexityFromPrice (valParams, csqc, null,
 				dblCleanPrice));
@@ -235,9 +235,9 @@ public class BondProcessor {
 
 		jsonResponse.put ("BondName", bond.name());
 
-		jsonResponse.put ("BondEffectiveDate", bond.effectiveDate());
+		jsonResponse.put ("BondEffectiveDate", bond.effectiveDate().toString());
 
-		jsonResponse.put ("BondMaturityDate", dtMaturity);
+		jsonResponse.put ("BondMaturityDate", dtMaturity.toString());
 
 		jsonResponse.put ("BondFirstCouponDate", bond.firstCouponDate());
 
