@@ -4,7 +4,9 @@ package org.drip.sample.burgard2011;
 import org.drip.analytics.date.*;
 import org.drip.measure.dynamics.*;
 import org.drip.measure.process.*;
+import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.xva.universe.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -52,9 +54,8 @@ import org.drip.service.env.EnvManager;
  */
 
 /**
- * CorrelatedNumeraireXVAAttribution constructs the XVA PnL Attribution arising out of the Joint Evolution of
- * 	Numeraires - the Continuous Asset, the Collateral, the Bank, and the Counter-Party Numeraires involved in
- *  the Dynamic XVA Replication Portfolio of the Burgard and Kjaer (2011) Methodology. The References are:
+ * XVAMarketGeneration generates the Asset, the Bank, and the Counter Party Credit/Funding Metrics used in an
+ * 	XVA Run. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -74,7 +75,7 @@ import org.drip.service.env.EnvManager;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CorrelatedNumeraireXVAAttribution2 {
+public class XVAMarketGeneration {
 
 	public static final void main (
 		final String[] astrArgs)
@@ -82,9 +83,10 @@ public class CorrelatedNumeraireXVAAttribution2 {
 	{
 		EnvManager.InitEnv ("");
 
-		double dblTimeWidth = 365.25 / 24.;
-		double dblTime = 365.25;
-		double[][] aadblCorrelation = new double[][] {
+		int iNumVertex = 24;
+		int iSimulationDuration = 365;
+
+		double[][] aadblCorrelationMatrix = new double[][] {
 			{1.00, 0.00, 0.20, 0.15, 0.05, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #0 ASSET NUMERAIRE
 			{0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #1 OVERNIGHT POLICY INDEX NUMERAIRE
 			{0.20, 0.00, 1.00, 0.13, 0.25, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00}, // #2 COLLATERAL SCHEME NUMERAIRE
@@ -98,97 +100,100 @@ public class CorrelatedNumeraireXVAAttribution2 {
 			{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00}  // #10 COUNTER PARTY RECOVERY RATE
 		};
 
-		double dblAssetDrift = 0.06;
-		double dblAssetVolatility = 0.15;
-		double dblAssetRepo = 0.03;
-		double dblAssetDividend = 0.02;
-		double dblInitialAssetNumeraire = 1.;
+		double dblAssetNumeraireDrift = 0.06;
+		double dblAssetNumeraireVolatility = 0.10;
+		double dblAssetNumeraireRepo = 0.03;
+		double dblAssetNumeraireDividend = 0.02;
+		double dblAssetNumeraireInitial = 1.;
 
-		double dblZeroCouponOvernightIndexBondDrift = 0.0025;
-		double dblZeroCouponOvernightIndexBondVolatility = 0.01;
-		double dblZeroCouponOvernightIndexBondRepo = 0.0;
-		double dblZeroCouponOvernightIndexNumeraire = 1.;
+		double dblOvernightPolicyIndexNumeraireDrift = 0.0025;
+		double dblOvernightPolicyIndexNumeraireVolatility = 0.001;
+		double dblOvernightPolicyIndexNumeraireRepo = 0.0;
 
-		double dblZeroCouponCollateralBondDrift = 0.01;
-		double dblZeroCouponCollateralBondVolatility = 0.05;
-		double dblZeroCouponCollateralBondRepo = 0.005;
-		double dblInitialCollateralNumeraire = 1.;
+		double dblCollateralSchemeNumeraireDrift = 0.01;
+		double dblCollateralSchemeNumeraireVolatility = 0.05;
+		double dblCollateralSchemeNumeraireRepo = 0.005;
 
-		double dblZeroCouponBankBondDrift = 0.03;
-		double dblZeroCouponBankBondVolatility = 0.10;
-		double dblZeroCouponBankBondRepo = 0.028;
-		double dblInitialBankNumeraire = 1.;
+		double dblBankSeniorFundingNumeraireDrift = 0.03;
+		double dblBankSeniorFundingNumeraireVolatility = 0.10;
+		double dblBankSeniorFundingNumeraireRepo = 0.028;
 
-		double dblBankInitialHazardRate = 0.03;
+		double dblCounterPartyFundingNumeraireDrift = 0.03;
+		double dblCounterPartyFundingNumeraireVolatility = 0.10;
+		double dblCounterPartyFundingNumeraireRepo = 0.028;
+
 		double dblBankHazardRateDrift = 0.00;
 		double dblBankHazardRateVolatility = 0.005;
+		double dblBankHazardRateInitial = 0.03;
 
-		double dblInitialBankSeniorRecoveryRate = 0.45;
 		double dblBankSeniorRecoveryRateDrift = 0.0;
 		double dblBankSeniorRecoveryRateVolatility = 0.0;
+		double dblBankSeniorRecoveryRateInitial = 0.45;
 
-		double dblZeroCouponCounterPartyBondDrift = 0.03;
-		double dblZeroCouponCounterPartyBondVolatility = 0.10;
-		double dblZeroCouponCounterPartyBondRepo = 0.028;
-		double dblInitialCounterPartyNumeraire = 1.;
-
-		double dblInitialCounterPartyHazardRate = 0.05;
 		double dblCounterPartyHazardRateDrift = 0.00;
 		double dblCounterPartyHazardRateVolatility = 0.005;
+		double dblCounterPartyHazardRateInitial = 0.05;
 
-		double dblInitialCounterPartyRecoveryRate = 0.30;
 		double dblCounterPartyRecoveryRateDrift = 0.0;
 		double dblCounterPartyRecoveryRateVolatility = 0.0;
+		double dblCounterPartyRecoveryRateInitial = 0.30;
 
-		double dblTerminalXVADerivativeValue = 1.;
-
-		double dblSensitivityShiftFactor = 0.001;
-
-		int iNumTimeStep = (int) (1. / dblTimeWidth);
-		double dblDerivativeValue = dblTerminalXVADerivativeValue;
-		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
-
-		DiffusionEvolver deAsset = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblAssetDrift,
-				dblAssetVolatility
-			)
-		);
-
-		DiffusionEvolver deZeroCouponOvernightIndexBond = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblZeroCouponOvernightIndexBondDrift,
-				dblZeroCouponOvernightIndexBondVolatility
-			)
-		);
-
-		DiffusionEvolver deZeroCouponCollateralBond = new DiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblZeroCouponCollateralBondDrift,
-				dblZeroCouponCollateralBondVolatility
-			)
-		);
-
-		DiffusionEvolver deZeroCouponBankBond = new JumpDiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblZeroCouponBankBondDrift,
-				dblZeroCouponBankBondVolatility
+		Tradeable tAsset = new Tradeable (
+			new DiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					dblAssetNumeraireDrift - dblAssetNumeraireDividend,
+					dblAssetNumeraireVolatility
+				)
 			),
-			HazardJumpEvaluator.Standard (
-				dblBankInitialHazardRate,
-				dblInitialBankSeniorRecoveryRate
-			)
+			dblAssetNumeraireRepo
 		);
 
-		DiffusionEvolver deZeroCouponCounterPartyBond = new JumpDiffusionEvolver (
-			DiffusionEvaluatorLogarithmic.Standard (
-				dblZeroCouponCounterPartyBondDrift,
-				dblZeroCouponCounterPartyBondVolatility
+		Tradeable tOvernightPolicyIndex = new Tradeable (
+			new DiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					dblOvernightPolicyIndexNumeraireDrift,
+					dblOvernightPolicyIndexNumeraireVolatility
+				)
 			),
-			HazardJumpEvaluator.Standard (
-				dblInitialCounterPartyHazardRate,
-				dblInitialCounterPartyRecoveryRate
-			)
+			dblOvernightPolicyIndexNumeraireRepo
+		);
+
+		Tradeable tCollateralScheme = new Tradeable (
+			new DiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					dblCollateralSchemeNumeraireDrift,
+					dblCollateralSchemeNumeraireVolatility
+				)
+			),
+			dblCollateralSchemeNumeraireRepo
+		);
+
+		Tradeable tBankSeniorFunding = new Tradeable (
+			new JumpDiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					dblBankSeniorFundingNumeraireDrift,
+					dblBankSeniorFundingNumeraireVolatility
+				),
+				HazardJumpEvaluator.Standard (
+					dblBankHazardRateInitial,
+					dblBankSeniorRecoveryRateInitial
+				)
+			),
+			dblBankSeniorFundingNumeraireRepo
+		);
+
+		Tradeable tCounterPartyFunding = new Tradeable (
+			new JumpDiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					dblCounterPartyFundingNumeraireDrift,
+					dblCounterPartyFundingNumeraireVolatility
+				),
+				HazardJumpEvaluator.Standard (
+					dblCounterPartyHazardRateInitial,
+					dblCounterPartyRecoveryRateInitial
+				)
+			),
+			dblCounterPartyFundingNumeraireRepo
 		);
 
 		DiffusionEvolver deBankHazardRate = new DiffusionEvolver (
@@ -220,5 +225,77 @@ public class CorrelatedNumeraireXVAAttribution2 {
 		);
 
 		JulianDate dtSpot = DateUtil.Today();
+
+		int iSpotDate = dtSpot.julian();
+
+		int aiVertexDate[] = VertexDateBuilder.EqualWidth (
+			iSpotDate,
+			iSpotDate + iSimulationDuration,
+			iNumVertex
+		);
+
+		MarketVertexGenerator mvg = new MarketVertexGenerator (
+			iSpotDate,
+			aiVertexDate,
+			aadblCorrelationMatrix,
+			tAsset,
+			tOvernightPolicyIndex,
+			tCollateralScheme,
+			tBankSeniorFunding,
+			null,
+			tCounterPartyFunding,
+			deBankHazardRate,
+			deBankSeniorRecoveryRate,
+			null,
+			deCounterPartyHazardRate,
+			deCounterPartyRecoveryRate
+		);
+
+		MarketVertex mvInitial = new MarketVertex (
+			dtSpot,
+			dblAssetNumeraireInitial,
+			dblOvernightPolicyIndexNumeraireDrift,
+			Math.exp (-1. * dblOvernightPolicyIndexNumeraireDrift * iSimulationDuration / 365),
+			dblCollateralSchemeNumeraireDrift,
+			Math.exp (-1. * dblCollateralSchemeNumeraireDrift * iSimulationDuration / 365),
+			new EntityMarketVertex (
+				1.,
+				dblBankHazardRateInitial,
+				dblBankSeniorRecoveryRateInitial,
+				dblBankSeniorFundingNumeraireDrift,
+				Math.exp (-1. * dblBankSeniorFundingNumeraireDrift * iSimulationDuration / 365),
+				Double.NaN,
+				Double.NaN,
+				Double.NaN
+			),
+			new EntityMarketVertex (
+				1.,
+				dblCounterPartyHazardRateInitial,
+				dblCounterPartyRecoveryRateInitial,
+				dblCounterPartyFundingNumeraireDrift,
+				Math.exp (-1. * dblCounterPartyFundingNumeraireDrift * iSimulationDuration / 365),
+				Double.NaN,
+				Double.NaN,
+				Double.NaN
+			)
+		);
+
+		MarketVertex[] aMV = mvg.marketVertex (mvInitial);
+
+		System.out.println();
+
+		System.out.println ("\t||---------------------------------------------------------------||");
+
+		for (int i = 0; i < aMV.length; ++i)
+			System.out.println (
+				"\t|| " + aMV[i].anchor() + " => " +
+				FormatUtil.FormatDouble (aMV[i].assetNumeraire(), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].overnightPolicyIndexRate(), 1, 2, 100.) + "% | " +
+				FormatUtil.FormatDouble (aMV[i].overnightPolicyIndexNumeraire(), 1, 4, 1.) + " ||"
+			);
+
+		System.out.println ("\t||---------------------------------------------------------------||");
+
+		System.out.println();
 	}
 }
