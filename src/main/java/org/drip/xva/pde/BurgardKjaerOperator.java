@@ -254,4 +254,147 @@ public abstract class BurgardKjaerOperator {
 
 		return null;
 	}
+
+	/**
+	 * Generate the Derivative Value Time Increment using the Burgard Kjaer Scheme
+	 * 
+	 * @param me The Market Edge
+	 * @param etvStart The Evolution Trajectory Vertex
+	 * @param dblCollateral The Off-setting Collateral
+	 * 
+	 * @return The Time Increment using the Burgard Kjaer Scheme
+	 */
+
+	public org.drip.xva.pde.BurgardKjaerEdgeRun edgeRun (
+		final org.drip.xva.universe.MarketEdge me,
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
+		final double dblCollateral)
+	{
+		if (null == me || null == etvStart || !org.drip.quant.common.NumberUtil.IsValid (dblCollateral))
+			return null;
+
+		org.drip.xva.derivative.AssetGreekVertex agvStart = etvStart.assetGreekVertex();
+
+		org.drip.xva.universe.MarketVertex mvFinish = me.finish();
+
+		org.drip.xva.universe.EntityMarketVertex emvBankFinish = mvFinish.bank();
+
+		org.drip.xva.universe.EntityMarketVertex emvCounterPartyFinish = mvFinish.counterParty();
+
+		double dblDerivativeXVAValueStart = agvStart.derivativeXVAValue();
+
+		double dblGainOnBankDefault = etvStart.gainOnBankDefault();
+
+		double dblAssetValue = mvFinish.assetNumeraire();
+
+		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
+
+		double dblBankSeniorDefaultIntensity = emvBankFinish.hazardRate();
+
+		double dblCounterPartyDefaultIntensity = emvCounterPartyFinish.hazardRate();
+
+		double dblBankGainOnCounterPartyDefault = etvStart.gainOnCounterPartyDefault();
+
+		double dblGainOnCounterPartyDefault = dblCounterPartyDefaultIntensity *
+			dblBankGainOnCounterPartyDefault;
+
+		try {
+			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
+				(_lsdc.asset()).thetaUpDown (etvStart, dblAssetValue, dblAssetBump);
+
+			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
+
+			return new org.drip.xva.pde.BurgardKjaerEdgeRun (
+				dblAssetBump,
+				-1. * adblBumpedTheta[0],
+				-1. * adblBumpedTheta[1],
+				-1. * adblBumpedTheta[2],
+				mvFinish.collateralSchemeNumeraire() * dblCollateral,
+				(dblBankSeniorDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValueStart,
+				-1. * dblBankSeniorDefaultIntensity * dblGainOnBankDefault,
+				-1. * dblGainOnCounterPartyDefault,
+				dblDerivativeXVAValueStart * hedgeError (
+					emvBankFinish.seniorRecoveryRate(),
+					dblGainOnBankDefault,
+					agvStart.derivativeFairValue(),
+					dblDerivativeXVAValueStart,
+					dblCollateral
+				)
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Generate the Time Increment Run Attribution using the Burgard Kjaer Scheme
+	 * 
+	 * @param me The Market Edge
+	 * @param etvStart The Starting Evolution Trajectory Vertex
+	 * @param dblCollateral The Off-setting Collateral
+	 * 
+	 * @return The Time Increment Run Attribution using the Burgard Kjaer Scheme
+	 */
+
+	public org.drip.xva.pde.BurgardKjaerEdgeAttribution edgeRunAttribution (
+		final org.drip.xva.universe.MarketEdge me,
+		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
+		final double dblCollateral)
+	{
+		if (null == me || null == etvStart) return null;
+
+		org.drip.xva.universe.MarketVertex mvFinish = me.finish();
+
+		double dblDerivativeXVAValue = etvStart.assetGreekVertex().derivativeXVAValue();
+
+		org.drip.xva.universe.EntityMarketVertex emvBankFinish = mvFinish.bank();
+
+		org.drip.xva.universe.EntityMarketVertex emvCounterPartyFinish = mvFinish.counterParty();
+
+		double dblCounterPartyRecovery = emvCounterPartyFinish.seniorRecoveryRate();
+
+		double dblBankDefaultIntensity = emvBankFinish.hazardRate();
+
+		double dblCounterPartyDefaultIntensity = emvCounterPartyFinish.hazardRate();
+
+		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
+			_pdeec.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
+
+		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM : emvBankFinish.seniorRecoveryRate() *
+			dblCloseOutMTM;
+
+		double dblAssetValue = mvFinish.assetNumeraire();
+
+		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
+
+		double dblDerivativeXVACounterPartyDefaultGrowth = -1. * dblCounterPartyDefaultIntensity *
+			(dblCloseOutMTM < 0. ? dblCloseOutMTM : dblCounterPartyRecovery * dblCloseOutMTM);
+
+		double dblBankSeniorFundingSpread = emvBankFinish.seniorFundingSpread() / me.vertexIncrement();
+
+		try {
+			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
+				(_lsdc.asset()).thetaUpDown (etvStart, dblAssetValue, dblAssetBump);
+
+			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
+
+			return new org.drip.xva.pde.BurgardKjaerEdgeAttribution (
+				dblAssetBump,
+				-1. * adblBumpedTheta[0],
+				-1. * adblBumpedTheta[1],
+				-1. * adblBumpedTheta[2],
+				mvFinish.collateralSchemeNumeraire() * dblCollateral,
+				(dblBankDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
+				dblBankSeniorFundingSpread * dblBankExposure,
+				-1. * dblBankDefaultIntensity * dblBankExposure,
+				dblDerivativeXVACounterPartyDefaultGrowth
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

@@ -233,7 +233,7 @@ public class PortfolioGroupRun {
 				FormatUtil.FormatDouble (aHGVR2[i].collateralizedExposure(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aHGVR2[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aHGVR2[i].collateralBalance(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].overnightPolicyIndexRate(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].overnightIndexRate(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].bank().survivalProbability(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].bank().seniorRecoveryRate(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].bank().seniorFundingSpread(), 1, 6, 1.) + " | " +

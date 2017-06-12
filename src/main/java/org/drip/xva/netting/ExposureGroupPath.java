@@ -187,7 +187,7 @@ public class ExposureGroupPath {
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblCollateralizedExposurePV[iVertexIndex] +=
 					adblCollateralGroupCollateralizedExposure[iVertexIndex] /
-						aMV[iVertexIndex].overnightPolicyIndexRate();
+						aMV[iVertexIndex].overnightIndexRate();
 		}
 
 		return adblCollateralizedExposurePV;
@@ -253,7 +253,7 @@ public class ExposureGroupPath {
 
 				if (0. < dblCollateralizedExposure)
 					adblCollateralizedPositiveExposurePV[iVertexIndex] += dblCollateralizedExposure /
-						aMV[iVertexIndex].overnightPolicyIndexRate();
+						aMV[iVertexIndex].overnightIndexRate();
 			}
 		}
 
@@ -320,7 +320,7 @@ public class ExposureGroupPath {
 
 				if (0. > dblCollateralizedExposure)
 					adblCollateralizedNegativeExposurePV[iVertexIndex] += dblCollateralizedExposure /
-						aMV[iVertexIndex].overnightPolicyIndexRate();
+						aMV[iVertexIndex].overnightIndexRate();
 			}
 		}
 
@@ -382,7 +382,7 @@ public class ExposureGroupPath {
 			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
 				adblUncollateralizedExposurePV[iVertexIndex] +=
 					adblCollateralGroupUncollateralizedExposure[iVertexIndex] /
-						aMV[iVertexIndex].overnightPolicyIndexRate();
+						aMV[iVertexIndex].overnightIndexRate();
 		}
 
 		return adblUncollateralizedExposurePV;
@@ -450,7 +450,7 @@ public class ExposureGroupPath {
 
 				if (0. < dblUncollateralizedExposure)
 					adblUncollateralizedPositiveExposurePV[iVertexIndex] += dblUncollateralizedExposure /
-						aMV[iVertexIndex].overnightPolicyIndexRate();
+						aMV[iVertexIndex].overnightIndexRate();
 			}
 		}
 
@@ -519,7 +519,7 @@ public class ExposureGroupPath {
 
 				if (0. > dblUncollateralizedExposure)
 					adblUncollateralizedNegativeExposurePV[iVertexIndex] += dblUncollateralizedExposure /
-						aMV[iVertexIndex].overnightPolicyIndexRate();
+						aMV[iVertexIndex].overnightIndexRate();
 			}
 		}
 

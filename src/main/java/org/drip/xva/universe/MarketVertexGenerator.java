@@ -77,7 +77,7 @@ public class MarketVertexGenerator {
 	 * Overnight Index Policy Numeraire Wanderer Index
 	 */
 
-	public static final int OVERNIGHT_INDEX_POLICY = 1;
+	public static final int OVERNIGHT_INDEX = 1;
 
 	/**
 	 * Collateral Scheme Numeraire Wanderer Index
@@ -139,7 +139,7 @@ public class MarketVertexGenerator {
 	private double[][] _aadblCorrelationMatrix = null;
 
 	private org.drip.xva.universe.Tradeable _tAsset = null;
-	private org.drip.xva.universe.Tradeable _tOvernightIndexPolicy = null;
+	private org.drip.xva.universe.Tradeable _tOvernightIndex = null;
 	private org.drip.xva.universe.Tradeable _tCollateralScheme = null;
 	private org.drip.xva.universe.Tradeable _tBankSeniorFunding = null;
 	private org.drip.xva.universe.Tradeable _tBankSubordinateFunding = null;
@@ -158,7 +158,7 @@ public class MarketVertexGenerator {
 	 * @param aiEventDate Array of the Event Dates
 	 * @param aadblCorrelationMatrix The Correlation Matrix
 	 * @param tAsset The Asset Tradeable
-	 * @param tOvernightIndexPolicy The Overnight Index Policy Tradeable
+	 * @param tOvernightIndex The Overnight Index Policy Tradeable
 	 * @param tCollateralScheme The Collateral Scheme Tradeable
 	 * @param tBankSeniorFunding The Bank Senior Funding Tradeable
 	 * @param tBankSubordinateFunding The Bank Subordinate Funding Tradeable
@@ -177,7 +177,7 @@ public class MarketVertexGenerator {
 		final int[] aiEventDate,
 		final double[][] aadblCorrelationMatrix,
 		final org.drip.xva.universe.Tradeable tAsset,
-		final org.drip.xva.universe.Tradeable tOvernightIndexPolicy,
+		final org.drip.xva.universe.Tradeable tOvernightIndex,
 		final org.drip.xva.universe.Tradeable tCollateralScheme,
 		final org.drip.xva.universe.Tradeable tBankSeniorFunding,
 		final org.drip.xva.universe.Tradeable tBankSubordinateFunding,
@@ -192,7 +192,7 @@ public class MarketVertexGenerator {
 		if (0 >= (_iSpotDate = iSpotDate) ||
 			null == (_aiEventDate = aiEventDate) ||
 			null == (_aadblCorrelationMatrix = aadblCorrelationMatrix) ||
-			null == (_tOvernightIndexPolicy = tOvernightIndexPolicy) ||
+			null == (_tOvernightIndex = tOvernightIndex) ||
 			null == (_tCollateralScheme = tCollateralScheme) ||
 			null == (_tBankSeniorFunding = tBankSeniorFunding) ||
 			null == (_tCounterPartyFunding = tCounterPartyFunding) ||
@@ -288,9 +288,9 @@ public class MarketVertexGenerator {
 	 * @return The Overnight Index Policy
 	 */
 
-	public org.drip.xva.universe.Tradeable overnightIndexPolicy()
+	public org.drip.xva.universe.Tradeable overnightIndex()
 	{
-		return _tOvernightIndexPolicy;
+		return _tOvernightIndex;
 	}
 
 	/**
@@ -410,6 +410,7 @@ public class MarketVertexGenerator {
 		double dblCounterPartySurvivalProbabilityExponent = 0.;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVAssetNumeraire = null;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVBankHazardRate = null;
+		org.drip.measure.realization.JumpDiffusionVertex[] aJDVOvernightIndexNumeraire = null;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVBankSeniorRecoveryRate = null;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVCounterPartyHazardRate = null;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVCounterPartyRecoveryRate = null;
@@ -417,7 +418,6 @@ public class MarketVertexGenerator {
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVBankSeniorFundingNumeraire = null;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVBankSubordinateRecoveryRate = null;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVCounterPartyFundingNumeraire = null;
-		org.drip.measure.realization.JumpDiffusionVertex[] aJDVOvernightIndexPolicyNumeraire = null;
 		org.drip.measure.realization.JumpDiffusionVertex[] aJDVBankSubordinateFundingNumeraire = null;
 		org.drip.xva.universe.MarketVertex[] aMV = new
 			org.drip.xva.universe.MarketVertex[iNumEventVertex + 1];
@@ -434,21 +434,13 @@ public class MarketVertexGenerator {
 
 		org.drip.xva.universe.EntityMarketVertex emvCounterPartyInitial = mvInitial.bank();
 
-		double dblOvernightIndexPolicyNumeraireStart = mvInitial.overnightPolicyIndexNumeraire();
-
-		double dblCollateralSchemeNumeraireStart = mvInitial.collateralSchemeNumeraire();
-
-		double dblBankSeniorFundingNumeraireStart = emvBankInitial.seniorFundingNumeraire();
-
-		double dblBankSubordinateFundingNumeraireStart = emvBankInitial.subordinateFundingNumeraire();
-
 		double dblBankSubordinateRecoveryRateStart = emvBankInitial.subordinateRecoveryRate();
 
-		double dblCounterPartyFundingNumeraireStart = emvCounterPartyInitial.seniorFundingNumeraire();
+		double dblBankSubordinateFundingNumeraireTerminal = emvBankInitial.subordinateFundingNumeraire();
 
 		boolean bSingleBankBond = !org.drip.quant.common.NumberUtil.IsValid
-			(dblBankSubordinateFundingNumeraireStart) || !org.drip.quant.common.NumberUtil.IsValid
-				(dblBankSubordinateFundingNumeraireStart);
+			(dblBankSubordinateFundingNumeraireTerminal) || !org.drip.quant.common.NumberUtil.IsValid
+				(dblBankSubordinateRecoveryRateStart);
 
 		try {
 			aJDVAssetNumeraire = !bAssetEvolutionOn ? null : _tAsset.numeraireEvolver().vertexSequence (new
@@ -456,16 +448,15 @@ public class MarketVertexGenerator {
 					false), org.drip.measure.realization.JumpDiffusionEdgeUnit.Diffusion (_adblTimeWidth,
 						aadblUnitEvolverSequence[ASSET]), _adblTimeWidth);
 
-			aJDVOvernightIndexPolicyNumeraire =
-				_tOvernightIndexPolicy.numeraireEvolver().vertexSequenceReverse (new
-					org.drip.measure.realization.JumpDiffusionVertex (iTerminalDate,
-						dblOvernightIndexPolicyNumeraireStart, 0., false),
-							org.drip.measure.realization.JumpDiffusionEdgeUnit.Diffusion (_adblTimeWidth,
-								aadblUnitEvolverSequence[OVERNIGHT_INDEX_POLICY]), _adblTimeWidth);
+			aJDVOvernightIndexNumeraire = _tOvernightIndex.numeraireEvolver().vertexSequenceReverse (new
+				org.drip.measure.realization.JumpDiffusionVertex (iTerminalDate,
+					mvInitial.overnightIndexNumeraire(), 0., false),
+						org.drip.measure.realization.JumpDiffusionEdgeUnit.Diffusion (_adblTimeWidth,
+							aadblUnitEvolverSequence[OVERNIGHT_INDEX]), _adblTimeWidth);
 
 			aJDVCollateralSchemeNumeraire = _tCollateralScheme.numeraireEvolver().vertexSequenceReverse (new
 				org.drip.measure.realization.JumpDiffusionVertex (iTerminalDate,
-					dblCollateralSchemeNumeraireStart, 0., false),
+					mvInitial.collateralSchemeNumeraire(), 0., false),
 						org.drip.measure.realization.JumpDiffusionEdgeUnit.Diffusion (_adblTimeWidth,
 							aadblUnitEvolverSequence[COLLATERAL_SCHEME]), _adblTimeWidth);
 
@@ -476,7 +467,7 @@ public class MarketVertexGenerator {
 
 			aJDVBankSeniorFundingNumeraire = _tBankSeniorFunding.numeraireEvolver().vertexSequenceReverse
 				(new org.drip.measure.realization.JumpDiffusionVertex (iTerminalDate,
-					dblBankSeniorFundingNumeraireStart, 0., false),
+					emvBankInitial.seniorFundingNumeraire(), 0., false),
 						org.drip.measure.realization.JumpDiffusionEdgeUnit.Diffusion (_adblTimeWidth,
 							aadblUnitEvolverSequence[BANK_SENIOR_FUNDING]), _adblTimeWidth);
 
@@ -489,7 +480,7 @@ public class MarketVertexGenerator {
 			aJDVBankSubordinateFundingNumeraire = bSingleBankBond ? null :
 				_tBankSubordinateFunding.numeraireEvolver().vertexSequenceReverse (new
 					org.drip.measure.realization.JumpDiffusionVertex (iTerminalDate,
-						dblBankSubordinateFundingNumeraireStart, 0., false),
+						dblBankSubordinateFundingNumeraireTerminal, 0., false),
 							org.drip.measure.realization.JumpDiffusionEdgeUnit.Diffusion (_adblTimeWidth,
 								aadblUnitEvolverSequence[BANK_SUBORDINATE_FUNDING]), _adblTimeWidth);
 
@@ -508,7 +499,7 @@ public class MarketVertexGenerator {
 
 			aJDVCounterPartyFundingNumeraire = _tCounterPartyFunding.numeraireEvolver().vertexSequenceReverse
 				(new org.drip.measure.realization.JumpDiffusionVertex (iTerminalDate,
-					dblCounterPartyFundingNumeraireStart, 0., false),
+					emvCounterPartyInitial.seniorFundingNumeraire(), 0., false),
 						org.drip.measure.realization.JumpDiffusionEdgeUnit.Diffusion (_adblTimeWidth,
 							aadblUnitEvolverSequence[COUNTER_PARTY_FUNDING]), _adblTimeWidth);
 
@@ -523,13 +514,24 @@ public class MarketVertexGenerator {
 			return null;
 		}
 
+		double dblOvernightIndexNumeraireStart = aJDVOvernightIndexNumeraire[0].value();
+
+		double dblCollateralSchemeNumeraireStart = aJDVCollateralSchemeNumeraire[0].value();
+
+		double dblBankSeniorFundingNumeraireStart = aJDVBankSeniorFundingNumeraire[0].value();
+
+		double dblBankSubordinateFundingNumeraireStart = bSingleBankBond ? java.lang.Double.NaN :
+			aJDVBankSubordinateFundingNumeraire[0].value();
+
+		double dblCounterPartyFundingNumeraireStart = aJDVCounterPartyFundingNumeraire[0].value();
+
 		for (int iEventVertex = 1; iEventVertex <= iNumEventVertex; ++iEventVertex) {
 			double dblBankHazardRate = aJDVBankHazardRate[iEventVertex].value();
 
 			double dblCounterPartyHazardRate = aJDVCounterPartyHazardRate[iEventVertex].value();
 
-			double dblOvernightIndexPolicyNumeraireFinish =
-				aJDVOvernightIndexPolicyNumeraire[iEventVertex].value();
+			double dblOvernightIndexNumeraireFinish =
+				aJDVOvernightIndexNumeraire[iEventVertex].value();
 
 			double dblCollateralSchemeNumeraireFinish =
 				aJDVCollateralSchemeNumeraire[iEventVertex].value();
@@ -548,21 +550,21 @@ public class MarketVertexGenerator {
 			dblBankSurvivalProbabilityExponent += dblBankHazardRate * dblTimeWidth;
 			double dblTimeWidthReciprocal = 1. / dblTimeWidth;
 
-			double dblOvernightIndexPolicyRate = dblTimeWidthReciprocal * java.lang.Math.log
-				(dblOvernightIndexPolicyNumeraireStart / dblOvernightIndexPolicyNumeraireFinish);
+			double dblOvernightIndexRate = dblTimeWidthReciprocal * java.lang.Math.log
+				(dblOvernightIndexNumeraireFinish / dblOvernightIndexNumeraireStart);
 
 			try {
 				org.drip.xva.universe.EntityMarketVertex emvBank = new org.drip.xva.universe.EntityMarketVertex (
 					java.lang.Math.exp (-1. * dblBankSurvivalProbabilityExponent),
 					dblBankHazardRate,
 					aJDVBankSeniorRecoveryRate[iEventVertex].value(),
-					dblTimeWidthReciprocal * java.lang.Math.log (dblBankSeniorFundingNumeraireStart /
-						dblBankSeniorFundingNumeraireFinish) - dblOvernightIndexPolicyRate,
+					dblTimeWidthReciprocal * java.lang.Math.log (dblBankSeniorFundingNumeraireFinish /
+						dblBankSeniorFundingNumeraireStart) - dblOvernightIndexRate,
 					dblBankSeniorFundingNumeraireFinish,
 					bSingleBankBond ? java.lang.Double.NaN : aJDVBankSubordinateRecoveryRate[iEventVertex].value(),
 					bSingleBankBond ? java.lang.Double.NaN : dblTimeWidthReciprocal * java.lang.Math.log
-						(dblBankSubordinateFundingNumeraireStart / dblBankSubordinateFundingNumeraireFinish)
-						- dblOvernightIndexPolicyRate,
+						(dblBankSubordinateFundingNumeraireFinish / dblBankSubordinateFundingNumeraireStart)
+						- dblOvernightIndexRate,
 					dblBankSubordinateFundingNumeraireFinish
 				);
 
@@ -570,8 +572,8 @@ public class MarketVertexGenerator {
 					java.lang.Math.exp (-1. * dblCounterPartySurvivalProbabilityExponent),
 					dblCounterPartyHazardRate,
 					aJDVCounterPartyRecoveryRate[iEventVertex].value(),
-					dblTimeWidthReciprocal * java.lang.Math.log (dblCounterPartyFundingNumeraireStart /
-						dblCounterPartyFundingNumeraireFinish) - dblOvernightIndexPolicyRate,
+					dblTimeWidthReciprocal * java.lang.Math.log (dblCounterPartyFundingNumeraireFinish /
+						dblCounterPartyFundingNumeraireStart) - dblOvernightIndexRate,
 					dblCounterPartyFundingNumeraireFinish,
 					java.lang.Double.NaN,
 					java.lang.Double.NaN,
@@ -581,10 +583,10 @@ public class MarketVertexGenerator {
 				aMV[iEventVertex] = new org.drip.xva.universe.MarketVertex (
 					new org.drip.analytics.date.JulianDate (_aiEventDate[iEventVertex - 1]),
 					bAssetEvolutionOn ? aJDVAssetNumeraire[iEventVertex].value() : java.lang.Double.NaN,
-					dblOvernightIndexPolicyRate,
-					dblOvernightIndexPolicyNumeraireFinish,
-					dblTimeWidthReciprocal * java.lang.Math.log (dblCollateralSchemeNumeraireStart /
-						dblCollateralSchemeNumeraireFinish) - dblOvernightIndexPolicyRate,
+					dblOvernightIndexRate,
+					dblOvernightIndexNumeraireFinish,
+					dblTimeWidthReciprocal * java.lang.Math.log (dblCollateralSchemeNumeraireFinish /
+						dblCollateralSchemeNumeraireStart) - dblOvernightIndexRate,
 					dblCollateralSchemeNumeraireFinish,
 					emvBank,
 					emvCounterParty
@@ -595,10 +597,10 @@ public class MarketVertexGenerator {
 				return null;
 			}
 
+			dblOvernightIndexNumeraireStart = dblOvernightIndexNumeraireFinish;
 			dblCollateralSchemeNumeraireStart = dblCollateralSchemeNumeraireFinish;
 			dblBankSeniorFundingNumeraireStart = dblBankSeniorFundingNumeraireFinish;
 			dblCounterPartyFundingNumeraireStart = dblCounterPartyFundingNumeraireFinish;
-			dblOvernightIndexPolicyNumeraireStart = dblOvernightIndexPolicyNumeraireFinish;
 			dblBankSubordinateFundingNumeraireStart = dblBankSubordinateFundingNumeraireFinish;
 		}
 
@@ -606,8 +608,8 @@ public class MarketVertexGenerator {
 			aMV[0] = new org.drip.xva.universe.MarketVertex (
 				mvInitial.anchor(),
 				mvInitial.assetNumeraire(),
-				aMV[1].overnightPolicyIndexRate(),
-				aJDVOvernightIndexPolicyNumeraire[0].value(),
+				mvInitial.overnightIndexRate(),
+				aJDVOvernightIndexNumeraire[0].value(),
 				aMV[1].collateralSchemeRate(),
 				aJDVCollateralSchemeNumeraire[0].value(),
 				new org.drip.xva.universe.EntityMarketVertex (

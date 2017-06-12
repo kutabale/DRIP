@@ -106,20 +106,24 @@ public class XVAMarketGeneration {
 		double dblAssetNumeraireDividend = 0.02;
 		double dblAssetNumeraireInitial = 1.;
 
-		double dblOvernightPolicyIndexNumeraireDrift = 0.0025;
-		double dblOvernightPolicyIndexNumeraireVolatility = 0.001;
-		double dblOvernightPolicyIndexNumeraireRepo = 0.0;
+		double dblOvernightIndexNumeraireDrift = 0.0025;
+		double dblOvernightIndexNumeraireVolatility = 0.001;
+		double dblOvernightIndexNumeraireRepo = 0.0;
 
 		double dblCollateralSchemeNumeraireDrift = 0.01;
-		double dblCollateralSchemeNumeraireVolatility = 0.05;
+		double dblCollateralSchemeNumeraireVolatility = 0.002;
 		double dblCollateralSchemeNumeraireRepo = 0.005;
 
 		double dblBankSeniorFundingNumeraireDrift = 0.03;
-		double dblBankSeniorFundingNumeraireVolatility = 0.10;
+		double dblBankSeniorFundingNumeraireVolatility = 0.002;
 		double dblBankSeniorFundingNumeraireRepo = 0.028;
 
+		double dblBankSubordinateFundingNumeraireDrift = 0.045;
+		double dblBankSubordinateFundingNumeraireVolatility = 0.002;
+		double dblBankSubordinateFundingNumeraireRepo = 0.028;
+
 		double dblCounterPartyFundingNumeraireDrift = 0.03;
-		double dblCounterPartyFundingNumeraireVolatility = 0.10;
+		double dblCounterPartyFundingNumeraireVolatility = 0.003;
 		double dblCounterPartyFundingNumeraireRepo = 0.028;
 
 		double dblBankHazardRateDrift = 0.00;
@@ -129,6 +133,10 @@ public class XVAMarketGeneration {
 		double dblBankSeniorRecoveryRateDrift = 0.0;
 		double dblBankSeniorRecoveryRateVolatility = 0.0;
 		double dblBankSeniorRecoveryRateInitial = 0.45;
+
+		double dblBankSubordinateRecoveryRateDrift = 0.0;
+		double dblBankSubordinateRecoveryRateVolatility = 0.0;
+		double dblBankSubordinateRecoveryRateInitial = 0.25;
 
 		double dblCounterPartyHazardRateDrift = 0.00;
 		double dblCounterPartyHazardRateVolatility = 0.005;
@@ -148,14 +156,14 @@ public class XVAMarketGeneration {
 			dblAssetNumeraireRepo
 		);
 
-		Tradeable tOvernightPolicyIndex = new Tradeable (
+		Tradeable tOvernightIndex = new Tradeable (
 			new DiffusionEvolver (
 				DiffusionEvaluatorLogarithmic.Standard (
-					dblOvernightPolicyIndexNumeraireDrift,
-					dblOvernightPolicyIndexNumeraireVolatility
+					dblOvernightIndexNumeraireDrift,
+					dblOvernightIndexNumeraireVolatility
 				)
 			),
-			dblOvernightPolicyIndexNumeraireRepo
+			dblOvernightIndexNumeraireRepo
 		);
 
 		Tradeable tCollateralScheme = new Tradeable (
@@ -180,6 +188,20 @@ public class XVAMarketGeneration {
 				)
 			),
 			dblBankSeniorFundingNumeraireRepo
+		);
+
+		Tradeable tBankSubordinateFunding = new Tradeable (
+			new JumpDiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					dblBankSubordinateFundingNumeraireDrift,
+					dblBankSubordinateFundingNumeraireVolatility
+				),
+				HazardJumpEvaluator.Standard (
+					dblBankHazardRateInitial,
+					dblBankSubordinateRecoveryRateInitial
+				)
+			),
+			dblBankSubordinateFundingNumeraireRepo
 		);
 
 		Tradeable tCounterPartyFunding = new Tradeable (
@@ -207,6 +229,13 @@ public class XVAMarketGeneration {
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblBankSeniorRecoveryRateDrift,
 				dblBankSeniorRecoveryRateVolatility
+			)
+		);
+
+		DiffusionEvolver deBankSubordinateRecoveryRate = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblBankSubordinateRecoveryRateDrift,
+				dblBankSubordinateRecoveryRateVolatility
 			)
 		);
 
@@ -239,14 +268,14 @@ public class XVAMarketGeneration {
 			aiVertexDate,
 			aadblCorrelationMatrix,
 			tAsset,
-			tOvernightPolicyIndex,
+			tOvernightIndex,
 			tCollateralScheme,
 			tBankSeniorFunding,
-			null,
+			tBankSubordinateFunding,
 			tCounterPartyFunding,
 			deBankHazardRate,
 			deBankSeniorRecoveryRate,
-			null,
+			deBankSubordinateRecoveryRate,
 			deCounterPartyHazardRate,
 			deCounterPartyRecoveryRate
 		);
@@ -254,26 +283,26 @@ public class XVAMarketGeneration {
 		MarketVertex mvInitial = new MarketVertex (
 			dtSpot,
 			dblAssetNumeraireInitial,
-			dblOvernightPolicyIndexNumeraireDrift,
-			Math.exp (-1. * dblOvernightPolicyIndexNumeraireDrift * iSimulationDuration / 365),
+			dblOvernightIndexNumeraireDrift,
+			1.,
 			dblCollateralSchemeNumeraireDrift,
-			Math.exp (-1. * dblCollateralSchemeNumeraireDrift * iSimulationDuration / 365),
+			1.,
 			new EntityMarketVertex (
 				1.,
 				dblBankHazardRateInitial,
 				dblBankSeniorRecoveryRateInitial,
 				dblBankSeniorFundingNumeraireDrift,
-				Math.exp (-1. * dblBankSeniorFundingNumeraireDrift * iSimulationDuration / 365),
-				Double.NaN,
-				Double.NaN,
-				Double.NaN
+				1.,
+				dblBankSubordinateRecoveryRateInitial,
+				dblBankSubordinateFundingNumeraireDrift,
+				1.
 			),
 			new EntityMarketVertex (
 				1.,
 				dblCounterPartyHazardRateInitial,
 				dblCounterPartyRecoveryRateInitial,
 				dblCounterPartyFundingNumeraireDrift,
-				Math.exp (-1. * dblCounterPartyFundingNumeraireDrift * iSimulationDuration / 365),
+				1.,
 				Double.NaN,
 				Double.NaN,
 				Double.NaN
@@ -284,17 +313,133 @@ public class XVAMarketGeneration {
 
 		System.out.println();
 
-		System.out.println ("\t||---------------------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------------------------------||");
+
+		System.out.println ("\t||          ASSET, OVERNIGHT INDEX, AND COLLATERAL NUMERAIRE          ||");
+
+		System.out.println ("\t||--------------------------------------------------------------------||");
+
+		System.out.println ("\t||    L -> R:                                                         ||");
+
+		System.out.println ("\t||            - Date                                                  ||");
+
+		System.out.println ("\t||            - Overnight Index Rate                                  ||");
+
+		System.out.println ("\t||            - Overnight Index Numeraire                             ||");
+
+		System.out.println ("\t||            - Collateral Scheme Rate                                ||");
+
+		System.out.println ("\t||            - Collateral Scheme Numeraire                           ||");
+
+		System.out.println ("\t||--------------------------------------------------------------------||");
 
 		for (int i = 0; i < aMV.length; ++i)
 			System.out.println (
 				"\t|| " + aMV[i].anchor() + " => " +
-				FormatUtil.FormatDouble (aMV[i].assetNumeraire(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].overnightPolicyIndexRate(), 1, 2, 100.) + "% | " +
-				FormatUtil.FormatDouble (aMV[i].overnightPolicyIndexNumeraire(), 1, 4, 1.) + " ||"
+				FormatUtil.FormatDouble (aMV[i].assetNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].overnightIndexRate(), 1, 2, 100.) + "% | " +
+				FormatUtil.FormatDouble (aMV[i].overnightIndexNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].collateralSchemeRate(), 1, 2, 100.) + "% | " +
+				FormatUtil.FormatDouble (aMV[i].collateralSchemeNumeraire(), 1, 6, 1.) + " ||"
 			);
 
-		System.out.println ("\t||---------------------------------------------------------------||");
+		System.out.println ("\t||--------------------------------------------------------------------||");
+
+		System.out.println();
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||             BANK REALIZATION VERTEX => SURVIVAL, SENIOR/SUBORDINATE NODE METRICS             ||");
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||    L -> R:                                                                                   ||");
+
+		System.out.println ("\t||            - Date                                                                            ||");
+
+		System.out.println ("\t||            - Hazard Rate                                                                     ||");
+
+		System.out.println ("\t||            - Survival Probability                                                            ||");
+
+		System.out.println ("\t||            - Senior Recovery Rate                                                            ||");
+
+		System.out.println ("\t||            - Senior Funding Spread                                                           ||");
+
+		System.out.println ("\t||            - Senior Funding Numeraire                                                        ||");
+
+		System.out.println ("\t||            - Subordinate Recovery Rate                                                       ||");
+
+		System.out.println ("\t||            - Subordinate Funding Spread                                                      ||");
+
+		System.out.println ("\t||            - Subordinate Funding Numeraire                                                   ||");
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
+
+		for (int i = 0; i < aMV.length; ++i) {
+			EntityMarketVertex emvBank = aMV[i].bank();
+
+			System.out.println (
+				"\t|| " + aMV[i].anchor() + " => " +
+				FormatUtil.FormatDouble (emvBank.hazardRate(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (emvBank.survivalProbability(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (emvBank.seniorRecoveryRate(), 1, 0, 100.) + "% | " +
+				FormatUtil.FormatDouble (emvBank.seniorFundingSpread(), 1, 2, 100.) + "% | " +
+				FormatUtil.FormatDouble (emvBank.seniorFundingNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (emvBank.subordinateRecoveryRate(), 1, 0, 100.) + "% | " +
+				FormatUtil.FormatDouble (emvBank.subordinateFundingSpread(), 1, 2, 100.) + "% | " +
+				FormatUtil.FormatDouble (emvBank.subordinateFundingNumeraire(), 1, 6, 1.) + " ||"
+			);
+		}
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
+
+		System.out.println();
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||         COUNTER PARTY REALIZATION VERTEX => SURVIVAL, SENIOR/SUBORDINATE NODE METRICS        ||");
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||    L -> R:                                                                                   ||");
+
+		System.out.println ("\t||            - Date                                                                            ||");
+
+		System.out.println ("\t||            - Hazard Rate                                                                     ||");
+
+		System.out.println ("\t||            - Survival Probability                                                            ||");
+
+		System.out.println ("\t||            - Senior Recovery Rate                                                            ||");
+
+		System.out.println ("\t||            - Senior Funding Spread                                                           ||");
+
+		System.out.println ("\t||            - Senior Funding Numeraire                                                        ||");
+
+		System.out.println ("\t||            - Subordinate Recovery Rate                                                       ||");
+
+		System.out.println ("\t||            - Subordinate Funding Spread                                                      ||");
+
+		System.out.println ("\t||            - Subordinate Funding Numeraire                                                   ||");
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
+
+		for (int i = 0; i < aMV.length; ++i) {
+			EntityMarketVertex emvCounterParty = aMV[i].counterParty();
+
+			System.out.println (
+				"\t|| " + aMV[i].anchor() + " => " +
+				FormatUtil.FormatDouble (emvCounterParty.hazardRate(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (emvCounterParty.survivalProbability(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (emvCounterParty.seniorRecoveryRate(), 1, 0, 100.) + "% | " +
+				FormatUtil.FormatDouble (emvCounterParty.seniorFundingSpread(), 1, 2, 100.) + "% | " +
+				FormatUtil.FormatDouble (emvCounterParty.seniorFundingNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (emvCounterParty.subordinateRecoveryRate(), 1, 0, 100.) + "% | " +
+				FormatUtil.FormatDouble (emvCounterParty.subordinateFundingSpread(), 1, 2, 100.) + "% | " +
+				FormatUtil.FormatDouble (emvCounterParty.subordinateFundingNumeraire(), 1, 6, 1.) + " ||"
+			);
+		}
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

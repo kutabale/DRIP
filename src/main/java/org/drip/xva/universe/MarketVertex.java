@@ -68,18 +68,18 @@ package org.drip.xva.universe;
 public class MarketVertex {
 	public double _dblAssetNumeraire = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+	private double _dblOvernightIndexRate = java.lang.Double.NaN;
 	private org.drip.xva.universe.EntityMarketVertex _emvBank = null;
 	private double _dblCollateralSchemeSpread = java.lang.Double.NaN;
-	private double _dblOvernightPolicyIndexRate = java.lang.Double.NaN;
+	private double _dblOvernightIndexNumeraire = java.lang.Double.NaN;
 	private double _dblCollateralSchemeNumeraire = java.lang.Double.NaN;
-	private double _dblOvernightPolicyIndexNumeraire = java.lang.Double.NaN;
 	private org.drip.xva.universe.EntityMarketVertex _emvCounterParty = null;
 
 	/**
 	 * Construct a Standard Instance of the MarketVertex
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblOvernightPolicyIndexRate The Realized Overnight Policy Index Rate
+	 * @param dblOvernightIndexRate The Realized Overnight Index Rate
 	 * @param dblBankSurvival The Realized Bank Survival Rate
 	 * @param dblBankSeniorRecoveryRate The Realized Bank Senior Recovery Rate
 	 * @param dblBankSeniorFundingSpread The Realized Bank Senior Funding Spread
@@ -91,7 +91,7 @@ public class MarketVertex {
 
 	public static final MarketVertex Standard (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblOvernightPolicyIndexRate,
+		final double dblOvernightIndexRate,
 		final double dblBankSurvival,
 		final double dblBankSeniorRecoveryRate,
 		final double dblBankSeniorFundingSpread,
@@ -102,7 +102,7 @@ public class MarketVertex {
 			return new MarketVertex (
 				dtAnchor,
 				java.lang.Double.NaN,
-				dblOvernightPolicyIndexRate,
+				dblOvernightIndexRate,
 				1.,
 				0.,
 				1.,
@@ -139,8 +139,8 @@ public class MarketVertex {
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblAssetNumeraire The Asset Numeraire Realization
-	 * @param dblOvernightPolicyIndexRate The Realized Overnight Policy Index Rate
-	 * @param dblOvernightPolicyIndexNumeraire The Realized Overnight Policy Index Numeraire
+	 * @param dblOvernightIndexRate The Realized Overnight Index Rate
+	 * @param dblOvernightIndexNumeraire The Realized Overnight Index Numeraire
 	 * @param dblCollateralSchemeSpread The Realized Collateral Scheme Spread
 	 * @param dblCollateralSchemeNumeraire The Realized Collateral Scheme Numeraire
 	 * @param emvBank Bank Entity Market Vertex Instance
@@ -152,8 +152,8 @@ public class MarketVertex {
 	public MarketVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblAssetNumeraire,
-		final double dblOvernightPolicyIndexRate,
-		final double dblOvernightPolicyIndexNumeraire,
+		final double dblOvernightIndexRate,
+		final double dblOvernightIndexNumeraire,
 		final double dblCollateralSchemeSpread,
 		final double dblCollateralSchemeNumeraire,
 		final org.drip.xva.universe.EntityMarketVertex emvBank,
@@ -161,27 +161,15 @@ public class MarketVertex {
 		throws java.lang.Exception
 	{
 		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblOvernightPolicyIndexRate = dblOvernightPolicyIndexRate) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblOvernightPolicyIndexNumeraire =
-					dblOvernightPolicyIndexNumeraire) || !org.drip.quant.common.NumberUtil.IsValid
-						(_dblCollateralSchemeSpread = dblCollateralSchemeSpread) ||
-							!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralSchemeNumeraire =
-								dblCollateralSchemeNumeraire) || null == (_emvBank = emvBank) || null ==
-									(_emvCounterParty = emvCounterParty))
+			(_dblOvernightIndexRate = dblOvernightIndexRate) || !org.drip.quant.common.NumberUtil.IsValid
+				(_dblOvernightIndexNumeraire = dblOvernightIndexNumeraire) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralSchemeSpread =
+						dblCollateralSchemeSpread) || !org.drip.quant.common.NumberUtil.IsValid
+							(_dblCollateralSchemeNumeraire = dblCollateralSchemeNumeraire) || null ==
+								(_emvBank = emvBank) || null == (_emvCounterParty = emvCounterParty))
 			throw new java.lang.Exception ("MarketVertex Constructor => Invalid Inputs");
 
 		_dblAssetNumeraire = dblAssetNumeraire;
-	}
-
-	/**
-	 * Retrieve the Asset Numeraire
-	 * 
-	 * @return The Asset Numeraire
-	 */
-
-	public double assetNumeraire()
-	{
-		return _dblAssetNumeraire;
 	}
 
 	/**
@@ -196,25 +184,36 @@ public class MarketVertex {
 	}
 
 	/**
-	 * Retrieve the Realized Overnight Policy Index Rate
+	 * Retrieve the Asset Numeraire
 	 * 
-	 * @return The Realized Overnight Policy Index Rate
+	 * @return The Asset Numeraire
 	 */
 
-	public double overnightPolicyIndexRate()
+	public double assetNumeraire()
 	{
-		return _dblOvernightPolicyIndexRate;
+		return _dblAssetNumeraire;
 	}
 
 	/**
-	 * Retrieve the Realized Overnight Policy Index Numeraire
+	 * Retrieve the Realized Overnight Index Rate
 	 * 
-	 * @return The Realized Overnight Policy Index Numeraire
+	 * @return The Realized Overnight Index Rate
 	 */
 
-	public double overnightPolicyIndexNumeraire()
+	public double overnightIndexRate()
 	{
-		return _dblOvernightPolicyIndexNumeraire;
+		return _dblOvernightIndexRate;
+	}
+
+	/**
+	 * Retrieve the Realized Overnight Index Numeraire
+	 * 
+	 * @return The Realized Overnight Index Numeraire
+	 */
+
+	public double overnightIndexNumeraire()
+	{
+		return _dblOvernightIndexNumeraire;
 	}
 
 	/**
@@ -247,7 +246,7 @@ public class MarketVertex {
 
 	public double collateralSchemeRate()
 	{
-		return _dblOvernightPolicyIndexRate + _dblCollateralSchemeSpread;
+		return _dblOvernightIndexRate + _dblCollateralSchemeSpread;
 	}
 
 	/**
