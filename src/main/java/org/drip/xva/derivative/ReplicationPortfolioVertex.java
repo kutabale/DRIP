@@ -188,39 +188,9 @@ public class ReplicationPortfolioVertex {
 	}
 
 	/**
-	 * Compute the Market Value of the Portfolio
-	 * 
-	 * @param lsv The Latent State Vertex
-	 * 
-	 * @return The Market Value of the Portfolio
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
-	 */
-
-	public double value (
-		final org.drip.xva.universe.LatentStateVertex lsv)
-		throws java.lang.Exception
-	{
-		if (null == lsv)
-			throw new java.lang.Exception ("ReplicationPortfolioVertex::value => Invalid Inputs");
-
-		double dblValue = -1. * _dblAssetNumeraireUnits * lsv.assetNumeraire().value() - _dblCashAccount -
-			_dblCounterPartyNumeraireUnits * lsv.counterPartyFundingNumeraire().value() -
-				lsv.bankSeniorFundingNumeraire().value() * _dblBankSeniorNumeraireUnits;
-
-		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFunding =
-			lsv.bankSubordinateFundingNumeraire();
-
-		if (null != jdvBankSubordinateFunding)
-			dblValue -= jdvBankSubordinateFunding.value() * _dblBankSubordinateNumeraireUnits;
-
-		return dblValue;
-	}
-
-	/**
 	 * Compute the Market Value of the Bank Position Pre-Default
 	 * 
-	 * @param lsv The Latent State Vertex
+	 * @param mv The Market Vertex
 	 * 
 	 * @return The Market Value of the Bank Position Pre-Default
 	 * 
@@ -228,20 +198,21 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double bankPreDefaultPositionValue (
-		final org.drip.xva.universe.LatentStateVertex lsv)
+		final org.drip.xva.universe.MarketVertex mv)
 		throws java.lang.Exception
 	{
-		if (null == lsv)
+		if (null == mv)
 			throw new java.lang.Exception
 				("ReplicationPortfolioVertex::bankPreDefaultPositionValue => Invalid Inputs");
 
-		double dblValue = -1. * lsv.bankSeniorFundingNumeraire().value() * _dblBankSeniorNumeraireUnits;
+		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
 
-		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFunding =
-			lsv.bankSubordinateFundingNumeraire();
+		double dblValue = -1. * emvBank.seniorFundingNumeraire() * _dblBankSeniorNumeraireUnits;
 
-		if (null != jdvBankSubordinateFunding)
-			dblValue -= jdvBankSubordinateFunding.value() * _dblBankSubordinateNumeraireUnits;
+		double dblBankSubordinateFunding = emvBank.subordinateFundingNumeraire();
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFunding))
+			dblValue -= dblBankSubordinateFunding * _dblBankSubordinateNumeraireUnits;
 
 		return dblValue;
 	}
@@ -249,7 +220,7 @@ public class ReplicationPortfolioVertex {
 	/**
 	 * Compute the Market Value of the Bank Position Post-Default
 	 * 
-	 * @param lsv The Latent State Vertex
+	 * @param mv The Market Vertex
 	 * 
 	 * @return The Market Value of the Bank Position Post-Default
 	 * 
@@ -257,25 +228,26 @@ public class ReplicationPortfolioVertex {
 	 */
 
 	public double bankPostDefaultPositionValue (
-		final org.drip.xva.universe.LatentStateVertex lsv)
+		final org.drip.xva.universe.MarketVertex mv)
 		throws java.lang.Exception
 	{
-		if (null == lsv)
+		if (null == mv)
 			throw new java.lang.Exception
 				("ReplicationPortfolioVertex::bankPostDefaultPositionValue => Invalid Inputs");
 
-		double dblValue = lsv.bankSeniorFundingNumeraire().value() * _dblBankSeniorNumeraireUnits *
-			lsv.bankSeniorRecoveryRate().value();
+		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
 
-		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFunding =
-			lsv.bankSubordinateFundingNumeraire();
+		double dblValue = emvBank.seniorFundingNumeraire() * _dblBankSeniorNumeraireUnits *
+			emvBank.seniorRecoveryRate();
 
-		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateRecovery =
-			lsv.bankSubordinateRecoveryRate();
+		double dblBankSubordinateFundingNumeraire = emvBank.subordinateFundingNumeraire();
 
-		if (null != jdvBankSubordinateFunding && null != jdvBankSubordinateRecovery)
-			dblValue -= jdvBankSubordinateFunding.value() * _dblBankSubordinateNumeraireUnits *
-				jdvBankSubordinateRecovery.value();
+		double dblBankSubordinateRecoveryRate = emvBank.subordinateRecoveryRate();
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFundingNumeraire) &&
+			!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateRecoveryRate))
+			dblValue -= dblBankSubordinateFundingNumeraire * _dblBankSubordinateNumeraireUnits *
+				dblBankSubordinateRecoveryRate;
 
 		return dblValue;
 	}

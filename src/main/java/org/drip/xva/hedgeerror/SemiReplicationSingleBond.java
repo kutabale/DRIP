@@ -89,7 +89,7 @@ public class SemiReplicationSingleBond extends org.drip.xva.pde.BurgardKjaerOper
 	 */
 
 	public SemiReplicationSingleBond (
-		final org.drip.xva.universe.LatentStateDynamicsContainer tc,
+		final org.drip.xva.universe.TradeablesContainer tc,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception
 	{

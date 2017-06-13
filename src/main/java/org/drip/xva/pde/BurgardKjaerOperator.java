@@ -70,8 +70,8 @@ package org.drip.xva.pde;
  */
 
 public abstract class BurgardKjaerOperator {
+	private org.drip.xva.universe.TradeablesContainer _tc = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
-	private org.drip.xva.universe.LatentStateDynamicsContainer _lsdc = null;
 
 	protected abstract double hedgeError (
 		final double dblBankRecovery,
@@ -83,18 +83,18 @@ public abstract class BurgardKjaerOperator {
 	/**
 	 * BurgardKjaerOperator Constructor
 	 * 
-	 * @param lsdc The Universe of Tradeable Assets
+	 * @param tc The Universe of Tradeable Assets
 	 * @param pdeec The XVA Control Settings
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public BurgardKjaerOperator (
-		final org.drip.xva.universe.LatentStateDynamicsContainer lsdc,
+		final org.drip.xva.universe.TradeablesContainer tc,
 		final org.drip.xva.definition.PDEEvolutionControl pdeec)
 		throws java.lang.Exception
 	{
-		if (null == (_lsdc = lsdc) || null == (_pdeec = pdeec))
+		if (null == (_tc = tc) || null == (_pdeec = pdeec))
 			throw new java.lang.Exception ("BurgardKjaerOperator Constructor => Invalid Inputs");
 	}
 
@@ -104,9 +104,9 @@ public abstract class BurgardKjaerOperator {
 	 * @return The Universe of Trade-able Assets
 	 */
 
-	public org.drip.xva.universe.LatentStateDynamicsContainer universe()
+	public org.drip.xva.universe.TradeablesContainer universe()
 	{
-		return _lsdc;
+		return _tc;
 	}
 
 	/**
@@ -118,141 +118,6 @@ public abstract class BurgardKjaerOperator {
 	public org.drip.xva.definition.PDEEvolutionControl pdeec()
 	{
 		return _pdeec;
-	}
-
-	/**
-	 * Generate the Derivative Value Time Increment using the Burgard Kjaer Scheme
-	 * 
-	 * @param etvStart The Evolution Trajectory Vertex
-	 * @param dblCollateral The Off-setting Collateral
-	 * 
-	 * @return The Time Increment using the Burgard Kjaer Scheme
-	 */
-
-	public org.drip.xva.pde.BurgardKjaerEdgeRun edgeRun (
-		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
-		final double dblCollateral)
-	{
-		if (null == etvStart || !org.drip.quant.common.NumberUtil.IsValid (dblCollateral)) return null;
-
-		org.drip.xva.derivative.AssetGreekVertex agv = etvStart.assetGreekVertex();
-
-		org.drip.xva.universe.LatentStateVertex lsv = etvStart.latentStateVertex();
-
-		double dblDerivativeXVAValue = agv.derivativeXVAValue();
-
-		double dblGainOnBankDefault = etvStart.gainOnBankDefault();
-
-		double dblAssetValue = lsv.assetNumeraire().value();
-
-		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
-
-		double dblBankSeniorDefaultIntensity = lsv.bankHazardRate().value();
-
-		double dblCounterPartyDefaultIntensity = lsv.counterPartyHazardRate().value();
-
-		double dblBankGainOnCounterPartyDefault = etvStart.gainOnCounterPartyDefault();
-
-		double dblGainOnCounterPartyDefault = dblCounterPartyDefaultIntensity *
-			dblBankGainOnCounterPartyDefault;
-
-		try {
-			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_lsdc.asset()).thetaUpDown (etvStart, dblAssetValue, dblAssetBump);
-
-			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
-
-			return new org.drip.xva.pde.BurgardKjaerEdgeRun (
-				dblAssetBump,
-				-1. * adblBumpedTheta[0],
-				-1. * adblBumpedTheta[1],
-				-1. * adblBumpedTheta[2],
-				lsv.collateralSchemeNumeraire().value() * dblCollateral,
-				(dblBankSeniorDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
-				-1. * dblBankSeniorDefaultIntensity * dblGainOnBankDefault,
-				-1. * dblGainOnCounterPartyDefault,
-				dblDerivativeXVAValue * hedgeError (
-					lsv.bankSeniorRecoveryRate().value(),
-					dblGainOnBankDefault,
-					agv.derivativeFairValue(),
-					dblDerivativeXVAValue,
-					dblCollateral
-				)
-			);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * Generate the Time Increment Run Attribution using the Burgard Kjaer Scheme
-	 * 
-	 * @param lse The Latent State Edge
-	 * @param etvStart The Starting Evolution Trajectory Vertex
-	 * @param dblCollateral The Off-setting Collateral
-	 * 
-	 * @return The Time Increment Run Attribution using the Burgard Kjaer Scheme
-	 */
-
-	public org.drip.xva.pde.BurgardKjaerEdgeAttribution edgeRunAttribution (
-		final org.drip.xva.universe.LatentStateEdge lse,
-		final org.drip.xva.derivative.EvolutionTrajectoryVertex etvStart,
-		final double dblCollateral)
-	{
-		if (null == lse || null == etvStart) return null;
-
-		org.drip.xva.universe.LatentStateVertex lsvFinish = lse.finish();
-
-		double dblDerivativeXVAValue = etvStart.assetGreekVertex().derivativeXVAValue();
-
-		double dblCounterPartyRecovery = lsvFinish.counterPartyRecoveryRate().value();
-
-		double dblBankDefaultIntensity = lsvFinish.bankHazardRate().value();
-
-		double dblCounterPartyDefaultIntensity = lsvFinish.counterPartyHazardRate().value();
-
-		double dblCloseOutMTM = org.drip.xva.definition.PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG ==
-			_pdeec.closeOutScheme() ? dblDerivativeXVAValue : dblDerivativeXVAValue;
-
-		double dblBankExposure = dblCloseOutMTM > 0. ? dblCloseOutMTM :
-			lsvFinish.bankSeniorRecoveryRate().value() * dblCloseOutMTM;
-
-		double dblAssetValue = lsvFinish.assetNumeraire().value();
-
-		double dblAssetBump = _pdeec.sensitivityShiftFactor() * dblAssetValue;
-
-		double dblDerivativeXVACounterPartyDefaultGrowth = -1. * dblCounterPartyDefaultIntensity *
-			(dblCloseOutMTM < 0. ? dblCloseOutMTM : dblCounterPartyRecovery * dblCloseOutMTM);
-
-		org.drip.measure.realization.JumpDiffusionVertex jdvCollateralScheme =
-			lsvFinish.collateralSchemeNumeraire();
-
-		double dblBankSeniorFundingSpread = lse.bankSeniorFundingSpread() / lse.vertexIncrement();
-
-		try {
-			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_lsdc.asset()).thetaUpDown (etvStart, dblAssetValue, dblAssetBump);
-
-			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
-
-			return new org.drip.xva.pde.BurgardKjaerEdgeAttribution (
-				dblAssetBump,
-				-1. * adblBumpedTheta[0],
-				-1. * adblBumpedTheta[1],
-				-1. * adblBumpedTheta[2],
-				jdvCollateralScheme.value() * dblCollateral,
-				(dblBankDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValue,
-				dblBankSeniorFundingSpread * dblBankExposure,
-				-1. * dblBankDefaultIntensity * dblBankExposure,
-				dblDerivativeXVACounterPartyDefaultGrowth
-			);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 
 	/**
@@ -273,13 +138,13 @@ public abstract class BurgardKjaerOperator {
 		if (null == me || null == etvStart || !org.drip.quant.common.NumberUtil.IsValid (dblCollateral))
 			return null;
 
-		org.drip.xva.derivative.AssetGreekVertex agvStart = etvStart.assetGreekVertex();
-
 		org.drip.xva.universe.MarketVertex mvFinish = me.finish();
 
 		org.drip.xva.universe.EntityMarketVertex emvBankFinish = mvFinish.bank();
 
 		org.drip.xva.universe.EntityMarketVertex emvCounterPartyFinish = mvFinish.counterParty();
+
+		org.drip.xva.derivative.AssetGreekVertex agvStart = etvStart.assetGreekVertex();
 
 		double dblDerivativeXVAValueStart = agvStart.derivativeXVAValue();
 
@@ -300,7 +165,7 @@ public abstract class BurgardKjaerOperator {
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_lsdc.asset()).thetaUpDown (etvStart, dblAssetValue, dblAssetBump);
+				(_tc.asset()).thetaUpDown (etvStart, dblAssetValue, dblAssetBump);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 
@@ -376,7 +241,7 @@ public abstract class BurgardKjaerOperator {
 
 		try {
 			double[] adblBumpedTheta = new org.drip.xva.pde.ParabolicDifferentialOperator
-				(_lsdc.asset()).thetaUpDown (etvStart, dblAssetValue, dblAssetBump);
+				(_tc.asset()).thetaUpDown (etvStart, dblAssetValue, dblAssetBump);
 
 			if (null == adblBumpedTheta || 3 != adblBumpedTheta.length) return null;
 

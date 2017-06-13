@@ -84,8 +84,7 @@ public class MarketEdge {
 		final org.drip.xva.universe.MarketVertex mvFinish)
 		throws java.lang.Exception
 	{
-		if (null == (_mvStart = mvStart) || null == (_mvFinish = mvFinish) || _mvFinish.anchor().julian() <=
-			_mvStart.anchor().julian())
+		if (null == (_mvStart = mvStart) || null == (_mvFinish = mvFinish))
 			throw new java.lang.Exception ("MarketEdge Constructor => Invalid Inputs");
 	}
 

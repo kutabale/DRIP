@@ -151,10 +151,11 @@ public class VertexDateBuilder {
 	{
 		if (0 >= iSpotDate || iFinalDate <= iSpotDate || 0 >= iNumVertex) return null;
 
-		double dblWidth = ((double) (iFinalDate - iSpotDate)) / iNumVertex;
 		int[] aiDate = new int[iNumVertex];
+		aiDate[iNumVertex - 1] = iFinalDate;
+		double dblWidth = ((double) (iFinalDate - iSpotDate)) / iNumVertex;
 
-		for (int iVertex = 0; iVertex < iNumVertex; ++iVertex) {
+		for (int iVertex = 0; iVertex < iNumVertex - 1; ++iVertex) {
 			aiDate[iVertex] = iSpotDate + (int) ((iVertex + 1) * dblWidth);
 		}
 

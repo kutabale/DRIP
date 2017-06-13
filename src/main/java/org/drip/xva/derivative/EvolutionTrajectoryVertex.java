@@ -73,7 +73,6 @@ public class EvolutionTrajectoryVertex {
 	private double _dblTime = java.lang.Double.NaN;
 	private double _dblCollateral = java.lang.Double.NaN;
 	private double _dblHedgeError = java.lang.Double.NaN;
-	private org.drip.xva.universe.LatentStateVertex _lsv = null;
 	private org.drip.xva.derivative.AssetGreekVertex _agv = null;
 	private org.drip.xva.derivative.ReplicationPortfolioVertex _rpv = null;
 	private double _dblBankGainOnCounterPartyDefault = java.lang.Double.NaN;
@@ -83,7 +82,6 @@ public class EvolutionTrajectoryVertex {
 	 * EvolutionTrajectoryVertex Constructor
 	 * 
 	 * @param dblTime The Evolution Trajectory Edge Time
-	 * @param lsv The Realized Latent State Vertex
 	 * @param rpv The Replication Portfolio Vertex
 	 * @param agv The Asset Greek Vertex
 	 * @param dblCounterPartyGainOnBankDefault Counter Party Gain On Bank Default
@@ -96,7 +94,6 @@ public class EvolutionTrajectoryVertex {
 
 	public EvolutionTrajectoryVertex (
 		final double dblTime,
-		final org.drip.xva.universe.LatentStateVertex lsv,
 		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
 		final org.drip.xva.derivative.AssetGreekVertex agv,
 		final double dblCounterPartyGainOnBankDefault,
@@ -105,13 +102,12 @@ public class EvolutionTrajectoryVertex {
 		final double dblHedgeError)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_lsv = lsv) || null ==
-			(_rpv = rpv) || null == (_agv = agv) || !org.drip.quant.common.NumberUtil.IsValid
-				(_dblCounterPartyGainOnBankDefault = dblCounterPartyGainOnBankDefault) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblBankGainOnCounterPartyDefault =
-						dblBankGainOnCounterPartyDefault) || !org.drip.quant.common.NumberUtil.IsValid
-							(_dblCollateral = dblCollateral) || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblHedgeError = dblHedgeError))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTime = dblTime) || null == (_rpv = rpv) || null ==
+			(_agv = agv) || !org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyGainOnBankDefault =
+				dblCounterPartyGainOnBankDefault) || !org.drip.quant.common.NumberUtil.IsValid
+					(_dblBankGainOnCounterPartyDefault = dblBankGainOnCounterPartyDefault) ||
+						!org.drip.quant.common.NumberUtil.IsValid (_dblCollateral = dblCollateral) ||
+							!org.drip.quant.common.NumberUtil.IsValid (_dblHedgeError = dblHedgeError))
 			throw new java.lang.Exception ("EvolutionTrajectoryVertex Constructor => Invalid Inputs");
 	}
 
@@ -146,17 +142,6 @@ public class EvolutionTrajectoryVertex {
 	public double hedgeError()
 	{
 		return _dblHedgeError;
-	}
-
-	/**
-	 * Retrieve the Realized Latent State Vertex
-	 * 
-	 * @return The Realized Latent State Vertex
-	 */
-
-	public org.drip.xva.universe.LatentStateVertex latentStateVertex()
-	{
-		return _lsv;
 	}
 
 	/**
@@ -207,20 +192,30 @@ public class EvolutionTrajectoryVertex {
 	 * Indicate whether Replication Portfolio satisfies the Funding Constraint implied by the Vertex
 	 * 	Numeraire
 	 * 
+	 * @param mv The Market Vertex
+	 * 
 	 * @return The Funding Constraint Verification Mismatch
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double verifyFundingConstraint()
+	public double verifyFundingConstraint (
+		final org.drip.xva.universe.MarketVertex mv)
+		throws java.lang.Exception
 	{
-		double dblFundingConstraint = _agv.derivativeXVAValue() + _lsv.bankSeniorFundingNumeraire().value() *
+		if (null == mv)
+			throw new java.lang.Exception
+				("EvolutionTrajectoryVertex::verifyFundingConstraint => Invalid Inputs");
+
+		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
+
+		double dblFundingConstraint = _agv.derivativeXVAValue() + emvBank.seniorFundingNumeraire() *
 			_rpv.bankSeniorNumeraireUnits();
 
-		org.drip.measure.realization.JumpDiffusionVertex jdvBankSubordinateFundingNumeraire =
-			_lsv.bankSubordinateFundingNumeraire();
+		double dblBankSubordinateFunding = emvBank.subordinateFundingNumeraire();
 
-		if (null != jdvBankSubordinateFundingNumeraire)
-			dblFundingConstraint += jdvBankSubordinateFundingNumeraire.value() *
-				_rpv.bankSubordinateNumeraireUnits();
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFunding))
+			dblFundingConstraint += dblBankSubordinateFunding * _rpv.bankSubordinateNumeraireUnits();
 
 		return dblFundingConstraint;
 	}
