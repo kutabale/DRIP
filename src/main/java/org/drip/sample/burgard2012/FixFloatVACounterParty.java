@@ -91,7 +91,7 @@ public class FixFloatVACounterParty {
 		throws Exception
 	{
 		double[][] aablATMSwapRateOffset = new double[iNumSimulation][iNumStep + 1];
-		double[] adblTimeWidth = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;

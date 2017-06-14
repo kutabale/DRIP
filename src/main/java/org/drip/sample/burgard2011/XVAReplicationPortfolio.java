@@ -123,14 +123,14 @@ public class XVAReplicationPortfolio {
 
 		double dblThetaAssetNumeraireDown = bker.thetaAssetNumeraireDown();
 
-		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() +
+		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() -
 			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
-		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() +
+		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() -
 			(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
 				(dblAssetNumeraireBump * dblAssetNumeraireBump);
 
-		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
+		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart + dblTheta * dblTimeWidth;
 
 		CloseOutGeneral cog = new CloseOutBilateral (
 			mvStart.bank().seniorRecoveryRate(),
@@ -534,7 +534,7 @@ public class XVAReplicationPortfolio {
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (agvInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMV[aMV.length - 1].assetNumeraire(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +

@@ -277,10 +277,3 @@ org.drip.xva.pde
 org.drip.xva.set
 org.drip.xva.strategy
 org.drip.xva.universe
-org.drip.zen.algorithm
-org.drip.zen.equation
-org.drip.zen.geometry
-org.drip.zen.grid
-org.drip.zen.juice
-org.drip.zen.numbers
-org.drip.zen.text

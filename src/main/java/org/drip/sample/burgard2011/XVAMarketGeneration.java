@@ -417,12 +417,6 @@ public class XVAMarketGeneration {
 
 		System.out.println ("\t||            - Senior Funding Numeraire                                                        ||");
 
-		System.out.println ("\t||            - Subordinate Recovery Rate                                                       ||");
-
-		System.out.println ("\t||            - Subordinate Funding Spread                                                      ||");
-
-		System.out.println ("\t||            - Subordinate Funding Numeraire                                                   ||");
-
 		System.out.println ("\t||----------------------------------------------------------------------------------------------||");
 
 		for (int i = 0; i < aMV.length; ++i) {
@@ -434,10 +428,7 @@ public class XVAMarketGeneration {
 				FormatUtil.FormatDouble (emvCounterParty.survivalProbability(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (emvCounterParty.seniorRecoveryRate(), 1, 0, 100.) + "% | " +
 				FormatUtil.FormatDouble (emvCounterParty.seniorFundingSpread(), 1, 2, 100.) + "% | " +
-				FormatUtil.FormatDouble (emvCounterParty.seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (emvCounterParty.subordinateRecoveryRate(), 1, 0, 100.) + "% | " +
-				FormatUtil.FormatDouble (emvCounterParty.subordinateFundingSpread(), 1, 2, 100.) + "% | " +
-				FormatUtil.FormatDouble (emvCounterParty.subordinateFundingNumeraire(), 1, 6, 1.) + " ||"
+				FormatUtil.FormatDouble (emvCounterParty.seniorFundingNumeraire(), 1, 6, 1.) + " ||"
 			);
 		}
 

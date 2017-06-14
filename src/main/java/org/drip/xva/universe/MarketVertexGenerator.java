@@ -354,7 +354,7 @@ public class MarketVertexGenerator {
 
 		double dblBankSubordinateFundingNumeraireTerminal = emvBankInitial.subordinateFundingNumeraire();
 
-		boolean bSingleBankBond = null != tBankSubordinateFunding ||
+		boolean bSingleBankBond = null == tBankSubordinateFunding ||
 			!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFundingNumeraireTerminal) ||
 				!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateRecoveryRateStart);
 

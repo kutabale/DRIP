@@ -122,14 +122,14 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblThetaAssetNumeraireDown = bkea.thetaAssetNumeraireDown();
 
-		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() +
+		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() -
 			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
-		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() +
+		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() -
 			(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
 				(dblAssetNumeraireBump * dblAssetNumeraireBump);
 
-		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
+		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart + dblTheta * dblTimeWidth;
 
 		CloseOutGeneral cog = new CloseOutBilateral (
 			mvStart.bank().seniorRecoveryRate(),
@@ -472,7 +472,7 @@ public class CorrelatedNumeraireXVAAttribution {
 			pdeec
 		);
 
-		AssetGreekVertex eagInitial = new AssetGreekVertex (
+		AssetGreekVertex agvInitial = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
@@ -484,7 +484,7 @@ public class CorrelatedNumeraireXVAAttribution {
 		double dblGainOnCounterPartyDefaultInitial = -1. * (dblDerivativeXVAValue -
 			cob.counterPartyDefault (dblDerivativeXVAValue));
 
-		ReplicationPortfolioVertex erpInitial = ReplicationPortfolioVertex.Standard (
+		ReplicationPortfolioVertex rpvInitial = ReplicationPortfolioVertex.Standard (
 			1.,
 			dblGainOnBankDefaultInitial,
 			dblGainOnCounterPartyDefaultInitial,
@@ -533,15 +533,15 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (eagInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (agvInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aMV[iNumVertex].assetNumeraire(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aMV[iNumVertex].bank().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aMV[iNumVertex].counterParty().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aMV[iNumVertex].collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (erpInitial.cashAccount(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (rpvInitial.cashAccount(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 6, 1.) + " | " +
@@ -556,7 +556,7 @@ public class CorrelatedNumeraireXVAAttribution {
 				0.,
 				0.
 			),
-			eagInitial,
+			agvInitial,
 			dblGainOnBankDefaultInitial,
 			dblGainOnCounterPartyDefaultInitial,
 			0.,

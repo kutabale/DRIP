@@ -123,14 +123,14 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		double dblThetaAssetNumeraireDown = bker.thetaAssetNumeraireDown();
 
-		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() +
+		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() -
 			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
-		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() +
+		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() -
 			(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
 				(dblAssetNumeraireBump * dblAssetNumeraireBump);
 
-		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
+		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart + dblTheta * dblTimeWidth;
 
 		CloseOutGeneral cog = new CloseOutBilateral (
 			mvStart.bank().seniorRecoveryRate(),
@@ -471,7 +471,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			pdeec
 		);
 
-		AssetGreekVertex eagInitial = new AssetGreekVertex (
+		AssetGreekVertex agvInitial = new AssetGreekVertex (
 			dblDerivativeXVAValue,
 			-1.,
 			0.,
@@ -531,7 +531,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 				0.,
 				0.
 			),
-			eagInitial,
+			agvInitial,
 			dblGainOnBankDefaultInitial,
 			dblGainOnCounterPartyDefaultInitial,
 			0.,

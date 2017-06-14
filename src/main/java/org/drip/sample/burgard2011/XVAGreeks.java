@@ -123,14 +123,14 @@ public class XVAGreeks {
 
 		double dblThetaAssetNumeraireDown = bker.thetaAssetNumeraireDown();
 
-		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() +
+		double dblDerivativeXVAValueDeltaFinish = agvStart.derivativeXVAValueDelta() -
 			0.5 * (dblThetaAssetNumeraireUp - dblThetaAssetNumeraireDown) * dblTimeWidth / dblAssetNumeraireBump;
 
-		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() +
+		double dblDerivativeXVAValueGammaFinish = agvStart.derivativeXVAValueGamma() -
 			(dblThetaAssetNumeraireUp + dblThetaAssetNumeraireDown - 2. * dblTheta) * dblTimeWidth /
 				(dblAssetNumeraireBump * dblAssetNumeraireBump);
 
-		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart - dblTheta * dblTimeWidth;
+		double dblDerivativeXVAValueFinish = dblDerivativeXVAValueStart + dblTheta * dblTimeWidth;
 
 		CloseOutGeneral cog = new CloseOutBilateral (
 			mvStart.bank().seniorRecoveryRate(),
@@ -168,7 +168,7 @@ public class XVAGreeks {
 		).cashAccount();
 
 		return new EvolutionTrajectoryVertex (
-			dblTimeStart - dblTimeWidth,
+			dblTimeStart + dblTimeWidth,
 			ReplicationPortfolioVertex.Standard (
 				-1. * dblDerivativeXVAValueDeltaFinish,
 				dblGainOnBankDefaultFinish / mvFinish.bank().seniorFundingNumeraire(),

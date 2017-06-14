@@ -329,7 +329,7 @@ public class EulerTrajectoryEvolutionScheme {
 		double dblDerivativeXVAValue = dblTerminalXVADerivativeValue;
 
 		for (int i = 0; i < aMV.length; ++i)
-			aMV[i] = aMVBase [aMV.length - 1 - i];
+			aMV[i] = aMVBase[aMV.length - 1 - i];
 
 		PDEEvolutionControl pdeec = new PDEEvolutionControl (
 			PDEEvolutionControl.CLOSEOUT_GREGORY_LI_TANG,
@@ -413,10 +413,10 @@ public class EulerTrajectoryEvolutionScheme {
 		System.out.println ("\t||" +
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (agvInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMV[aMV.length - 1].assetNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMV[aMV.length - 1].bank().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMV[aMV.length - 1].counterParty().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMV[aMV.length - 1].collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].assetNumeraire(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].bank().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].counterParty().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
@@ -452,10 +452,10 @@ public class EulerTrajectoryEvolutionScheme {
 			System.out.println ("\t||" +
 				FormatUtil.FormatDouble (etv.time(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.assetGreekVertex().derivativeXVAValue(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].assetNumeraire(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].bank().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].counterParty().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMV[i].collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMVBase[i].assetNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMVBase[i].bank().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMVBase[i].counterParty().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMVBase[i].collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().assetNumeraireUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +

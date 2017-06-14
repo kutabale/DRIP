@@ -110,10 +110,10 @@ public class MarketVertex {
 					dblBankSurvival,
 					dblBankSeniorFundingSpread / (1. - dblBankSeniorRecoveryRate),
 					dblBankSeniorRecoveryRate,
+					dblBankSeniorFundingSpread,
 					1.,
-					dblBankSeniorFundingSpread,
 					0.,
-					dblBankSeniorFundingSpread,
+					dblBankSeniorFundingSpread / (1. - dblBankSeniorRecoveryRate),
 					1.
 				),
 				new org.drip.xva.universe.EntityMarketVertex (
