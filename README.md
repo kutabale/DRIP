@@ -40,4 +40,4 @@ Apache 2.0
 
 ## Contact
 
-lakshmi@synergicdesign.com
+lakshmi7977@gmail.com
