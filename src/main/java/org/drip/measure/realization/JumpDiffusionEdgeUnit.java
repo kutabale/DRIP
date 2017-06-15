@@ -261,7 +261,7 @@ public class JumpDiffusionEdgeUnit {
 		if (!org.drip.quant.common.NumberUtil.IsValid (_dblTimeIncrement = dblTimeIncrement) || 0. ==
 			_dblTimeIncrement || !org.drip.quant.common.NumberUtil.IsValid (_dblDiffusion = dblDiffusion) ||
 				!org.drip.quant.common.NumberUtil.IsValid (_dblJump = dblJump))
-			throw new java.lang.Exception ("JumpDiffusionEdgeUnit Constructor => Invalid Inputs: " + _dblTimeIncrement);
+			throw new java.lang.Exception ("JumpDiffusionEdgeUnit Constructor => Invalid Inputs");
 	}
 
 	/**

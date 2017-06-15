@@ -91,7 +91,7 @@ public class PortfolioPathAggregationUncorrelated {
 	{
 		double[] adblNumeraireValue = new double[iNumStep + 1];
 		adblNumeraireValue[0] = dblNumeraireValueInitial;
-		double[] adblTimeWidth = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
@@ -126,7 +126,7 @@ public class PortfolioPathAggregationUncorrelated {
 		throws Exception
 	{
 		double[][] aablCollateralPortfolioValue = new double[iNumPath][iNumStep + 1];
-		double[] adblTimeWidth = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
@@ -184,6 +184,8 @@ public class PortfolioPathAggregationUncorrelated {
 		double dblCounterPartyRecoveryRateInitial = 0.30;
 		double dblBankFundingSpreadDrift = 0.00002;
 		double dblBankFundingSpreadVolatility = 0.002;
+		double dblCounterPartyFundingSpreadDrift = 0.000022;
+		double dblCounterPartyFundingSpreadVolatility = 0.0022;
 
 		double dblTimeWidth = dblTime / iNumStep;
 		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
@@ -191,6 +193,7 @@ public class PortfolioPathAggregationUncorrelated {
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
+		double dblCounterPartyFundingSpreadInitial = dblCounterPartyHazardRateInitial / (1. - dblCounterPartyRecoveryRateInitial);
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -286,15 +289,29 @@ public class PortfolioPathAggregationUncorrelated {
 			iNumStep
 		);
 
+		double[] adblCounterPartyFundingSpread = NumeraireValueRealization (
+			new DiffusionEvolver (
+				DiffusionEvaluatorLinear.Standard (
+					dblCounterPartyFundingSpreadDrift,
+					dblCounterPartyFundingSpreadVolatility
+				)
+			),
+			dblCounterPartyFundingSpreadInitial,
+			dblTime,
+			dblTimeWidth,
+			iNumStep
+		);
+
 		for (int i = 0; i <= iNumStep; ++i) {
-			aMV[i] = MarketVertex.Standard (
+			aMV[i] = MarketVertex.SeniorOnly (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				adblCSA[i],
 				Math.exp (-0.5 * adblBankHazardRate[i] * i),
 				adblBankRecoveryRate[i],
 				adblBankFundingSpread[i],
 				Math.exp (-0.5 * adblCounterPartyHazardRate[i] * i),
-				adblCounterPartyRecoveryRate[i]
+				adblCounterPartyRecoveryRate[i],
+				adblCounterPartyFundingSpread[i]
 			);
 
 			for (int j = 0; j < iNumPath; ++j)

@@ -76,7 +76,7 @@ public class MarketVertex {
 	private org.drip.xva.universe.EntityMarketVertex _emvCounterParty = null;
 
 	/**
-	 * Construct a Standard Instance of the MarketVertex
+	 * Construct the "Senior Only" Instance of the MarketVertex
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblOvernightIndexRate The Realized Overnight Index Rate
@@ -85,18 +85,20 @@ public class MarketVertex {
 	 * @param dblBankSeniorFundingSpread The Realized Bank Senior Funding Spread
 	 * @param dblCounterPartySurvival The Realized Counter Party Survival Probability
 	 * @param dblCounterPartyRecoveryRate The Realized Counter Party Recovery Rate
+	 * @param dblCounterPartyFundingSpread The Realized Counter Party Funding Spread
 	 * 
-	 * @return The Standard Instance of MarketVertex
+	 * @return The "Senior Only" Instance of MarketVertex
 	 */
 
-	public static final MarketVertex Standard (
+	public static final MarketVertex SeniorOnly (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblOvernightIndexRate,
 		final double dblBankSurvival,
 		final double dblBankSeniorRecoveryRate,
 		final double dblBankSeniorFundingSpread,
 		final double dblCounterPartySurvival,
-		final double dblCounterPartyRecoveryRate)
+		final double dblCounterPartyRecoveryRate,
+		final double dblCounterPartyFundingSpread)
 	{
 		try {
 			return new MarketVertex (
@@ -112,15 +114,15 @@ public class MarketVertex {
 					dblBankSeniorRecoveryRate,
 					dblBankSeniorFundingSpread,
 					1.,
-					0.,
-					dblBankSeniorFundingSpread / (1. - dblBankSeniorRecoveryRate),
-					1.
+					java.lang.Double.NaN,
+					java.lang.Double.NaN,
+					java.lang.Double.NaN
 				),
 				new org.drip.xva.universe.EntityMarketVertex (
 					dblCounterPartySurvival,
 					0.,
 					dblCounterPartyRecoveryRate,
-					0.,
+					dblCounterPartyFundingSpread,
 					1.,
 					java.lang.Double.NaN,
 					java.lang.Double.NaN,

@@ -12,8 +12,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -95,7 +94,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 	{
 		double[] adblNumeraireValue = new double[iNumStep + 1];
 		adblNumeraireValue[0] = dblNumeraireValueInitial;
-		double[] adblTimeWidth = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
@@ -131,7 +130,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 	{
 		double[] adblATMSwapRateOffset = new double[iNumStep + 1];
 		adblATMSwapRateOffset[0] = dblATMSwapRateOffsetInitial;
-		double[] adblTimeWidth = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
@@ -218,15 +217,18 @@ public class UncollateralizedCollateralGroupCorrelated {
 		double dblCounterPartyRecoveryRateInitial = 0.30;
 		double dblBankFundingSpreadDrift = 0.00002;
 		double dblBankFundingSpreadVolatility = 0.002;
+		double dblCounterPartyFundingSpreadDrift = 0.000022;
+		double dblCounterPartyFundingSpreadVolatility = 0.0022;
 
 		double[][] aadblCorrelation = new double[][] {
-			{1.00, 0.03,  0.07,  0.04,  0.05,  0.08,  0.00},  // PORTFOLIO
-			{0.03, 1.00,  0.26,  0.33,  0.21,  0.35,  0.13},  // CSA
-			{0.07, 0.26,  1.00,  0.45, -0.17,  0.07,  0.77},  // BANK HAZARD
-			{0.04, 0.33,  0.45,  1.00, -0.22, -0.54,  0.58},  // COUNTER PARTY HAZARD
-			{0.05, 0.21, -0.17, -0.22,  1.00,  0.47, -0.23},  // BANK RECOVERY
-			{0.08, 0.35,  0.07, -0.54,  0.47,  1.00,  0.01},  // COUNTER PARTY RECOVERY
-			{0.00, 0.13,  0.77,  0.58, -0.23,  0.01,  1.00}   // BANK FUNDING SPREAD
+			{1.00, 0.03,  0.07,  0.04,  0.05,  0.08,  0.00,  0.00},  // PORTFOLIO
+			{0.03, 1.00,  0.26,  0.33,  0.21,  0.35,  0.13,  0.00},  // CSA
+			{0.07, 0.26,  1.00,  0.45, -0.17,  0.07,  0.77,  0.00},  // BANK HAZARD
+			{0.04, 0.33,  0.45,  1.00, -0.22, -0.54,  0.58,  0.00},  // COUNTER PARTY HAZARD
+			{0.05, 0.21, -0.17, -0.22,  1.00,  0.47, -0.23,  0.00},  // BANK RECOVERY
+			{0.08, 0.35,  0.07, -0.54,  0.47,  1.00,  0.01,  0.00},  // COUNTER PARTY RECOVERY
+			{0.00, 0.13,  0.77,  0.58, -0.23,  0.01,  1.00,  0.00},  // BANK FUNDING SPREAD
+			{0.00, 0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  1.00}   // COUNTER PARTY FUNDING SPREAD
 		};
 
 		JulianDate dtSpot = DateUtil.Today();
@@ -237,6 +239,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankRecoveryRateInitial);
+		double dblCounterPartyFundingSpreadInitial = dblCounterPartyHazardRateInitial / (1. - dblCounterPartyRecoveryRateInitial);
 
 		DiffusionEvolver deATMSwapRateOffset = new DiffusionEvolver (
 			DiffusionEvaluatorLinear.Standard (
@@ -284,6 +287,13 @@ public class UncollateralizedCollateralGroupCorrelated {
 			DiffusionEvaluatorLinear.Standard (
 				dblBankFundingSpreadDrift,
 				dblBankFundingSpreadVolatility
+			)
+		);
+
+		DiffusionEvolver deCounterPartyFundingSpread = new DiffusionEvolver (
+			DiffusionEvaluatorLinear.Standard (
+				dblCounterPartyFundingSpreadDrift,
+				dblCounterPartyFundingSpreadVolatility
 			)
 		);
 
@@ -359,18 +369,28 @@ public class UncollateralizedCollateralGroupCorrelated {
 				iNumStep
 			);
 
+			double[] adblCounterPartyFundingSpread = NumeraireValueRealization (
+				deCounterPartyFundingSpread,
+				dblCounterPartyFundingSpreadInitial,
+				dblTime,
+				dblTimeWidth,
+				aadblNumeraire[6],
+				iNumStep
+			);
+
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
 			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aMV[j] = MarketVertex.Standard (
+				aMV[j] = MarketVertex.SeniorOnly (
 					adtVertex[j] = dtSpot.addMonths (6 * j + 6),
 					adblCSA[j],
 					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
 					adblBankRecoveryRate[j],
 					adblBankFundingSpread[j],
 					Math.exp (-0.5 * adblCounterPartyHazardRate[j] * (j + 1)),
-					adblCounterPartyRecoveryRate[j]
+					adblCounterPartyRecoveryRate[j],
+					adblCounterPartyFundingSpread[j]
 				);
 
 				aadblCollateralBalance[i][j] = 0.;

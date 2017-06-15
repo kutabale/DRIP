@@ -89,8 +89,8 @@ public class PortfolioGroupRun {
 		throws Exception
 	{
 		double[] ablAssetValue = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
 		ablAssetValue[0] = dblAssetValueInitial;
-		double[] adblTimeWidth = new double[iNumStep + 1];
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
@@ -136,6 +136,7 @@ public class PortfolioGroupRun {
 		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
+		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
 		HypothecationGroupVertexRegular[] aHGVR1 = new HypothecationGroupVertexRegular[iNumStep + 1];
 		HypothecationGroupVertexRegular[] aHGVR2 = new HypothecationGroupVertexRegular[iNumStep + 1];
 
@@ -201,14 +202,15 @@ public class PortfolioGroupRun {
 		System.out.println ("\t|--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i = 0; i <= iNumStep; ++i) {
-			aMV[i] = MarketVertex.Standard (
+			aMV[i] = MarketVertex.SeniorOnly (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
 				dblBankRecoveryRate,
 				dblBankFundingSpread,
 				Math.exp (-0.5 * dblCounterPartyHazardRate * i),
-				dblCounterPartyRecoveryRate
+				dblCounterPartyRecoveryRate,
+				dblCounterPartyFundingSpread
 			);
 
 			aHGVR1[i] = new HypothecationGroupVertexRegular (

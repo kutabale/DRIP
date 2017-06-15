@@ -11,8 +11,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.strategy.*;
-import org.drip.xva.universe.MarketPath;
-import org.drip.xva.universe.MarketVertex;
+import org.drip.xva.universe.*;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -92,7 +91,7 @@ public class UncollateralizedCollateralGroup {
 	{
 		double[] adblATMSwapRateOffset = new double[iNumStep + 1];
 		adblATMSwapRateOffset[0] = dblATMSwapRateOffsetInitial;
-		double[] adblTimeWidth = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
@@ -199,6 +198,7 @@ public class UncollateralizedCollateralGroup {
 		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
+		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
 
 		double[][] aadblSwapPortfolioValueRealization = SwapPortfolioValueRealization (
 			new DiffusionEvolver (
@@ -216,14 +216,15 @@ public class UncollateralizedCollateralGroup {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aMV[i] = MarketVertex.Standard (
+			aMV[i] = MarketVertex.SeniorOnly (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
 				dblBankRecoveryRate,
 				dblBankFundingSpread,
 				Math.exp (-0.5 * dblCounterPartyHazardRate * i),
-				dblCounterPartyRecoveryRate
+				dblCounterPartyRecoveryRate,
+				dblCounterPartyFundingSpread
 			);
 
 		MarketPath mp = new MarketPath (aMV);

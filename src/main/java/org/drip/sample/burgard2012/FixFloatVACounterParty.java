@@ -140,6 +140,7 @@ public class FixFloatVACounterParty {
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
+		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -158,14 +159,15 @@ public class FixFloatVACounterParty {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aMV[i] = MarketVertex.Standard (
+			aMV[i] = MarketVertex.SeniorOnly (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Math.exp (0.5 * dblCSADrift * i),
 				Math.exp (-0.5 * dblBankHazardRate * i),
 				dblBankRecoveryRate,
 				dblBankFundingSpread,
 				Math.exp (-0.5 * dblCounterPartyHazardRate * i),
-				dblCounterPartyRecoveryRate
+				dblCounterPartyRecoveryRate,
+				dblCounterPartyFundingSpread
 			);
 
 		MarketPath mp = new MarketPath (aMV);
