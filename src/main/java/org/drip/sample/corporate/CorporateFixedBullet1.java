@@ -1,5 +1,5 @@
 
-package org.drip.sample.guggenheim;
+package org.drip.sample.corporate;
 
 import java.util.Map;
 
@@ -65,13 +65,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * TreasuryFixedBullet demonstrates Non-EOS Fixed Coupon Treasury Bond Pricing and Relative Value Measure
+ * CorporateFixedBullet1 demonstrates Non-EOS Fixed Coupon Agency Bond Pricing and Relative Value Measure
  *  Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class TreasuryFixedBullet {
+public class CorporateFixedBullet1 {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -405,7 +405,7 @@ public class TreasuryFixedBullet {
 		throws Exception
 	{
 		JulianDate dtSettle = dtValue.addBusDays (
-			1,
+			0,
 			aBond[0].currency()
 		);
 
@@ -432,10 +432,10 @@ public class TreasuryFixedBullet {
 		double[] adblOAS = new double[aBond.length];
 
 		for (int i = 0; i < aBond.length; ++i) {
-			System.out.println ("Doing " + aBond[i].name() + " @ " + dtSettle);
-
 			double dblCleanPriceOASUp = Double.NaN;
 			double dblCleanPriceOASDown = Double.NaN;
+
+			System.out.println ("Doing " + aBond[i].name());
 
 			WorkoutInfo wi = aBond[i].exerciseYieldFromPrice (
 				valParams,
@@ -539,7 +539,7 @@ public class TreasuryFixedBullet {
 		JulianDate dtSpot = DateUtil.CreateFromYMD (
 			2017,
 			DateUtil.MARCH,
-			10
+			15
 		);
 
 		String strCurrency = "USD";
@@ -607,21 +607,43 @@ public class TreasuryFixedBullet {
 		);
 
 		Bond[] aCorporateBond = new Bond[] {
-			Corporate ("AGENCY ", DateUtil.CreateFromYMD (2012,  7,  2), DateUtil.CreateFromYMD (2017,  6, 30), 0.00750, 2, "ACT/ACT"),
-			Corporate ("AGENCY ", DateUtil.CreateFromYMD (2011,  6, 30), DateUtil.CreateFromYMD (2017,  6, 30), 0.02500, 2, "ACT/ACT"),
-			Corporate ("AGENCY ", DateUtil.CreateFromYMD (2015,  1, 15), DateUtil.CreateFromYMD (2018,  1, 15), 0.00875, 2, "ACT/ACT"),
-			Corporate ("AGENCY ", DateUtil.CreateFromYMD (2011,  9, 30), DateUtil.CreateFromYMD (2018,  9, 30), 0.01375, 2, "ACT/ACT"),
-			Corporate ("AGENCY ", DateUtil.CreateFromYMD (1989,  8, 15), DateUtil.CreateFromYMD (2019,  8, 15), 0.08125, 2, "ACT/ACT"),
-			Corporate ("AGENCY ", DateUtil.CreateFromYMD (2016, 11, 15), DateUtil.CreateFromYMD (2046, 11, 15), 0.02875, 2, "ACT/ACT"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2013,  7, 31), DateUtil.CreateFromYMD (2018,  4, 15), 0.03625, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015, 11, 30), DateUtil.CreateFromYMD (2018,  7, 16), 0.03875, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2011, 11, 21), DateUtil.CreateFromYMD (2018, 11,  1), 0.06250, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2011, 11,  9), DateUtil.CreateFromYMD (2018, 11, 15), 0.09000, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  4,  3), DateUtil.CreateFromYMD (2019,  4, 30), 0.06375, 4, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014, 10, 17), DateUtil.CreateFromYMD (2019, 10, 15), 0.04250, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  9, 15), DateUtil.CreateFromYMD (2019, 10, 30), 0.06250, 4, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012,  3,  1), DateUtil.CreateFromYMD (2020,  3,  1), 0.07000, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2010,  3, 11), DateUtil.CreateFromYMD (2020,  3, 15), 0.05350, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2002,  3, 21), DateUtil.CreateFromYMD (2021,  4,  2), 0.07100, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014, 11, 14), DateUtil.CreateFromYMD (2021,  9, 15), 0.07250, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  5,  5), DateUtil.CreateFromYMD (2021, 10, 15), 0.06250, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2007,  6, 26), DateUtil.CreateFromYMD (2022,  7,  2), 0.06636, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2012, 11, 13), DateUtil.CreateFromYMD (2023,  5, 13), 0.05125, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2014,  5, 23), DateUtil.CreateFromYMD (2024,  6,  1), 0.05250, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2016,  5, 18), DateUtil.CreateFromYMD (2024,  6, 30), 0.07000, 2, "30/360"),
+			Corporate ("CORPORA", DateUtil.CreateFromYMD (2015,  1, 29), DateUtil.CreateFromYMD (2024, 11, 15), 0.05875, 2, "30/360"),
 		};
 
 		double[] adblCleanPrice = new double[] {
-			0.999921875,	// (2017,  6, 30)
-			1.005312500,	// (2017,  6, 30)
-			0.998515625,	// (2018,  1, 15)
-			1.001875000,	// (2018,  9, 30)
-			1.158125000,	// (2019,  8, 15)
-			0.943281250,	// (2046, 11, 15)
+			1.0085000,	// (2018,  4, 15)
+			1.0125000,	// (2018,  7, 16)
+			1.0470000,	// (2018, 11,  1)
+			1.0862500,	// (2018, 11, 15)
+			0.2509200,	// (2019,  4, 30)
+			1.0266900,	// (2019, 10, 15)
+			0.9912500,	// (2019, 10, 30)
+			1.0875000,	// (2020,  3,  1)
+			1.0375000,	// (2020,  3, 15)
+			1.0832920,	// (2021,  4, 21)
+			1.0721900,	// (2021,  9, 15)
+			1.0875000,	// (2021, 10, 15)
+			1.0781250,	// (2022,  7,  2)
+			1.0000000,	// (2023,  5, 13)
+			0.9900000,	// (2024,  6,  1)
+			1.0962500,	// (2024,  6, 30)
+			1.0425000,	// (2024, 11, 15)
 		};
 
 		double[] adblOAS = RVMeasures (
@@ -666,7 +688,7 @@ public class TreasuryFixedBullet {
 
 				csqc.setGovvieState (meGovvieCurve.getValue());
 
-				String strDump = " |           ";
+				String strDump = " |                ";
 
 				try {
 					strDump = " |      " +

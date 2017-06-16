@@ -1,9 +1,14 @@
 
-package org.drip.sample.guggenheim;
+package org.drip.sample.preferred;
+
+import java.util.Map;
 
 import org.drip.analytics.date.*;
+import org.drip.analytics.output.BondRVMeasures;
+import org.drip.analytics.support.Helper;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
+import org.drip.param.quote.*;
 import org.drip.param.valuation.*;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
@@ -60,18 +65,17 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * ZeroCouponBullet2 demonstrates Non-EOS Zero Coupon Multi-flavor Bond Pricing and Relative Value Measure
+ * PreferredFixedBullet demonstrates Non-EOS Fixed Coupon Preferred Bond Pricing and Relative Value Measure
  *  Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class ZeroCouponBullet2 {
+public class PreferredFixedBullet {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
-		final String strCurrency,
-		final double dblBump)
+		final String strCurrency)
 		throws Exception
 	{
 		String[] astrDepositMaturityTenor = new String[] {
@@ -79,16 +83,16 @@ public class ZeroCouponBullet2 {
 		};
 
 		double[] adblDepositQuote = new double[] {
-			0.0111956 + dblBump // 2D
+			0.0111956 // 2D
 		};
 
 		double[] adblFuturesQuote = new double[] {
-			0.011375 + dblBump,	// 98.8625
-			0.013350 + dblBump,	// 98.6650
-			0.014800 + dblBump,	// 98.5200
-			0.016450 + dblBump,	// 98.3550
-			0.017850 + dblBump,	// 98.2150
-			0.019300 + dblBump	// 98.0700
+			0.011375,	// 98.8625
+			0.013350,	// 98.6650
+			0.014800,	// 98.5200
+			0.016450,	// 98.3550
+			0.017850,	// 98.2150
+			0.019300	// 98.0700
 		};
 
 		String[] astrFixFloatMaturityTenor = new String[] {
@@ -112,23 +116,23 @@ public class ZeroCouponBullet2 {
 		};
 
 		double[] adblFixFloatQuote = new double[] {
-			0.017029 + dblBump, //  2Y
-			0.019354 + dblBump, //  3Y
-			0.021044 + dblBump, //  4Y
-			0.022291 + dblBump, //  5Y
-			0.023240 + dblBump, //  6Y
-			0.024025 + dblBump, //  7Y
-			0.024683 + dblBump, //  8Y
-			0.025243 + dblBump, //  9Y
-			0.025720 + dblBump, // 10Y
-			0.026130 + dblBump, // 11Y
-			0.026495 + dblBump, // 12Y
-			0.027230 + dblBump, // 15Y
-			0.027855 + dblBump, // 20Y
-			0.028025 + dblBump, // 25Y
-			0.028028 + dblBump, // 30Y
-			0.027902 + dblBump, // 40Y
-			0.027655 + dblBump  // 50Y
+			0.017029, //  2Y
+			0.019354, //  3Y
+			0.021044, //  4Y
+			0.022291, //  5Y
+			0.023240, //  6Y
+			0.024025, //  7Y
+			0.024683, //  8Y
+			0.025243, //  9Y
+			0.025720, // 10Y
+			0.026130, // 11Y
+			0.026495, // 12Y
+			0.027230, // 15Y
+			0.027855, // 20Y
+			0.028025, // 25Y
+			0.028028, // 30Y
+			0.027902, // 40Y
+			0.027655  // 50Y
 		};
 
 		MergedDiscountForwardCurve dcFunding = LatentMarketStateBuilder.SmoothFundingCurve (
@@ -259,7 +263,7 @@ public class ZeroCouponBullet2 {
 		return dcFunding;
 	}
 
-	private static final GovvieCurve GovvieCurve (
+	private static final Map<String, GovvieCurve> GovvieCurve (
 		final JulianDate dtSpot,
 		final String strCode,
 		final double[] adblCoupon,
@@ -288,7 +292,7 @@ public class ZeroCouponBullet2 {
 			dtSpot.addTenor ("30Y")
 		};
 
-		GovvieCurve gc = LatentMarketStateBuilder.GovvieCurve (
+		Map<String, GovvieCurve> mapGovvieCurve = LatentMarketStateBuilder.BumpedGovvieCurve (
 			strCode,
 			dtSpot,
 			adtEffective,
@@ -296,7 +300,9 @@ public class ZeroCouponBullet2 {
 			adblCoupon,
 			adblYield,
 			"Yield",
-			LatentMarketStateBuilder.SHAPE_PRESERVING
+			LatentMarketStateBuilder.SHAPE_PRESERVING,
+			0.0001,
+			false
 		);
 
 		BondComponent[] aComp = TreasuryBuilder.FromCode (
@@ -310,7 +316,7 @@ public class ZeroCouponBullet2 {
 
 		CurveSurfaceQuoteContainer csqc = new CurveSurfaceQuoteContainer();
 
-		csqc.setGovvieState (gc);
+		csqc.setGovvieState (mapGovvieCurve.get ("BASE"));
 
 		System.out.println();
 
@@ -333,29 +339,56 @@ public class ZeroCouponBullet2 {
 						valParams,
 						null,
 						null,
-						gc.yield (aComp[i].maturityDate().julian())
+						mapGovvieCurve.get ("BASE").yield (aComp[i].maturityDate().julian())
 					)
 				), 1, 3, 100.) + "% ||"
 			);
 
 		System.out.println ("\t|-------------------------------------------||");
 
-		return gc;
+		return mapGovvieCurve;
 	}
 
-	private static final BondComponent Zero (
-		final String strCUSIP,
+	private static final void AccumulateBondMarketQuote (
+		final CurveSurfaceQuoteContainer csqc,
+		final String[] astrOnTheRunCode,
+		final double[] adblYield)
+		throws Exception
+	{
+		for (int i = 0; i < astrOnTheRunCode.length; ++i) {
+			ProductMultiMeasure pmmq = new ProductMultiMeasure();
+
+			pmmq.addQuote (
+				"Yield",
+				new MultiSided (
+					"mid",
+					adblYield[i]
+				),
+				true
+			);
+
+			csqc.setProductQuote (
+				astrOnTheRunCode[i],
+				pmmq
+			);
+		}
+	}
+
+	private static final Bond Corporate (
+		final String strName,
 		final JulianDate dtEffective,
 		final JulianDate dtMaturity,
+		final double dblCoupon,
+		final int iFreq,
 		final String strDayCount)
 		throws Exception
 	{
 		return BondBuilder.CreateSimpleFixed (
-			strCUSIP,
+			strName + FormatUtil.FormatDouble (dblCoupon, 1, 4, 100.) + " " + dtMaturity,
 			"USD",
 			"",
-			0.,
-			2,
+			dblCoupon,
+			iFreq,
 			strDayCount,
 			dtEffective,
 			dtMaturity,
@@ -364,15 +397,15 @@ public class ZeroCouponBullet2 {
 		);
 	}
 
-	private static final void RVMeasures (
-		final BondComponent[] aBond,
+	private static final double[] RVMeasures (
+		final Bond[] aBond,
 		final JulianDate dtValue,
 		final CurveSurfaceQuoteContainer csqc,
 		final double[] adblCleanPrice)
 		throws Exception
 	{
 		JulianDate dtSettle = dtValue.addBusDays (
-			3,
+			0,
 			aBond[0].currency()
 		);
 
@@ -394,99 +427,100 @@ public class ZeroCouponBullet2 {
 
 		System.out.println();
 
+		String strCurveMetrics = "";
 		String strSecularMetrics = "";
+		double[] adblOAS = new double[aBond.length];
 
 		for (int i = 0; i < aBond.length; ++i) {
-			double dblOAS = Double.NaN;
-			double dblYTM = Double.NaN;
-			double dblYTW = Double.NaN;
-			double dblWALTM = Double.NaN;
-			double dblWALTW = Double.NaN;
-			double dblDiscountMargin = Double.NaN;
-			double dblModifiedDurationTW = Double.NaN;
+			System.out.println ("Doing " + aBond[i].name());
 
-			try {
-				WorkoutInfo wi = aBond[i].exerciseYieldFromPrice (
-					valParams,
-					csqc,
-					null,
-					adblCleanPrice[i]
-				);
+			WorkoutInfo wi = aBond[i].exerciseYieldFromPrice (
+				valParams,
+				csqc,
+				null,
+				adblCleanPrice[i]
+			);
 
-				dblYTW = wi.yield();
+			BondRVMeasures rvm = aBond[i].standardMeasures (
+				valParams,
+				null,
+				csqc,
+				null,
+				wi,
+				adblCleanPrice[i]
+			);
 
-				dblYTM = aBond[i].yieldFromPrice (
-					valParams,
-					csqc,
-					null,
-					aBond[i].maturityDate().julian(),
-					1.,
-					adblCleanPrice[i]
-				);
+			strSecularMetrics += "\t| " +
+				aBond[i].name() + " | " +
+				aBond[i].effectiveDate() + " | " +
+				aBond[i].maturityDate() + " |  " +
+				aBond[i].firstCouponDate() + "  |" +
+				FormatUtil.FormatDouble (adblCleanPrice[i], 3, 3, 100.) + " |" +
+				FormatUtil.FormatDouble (aBond[i].accrued (dtSettle.julian(), csqc), 1, 5, 100.) + " |" +
+				FormatUtil.FormatDouble (wi.yield(), 1, 2, 100.) + "% | " +
+				FormatUtil.FormatDouble (rvm.macaulayDuration(), 2, 2, 1.) + "  | " +
+				FormatUtil.FormatDouble (rvm.modifiedDuration(), 2, 2, 10000.) + "  |  " +
+				FormatUtil.FormatDouble (rvm.yield01(), 2, 2, 10000.) + "  |" +
+				FormatUtil.FormatDouble (rvm.yield01(), 4, 0, 1000000.) + " |" +
+				FormatUtil.FormatDouble (rvm.convexity(), 1, 2, 1000000.) + " |" +
+				FormatUtil.FormatDouble (aBond[i].weightedAverageLife (valParams, csqc), 2, 2, 1.) + " |   " +
+				FormatUtil.FormatDouble (rvm.bondBasis(), 3, 0, 10000.) + "     ||" + "\n";
 
-				dblWALTW = aBond[i].weightedAverageLife (
-					valParams,
-					csqc,
-					wi.date(),
-					wi.factor()
-				);
+			adblOAS[i] = rvm.oas();
 
-				dblWALTM = aBond[i].weightedAverageLife (
-					valParams,
-					csqc,
-					aBond[i].maturityDate().julian(),
-					1.
-				);
+			double dblCleanPriceOASUp = aBond[i].priceFromOAS (
+				valParams,
+				csqc,
+				null,
+				adblOAS[i] + 0.0001
+			);
 
-				dblDiscountMargin = aBond[i].discountMarginFromYield (
-					valParams,
-					csqc,
-					null,
-					wi.date(),
-					wi.factor(),
-					wi.yield()
-				);
+			double dblCleanPriceOASDown = aBond[i].priceFromOAS (
+				valParams,
+				csqc,
+				null,
+				adblOAS[i] - 0.0001
+			);
 
-				dblOAS = aBond[i].oasFromYield (
-					valParams,
-					csqc,
-					null,
-					wi.date(),
-					wi.factor(),
-					wi.yield()
-				);
-
-				dblModifiedDurationTW = aBond[i].modifiedDurationFromPrice (
-					valParams,
-					csqc,
-					null,
-					wi.date(),
-					wi.factor(),
-					adblCleanPrice[i]
-				);
-			} catch (Exception e) {
-				// e.printStackTrace();
-			}
-
-			strSecularMetrics +=
-				aBond[i].name() + "," +
-				aBond[i].effectiveDate() + "," +
-				aBond[i].maturityDate() + "," +
-				FormatUtil.FormatDouble (adblCleanPrice[i], 3, 3, 100.) + "," +
-				FormatUtil.FormatDouble (0., 1, 4, 100.) + "," +
-				FormatUtil.FormatDouble (dblYTW, 1, 3, 100.) + "%," +
-				FormatUtil.FormatDouble (dblYTM, 1, 3, 100.) + "%," +
-				FormatUtil.FormatDouble (dblWALTW, 1, 3, 1.) + "," +
-				FormatUtil.FormatDouble (dblWALTM, 1, 3, 1.) + "," +
-				FormatUtil.FormatDouble (dblModifiedDurationTW, 1, 4, 10000.) + "," +
-				FormatUtil.FormatDouble (dblDiscountMargin, 1, 3, 10000.) + "," +
-				FormatUtil.FormatDouble (dblOAS, 1, 3, 10000.) + "\n";
+			strCurveMetrics += "\t| " +
+				aBond[i].name() + " |" +
+				FormatUtil.FormatDouble (adblCleanPrice[i], 3, 3, 100.) + " |" +
+				FormatUtil.FormatDouble (wi.yield(), 1, 2, 100.) + "% |   " +
+				FormatUtil.FormatDouble (rvm.zSpread(), 3, 0, 10000.) + "   |" +
+				FormatUtil.FormatDouble (adblOAS[i], 3, 0, 10000.) + " | " +
+				FormatUtil.FormatDouble (0.5 * (dblCleanPriceOASDown - dblCleanPriceOASUp) / adblCleanPrice[i], 2, 2, 10000.) + "  |  " +
+				FormatUtil.FormatDouble ((dblCleanPriceOASDown + dblCleanPriceOASUp - 2. * adblCleanPrice[i]) / adblCleanPrice[i], 2, 2, 1000000.) + "   |" +
+				FormatUtil.FormatDouble (rvm.asw(), 3, 0, 10000.) + " |  " +
+				FormatUtil.FormatDouble (rvm.gSpread(), 3, 0, 10000.) + "    |   " +
+				FormatUtil.FormatDouble (rvm.iSpread(), 3, 0, 10000.) + "   |    " +
+				FormatUtil.FormatDouble (rvm.tsySpread(), 3, 0, 10000.) + "    |  " +
+				Helper.BaseTsyBmk (
+					dtValue.julian(),
+					aBond[i].maturityDate().julian()
+				) + "  ||" + "\n";
 		}
 
-		System.out.println
-			("Bond, Issue, Maturity, Clean Price, Accrued, Yield TW, Yield TM, WAL TW, WAL TM, Duration TW, Discount Margin TW, OAS TW");
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|             BOND           |  EFFECTIVE  |   MATURITY  |  FIRST COUPON |  PRICE  | ACCRUED | YIELD | MAC DUR | MOD DUR | YIELD 01 | DV01 | CONV |  WAL  | BOND BASIS ||");
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.print (strSecularMetrics);
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t|             BOND           |  PRICE  | YIELD | Z SPREAD | OAS | OAS DUR |  OAS CONV | ASW | G SPREAD | I SPREAD | TSY SPREAD | TSY BMK ||");
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.print (strCurveMetrics);
+
+		System.out.println ("\t|----------------------------------------------------------------------------------------------------------------------------------------||");
+
+		return adblOAS;
 	}
 
 	public static final void main (
@@ -498,11 +532,16 @@ public class ZeroCouponBullet2 {
 		JulianDate dtSpot = DateUtil.CreateFromYMD (
 			2017,
 			DateUtil.MARCH,
-			10
+			13
 		);
 
 		String strCurrency = "USD";
 		String strTreasuryCode = "UST";
+
+		MergedDiscountForwardCurve dcFunding = FundingCurve (
+			dtSpot,
+			strCurrency
+		);
 
 		double[] adblTreasuryCoupon = new double[] {
 			0.0100,
@@ -516,85 +555,116 @@ public class ZeroCouponBullet2 {
 		};
 
 		double[] adblTreasuryYield = new double[] {
-			0.0083,	//  1Y
-			0.0122, //  2Y
-			0.0149, //  3Y
-			0.0193, //  5Y
-			0.0227, //  7Y
-			0.0248, // 10Y
-			0.0280, // 20Y
-			0.0308  // 30Y
+			0.0104,	//  1Y
+			0.0137, //  2Y
+			0.0167, //  3Y
+			0.0213, //  5Y
+			0.0243, //  7Y
+			0.0260, // 10Y
+			0.0294, // 20Y
+			0.0319  // 30Y
 		};
 
-		BondComponent[] aZeroBond = new BondComponent[] {
-			Zero ("969268AP6", DateUtil.CreateFromYMD (2011, 11, 30), DateUtil.CreateFromYMD (2023,  8, 11), "US MUNI: 30/360"),
-			Zero ("358266CC6", DateUtil.CreateFromYMD (2004,  3, 24), DateUtil.CreateFromYMD (2025,  8, 15), "US MUNI: 30/360"),
-			Zero ("240361JD8", DateUtil.CreateFromYMD (2007,  9,  8), DateUtil.CreateFromYMD (2026,  1,  1), "US MUNI: 30/360"),
-			Zero ("03254CDT4", DateUtil.CreateFromYMD (2007,  2, 13), DateUtil.CreateFromYMD (2026,  8,  1), "US MUNI: 30/360"),
-			Zero ("564538CN4", DateUtil.CreateFromYMD (2006,  8, 17), DateUtil.CreateFromYMD (2027,  8,  1), "US MUNI: 30/360"),
-			Zero ("488764TB7", DateUtil.CreateFromYMD (2008,  5,  6), DateUtil.CreateFromYMD (2028,  2,  1), "US MUNI: 30/360"),
-			Zero ("358266CF9", DateUtil.CreateFromYMD (2004,  3, 24), DateUtil.CreateFromYMD (2028,  8, 15), "US MUNI: 30/360"),
-			Zero ("671205ZL9", DateUtil.CreateFromYMD (2009,  6,  5), DateUtil.CreateFromYMD (2029,  8,  1), "US MUNI: 30/360"),
-			Zero ("74529JHR9", DateUtil.CreateFromYMD (2009,  6, 18), DateUtil.CreateFromYMD (2030,  8,  1), "US MUNI: 30/360"),
-			Zero ("533067FX7", DateUtil.CreateFromYMD (2006, 11,  7), DateUtil.CreateFromYMD (2030,  8,  1), "US MUNI: 30/360"),
-			Zero ("828641UH1", DateUtil.CreateFromYMD (2007, 10, 18), DateUtil.CreateFromYMD (2032,  8,  1), "US MUNI: 30/360"),
-			Zero ("66285WBZ8", DateUtil.CreateFromYMD (2008,  4,  3), DateUtil.CreateFromYMD (2034,  1,  1), "US MUNI: 30/360"),
-			Zero ("564538CW4", DateUtil.CreateFromYMD (2006,  8, 17), DateUtil.CreateFromYMD (2035,  8,  1), "US MUNI: 30/360"),
-			Zero ("410360GY1", DateUtil.CreateFromYMD (2008,  8,  6), DateUtil.CreateFromYMD (2036,  8,  1), "US MUNI: 30/360"),
-			Zero ("797355M84", DateUtil.CreateFromYMD (2010,  8, 18), DateUtil.CreateFromYMD (2038,  7,  1), "US MUNI: 30/360"),
-			Zero ("59333NNK5", DateUtil.CreateFromYMD (2009,  7, 14), DateUtil.CreateFromYMD (2040, 10,  1), "US MUNI: 30/360"),
-			Zero ("59333NNM1", DateUtil.CreateFromYMD (2009,  7, 14), DateUtil.CreateFromYMD (2042, 10,  1), "US MUNI: 30/360"),
-			Zero ("797355N67", DateUtil.CreateFromYMD (2010,  8, 18), DateUtil.CreateFromYMD (2044,  7,  1), "US MUNI: 30/360"),
-			Zero ("59333NNP4", DateUtil.CreateFromYMD (2009,  7, 14), DateUtil.CreateFromYMD (2044, 10,  1), "US MUNI: 30/360"),
-			Zero ("797355N83", DateUtil.CreateFromYMD (2010,  8, 18), DateUtil.CreateFromYMD (2045,  7,  1), "US MUNI: 30/360"),
+		Map<String, GovvieCurve> mapGovvieCurve = GovvieCurve (
+			dtSpot,
+			strTreasuryCode,
+			adblTreasuryCoupon,
+			adblTreasuryYield
+		);
+
+		CurveSurfaceQuoteContainer csqc = MarketParamsBuilder.Create (
+			dcFunding,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null
+		);
+
+		csqc.setGovvieState (mapGovvieCurve.get ("BASE"));
+
+		AccumulateBondMarketQuote (
+			csqc,
+			new String[] {
+				"01YON",
+				"02YON",
+				"03YON",
+				"05YON",
+				"07YON",
+				"10YON",
+				"20YON",
+				"30YON"
+			},
+			adblTreasuryYield
+		);
+
+		Bond[] aCorporateBond = new Bond[] {
+			Corporate ("AGENCY ", DateUtil.CreateFromYMD (2014,  4,  3), DateUtil.CreateFromYMD (2019,  4, 30), 0.06375, 4, "30/360 NON-EOM"),
 		};
 
 		double[] adblCleanPrice = new double[] {
-			0.8524080,	// (2023,  8, 11)
-			0.6938800,	// (2025,  8, 15)
-			0.7383725,	// (2026,  1,  1)
-			0.7432680,	// (2026,  8,  1)
-			0.7164500,	// (2027,  8,  1)
-			0.6631900,	// (2028,  2,  1)
-			0.6004900,	// (2028,  8, 15)
-			0.6462515,	// (2029,  8,  1)
-			0.1438000,	// (2030,  8,  1)
-			0.6101975,	// (2030,  8,  1)
-			0.5496585,	// (2032,  8,  1)
-			0.4943400,	// (2034,  1,  1)
-			0.4693195,	// (2035,  8,  1)
-			0.4400195,	// (2036,  8,  1)
-			0.4068500,	// (2038,  7,  1)
-			0.3351535,	// (2040, 10,  1)
-			0.2947400,	// (2042, 10,  1)
-			0.3017690,	// (2044,  7,  1)
-			0.2727705,	// (2044, 10,  1)
-			0.2870535,	// (2045,  7,  1)
-	};
+			1.0036800,	// (2019,  4, 30)
+		};
 
-		RVMeasures (
-			aZeroBond,
+		double[] adblOAS = RVMeasures (
+			aCorporateBond,
 			dtSpot,
-			MarketParamsBuilder.Create (
-				FundingCurve (
-					dtSpot,
-					strCurrency,
-					0.
-				),
-				GovvieCurve (
-					dtSpot,
-					strTreasuryCode,
-					adblTreasuryCoupon,
-					adblTreasuryYield
-				),
-				null,
-				null,
-				null,
-				null,
-				null
-			),
+			csqc,
 			adblCleanPrice
 		);
+
+		ValuationParams valParams = new ValuationParams (
+			dtSpot,
+			dtSpot.addBusDays (
+				3,
+				dcFunding.currency()
+			),
+			dcFunding.currency()
+		);
+
+		System.out.println();
+
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.print ("\t|             BOND          ");
+
+		for (Map.Entry<String, GovvieCurve> meGovvieCurve : mapGovvieCurve.entrySet()) {
+			if ("BASE".equalsIgnoreCase (meGovvieCurve.getKey()) || "BUMP".equalsIgnoreCase (meGovvieCurve.getKey()))
+				continue;
+
+			System.out.print (" | " + meGovvieCurve.getKey());
+		}
+
+		System.out.println (" ||");
+
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
+
+		for (int i = 0; i < adblOAS.length; ++i) {
+			System.out.print ("\t| " + aCorporateBond[i].name());
+
+			for (Map.Entry<String, GovvieCurve> meGovvieCurve : mapGovvieCurve.entrySet()) {
+				if ("BASE".equalsIgnoreCase (meGovvieCurve.getKey()) || "BUMP".equalsIgnoreCase (meGovvieCurve.getKey()))
+					continue;
+
+				csqc.setGovvieState (meGovvieCurve.getValue());
+
+				System.out.print (" |      " +
+					FormatUtil.FormatDouble (
+						(adblCleanPrice[i] - aCorporateBond[i].priceFromOAS (
+							valParams,
+							csqc,
+							null,
+							adblOAS[i]
+						)) / adblCleanPrice[i],
+					2, 2, 10000.) + "     "
+				);
+			}
+
+			System.out.println (" ||");
+		}
+
+		System.out.println ("\t|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

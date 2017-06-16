@@ -137,46 +137,6 @@ public class BondProcessor {
 			return null;
 		}
 
-		java.util.List<org.drip.analytics.cashflow.CompositePeriod> lsCP = bond.couponPeriods();
-
-		if (null == lsCP || 0 == lsCP.size()) return null;
-
-		org.drip.json.simple.JSONArray jsonCashFlowArray = new org.drip.json.simple.JSONArray();
-
-		for (org.drip.analytics.cashflow.CompositePeriod cp : lsCP) {
-			if (null == cp) return null;
-
-			org.drip.json.simple.JSONObject jsonCashFlow = new org.drip.json.simple.JSONObject();
-
-			try {
-				jsonCashFlow.put ("StartDate", new org.drip.analytics.date.JulianDate
-					(cp.startDate()).toString());
-
-				jsonCashFlow.put ("EndDate", new org.drip.analytics.date.JulianDate
-					(cp.endDate()).toString());
-
-				jsonCashFlow.put ("PayDate", new org.drip.analytics.date.JulianDate
-					(cp.payDate()).toString());
-
-				jsonCashFlow.put ("FixingDate", new org.drip.analytics.date.JulianDate
-					(cp.fxFixingDate()).toString());
-
-				jsonCashFlow.put ("CouponDCF", cp.couponDCF());
-
-				jsonCashFlow.put ("PayDiscountFactor", cp.df (csqc));
-			} catch (java.lang.Exception e) {
-				e.printStackTrace();
-
-				return null;
-			}
-
-			jsonCashFlow.put ("BaseNotional", cp.baseNotional());
-
-			jsonCashFlowArray.add (jsonCashFlow);
-		}
-
-		jsonResponse.put ("FloatingCashFlow", jsonCashFlowArray);
-
 		return jsonResponse;
 	}
 
@@ -244,18 +204,6 @@ public class BondProcessor {
 		jsonResponse.put ("BondCleanPrice", dblCleanPrice);
 
 		try {
-			jsonResponse.put ("BondZSpread", bond.zspreadFromPrice (valParams, csqc, null, dblCleanPrice));
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			jsonResponse.put ("BondOAS", bond.oasFromPrice (valParams, csqc, null, dblCleanPrice));
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
 			jsonResponse.put ("BondASW", bond.aswFromPrice (valParams, csqc, null, dblCleanPrice));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -274,18 +222,85 @@ public class BondProcessor {
 		}
 
 		try {
+			jsonResponse.put ("BondOAS", bond.oasFromPrice (valParams, csqc, null, dblCleanPrice));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
 			jsonResponse.put ("BondTreasurySpread", bond.tsySpreadFromPrice (valParams, csqc, null,
 				dblCleanPrice));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
 
+		jsonResponse.put ("BondTreasuryBenchmark", org.drip.analytics.support.Helper.BaseTsyBmk
+			(iSpotDate, dtMaturity.julian()));
+
 		try {
-			jsonResponse.put ("BondTreasuryBenchmark", org.drip.analytics.support.Helper.BaseTsyBmk
-				(iSpotDate, dtMaturity.julian()));
+			jsonResponse.put ("BondZSpread", bond.zspreadFromPrice (valParams, csqc, null, dblCleanPrice));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
+
+		return jsonResponse;
+	}
+
+	/**
+	 * JSON Based in/out Bond Curve Cash Flow Thunker
+	 * 
+	 * @param jsonParameter JSON Bond Cash Flow Parameters
+	 * 
+	 * @return JSON Bond Cash Flow Response
+	 */
+
+	@SuppressWarnings ("unchecked") static final org.drip.json.simple.JSONObject CashFlows (
+		final org.drip.json.simple.JSONObject jsonParameter)
+	{
+		org.drip.state.discount.MergedDiscountForwardCurve dcFunding =
+			org.drip.service.json.LatentStateProcessor.FundingCurve (jsonParameter);
+
+		if (null == dcFunding) return null;
+
+		org.drip.param.market.CurveSurfaceQuoteContainer csqc = new
+			org.drip.param.market.CurveSurfaceQuoteContainer();
+
+		if (!csqc.setFundingState (dcFunding)) return null;
+
+		org.drip.state.credit.CreditCurve cc = org.drip.service.json.LatentStateProcessor.CreditCurve
+			(jsonParameter, dcFunding);
+
+		System.out.println (cc);
+
+		csqc.setCreditState (cc);
+
+		double dblValueNotional = 1.;
+		org.drip.product.credit.BondComponent bond = null;
+
+		org.drip.analytics.date.JulianDate dtMaturity = org.drip.json.parser.Converter.DateEntry
+			(jsonParameter, "BondMaturityDate");
+
+		try {
+			if (null == (bond = org.drip.product.creator.BondBuilder.CreateSimpleFixed
+				(org.drip.json.parser.Converter.StringEntry (jsonParameter, "BondName"),
+					dcFunding.currency(), "", org.drip.json.parser.Converter.DoubleEntry (jsonParameter,
+						"BondCoupon"), org.drip.json.parser.Converter.IntegerEntry (jsonParameter,
+							"BondFrequency"), org.drip.json.parser.Converter.StringEntry (jsonParameter,
+								"BondDayCount"), org.drip.json.parser.Converter.DateEntry (jsonParameter,
+									"BondEffectiveDate"), dtMaturity, null, null)))
+				return null;
+
+			dblValueNotional = org.drip.json.parser.Converter.DoubleEntry (jsonParameter,
+				"BondValueNotional");
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		org.drip.json.simple.JSONObject jsonResponse = new org.drip.json.simple.JSONObject();
+
+		jsonResponse.put ("BondName", bond.name());
 
 		java.util.List<org.drip.analytics.cashflow.CompositePeriod> lsCP = bond.couponPeriods();
 
@@ -306,24 +321,32 @@ public class BondProcessor {
 			jsonCashFlow.put ("PayDate", new org.drip.analytics.date.JulianDate (cp.payDate()).toString());
 
 			try {
+				double dblCouponRate = cp.periods().get (0).baseRate (csqc);
+
 				jsonCashFlow.put ("FixingDate", new org.drip.analytics.date.JulianDate
 					(cp.fxFixingDate()).toString());
 
 				jsonCashFlow.put ("CouponDCF", cp.couponDCF());
 
+				jsonCashFlow.put ("CouponRate", dblCouponRate);
+
+				if (null != cc) jsonCashFlow.put ("SurvivalFactor", cc.survival (cp.payDate()));
+
 				jsonCashFlow.put ("PayDiscountFactor", cp.df (csqc));
+
+				jsonCashFlow.put ("CouponAmount", dblCouponRate * dblValueNotional);
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
 
 				return null;
 			}
 
-			jsonCashFlow.put ("BaseNotional", cp.baseNotional());
+			jsonCashFlow.put ("BaseNotional", cp.baseNotional() * dblValueNotional);
 
 			jsonCashFlowArray.add (jsonCashFlow);
 		}
 
-		jsonResponse.put ("FloatingCashFlow", jsonCashFlowArray);
+		jsonResponse.put ("CashFlow", jsonCashFlowArray);
 
 		return jsonResponse;
 	}

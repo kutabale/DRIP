@@ -1,5 +1,5 @@
 
-package org.drip.sample.guggenheim;
+package org.drip.sample.municipal;
 
 import org.drip.analytics.date.*;
 import org.drip.param.creator.MarketParamsBuilder;
@@ -60,13 +60,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * CUSIP_033177XV3 demonstrates EOS Fixed Coupon Multi-flavor Pricing and Relative Value Measure Generation
- *  for CUSIP 033177XV3.
+ * CUSIP_3130A1JB5 demonstrates EOS Fixed/Float Coupon Multi-flavor Pricing and Relative Value Measure
+ *  Generation for CUSIP 3130A1JB5.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CUSIP_033177XV3 {
+public class CUSIP_3130A1JB5 {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -400,55 +400,17 @@ public class CUSIP_033177XV3 {
 			0.0308  // 30Y
 		};
 
-		JulianDate dtEffective = DateUtil.CreateFromYMD (2009, 12,  3);
-		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2039, 12,  1);
-		double dblCoupon = 0.06558;
-		double dblCleanPrice = 1.08641;
+		JulianDate dtEffective = DateUtil.CreateFromYMD (2014,  4, 11);
+		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2029,  4, 11);
+		double dblCoupon = 0.0400;
+		double dblCleanPrice = 1.00085;
 		int iFreq = 2;
-		String strCUSIP = "033177XV3";
+		String strCUSIP = "3130A1JB5";
 		String strDayCount = "30/360";
 		int[] aiExerciseDate = new int[] {
-			DateUtil.CreateFromYMD (2019, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2020, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2021, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2022, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2023, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2024, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2025, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2026, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2027, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2028, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2029, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2030, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2031, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2032, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2033, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2034, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2035, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2036, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2037, 12,  1).julian(),
-			DateUtil.CreateFromYMD (2038, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2017,  4, 11).julian(),
 		};
 		double[] adblExercisePrice = new double[] {
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
 			1.,
 		};
 

@@ -1,5 +1,5 @@
 
-package org.drip.sample.guggenheim;
+package org.drip.sample.sovereign;
 
 import java.util.Map;
 

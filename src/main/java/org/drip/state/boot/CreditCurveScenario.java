@@ -143,6 +143,8 @@ public class CreditCurveScenario {
 			return null;
 
 		for (int i = 0; i < iNumComp; ++i) {
+			if (null == aCalibInst[i]) return null;
+
 			adblHazardRate[i] = java.lang.Double.NaN;
 
 			aiDate[i] = aCalibInst[i].maturityDate().julian();

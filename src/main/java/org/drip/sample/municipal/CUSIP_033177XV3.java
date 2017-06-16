@@ -1,5 +1,5 @@
 
-package org.drip.sample.guggenheim;
+package org.drip.sample.municipal;
 
 import org.drip.analytics.date.*;
 import org.drip.param.creator.MarketParamsBuilder;
@@ -60,13 +60,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * CUSIP_3130A84E0 demonstrates EOS Fixed/Float Coupon Multi-flavor Pricing and Relative Value Measure
- *  Generation for CUSIP 3130A84E0.
+ * CUSIP_033177XV3 demonstrates EOS Fixed Coupon Multi-flavor Pricing and Relative Value Measure Generation
+ *  for CUSIP 033177XV3.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CUSIP_3130A84E0 {
+public class CUSIP_033177XV3 {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -297,8 +297,7 @@ public class CUSIP_3130A84E0 {
 				wi.yield()
 			);
 
-			dblOASDurationTW = (
-				dblCleanPrice - bond.priceFromOAS (
+			dblOASDurationTW = (dblCleanPrice - bond.priceFromOAS (
 					valParams,
 					csqc,
 					null,
@@ -401,76 +400,36 @@ public class CUSIP_3130A84E0 {
 			0.0308  // 30Y
 		};
 
-		JulianDate dtEffective = DateUtil.CreateFromYMD (2016,  5, 23);
-		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2036,  5, 23);
-		double dblCoupon = 0.0303;
-		double dblCleanPrice = 0.93898;
+		JulianDate dtEffective = DateUtil.CreateFromYMD (2009, 12,  3);
+		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2039, 12,  1);
+		double dblCoupon = 0.06558;
+		double dblCleanPrice = 1.08641;
 		int iFreq = 2;
-		String strCUSIP = "3130A84E0";
+		String strCUSIP = "033177XV3";
 		String strDayCount = "30/360";
 		int[] aiExerciseDate = new int[] {
-			DateUtil.CreateFromYMD (2016, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2017,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2017, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2018,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2018, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2019,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2019, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2020,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2020, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2021,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2021, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2022,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2022, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2023,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2023, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2024,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2024, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2025,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2025, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2026,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2026, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2027,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2027, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2028,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2028, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2029,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2029, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2030,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2030, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2031,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2031, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2032,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2032, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2033,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2033, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2034,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2034, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2035,  5, 23).julian(),
-			DateUtil.CreateFromYMD (2035, 11, 23).julian(),
-			DateUtil.CreateFromYMD (2036,  5, 23).julian(),
+			DateUtil.CreateFromYMD (2019, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2020, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2021, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2022, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2023, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2024, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2025, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2026, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2027, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2028, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2029, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2030, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2031, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2032, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2033, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2034, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2035, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2036, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2037, 12,  1).julian(),
+			DateUtil.CreateFromYMD (2038, 12,  1).julian(),
 		};
 		double[] adblExercisePrice = new double[] {
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
-			1.,
 			1.,
 			1.,
 			1.,
@@ -510,7 +469,7 @@ public class CUSIP_3130A84E0 {
 			aiExerciseDate,
 			adblExercisePrice,
 			false,
-			5,
+			30,
 			false,
 			Double.NaN,
 			"",
