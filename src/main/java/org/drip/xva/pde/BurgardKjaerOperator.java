@@ -69,16 +69,9 @@ package org.drip.xva.pde;
  * @author Lakshmi Krishnamurthy
  */
 
-public abstract class BurgardKjaerOperator {
+public class BurgardKjaerOperator {
 	private org.drip.xva.universe.TradeablesContainer _tc = null;
 	private org.drip.xva.definition.PDEEvolutionControl _pdeec = null;
-
-	protected abstract double hedgeError (
-		final double dblBankRecovery,
-		final double dblBankDefaultBoundaryCondition,
-		final double dblDerivativeFairValue,
-		final double dblDerivativeXVAValue,
-		final double dblCollateral);
 
 	/**
 	 * BurgardKjaerOperator Constructor
@@ -178,13 +171,7 @@ public abstract class BurgardKjaerOperator {
 				(dblBankSeniorDefaultIntensity + dblCounterPartyDefaultIntensity) * dblDerivativeXVAValueStart,
 				-1. * dblBankSeniorDefaultIntensity * dblGainOnBankDefault,
 				-1. * dblGainOnCounterPartyDefault,
-				dblDerivativeXVAValueStart * hedgeError (
-					emvBankFinish.seniorRecoveryRate(),
-					dblGainOnBankDefault,
-					agvStart.derivativeFairValue(),
-					dblDerivativeXVAValueStart,
-					dblCollateral
-				)
+				0.
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

@@ -1,5 +1,5 @@
 
-package org.drip.xva.hedgeerror;
+package org.drip.xva.strategy;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.hedgeerror;
  */
 
 /**
- * BurgardKjaerVertex holds the Vertex Realizations off an Imperfect Hedge Based Incremental Burgard Kjaer
- *  Simulation Step. The References are:
+ * BurgardKjaerExposure holds the Vertex Realizations off the specific Exposures in each Simulation Step as
+ * 	laid out in the Burgard Kjaer (2013) Scheme. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2011): PDE Representations of Derivatives with Bilateral Counter Party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -65,87 +65,57 @@ package org.drip.xva.hedgeerror;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BurgardKjaerVertex {
+public class BurgardKjaerExposure {
+	private double _dblDebt = java.lang.Double.NaN;
+	private double _dblCredit = java.lang.Double.NaN;
 	private double _dblHedgeError = java.lang.Double.NaN;
-	private double _dblBilateralCVA = java.lang.Double.NaN;
-	private double _dblBilateralDVA = java.lang.Double.NaN;
-	private double _dblBilateralFCA = java.lang.Double.NaN;
-	private double _dblBilateralCollateralVA = java.lang.Double.NaN;
-	private org.drip.xva.derivative.ReplicationPortfolioVertex _rpv = null;
+	private double _dblCollateralAmount = java.lang.Double.NaN;
 
 	/**
-	 * BurgardKjaerVertex Constructor
+	 * BurgardKjaerExposure Constructor
 	 * 
+	 * @param dblCredit The Counter Party Credit Exposure
+	 * @param dblDebt The Bank Debt Exposure
 	 * @param dblHedgeError The Hedge Error
-	 * @param rpv The Replication Portfolio Vertex Instance
-	 * @param dblBilateralCVA The Bilateral CVA
-	 * @param dblBilateralDVA The Bilateral DVA
-	 * @param dblBilateralFCA The Bilateral FCA
-	 * @param dblBilateralCollateralVA The Bilateral Collateral VA
+	 * @param dblCollateralAmount The Collateral Amount
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public BurgardKjaerVertex (
+	public BurgardKjaerExposure (
+		final double dblCredit,
+		final double dblDebt,
 		final double dblHedgeError,
-		final org.drip.xva.derivative.ReplicationPortfolioVertex rpv,
-		final double dblBilateralCVA,
-		final double dblBilateralDVA,
-		final double dblBilateralFCA,
-		final double dblBilateralCollateralVA)
+		final double dblCollateralAmount)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHedgeError = dblHedgeError) || null == (_rpv =
-			rpv) || !org.drip.quant.common.NumberUtil.IsValid (_dblBilateralCVA = dblBilateralCVA) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralDVA = dblBilateralDVA) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralFCA = dblBilateralFCA) ||
-						!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralCollateralVA =
-							dblBilateralCollateralVA))
-			throw new java.lang.Exception ("BurgardKjaerVertex Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCredit = dblCredit) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDebt = dblDebt) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblHedgeError = dblHedgeError) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralAmount = dblCollateralAmount))
+			throw new java.lang.Exception ("BurgardKjaerExposure Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Bilateral CVA
+	 * Retrieve the Counter Party Credit Exposure
 	 * 
-	 * @return The Bilateral CVA
+	 * @return The Counter Party Credit Exposure
 	 */
 
-	public double bilateralCVA()
+	public double credit()
 	{
-		return _dblBilateralCVA;
+		return _dblCredit;
 	}
 
 	/**
-	 * Retrieve the Bilateral DVA
+	 * Retrieve the Bank Debt Exposure
 	 * 
-	 * @return The Bilateral DVA
+	 * @return The Bank Debt Exposure
 	 */
 
-	public double bilateralDVA()
+	public double debt()
 	{
-		return _dblBilateralDVA;
-	}
-
-	/**
-	 * Retrieve the Bilateral FCA
-	 * 
-	 * @return The Bilateral FCA
-	 */
-
-	public double bilateralFCA()
-	{
-		return _dblBilateralFCA;
-	}
-
-	/**
-	 * Retrieve the Bilateral Collateral VA
-	 * 
-	 * @return The Bilateral Collateral VA
-	 */
-
-	public double bilateralCollateralVA()
-	{
-		return _dblBilateralCollateralVA;
+		return _dblDebt;
 	}
 
 	/**
@@ -160,13 +130,13 @@ public class BurgardKjaerVertex {
 	}
 
 	/**
-	 * Retrieve the Replication Portfolio Vertex Instance
+	 * Retrieve the Collateral Amount
 	 * 
-	 * @return The Replication Portfolio Vertex Instance
+	 * @return The Collateral Amount
 	 */
 
-	public org.drip.xva.derivative.ReplicationPortfolioVertex replicationPortfolioVertex()
+	public double collateralAmount()
 	{
-		return _rpv;
+		return _dblCollateralAmount;
 	}
 }

@@ -9,7 +9,6 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.definition.*;
 import org.drip.xva.derivative.*;
-import org.drip.xva.hedgeerror.PerfectReplication;
 import org.drip.xva.pde.*;
 import org.drip.xva.universe.*;
 
@@ -468,7 +467,7 @@ public class XVAExplain {
 			pdeec
 		);
 
-		BurgardKjaerOperator bko = new PerfectReplication (
+		BurgardKjaerOperator bko = new BurgardKjaerOperator (
 			tc,
 			pdeec
 		);

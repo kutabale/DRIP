@@ -103,7 +103,7 @@ public class ParabolicDifferentialOperator {
 	 * Compute the Theta for the Derivative from the Asset Edge Value
 	 * 
 	 * @param etv The Derivative's Evolution Trajectory Vertex
-	 * @param dblAsset The Asset Vertex Value
+	 * @param dblAssetNumeraireVertex The Asset Numeraire Vertex Value
 	 * 
 	 * @return The Theta
 	 * 
@@ -112,26 +112,28 @@ public class ParabolicDifferentialOperator {
 
 	public double theta (
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etv,
-		final double dblAsset)
+		final double dblAssetNumeraireVertex)
 		throws java.lang.Exception
 	{
-		if (null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblAsset))
+		if (null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblAssetNumeraireVertex))
 			throw new java.lang.Exception ("ParabolicDifferentialOperator::theta => Invalid Inputs");
 
 		org.drip.xva.derivative.AssetGreekVertex agv = etv.assetGreekVertex();
 
 		double dblVolatility = _t.numeraireEvolver().evaluator().volatility().value (new
-			org.drip.measure.realization.JumpDiffusionVertex (etv.time(), dblAsset, 0., false));
+			org.drip.measure.realization.JumpDiffusionVertex (etv.time(), dblAssetNumeraireVertex, 0.,
+				false));
 
-		return 0.5 * dblVolatility * dblVolatility * dblAsset * dblAsset * agv.derivativeXVAValueGamma() -
-			_t.cashAccumulationRate() * dblAsset * agv.derivativeXVAValueDelta();
+		return 0.5 * dblVolatility * dblVolatility * dblAssetNumeraireVertex * dblAssetNumeraireVertex *
+			agv.derivativeXVAValueGamma() - _t.cashAccumulationRate() * dblAssetNumeraireVertex *
+				agv.derivativeXVAValueDelta();
 	}
 
 	/**
 	 * Compute the Up/Down Thetas
 	 *  
 	 * @param etv The Derivative's Evolution Trajectory Vertex
-	 * @param dblAsset The Asset Vertex Value
+	 * @param dblAssetNumeraireVertex The Asset Numeraire Vertex Value
 	 * @param dblShift The Amount to Shift the Reference Underlier Numeraire By
 	 * 
 	 * @return The Array of the Up/Down Thetas
@@ -139,22 +141,23 @@ public class ParabolicDifferentialOperator {
 
 	public double[] thetaUpDown (
 		final org.drip.xva.derivative.EvolutionTrajectoryVertex etv,
-		final double dblAsset,
+		final double dblAssetNumeraireVertex,
 		final double dblShift)
 	{
-		if (null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblAsset) ||
+		if (null == etv || !org.drip.quant.common.NumberUtil.IsValid (dblAssetNumeraireVertex) ||
 			!org.drip.quant.common.NumberUtil.IsValid (dblShift))
 			return null;
 
 		org.drip.xva.derivative.AssetGreekVertex agv = etv.assetGreekVertex();
 
-		double dblAssetUp = dblAsset + dblShift;
-		double dblAssetDown = dblAsset - dblShift;
+		double dblAssetNumeraireVertexDown = dblAssetNumeraireVertex - dblShift;
+		double dblAssetNumeraireVertexUp = dblAssetNumeraireVertex + dblShift;
 		double dblVolatility = java.lang.Double.NaN;
 
 		try {
 			dblVolatility = _t.numeraireEvolver().evaluator().volatility().value (new
-				org.drip.measure.realization.JumpDiffusionVertex (etv.time(), dblAsset, 0., false));
+				org.drip.measure.realization.JumpDiffusionVertex (etv.time(), dblAssetNumeraireVertex, 0.,
+					false));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
@@ -165,8 +168,10 @@ public class ParabolicDifferentialOperator {
 
 		double dblDeltaCoefficient = -1. * _t.cashAccumulationRate() * agv.derivativeXVAValueDelta();
 
-		return new double[] {dblGammaCoefficient * dblAssetDown * dblAssetDown + dblDeltaCoefficient *
-			dblAssetDown, dblGammaCoefficient * dblAsset * dblAsset + dblDeltaCoefficient * dblAsset,
-				dblGammaCoefficient * dblAssetUp * dblAssetUp + dblDeltaCoefficient * dblAssetUp};
+		return new double[] {dblGammaCoefficient * dblAssetNumeraireVertexDown * dblAssetNumeraireVertexDown
+			+ dblDeltaCoefficient * dblAssetNumeraireVertexDown, dblGammaCoefficient *
+				dblAssetNumeraireVertex * dblAssetNumeraireVertex + dblDeltaCoefficient *
+					dblAssetNumeraireVertex, dblGammaCoefficient * dblAssetNumeraireVertexUp *
+						dblAssetNumeraireVertexUp + dblDeltaCoefficient * dblAssetNumeraireVertexUp};
 	}
 }

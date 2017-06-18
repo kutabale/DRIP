@@ -1,5 +1,5 @@
 
-package org.drip.xva.hedgeerror;
+package org.drip.xva.strategy;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.hedgeerror;
  */
 
 /**
- * PerfectReplication corresponds to the case of no Hedge Error based Evolution under the Burgard Kjaer
- * 	(2011, 2013) Methodology. This results in zero FCA. The References are:
+ * BurgardKjaerValuationAdjustment holds the Vertex Values of the Valuation Adjustments Based on the
+ * 	Incremental Burgard Kjaer Simulation Step. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2011): PDE Representations of Derivatives with Bilateral Counter Party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -65,32 +65,79 @@ package org.drip.xva.hedgeerror;
  * @author Lakshmi Krishnamurthy
  */
 
-public class PerfectReplication extends org.drip.xva.pde.BurgardKjaerOperator {
-
-	@Override protected double hedgeError (
-		final double dblBankRecovery,
-		final double dblBankDefaultBoundaryCondition,
-		final double dblDerivativeFairValue,
-		final double dblDerivativeXVAValue,
-		final double dblCollateral)
-	{
-		return 0.;
-	}
+public class BurgardKjaerValuationAdjustment {
+	private double _dblBilateralCVA = java.lang.Double.NaN;
+	private double _dblBilateralDVA = java.lang.Double.NaN;
+	private double _dblBilateralFCA = java.lang.Double.NaN;
+	private double _dblBilateralCollateralVA = java.lang.Double.NaN;
 
 	/**
-	 * PerfectReplication Constructor
+	 * BurgardKjaerValuationAdjustment Constructor
 	 * 
-	 * @param tc The Universe of Tradeable Assets
-	 * @param pdeec The XVA Control Settings
+	 * @param dblBilateralCVA The Bilateral CVA
+	 * @param dblBilateralDVA The Bilateral DVA
+	 * @param dblBilateralFCA The Bilateral FCA
+	 * @param dblBilateralCollateralVA The Bilateral Collateral VA
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public PerfectReplication (
-		final org.drip.xva.universe.TradeablesContainer tc,
-		final org.drip.xva.definition.PDEEvolutionControl pdeec)
+	public BurgardKjaerValuationAdjustment (
+		final double dblBilateralCVA,
+		final double dblBilateralDVA,
+		final double dblBilateralFCA,
+		final double dblBilateralCollateralVA)
 		throws java.lang.Exception
 	{
-		super (tc, pdeec);
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralCVA = dblBilateralCVA) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralDVA = dblBilateralDVA) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralFCA = dblBilateralFCA) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralCollateralVA =
+						dblBilateralCollateralVA))
+			throw new java.lang.Exception ("BurgardKjaerValuationAdjustment Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Bilateral CVA
+	 * 
+	 * @return The Bilateral CVA
+	 */
+
+	public double bilateralCVA()
+	{
+		return _dblBilateralCVA;
+	}
+
+	/**
+	 * Retrieve the Bilateral DVA
+	 * 
+	 * @return The Bilateral DVA
+	 */
+
+	public double bilateralDVA()
+	{
+		return _dblBilateralDVA;
+	}
+
+	/**
+	 * Retrieve the Bilateral FCA
+	 * 
+	 * @return The Bilateral FCA
+	 */
+
+	public double bilateralFCA()
+	{
+		return _dblBilateralFCA;
+	}
+
+	/**
+	 * Retrieve the Bilateral Collateral VA
+	 * 
+	 * @return The Bilateral Collateral VA
+	 */
+
+	public double bilateralCollateralVA()
+	{
+		return _dblBilateralCollateralVA;
 	}
 }
