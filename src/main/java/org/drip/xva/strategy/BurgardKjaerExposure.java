@@ -72,6 +72,42 @@ public class BurgardKjaerExposure {
 	private double _dblCollateralAmount = java.lang.Double.NaN;
 
 	/**
+	 * Generate a Standard Instance of BurgardKjaerExposure
+	 * 
+	 * @param dblUncollateralizedExposure The Uncollateralized Exposure
+	 * @param cog The Close-out General Instance
+	 * @param dblHedgeError The Hedge Error
+	 * @param dblCollateralAmount The Collateral Amount
+	 * 
+	 * @return The Standard Instance of BurgardKjaerExposure
+	 */
+
+	public static final BurgardKjaerExposure Standard (
+		final double dblUncollateralizedExposure,
+		final org.drip.xva.definition.CloseOutGeneral cog,
+		final double dblHedgeError,
+		final double dblCollateralAmount)
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblUncollateralizedExposure) || null == cog)
+			return null;
+
+		try {
+			return new BurgardKjaerExposure (
+				dblUncollateralizedExposure - cog.counterPartyDefault (dblUncollateralizedExposure,
+					dblCollateralAmount),
+				dblUncollateralizedExposure - cog.bankDefault (dblUncollateralizedExposure,
+					dblCollateralAmount),
+				dblHedgeError,
+				dblCollateralAmount
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * BurgardKjaerExposure Constructor
 	 * 
 	 * @param dblCredit The Counter Party Credit Exposure

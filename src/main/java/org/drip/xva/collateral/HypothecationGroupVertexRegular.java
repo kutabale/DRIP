@@ -73,7 +73,7 @@ public class HypothecationGroupVertexRegular extends org.drip.xva.collateral.Hyp
 	 * HypothecationGroupVertexRegular Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
+	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
 	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
 	 * 
@@ -82,12 +82,12 @@ public class HypothecationGroupVertexRegular extends org.drip.xva.collateral.Hyp
 
 	public HypothecationGroupVertexRegular (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardPV,
+		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
 		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		super (dtAnchor, dblForwardPV, dblRealizedCashFlow, dblCollateralBalance);
+		super (dtAnchor, dblForwardExposure, dblRealizedCashFlow, dblCollateralBalance);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class HypothecationGroupVertexRegular extends org.drip.xva.collateral.Hyp
 
 	public double collateralizedExposure()
 	{
-		return forwardPV() + realizedCashFlow() - collateralBalance();
+		return forwardExposure() + realizedCashFlow() - collateralBalance();
 	}
 
 	/**
@@ -109,6 +109,6 @@ public class HypothecationGroupVertexRegular extends org.drip.xva.collateral.Hyp
 
 	public double uncollateralizedExposure()
 	{
-		return forwardPV() + realizedCashFlow();
+		return forwardExposure() + realizedCashFlow();
 	}
 }

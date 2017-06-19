@@ -111,6 +111,7 @@ org.drip.regression.curve
 org.drip.regression.curvejacobian
 org.drip.regression.fixedpointfinder
 org.drip.regression.spline
+org.drip.sample.agency
 org.drip.sample.algo
 org.drip.sample.alm
 org.drip.sample.almgren2003
@@ -135,6 +136,7 @@ org.drip.sample.capfloor
 org.drip.sample.classifier
 org.drip.sample.cma
 org.drip.sample.cms
+org.drip.sample.corporate
 org.drip.sample.coveringnumber
 org.drip.sample.credit
 org.drip.sample.creditfeed
@@ -166,7 +168,6 @@ org.drip.sample.fundinghistorical
 org.drip.sample.fx
 org.drip.sample.govvie
 org.drip.sample.govviemc
-org.drip.sample.guggenheim
 org.drip.sample.helitterman
 org.drip.sample.hjm
 org.drip.sample.hullwhite
@@ -177,6 +178,7 @@ org.drip.sample.lvar
 org.drip.sample.matrix
 org.drip.sample.measure
 org.drip.sample.multicurve
+org.drip.sample.municipal
 org.drip.sample.netting
 org.drip.sample.numeraire
 org.drip.sample.numerical
@@ -189,6 +191,7 @@ org.drip.sample.overnightfeed
 org.drip.sample.overnighthistorical
 org.drip.sample.piterbarg2010
 org.drip.sample.piterbarg2012
+org.drip.sample.preferred
 org.drip.sample.principal
 org.drip.sample.rdtor1
 org.drip.sample.rng
@@ -197,6 +200,7 @@ org.drip.sample.semidefinite
 org.drip.sample.sensitivity
 org.drip.sample.sequence
 org.drip.sample.service
+org.drip.sample.sovereign
 org.drip.sample.spline
 org.drip.sample.statistics
 org.drip.sample.stochasticvolatility
@@ -271,7 +275,6 @@ org.drip.xva.cpty
 org.drip.xva.csa
 org.drip.xva.definition
 org.drip.xva.derivative
-org.drip.xva.hedgeerror
 org.drip.xva.netting
 org.drip.xva.pde
 org.drip.xva.set

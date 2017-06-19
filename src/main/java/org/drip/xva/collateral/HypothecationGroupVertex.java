@@ -68,7 +68,7 @@ package org.drip.xva.collateral;
  */
 
 public class HypothecationGroupVertex {
-	private double _dblForwardPV = java.lang.Double.NaN;
+	private double _dblForwardExposure = java.lang.Double.NaN;
 	private double _dblRealizedCashFlow = java.lang.Double.NaN;
 	private double _dblCollateralBalance = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
@@ -77,7 +77,7 @@ public class HypothecationGroupVertex {
 	 * HypothecationGroupVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardPV The Forward PV at the Path Vertex Time Node
+	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
 	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
 	 * 
@@ -86,13 +86,13 @@ public class HypothecationGroupVertex {
 
 	public HypothecationGroupVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardPV,
+		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
 		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblForwardPV =
-			dblForwardPV) || !org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow =
+		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblForwardExposure
+			= dblForwardExposure) || !org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow =
 				dblRealizedCashFlow) || !org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance =
 					dblCollateralBalance))
 			throw new java.lang.Exception ("HypothecationGroupVertex Constructor => Invalid Inputs");
@@ -110,14 +110,14 @@ public class HypothecationGroupVertex {
 	}
 
 	/**
-	 * Retrieve the Forward PV at the Path Vertex Time Node
+	 * Retrieve the Forward Exposure at the Path Vertex Time Node
 	 * 
-	 * @return The Forward PV at the Path Vertex Time Node
+	 * @return The Forward Exposure at the Path Vertex Time Node
 	 */
 
-	public double forwardPV()
+	public double forwardExposure()
 	{
-		return _dblForwardPV;
+		return _dblForwardExposure;
 	}
 
 	/**
