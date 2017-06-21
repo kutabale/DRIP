@@ -209,13 +209,15 @@ public class EvolutionTrajectoryVertex {
 
 		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
 
-		double dblFundingConstraint = _agv.derivativeXVAValue() + emvBank.seniorFundingNumeraire() *
-			_rpv.bankSeniorNumeraireUnits();
+		double dblFundingConstraint = _agv.derivativeXVAValue() + emvBank.seniorFundingNumeraire().forward()
+			* _rpv.bankSeniorNumeraireUnits();
 
-		double dblBankSubordinateFunding = emvBank.subordinateFundingNumeraire();
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinateFunding =
+			emvBank.subordinateFundingNumeraire();
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFunding))
-			dblFundingConstraint += dblBankSubordinateFunding * _rpv.bankSubordinateNumeraireUnits();
+		if (null != nmvBankSubordinateFunding)
+			dblFundingConstraint += nmvBankSubordinateFunding.forward() *
+				_rpv.bankSubordinateNumeraireUnits();
 
 		return dblFundingConstraint;
 	}

@@ -96,11 +96,13 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bank().survivalProbability() *
-					aMV[iVertexIndex - 1].bank().seniorFundingSpread();
+					aMV[iVertexIndex - 1].bank().seniorFundingSpread() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() *
-					aMV[iVertexIndex].bank().seniorFundingSpread();
+					aMV[iVertexIndex].bank().seniorFundingSpread() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblUnilateralFundingCostAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -131,12 +133,14 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bank().survivalProbability() *
 					aMV[iVertexIndex - 1].bank().seniorFundingSpread() *
-						aMV[iVertexIndex - 1].counterParty().survivalProbability();
+						aMV[iVertexIndex - 1].counterParty().survivalProbability() *
+							aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() *
-					aMV[iVertexIndex].bank().seniorFundingSpread()
-						* aMV[iVertexIndex].counterParty().survivalProbability();
+					aMV[iVertexIndex].bank().seniorFundingSpread() *
+						aMV[iVertexIndex].counterParty().survivalProbability() *
+							aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblBilateralFundingValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -163,11 +167,13 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bank().survivalProbability() *
-					aMV[iVertexIndex - 1].bank().seniorFundingSpread();
+					aMV[iVertexIndex - 1].bank().seniorFundingSpread() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedNegativeExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() *
-					aMV[iVertexIndex].bank().seniorFundingSpread();
+					aMV[iVertexIndex].bank().seniorFundingSpread() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblUnilateralFundingBenefitAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd)
 				* (aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -196,16 +202,18 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
-				aMV[iVertexIndex - 1].bank().survivalProbability() * (1.
-					- aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
+				aMV[iVertexIndex - 1].bank().survivalProbability() * (1. -
+					aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
 						aMV[iVertexIndex - 1].bank().hazardRate() *
-							aMV[iVertexIndex - 1].counterParty().survivalProbability();
+							aMV[iVertexIndex - 1].counterParty().survivalProbability() *
+								aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() * (1. -
 					aMV[iVertexIndex].bank().seniorRecoveryRate()) *
 						aMV[iVertexIndex].bank().hazardRate() *
-							aMV[iVertexIndex].counterParty().survivalProbability();
+							aMV[iVertexIndex].counterParty().survivalProbability() *
+								aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblBilateralFundingDebtAdjustment += 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -232,11 +240,13 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bank().survivalProbability() *
-					aMV[iVertexIndex - 1].bank().seniorFundingSpread();
+					aMV[iVertexIndex - 1].bank().seniorFundingSpread() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() *
-					aMV[iVertexIndex].bank().seniorFundingSpread();
+					aMV[iVertexIndex].bank().seniorFundingSpread() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblSymmetricFundingValueAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex].anchor().julian() - aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
@@ -264,12 +274,13 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bank().survivalProbability() * (1. -
 					aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
-						aMV[iVertexIndex - 1].bank().hazardRate();
+						aMV[iVertexIndex - 1].bank().hazardRate() *
+							aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() * (1. -
-					aMV[iVertexIndex].bank().seniorRecoveryRate()) *
-						aMV[iVertexIndex].bank().hazardRate();
+					aMV[iVertexIndex].bank().seniorRecoveryRate()) * aMV[iVertexIndex].bank().hazardRate() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblUnilateralFundingDebtAdjustment[iVertexIndex - 1] = 0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -
@@ -302,13 +313,14 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 				aMV[iVertexIndex - 1].bank().survivalProbability() * (1. -
 					aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
 						aMV[iVertexIndex - 1].bank().hazardRate() *
-							aMV[iVertexIndex - 1].counterParty().survivalProbability();
+							aMV[iVertexIndex - 1].counterParty().survivalProbability() *
+								aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() * (1. -
-					aMV[iVertexIndex].bank().seniorRecoveryRate()) *
-						aMV[iVertexIndex].bank().hazardRate() *
-							aMV[iVertexIndex].counterParty().survivalProbability();
+					aMV[iVertexIndex].bank().seniorRecoveryRate()) * aMV[iVertexIndex].bank().hazardRate() *
+						aMV[iVertexIndex].counterParty().survivalProbability() *
+							aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblBilateralFundingDebtAdjustment[iVertexIndex - 1] = 0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -
@@ -336,11 +348,13 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bank().survivalProbability() *
-					aMV[iVertexIndex - 1].bank().seniorFundingSpread();
+					aMV[iVertexIndex - 1].bank().seniorFundingSpread() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedNegativeExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() *
-					aMV[iVertexIndex].bank().seniorFundingSpread();
+					aMV[iVertexIndex].bank().seniorFundingSpread() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblUnilateralFundingDebtAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -
@@ -373,13 +387,14 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 				aMV[iVertexIndex - 1].bank().survivalProbability() * (1. -
 					aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
 						aMV[iVertexIndex - 1].bank().hazardRate() *
-							aMV[iVertexIndex - 1].counterParty().survivalProbability();
+							aMV[iVertexIndex - 1].counterParty().survivalProbability() *
+								aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() * (1. -
-					aMV[iVertexIndex].bank().seniorRecoveryRate()) *
-						aMV[iVertexIndex].bank().hazardRate() *
-							aMV[iVertexIndex].counterParty().survivalProbability();
+					aMV[iVertexIndex].bank().seniorRecoveryRate()) * aMV[iVertexIndex].bank().hazardRate() *
+						aMV[iVertexIndex].counterParty().survivalProbability() *
+							aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblBilateralFundingDebtAdjustment[iVertexIndex - 1] = 0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -
@@ -407,11 +422,13 @@ public abstract class FundingGroupPath extends org.drip.xva.netting.ExposureGrou
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedExposurePV[iVertexIndex - 1] *
 				aMV[iVertexIndex - 1].bank().survivalProbability() *
-					aMV[iVertexIndex - 1].bank().seniorFundingSpread();
+					aMV[iVertexIndex - 1].bank().seniorFundingSpread() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedExposurePV[iVertexIndex] *
 				aMV[iVertexIndex].bank().survivalProbability() *
-					aMV[iVertexIndex].bank().seniorFundingSpread();
+					aMV[iVertexIndex].bank().seniorFundingSpread() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblSymmetricFundingValueAdjustment[iVertexIndex - 1] = 0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -

@@ -98,10 +98,12 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] * (1. -
-				aMV[iVertexIndex - 1].counterParty().seniorRecoveryRate());
+				aMV[iVertexIndex - 1].counterParty().seniorRecoveryRate()) *
+					aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] * (1. -
-				aMV[iVertexIndex].counterParty().seniorRecoveryRate());
+				aMV[iVertexIndex].counterParty().seniorRecoveryRate()) *
+					aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblUnilateralCreditAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex - 1].counterParty().survivalProbability() -
@@ -132,11 +134,13 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] * (1. -
 				aMV[iVertexIndex - 1].counterParty().seniorRecoveryRate()) *
-					aMV[iVertexIndex - 1].bank().survivalProbability();
+					aMV[iVertexIndex - 1].bank().survivalProbability() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] * (1. -
 				aMV[iVertexIndex].counterParty().seniorRecoveryRate()) *
-					aMV[iVertexIndex].bank().survivalProbability();
+					aMV[iVertexIndex].bank().survivalProbability() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblBilateralCreditAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex - 1].counterParty().survivalProbability() -
@@ -177,10 +181,12 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] * (1. -
-				aMV[iVertexIndex - 1].bank().seniorRecoveryRate());
+				aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
+					aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedNegativeExposurePV[iVertexIndex] * (1. -
-				aMV[iVertexIndex].bank().seniorRecoveryRate());
+				aMV[iVertexIndex].bank().seniorRecoveryRate()) *
+					aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblUnilateralDebtAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex - 1].bank().survivalProbability() -
@@ -211,11 +217,13 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] * (1. -
 				aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
-					aMV[iVertexIndex - 1].counterParty().survivalProbability();
+					aMV[iVertexIndex - 1].counterParty().survivalProbability() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedNegativeExposurePV[iVertexIndex] * (1. -
 				aMV[iVertexIndex].bank().seniorRecoveryRate()) *
-					aMV[iVertexIndex].counterParty().survivalProbability();
+					aMV[iVertexIndex].counterParty().survivalProbability() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			dblBilateralDebtAdjustment -= 0.5 * (dblPeriodIntegrandStart + dblPeriodIntegrandEnd) *
 				(aMV[iVertexIndex - 1].bank().survivalProbability() -
@@ -245,10 +253,12 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] * (1. -
-				aMV[iVertexIndex - 1].counterParty().seniorRecoveryRate());
+				aMV[iVertexIndex - 1].counterParty().seniorRecoveryRate()) *
+					aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] * (1. -
-				aMV[iVertexIndex].counterParty().seniorRecoveryRate());
+				aMV[iVertexIndex].counterParty().seniorRecoveryRate()) *
+					aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblPeriodUnilateralCreditAdjustment[iVertexIndex - 1] = 0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex - 1].counterParty().survivalProbability() -
@@ -279,11 +289,13 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] * (1. -
 				aMV[iVertexIndex - 1].counterParty().seniorRecoveryRate()) *
-					aMV[iVertexIndex - 1].bank().survivalProbability();
+					aMV[iVertexIndex - 1].bank().survivalProbability() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] * (1. -
 				aMV[iVertexIndex].counterParty().seniorRecoveryRate()) *
-					aMV[iVertexIndex].bank().survivalProbability();
+					aMV[iVertexIndex].bank().survivalProbability() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblPeriodBilateralCreditAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex - 1].counterParty().survivalProbability() -
@@ -314,11 +326,13 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedPositiveExposurePV[iVertexIndex - 1] * (1. -
 				aMV[iVertexIndex - 1].counterParty().seniorRecoveryRate()) * (1. -
-					aMV[iVertexIndex - 1].bank().survivalProbability());
+					aMV[iVertexIndex - 1].bank().survivalProbability()) *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedPositiveExposurePV[iVertexIndex] * (1. -
 				aMV[iVertexIndex].counterParty().seniorRecoveryRate()) * (1. -
-					aMV[iVertexIndex].bank().survivalProbability());
+					aMV[iVertexIndex].bank().survivalProbability()) *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblPeriodContraLiabilityCreditAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex - 1].counterParty().survivalProbability() -
@@ -345,10 +359,12 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] * (1. -
-				aMV[iVertexIndex - 1].bank().seniorRecoveryRate());
+				aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
+					aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedNegativeExposurePV[iVertexIndex] * (1. -
-				aMV[iVertexIndex].bank().seniorRecoveryRate());
+				aMV[iVertexIndex].bank().seniorRecoveryRate()) *
+					aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblUnilateralDebtAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex - 1].bank().survivalProbability() -
@@ -379,11 +395,13 @@ public abstract class CreditDebtGroupPath extends org.drip.xva.netting.ExposureG
 		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
 			double dblPeriodIntegrandStart = adblCollateralizedNegativeExposurePV[iVertexIndex - 1] * (1. -
 				aMV[iVertexIndex - 1].bank().seniorRecoveryRate()) *
-					aMV[iVertexIndex - 1].counterParty().survivalProbability();
+					aMV[iVertexIndex - 1].counterParty().survivalProbability() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
 
 			double dblPeriodIntegrandEnd = adblCollateralizedNegativeExposurePV[iVertexIndex] * (1. -
 				aMV[iVertexIndex].bank().seniorRecoveryRate()) *
-					aMV[iVertexIndex].counterParty().survivalProbability();
+					aMV[iVertexIndex].counterParty().survivalProbability() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
 
 			adblBilateralDebtAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
 				dblPeriodIntegrandEnd) * (aMV[iVertexIndex - 1].bank().survivalProbability() -

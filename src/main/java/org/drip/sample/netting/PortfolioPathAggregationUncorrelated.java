@@ -116,6 +116,40 @@ public class PortfolioPathAggregationUncorrelated {
 		return adblNumeraireValue;
 	}
 
+	private static final double[] VertexNumeraireRealization (
+		final DiffusionEvolver deNumeraireValue,
+		final double dblNumeraireValueInitial,
+		final double dblTime,
+		final double dblTimeWidth,
+		final int iNumStep)
+		throws Exception
+	{
+		double[] adblNumeraireValue = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
+
+		JumpDiffusionVertex[] aJDV = deNumeraireValue.vertexSequenceReverse (
+			new JumpDiffusionVertex (
+				dblTime,
+				dblNumeraireValueInitial,
+				0.,
+				false
+			),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				SequenceGenerator.Gaussian (iNumStep)
+			),
+			adblTimeWidth
+		);
+
+		for (int j = 0; j <= iNumStep; ++j)
+			adblNumeraireValue[j] = aJDV[j].value();
+
+		return adblNumeraireValue;
+	}
+
 	private static final double[][] CollateralPortfolioValueRealization (
 		final DiffusionEvolver deCollateralPortfolioValue,
 		final double dblCollateralPortfolioValueInitial,
@@ -211,7 +245,7 @@ public class PortfolioPathAggregationUncorrelated {
 			iNumPath
 		);
 
-		double[] adblCSA = NumeraireValueRealization (
+		double[] adblCSA = VertexNumeraireRealization (
 			new DiffusionEvolver (
 				DiffusionEvaluatorLogarithmic.Standard (
 					dblCSADrift,
@@ -303,15 +337,45 @@ public class PortfolioPathAggregationUncorrelated {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i) {
-			aMV[i] = MarketVertex.SeniorOnly (
+			aMV[i] = new MarketVertex (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
-				adblCSA[i],
-				Math.exp (-0.5 * adblBankHazardRate[i] * i),
-				adblBankRecoveryRate[i],
-				adblBankFundingSpread[i],
-				Math.exp (-0.5 * adblCounterPartyHazardRate[i] * i),
-				adblCounterPartyRecoveryRate[i],
-				adblCounterPartyFundingSpread[i]
+				Double.NaN,
+				0.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
+				dblCSADrift,
+				new NumeraireMarketVertex (
+					adblCSA[0],
+					adblCSA[i]
+				),
+				new EntityMarketVertex (
+					Math.exp (-0.5 * adblBankHazardRate[i] * i),
+					adblBankHazardRate[i],
+					adblBankRecoveryRate[i],
+					adblBankFundingSpread[i],
+					new NumeraireMarketVertex (
+						Math.exp (-0.5 * adblBankHazardRate[i] * (1. - adblBankRecoveryRate[i]) * iNumStep),
+						Math.exp (-0.5 * adblBankHazardRate[i] * (1. - adblBankRecoveryRate[i]) * (iNumStep - i))
+					),
+					Double.NaN,
+					Double.NaN,
+					null
+				),
+				new EntityMarketVertex (
+					Math.exp (-0.5 * adblCounterPartyHazardRate[i] * i),
+					adblCounterPartyHazardRate[i],
+					adblCounterPartyRecoveryRate[i],
+					adblCounterPartyFundingSpread[i],
+					new NumeraireMarketVertex (
+						Math.exp (-0.5 * adblCounterPartyHazardRate[i] * (1. - adblCounterPartyRecoveryRate[i]) * iNumStep),
+						Math.exp (-0.5 * adblCounterPartyHazardRate[i] * (1. - adblCounterPartyRecoveryRate[i]) * (iNumStep - i))
+					),
+					Double.NaN,
+					Double.NaN,
+					null
+				)
 			);
 
 			for (int j = 0; j < iNumPath; ++j)

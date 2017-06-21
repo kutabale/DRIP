@@ -296,28 +296,43 @@ public class EulerTrajectoryEvolutionScheme {
 			dtSpot,
 			dblAssetNumeraireInitial,
 			dblOvernightIndexNumeraireDrift,
-			1.,
+			new NumeraireMarketVertex (
+				1.,
+				1.
+			),
 			dblCollateralSchemeNumeraireDrift,
-			1.,
+			new NumeraireMarketVertex (
+				1.,
+				1.
+			),
 			new EntityMarketVertex (
 				1.,
 				dblBankHazardRateInitial,
 				dblBankSeniorRecoveryRateInitial,
 				dblBankSeniorFundingNumeraireDrift,
-				1.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
 				dblBankSubordinateRecoveryRateInitial,
 				dblBankSubordinateFundingNumeraireDrift,
-				1.
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				)
 			),
 			new EntityMarketVertex (
 				1.,
 				dblCounterPartyHazardRateInitial,
 				dblCounterPartyRecoveryRateInitial,
 				dblCounterPartyFundingNumeraireDrift,
-				1.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
 				Double.NaN,
 				Double.NaN,
-				Double.NaN
+				null
 			)
 		);
 
@@ -413,9 +428,9 @@ public class EulerTrajectoryEvolutionScheme {
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (agvInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].assetNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].bank().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].counterParty().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].bank().seniorFundingNumeraire().forward(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].counterParty().seniorFundingNumeraire().forward(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMVBase[aMV.length - 1].collateralSchemeNumeraire().forward(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
@@ -452,9 +467,9 @@ public class EulerTrajectoryEvolutionScheme {
 				FormatUtil.FormatDouble (etv.time(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.assetGreekVertex().derivativeXVAValue(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMVBase[i].assetNumeraire(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMVBase[i].bank().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMVBase[i].counterParty().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aMVBase[i].collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMVBase[i].bank().seniorFundingNumeraire().forward(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMVBase[i].counterParty().seniorFundingNumeraire().forward(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMVBase[i].collateralSchemeNumeraire().forward(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().assetNumeraireUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (etv.replicationPortfolioVertex().counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +

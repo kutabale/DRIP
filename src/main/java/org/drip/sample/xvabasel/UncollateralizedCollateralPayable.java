@@ -203,15 +203,45 @@ public class UncollateralizedCollateralPayable {
 		);
 
 		for (int i = 0; i <= iNumStep; ++i)
-			aNV[i] = MarketVertex.SeniorOnly (
+			aNV[i] = new MarketVertex (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
-				Math.exp (0.5 * dblCSADrift * i),
-				Math.exp (-0.5 * dblBankHazardRate * i),
-				dblBankRecoveryRate,
-				dblBankFundingSpread,
-				Math.exp (-0.5 * dblCounterPartyHazardRate * i),
-				dblCounterPartyRecoveryRate,
-				dblCounterPartyFundingSpread
+				Double.NaN,
+				0.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
+				dblCSADrift,
+				new NumeraireMarketVertex (
+					Math.exp (-0.5 * dblCSADrift * iNumStep),
+					Math.exp (-0.5 * dblCSADrift * (iNumStep - i))
+				),
+				new EntityMarketVertex (
+					Math.exp (-0.5 * dblBankHazardRate * i),
+					dblBankHazardRate,
+					dblBankRecoveryRate,
+					dblBankFundingSpread,
+					new NumeraireMarketVertex (
+						Math.exp (-0.5 * dblBankHazardRate * (1. - dblBankRecoveryRate) * iNumStep),
+						Math.exp (-0.5 * dblBankHazardRate * (1. - dblBankRecoveryRate) * (iNumStep - i))
+					),
+					Double.NaN,
+					Double.NaN,
+					null
+				),
+				new EntityMarketVertex (
+					Math.exp (-0.5 * dblCounterPartyHazardRate * i),
+					dblCounterPartyHazardRate,
+					dblCounterPartyRecoveryRate,
+					dblCounterPartyFundingSpread,
+					new NumeraireMarketVertex (
+						Math.exp (-0.5 * dblCounterPartyHazardRate * (1. - dblCounterPartyRecoveryRate) * iNumStep),
+						Math.exp (-0.5 * dblCounterPartyHazardRate * (1. - dblCounterPartyRecoveryRate) * (iNumStep - i))
+					),
+					Double.NaN,
+					Double.NaN,
+					null
+				)
 			);
 
 		for (int i = 0; i < iNumPath; ++i) {

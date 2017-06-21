@@ -152,9 +152,9 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 
 		double dblCashAccountAccumulationFinish = cae.accumulation();
 
-		double dblBankSeniorFundingNumeraireFinish = mvFinish.bank().seniorFundingNumeraire();
+		double dblBankSeniorFundingNumeraireFinish = mvFinish.bank().seniorFundingNumeraire().forward();
 
-		double dblCounterPartyFundingNumeraireFinish = mvFinish.counterParty().seniorFundingNumeraire();
+		double dblCounterPartyFundingNumeraireFinish = mvFinish.counterParty().seniorFundingNumeraire().forward();
 
 		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
@@ -169,7 +169,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			FormatUtil.FormatDouble (mvFinish.assetNumeraire(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblBankSeniorFundingNumeraireFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCounterPartyFundingNumeraireFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (mvFinish.collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (mvFinish.collateralSchemeNumeraire().forward(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
@@ -191,7 +191,7 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 					-1. * dblTimeWidth * tc.collateralScheme().numeraireEvolver().evaluator().drift().value (
 						new JumpDiffusionVertex (
 							dblTime,
-							mvFinish.collateralSchemeNumeraire(),
+							mvFinish.collateralSchemeNumeraire().forward(),
 							0.,
 							false
 						)
@@ -420,28 +420,43 @@ public class CorrelatedNumeraireXVAReplicationPortfolio {
 			dtSpot,
 			dblAssetNumeraireInitial,
 			dblOvernightIndexNumeraireDrift,
-			1.,
+			new NumeraireMarketVertex (
+				1.,
+				1.
+			),
 			dblCollateralSchemeNumeraireDrift,
-			1.,
+			new NumeraireMarketVertex (
+				1.,
+				1.
+			),
 			new EntityMarketVertex (
 				1.,
 				dblBankHazardRateInitial,
 				dblBankSeniorRecoveryRateInitial,
 				dblBankSeniorFundingNumeraireDrift,
-				1.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
 				dblBankSubordinateRecoveryRateInitial,
 				dblBankSubordinateFundingNumeraireDrift,
-				1.
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				)
 			),
 			new EntityMarketVertex (
 				1.,
 				dblCounterPartyHazardRateInitial,
 				dblCounterPartyRecoveryRateInitial,
 				dblCounterPartyFundingNumeraireDrift,
-				1.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
 				Double.NaN,
 				Double.NaN,
-				Double.NaN
+				null
 			)
 		);
 

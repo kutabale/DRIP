@@ -95,17 +95,19 @@ public class BurgardKjaerVertex {
 
 		double dblBankHazardRate = emvBank.hazardRate();
 
-		double dblBilateralDFIncrement = -1. * mv.overnightIndexNumeraire() *
+		double dblBilateralDFIncrement = -1. * mv.overnightIndexNumeraire().epochalForwardScale() *
 			emvCounterParty.survivalProbability() * emvBank.survivalProbability() * dblTimeIncrement;
 
 		try {
 			return new BurgardKjaerVertex (
-				bke, new org.drip.xva.strategy.BurgardKjaerValuationAdjustment (
+				bke,
+				new org.drip.xva.strategy.BurgardKjaerValuationAdjustment (
 					dblBilateralDFIncrement * emvCounterParty.hazardRate() * bke.credit(),
 					dblBilateralDFIncrement * dblBankHazardRate * bke.debt(),
 					dblBilateralDFIncrement * dblBankHazardRate * bke.hedgeError(),
 					dblBilateralDFIncrement * mv.collateralSchemeSpread() * bke.collateralAmount()
-				), rpv
+				),
+				rpv
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

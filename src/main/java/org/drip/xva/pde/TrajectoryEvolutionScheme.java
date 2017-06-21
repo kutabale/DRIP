@@ -149,13 +149,24 @@ public class TrajectoryEvolutionScheme {
 
 		double dblAssetNumeraireFinish = mvFinish.assetNumeraire();
 
-		double dblBankSeniorFundingNumeraireFinish = emvBankFinish.seniorFundingNumeraire();
+		double dblBankSeniorFundingNumeraireFinish = emvBankFinish.seniorFundingNumeraire().forward();
 
-		double dblBankSubordinateFundingNumeraireStart = emvBankStart.subordinateFundingNumeraire();
+		double dblCounterPartyNumeraireFinish = emvCounterPartyFinish.seniorFundingNumeraire().forward();
 
-		double dblBankSubordinateFundingNumeraireFinish = emvBankFinish.subordinateFundingNumeraire();
+		double dblBankSubordinateFundingNumeraireStart = java.lang.Double.NaN;
+		double dblBankSubordinateFundingNumeraireFinish = java.lang.Double.NaN;
 
-		double dblCounterPartyNumeraireFinish = emvCounterPartyFinish.seniorFundingNumeraire();
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinateFundingStart =
+			emvBankStart.seniorFundingNumeraire();
+
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinateFundingFinish =
+			emvBankFinish.seniorFundingNumeraire();
+
+		if (null != nmvBankSubordinateFundingStart && null != nmvBankSubordinateFundingFinish) {
+			dblBankSubordinateFundingNumeraireStart = nmvBankSubordinateFundingStart.forward();
+
+			dblBankSubordinateFundingNumeraireFinish = nmvBankSubordinateFundingFinish.forward();
+		}
 
 		double dblTimeIncrement = me.vertexIncrement() / 365.25;
 
@@ -169,7 +180,7 @@ public class TrajectoryEvolutionScheme {
 				dblTimeIncrement;
 
 		double dblCounterPartyPositionValueChange = dblCounterPartyNumeraireUnitsStart *
-			(dblCounterPartyNumeraireFinish - mvStart.counterParty().seniorFundingNumeraire());
+			(dblCounterPartyNumeraireFinish - mvStart.counterParty().seniorFundingNumeraire().forward());
 
 		double dblCashAccountBalance = -1. * etvStart.assetGreekVertex().derivativeXVAValue() -
 			dblBankSeniorNumeraireUnitsStart * dblBankSeniorFundingNumeraireFinish;
@@ -187,10 +198,10 @@ public class TrajectoryEvolutionScheme {
 				dblTimeIncrement;
 
 		double dblDerivativeXVAValueChange = -1. * (dblAssetNumeraireUnitsStart * (dblAssetNumeraireFinish -
-			mvStart.assetNumeraire()) + dblBankSeniorNumeraireUnitsStart * (dblBankSeniorFundingNumeraireFinish -
-				emvBankStart.seniorFundingNumeraire()) + dblCounterPartyPositionValueChange +
-					(dblAssetCashChange + dblCounterPartyCashAccumulation + dblBankCashAccumulation) *
-						dblTimeIncrement);
+			mvStart.assetNumeraire()) + dblBankSeniorNumeraireUnitsStart *
+				(dblBankSeniorFundingNumeraireFinish - emvBankStart.seniorFundingNumeraire().forward()) +
+					dblCounterPartyPositionValueChange + (dblAssetCashChange +
+						dblCounterPartyCashAccumulation + dblBankCashAccumulation) * dblTimeIncrement);
 
 		if (org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFundingNumeraireStart) &&
 			org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFundingNumeraireFinish))
@@ -275,11 +286,12 @@ public class TrajectoryEvolutionScheme {
 			return null;
 		}
 
+		double dblBankSubordinateFundingNumeraire = java.lang.Double.NaN;
 		double dblGainOnBankDefaultFinish = -1. * (dblDerivativeXVAValueFinish -
 			dblCounterPartyGainOnBankDefault);
 
 		double dblCounterPartyNumeraireUnitsFinish = dblGainOnCounterPartyDefaultFinish /
-			emvCounterPartyFinish.seniorFundingNumeraire();
+			emvCounterPartyFinish.seniorFundingNumeraire().forward();
 
 		org.drip.xva.derivative.CashAccountRebalancer car = rebalanceCash (etvStart, me);
 
@@ -287,9 +299,13 @@ public class TrajectoryEvolutionScheme {
 
 		org.drip.xva.derivative.CashAccountEdge cae = car.cashAccount();
 
-		double dblBankSeniorFundingNumeraire = emvBankFinish.seniorFundingNumeraire();
+		double dblBankSeniorFundingNumeraire = emvBankFinish.seniorFundingNumeraire().forward();
 
-		double dblBankSubordinateFundingNumeraire = emvBankFinish.subordinateFundingNumeraire();
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinateFunding =
+			emvBankFinish.subordinateFundingNumeraire();
+
+		if (null != nmvBankSubordinateFunding)
+			dblBankSubordinateFundingNumeraire = nmvBankSubordinateFunding.forward();
 
 		org.drip.xva.universe.Tradeable tCollateralScheme = _tc.collateralScheme();
 
@@ -316,7 +332,7 @@ public class TrajectoryEvolutionScheme {
 						tCollateralScheme.numeraireEvolver().evaluator().drift().value (
 							new org.drip.measure.realization.JumpDiffusionVertex (
 								dblTimeStart - 0.5 * dblTimeIncrement,
-								me.start().collateralSchemeNumeraire(),
+								me.start().collateralSchemeNumeraire().forward(),
 								0.,
 								false
 							)

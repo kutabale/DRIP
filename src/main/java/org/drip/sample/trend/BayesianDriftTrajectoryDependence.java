@@ -1,9 +1,7 @@
 
 package org.drip.sample.trend;
 
-import org.drip.execution.bayesian.ConditionalPriceDistribution;
-import org.drip.execution.bayesian.PriorConditionalCombiner;
-import org.drip.execution.bayesian.PriorDriftDistribution;
+import org.drip.execution.bayesian.*;
 import org.drip.execution.cost.LinearTemporaryImpact;
 import org.drip.execution.impact.ParticipationRateLinear;
 import org.drip.quant.common.FormatUtil;

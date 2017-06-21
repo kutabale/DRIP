@@ -102,7 +102,7 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblTime = dblTimeStart + dblTimeWidth;
 
-		double dblCollateralSchemeNumeraire = mvStart.collateralSchemeNumeraire();
+		double dblCollateralSchemeNumeraire = mvStart.collateralSchemeNumeraire().forward();
 
 		BurgardKjaerEdgeAttribution bkea = bko.edgeRunAttribution (
 			new MarketEdge (
@@ -153,9 +153,9 @@ public class CorrelatedNumeraireXVAAttribution {
 
 		double dblAssetNumeraireFinish = mvFinish.assetNumeraire();
 
-		double dblBankSeniorFundingNumeraireFinish = mvFinish.bank().seniorFundingNumeraire();
+		double dblBankSeniorFundingNumeraireFinish = mvFinish.bank().seniorFundingNumeraire().forward();
 
-		double dblCounterPartyFundingNumeraireFinish = mvFinish.counterParty().seniorFundingNumeraire();
+		double dblCounterPartyFundingNumeraireFinish = mvFinish.counterParty().seniorFundingNumeraire().forward();
 
 		ReplicationPortfolioVertex rpvFinish = ReplicationPortfolioVertex.Standard (
 			-1. * dblDerivativeXVAValueDeltaFinish,
@@ -170,7 +170,7 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (dblAssetNumeraireFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblBankSeniorFundingNumeraireFinish, 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (dblCounterPartyFundingNumeraireFinish, 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (mvFinish.collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (mvFinish.collateralSchemeNumeraire().forward(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvFinish.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +
@@ -421,28 +421,43 @@ public class CorrelatedNumeraireXVAAttribution {
 			dtSpot,
 			dblAssetNumeraireInitial,
 			dblOvernightIndexNumeraireDrift,
-			1.,
+			new NumeraireMarketVertex (
+				1.,
+				1.
+			),
 			dblCollateralSchemeNumeraireDrift,
-			1.,
+			new NumeraireMarketVertex (
+				1.,
+				1.
+			),
 			new EntityMarketVertex (
 				1.,
 				dblBankHazardRateInitial,
 				dblBankSeniorRecoveryRateInitial,
 				dblBankSeniorFundingNumeraireDrift,
-				1.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
 				dblBankSubordinateRecoveryRateInitial,
 				dblBankSubordinateFundingNumeraireDrift,
-				1.
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				)
 			),
 			new EntityMarketVertex (
 				1.,
 				dblCounterPartyHazardRateInitial,
 				dblCounterPartyRecoveryRateInitial,
 				dblCounterPartyFundingNumeraireDrift,
-				1.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
 				Double.NaN,
 				Double.NaN,
-				Double.NaN
+				null
 			)
 		);
 
@@ -534,9 +549,9 @@ public class CorrelatedNumeraireXVAAttribution {
 			FormatUtil.FormatDouble (1., 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (agvInitial.derivativeXVAValue(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (aMV[iNumVertex].assetNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMV[iNumVertex].bank().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMV[iNumVertex].counterParty().seniorFundingNumeraire(), 1, 6, 1.) + " | " +
-			FormatUtil.FormatDouble (aMV[iNumVertex].collateralSchemeNumeraire(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMV[iNumVertex].bank().seniorFundingNumeraire().forward(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMV[iNumVertex].counterParty().seniorFundingNumeraire().forward(), 1, 6, 1.) + " | " +
+			FormatUtil.FormatDouble (aMV[iNumVertex].collateralSchemeNumeraire().forward(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.assetNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.bankSeniorNumeraireUnits(), 1, 6, 1.) + " | " +
 			FormatUtil.FormatDouble (rpvInitial.counterPartyNumeraireUnits(), 1, 6, 1.) + " | " +

@@ -207,12 +207,13 @@ public class ReplicationPortfolioVertex {
 
 		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
 
-		double dblValue = -1. * emvBank.seniorFundingNumeraire() * _dblBankSeniorNumeraireUnits;
+		double dblValue = -1. * emvBank.seniorFundingNumeraire().forward() * _dblBankSeniorNumeraireUnits;
 
-		double dblBankSubordinateFunding = emvBank.subordinateFundingNumeraire();
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinateFunding =
+			emvBank.subordinateFundingNumeraire();
 
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFunding))
-			dblValue -= dblBankSubordinateFunding * _dblBankSubordinateNumeraireUnits;
+		if (null != nmvBankSubordinateFunding)
+			dblValue -= nmvBankSubordinateFunding.forward() * _dblBankSubordinateNumeraireUnits;
 
 		return dblValue;
 	}
@@ -237,17 +238,15 @@ public class ReplicationPortfolioVertex {
 
 		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
 
-		double dblValue = emvBank.seniorFundingNumeraire() * _dblBankSeniorNumeraireUnits *
+		double dblValue = emvBank.seniorFundingNumeraire().forward() * _dblBankSeniorNumeraireUnits *
 			emvBank.seniorRecoveryRate();
 
-		double dblBankSubordinateFundingNumeraire = emvBank.subordinateFundingNumeraire();
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinateFunding =
+			emvBank.subordinateFundingNumeraire();
 
-		double dblBankSubordinateRecoveryRate = emvBank.subordinateRecoveryRate();
-
-		if (!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateFundingNumeraire) &&
-			!org.drip.quant.common.NumberUtil.IsValid (dblBankSubordinateRecoveryRate))
-			dblValue -= dblBankSubordinateFundingNumeraire * _dblBankSubordinateNumeraireUnits *
-				dblBankSubordinateRecoveryRate;
+		if (null != nmvBankSubordinateFunding)
+			dblValue -= nmvBankSubordinateFunding.forward() * _dblBankSubordinateNumeraireUnits *
+				emvBank.subordinateRecoveryRate();
 
 		return dblValue;
 	}

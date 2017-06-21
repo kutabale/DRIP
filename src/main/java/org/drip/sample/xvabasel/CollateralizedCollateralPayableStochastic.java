@@ -132,6 +132,41 @@ public class CollateralizedCollateralPayableStochastic {
 		return adblNumeraireValue;
 	}
 
+	private static final double[] VertexNumeraireRealization (
+		final DiffusionEvolver deNumeraireValue,
+		final double dblNumeraireValueInitial,
+		final double dblTime,
+		final double dblTimeWidth,
+		final double[] adblRandom,
+		final int iNumStep)
+		throws Exception
+	{
+		double[] adblNumeraireValue = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
+
+		for (int i = 0; i < iNumStep; ++i)
+			adblTimeWidth[i] = dblTimeWidth;
+
+		JumpDiffusionVertex[] aJDV = deNumeraireValue.vertexSequenceReverse (
+			new JumpDiffusionVertex (
+				dblTime,
+				dblNumeraireValueInitial,
+				0.,
+				false
+			),
+			JumpDiffusionEdgeUnit.Diffusion (
+				adblTimeWidth,
+				adblRandom
+			),
+			adblTimeWidth
+		);
+
+		for (int j = 0; j <= iNumStep; ++j)
+			adblNumeraireValue[j] = aJDV[j].value();
+
+		return adblNumeraireValue;
+	}
+
 	private static final double[] ATMSwapRateOffsetRealization (
 		final DiffusionEvolver deATMSwapRateOffset,
 		final double dblATMSwapRateOffsetInitial,
@@ -371,7 +406,7 @@ public class CollateralizedCollateralPayableStochastic {
 				dblSwapNotional2
 			);
 
-			double[] adblCSA = NumeraireValueRealization (
+			double[] adblCSA = VertexNumeraireRealization (
 				deCSA,
 				dblCSAInitial,
 				dblTime,
@@ -479,15 +514,45 @@ public class CollateralizedCollateralPayableStochastic {
 					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
 				}
 
-				aMV[j] = MarketVertex.SeniorOnly (
-					adtVertex[j],
-					adblCSA[j],
-					Math.exp (-0.5 * adblBankHazardRate[j] * (j + 1)),
-					adblBankRecoveryRate[j],
-					adblBankFundingSpread[j],
-					Math.exp (-0.5 * adblCounterPartyHazardRate[j] * (j + 1)),
-					adblCounterPartyRecoveryRate[j],
-					adblCounterPartyFundingSpread[j]
+				aMV[j] = new MarketVertex (
+					adtVertex[j] = dtSpot.addMonths (6 * j),
+					Double.NaN,
+					0.,
+					new NumeraireMarketVertex (
+						1.,
+						1.
+					),
+					dblCSADrift,
+					new NumeraireMarketVertex (
+						adblCSA[0],
+						adblCSA[j]
+					),
+					new EntityMarketVertex (
+						Math.exp (-0.5 * adblBankHazardRate[j] * j),
+						adblBankHazardRate[j],
+						adblBankRecoveryRate[j],
+						adblBankFundingSpread[j],
+						new NumeraireMarketVertex (
+							Math.exp (-0.5 * adblBankHazardRate[j] * (1. - adblBankRecoveryRate[j]) * iNumStep),
+							Math.exp (-0.5 * adblBankHazardRate[j] * (1. - adblBankRecoveryRate[j]) * (iNumStep - j))
+						),
+						Double.NaN,
+						Double.NaN,
+						null
+					),
+					new EntityMarketVertex (
+						Math.exp (-0.5 * adblCounterPartyHazardRate[j] * j),
+						adblCounterPartyHazardRate[j],
+						adblCounterPartyRecoveryRate[j],
+						adblCounterPartyFundingSpread[j],
+						new NumeraireMarketVertex (
+							Math.exp (-0.5 * adblCounterPartyHazardRate[j] * (1. - adblCounterPartyRecoveryRate[j]) * iNumStep),
+							Math.exp (-0.5 * adblCounterPartyHazardRate[j] * (1. - adblCounterPartyRecoveryRate[j]) * (iNumStep - j))
+						),
+						Double.NaN,
+						Double.NaN,
+						null
+					)
 				);
 
 				aHGVR1[j] = new HypothecationGroupVertexRegular (

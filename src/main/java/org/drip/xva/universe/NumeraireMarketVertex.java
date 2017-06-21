@@ -109,4 +109,15 @@ public class NumeraireMarketVertex {
 	{
 		return _dblForward;
 	}
+
+	/**
+	 * Retrieve the Epochal/Forward Numeraire Scale
+	 * 
+	 * @return The Epochal/Forward Numeraire Scale
+	 */
+
+	public double epochalForwardScale()
+	{
+		return _dblEpochal / _dblForward;
+	}
 }

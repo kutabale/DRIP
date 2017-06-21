@@ -286,28 +286,43 @@ public class XVAMarketGeneration {
 			dtSpot,
 			dblAssetNumeraireInitial,
 			dblOvernightIndexNumeraireDrift,
-			1.,
+			new NumeraireMarketVertex (
+				1.,
+				1.
+			),
 			dblCollateralSchemeNumeraireDrift,
-			1.,
+			new NumeraireMarketVertex (
+				1.,
+				1.
+			),
 			new EntityMarketVertex (
 				1.,
 				dblBankHazardRateInitial,
 				dblBankSeniorRecoveryRateInitial,
 				dblBankSeniorFundingNumeraireDrift,
-				1.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
 				dblBankSubordinateRecoveryRateInitial,
 				dblBankSubordinateFundingNumeraireDrift,
-				1.
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				)
 			),
 			new EntityMarketVertex (
 				1.,
 				dblCounterPartyHazardRateInitial,
 				dblCounterPartyRecoveryRateInitial,
 				dblCounterPartyFundingNumeraireDrift,
-				1.,
+				new NumeraireMarketVertex (
+					1.,
+					1.
+				),
 				Double.NaN,
 				Double.NaN,
-				Double.NaN
+				null
 			)
 		);
 
@@ -340,9 +355,9 @@ public class XVAMarketGeneration {
 				"\t|| " + aMV[i].anchor() + " => " +
 				FormatUtil.FormatDouble (aMV[i].assetNumeraire(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].overnightIndexRate(), 1, 2, 100.) + "% | " +
-				FormatUtil.FormatDouble (aMV[i].overnightIndexNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aMV[i].overnightIndexNumeraire().forward(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].collateralSchemeRate(), 1, 2, 100.) + "% | " +
-				FormatUtil.FormatDouble (aMV[i].collateralSchemeNumeraire(), 1, 6, 1.) + " ||"
+				FormatUtil.FormatDouble (aMV[i].collateralSchemeNumeraire().forward(), 1, 6, 1.) + " ||"
 			);
 
 		System.out.println ("\t||--------------------------------------------------------------------||");
@@ -386,10 +401,10 @@ public class XVAMarketGeneration {
 				FormatUtil.FormatDouble (emvBank.survivalProbability(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (emvBank.seniorRecoveryRate(), 1, 0, 100.) + "% | " +
 				FormatUtil.FormatDouble (emvBank.seniorFundingSpread(), 1, 2, 100.) + "% | " +
-				FormatUtil.FormatDouble (emvBank.seniorFundingNumeraire(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (emvBank.seniorFundingNumeraire().forward(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (emvBank.subordinateRecoveryRate(), 1, 0, 100.) + "% | " +
 				FormatUtil.FormatDouble (emvBank.subordinateFundingSpread(), 1, 2, 100.) + "% | " +
-				FormatUtil.FormatDouble (emvBank.subordinateFundingNumeraire(), 1, 6, 1.) + " ||"
+				FormatUtil.FormatDouble (emvBank.subordinateFundingNumeraire().forward(), 1, 6, 1.) + " ||"
 			);
 		}
 
@@ -428,7 +443,7 @@ public class XVAMarketGeneration {
 				FormatUtil.FormatDouble (emvCounterParty.survivalProbability(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (emvCounterParty.seniorRecoveryRate(), 1, 0, 100.) + "% | " +
 				FormatUtil.FormatDouble (emvCounterParty.seniorFundingSpread(), 1, 2, 100.) + "% | " +
-				FormatUtil.FormatDouble (emvCounterParty.seniorFundingNumeraire(), 1, 6, 1.) + " ||"
+				FormatUtil.FormatDouble (emvCounterParty.seniorFundingNumeraire().forward(), 1, 6, 1.) + " ||"
 			);
 		}
 
