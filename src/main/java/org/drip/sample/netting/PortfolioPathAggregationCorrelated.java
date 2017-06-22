@@ -346,7 +346,7 @@ public class PortfolioPathAggregationCorrelated {
 			);
 
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
-			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -392,7 +392,7 @@ public class PortfolioPathAggregationCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = new HypothecationGroupVertexRegular (
+				aHGVR[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblCollateralPortfolio[i][j],
 					0.,

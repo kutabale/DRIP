@@ -338,7 +338,7 @@ public class CPGAZeroThreshold {
 		for (int i = 0; i < iNumPath; ++i) {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart = dblTime * dblATMSwapRateStart;
-			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
@@ -361,7 +361,7 @@ public class CPGAZeroThreshold {
 					dblCollateralBalance = hae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = new HypothecationGroupVertexRegular (
+				aHGVR[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblSwapPortfolioValueRealization[i][j],
 					0.,

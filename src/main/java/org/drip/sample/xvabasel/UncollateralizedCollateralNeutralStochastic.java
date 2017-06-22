@@ -459,8 +459,8 @@ public class UncollateralizedCollateralNeutralStochastic {
 			);
 
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
-			HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
-			HypothecationGroupVertexRegular[] aCGV2 = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertex[] aCGV1 = new HypothecationGroupVertex[iNumStep + 1];
+			HypothecationGroupVertex[] aCGV2 = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aNV[j] = new MarketVertex (
@@ -506,14 +506,14 @@ public class UncollateralizedCollateralNeutralStochastic {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV1[j] = new HypothecationGroupVertexRegular (
+				aCGV1[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					0.
 				);
 
-				aCGV2[j] = new HypothecationGroupVertexRegular (
+				aCGV2[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,

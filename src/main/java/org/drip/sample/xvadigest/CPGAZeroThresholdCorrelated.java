@@ -492,7 +492,7 @@ public class CPGAZeroThresholdCorrelated {
 			JulianDate dtStart = dtSpot;
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
 			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
-			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -556,7 +556,7 @@ public class CPGAZeroThresholdCorrelated {
 					dblCollateralBalance = hae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = new HypothecationGroupVertexRegular (
+				aHGVR[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,

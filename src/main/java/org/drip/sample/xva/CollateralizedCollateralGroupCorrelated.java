@@ -430,7 +430,7 @@ public class CollateralizedCollateralGroupCorrelated {
 			JulianDate dtStart = dtSpot;
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
 			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
-			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -494,7 +494,7 @@ public class CollateralizedCollateralGroupCorrelated {
 					dblCollateralBalance = cae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = new HypothecationGroupVertexRegular (
+				aHGVR[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,

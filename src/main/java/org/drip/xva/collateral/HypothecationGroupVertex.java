@@ -47,7 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * HypothecationGroupVertex holds the Vertex Realizations of a Projected Path of a Simulation Run of a
+ * HypothecationGroupVertex holds the "Regular" Vertex Exposures of a Projected Path of a Simulation Run of a
  *  Collateral Hypothecation Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -140,5 +140,66 @@ public class HypothecationGroupVertex {
 	public double realizedCashFlow()
 	{
 		return _dblRealizedCashFlow;
+	}
+
+	/**
+	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
+	 */
+
+	public double collateralizedExposure()
+	{
+		return forwardExposure() + realizedCashFlow() - collateralBalance();
+	}
+
+	/**
+	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
+	 */
+
+	public double uncollateralizedExposure()
+	{
+		return forwardExposure() + realizedCashFlow();
+	}
+
+	/**
+	 * Retrieve the Credit Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Credit Exposure at the Path Vertex Time Node
+	 */
+
+	public double creditExposure()
+	{
+		double dblCreditExposure = collateralizedExposure();
+
+		return 0. > dblCreditExposure ? dblCreditExposure : 0.;
+	}
+
+	/**
+	 * Retrieve the Debt Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Debt Exposure at the Path Vertex Time Node
+	 */
+
+	public double debtExposure()
+	{
+		double dblDebtExposure = collateralizedExposure();
+
+		return 0. < dblDebtExposure ? dblDebtExposure : 0.;
+	}
+
+	/**
+	 * Retrieve the Funding Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Funding Exposure at the Path Vertex Time Node
+	 */
+
+	public double fundingExposure()
+	{
+		double dblCreditExposure = collateralizedExposure();
+
+		return 0. > dblCreditExposure ? dblCreditExposure : 0.;
 	}
 }

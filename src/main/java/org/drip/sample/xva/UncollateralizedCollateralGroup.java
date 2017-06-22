@@ -260,12 +260,12 @@ public class UncollateralizedCollateralGroup {
 		MarketPath mp = new MarketPath (aMV);
 
 		for (int i = 0; i < iNumPath; ++i) {
-			HypothecationGroupVertexRegular[] aHGVR = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = new HypothecationGroupVertexRegular (
+				aHGVR[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblSwapPortfolioValueRealization[i][j],
 					0.,

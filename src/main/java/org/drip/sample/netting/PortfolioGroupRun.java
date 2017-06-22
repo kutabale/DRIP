@@ -137,8 +137,8 @@ public class PortfolioGroupRun {
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
-		HypothecationGroupVertexRegular[] aHGVR1 = new HypothecationGroupVertexRegular[iNumStep + 1];
-		HypothecationGroupVertexRegular[] aHGVR2 = new HypothecationGroupVertexRegular[iNumStep + 1];
+		HypothecationGroupVertex[] aHGVR1 = new HypothecationGroupVertex[iNumStep + 1];
+		HypothecationGroupVertex[] aHGVR2 = new HypothecationGroupVertex[iNumStep + 1];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -243,14 +243,14 @@ public class PortfolioGroupRun {
 				)
 			);
 
-			aHGVR1[i] = new HypothecationGroupVertexRegular (
+			aHGVR1[i] = new HypothecationGroupVertex (
 				adtVertex[i],
 				adblAssetValuePath1[i],
 				0.,
 				0.
 			);
 
-			aHGVR2[i] = new HypothecationGroupVertexRegular (
+			aHGVR2[i] = new HypothecationGroupVertex (
 				adtVertex[i],
 				adblAssetValuePath2[i],
 				0.,

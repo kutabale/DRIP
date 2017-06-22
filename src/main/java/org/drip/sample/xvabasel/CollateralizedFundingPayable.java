@@ -281,8 +281,8 @@ public class CollateralizedFundingPayable {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			HypothecationGroupVertexRegular[] aHGVR1 = new HypothecationGroupVertexRegular[iNumStep + 1];
-			HypothecationGroupVertexRegular[] aHGVR2 = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertex[] aHGVR1 = new HypothecationGroupVertex[iNumStep + 1];
+			HypothecationGroupVertex[] aHGVR2 = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
@@ -322,14 +322,14 @@ public class CollateralizedFundingPayable {
 				}
 
 
-				aHGVR1[j] = new HypothecationGroupVertexRegular (
+				aHGVR1[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					dblCollateralBalance1
 				);
 
-				aHGVR2[j] = new HypothecationGroupVertexRegular (
+				aHGVR2[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,

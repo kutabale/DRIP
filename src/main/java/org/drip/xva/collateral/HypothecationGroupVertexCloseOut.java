@@ -47,8 +47,8 @@ package org.drip.xva.collateral;
  */
 
 /**
- * HypothecationGroupVertexRegular holds the "Regular" Vertex Exposures of a Projected Path of a Simulation
- *  Run of a Collateral Hypothecation Group. The References are:
+ * HypothecationGroupVertexCloseOut holds the Close Out Based Vertex Exposures of a Projected Path of a
+ *  Simulation Run of a Collateral Hypothecation Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,48 +67,89 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class HypothecationGroupVertexRegular extends org.drip.xva.collateral.HypothecationGroupVertex {
+public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.HypothecationGroupVertex {
+	private double _dblHedgeError = java.lang.Double.NaN;
+	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
+	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
 
 	/**
-	 * HypothecationGroupVertexRegular Constructor
+	 * HypothecationGroupVertexCloseOut Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
 	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param dblBankDefaultCloseOut Close Out on Bank Default
+	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
+	 * @param dblHedgeError The Vertex Hedge Error
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public HypothecationGroupVertexRegular (
+	public HypothecationGroupVertexCloseOut (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
-		final double dblCollateralBalance)
+		final double dblCollateralBalance,
+		final double dblBankDefaultCloseOut,
+		final double dblCounterPartyDefaultCloseOut,
+		final double dblHedgeError)
 		throws java.lang.Exception
 	{
 		super (dtAnchor, dblForwardExposure, dblRealizedCashFlow, dblCollateralBalance);
+
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
+				dblCounterPartyDefaultCloseOut) || !org.drip.quant.common.NumberUtil.IsValid (_dblHedgeError
+					= dblHedgeError))
+			throw new java.lang.Exception ("HypothecationGroupVertexCloseOut Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
+	 * Retrieve the Hedge Error
 	 * 
-	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
+	 * @return The Hedge Error
 	 */
 
-	public double collateralizedExposure()
+	public double hedgeError()
 	{
-		return forwardExposure() + realizedCashFlow() - collateralBalance();
+		return _dblHedgeError;
 	}
 
 	/**
-	 * Retrieve the Total Uncollateralized Exposure at the Path Vertex Time Node
+	 * Retrieve the Close Out on Bank Default
 	 * 
-	 * @return The Total Uncollateralized Exposure at the Path Vertex Time Node
+	 * @return Close Out on Bank Default
 	 */
 
-	public double uncollateralizedExposure()
+	public double bankDefaultCloseOut()
 	{
-		return forwardExposure() + realizedCashFlow();
+		return _dblBankDefaultCloseOut;
+	}
+
+	/**
+	 * Retrieve the Close Out on Counter Party Default
+	 * 
+	 * @return Close Out on Counter Party Default
+	 */
+
+	public double counterPartyDefaultCloseOut()
+	{
+		return _dblCounterPartyDefaultCloseOut;
+	}
+
+	@Override public double creditExposure()
+	{
+		return collateralizedExposure() - _dblCounterPartyDefaultCloseOut;
+	}
+
+	@Override public double debtExposure()
+	{
+		return collateralizedExposure() - _dblBankDefaultCloseOut;
+	}
+
+	@Override public double fundingExposure()
+	{
+		return _dblHedgeError;
 	}
 }

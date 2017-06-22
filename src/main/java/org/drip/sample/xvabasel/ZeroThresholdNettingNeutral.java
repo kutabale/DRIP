@@ -281,8 +281,8 @@ public class ZeroThresholdNettingNeutral {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			HypothecationGroupVertexRegular[] aCGV1 = new HypothecationGroupVertexRegular[iNumStep + 1];
-			HypothecationGroupVertexRegular[] aCGV2 = new HypothecationGroupVertexRegular[iNumStep + 1];
+			HypothecationGroupVertex[] aCGV1 = new HypothecationGroupVertex[iNumStep + 1];
+			HypothecationGroupVertex[] aCGV2 = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
@@ -322,14 +322,14 @@ public class ZeroThresholdNettingNeutral {
 				}
 
 
-				aCGV1[j] = new HypothecationGroupVertexRegular (
+				aCGV1[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					dblCollateralBalance1
 				);
 
-				aCGV2[j] = new HypothecationGroupVertexRegular (
+				aCGV2[j] = new HypothecationGroupVertex (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,

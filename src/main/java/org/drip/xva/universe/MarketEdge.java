@@ -51,17 +51,19 @@ package org.drip.xva.universe;
  * 	Evolution Edge. The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
- *  	Re-Hypothecation Option, eSSRN, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955.
+ *  	Re-Hypothecation Option <i>eSSRN</i>
+ *  		<b>https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955</b>.<br><br>
  *  
- *  - Burgard, C., and M. Kjaer (2013): Funding Costs, Funding Strategies, Risk, 23 (12) 82-87.
+ *  - Burgard, C., and M. Kjaer (2013): Funding Costs, Funding Strategies <i>Risk</i> <b>23 (12)</b>
+ *  	82-87.<br><br>
  *  
- *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
+ *  - Burgard, C., and M. Kjaer (2014): In the Balance <i>Risk</i> <b>24 (11)</b> 72-75.<br><br>
  *  
- *  - Burgard, C., and M. Kjaer (2017): Derivatives Funding, Netting, and Accounting, eSSRN,
- *  	https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2534011.
+ *  - Burgard, C., and M. Kjaer (2017): Derivatives Funding, Netting, and Accountingb <b>eSSRN</b>
+ *  	https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2534011.<br><br>
  * 
- *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
- *  	21 (2) 97-102.
+ *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing
+ *  	<i>Risk</i> <b>21 (2)</b> 97-102.<br><br>
  * 
  * @author Lakshmi Krishnamurthy
  */
