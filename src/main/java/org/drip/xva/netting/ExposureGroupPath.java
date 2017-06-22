@@ -100,12 +100,12 @@ public class ExposureGroupPath {
 	}
 
 	/**
-	 * Retrieve the Array of the Collateral Group Trajectory Paths
+	 * Retrieve the Array of the Collateral Hypothecation Group Trajectory Paths
 	 * 
-	 * @return Array of the Collateral Group Trajectory Paths
+	 * @return Array of the Collateral Hypothecation Group Trajectory Paths
 	 */
 
-	public org.drip.xva.collateral.HypothecationGroupPath[] collateralGroupPaths()
+	public org.drip.xva.collateral.HypothecationGroupPath[] hypothecationGroupPaths()
 	{
 		return _aHGP;
 	}
@@ -642,6 +642,43 @@ public class ExposureGroupPath {
 	}
 
 	/**
+	 * Compute Period-wise Path Unilateral Collateral Value Adjustment
+	 * 
+	 * @return The Period-wise Path Unilateral Collateral Value Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double[] periodUnilateralCollateralValueAdjustment()
+		throws java.lang.Exception
+	{
+		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+
+		double[] adblCollateralBalance = collateralBalance();
+
+		int iNumVertex = adblCollateralBalance.length;
+		double[] adblUnilateralCollateralValueAdjustment = new double[iNumVertex - 1];
+
+		for (int iVertexIndex = 1; iVertexIndex < iNumVertex; ++iVertexIndex) {
+			double dblPeriodIntegrandStart = adblCollateralBalance[iVertexIndex - 1] *
+				aMV[iVertexIndex - 1].counterParty().survivalProbability() *
+					aMV[iVertexIndex - 1].collateralSchemeSpread() *
+						aMV[iVertexIndex - 1].overnightIndexNumeraire().epochalForwardScale();
+
+			double dblPeriodIntegrandEnd = adblCollateralBalance[iVertexIndex] *
+				aMV[iVertexIndex].counterParty().survivalProbability() *
+					aMV[iVertexIndex].collateralSchemeSpread() *
+						aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
+
+			adblUnilateralCollateralValueAdjustment[iVertexIndex - 1] = -0.5 * (dblPeriodIntegrandStart +
+				dblPeriodIntegrandEnd) * (aMV[iVertexIndex].anchor().julian() -
+					aMV[iVertexIndex - 1].anchor().julian()) / 365.25;
+		}
+
+		return adblUnilateralCollateralValueAdjustment;
+	}
+
+	/**
 	 * Compute Period-wise Path Bilateral Collateral Value Adjustment
 	 * 
 	 * @return The Period-wise Path Bilateral Collateral Value Adjustment
@@ -722,6 +759,36 @@ public class ExposureGroupPath {
 	}
 
 	/**
+	 * Retrieve the Array of Credit Exposure PV
+	 * 
+	 * @return The Array of Credit Exposure PV
+	 */
+
+	public double[] creditExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aHGP.length;
+		double[] adblCreditExposurePV = new double[iNumVertex];
+
+		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCreditExposurePV[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupCreditExposure = _aHGP[iCollateralGroupIndex].creditExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCreditExposurePV[iVertexIndex] += adblCollateralGroupCreditExposure[iVertexIndex] *
+					aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
+		}
+
+		return adblCreditExposurePV;
+	}
+
+	/**
 	 * Retrieve the Array of Debt Exposures
 	 * 
 	 * @return The Array of Debt Exposures
@@ -749,6 +816,36 @@ public class ExposureGroupPath {
 	}
 
 	/**
+	 * Retrieve the Array of Debt Exposure PV
+	 * 
+	 * @return The Array of Debt Exposure PV
+	 */
+
+	public double[] debtExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aHGP.length;
+		double[] adblDebtExposurePV = new double[iNumVertex];
+
+		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblDebtExposurePV[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupDebtExposure = _aHGP[iCollateralGroupIndex].debtExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblDebtExposurePV[iVertexIndex] += adblCollateralGroupDebtExposure[iVertexIndex] *
+					aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
+		}
+
+		return adblDebtExposurePV;
+	}
+
+	/**
 	 * Retrieve the Array of Funding Exposures
 	 * 
 	 * @return The Array of Funding Exposures
@@ -773,5 +870,35 @@ public class ExposureGroupPath {
 		}
 
 		return adblFundingExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Funding Exposure PV
+	 * 
+	 * @return The Array of Funding Exposure PV
+	 */
+
+	public double[] fundingExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCollateralGroup = _aHGP.length;
+		double[] adblFundingExposurePV = new double[iNumVertex];
+
+		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblFundingExposurePV[j] = 0.;
+
+		for (int iCollateralGroupIndex = 0; iCollateralGroupIndex < iNumCollateralGroup;
+			++iCollateralGroupIndex) {
+			double[] adblCollateralGroupFundingExposure = _aHGP[iCollateralGroupIndex].fundingExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblFundingExposurePV[iVertexIndex] += adblCollateralGroupFundingExposure[iVertexIndex] *
+					aMV[iVertexIndex].overnightIndexNumeraire().epochalForwardScale();
+		}
+
+		return adblFundingExposurePV;
 	}
 }

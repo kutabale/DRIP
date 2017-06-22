@@ -174,7 +174,7 @@ public class HypothecationGroupVertex {
 	{
 		double dblCreditExposure = collateralizedExposure();
 
-		return 0. > dblCreditExposure ? dblCreditExposure : 0.;
+		return 0. < dblCreditExposure ? dblCreditExposure : 0.;
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class HypothecationGroupVertex {
 	{
 		double dblDebtExposure = collateralizedExposure();
 
-		return 0. < dblDebtExposure ? dblDebtExposure : 0.;
+		return 0. > dblDebtExposure ? dblDebtExposure : 0.;
 	}
 
 	/**
@@ -200,6 +200,6 @@ public class HypothecationGroupVertex {
 	{
 		double dblCreditExposure = collateralizedExposure();
 
-		return 0. > dblCreditExposure ? dblCreditExposure : 0.;
+		return 0. < dblCreditExposure ? dblCreditExposure : 0.;
 	}
 }
