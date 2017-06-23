@@ -393,17 +393,141 @@ public class MonoPathExposureAdjustment implements org.drip.xva.cpty.PathExposur
 		return adblUncollateralizedNegativeExposurePV;
 	}
 
+	@Override public double[] creditExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCreditDebtGroup = _aCDGP.length;
+		double[] adblCreditExposure = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCreditExposure[j] = 0.;
+
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupExposure = _aCDGP[iCreditDebtGroupIndex].creditExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCreditExposure[iVertexIndex] += adblCreditDebtGroupExposure[iVertexIndex];
+		}
+
+		return adblCreditExposure;
+	}
+
+	@Override public double[] creditExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCreditDebtGroup = _aCDGP.length;
+		double[] adblCreditExposurePV = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblCreditExposurePV[j] = 0.;
+
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupExposurePV = _aCDGP[iCreditDebtGroupIndex].creditExposurePV();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCreditExposurePV[iVertexIndex] += adblCreditDebtGroupExposurePV[iVertexIndex];
+		}
+
+		return adblCreditExposurePV;
+	}
+
+	@Override public double[] debtExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCreditDebtGroup = _aCDGP.length;
+		double[] adblDebtExposure = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblDebtExposure[j] = 0.;
+
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupExposure = _aCDGP[iCreditDebtGroupIndex].debtExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblDebtExposure[iVertexIndex] += adblCreditDebtGroupExposure[iVertexIndex];
+		}
+
+		return adblDebtExposure;
+	}
+
+	@Override public double[] debtExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumCreditDebtGroup = _aCDGP.length;
+		double[] adblDebtExposurePV = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblDebtExposurePV[j] = 0.;
+
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex) {
+			double[] adblCreditDebtGroupExposurePV = _aCDGP[iCreditDebtGroupIndex].debtExposurePV();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblDebtExposurePV[iVertexIndex] += adblCreditDebtGroupExposurePV[iVertexIndex];
+		}
+
+		return adblDebtExposurePV;
+	}
+
+	@Override public double[] fundingExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumFundingGroup = _aFGP.length;
+		double[] adblFundingExposure = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblFundingExposure[j] = 0.;
+
+		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex) {
+			double[] adblFundingGroupExposure = _aFGP[iFundingGroupIndex].fundingExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblFundingExposure[iVertexIndex] += adblFundingGroupExposure[iVertexIndex];
+		}
+
+		return adblFundingExposure;
+	}
+
+	@Override public double[] fundingExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumFundingGroup = _aFGP.length;
+		double[] adblFundingExposurePV = new double[iNumVertex];
+
+		for (int j = 0; j < iNumVertex; ++j)
+			adblFundingExposurePV[j] = 0.;
+
+		for (int iFundingGroupIndex = 0; iFundingGroupIndex < iNumFundingGroup; ++iFundingGroupIndex) {
+			double[] adblFundingGroupExposurePV = _aFGP[iFundingGroupIndex].fundingExposurePV();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblFundingExposurePV[iVertexIndex] += adblFundingGroupExposurePV[iVertexIndex];
+		}
+
+		return adblFundingExposurePV;
+	}
+
 	@Override public double unilateralCreditAdjustment()
 		throws java.lang.Exception
 	{
 		int iNumCreditDebtGroup = _aCDGP.length;
-		double dblUnilateralCreditAdjustment = 0.;
+		double dbUnilateralCreditAdjustment = 0.;
 
 		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
 			++iCreditDebtGroupIndex)
-			dblUnilateralCreditAdjustment += _aCDGP[iCreditDebtGroupIndex].unilateralCreditAdjustment();
+			dbUnilateralCreditAdjustment += _aCDGP[iCreditDebtGroupIndex].unilateralCreditAdjustment();
 
-		return dblUnilateralCreditAdjustment;
+		return dbUnilateralCreditAdjustment;
 	}
 
 	@Override public double bilateralCreditAdjustment()

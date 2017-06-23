@@ -174,6 +174,54 @@ public interface PathExposureAdjustment {
 	abstract public double[] uncollateralizedNegativeExposurePV();
 
 	/**
+	 * Retrieve the Array of Credit Exposures
+	 * 
+	 * @return The Array of Credit Exposures
+	 */
+
+	abstract public double[] creditExposure();
+
+	/**
+	 * Retrieve the Array of Credit Exposure PVs
+	 * 
+	 * @return The Array of Credit Exposures PVs
+	 */
+
+	abstract public double[] creditExposurePV();
+
+	/**
+	 * Retrieve the Array of Debt Exposures
+	 * 
+	 * @return The Array of Debt Exposures
+	 */
+
+	abstract public double[] debtExposure();
+
+	/**
+	 * Retrieve the Array of Debt Exposure PVs
+	 * 
+	 * @return The Array of Debt Exposures PVs
+	 */
+
+	abstract public double[] debtExposurePV();
+
+	/**
+	 * Retrieve the Array of Funding Exposures
+	 * 
+	 * @return The Array of Funding Exposures
+	 */
+
+	abstract public double[] fundingExposure();
+
+	/**
+	 * Retrieve the Array of Funding Exposure PVs
+	 * 
+	 * @return The Array of Funding Exposures PVs
+	 */
+
+	abstract public double[] fundingExposurePV();
+
+	/**
 	 * Compute Path Unilateral Credit Adjustment
 	 * 
 	 * @return The Path Unilateral Credit Adjustment
