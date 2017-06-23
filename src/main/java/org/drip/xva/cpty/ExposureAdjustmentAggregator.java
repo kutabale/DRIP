@@ -474,6 +474,180 @@ public class ExposureAdjustmentAggregator {
 	}
 
 	/**
+	 * Retrieve the Array of Credit Exposures
+	 * 
+	 * @return The Array of Credit Exposures
+	 */
+
+	public double[] creditExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumPath = _aPEA.length;
+		double[] adblCreditExposure = new double[iNumVertex];
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCreditExposure[iVertexIndex] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCreditExposure = _aPEA[iPathIndex].creditExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCreditExposure[iVertexIndex] += adblPathCreditExposure[iVertexIndex];
+		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCreditExposure[iVertexIndex] /= iNumPath;
+
+		return adblCreditExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Credit Exposure PV
+	 * 
+	 * @return The Array of Credit Exposure PV
+	 */
+
+	public double[] creditExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumPath = _aPEA.length;
+		double[] adblCreditExposurePV = new double[iNumVertex];
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCreditExposurePV[iVertexIndex] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathCreditExposurePV = _aPEA[iPathIndex].creditExposurePV();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblCreditExposurePV[iVertexIndex] += adblPathCreditExposurePV[iVertexIndex];
+		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblCreditExposurePV[iVertexIndex] /= iNumPath;
+
+		return adblCreditExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Debt Exposures
+	 * 
+	 * @return The Array of Debt Exposures
+	 */
+
+	public double[] debtExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumPath = _aPEA.length;
+		double[] adblDebtExposure = new double[iNumVertex];
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblDebtExposure[iVertexIndex] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathDebtExposure = _aPEA[iPathIndex].debtExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblDebtExposure[iVertexIndex] += adblPathDebtExposure[iVertexIndex];
+		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblDebtExposure[iVertexIndex] /= iNumPath;
+
+		return adblDebtExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Debt Exposure PV
+	 * 
+	 * @return The Array of Debt Exposure PV
+	 */
+
+	public double[] debtExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumPath = _aPEA.length;
+		double[] adblDebtExposurePV = new double[iNumVertex];
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblDebtExposurePV[iVertexIndex] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathDebtExposurePV = _aPEA[iPathIndex].debtExposurePV();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblDebtExposurePV[iVertexIndex] += adblPathDebtExposurePV[iVertexIndex];
+		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblDebtExposurePV[iVertexIndex] /= iNumPath;
+
+		return adblDebtExposurePV;
+	}
+
+	/**
+	 * Retrieve the Array of Funding Exposures
+	 * 
+	 * @return The Array of Funding Exposures
+	 */
+
+	public double[] fundingExposure()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumPath = _aPEA.length;
+		double[] adblFundingExposure = new double[iNumVertex];
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblFundingExposure[iVertexIndex] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathFundingExposure = _aPEA[iPathIndex].fundingExposure();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblFundingExposure[iVertexIndex] += adblPathFundingExposure[iVertexIndex];
+		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblFundingExposure[iVertexIndex] /= iNumPath;
+
+		return adblFundingExposure;
+	}
+
+	/**
+	 * Retrieve the Array of Funding Exposure PV
+	 * 
+	 * @return The Array of Funding Exposure PV
+	 */
+
+	public double[] fundingExposurePV()
+	{
+		int iNumVertex = anchors().length;
+
+		int iNumPath = _aPEA.length;
+		double[] adblFundingExposurePV = new double[iNumVertex];
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblFundingExposurePV[iVertexIndex] = 0.;
+
+		for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex) {
+			double[] adblPathFundingExposurePV = _aPEA[iPathIndex].fundingExposurePV();
+
+			for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+				adblFundingExposurePV[iVertexIndex] += adblPathFundingExposurePV[iVertexIndex];
+		}
+
+		for (int iVertexIndex = 0; iVertexIndex < iNumVertex; ++iVertexIndex)
+			adblFundingExposurePV[iVertexIndex] /= iNumPath;
+
+		return adblFundingExposurePV;
+	}
+
+	/**
 	 * Retrieve the Expected Unilateral CVA
 	 * 
 	 * @return The Expected Unilateral CVA
@@ -700,6 +874,12 @@ public class ExposureAdjustmentAggregator {
 		double[] adblCVACL = new double[iNumPath];
 		double[] adblFTDCVA = new double[iNumPath];
 		double[] adblTotalVA = new double[iNumPath];
+		double[][] aadblDebtExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblCreditExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblDebtExposurePV = new double[iNumVertex][iNumPath];
+		double[][] aadblFundingExposure = new double[iNumVertex][iNumPath];
+		double[][] aadblCreditExposurePV = new double[iNumVertex][iNumPath];
+		double[][] aadblFundingExposurePV = new double[iNumVertex][iNumPath];
 		double[][] aadblCollateralizedExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblUncollateralizedExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblCollateralizedExposurePV = new double[iNumVertex][iNumPath];
@@ -763,6 +943,18 @@ public class ExposureAdjustmentAggregator {
 			double[] adblPathUncollateralizedNegativeExposurePV =
 				_aPEA[iPathIndex].uncollateralizedNegativeExposurePV();
 
+			double[] adblPathCreditExposure = _aPEA[iPathIndex].creditExposure();
+
+			double[] adblPathCreditExposurePV = _aPEA[iPathIndex].creditExposurePV();
+
+			double[] adblPathDebtExposure = _aPEA[iPathIndex].debtExposure();
+
+			double[] adblPathDebtExposurePV = _aPEA[iPathIndex].debtExposurePV();
+
+			double[] adblPathFundingExposure = _aPEA[iPathIndex].fundingExposure();
+
+			double[] adblPathFundingExposurePV = _aPEA[iPathIndex].fundingExposurePV();
+
 			try {
 				adblCVA[iPathIndex] = _aPEA[iPathIndex].creditAdjustment();
 
@@ -816,6 +1008,12 @@ public class ExposureAdjustmentAggregator {
 					adblPathUncollateralizedNegativeExposure[iVertexIndex];
 				aadblUncollateralizedNegativeExposurePV[iVertexIndex][iPathIndex] =
 					adblPathUncollateralizedNegativeExposurePV[iVertexIndex];
+				aadblCreditExposure[iVertexIndex][iPathIndex] = adblPathCreditExposure[iVertexIndex];
+				aadblCreditExposurePV[iVertexIndex][iPathIndex] = adblPathCreditExposurePV[iVertexIndex];
+				aadblDebtExposure[iVertexIndex][iPathIndex] = adblPathDebtExposure[iVertexIndex];
+				aadblDebtExposurePV[iVertexIndex][iPathIndex] = adblPathDebtExposurePV[iVertexIndex];
+				aadblFundingExposure[iVertexIndex][iPathIndex] = adblPathFundingExposure[iVertexIndex];
+				aadblFundingExposurePV[iVertexIndex][iPathIndex] = adblPathFundingExposurePV[iVertexIndex];
 			}
 		}
 
@@ -843,7 +1041,13 @@ public class ExposureAdjustmentAggregator {
 				aadblUncollateralizedPositiveExposure,
 				aadblUncollateralizedPositiveExposurePV,
 				aadblUncollateralizedNegativeExposure,
-				aadblUncollateralizedNegativeExposurePV
+				aadblUncollateralizedNegativeExposurePV,
+				aadblCreditExposure,
+				aadblCreditExposurePV,
+				aadblDebtExposure,
+				aadblDebtExposurePV,
+				aadblFundingExposure,
+				aadblFundingExposurePV
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

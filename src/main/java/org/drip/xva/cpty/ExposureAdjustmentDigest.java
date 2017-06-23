@@ -98,6 +98,12 @@ public class ExposureAdjustmentDigest {
 		null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTUncollateralizedNegativeExposurePV =
 		null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTCreditExposure = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTCreditExposurePV = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTDebtExposure = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTDebtExposurePV = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTFundingExposure = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTFundingExposurePV = null;
 
 	/**
 	 * ExposureAdjustmentDigest Constructor
@@ -125,6 +131,12 @@ public class ExposureAdjustmentDigest {
 	 * @param aadblUncollateralizedPositiveExposurePV Double Array of Uncollateralized Positive Exposure PV
 	 * @param aadblUncollateralizedNegativeExposure Double Array of Uncollateralized Negative Exposure
 	 * @param aadblUncollateralizedNegativeExposurePV Double Array of Uncollateralized Negative Exposure PV
+	 * @param aadblCreditExposure Double Array of Credit Exposure
+	 * @param aadblCreditExposurePV Double Array of Credit Exposure PV
+	 * @param aadblDebtExposure Double Array of Debt Exposure
+	 * @param aadblDebtExposurePV Double Array of Debt Exposure PV
+	 * @param aadblFundingExposure Double Array of Funding Exposure
+	 * @param aadblFundingExposurePV Double Array of Funding Exposure PV
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -152,7 +164,13 @@ public class ExposureAdjustmentDigest {
 		final double[][] aadblUncollateralizedPositiveExposure,
 		final double[][] aadblUncollateralizedPositiveExposurePV,
 		final double[][] aadblUncollateralizedNegativeExposure,
-		final double[][] aadblUncollateralizedNegativeExposurePV)
+		final double[][] aadblUncollateralizedNegativeExposurePV,
+		final double[][] aadblCreditExposure,
+		final double[][] aadblCreditExposurePV,
+		final double[][] aadblDebtExposure,
+		final double[][] aadblDebtExposurePV,
+		final double[][] aadblFundingExposure,
+		final double[][] aadblFundingExposurePV)
 		throws java.lang.Exception
 	{
 		if (null == adblUCVA || null == adblFTDCVA || null == adblCVA || null == adblCVACL || null == adblDVA
@@ -165,7 +183,12 @@ public class ExposureAdjustmentDigest {
 									null == aadblUncollateralizedPositiveExposure || null ==
 										aadblUncollateralizedPositiveExposurePV || null ==
 											aadblUncollateralizedNegativeExposure || null ==
-												aadblUncollateralizedNegativeExposurePV)
+												aadblUncollateralizedNegativeExposurePV || null ==
+													aadblCreditExposure || null == aadblCreditExposurePV ||
+														null == aadblDebtExposure || null ==
+															aadblDebtExposurePV || null ==
+																aadblFundingExposure || null ==
+																	aadblFundingExposurePV)
 			throw new java.lang.Exception ("ExposureAdjustmentDigest Constructor => Invalid Inputs");
 
 		_udtUCVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblUCVA);
@@ -211,6 +234,12 @@ public class ExposureAdjustmentDigest {
 			org.drip.measure.statistics.UnivariateDiscreteThin[iNumVertex];
 		_aUDTUncollateralizedNegativeExposurePV = new
 			org.drip.measure.statistics.UnivariateDiscreteThin[iNumVertex];
+		_aUDTCreditExposure = new org.drip.measure.statistics.UnivariateDiscreteThin[iNumVertex];
+		_aUDTCreditExposurePV = new org.drip.measure.statistics.UnivariateDiscreteThin[iNumVertex];
+		_aUDTDebtExposure = new org.drip.measure.statistics.UnivariateDiscreteThin[iNumVertex];
+		_aUDTDebtExposurePV = new org.drip.measure.statistics.UnivariateDiscreteThin[iNumVertex];
+		_aUDTFundingExposure = new org.drip.measure.statistics.UnivariateDiscreteThin[iNumVertex];
+		_aUDTFundingExposurePV = new org.drip.measure.statistics.UnivariateDiscreteThin[iNumVertex];
 
 		if (0 == iNumVertex || iNumVertex != aadblCollateralizedExposurePV.length || iNumVertex !=
 			aadblCollateralizedPositiveExposure.length || iNumVertex !=
@@ -222,7 +251,13 @@ public class ExposureAdjustmentDigest {
 									aadblUncollateralizedPositiveExposure.length || iNumVertex !=
 										aadblCollateralizedPositiveExposurePV.length || iNumVertex !=
 											aadblCollateralizedNegativeExposurePV.length || iNumVertex !=
-												aadblCollateralizedNegativeExposurePV.length)
+												aadblCollateralizedNegativeExposurePV.length || iNumVertex !=
+													aadblCreditExposure.length || iNumVertex !=
+														aadblCreditExposurePV.length || iNumVertex !=
+															aadblDebtExposure.length || iNumVertex !=
+																aadblDebtExposurePV.length || iNumVertex !=
+																	aadblFundingExposure.length || iNumVertex
+																		!= aadblFundingExposurePV.length)
 			throw new java.lang.Exception ("ExposureAdjustmentDigest Constructor => Invalid Inputs");
 
 		for (int i = 0 ; i < iNumVertex; ++i) {
@@ -396,6 +431,72 @@ public class ExposureAdjustmentDigest {
 	public org.drip.measure.statistics.UnivariateDiscreteThin[] uncollateralizedNegativeExposurePV()
 	{
 		return _aUDTUncollateralizedNegativeExposurePV;
+	}
+
+	/**
+	 * Retrieve the Univariate This Statistics for the Credit Exposure
+	 * 
+	 * @return Univariate This Statistics for the Credit Exposure
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin[] creditExposure()
+	{
+		return _aUDTCreditExposure;
+	}
+
+	/**
+	 * Retrieve the Univariate This Statistics for the Credit Exposure PV
+	 * 
+	 * @return Univariate This Statistics for the Credit Exposure PV
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin[] creditExposurePV()
+	{
+		return _aUDTCreditExposurePV;
+	}
+
+	/**
+	 * Retrieve the Univariate This Statistics for the Debt Exposure
+	 * 
+	 * @return Univariate This Statistics for the Debt Exposure
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin[] debtExposure()
+	{
+		return _aUDTDebtExposure;
+	}
+
+	/**
+	 * Retrieve the Univariate This Statistics for the Debt Exposure PV
+	 * 
+	 * @return Univariate This Statistics for the Debt Exposure PV
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin[] debtExposurePV()
+	{
+		return _aUDTDebtExposurePV;
+	}
+
+	/**
+	 * Retrieve the Univariate This Statistics for the Funding Exposure
+	 * 
+	 * @return Univariate This Statistics for the Funding Exposure
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin[] fundingExposure()
+	{
+		return _aUDTFundingExposure;
+	}
+
+	/**
+	 * Retrieve the Univariate This Statistics for the Funding Exposure PV
+	 * 
+	 * @return Univariate This Statistics for the Funding Exposure PV
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin[] fundingExposurePV()
+	{
+		return _aUDTFundingExposurePV;
 	}
 
 	/**
