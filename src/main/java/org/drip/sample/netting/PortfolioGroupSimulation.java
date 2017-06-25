@@ -131,6 +131,7 @@ public class PortfolioGroupSimulation {
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
 		double dblCollateralPortfolioValueInitial = 1.;
+		double dblOISRate = 0.004;
 		double dblCSADrift = 0.01;
 		double dblBankHazardRate = 0.015;
 		double dblBankRecoveryRate = 0.40;
@@ -168,8 +169,8 @@ public class PortfolioGroupSimulation {
 				Double.NaN,
 				0.,
 				new NumeraireMarketVertex (
-					1.,
-					1.
+					Math.exp (-0.5 * dblOISRate * iNumStep),
+					Math.exp (-0.5 * dblOISRate * (iNumStep - i))
 				),
 				dblCSADrift,
 				new NumeraireMarketVertex (

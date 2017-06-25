@@ -98,7 +98,7 @@ public class PortfolioCollateralEstimate {
 
 		JulianDate dtStart = dtSpot;
 		double dblTimeWidth = dblTime / iNumStep;
-		double[] adblTimeWidth = new double[iNumStep + 1];
+		double[] adblTimeWidth = new double[iNumStep];
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;

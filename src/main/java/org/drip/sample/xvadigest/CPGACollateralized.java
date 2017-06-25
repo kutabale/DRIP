@@ -253,6 +253,7 @@ public class CPGACollateralized {
 		double dblATMSwapRateStart = 0.;
 		double dblATMSwapRateDrift = 0.0;
 		double dblATMSwapRateVolatility = 0.25;
+		double dblOvernightNumeraireDrift = 0.004;
 		double dblCSADrift = 0.01;
 		double dblBankHazardRate = 0.015;
 		double dblBankRecoveryRate = 0.40;
@@ -297,10 +298,10 @@ public class CPGACollateralized {
 			aMV[i] = new MarketVertex (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Double.NaN,
-				0.,
+				dblOvernightNumeraireDrift,
 				new NumeraireMarketVertex (
-					1.,
-					1.
+					Math.exp (-0.5 * dblOvernightNumeraireDrift * iNumStep),
+					Math.exp (-0.5 * dblOvernightNumeraireDrift * (iNumStep - i))
 				),
 				dblCSADrift,
 				new NumeraireMarketVertex (

@@ -201,6 +201,9 @@ public class PortfolioPathAggregationUncorrelated {
 		double dblAssetDrift = 0.06;
 		double dblAssetVolatility = 0.15;
 		double dblAssetInitial = 1.;
+		double dblOvernightDrift = 0.004;
+		double dblOvernightVolatility = 0.02;
+		double dblOvernightInitial = 1.;
 		double dblCSADrift = 0.01;
 		double dblCSAVolatility = 0.05;
 		double dblCSAInitial = 1.;
@@ -243,6 +246,19 @@ public class PortfolioPathAggregationUncorrelated {
 			dblTimeWidth,
 			iNumStep,
 			iNumPath
+		);
+
+		double[] adblOvernightNumeraire = VertexNumeraireRealization (
+			new DiffusionEvolver (
+				DiffusionEvaluatorLogarithmic.Standard (
+					dblOvernightDrift,
+					dblOvernightVolatility
+				)
+			),
+			dblOvernightInitial,
+			dblTime,
+			dblTimeWidth,
+			iNumStep
 		);
 
 		double[] adblCSA = VertexNumeraireRealization (
@@ -340,10 +356,10 @@ public class PortfolioPathAggregationUncorrelated {
 			aMV[i] = new MarketVertex (
 				adtVertex[i] = dtSpot.addMonths (6 * i),
 				Double.NaN,
-				0.,
+				dblOvernightDrift,
 				new NumeraireMarketVertex (
-					1.,
-					1.
+					adblOvernightNumeraire[0],
+					adblOvernightNumeraire[i]
 				),
 				dblCSADrift,
 				new NumeraireMarketVertex (
