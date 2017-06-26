@@ -270,8 +270,6 @@ public class BondProcessor {
 		org.drip.state.credit.CreditCurve cc = org.drip.service.json.LatentStateProcessor.CreditCurve
 			(jsonParameter, dcFunding);
 
-		System.out.println (cc);
-
 		csqc.setCreditState (cc);
 
 		double dblValueNotional = 1.;

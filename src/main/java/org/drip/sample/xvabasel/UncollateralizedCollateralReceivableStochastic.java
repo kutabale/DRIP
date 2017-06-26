@@ -267,6 +267,9 @@ public class UncollateralizedCollateralReceivableStochastic {
 		double dblTime = 5.;
 		double dblATMSwapRateOffsetDrift = 0.0;
 		double dblATMSwapRateOffsetVolatility = 0.25;
+		double dblOvernightNumeraireDrift = 0.004;
+		double dblOvernightNumeraireVolatility = 0.02;
+		double dblOvernightNumeraireInitial = 1.;
 		double dblCSADrift = 0.01;
 		double dblCSAVolatility = 0.05;
 		double dblCSAInitial = 1.;
@@ -288,14 +291,15 @@ public class UncollateralizedCollateralReceivableStochastic {
 		double dblCounterPartyFundingSpreadVolatility = 0.0022;
 
 		double[][] aadblCorrelation = new double[][] {
-			{1.00, 0.03,  0.07,  0.04,  0.05,  0.08,  0.00,  0.00},  // PORTFOLIO
-			{0.03, 1.00,  0.26,  0.33,  0.21,  0.35,  0.13,  0.00},  // CSA
-			{0.07, 0.26,  1.00,  0.45, -0.17,  0.07,  0.77,  0.00},  // BANK HAZARD
-			{0.04, 0.33,  0.45,  1.00, -0.22, -0.54,  0.58,  0.00},  // COUNTER PARTY HAZARD
-			{0.05, 0.21, -0.17, -0.22,  1.00,  0.47, -0.23,  0.00},  // BANK RECOVERY
-			{0.08, 0.35,  0.07, -0.54,  0.47,  1.00,  0.01,  0.00},  // COUNTER PARTY RECOVERY
-			{0.00, 0.13,  0.77,  0.58, -0.23,  0.01,  1.00,  0.00},  // BANK FUNDING SPREAD
-			{0.00, 0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  1.00}   // COUNTER PARTY FUNDING SPREAD
+			{1.00,  0.00,  0.03,  0.07,  0.04,  0.05,  0.08,  0.00,  0.00},  // PORTFOLIO
+			{0.00,  1.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  1.00},  // OVERNIGHT
+			{0.03,  0.00,  1.00,  0.26,  0.33,  0.21,  0.35,  0.13,  0.00},  // CSA
+			{0.07,  0.00,  0.26,  1.00,  0.45, -0.17,  0.07,  0.77,  0.00},  // BANK HAZARD
+			{0.04,  0.00,  0.33,  0.45,  1.00, -0.22, -0.54,  0.58,  0.00},  // COUNTER PARTY HAZARD
+			{0.05,  0.00,  0.21, -0.17, -0.22,  1.00,  0.47, -0.23,  0.00},  // BANK RECOVERY
+			{0.08,  0.00,  0.35,  0.07, -0.54,  0.47,  1.00,  0.01,  0.00},  // COUNTER PARTY RECOVERY
+			{0.00,  0.00,  0.13,  0.77,  0.58, -0.23,  0.01,  1.00,  0.00},  // BANK FUNDING SPREAD
+			{0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  1.00}   // COUNTER PARTY FUNDING SPREAD
 		};
 
 		JulianDate dtSpot = DateUtil.Today();
@@ -314,6 +318,13 @@ public class UncollateralizedCollateralReceivableStochastic {
 			DiffusionEvaluatorLinear.Standard (
 				dblATMSwapRateOffsetDrift,
 				dblATMSwapRateOffsetVolatility
+			)
+		);
+
+		DiffusionEvolver deOvernightNumeraire = new DiffusionEvolver (
+			DiffusionEvaluatorLogarithmic.Standard (
+				dblOvernightNumeraireDrift,
+				dblOvernightNumeraireVolatility
 			)
 		);
 
@@ -396,12 +407,21 @@ public class UncollateralizedCollateralReceivableStochastic {
 				dblSwapNotional2
 			);
 
+			double[] adblOvernightNumeraire = VertexNumeraireRealization (
+				deOvernightNumeraire,
+				dblOvernightNumeraireInitial,
+				dblTime,
+				dblTimeWidth,
+				aadblNumeraire[1],
+				iNumStep
+			);
+
 			double[] adblCSA = VertexNumeraireRealization (
 				deCSA,
 				dblCSAInitial,
 				dblTime,
 				dblTimeWidth,
-				aadblNumeraire[1],
+				aadblNumeraire[2],
 				iNumStep
 			);
 
@@ -410,7 +430,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 				dblBankHazardRateInitial,
 				dblTime,
 				dblTimeWidth,
-				aadblNumeraire[2],
+				aadblNumeraire[3],
 				iNumStep
 			);
 
@@ -419,7 +439,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 				dblCounterPartyHazardRateInitial,
 				dblTime,
 				dblTimeWidth,
-				aadblNumeraire[3],
+				aadblNumeraire[4],
 				iNumStep
 			);
 
@@ -428,7 +448,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 				dblBankRecoveryRateInitial,
 				dblTime,
 				dblTimeWidth,
-				aadblNumeraire[4],
+				aadblNumeraire[5],
 				iNumStep
 			);
 
@@ -437,7 +457,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 				dblCounterPartyRecoveryRateInitial,
 				dblTime,
 				dblTimeWidth,
-				aadblNumeraire[5],
+				aadblNumeraire[6],
 				iNumStep
 			);
 
@@ -446,7 +466,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 				dblBankFundingSpreadInitial,
 				dblTime,
 				dblTimeWidth,
-				aadblNumeraire[6],
+				aadblNumeraire[7],
 				iNumStep
 			);
 
@@ -455,7 +475,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 				dblCounterPartyFundingSpreadInitial,
 				dblTime,
 				dblTimeWidth,
-				aadblNumeraire[7],
+				aadblNumeraire[8],
 				iNumStep
 			);
 
@@ -467,10 +487,10 @@ public class UncollateralizedCollateralReceivableStochastic {
 				aNV[j] = new MarketVertex (
 					adtVertex[j] = dtSpot.addMonths (6 * j),
 					Double.NaN,
-					0.,
+					dblOvernightNumeraireDrift,
 					new NumeraireMarketVertex (
-						1.,
-						1.
+						adblOvernightNumeraire[0],
+						adblOvernightNumeraire[j]
 					),
 					dblCSADrift,
 					new NumeraireMarketVertex (
