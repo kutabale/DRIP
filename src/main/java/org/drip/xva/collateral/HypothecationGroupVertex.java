@@ -68,10 +68,64 @@ package org.drip.xva.collateral;
  */
 
 public class HypothecationGroupVertex {
+	private double _dblHedgeError = java.lang.Double.NaN;
 	private double _dblForwardExposure = java.lang.Double.NaN;
 	private double _dblRealizedCashFlow = java.lang.Double.NaN;
 	private double _dblCollateralBalance = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
+	private double _dblBankPreDefaultPositionValue = java.lang.Double.NaN;
+	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
+	private double _dblBankPostDefaultPositionValue = java.lang.Double.NaN;
+
+	/**
+	 * Construct a Standard Instance of HypothecationGroupVertex
+	 * 
+	 * @param dtAnchor The Vertex Date Anchor
+	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
+	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
+	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param mv The Market Vertex Instance
+	 * @param cog The Generic Close-Out Evaluator Instance
+	 * 
+	 * @return The Standard Instance of HypothecationGroupVertex
+	 */
+
+	public static HypothecationGroupVertex Standard (
+		final org.drip.analytics.date.JulianDate dtAnchor,
+		final double dblForwardExposure,
+		final double dblRealizedCashFlow,
+		final double dblCollateralBalance,
+		final double dblHedgeError,
+		final org.drip.xva.universe.MarketVertex mv,
+		final org.drip.xva.definition.CloseOutGeneral cog)
+	{
+		if (null == cog) return null;
+
+		double dblUncollateralizedExposure = dblForwardExposure + dblRealizedCashFlow;
+
+		try {
+			return new HypothecationGroupVertex (
+				dtAnchor,
+				dblForwardExposure,
+				dblRealizedCashFlow,
+				dblCollateralBalance,
+				cog.bankDefault (
+					dblUncollateralizedExposure,
+					dblCollateralBalance
+				),
+				cog.counterPartyDefault (
+					dblUncollateralizedExposure,
+					dblCollateralBalance
+				),
+				dblHedgeError
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	/**
 	 * HypothecationGroupVertex Constructor
@@ -80,6 +134,9 @@ public class HypothecationGroupVertex {
 	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
 	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param dblBankDefaultCloseOut Close Out on Bank Default
+	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
+	 * @param dblHedgeError The Vertex Hedge Error
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
@@ -88,13 +145,20 @@ public class HypothecationGroupVertex {
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
-		final double dblCollateralBalance)
+		final double dblCollateralBalance,
+		final double dblBankDefaultCloseOut,
+		final double dblCounterPartyDefaultCloseOut,
+		final double dblHedgeError)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid (_dblForwardExposure
-			= dblForwardExposure) || !org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow =
-				dblRealizedCashFlow) || !org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance =
-					dblCollateralBalance))
+		if (null == (_dtAnchor = dtAnchor) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblForwardExposure = dblForwardExposure) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow = dblRealizedCashFlow) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
+				dblCounterPartyDefaultCloseOut) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblHedgeError = dblHedgeError))
 			throw new java.lang.Exception ("HypothecationGroupVertex Constructor => Invalid Inputs");
 	}
 
@@ -140,6 +204,61 @@ public class HypothecationGroupVertex {
 	public double realizedCashFlow()
 	{
 		return _dblRealizedCashFlow;
+	}
+
+	/**
+	 * Retrieve the Hedge Error
+	 * 
+	 * @return The Hedge Error
+	 */
+
+	public double hedgeError()
+	{
+		return _dblHedgeError;
+	}
+
+	/**
+	 * Retrieve the Close Out on Bank Default
+	 * 
+	 * @return Close Out on Bank Default
+	 */
+
+	public double bankDefaultCloseOut()
+	{
+		return _dblBankDefaultCloseOut;
+	}
+
+	/**
+	 * Retrieve the Close Out on Counter Party Default
+	 * 
+	 * @return Close Out on Counter Party Default
+	 */
+
+	public double counterPartyDefaultCloseOut()
+	{
+		return _dblCounterPartyDefaultCloseOut;
+	}
+
+	/**
+	 * Retrieve the Bank Pre-Default Position Value
+	 * 
+	 * @return The Bank Pre-Default Position Value
+	 */
+
+	public double bankPreDefaultPositionValue()
+	{
+		return _dblBankPreDefaultPositionValue;
+	}
+
+	/**
+	 * Retrieve the Bank Post-Default Position Value
+	 * 
+	 * @return The Bank Post-Default Position Value
+	 */
+
+	public double bankPostDefaultPositionValue()
+	{
+		return _dblBankPostDefaultPositionValue;
 	}
 
 	/**

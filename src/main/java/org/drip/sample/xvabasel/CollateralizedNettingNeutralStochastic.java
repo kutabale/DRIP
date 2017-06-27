@@ -15,6 +15,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -305,6 +306,11 @@ public class CollateralizedNettingNeutralStochastic {
 			{0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  1.00}   // COUNTER PARTY FUNDING SPREAD
 		};
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRateInitial,
+			dblCounterPartyRecoveryRateInitial
+		);
+
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
 			dblCounterPartyThreshold,
@@ -575,18 +581,24 @@ public class CollateralizedNettingNeutralStochastic {
 					)
 				);
 
-				aCGV1[j] = new HypothecationGroupVertex (
+				aCGV1[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					dblCollateralBalance1
+					dblCollateralBalance1,
+					0.,
+					aNV[j],
+					cob
 				);
 
-				aCGV2[j] = new HypothecationGroupVertex (
+				aCGV2[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					dblCollateralBalance2
+					dblCollateralBalance2,
+					0.,
+					aNV[j],
+					cob
 				);
 			}
 

@@ -10,6 +10,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -142,9 +143,14 @@ public class FixFloatVABank {
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRate,
+			dblCounterPartyRecoveryRate
+		);
+
 		JulianDate dtSpot = DateUtil.Today();
 
-		double[][] aaablATMSwapRateOffset = ATMSwapRateOffsetRealization (
+		double[][] aablATMSwapRateOffset = ATMSwapRateOffsetRealization (
 			new DiffusionEvolver (
 				DiffusionEvaluatorLinear.Standard (
 					dblATMSwapRateOffsetDrift,
@@ -206,11 +212,14 @@ public class FixFloatVABank {
 			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j)
-				aHGVR[j] = new HypothecationGroupVertex (
+				aHGVR[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
-					dblTimeWidth * (iNumStep - j) * aaablATMSwapRateOffset[i][j],
+					dblTimeWidth * (iNumStep - j) * aablATMSwapRateOffset[i][j],
 					0.,
-					0.
+					0.,
+					0.,
+					aMV[j],
+					cob
 				);
 
 			HypothecationGroupPath[] aHGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR)};

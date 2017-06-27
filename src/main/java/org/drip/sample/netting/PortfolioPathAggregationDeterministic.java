@@ -10,6 +10,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -149,6 +150,11 @@ public class PortfolioPathAggregationDeterministic {
 
 		JulianDate dtSpot = DateUtil.Today();
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRate,
+			dblCounterPartyRecoveryRate
+		);
+
 		double[][] aadblCollateralPortfolioValue = CollateralPortfolioValueRealization (
 			new DiffusionEvolver (
 				DiffusionEvaluatorLogarithmic.Standard (
@@ -215,11 +221,14 @@ public class PortfolioPathAggregationDeterministic {
 			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aHGVR[j] = new HypothecationGroupVertex (
+				aHGVR[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblCollateralPortfolioValue[i][j],
 					0.,
-					0.
+					0.,
+					0.,
+					aMV[j],
+					cob
 				);
 			}
 

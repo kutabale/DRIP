@@ -12,6 +12,7 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -274,6 +275,11 @@ public class ZeroThresholdCollateralGroupCorrelated {
 
 		JulianDate dtSpot = DateUtil.Today();
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRateInitial,
+			dblCounterPartyRecoveryRateInitial
+		);
+
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
 			0.,
@@ -509,11 +515,14 @@ public class ZeroThresholdCollateralGroupCorrelated {
 					dblCollateralBalance = hae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = new HypothecationGroupVertex (
+				aHGVR[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,
-					dblCollateralBalance
+					dblCollateralBalance,
+					0.,
+					aMV[j],
+					cob
 				);
 
 				dtStart = dtEnd;

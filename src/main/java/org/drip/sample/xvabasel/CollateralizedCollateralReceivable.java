@@ -13,6 +13,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -199,6 +200,11 @@ public class CollateralizedCollateralReceivable {
 		MonoPathExposureAdjustment[] aMPEAExtended = new MonoPathExposureAdjustment[iNumPath];
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRate,
+			dblCounterPartyRecoveryRate
+		);
+
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
 			dblCounterPartyThreshold,
@@ -322,19 +328,24 @@ public class CollateralizedCollateralReceivable {
 					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
 				}
 
-
-				aHGVR1[j] = new HypothecationGroupVertex (
+				aHGVR1[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					dblCollateralBalance1
+					dblCollateralBalance1,
+					0.,
+					aMV[j],
+					cob
 				);
 
-				aHGVR2[j] = new HypothecationGroupVertex (
+				aHGVR2[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					dblCollateralBalance2
+					dblCollateralBalance2,
+					0.,
+					aMV[j],
+					cob
 				);
 
 				dtStart = dtEnd;

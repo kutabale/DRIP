@@ -12,6 +12,7 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -339,6 +340,11 @@ public class CPGAUncollateralizedCorrelated {
 
 		JulianDate dtSpot = DateUtil.Today();
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRateInitial,
+			dblCounterPartyRecoveryRateInitial
+		);
+
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolioValue = new double[iNumPath][iNumStep + 1];
@@ -547,11 +553,14 @@ public class CPGAUncollateralizedCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = new HypothecationGroupVertex (
+				aHGVR[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,
-					0.
+					0.,
+					0.,
+					aMV[j],
+					cob
 				);
 			}
 

@@ -12,6 +12,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -271,6 +272,11 @@ public class CPGACollateralized {
 		MonoPathExposureAdjustment[] aMPEA = new MonoPathExposureAdjustment[iNumPath];
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRate,
+			dblCounterPartyRecoveryRate
+		);
+
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
 			dblCounterPartyThreshold,
@@ -364,11 +370,14 @@ public class CPGACollateralized {
 					dblCollateralBalance = hae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = new HypothecationGroupVertex (
+				aHGVR[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblSwapPortfolioValueRealization[i][j],
 					0.,
-					dblCollateralBalance
+					dblCollateralBalance,
+					0.,
+					aMV[j],
+					cob
 				);
 
 				dtStart = dtEnd;

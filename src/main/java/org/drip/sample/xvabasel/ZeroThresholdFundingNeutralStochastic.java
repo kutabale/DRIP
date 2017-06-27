@@ -15,6 +15,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -315,6 +316,11 @@ public class ZeroThresholdFundingNeutralStochastic {
 
 		JulianDate dtSpot = DateUtil.Today();
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRateInitial,
+			dblCounterPartyRecoveryRateInitial
+		);
+
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
@@ -575,18 +581,24 @@ public class ZeroThresholdFundingNeutralStochastic {
 					)
 				);
 
-				aCGV1[j] = new HypothecationGroupVertex (
+				aCGV1[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					dblCollateralBalance1
+					dblCollateralBalance1,
+					0.,
+					aNV[j],
+					cob
 				);
 
-				aCGV2[j] = new HypothecationGroupVertex (
+				aCGV2[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					dblCollateralBalance2
+					dblCollateralBalance2,
+					0.,
+					aNV[j],
+					cob
 				);
 			}
 

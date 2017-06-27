@@ -10,6 +10,7 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -143,6 +144,11 @@ public class PortfolioGroupRun {
 
 		JulianDate dtSpot = DateUtil.Today();
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRate,
+			dblCounterPartyRecoveryRate
+		);
+
 		DiffusionEvolver deAssetValue = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
 				dblAssetDrift,
@@ -244,18 +250,24 @@ public class PortfolioGroupRun {
 				)
 			);
 
-			aHGVR1[i] = new HypothecationGroupVertex (
+			aHGVR1[i] = HypothecationGroupVertex.Standard (
 				adtVertex[i],
 				adblAssetValuePath1[i],
 				0.,
-				0.
+				0.,
+				0.,
+				aMV[i],
+				cob
 			);
 
-			aHGVR2[i] = new HypothecationGroupVertex (
+			aHGVR2[i] = HypothecationGroupVertex.Standard (
 				adtVertex[i],
 				adblAssetValuePath2[i],
 				0.,
-				0.
+				0.,
+				0.,
+				aMV[i],
+				cob
 			);
 
 			System.out.println (

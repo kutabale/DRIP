@@ -11,6 +11,7 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -209,6 +210,11 @@ public class PortfolioPathAggregationCorrelated {
 		double dblCounterPartyFundingSpreadInitial = dblCounterPartyHazardRateInitial / (1. - dblCounterPartyRecoveryRateInitial);
 
 		JulianDate dtSpot = DateUtil.Today();
+
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRateInitial,
+			dblCounterPartyRecoveryRateInitial
+		);
 
 		for (int j = 0; j <= iNumStep; ++j)
 			adtVertex[j] = dtSpot.addMonths (6 * j + 6);
@@ -412,11 +418,14 @@ public class PortfolioPathAggregationCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = new HypothecationGroupVertex (
+				aHGVR[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblCollateralPortfolio[i][j],
 					0.,
-					0.
+					0.,
+					0.,
+					aMV[j],
+					cob
 				);
 			}
 

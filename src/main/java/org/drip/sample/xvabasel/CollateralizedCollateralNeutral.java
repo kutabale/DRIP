@@ -13,6 +13,7 @@ import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
 import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -189,6 +190,11 @@ public class CollateralizedCollateralNeutral {
 
 		JulianDate dtSpot = DateUtil.Today();
 
+		CloseOutBilateral cob = new CloseOutBilateral (
+			dblBankRecoveryRate,
+			dblCounterPartyRecoveryRate
+		);
+
 		double dblTimeWidth = dblTime / iNumStep;
 		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
@@ -323,18 +329,24 @@ public class CollateralizedCollateralNeutral {
 				}
 
 
-				aHGVR1[j] = new HypothecationGroupVertex (
+				aHGVR1[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					dblCollateralBalance1
+					dblCollateralBalance1,
+					0.,
+					aMV[j],
+					cob
 				);
 
-				aHGVR2[j] = new HypothecationGroupVertex (
+				aHGVR2[j] = HypothecationGroupVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					dblCollateralBalance2
+					dblCollateralBalance2,
+					0.,
+					aMV[j],
+					cob
 				);
 
 				dtStart = dtEnd;
