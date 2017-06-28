@@ -47,8 +47,8 @@ package org.drip.xva.collateral;
  */
 
 /**
- * HypothecationGroupVertexCloseOut holds the Close Out Based Vertex Exposures of a Projected Path of a
- *  Simulation Run of a Collateral Hypothecation Group. The References are:
+ * HypothecationGroupVertexPerfectReplication holds the Perfect Replication Based Vertex Exposures of a
+ *  Projected Path of a Simulation Run of a Collateral Hypothecation Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,10 +67,11 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.HypothecationGroupVertex {
+public class HypothecationGroupVertexPerfectReplication extends
+	org.drip.xva.collateral.HypothecationGroupVertexBurgardKjaer {
 
 	/**
-	 * Construct a Standard Instance of HypothecationGroupVertexCloseOut
+	 * Construct a Standard Instance of HypothecationGroupVertexPerfectReplication
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
@@ -79,15 +80,14 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	 * @param mv The Market Vertex Instance
 	 * @param cog The Generic Close-Out Evaluator Instance
 	 * 
-	 * @return The Standard Instance of HypothecationGroupVertexCloseOut
+	 * @return The Standard Instance of HypothecationGroupVertexPerfectReplication
 	 */
 
-	public static HypothecationGroupVertexCloseOut Standard (
+	public static HypothecationGroupVertexPerfectReplication Standard (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
 		final double dblCollateralBalance,
-		final double dblHedgeError,
 		final org.drip.xva.universe.MarketVertex mv,
 		final org.drip.xva.definition.CloseOutGeneral cog)
 	{
@@ -96,7 +96,7 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 		double dblUncollateralizedExposure = dblForwardExposure + dblRealizedCashFlow;
 
 		try {
-			return new HypothecationGroupVertexCloseOut (
+			return new HypothecationGroupVertexPerfectReplication (
 				dtAnchor,
 				dblForwardExposure,
 				dblRealizedCashFlow,
@@ -108,8 +108,7 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 				cog.counterPartyDefault (
 					dblUncollateralizedExposure,
 					dblCollateralBalance
-				),
-				dblHedgeError
+				)
 			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -119,7 +118,7 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	}
 
 	/**
-	 * HypothecationGroupVertexCloseOut Constructor
+	 * HypothecationGroupVertexPerfectReplication Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
@@ -127,40 +126,20 @@ public class HypothecationGroupVertexCloseOut extends org.drip.xva.collateral.Hy
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
 	 * @param dblBankDefaultCloseOut Close Out on Bank Default
 	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
-	 * @param dblBankPreDefaultPositionValue The Bank Pre-Default Position Value
-	 * @param dblBankPostDefaultPositionValue The Bank Post-Default Position Value
-	 * @param dblHedgeError The Vertex Hedge Error
-	 * @param rpv The Replication Portfolio Vertex Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public HypothecationGroupVertexCloseOut (
+	public HypothecationGroupVertexPerfectReplication (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
 		final double dblCollateralBalance,
 		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut,
-		final double dblHedgeError)
+		final double dblCounterPartyDefaultCloseOut)
 		throws java.lang.Exception
 	{
 		super (dtAnchor, dblForwardExposure, dblRealizedCashFlow, dblCollateralBalance,
-			dblBankDefaultCloseOut, dblCounterPartyDefaultCloseOut, dblHedgeError);
-	}
-
-	@Override public double creditExposure()
-	{
-		return collateralizedExposure() - counterPartyDefaultCloseOut();
-	}
-
-	@Override public double debtExposure()
-	{
-		return collateralizedExposure() - bankDefaultCloseOut();
-	}
-
-	@Override public double fundingExposure()
-	{
-		return hedgeError();
+			dblBankDefaultCloseOut, dblCounterPartyDefaultCloseOut, 0.);
 	}
 }

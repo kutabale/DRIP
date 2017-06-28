@@ -85,6 +85,7 @@ public class HypothecationGroupVertex {
 	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
 	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param dblHedgeError Hedge Error
 	 * @param mv The Market Vertex Instance
 	 * @param cog The Generic Close-Out Evaluator Instance
 	 * 
@@ -361,29 +362,36 @@ public class HypothecationGroupVertex {
 
 		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
 
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSenior = emvBank.seniorFundingNumeraire();
+
+		double dblBankSeniorRecovery = emvBank.seniorRecoveryRate();
+
+		double dblBankSeniorNumeraire = nmvBankSenior.forward();
+
 		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinate =
 			emvBank.subordinateFundingNumeraire();
 
-		try {
-			double dblBumpedAdjustedExposure = new HypothecationGroupVertex (
-				_dtAnchor,
-				_dblForwardExposure + 0.0001,
-				_dblRealizedCashFlow,
-				_dblCollateralBalance,
-				_dblBankDefaultCloseOut,
-				_dblCounterPartyDefaultCloseOut,
-				_dblHedgeError
-			).adjustedExposure();
+		double dblCounterPartyUnits = (_dblCounterPartyDefaultCloseOut - dblAdjustedExposure) /
+			mv.counterParty().seniorFundingNumeraire().forward();
 
-			if (null == nmvBankSubordinate)
-				return org.drip.xva.derivative.ReplicationPortfolioVertex.Standard (
-					(dblAdjustedExposure - dblBumpedAdjustedExposure) / 0.0001,
-					(_dblBankDefaultCloseOut - dblAdjustedExposure) /
-						emvBank.seniorFundingNumeraire().forward(),
-					(_dblCounterPartyDefaultCloseOut - dblAdjustedExposure) /
-						mv.counterParty().seniorFundingNumeraire().forward(),
-					0.
-				);
+		if (null == nmvBankSubordinate)
+			return org.drip.xva.derivative.ReplicationPortfolioVertex.Standard (0., (_dblBankDefaultCloseOut
+				- dblAdjustedExposure) / dblBankSeniorNumeraire, dblCounterPartyUnits, 0.);
+
+		double dblBankSubordinateRecovery = emvBank.subordinateRecoveryRate();
+
+		double dblBankSubordinateNumeraire = nmvBankSubordinate.forward();
+
+		try {
+			return new org.drip.xva.derivative.ReplicationPortfolioVertex (
+				0.,
+				(_dblHedgeError + dblBankSubordinateRecovery * dblAdjustedExposure - _dblBankDefaultCloseOut) /
+					(dblBankSeniorRecovery - dblBankSubordinateRecovery) / dblBankSeniorNumeraire,
+				(_dblHedgeError + dblBankSeniorRecovery * dblAdjustedExposure - _dblBankDefaultCloseOut) /
+					(dblBankSubordinateRecovery - dblBankSeniorRecovery) / dblBankSubordinateNumeraire,
+				dblCounterPartyUnits,
+				0.
+			);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
