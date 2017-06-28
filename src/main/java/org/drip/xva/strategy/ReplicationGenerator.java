@@ -47,17 +47,17 @@ package org.drip.xva.strategy;
  */
 
 /**
- * BurgardKjaerValuationAdjustment holds the Vertex Values of the Valuation Adjustments Based on the
- * 	Incremental Burgard Kjaer Simulation Step. The References are:
+ * ReplicationGenerator contains the Dynamic Replication Portfolio that corresponds to the Incremental
+ * 	Path-wise Replication Portfolio given the Hedge Error Constraint. The References are:
  *  
- *  - Burgard, C., and M. Kjaer (2011): PDE Representations of Derivatives with Bilateral Counter Party Risk
+ *  - Burgard, C., and M. Kjaer (2013): Funding Strategies, Funding Costs, Risk, 24 (12) 82-87.
+ *  
+ *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
  *  
- *  - Burgard, C., and M. Kjaer (2011): In the Balance, Risk, 22 (11) 72-75.
+ *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
  *  
- *  - Burgard, C., and M. Kjaer (2013): Funding Costs and Funding Strategies, Risk, 24 (12) 82-87.
- *  
- *  - Hull, J., and A. White (2012): The FVA Debate, Risk, 23 (7) 83-85.
+ *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -65,79 +65,64 @@ package org.drip.xva.strategy;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BurgardKjaerValuationAdjustment {
-	private double _dblBilateralCVA = java.lang.Double.NaN;
-	private double _dblBilateralDVA = java.lang.Double.NaN;
-	private double _dblBilateralFCA = java.lang.Double.NaN;
-	private double _dblBilateralCollateralVA = java.lang.Double.NaN;
+public class ReplicationGenerator {
+	private double _dblHedgeError = java.lang.Double.NaN;
+	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
+	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
 
 	/**
-	 * BurgardKjaerValuationAdjustment Constructor
+	 * ReplicationGenerator Constructor
 	 * 
-	 * @param dblBilateralCVA The Bilateral CVA
-	 * @param dblBilateralDVA The Bilateral DVA
-	 * @param dblBilateralFCA The Bilateral FCA
-	 * @param dblBilateralCollateralVA The Bilateral Collateral VA
+	 * @param dblHedgeError The Hedge Error
+	 * @param dblBankDefaultCloseOut Close Out on Bank Default
+	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public BurgardKjaerValuationAdjustment (
-		final double dblBilateralCVA,
-		final double dblBilateralDVA,
-		final double dblBilateralFCA,
-		final double dblBilateralCollateralVA)
+	public ReplicationGenerator (
+		final double dblHedgeError,
+		final double dblBankDefaultCloseOut,
+		final double dblCounterPartyDefaultCloseOut)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralCVA = dblBilateralCVA) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralDVA = dblBilateralDVA) ||
-				!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralFCA = dblBilateralFCA) ||
-					!org.drip.quant.common.NumberUtil.IsValid (_dblBilateralCollateralVA =
-						dblBilateralCollateralVA))
-			throw new java.lang.Exception ("BurgardKjaerValuationAdjustment Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblHedgeError = dblHedgeError) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
+				!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
+					dblCounterPartyDefaultCloseOut))
+			throw new java.lang.Exception ("ReplicationGenerator Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Bilateral CVA
+	 * Retrieve the Hedge Error
 	 * 
-	 * @return The Bilateral CVA
+	 * @return The Hedge Error
 	 */
 
-	public double bilateralCVA()
+	public double hedgeError()
 	{
-		return _dblBilateralCVA;
+		return _dblHedgeError;
 	}
 
 	/**
-	 * Retrieve the Bilateral DVA
+	 * Retrieve the Bank Default Close Out
 	 * 
-	 * @return The Bilateral DVA
+	 * @return The Bank Default Close Out
 	 */
 
-	public double bilateralDVA()
+	public double bankDefaultCloseOut()
 	{
-		return _dblBilateralDVA;
+		return _dblBankDefaultCloseOut;
 	}
 
 	/**
-	 * Retrieve the Bilateral FCA
+	 * Retrieve the Counter Party Default Close Out
 	 * 
-	 * @return The Bilateral FCA
+	 * @return The Counter Party Default Close Out
 	 */
 
-	public double bilateralFCA()
+	public double counterPartyDefaultCloseOut()
 	{
-		return _dblBilateralFCA;
-	}
-
-	/**
-	 * Retrieve the Bilateral Collateral VA
-	 * 
-	 * @return The Bilateral Collateral VA
-	 */
-
-	public double bilateralCollateralVA()
-	{
-		return _dblBilateralCollateralVA;
+		return _dblCounterPartyDefaultCloseOut;
 	}
 }

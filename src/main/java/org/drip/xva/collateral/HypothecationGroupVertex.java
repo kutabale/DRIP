@@ -74,8 +74,8 @@ public class HypothecationGroupVertex {
 	private double _dblCollateralBalance = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
 	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
-	private double _dblBankPreDefaultPositionValue = java.lang.Double.NaN;
 	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
+	private double _dblBankPreDefaultPositionValue = java.lang.Double.NaN;
 	private double _dblBankPostDefaultPositionValue = java.lang.Double.NaN;
 
 	/**
@@ -320,5 +320,74 @@ public class HypothecationGroupVertex {
 		double dblCreditExposure = collateralizedExposure();
 
 		return 0. < dblCreditExposure ? dblCreditExposure : 0.;
+	}
+
+	/**
+	 * Retrieve the Exposure Adjustment at the Path Vertex Time Node
+	 * 
+	 * @return The Exposure Adjustment at the Path Vertex Time Node
+	 */
+
+	public double adjustment()
+	{
+		return creditExposure() + debtExposure() + fundingExposure();
+	}
+
+	/**
+	 * Retrieve the Adjusted Exposure at the Path Vertex Time Node
+	 * 
+	 * @return The Adjusted Exposure at the Path Vertex Time Node
+	 */
+
+	public double adjustedExposure()
+	{
+		return collateralizedExposure() + adjustment();
+	}
+
+	/**
+	 * Retrieve the Replication Portfolio Vertex Instance
+	 * 
+	 * @param mv The Market Vertex
+	 * 
+	 * @return The Replication Portfolio Vertex Instance
+	 */
+
+	public org.drip.xva.derivative.ReplicationPortfolioVertex replicationPortfolio (
+		final org.drip.xva.universe.MarketVertex mv)
+	{
+		if (null == mv) return null;
+
+		double dblAdjustedExposure = adjustedExposure();
+
+		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
+
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinate =
+			emvBank.subordinateFundingNumeraire();
+
+		try {
+			double dblBumpedAdjustedExposure = new HypothecationGroupVertex (
+				_dtAnchor,
+				_dblForwardExposure + 0.0001,
+				_dblRealizedCashFlow,
+				_dblCollateralBalance,
+				_dblBankDefaultCloseOut,
+				_dblCounterPartyDefaultCloseOut,
+				_dblHedgeError
+			).adjustedExposure();
+
+			if (null == nmvBankSubordinate)
+				return org.drip.xva.derivative.ReplicationPortfolioVertex.Standard (
+					(dblAdjustedExposure - dblBumpedAdjustedExposure) / 0.0001,
+					(_dblBankDefaultCloseOut - dblAdjustedExposure) /
+						emvBank.seniorFundingNumeraire().forward(),
+					(_dblCounterPartyDefaultCloseOut - dblAdjustedExposure) /
+						mv.counterParty().seniorFundingNumeraire().forward(),
+					0.
+				);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

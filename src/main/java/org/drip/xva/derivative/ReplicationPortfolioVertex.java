@@ -122,14 +122,15 @@ public class ReplicationPortfolioVertex {
 		final double dblCashAccount)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblAssetNumeraireUnits = dblAssetNumeraireUnits) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankSeniorNumeraireUnits =
-				dblBankSeniorNumeraireUnits) || !org.drip.quant.common.NumberUtil.IsValid
-					(_dblBankSubordinateNumeraireUnits = dblBankSubordinateNumeraireUnits) ||
-						!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyNumeraireUnits =
-							dblCounterPartyNumeraireUnits) || !org.drip.quant.common.NumberUtil.IsValid
-								(_dblCashAccount = dblCashAccount))
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBankSeniorNumeraireUnits =
+			dblBankSeniorNumeraireUnits) || !org.drip.quant.common.NumberUtil.IsValid
+				(_dblBankSubordinateNumeraireUnits = dblBankSubordinateNumeraireUnits) ||
+					!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyNumeraireUnits =
+						dblCounterPartyNumeraireUnits) || !org.drip.quant.common.NumberUtil.IsValid
+							(_dblCashAccount = dblCashAccount))
 			throw new java.lang.Exception ("ReplicationPortfolioVertex Constructor => Invalid Inputs");
+
+		_dblAssetNumeraireUnits = dblAssetNumeraireUnits;
 	}
 
 	/**
