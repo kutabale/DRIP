@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.hypothecation;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.collateral;
  */
 
 /**
- * HypothecationAmountEstimatorOutput contains the Estimation Output of the Hypothecation Collateral that is
- *  to be Posted during a Single Run of a Collateral Hypothecation Group Valuation. The References are:
+ * CollateralAmountEstimatorOutput contains the Estimation Output of the Hypothecation Collateral that is to
+ *  be Posted during a Single Run of a Collateral Hypothecation Group Valuation. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,7 +67,7 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class HypothecationAmountEstimatorOutput {
+public class CollateralAmountEstimatorOutput {
 	private double _dblPostingRequirement = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtBankMargin = null;
 	private double _dblBankWindowMarginValue = java.lang.Double.NaN;
@@ -79,7 +79,7 @@ public class HypothecationAmountEstimatorOutput {
 	private double _dblCounterPartyCollateralThreshold = java.lang.Double.NaN;
 
 	/**
-	 * HypothecationAmountEstimatorOutput Constructor
+	 * CollateralAmountEstimatorOutput Constructor
 	 * 
 	 * @param dtBankMargin The Bank Margin Date
 	 * @param dtCounterPartyMargin The Counter Party Margin Date
@@ -94,7 +94,7 @@ public class HypothecationAmountEstimatorOutput {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public HypothecationAmountEstimatorOutput (
+	public CollateralAmountEstimatorOutput (
 		final org.drip.analytics.date.JulianDate dtBankMargin,
 		final org.drip.analytics.date.JulianDate dtCounterPartyMargin,
 		final double dblBankWindowMarginValue,
@@ -122,7 +122,7 @@ public class HypothecationAmountEstimatorOutput {
 															!org.drip.quant.common.NumberUtil.IsValid
 																(_dblPostingRequirement =
 																	dblPostingRequirement))
-			throw new java.lang.Exception ("HypothecationAmountEstimatorOutput Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("CollateralAmountEstimatorOutput Constructor => Invalid Inputs");
 	}
 
 	/**

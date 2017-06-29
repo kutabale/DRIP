@@ -10,9 +10,9 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
-import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.definition.CloseOutBilateral;
+import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -286,7 +286,6 @@ public class UncollateralizedCollateralPayable {
 					0.,
 					0.,
 					0.,
-					aNV[j],
 					cob
 				);
 
@@ -296,20 +295,19 @@ public class UncollateralizedCollateralPayable {
 					0.,
 					0.,
 					0.,
-					aNV[j],
 					cob
 				);
 			}
 
 			MarketPath np = new MarketPath (aNV);
 
-			HypothecationGroupPath[] aCGPGround = new HypothecationGroupPath[] {
-				new HypothecationGroupPath (aCGV1)
+			CollateralGroupPath[] aCGPGround = new CollateralGroupPath[] {
+				new CollateralGroupPath (aCGV1)
 			};
 
-			HypothecationGroupPath[] aCGPExtended = new HypothecationGroupPath[] {
-				new HypothecationGroupPath (aCGV1),
-				new HypothecationGroupPath (aCGV2)
+			CollateralGroupPath[] aCGPExtended = new CollateralGroupPath[] {
+				new CollateralGroupPath (aCGV1),
+				new CollateralGroupPath (aCGV2)
 			};
 
 			aCPGPGround[i] = new MonoPathExposureAdjustment (

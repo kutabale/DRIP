@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.hypothecation;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,8 @@ package org.drip.xva.collateral;
  */
 
 /**
- * HypothecationGroupVertexPerfectReplication holds the Perfect Replication Based Vertex Exposures of a
- *  Projected Path of a Simulation Run of a Collateral Hypothecation Group. The References are:
+ * MarginPeriodOfRisk contains the Margining Information associated with the Counter Party. The References
+ *  are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,49 +67,39 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class HypothecationGroupVertexPerfectReplication extends
-	org.drip.xva.collateral.HypothecationGroupVertexBurgardKjaer {
+public class MarginPeriodOfRisk {
 
 	/**
-	 * Construct a Standard Instance of HypothecationGroupVertexPerfectReplication
-	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
-	 * @param mv The Market Vertex Instance
-	 * @param cog The Generic Close-Out Evaluator Instance
-	 * 
-	 * @return The Standard Instance of HypothecationGroupVertexPerfectReplication
+	 * MPoR Interpolation Type - LINEAR
 	 */
 
-	public static HypothecationGroupVertexPerfectReplication Standard (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardExposure,
-		final double dblRealizedCashFlow,
-		final double dblCollateralBalance,
-		final org.drip.xva.universe.MarketVertex mv,
-		final org.drip.xva.definition.CloseOutGeneral cog)
+	public static final int MPOR_INTERPOLATION_LINEAR = 1;
+
+	/**
+	 * MPoR Interpolation Type - SQRT_T
+	 */
+
+	public static final int MPOR_INTERPOLATION_SQRT_T = 2;
+
+	/**
+	 * MPoR Interpolation Type - BROWNIAN_BRIDGE
+	 */
+
+	public static final int MPOR_INTERPOLATION_BROWNIAN_BRIDGE = 4;
+
+	private int _iInterpolationType = -1;
+	private int _iMarginCallFrequency = -1;
+
+	/**
+	 * Construct a Standard Instance of MarginPeriodOfRisk
+	 * 
+	 * @return The Standard Instance of MarginPeriodOfRisk
+	 */
+
+	public static final MarginPeriodOfRisk Standard()
 	{
-		if (null == cog) return null;
-
-		double dblUncollateralizedExposure = dblForwardExposure + dblRealizedCashFlow;
-
 		try {
-			return new HypothecationGroupVertexPerfectReplication (
-				dtAnchor,
-				dblForwardExposure,
-				dblRealizedCashFlow,
-				dblCollateralBalance,
-				cog.bankDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				),
-				cog.counterPartyDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				)
-			);
+			return new MarginPeriodOfRisk (1, MPOR_INTERPOLATION_BROWNIAN_BRIDGE);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -118,28 +108,44 @@ public class HypothecationGroupVertexPerfectReplication extends
 	}
 
 	/**
-	 * HypothecationGroupVertexPerfectReplication Constructor
+	 * MarginPeriodOfRisk Constructor
 	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
-	 * @param dblBankDefaultCloseOut Close Out on Bank Default
-	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
+	 * @param iMarginCallFrequency The MPoR Margin Call Frequency
+	 * @param iInterpolationType The MPoR Interpolation Type
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public HypothecationGroupVertexPerfectReplication (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardExposure,
-		final double dblRealizedCashFlow,
-		final double dblCollateralBalance,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut)
+	public MarginPeriodOfRisk (
+		final int iMarginCallFrequency,
+		final int iInterpolationType)
 		throws java.lang.Exception
 	{
-		super (dtAnchor, dblForwardExposure, dblRealizedCashFlow, dblCollateralBalance,
-			dblBankDefaultCloseOut, dblCounterPartyDefaultCloseOut, 0.);
+		if (-1 >= (_iMarginCallFrequency = iMarginCallFrequency) || (MPOR_INTERPOLATION_LINEAR !=
+			(_iInterpolationType = iInterpolationType) && MPOR_INTERPOLATION_SQRT_T != _iInterpolationType &&
+				MPOR_INTERPOLATION_BROWNIAN_BRIDGE != _iInterpolationType))
+			throw new java.lang.Exception ("MarginPeriodOfRisk Constructor => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the MPoR Margin Call Frequency
+	 * 
+	 * @return The MPoR Margin Call Frequency
+	 */
+
+	public int marginCallFrequency()
+	{
+		return _iMarginCallFrequency;
+	}
+
+	/**
+	 * Retrieve the MPoR Interpolation Type
+	 * 
+	 * @return The MPoR Interpolation Type
+	 */
+
+	public int interpolationType()
+	{
+		return _iInterpolationType;
 	}
 }

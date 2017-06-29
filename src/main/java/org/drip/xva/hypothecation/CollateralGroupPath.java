@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.hypothecation;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,7 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * HypothecationGroupPath accumulates the Vertex Realizations of the Sequence in a Single Path Projection Run
+ * CollateralGroupPath accumulates the Vertex Realizations of the Sequence in a Single Path Projection Run
  *  along the Granularity of a Regular Collateral Hypothecation Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
@@ -67,35 +67,35 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class HypothecationGroupPath {
-	private org.drip.xva.collateral.HypothecationGroupVertex[] _aHGV = null;
+public class CollateralGroupPath {
+	private org.drip.xva.hypothecation.HypothecationGroupVertex[] _aHGV = null;
 
 	/**
-	 * HypothecationGroupPath Constructor
+	 * CollateralGroupPath Constructor
 	 * 
 	 * @param aHGV The Array of Collateral Hypothecation Group Trajectory Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public HypothecationGroupPath (
-		final org.drip.xva.collateral.HypothecationGroupVertex[] aHGV)
+	public CollateralGroupPath (
+		final org.drip.xva.hypothecation.HypothecationGroupVertex[] aHGV)
 		throws java.lang.Exception
 	{
 		if (null == (_aHGV = aHGV))
-			throw new java.lang.Exception ("HypothecationGroupPath Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
 		int iNumPath = _aHGV.length;
 
 		if (1 >= iNumPath)
-			throw new java.lang.Exception ("HypothecationGroupPath Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumPath; ++i) {
 			if (null == _aHGV[i])
-				throw new java.lang.Exception ("HypothecationGroupPath Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
 			if (0 != i && _aHGV[i - 1].anchor().julian() >= _aHGV[i].anchor().julian())
-				throw new java.lang.Exception ("HypothecationGroupPath Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 		}
 	}
 
@@ -105,7 +105,7 @@ public class HypothecationGroupPath {
 	 * @return The Array of Netting Group Trajectory Vertexes
 	 */
 
-	public org.drip.xva.collateral.HypothecationGroupVertex[] vertexes()
+	public org.drip.xva.hypothecation.HypothecationGroupVertex[] vertexes()
 	{
 		return _aHGV;
 	}

@@ -8,9 +8,9 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.definition.CloseOutBilateral;
+import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -256,7 +256,6 @@ public class PortfolioGroupRun {
 				0.,
 				0.,
 				0.,
-				aMV[i],
 				cob
 			);
 
@@ -266,7 +265,6 @@ public class PortfolioGroupRun {
 				0.,
 				0.,
 				0.,
-				aMV[i],
 				cob
 			);
 
@@ -289,9 +287,9 @@ public class PortfolioGroupRun {
 
 		MarketPath mp = new MarketPath (aMV);
 
-		HypothecationGroupPath[] aHGP1 = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR1)};
+		CollateralGroupPath[] aHGP1 = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR1)};
 
-		HypothecationGroupPath[] aHGP2 = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR2)};
+		CollateralGroupPath[] aHGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR2)};
 
 		NettingGroupPathAA2014 ngpaa2014_1 = new NettingGroupPathAA2014 (
 			aHGP1,

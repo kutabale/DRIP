@@ -1,5 +1,5 @@
 
-package org.drip.xva.collateral;
+package org.drip.xva.derivative;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,7 @@ package org.drip.xva.collateral;
  */
 
 /**
- * HypothecationGroupVertexBurgardKjaer holds the Close Out Based Vertex Exposures of a Projected Path of a
- *  Simulation Run of a Collateral Hypothecation Group. The References are:
+ * ReplicationPortfolioVertexBank holds the Bank Senor/Subordinate Replication Portfolio. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,51 +66,23 @@ package org.drip.xva.collateral;
  * @author Lakshmi Krishnamurthy
  */
 
-public class HypothecationGroupVertexBurgardKjaer extends org.drip.xva.collateral.HypothecationGroupVertex {
+public class ReplicationPortfolioVertexBank {
+	private double _dblSeniorNumeraireUnits = java.lang.Double.NaN;
+	private double _dblSubordinateNumeraireUnits = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Standard Instance of HypothecationGroupVertexBurgardKjaer
+	 * Construct a ReplicationPortfolioVertexBank Instance from the Senior Bank Numeraire alone
 	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
-	 * @param dblHedgeError Hedge Error
-	 * @param mv The Market Vertex Instance
-	 * @param cog The Generic Close-Out Evaluator Instance
+	 * @param dblSeniorNumeraireUnits The Bank Senior Numeraire Units
 	 * 
-	 * @return The Standard Instance of HypothecationGroupVertexCloseOut
+	 * @return The ReplicationPortfolioVertexBank Instance from the Senior Bank Numeraire alone
 	 */
 
-	public static HypothecationGroupVertexBurgardKjaer Standard (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardExposure,
-		final double dblRealizedCashFlow,
-		final double dblCollateralBalance,
-		final double dblHedgeError,
-		final org.drip.xva.universe.MarketVertex mv,
-		final org.drip.xva.definition.CloseOutGeneral cog)
+	public static final ReplicationPortfolioVertexBank Standard (
+		final double dblSeniorNumeraireUnits)
 	{
-		if (null == cog) return null;
-
-		double dblUncollateralizedExposure = dblForwardExposure + dblRealizedCashFlow;
-
 		try {
-			return new HypothecationGroupVertexBurgardKjaer (
-				dtAnchor,
-				dblForwardExposure,
-				dblRealizedCashFlow,
-				dblCollateralBalance,
-				cog.bankDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				),
-				cog.counterPartyDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				),
-				dblHedgeError
-			);
+			return new ReplicationPortfolioVertexBank (dblSeniorNumeraireUnits, 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -120,45 +91,44 @@ public class HypothecationGroupVertexBurgardKjaer extends org.drip.xva.collatera
 	}
 
 	/**
-	 * HypothecationGroupVertexBurgardKjaer Constructor
+	 * ReplicationPortfolioVertexBank Constructor
 	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
-	 * @param dblBankDefaultCloseOut Close Out on Bank Default
-	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
-	 * @param dblHedgeError The Vertex Hedge Error
+	 * @param dblSeniorNumeraireUnits The Bank Senior Numeraire Units
+	 * @param dblSubordinateNumeraireUnits The Bank Subordinate Numeraire Units
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public HypothecationGroupVertexBurgardKjaer (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardExposure,
-		final double dblRealizedCashFlow,
-		final double dblCollateralBalance,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut,
-		final double dblHedgeError)
+	public ReplicationPortfolioVertexBank (
+		final double dblSeniorNumeraireUnits,
+		final double dblSubordinateNumeraireUnits)
 		throws java.lang.Exception
 	{
-		super (dtAnchor, dblForwardExposure, dblRealizedCashFlow, dblCollateralBalance,
-			dblBankDefaultCloseOut, dblCounterPartyDefaultCloseOut, dblHedgeError);
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblSeniorNumeraireUnits = dblSeniorNumeraireUnits) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblSubordinateNumeraireUnits =
+				dblSubordinateNumeraireUnits))
+			throw new java.lang.Exception ("ReplicationPortfolioVertex Constructor => Invalid Inputs");
 	}
 
-	@Override public double creditExposure()
+	/**
+	 * Retrieve the Number of Bank Senior Numeraire Units
+	 * 
+	 * @return The Number of Bank Senior Numeraire Units
+	 */
+
+	public double seniorNumeraireUnits()
 	{
-		return collateralizedExposure() - counterPartyDefaultCloseOut();
+		return _dblSeniorNumeraireUnits;
 	}
 
-	@Override public double debtExposure()
-	{
-		return collateralizedExposure() - bankDefaultCloseOut();
-	}
+	/**
+	 * Retrieve the Number of Bank Subordinate Numeraire Units
+	 * 
+	 * @return The Number of Bank Subordinate Numeraire Units
+	 */
 
-	@Override public double fundingExposure()
+	public double subordinateNumeraireUnits()
 	{
-		return hedgeError();
+		return _dblSubordinateNumeraireUnits;
 	}
 }

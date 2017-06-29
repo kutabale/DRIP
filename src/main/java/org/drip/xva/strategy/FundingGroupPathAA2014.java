@@ -80,12 +80,12 @@ public class FundingGroupPathAA2014 extends org.drip.xva.netting.FundingGroupPat
 	 */
 
 	public static final FundingGroupPathAA2014 Mono (
-		final org.drip.xva.collateral.HypothecationGroupPath hgp,
+		final org.drip.xva.hypothecation.CollateralGroupPath hgp,
 		final org.drip.xva.universe.MarketPath mp)
 	{
 		try {
 			return new org.drip.xva.strategy.FundingGroupPathAA2014 (new
-				org.drip.xva.collateral.HypothecationGroupPath[] {hgp}, mp);
+				org.drip.xva.hypothecation.CollateralGroupPath[] {hgp}, mp);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -103,7 +103,7 @@ public class FundingGroupPathAA2014 extends org.drip.xva.netting.FundingGroupPat
 	 */
 
 	public FundingGroupPathAA2014 (
-		final org.drip.xva.collateral.HypothecationGroupPath[] aHGP,
+		final org.drip.xva.hypothecation.CollateralGroupPath[] aHGP,
 		final org.drip.xva.universe.MarketPath mp)
 		throws java.lang.Exception
 	{

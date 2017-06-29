@@ -13,9 +13,9 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
-import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.definition.CloseOutBilateral;
+import org.drip.xva.hypothecation.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -511,7 +511,7 @@ public class ZeroThresholdCollateralNeutralStochastic {
 				double dblValueEnd2 = aadblPortfolio2Value[i][j];
 
 				if (0 != j) {
-					HypothecationAmountEstimator cae1 = new HypothecationAmountEstimator (
+					CollateralAmountEstimator cae1 = new CollateralAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -525,7 +525,7 @@ public class ZeroThresholdCollateralNeutralStochastic {
 
 					dblCollateralBalance1 = cae1.postingRequirement (dtEnd);
 
-					HypothecationAmountEstimator cae2 = new HypothecationAmountEstimator (
+					CollateralAmountEstimator cae2 = new CollateralAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -587,7 +587,6 @@ public class ZeroThresholdCollateralNeutralStochastic {
 					0.,
 					dblCollateralBalance1,
 					0.,
-					aNV[j],
 					cob
 				);
 
@@ -597,15 +596,14 @@ public class ZeroThresholdCollateralNeutralStochastic {
 					0.,
 					dblCollateralBalance2,
 					0.,
-					aNV[j],
 					cob
 				);
 			}
 
 			MarketPath np = new MarketPath (aNV);
 
-			HypothecationGroupPath[] aCGPGround = new HypothecationGroupPath[] {
-				new HypothecationGroupPath (aCGV1)
+			CollateralGroupPath[] aCGPGround = new CollateralGroupPath[] {
+				new CollateralGroupPath (aCGV1)
 			};
 
 			aCPGPGround[i] = new MonoPathExposureAdjustment (
@@ -623,9 +621,9 @@ public class ZeroThresholdCollateralNeutralStochastic {
 				}
 			);
 
-			HypothecationGroupPath[] aCGPExtended = new HypothecationGroupPath[] {
-				new HypothecationGroupPath (aCGV1),
-				new HypothecationGroupPath (aCGV2)
+			CollateralGroupPath[] aCGPExtended = new CollateralGroupPath[] {
+				new CollateralGroupPath (aCGV1),
+				new CollateralGroupPath (aCGV2)
 			};
 
 			aCPGPExtended[i] = new MonoPathExposureAdjustment (

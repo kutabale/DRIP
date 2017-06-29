@@ -5,4 +5,4 @@
  * @author Lakshmi Krishnamurthy
  */
 
-package org.drip.xva.collateral;
+package org.drip.xva.hypothecation;

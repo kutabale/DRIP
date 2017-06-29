@@ -13,9 +13,9 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
-import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.definition.CloseOutBilateral;
+import org.drip.xva.hypothecation.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -511,7 +511,7 @@ public class CollateralizedCollateralPayableStochastic {
 				double dblValueEnd2 = aadblPortfolio2Value[i][j];
 
 				if (0 != j) {
-					HypothecationAmountEstimator hae1 = new HypothecationAmountEstimator (
+					CollateralAmountEstimator hae1 = new CollateralAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -525,7 +525,7 @@ public class CollateralizedCollateralPayableStochastic {
 
 					dblCollateralBalance1 = hae1.postingRequirement (dtEnd);
 
-					HypothecationAmountEstimator hae2 = new HypothecationAmountEstimator (
+					CollateralAmountEstimator hae2 = new CollateralAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -587,7 +587,6 @@ public class CollateralizedCollateralPayableStochastic {
 					0.,
 					dblCollateralBalance1,
 					0.,
-					aMV[j],
 					cob
 				);
 
@@ -597,15 +596,14 @@ public class CollateralizedCollateralPayableStochastic {
 					0.,
 					dblCollateralBalance2,
 					0.,
-					aMV[j],
 					cob
 				);
 			}
 
 			MarketPath mp = new MarketPath (aMV);
 
-			HypothecationGroupPath[] aHGPGround = new HypothecationGroupPath[] {
-				new HypothecationGroupPath (aHGVR1)
+			CollateralGroupPath[] aHGPGround = new CollateralGroupPath[] {
+				new CollateralGroupPath (aHGVR1)
 			};
 
 			aMPEAGround[i] = new MonoPathExposureAdjustment (
@@ -623,9 +621,9 @@ public class CollateralizedCollateralPayableStochastic {
 				}
 			);
 
-			HypothecationGroupPath[] aHGPExtended = new HypothecationGroupPath[] {
-				new HypothecationGroupPath (aHGVR1),
-				new HypothecationGroupPath (aHGVR2)
+			CollateralGroupPath[] aHGPExtended = new CollateralGroupPath[] {
+				new CollateralGroupPath (aHGVR1),
+				new CollateralGroupPath (aHGVR2)
 			};
 
 			aMPEAExtended[i] = new MonoPathExposureAdjustment (

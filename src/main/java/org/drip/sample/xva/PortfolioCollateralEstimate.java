@@ -9,7 +9,7 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.*;
+import org.drip.xva.hypothecation.*;
 import org.drip.xva.set.*;
 
 /*
@@ -171,7 +171,7 @@ public class PortfolioCollateralEstimate {
 
 			double dblPortfolioValueFinish = dblTimeWidth * (iNumStep - i) * aJDESwapRate[i].finish();
 
-			HypothecationAmountEstimator hae = new HypothecationAmountEstimator (
+			CollateralAmountEstimator hae = new CollateralAmountEstimator (
 				cgs,
 				cpgs,
 				new BrokenDateInterpolatorLinearT (
@@ -183,7 +183,7 @@ public class PortfolioCollateralEstimate {
 				Double.NaN
 			);
 
-			HypothecationAmountEstimatorOutput haeo = hae.output (dtEnd);
+			CollateralAmountEstimatorOutput haeo = hae.output (dtEnd);
 
 			System.out.println (
 				"\t|| " +

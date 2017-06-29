@@ -8,9 +8,9 @@ import org.drip.measure.process.DiffusionEvolver;
 import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.definition.CloseOutBilateral;
+import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -416,12 +416,11 @@ public class PortfolioPathAggregationUncorrelated {
 					0.,
 					0.,
 					0.,
-					aMV[j],
 					cob
 				);
 			}
 
-			HypothecationGroupPath[] aHGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR)};
+			CollateralGroupPath[] aHGP = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR)};
 
 			aMPEA[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {

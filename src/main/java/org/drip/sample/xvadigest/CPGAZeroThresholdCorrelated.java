@@ -11,9 +11,9 @@ import org.drip.measure.statistics.UnivariateDiscreteThin;
 import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
-import org.drip.xva.collateral.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.definition.CloseOutBilateral;
+import org.drip.xva.hypothecation.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -567,7 +567,7 @@ public class CPGAZeroThresholdCorrelated {
 				double dblValueEnd = aadblPortfolioValue[i][j];
 
 				if (0 != j) {
-					HypothecationAmountEstimator hae = new HypothecationAmountEstimator (
+					CollateralAmountEstimator hae = new CollateralAmountEstimator (
 						cgs,
 						cpgs,
 						new BrokenDateInterpolatorLinearT (
@@ -588,7 +588,6 @@ public class CPGAZeroThresholdCorrelated {
 					0.,
 					dblCollateralBalance,
 					0.,
-					aMV[j],
 					cob
 				);
 
@@ -598,7 +597,7 @@ public class CPGAZeroThresholdCorrelated {
 
 			MarketPath mp = new MarketPath (aMV);
 
-			HypothecationGroupPath[] aHGP = new HypothecationGroupPath[] {new HypothecationGroupPath (aHGVR)};
+			CollateralGroupPath[] aHGP = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR)};
 
 			aMPEA[i] = new MonoPathExposureAdjustment (
 				new NettingGroupPathAA2014[] {
