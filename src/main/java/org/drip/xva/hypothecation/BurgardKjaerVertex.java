@@ -69,15 +69,12 @@ package org.drip.xva.hypothecation;
 
 public class BurgardKjaerVertex {
 	private double _dblExposure = java.lang.Double.NaN;
-	private double _dblDebtExposure = java.lang.Double.NaN;
-	private double _dblCreditExposure = java.lang.Double.NaN;
-	private double _dblFundingExposure = java.lang.Double.NaN;
 	private double _dblRealizedCashFlow = java.lang.Double.NaN;
-	private double _dblCollateralBalance = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
 	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
 	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
 	private org.drip.xva.derivative.ReplicationPortfolioVertexBank _rpvb = null;
+	private org.drip.xva.hypothecation.CollateralGroupVertexExposure _cgve = null;
 
 	/**
 	 * BurgardKjaerVertex Constructor
@@ -85,12 +82,9 @@ public class BurgardKjaerVertex {
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblExposure The Forward Exposure at the Path Vertex Time Node
 	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
+	 * @param cgve The Collateral Group Vertex Exposure
 	 * @param dblBankDefaultCloseOut Close Out on Bank Default
 	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
-	 * @param dblCreditExposure The Credit Exposure
-	 * @param dblDebtExposure The Debt Exposure
-	 * @param dblFundingExposure The Funding Exposure
 	 * @param rpvb The Bank Replication Portfolio Vertex Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -100,25 +94,18 @@ public class BurgardKjaerVertex {
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblExposure,
 		final double dblRealizedCashFlow,
-		final double dblCollateralBalance,
+		final org.drip.xva.hypothecation.CollateralGroupVertexExposure cgve,
 		final double dblBankDefaultCloseOut,
 		final double dblCounterPartyDefaultCloseOut,
-		final double dblCreditExposure,
-		final double dblDebtExposure,
-		final double dblFundingExposure,
 		final org.drip.xva.derivative.ReplicationPortfolioVertexBank rpvb)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || null == (_rpvb = rpvb) ||
+		if (null == (_dtAnchor = dtAnchor) || null == (_rpvb = rpvb) || null == (_cgve = cgve) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblExposure = dblExposure) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow = dblRealizedCashFlow) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
-				dblCounterPartyDefaultCloseOut) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCreditExposure = dblCreditExposure) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblDebtExposure = dblDebtExposure) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblFundingExposure = dblFundingExposure))
+				dblCounterPartyDefaultCloseOut))
 			throw new java.lang.Exception ("BurgardKjaerVertex Constructor => Invalid Inputs");
 	}
 
@@ -152,7 +139,7 @@ public class BurgardKjaerVertex {
 
 	public double collateralBalance()
 	{
-		return _dblCollateralBalance;
+		return _cgve.collateralBalance();
 	}
 
 	/**
@@ -196,7 +183,7 @@ public class BurgardKjaerVertex {
 
 	public double collateralizedExposure()
 	{
-		return _dblExposure + _dblRealizedCashFlow - _dblCollateralBalance;
+		return _dblExposure + _dblRealizedCashFlow - _cgve.collateralBalance();
 	}
 
 	/**
@@ -218,7 +205,7 @@ public class BurgardKjaerVertex {
 
 	public double creditExposure()
 	{
-		return _dblCreditExposure;
+		return _cgve.credit();
 	}
 
 	/**
@@ -229,7 +216,7 @@ public class BurgardKjaerVertex {
 
 	public double debtExposure()
 	{
-		return _dblDebtExposure;
+		return _cgve.debt();
 	}
 
 	/**
@@ -240,7 +227,7 @@ public class BurgardKjaerVertex {
 
 	public double fundingExposure()
 	{
-		return _dblFundingExposure;
+		return _cgve.funding();
 	}
 
 	/**
@@ -251,7 +238,7 @@ public class BurgardKjaerVertex {
 
 	public double hedgeError()
 	{
-		return _dblFundingExposure;
+		return _cgve.funding();
 	}
 
 	/**
