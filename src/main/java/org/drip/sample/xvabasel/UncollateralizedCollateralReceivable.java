@@ -274,13 +274,13 @@ public class UncollateralizedCollateralReceivable {
 				dblSwapNotional2
 			);
 
-			HypothecationGroupVertex[] aCGV1 = new HypothecationGroupVertex[iNumStep + 1];
-			HypothecationGroupVertex[] aCGV2 = new HypothecationGroupVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aCGV1 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aCGV2 = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV1[j] = HypothecationGroupVertex.Standard (
+				aCGV1[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
@@ -289,7 +289,7 @@ public class UncollateralizedCollateralReceivable {
 					cob
 				);
 
-				aCGV2[j] = HypothecationGroupVertex.Standard (
+				aCGV2[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
@@ -311,14 +311,14 @@ public class UncollateralizedCollateralReceivable {
 			};
 
 			aCPGPGround[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGPGround,
 						np
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGPGround,
 						np
 					)
@@ -326,14 +326,14 @@ public class UncollateralizedCollateralReceivable {
 			);
 
 			aCPGPExtended[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGPExtended,
 						np
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGPExtended,
 						np
 					)

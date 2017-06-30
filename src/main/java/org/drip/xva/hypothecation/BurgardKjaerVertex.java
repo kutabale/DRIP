@@ -68,23 +68,19 @@ package org.drip.xva.hypothecation;
  */
 
 public class BurgardKjaerVertex {
-	private double _dblExposure = java.lang.Double.NaN;
-	private double _dblRealizedCashFlow = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
-	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
-	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
 	private org.drip.xva.derivative.ReplicationPortfolioVertexBank _rpvb = null;
-	private org.drip.xva.hypothecation.CollateralGroupVertexExposure _cgve = null;
+	private org.drip.xva.hypothecation.CollateralGroupVertexCloseOut _cgvco = null;
+	private org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw _cgver = null;
+	private org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution _cgvea = null;
 
 	/**
 	 * BurgardKjaerVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblExposure The Forward Exposure at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param cgve The Collateral Group Vertex Exposure
-	 * @param dblBankDefaultCloseOut Close Out on Bank Default
-	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
+	 * @param cgver The Collateral Group Vertex Exposure Raw
+	 * @param cgvea The Collateral Group Vertex Exposure Attribution
+	 * @param cgvco The Collateral Group Vertex Close Out Instance
 	 * @param rpvb The Bank Replication Portfolio Vertex Instance
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
@@ -92,20 +88,14 @@ public class BurgardKjaerVertex {
 
 	public BurgardKjaerVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblExposure,
-		final double dblRealizedCashFlow,
-		final org.drip.xva.hypothecation.CollateralGroupVertexExposure cgve,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut,
+		final org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw cgver,
+		final org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution cgvea,
+		final org.drip.xva.hypothecation.CollateralGroupVertexCloseOut cgvco,
 		final org.drip.xva.derivative.ReplicationPortfolioVertexBank rpvb)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || null == (_rpvb = rpvb) || null == (_cgve = cgve) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblExposure = dblExposure) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow = dblRealizedCashFlow) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
-				dblCounterPartyDefaultCloseOut))
+		if (null == (_dtAnchor = dtAnchor) || null == (_cgver = cgver) || null == (_cgvea = cgvea) || null ==
+			(_cgvco = cgvco) || null == (_rpvb = rpvb))
 			throw new java.lang.Exception ("BurgardKjaerVertex Constructor => Invalid Inputs");
 	}
 
@@ -128,7 +118,7 @@ public class BurgardKjaerVertex {
 
 	public double exposure()
 	{
-		return _dblExposure;
+		return _cgver.uncollateralized();
 	}
 
 	/**
@@ -139,7 +129,7 @@ public class BurgardKjaerVertex {
 
 	public double collateralBalance()
 	{
-		return _cgve.collateralBalance();
+		return _cgvea.collateralBalance();
 	}
 
 	/**
@@ -150,7 +140,7 @@ public class BurgardKjaerVertex {
 
 	public double realizedCashFlow()
 	{
-		return _dblRealizedCashFlow;
+		return _cgver.realizedCashFlow();
 	}
 
 	/**
@@ -161,7 +151,7 @@ public class BurgardKjaerVertex {
 
 	public double bankDefaultCloseOut()
 	{
-		return _dblBankDefaultCloseOut;
+		return _cgvco.bank();
 	}
 
 	/**
@@ -172,7 +162,7 @@ public class BurgardKjaerVertex {
 
 	public double counterPartyDefaultCloseOut()
 	{
-		return _dblCounterPartyDefaultCloseOut;
+		return _cgvco.counterParty();
 	}
 
 	/**
@@ -183,7 +173,7 @@ public class BurgardKjaerVertex {
 
 	public double collateralizedExposure()
 	{
-		return _dblExposure + _dblRealizedCashFlow - _cgve.collateralBalance();
+		return _cgver.gross() - _cgvea.collateralBalance();
 	}
 
 	/**
@@ -194,7 +184,7 @@ public class BurgardKjaerVertex {
 
 	public double uncollateralizedExposure()
 	{
-		return _dblExposure + _dblRealizedCashFlow;
+		return _cgver.gross();
 	}
 
 	/**
@@ -205,7 +195,7 @@ public class BurgardKjaerVertex {
 
 	public double creditExposure()
 	{
-		return _cgve.credit();
+		return _cgvea.credit();
 	}
 
 	/**
@@ -216,7 +206,7 @@ public class BurgardKjaerVertex {
 
 	public double debtExposure()
 	{
-		return _cgve.debt();
+		return _cgvea.debt();
 	}
 
 	/**
@@ -227,7 +217,7 @@ public class BurgardKjaerVertex {
 
 	public double fundingExposure()
 	{
-		return _cgve.funding();
+		return _cgvea.funding();
 	}
 
 	/**
@@ -238,7 +228,7 @@ public class BurgardKjaerVertex {
 
 	public double hedgeError()
 	{
-		return _cgve.funding();
+		return _cgvea.funding();
 	}
 
 	/**

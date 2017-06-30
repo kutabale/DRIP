@@ -499,8 +499,8 @@ public class CollateralizedCollateralPayableStochastic {
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			HypothecationGroupVertex[] aHGVR1 = new HypothecationGroupVertex[iNumStep + 1];
-			HypothecationGroupVertex[] aHGVR2 = new HypothecationGroupVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR1 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR2 = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = (adtVertex[j] = dtSpot.addMonths (6 * j + 6));
@@ -581,7 +581,7 @@ public class CollateralizedCollateralPayableStochastic {
 					)
 				);
 
-				aHGVR1[j] = HypothecationGroupVertex.Standard (
+				aHGVR1[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
@@ -590,7 +590,7 @@ public class CollateralizedCollateralPayableStochastic {
 					cob
 				);
 
-				aHGVR2[j] = HypothecationGroupVertex.Standard (
+				aHGVR2[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
@@ -607,14 +607,14 @@ public class CollateralizedCollateralPayableStochastic {
 			};
 
 			aMPEAGround[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aHGPGround,
 						mp
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aHGPGround,
 						mp
 					)
@@ -627,14 +627,14 @@ public class CollateralizedCollateralPayableStochastic {
 			};
 
 			aMPEAExtended[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aHGPExtended,
 						mp
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aHGPExtended,
 						mp
 					)

@@ -347,7 +347,7 @@ public class CPGACollateralized {
 		for (int i = 0; i < iNumPath; ++i) {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart = dblTime * dblATMSwapRateStart;
-			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
@@ -370,7 +370,7 @@ public class CPGACollateralized {
 					dblCollateralBalance = hae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = HypothecationGroupVertex.Standard (
+				aHGVR[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblSwapPortfolioValueRealization[i][j],
 					0.,
@@ -386,14 +386,14 @@ public class CPGACollateralized {
 			CollateralGroupPath[] aHGP = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR)};
 
 			aMPEA[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aHGP,
 						mp
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aHGP,
 						mp
 					)

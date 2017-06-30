@@ -1,5 +1,5 @@
 
-package org.drip.xva.hypothecation;
+package org.drip.xva.strategy;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,8 +47,12 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * CollateralGroupVertexCloseOut holds the Bank and the Counter Party Close Outs at each Re-hypothecation
- *  Collateral Group. The References are:
+ * AlbaneseAndersenFundingGroupPath rolls up the Path Realizations of the Sequence in a Single Path
+ *  Projection Run over Multiple Collateral Groups onto a Single Funding Group in accordance with the
+ *   Albanese Andersen (2014) Scheme. The References are:
+ *  
+ *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
+ *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -56,10 +60,6 @@ package org.drip.xva.hypothecation;
  *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -67,40 +67,24 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertexCloseOut {
-	private double _dblBank = java.lang.Double.NaN;
-	private double _dblCounterParty = java.lang.Double.NaN;
+public class AlbaneseAndersenFundingGroupPath extends org.drip.xva.netting.FundingGroupPath {
 
 	/**
-	 * Construct a Static Instance of CollateralGroupVertexCloseOut
+	 * Generate a "Mono" AlbaneseAndersenFundingGroupPath Instance
 	 * 
-	 * @param cog The Close Out General Instance
-	 * @param dblUncollateralizedExposure The Uncollateralized Exposure
-	 * @param dblCollateralBalance The Collateral Balance
+	 * @param hgp The "Mono" Hypothecation Group Path
+	 * @param mp The Market Path
 	 * 
-	 * @return The Static Instance of CollateralGroupVertexCloseOut
+	 * @return The "Mono" AlbaneseAndersenFundingGroupPath Instance
 	 */
 
-	public static final CollateralGroupVertexCloseOut Standard (
-		final org.drip.xva.definition.CloseOutGeneral cog,
-		final double dblUncollateralizedExposure,
-		final double dblCollateralBalance)
+	public static final AlbaneseAndersenFundingGroupPath Mono (
+		final org.drip.xva.hypothecation.CollateralGroupPath hgp,
+		final org.drip.xva.universe.MarketPath mp)
 	{
-		if (null == cog || !org.drip.quant.common.NumberUtil.IsValid (dblUncollateralizedExposure) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblCollateralBalance))
-			return null;
-
 		try {
-			return new CollateralGroupVertexCloseOut (
-				cog.bankDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				),
-				cog.counterPartyDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				)
-			);
+			return new org.drip.xva.strategy.AlbaneseAndersenFundingGroupPath (new
+				org.drip.xva.hypothecation.CollateralGroupPath[] {hgp}, mp);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -109,43 +93,63 @@ public class CollateralGroupVertexCloseOut {
 	}
 
 	/**
-	 * CollateralGroupVertexCloseOut Constructor
+	 * AlbaneseAndersenFundingGroupPath Constructor
 	 * 
-	 * @param dblBank The Bank Close Out
-	 * @param dblCounterParty The Counter Party Close Out
+	 * @param aHGP Array of the Collateral Group Trajectory Paths
+	 * @param mp The Market Path
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertexCloseOut (
-		final double dblBank,
-		final double dblCounterParty)
+	public AlbaneseAndersenFundingGroupPath (
+		final org.drip.xva.hypothecation.CollateralGroupPath[] aHGP,
+		final org.drip.xva.universe.MarketPath mp)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBank = dblBank) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterParty = dblCounterParty))
-			throw new java.lang.Exception ("CollateralGroupVertexCloseOut Constructor => Invalid Inputs");
+		super (aHGP, mp);
 	}
 
-	/**
-	 * Retrieve the Bank Close Out
-	 * 
-	 * @return The Bank Close Out
-	 */
-
-	public double bank()
+	@Override public double fundingValueAdjustment()
+		throws java.lang.Exception
 	{
-		return _dblBank;
+		return bilateralFundingValueAdjustment();
 	}
 
-	/**
-	 * Retrieve the Counter Party Close Out
-	 * 
-	 * @return The Counter Party Close Out
-	 */
-
-	public double counterParty()
+	@Override public double fundingDebtAdjustment()
+		throws java.lang.Exception
 	{
-		return _dblCounterParty;
+		return bilateralFundingDebtAdjustment();
+	}
+
+	@Override public double fundingCostAdjustment()
+	{
+		return unilateralFundingValueAdjustment();
+	}
+
+	@Override public double fundingBenefitAdjustment()
+	{
+		return unilateralFundingDebtAdjustment();
+	}
+
+	@Override public double[] periodFundingValueAdjustment()
+		throws java.lang.Exception
+	{
+		return periodBilateralFundingValueAdjustment();
+	}
+
+	@Override public double[] periodFundingDebtAdjustment()
+		throws java.lang.Exception
+	{
+		return periodBilateralFundingDebtAdjustment();
+	}
+
+	@Override public double[] periodFundingCostAdjustment()
+	{
+		return periodUnilateralFundingValueAdjustment();
+	}
+
+	@Override public double[] periodFundingBenefitAdjustment()
+	{
+		return periodUnilateralFundingDebtAdjustment();
 	}
 }

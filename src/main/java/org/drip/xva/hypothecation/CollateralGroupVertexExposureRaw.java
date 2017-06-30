@@ -47,8 +47,8 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * CollateralGroupVertexExposure holds the Credit, the Debt, and the Funding Exposures, as well as the
- *  Collateral Balances at each Re-hypothecation Collateral Group. The References are:
+ * CollateralGroupVertexExposureRaw holds the Uncollateralized Exposure and the Collateral Balances at each
+ *  Re-hypothecation Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,78 +67,59 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertexExposure {
-	private double _dblDebt = java.lang.Double.NaN;
-	private double _dblCredit = java.lang.Double.NaN;
-	private double _dblFunding = java.lang.Double.NaN;
-	private double _dblCollateralBalance = java.lang.Double.NaN;
+public class CollateralGroupVertexExposureRaw {
+	private double _dblRealizedCashFlow = java.lang.Double.NaN;
+	private double _dblUncollateralized = java.lang.Double.NaN;
 
 	/**
-	 * CollateralGroupVertexExposure Constructor
+	 * CollateralGroupVertexExposureRaw Constructor
 	 * 
-	 * @param dblCredit The Credit Exposure of the Collateral Group
-	 * @param dblDebt The Debt Exposure of the Collateral Group
-	 * @param dblFunding The Funding Exposure of the Collateral Group
-	 * @param dblCollateralBalance The Collateral Balance of the Collateral Group
+	 * @param dblUncollateralized The Raw Uncollateralized Exposure
+	 * @param dblRealizedCashFlow The Realized Cash Flow
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public CollateralGroupVertexExposure (
-		final double dblCredit,
-		final double dblDebt,
-		final double dblFunding,
-		final double dblCollateralBalance)
+	public CollateralGroupVertexExposureRaw (
+		final double dblUncollateralized,
+		final double dblRealizedCashFlow)
 		throws java.lang.Exception
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCredit = dblCredit) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblDebt = dblDebt) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblFunding = dblFunding) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance))
-			throw new java.lang.Exception ("CollateralGroupVertexExposure Constructor => Invalid Inputs");
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblUncollateralized = dblUncollateralized) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow = dblRealizedCashFlow))
+			throw new java.lang.Exception ("CollateralGroupVertexExposureRaw Constructor => Invalid Inputs");
 	}
 
 	/**
-	 * Retrieve the Credit Exposure of the Collateral Group
+	 * Retrieve the Raw Uncollateralized Exposure
 	 * 
-	 * @return The Credit Exposure
+	 * @return The Raw Uncollateralized Exposure
 	 */
 
-	public double credit()
+	public double uncollateralized()
 	{
-		return _dblCredit;
+		return _dblUncollateralized;
 	}
 
 	/**
-	 * Retrieve the Debt Exposure of the Collateral Group
+	 * Retrieve the Realized Cash Flow
 	 * 
-	 * @return The Debt Exposure
+	 * @return The Realized Cash Flow
 	 */
 
-	public double debt()
+	public double realizedCashFlow()
 	{
-		return _dblDebt;
+		return _dblRealizedCashFlow;
 	}
 
 	/**
-	 * Retrieve the Funding Exposure of the Collateral Group
+	 * Retrieve the Gross Uncollateralized Exposure
 	 * 
-	 * @return The Funding Exposure
+	 * @return The Gross Uncollateralized Exposure
 	 */
 
-	public double funding()
+	public double gross()
 	{
-		return _dblFunding;
-	}
-
-	/**
-	 * Retrieve the Collateral Balance of the Collateral Group
-	 * 
-	 * @return The Collateral Balance
-	 */
-
-	public double collateralBalance()
-	{
-		return _dblCollateralBalance;
+		return _dblUncollateralized + _dblRealizedCashFlow;
 	}
 }

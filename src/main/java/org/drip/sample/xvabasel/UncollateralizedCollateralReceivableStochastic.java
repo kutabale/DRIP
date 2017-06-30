@@ -486,8 +486,8 @@ public class UncollateralizedCollateralReceivableStochastic {
 			);
 
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
-			HypothecationGroupVertex[] aCGV1 = new HypothecationGroupVertex[iNumStep + 1];
-			HypothecationGroupVertex[] aCGV2 = new HypothecationGroupVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aCGV1 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aCGV2 = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aNV[j] = new MarketVertex (
@@ -533,7 +533,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV1[j] = HypothecationGroupVertex.Standard (
+				aCGV1[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
@@ -542,7 +542,7 @@ public class UncollateralizedCollateralReceivableStochastic {
 					cob
 				);
 
-				aCGV2[j] = HypothecationGroupVertex.Standard (
+				aCGV2[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
@@ -559,14 +559,14 @@ public class UncollateralizedCollateralReceivableStochastic {
 			};
 
 			aCPGPGround[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGPGround,
 						np
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGPGround,
 						np
 					)
@@ -579,14 +579,14 @@ public class UncollateralizedCollateralReceivableStochastic {
 			};
 
 			aCPGPExtended[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aCGPExtended,
 						np
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aCGPExtended,
 						np
 					)

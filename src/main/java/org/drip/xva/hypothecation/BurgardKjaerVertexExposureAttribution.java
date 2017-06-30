@@ -1,5 +1,5 @@
 
-package org.drip.xva.strategy;
+package org.drip.xva.hypothecation;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -47,9 +47,9 @@ package org.drip.xva.strategy;
  */
 
 /**
- * FundingGroupPathAA2014 rolls up the Path Realizations of the Sequence in a Single Path Projection Run over
- *  Multiple Collateral Groups onto a Single Funding Group in accordance with the Albanese Andersen (2014)
- *  Strategy. The References are:
+ * BurgardKjaerVertexExposureAttribution holds the Credit, the Debt, and the Funding Exposures, as well as
+ *  the Collateral Balances at each Re-hypothecation Collateral Group using the Burgard Kjaer (2014) Scheme.
+ *  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,89 +68,56 @@ package org.drip.xva.strategy;
  * @author Lakshmi Krishnamurthy
  */
 
-public class FundingGroupPathAA2014 extends org.drip.xva.netting.FundingGroupPath {
+public class BurgardKjaerVertexExposureAttribution implements
+	org.drip.xva.hypothecation.CollateralGroupVertexExposureAttibution {
+	private double _dblDebt = java.lang.Double.NaN;
+	private double _dblCredit = java.lang.Double.NaN;
+	private double _dblFunding = java.lang.Double.NaN;
+	private double _dblCollateralBalance = java.lang.Double.NaN;
 
 	/**
-	 * Generate a "Mono" FundingGroupPathAA2014 Instance
+	 * BurgardKjaerVertexExposureAttribution Constructor
 	 * 
-	 * @param hgp The "Mono" Hypothecation Group Path
-	 * @param mp The Market Path
-	 * 
-	 * @return The "Mono" FundingGroupPathAA2014 Instance
-	 */
-
-	public static final FundingGroupPathAA2014 Mono (
-		final org.drip.xva.hypothecation.CollateralGroupPath hgp,
-		final org.drip.xva.universe.MarketPath mp)
-	{
-		try {
-			return new org.drip.xva.strategy.FundingGroupPathAA2014 (new
-				org.drip.xva.hypothecation.CollateralGroupPath[] {hgp}, mp);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * FundingGroupPathAA2014 Constructor
-	 * 
-	 * @param aHGP Array of the Collateral Group Trajectory Paths
-	 * @param mp The Market Path
+	 * @param dblCredit The Credit Exposure of the Collateral Group
+	 * @param dblDebt The Debt Exposure of the Collateral Group
+	 * @param dblFunding The Funding Exposure of the Collateral Group
+	 * @param dblCollateralBalance The Collateral Balance of the Collateral Group
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public FundingGroupPathAA2014 (
-		final org.drip.xva.hypothecation.CollateralGroupPath[] aHGP,
-		final org.drip.xva.universe.MarketPath mp)
+	public BurgardKjaerVertexExposureAttribution (
+		final double dblCredit,
+		final double dblDebt,
+		final double dblFunding,
+		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		super (aHGP, mp);
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCredit = dblCredit) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblDebt = dblDebt) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblFunding = dblFunding) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance))
+			throw new java.lang.Exception
+				("BurgardKjaerVertexExposureAttribution Constructor => Invalid Inputs");
 	}
 
-	@Override public double fundingValueAdjustment()
-		throws java.lang.Exception
+	@Override public double credit()
 	{
-		return bilateralFundingValueAdjustment();
+		return _dblCredit;
 	}
 
-	@Override public double fundingDebtAdjustment()
-		throws java.lang.Exception
+	@Override public double debt()
 	{
-		return bilateralFundingDebtAdjustment();
+		return _dblDebt;
 	}
 
-	@Override public double fundingCostAdjustment()
+	@Override public double funding()
 	{
-		return unilateralFundingValueAdjustment();
+		return _dblFunding;
 	}
 
-	@Override public double fundingBenefitAdjustment()
+	@Override public double collateralBalance()
 	{
-		return unilateralFundingDebtAdjustment();
-	}
-
-	@Override public double[] periodFundingValueAdjustment()
-		throws java.lang.Exception
-	{
-		return periodBilateralFundingValueAdjustment();
-	}
-
-	@Override public double[] periodFundingDebtAdjustment()
-		throws java.lang.Exception
-	{
-		return periodBilateralFundingDebtAdjustment();
-	}
-
-	@Override public double[] periodFundingCostAdjustment()
-	{
-		return periodUnilateralFundingValueAdjustment();
-	}
-
-	@Override public double[] periodFundingBenefitAdjustment()
-	{
-		return periodUnilateralFundingDebtAdjustment();
+		return _dblCollateralBalance;
 	}
 }

@@ -47,9 +47,12 @@ package org.drip.xva.strategy;
  */
 
 /**
- * NettingGroupPathAA2014 rolls up the Path Realizations of the Sequence in a Single Path Projection Run over
- *  Multiple Collateral Groups onto a Single Netting Group in accordance with the Albanese Andersen (2014)
- *  Strategy. The References are:
+ * AlbaneseAndersenNettingGroupPath rolls up the Path Realizations of the Sequence in a Single Path
+ *  Projection Run over Multiple Collateral Groups onto a Single Netting Group in accordance with the
+ *  Albanese Andersen (2014) Scheme. The References are:
+ *  
+ *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
+ *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -57,10 +60,6 @@ package org.drip.xva.strategy;
  *  - Burgard, C., and M. Kjaer (2014): In the Balance, Risk, 24 (11) 72-75.
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
- *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
  * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
@@ -68,23 +67,23 @@ package org.drip.xva.strategy;
  * @author Lakshmi Krishnamurthy
  */
 
-public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroupPath {
+public class AlbaneseAndersenNettingGroupPath extends org.drip.xva.netting.CreditDebtGroupPath {
 
 	/**
-	 * Generate a "Mono" NettingGroupPathAA2014 Instance
+	 * Generate a "Mono" AlbaneseAndersenNettingGroupPath Instance
 	 * 
 	 * @param hgp The "Mono" Hypothecation Group Path
 	 * @param mp The Market Path
 	 * 
-	 * @return The "Mono" NettingGroupPathAA2014 Instance
+	 * @return The "Mono" AlbaneseAndersenNettingGroupPath Instance
 	 */
 
-	public static final NettingGroupPathAA2014 Mono (
+	public static final AlbaneseAndersenNettingGroupPath Mono (
 		final org.drip.xva.hypothecation.CollateralGroupPath hgp,
 		final org.drip.xva.universe.MarketPath mp)
 	{
 		try {
-			return new org.drip.xva.strategy.NettingGroupPathAA2014 (new
+			return new org.drip.xva.strategy.AlbaneseAndersenNettingGroupPath (new
 				org.drip.xva.hypothecation.CollateralGroupPath[] {hgp}, mp);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
@@ -94,7 +93,7 @@ public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroup
 	}
 
 	/**
-	 * NettingGroupPathAA2014 Constructor
+	 * AlbaneseAndersenNettingGroupPath Constructor
 	 * 
 	 * @param aHGP Array of the Hypothecation Group Trajectory Paths
 	 * @param mp The Market Path
@@ -102,7 +101,7 @@ public class NettingGroupPathAA2014 extends org.drip.xva.netting.CreditDebtGroup
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public NettingGroupPathAA2014 (
+	public AlbaneseAndersenNettingGroupPath (
 		final org.drip.xva.hypothecation.CollateralGroupPath[] aHGP,
 		final org.drip.xva.universe.MarketPath mp)
 		throws java.lang.Exception

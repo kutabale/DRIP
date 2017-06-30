@@ -139,8 +139,8 @@ public class PortfolioGroupRun {
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
-		HypothecationGroupVertex[] aHGVR1 = new HypothecationGroupVertex[iNumStep + 1];
-		HypothecationGroupVertex[] aHGVR2 = new HypothecationGroupVertex[iNumStep + 1];
+		AlbaneseAndersenVertex[] aHGVR1 = new AlbaneseAndersenVertex[iNumStep + 1];
+		AlbaneseAndersenVertex[] aHGVR2 = new AlbaneseAndersenVertex[iNumStep + 1];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -250,7 +250,7 @@ public class PortfolioGroupRun {
 				)
 			);
 
-			aHGVR1[i] = HypothecationGroupVertex.Standard (
+			aHGVR1[i] = AlbaneseAndersenVertex.Standard (
 				adtVertex[i],
 				adblAssetValuePath1[i],
 				0.,
@@ -259,7 +259,7 @@ public class PortfolioGroupRun {
 				cob
 			);
 
-			aHGVR2[i] = HypothecationGroupVertex.Standard (
+			aHGVR2[i] = AlbaneseAndersenVertex.Standard (
 				adtVertex[i],
 				adblAssetValuePath2[i],
 				0.,
@@ -291,22 +291,22 @@ public class PortfolioGroupRun {
 
 		CollateralGroupPath[] aHGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR2)};
 
-		NettingGroupPathAA2014 ngpaa2014_1 = new NettingGroupPathAA2014 (
+		AlbaneseAndersenNettingGroupPath ngpaa2014_1 = new AlbaneseAndersenNettingGroupPath (
 			aHGP1,
 			mp
 		);
 
-		FundingGroupPathAA2014 fgpaa2014_1 = new FundingGroupPathAA2014 (
+		AlbaneseAndersenFundingGroupPath fgpaa2014_1 = new AlbaneseAndersenFundingGroupPath (
 			aHGP1,
 			mp
 		);
 
-		NettingGroupPathAA2014 ngpaa2014_2 = new NettingGroupPathAA2014 (
+		AlbaneseAndersenNettingGroupPath ngpaa2014_2 = new AlbaneseAndersenNettingGroupPath (
 			aHGP2,
 			mp
 		);
 
-		FundingGroupPathAA2014 fgpaa2014_2 = new FundingGroupPathAA2014 (
+		AlbaneseAndersenFundingGroupPath fgpaa2014_2 = new AlbaneseAndersenFundingGroupPath (
 			aHGP2,
 			mp
 		);
@@ -458,12 +458,12 @@ public class PortfolioGroupRun {
 		ExposureAdjustmentAggregator eaa = new ExposureAdjustmentAggregator (
 			new MonoPathExposureAdjustment[] {
 				new MonoPathExposureAdjustment (
-					new NettingGroupPathAA2014[] {ngpaa2014_1},
-					new FundingGroupPathAA2014[] {fgpaa2014_1}
+					new AlbaneseAndersenNettingGroupPath[] {ngpaa2014_1},
+					new AlbaneseAndersenFundingGroupPath[] {fgpaa2014_1}
 				),
 				new MonoPathExposureAdjustment (
-					new NettingGroupPathAA2014[] {ngpaa2014_2},
-					new FundingGroupPathAA2014[] {fgpaa2014_2}
+					new AlbaneseAndersenNettingGroupPath[] {ngpaa2014_2},
+					new AlbaneseAndersenFundingGroupPath[] {fgpaa2014_2}
 				)
 			}
 		);

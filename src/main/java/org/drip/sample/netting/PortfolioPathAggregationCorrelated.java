@@ -372,7 +372,7 @@ public class PortfolioPathAggregationCorrelated {
 			);
 
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
-			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -418,7 +418,7 @@ public class PortfolioPathAggregationCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = HypothecationGroupVertex.Standard (
+				aHGVR[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblCollateralPortfolio[i][j],
 					0.,
@@ -431,14 +431,14 @@ public class PortfolioPathAggregationCorrelated {
 			CollateralGroupPath[] aHGP = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR)};
 
 			aMPEA[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aHGP,
 						new MarketPath (aMV)
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aHGP,
 						new MarketPath (aMV)
 					)

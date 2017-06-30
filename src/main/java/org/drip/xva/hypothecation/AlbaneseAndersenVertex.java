@@ -47,8 +47,11 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * HypothecationGroupVertex holds the "Regular" Vertex Exposures of a Projected Path of a Simulation Run of a
- *  Collateral Hypothecation Group. The References are:
+ * AlbaneseAndersenVertex holds the Albanese and Andersen (2014) Vertex Exposures of a Projected Path of a
+ *  Simulation Run of a Collateral Hypothecation Group. The References are:
+ *  
+ *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
+ *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -57,17 +60,14 @@ package org.drip.xva.hypothecation;
  *  
  *  - Gregory, J. (2009): Being Two-faced over Counter-party Credit Risk, Risk 20 (2) 86-90.
  *  
- *  - Li, B., and Y. Tang (2007): Quantitative Analysis, Derivatives Modeling, and Trading Strategies in the
- *  	Presence of Counter-party Credit Risk for the Fixed Income Market, World Scientific Publishing,
- *  	Singapore.
- * 
  *  - Piterbarg, V. (2010): Funding Beyond Discounting: Collateral Agreements and Derivatives Pricing, Risk
  *  	21 (2) 97-102.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class HypothecationGroupVertex {
+public class AlbaneseAndersenVertex implements
+	org.drip.xva.hypothecation.CollateralGroupVertexExposureAttibution {
 	private double _dblHedgeError = java.lang.Double.NaN;
 	private double _dblForwardExposure = java.lang.Double.NaN;
 	private double _dblRealizedCashFlow = java.lang.Double.NaN;
@@ -77,7 +77,7 @@ public class HypothecationGroupVertex {
 	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Standard Instance of HypothecationGroupVertex
+	 * Construct a Standard Instance of AlbaneseAndersenVertex
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
@@ -86,10 +86,10 @@ public class HypothecationGroupVertex {
 	 * @param dblHedgeError Hedge Error
 	 * @param cog The Generic Close-Out Evaluator Instance
 	 * 
-	 * @return The Standard Instance of HypothecationGroupVertex
+	 * @return The Standard Instance of AlbaneseAndersenVertex
 	 */
 
-	public static HypothecationGroupVertex Standard (
+	public static AlbaneseAndersenVertex Standard (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
@@ -102,7 +102,7 @@ public class HypothecationGroupVertex {
 		double dblUncollateralizedExposure = dblForwardExposure + dblRealizedCashFlow;
 
 		try {
-			return new HypothecationGroupVertex (
+			return new AlbaneseAndersenVertex (
 				dtAnchor,
 				dblForwardExposure,
 				dblRealizedCashFlow,
@@ -125,7 +125,7 @@ public class HypothecationGroupVertex {
 	}
 
 	/**
-	 * HypothecationGroupVertex Constructor
+	 * AlbaneseAndersenVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
@@ -138,7 +138,7 @@ public class HypothecationGroupVertex {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public HypothecationGroupVertex (
+	public AlbaneseAndersenVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
@@ -156,7 +156,7 @@ public class HypothecationGroupVertex {
 			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
 				dblCounterPartyDefaultCloseOut) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblHedgeError = dblHedgeError))
-			throw new java.lang.Exception ("HypothecationGroupVertex Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AlbaneseAndersenVertex Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -258,118 +258,24 @@ public class HypothecationGroupVertex {
 		return forwardExposure() + realizedCashFlow();
 	}
 
-	/**
-	 * Retrieve the Credit Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Credit Exposure at the Path Vertex Time Node
-	 */
-
-	public double creditExposure()
+	@Override public double credit()
 	{
 		double dblCreditExposure = collateralizedExposure();
 
 		return 0. < dblCreditExposure ? dblCreditExposure : 0.;
 	}
 
-	/**
-	 * Retrieve the Debt Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Debt Exposure at the Path Vertex Time Node
-	 */
-
-	public double debtExposure()
+	@Override public double debt()
 	{
 		double dblDebtExposure = collateralizedExposure();
 
 		return 0. > dblDebtExposure ? dblDebtExposure : 0.;
 	}
 
-	/**
-	 * Retrieve the Funding Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Funding Exposure at the Path Vertex Time Node
-	 */
-
-	public double fundingExposure()
+	@Override public double funding()
 	{
 		double dblCreditExposure = collateralizedExposure();
 
 		return 0. < dblCreditExposure ? dblCreditExposure : 0.;
-	}
-
-	/**
-	 * Retrieve the Exposure Adjustment at the Path Vertex Time Node
-	 * 
-	 * @return The Exposure Adjustment at the Path Vertex Time Node
-	 */
-
-	public double adjustment()
-	{
-		return creditExposure() + debtExposure() + fundingExposure();
-	}
-
-	/**
-	 * Retrieve the Adjusted Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Adjusted Exposure at the Path Vertex Time Node
-	 */
-
-	public double adjustedExposure()
-	{
-		return collateralizedExposure() + adjustment();
-	}
-
-	/**
-	 * Retrieve the Replication Portfolio Vertex Instance
-	 * 
-	 * @param mv The Market Vertex
-	 * 
-	 * @return The Replication Portfolio Vertex Instance
-	 */
-
-	public org.drip.xva.derivative.ReplicationPortfolioVertex replicationPortfolio (
-		final org.drip.xva.universe.MarketVertex mv)
-	{
-		if (null == mv) return null;
-
-		double dblAdjustedExposure = adjustedExposure();
-
-		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
-
-		org.drip.xva.universe.NumeraireMarketVertex nmvBankSenior = emvBank.seniorFundingNumeraire();
-
-		double dblBankSeniorRecovery = emvBank.seniorRecoveryRate();
-
-		double dblBankSeniorNumeraire = nmvBankSenior.forward();
-
-		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinate =
-			emvBank.subordinateFundingNumeraire();
-
-		double dblCounterPartyUnits = (_dblCounterPartyDefaultCloseOut - dblAdjustedExposure) /
-			mv.counterParty().seniorFundingNumeraire().forward();
-
-		if (null == nmvBankSubordinate)
-			return org.drip.xva.derivative.ReplicationPortfolioVertex.Standard (0., (_dblBankDefaultCloseOut
-				- dblAdjustedExposure) / dblBankSeniorNumeraire, dblCounterPartyUnits, 0.);
-
-		double dblBankSubordinateRecovery = emvBank.subordinateRecoveryRate();
-
-		double dblBankSubordinateNumeraire = nmvBankSubordinate.forward();
-
-		try {
-			return new org.drip.xva.derivative.ReplicationPortfolioVertex (
-				0.,
-				(_dblHedgeError + dblBankSubordinateRecovery * dblAdjustedExposure - _dblBankDefaultCloseOut) /
-					(dblBankSeniorRecovery - dblBankSubordinateRecovery) / dblBankSeniorNumeraire,
-				(_dblHedgeError + dblBankSeniorRecovery * dblAdjustedExposure - _dblBankDefaultCloseOut) /
-					(dblBankSubordinateRecovery - dblBankSeniorRecovery) / dblBankSubordinateNumeraire,
-				dblCounterPartyUnits,
-				0.
-			);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 }

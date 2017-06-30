@@ -47,8 +47,8 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * CollateralGroupVertexCloseOut holds the Bank and the Counter Party Close Outs at each Re-hypothecation
- *  Collateral Group. The References are:
+ * CollateralGroupVertexExposureAttibution holds the Credit, the Debt, and the Funding Exposures, as well as
+ *  the Collateral Balances at each Re-hypothecation Collateral Group.  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,85 +67,37 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class CollateralGroupVertexCloseOut {
-	private double _dblBank = java.lang.Double.NaN;
-	private double _dblCounterParty = java.lang.Double.NaN;
+public interface CollateralGroupVertexExposureAttibution {
 
 	/**
-	 * Construct a Static Instance of CollateralGroupVertexCloseOut
+	 * Retrieve the Credit Exposure of the Collateral Group
 	 * 
-	 * @param cog The Close Out General Instance
-	 * @param dblUncollateralizedExposure The Uncollateralized Exposure
-	 * @param dblCollateralBalance The Collateral Balance
-	 * 
-	 * @return The Static Instance of CollateralGroupVertexCloseOut
+	 * @return The Credit Exposure
 	 */
 
-	public static final CollateralGroupVertexCloseOut Standard (
-		final org.drip.xva.definition.CloseOutGeneral cog,
-		final double dblUncollateralizedExposure,
-		final double dblCollateralBalance)
-	{
-		if (null == cog || !org.drip.quant.common.NumberUtil.IsValid (dblUncollateralizedExposure) ||
-			!org.drip.quant.common.NumberUtil.IsValid (dblCollateralBalance))
-			return null;
-
-		try {
-			return new CollateralGroupVertexCloseOut (
-				cog.bankDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				),
-				cog.counterPartyDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				)
-			);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
+	public abstract double credit();
 
 	/**
-	 * CollateralGroupVertexCloseOut Constructor
+	 * Retrieve the Debt Exposure of the Collateral Group
 	 * 
-	 * @param dblBank The Bank Close Out
-	 * @param dblCounterParty The Counter Party Close Out
-	 * 
-	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 * @return The Debt Exposure
 	 */
 
-	public CollateralGroupVertexCloseOut (
-		final double dblBank,
-		final double dblCounterParty)
-		throws java.lang.Exception
-	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblBank = dblBank) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterParty = dblCounterParty))
-			throw new java.lang.Exception ("CollateralGroupVertexCloseOut Constructor => Invalid Inputs");
-	}
+	public abstract double debt();
 
 	/**
-	 * Retrieve the Bank Close Out
+	 * Retrieve the Funding Exposure of the Collateral Group
 	 * 
-	 * @return The Bank Close Out
+	 * @return The Funding Exposure
 	 */
 
-	public double bank()
-	{
-		return _dblBank;
-	}
+	public abstract double funding();
 
 	/**
-	 * Retrieve the Counter Party Close Out
+	 * Retrieve the Collateral Balance of the Collateral Group
 	 * 
-	 * @return The Counter Party Close Out
+	 * @return The Collateral Balance
 	 */
 
-	public double counterParty()
-	{
-		return _dblCounterParty;
-	}
+	public abstract double collateralBalance();
 }

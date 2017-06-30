@@ -518,7 +518,7 @@ public class CPGAZeroThresholdCorrelated {
 			JulianDate dtStart = dtSpot;
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
 			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
-			HypothecationGroupVertex[] aHGVR = new HypothecationGroupVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -582,7 +582,7 @@ public class CPGAZeroThresholdCorrelated {
 					dblCollateralBalance = hae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = HypothecationGroupVertex.Standard (
+				aHGVR[j] = AlbaneseAndersenVertex.Standard (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,
@@ -600,14 +600,14 @@ public class CPGAZeroThresholdCorrelated {
 			CollateralGroupPath[] aHGP = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR)};
 
 			aMPEA[i] = new MonoPathExposureAdjustment (
-				new NettingGroupPathAA2014[] {
-					new NettingGroupPathAA2014 (
+				new AlbaneseAndersenNettingGroupPath[] {
+					new AlbaneseAndersenNettingGroupPath (
 						aHGP,
 						mp
 					)
 				},
-				new FundingGroupPathAA2014[] {
-					new FundingGroupPathAA2014 (
+				new AlbaneseAndersenFundingGroupPath[] {
+					new AlbaneseAndersenFundingGroupPath (
 						aHGP,
 						mp
 					)
