@@ -86,7 +86,7 @@ public class BurgardKjaerVertexBuilder {
 		final org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw cgver,
 		final org.drip.xva.universe.MarketEdge me,
 		final org.drip.xva.hypothecation.CollateralGroupVertexCloseOut cgvco,
-		final org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution cgvea)
+		final org.drip.xva.hypothecation.BurgardKjaerVertexExposure cgvea)
 	{
 		if (null == cgver || null == me || null == cgvco || null == cgvea) return null;
 
@@ -192,7 +192,7 @@ public class BurgardKjaerVertexBuilder {
 				),
 				me,
 				cgvco,
-				new org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution (
+				new org.drip.xva.hypothecation.BurgardKjaerVertexExposure (
 					dblCollateralizedExposure - cgvco.counterParty(),
 					dblCollateralizedExposure - cgvco.bank(),
 					dblHedgeError,
@@ -250,7 +250,7 @@ public class BurgardKjaerVertexBuilder {
 					dblUncollateralizedExposure,
 					dblCollateralBalance
 				),
-				new org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution (
+				new org.drip.xva.hypothecation.BurgardKjaerVertexExposure (
 					0. < dblCollateralizedExposure ? dblCollateralizedExposure : 0.,
 					0. > dblCollateralizedExposure ? dblCollateralizedExposure : 0.,
 					0. < dblCollateralizedExposure ? dblCollateralizedExposure : 0.,
@@ -303,7 +303,7 @@ public class BurgardKjaerVertexBuilder {
 					dblUncollateralizedExposure,
 					dblUncollateralizedExposure
 				),
-				new org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution (
+				new org.drip.xva.hypothecation.BurgardKjaerVertexExposure (
 					0.,
 					0.,
 					0.,
@@ -356,7 +356,7 @@ public class BurgardKjaerVertexBuilder {
 					dblUncollateralizedExposure,
 					dblCollateralBalance
 				),
-				new org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution (
+				new org.drip.xva.hypothecation.BurgardKjaerVertexExposure (
 					0. < dblUncollateralizedExposure ? dblUncollateralizedExposure : 0.,
 					0.,
 					0. < dblUncollateralizedExposure ? dblUncollateralizedExposure : 0.,
@@ -414,7 +414,7 @@ public class BurgardKjaerVertexBuilder {
 					dblCollateralizedExposure * dblBankSeniorRecoveryFinish,
 					dblCollateralizedExposure * dblCounterPartyRecoveryFinish
 				),
-				new org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution (
+				new org.drip.xva.hypothecation.BurgardKjaerVertexExposure (
 					dblCollateralizedExposure * (1. - dblCounterPartyRecoveryFinish),
 					dblCollateralizedExposure * (1. - dblBankSeniorRecoveryFinish),
 					0.,

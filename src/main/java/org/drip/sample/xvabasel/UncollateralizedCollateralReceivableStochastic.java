@@ -13,7 +13,6 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -305,11 +304,6 @@ public class UncollateralizedCollateralReceivableStochastic {
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRateInitial,
-			dblCounterPartyRecoveryRateInitial
-		);
-
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
@@ -486,8 +480,8 @@ public class UncollateralizedCollateralReceivableStochastic {
 			);
 
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
-			AlbaneseAndersenVertex[] aCGV1 = new AlbaneseAndersenVertex[iNumStep + 1];
-			AlbaneseAndersenVertex[] aCGV2 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aCGV1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aCGV2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aNV[j] = new MarketVertex (
@@ -533,22 +527,18 @@ public class UncollateralizedCollateralReceivableStochastic {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV1[j] = AlbaneseAndersenVertex.Standard (
+				aCGV1[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					0.,
-					0.,
-					cob
+					0.
 				);
 
-				aCGV2[j] = AlbaneseAndersenVertex.Standard (
+				aCGV2[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					0.,
-					0.,
-					cob
+					0.
 				);
 			}
 

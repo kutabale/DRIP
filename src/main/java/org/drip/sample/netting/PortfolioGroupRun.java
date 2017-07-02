@@ -9,7 +9,6 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -139,15 +138,10 @@ public class PortfolioGroupRun {
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
-		AlbaneseAndersenVertex[] aHGVR1 = new AlbaneseAndersenVertex[iNumStep + 1];
-		AlbaneseAndersenVertex[] aHGVR2 = new AlbaneseAndersenVertex[iNumStep + 1];
+		AlbaneseAndersenVertexExposure[] aHGVR1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+		AlbaneseAndersenVertexExposure[] aHGVR2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 		JulianDate dtSpot = DateUtil.Today();
-
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRate,
-			dblCounterPartyRecoveryRate
-		);
 
 		DiffusionEvolver deAssetValue = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
@@ -250,22 +244,18 @@ public class PortfolioGroupRun {
 				)
 			);
 
-			aHGVR1[i] = AlbaneseAndersenVertex.Standard (
+			aHGVR1[i] = new AlbaneseAndersenVertexExposure (
 				adtVertex[i],
 				adblAssetValuePath1[i],
 				0.,
-				0.,
-				0.,
-				cob
+				0.
 			);
 
-			aHGVR2[i] = AlbaneseAndersenVertex.Standard (
+			aHGVR2[i] = new AlbaneseAndersenVertexExposure (
 				adtVertex[i],
 				adblAssetValuePath2[i],
 				0.,
-				0.,
-				0.,
-				cob
+				0.
 			);
 
 			System.out.println (

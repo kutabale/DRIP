@@ -62,8 +62,8 @@ package org.drip.product.params;
 
 public class CouponSetting implements org.drip.product.params.Validatable {
 	private java.lang.String _strCouponType = "";
-	private double _dblCouponRate = java.lang.Double.NaN;
 	private org.drip.quant.common.Array2D _fs = null;
+	private double _dblCouponRate = java.lang.Double.NaN;
 	private double _dblCouponFloorRate = java.lang.Double.NaN;
 	private double _dblCouponCeilingRate = java.lang.Double.NaN;
 

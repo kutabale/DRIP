@@ -47,9 +47,9 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * BurgardKjaerVertexExposureAttribution holds the Credit, the Debt, and the Funding Exposures, as well as
- *  the Collateral Balances at each Re-hypothecation Collateral Group using the Burgard Kjaer (2014) Scheme.
- *  The References are:
+ * BurgardKjaerVertexExposure holds the Credit, the Debt, and the Funding Exposures, as well as the
+ *  Collateral Balances at each Re-hypothecation Collateral Group using the Burgard Kjaer (2014) Scheme. The
+ *  References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -68,15 +68,14 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BurgardKjaerVertexExposureAttribution implements
-	org.drip.xva.hypothecation.CollateralGroupVertexExposureAttibution {
+public class BurgardKjaerVertexExposure implements org.drip.xva.hypothecation.CollateralGroupVertexExposure {
 	private double _dblDebt = java.lang.Double.NaN;
 	private double _dblCredit = java.lang.Double.NaN;
 	private double _dblFunding = java.lang.Double.NaN;
 	private double _dblCollateralBalance = java.lang.Double.NaN;
 
 	/**
-	 * BurgardKjaerVertexExposureAttribution Constructor
+	 * BurgardKjaerVertexExposure Constructor
 	 * 
 	 * @param dblCredit The Credit Exposure of the Collateral Group
 	 * @param dblDebt The Debt Exposure of the Collateral Group
@@ -86,7 +85,7 @@ public class BurgardKjaerVertexExposureAttribution implements
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public BurgardKjaerVertexExposureAttribution (
+	public BurgardKjaerVertexExposure (
 		final double dblCredit,
 		final double dblDebt,
 		final double dblFunding,
@@ -97,8 +96,7 @@ public class BurgardKjaerVertexExposureAttribution implements
 			!org.drip.quant.common.NumberUtil.IsValid (_dblDebt = dblDebt) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblFunding = dblFunding) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance))
-			throw new java.lang.Exception
-				("BurgardKjaerVertexExposureAttribution Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("BurgardKjaerVertexExposure Constructor => Invalid Inputs");
 	}
 
 	@Override public double credit()

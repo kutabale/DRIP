@@ -47,8 +47,8 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * AlbaneseAndersenVertex holds the Albanese and Andersen (2014) Vertex Exposures of a Projected Path of a
- *  Simulation Run of a Collateral Hypothecation Group. The References are:
+ * AlbaneseAndersenVertexExposure holds the Albanese and Andersen (2014) Vertex Exposures of a Projected Path
+ *  of a Simulation Run of a Collateral Hypothecation Group. The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
@@ -66,97 +66,36 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlbaneseAndersenVertex implements
-	org.drip.xva.hypothecation.CollateralGroupVertexExposureAttibution {
-	private double _dblHedgeError = java.lang.Double.NaN;
+public class AlbaneseAndersenVertexExposure implements
+	org.drip.xva.hypothecation.CollateralGroupVertexExposure {
 	private double _dblForwardExposure = java.lang.Double.NaN;
 	private double _dblRealizedCashFlow = java.lang.Double.NaN;
 	private double _dblCollateralBalance = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
-	private double _dblBankDefaultCloseOut = java.lang.Double.NaN;
-	private double _dblCounterPartyDefaultCloseOut = java.lang.Double.NaN;
 
 	/**
-	 * Construct a Standard Instance of AlbaneseAndersenVertex
+	 * AlbaneseAndersenVertexExposure Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
 	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
 	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
-	 * @param dblHedgeError Hedge Error
-	 * @param cog The Generic Close-Out Evaluator Instance
-	 * 
-	 * @return The Standard Instance of AlbaneseAndersenVertex
-	 */
-
-	public static AlbaneseAndersenVertex Standard (
-		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardExposure,
-		final double dblRealizedCashFlow,
-		final double dblCollateralBalance,
-		final double dblHedgeError,
-		final org.drip.xva.definition.CloseOutGeneral cog)
-	{
-		if (null == cog) return null;
-
-		double dblUncollateralizedExposure = dblForwardExposure + dblRealizedCashFlow;
-
-		try {
-			return new AlbaneseAndersenVertex (
-				dtAnchor,
-				dblForwardExposure,
-				dblRealizedCashFlow,
-				dblCollateralBalance,
-				cog.bankDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				),
-				cog.counterPartyDefault (
-					dblUncollateralizedExposure,
-					dblCollateralBalance
-				),
-				dblHedgeError
-			);
-		} catch (java.lang.Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * AlbaneseAndersenVertex Constructor
-	 * 
-	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
-	 * @param dblBankDefaultCloseOut Close Out on Bank Default
-	 * @param dblCounterPartyDefaultCloseOut Close Out on Counter Party Default
-	 * @param dblHedgeError The Vertex Hedge Error
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public AlbaneseAndersenVertex (
+	public AlbaneseAndersenVertexExposure (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final double dblForwardExposure,
 		final double dblRealizedCashFlow,
-		final double dblCollateralBalance,
-		final double dblBankDefaultCloseOut,
-		final double dblCounterPartyDefaultCloseOut,
-		final double dblHedgeError)
+		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
 		if (null == (_dtAnchor = dtAnchor) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblForwardExposure = dblForwardExposure) ||
 			!org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow = dblRealizedCashFlow) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblBankDefaultCloseOut = dblBankDefaultCloseOut) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCounterPartyDefaultCloseOut =
-				dblCounterPartyDefaultCloseOut) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblHedgeError = dblHedgeError))
-			throw new java.lang.Exception ("AlbaneseAndersenVertex Constructor => Invalid Inputs");
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance))
+			throw new java.lang.Exception ("AlbaneseAndersenVertexExposure Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -204,39 +143,6 @@ public class AlbaneseAndersenVertex implements
 	}
 
 	/**
-	 * Retrieve the Hedge Error
-	 * 
-	 * @return The Hedge Error
-	 */
-
-	public double hedgeError()
-	{
-		return _dblHedgeError;
-	}
-
-	/**
-	 * Retrieve the Close Out on Bank Default
-	 * 
-	 * @return Close Out on Bank Default
-	 */
-
-	public double bankDefaultCloseOut()
-	{
-		return _dblBankDefaultCloseOut;
-	}
-
-	/**
-	 * Retrieve the Close Out on Counter Party Default
-	 * 
-	 * @return Close Out on Counter Party Default
-	 */
-
-	public double counterPartyDefaultCloseOut()
-	{
-		return _dblCounterPartyDefaultCloseOut;
-	}
-
-	/**
 	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
 	 * 
 	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
@@ -244,7 +150,7 @@ public class AlbaneseAndersenVertex implements
 
 	public double collateralizedExposure()
 	{
-		return forwardExposure() + realizedCashFlow() - collateralBalance();
+		return _dblForwardExposure + _dblRealizedCashFlow - _dblCollateralBalance;
 	}
 
 	/**
@@ -255,7 +161,7 @@ public class AlbaneseAndersenVertex implements
 
 	public double uncollateralizedExposure()
 	{
-		return forwardExposure() + realizedCashFlow();
+		return _dblForwardExposure + _dblRealizedCashFlow;
 	}
 
 	@Override public double credit()

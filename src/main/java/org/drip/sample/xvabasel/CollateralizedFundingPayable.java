@@ -12,7 +12,6 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
@@ -200,11 +199,6 @@ public class CollateralizedFundingPayable {
 		MonoPathExposureAdjustment[] aMPEAExtended = new MonoPathExposureAdjustment[iNumPath];
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
 
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRate,
-			dblCounterPartyRecoveryRate
-		);
-
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
 			dblCounterPartyThreshold,
@@ -288,8 +282,8 @@ public class CollateralizedFundingPayable {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			AlbaneseAndersenVertex[] aHGVR1 = new AlbaneseAndersenVertex[iNumStep + 1];
-			AlbaneseAndersenVertex[] aHGVR2 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aHGVR1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aHGVR2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
@@ -328,22 +322,18 @@ public class CollateralizedFundingPayable {
 					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
 				}
 
-				aHGVR1[j] = AlbaneseAndersenVertex.Standard (
+				aHGVR1[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					dblCollateralBalance1,
-					0.,
-					cob
+					dblCollateralBalance1
 				);
 
-				aHGVR2[j] = AlbaneseAndersenVertex.Standard (
+				aHGVR2[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					dblCollateralBalance2,
-					0.,
-					cob
+					dblCollateralBalance2
 				);
 
 				dtStart = dtEnd;

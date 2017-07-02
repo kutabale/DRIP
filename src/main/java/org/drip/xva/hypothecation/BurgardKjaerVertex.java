@@ -72,7 +72,7 @@ public class BurgardKjaerVertex {
 	private org.drip.xva.derivative.ReplicationPortfolioVertexBank _rpvb = null;
 	private org.drip.xva.hypothecation.CollateralGroupVertexCloseOut _cgvco = null;
 	private org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw _cgver = null;
-	private org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution _cgvea = null;
+	private org.drip.xva.hypothecation.BurgardKjaerVertexExposure _cgvea = null;
 
 	/**
 	 * BurgardKjaerVertex Constructor
@@ -89,7 +89,7 @@ public class BurgardKjaerVertex {
 	public BurgardKjaerVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
 		final org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw cgver,
-		final org.drip.xva.hypothecation.BurgardKjaerVertexExposureAttribution cgvea,
+		final org.drip.xva.hypothecation.BurgardKjaerVertexExposure cgvea,
 		final org.drip.xva.hypothecation.CollateralGroupVertexCloseOut cgvco,
 		final org.drip.xva.derivative.ReplicationPortfolioVertexBank rpvb)
 		throws java.lang.Exception

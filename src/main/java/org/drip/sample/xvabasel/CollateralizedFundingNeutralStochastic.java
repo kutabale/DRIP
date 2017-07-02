@@ -14,7 +14,6 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
@@ -316,11 +315,6 @@ public class CollateralizedFundingNeutralStochastic {
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRateInitial,
-			dblCounterPartyRecoveryRateInitial
-		);
-
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
@@ -499,8 +493,8 @@ public class CollateralizedFundingNeutralStochastic {
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			AlbaneseAndersenVertex[] aHGVR1 = new AlbaneseAndersenVertex[iNumStep + 1];
-			AlbaneseAndersenVertex[] aHGVR2 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aHGVR1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aHGVR2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = (adtVertex[j] = dtSpot.addMonths (6 * j + 6));
@@ -581,22 +575,18 @@ public class CollateralizedFundingNeutralStochastic {
 					)
 				);
 
-				aHGVR1[j] = AlbaneseAndersenVertex.Standard (
+				aHGVR1[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					dblCollateralBalance1,
-					0.,
-					cob
+					dblCollateralBalance1
 				);
 
-				aHGVR2[j] = AlbaneseAndersenVertex.Standard (
+				aHGVR2[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					dblCollateralBalance2,
-					0.,
-					cob
+					dblCollateralBalance2
 				);
 			}
 

@@ -9,7 +9,6 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -143,11 +142,6 @@ public class FixFloatVABank {
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
 
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRate,
-			dblCounterPartyRecoveryRate
-		);
-
 		JulianDate dtSpot = DateUtil.Today();
 
 		double[][] aablATMSwapRateOffset = ATMSwapRateOffsetRealization (
@@ -209,16 +203,14 @@ public class FixFloatVABank {
 		MarketPath mp = new MarketPath (aMV);
 
 		for (int i = 0; i < iNumPath; ++i) {
-			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aHGVR = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j)
-				aHGVR[j] = AlbaneseAndersenVertex.Standard (
+				aHGVR[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					dblTimeWidth * (iNumStep - j) * aablATMSwapRateOffset[i][j],
 					0.,
-					0.,
-					0.,
-					cob
+					0.
 				);
 
 			CollateralGroupPath[] aHGP = new CollateralGroupPath[] {new CollateralGroupPath (aHGVR)};

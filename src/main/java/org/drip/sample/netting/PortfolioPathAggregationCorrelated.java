@@ -10,7 +10,6 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -211,11 +210,6 @@ public class PortfolioPathAggregationCorrelated {
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRateInitial,
-			dblCounterPartyRecoveryRateInitial
-		);
-
 		for (int j = 0; j <= iNumStep; ++j)
 			adtVertex[j] = dtSpot.addMonths (6 * j + 6);
 
@@ -372,7 +366,7 @@ public class PortfolioPathAggregationCorrelated {
 			);
 
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
-			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aHGVR = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -418,13 +412,11 @@ public class PortfolioPathAggregationCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = AlbaneseAndersenVertex.Standard (
+				aHGVR[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblCollateralPortfolio[i][j],
 					0.,
-					0.,
-					0.,
-					cob
+					0.
 				);
 			}
 

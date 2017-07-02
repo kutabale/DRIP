@@ -68,7 +68,7 @@ package org.drip.xva.hypothecation;
  */
 
 public class CollateralGroupPath {
-	private org.drip.xva.hypothecation.AlbaneseAndersenVertex[] _aHGV = null;
+	private org.drip.xva.hypothecation.AlbaneseAndersenVertexExposure[] _aHGV = null;
 
 	/**
 	 * CollateralGroupPath Constructor
@@ -79,7 +79,7 @@ public class CollateralGroupPath {
 	 */
 
 	public CollateralGroupPath (
-		final org.drip.xva.hypothecation.AlbaneseAndersenVertex[] aHGV)
+		final org.drip.xva.hypothecation.AlbaneseAndersenVertexExposure[] aHGV)
 		throws java.lang.Exception
 	{
 		if (null == (_aHGV = aHGV))
@@ -105,7 +105,7 @@ public class CollateralGroupPath {
 	 * @return The Array of Netting Group Trajectory Vertexes
 	 */
 
-	public org.drip.xva.hypothecation.AlbaneseAndersenVertex[] vertexes()
+	public org.drip.xva.hypothecation.AlbaneseAndersenVertexExposure[] vertexes()
 	{
 		return _aHGV;
 	}

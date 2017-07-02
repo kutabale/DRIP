@@ -11,7 +11,6 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
@@ -275,11 +274,6 @@ public class ZeroThresholdCollateralGroupCorrelated {
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRateInitial,
-			dblCounterPartyRecoveryRateInitial
-		);
-
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
 			0.,
@@ -451,7 +445,7 @@ public class ZeroThresholdCollateralGroupCorrelated {
 			JulianDate dtStart = dtSpot;
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
 			double dblValueStart = dblTime * dblATMSwapRateOffsetStart;
-			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aHGVR = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -515,13 +509,11 @@ public class ZeroThresholdCollateralGroupCorrelated {
 					dblCollateralBalance = hae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = AlbaneseAndersenVertex.Standard (
+				aHGVR[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,
-					dblCollateralBalance,
-					0.,
-					cob
+					dblCollateralBalance
 				);
 
 				dtStart = dtEnd;

@@ -14,7 +14,6 @@ import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.basel.*;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
@@ -306,11 +305,6 @@ public class CollateralizedNettingReceivableStochastic {
 			{0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  1.00}   // COUNTER PARTY FUNDING SPREAD
 		};
 
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRateInitial,
-			dblCounterPartyRecoveryRateInitial
-		);
-
 		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
 			"FIXEDTHRESHOLD",
 			dblCounterPartyThreshold,
@@ -499,8 +493,8 @@ public class CollateralizedNettingReceivableStochastic {
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			AlbaneseAndersenVertex[] aCGV1 = new AlbaneseAndersenVertex[iNumStep + 1];
-			AlbaneseAndersenVertex[] aCGV2 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aCGV1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aCGV2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = (adtVertex[j] = dtSpot.addMonths (6 * j + 6));
@@ -581,22 +575,18 @@ public class CollateralizedNettingReceivableStochastic {
 					)
 				);
 
-				aCGV1[j] = AlbaneseAndersenVertex.Standard (
+				aCGV1[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
-					dblCollateralBalance1,
-					0.,
-					cob
+					dblCollateralBalance1
 				);
 
-				aCGV2[j] = AlbaneseAndersenVertex.Standard (
+				aCGV2[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,
-					dblCollateralBalance2,
-					0.,
-					cob
+					dblCollateralBalance2
 				);
 			}
 

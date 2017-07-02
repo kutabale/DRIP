@@ -47,8 +47,8 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * CollateralGroupVertexExposureAttibution holds the Credit, the Debt, and the Funding Exposures, as well as
- *  the Collateral Balances at each Re-hypothecation Collateral Group.  The References are:
+ * CollateralGroupVertexExposure holds the Credit, the Debt, and the Funding Exposures, as well as the
+ *  Collateral Balances at each Re-hypothecation Collateral Group.  The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,7 +67,7 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public interface CollateralGroupVertexExposureAttibution {
+public interface CollateralGroupVertexExposure {
 
 	/**
 	 * Retrieve the Credit Exposure of the Collateral Group

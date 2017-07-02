@@ -10,7 +10,6 @@ import org.drip.quant.common.FormatUtil;
 import org.drip.quant.linearalgebra.Matrix;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.cpty.*;
-import org.drip.xva.definition.CloseOutBilateral;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -273,11 +272,6 @@ public class UncollateralizedCollateralGroupCorrelated {
 
 		JulianDate dtSpot = DateUtil.Today();
 
-		CloseOutBilateral cob = new CloseOutBilateral (
-			dblBankRecoveryRateInitial,
-			dblCounterPartyRecoveryRateInitial
-		);
-
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolioValue = new double[iNumPath][iNumStep + 1];
@@ -440,7 +434,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 			);
 
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
-			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertexExposure[] aHGVR = new AlbaneseAndersenVertexExposure[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -486,13 +480,11 @@ public class UncollateralizedCollateralGroupCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = AlbaneseAndersenVertex.Standard (
+				aHGVR[j] = new AlbaneseAndersenVertexExposure (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,
-					0.,
-					0.,
-					cob
+					0.
 				);
 			}
 
