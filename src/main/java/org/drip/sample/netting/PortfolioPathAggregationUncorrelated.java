@@ -401,10 +401,10 @@ public class PortfolioPathAggregationUncorrelated {
 		MarketPath mp = new MarketPath (aMV);
 
 		for (int i = 0; i < iNumPath; ++i) {
-			AlbaneseAndersenVertexExposure[] aHGVR = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aHGVR[j] = new AlbaneseAndersenVertexExposure (
+				aHGVR[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblCollateralPortfolioValue[i][j],
 					0.,

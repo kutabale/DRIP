@@ -274,7 +274,7 @@ public class CollateralizedCollateralGroup {
 		for (int i = 0; i < iNumPath; ++i) {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart = dblTime * dblATMSwapRateStart;
-			AlbaneseAndersenVertexExposure[] aHGVR = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				double dblCollateralBalance = 0.;
@@ -297,7 +297,7 @@ public class CollateralizedCollateralGroup {
 					dblCollateralBalance = hae.postingRequirement (dtEnd);
 				}
 
-				aHGVR[j] = new AlbaneseAndersenVertexExposure (
+				aHGVR[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblSwapPortfolioValueRealization[i][j],
 					0.,

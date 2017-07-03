@@ -479,8 +479,8 @@ public class UncollateralizedNettingPayableStochastic {
 			);
 
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
-			AlbaneseAndersenVertexExposure[] aCGV1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
-			AlbaneseAndersenVertexExposure[] aCGV2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertex[] aCGV1 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aCGV2 = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aNV[j] = new MarketVertex (
@@ -526,14 +526,14 @@ public class UncollateralizedNettingPayableStochastic {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aCGV1[j] = new AlbaneseAndersenVertexExposure (
+				aCGV1[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					0.
 				);
 
-				aCGV2[j] = new AlbaneseAndersenVertexExposure (
+				aCGV2[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,

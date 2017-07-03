@@ -493,8 +493,8 @@ public class CollateralizedFundingReceivableStochastic {
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			AlbaneseAndersenVertexExposure[] aHGVR1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
-			AlbaneseAndersenVertexExposure[] aHGVR2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR1 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR2 = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = (adtVertex[j] = dtSpot.addMonths (6 * j + 6));
@@ -575,14 +575,14 @@ public class CollateralizedFundingReceivableStochastic {
 					)
 				);
 
-				aHGVR1[j] = new AlbaneseAndersenVertexExposure (
+				aHGVR1[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					dblCollateralBalance1
 				);
 
-				aHGVR2[j] = new AlbaneseAndersenVertexExposure (
+				aHGVR2[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,

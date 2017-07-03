@@ -47,8 +47,8 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * AlbaneseAndersenVertexExposure holds the Albanese and Andersen (2014) Vertex Exposures of a Projected Path
- *  of a Simulation Run of a Collateral Hypothecation Group. The References are:
+ * AlbaneseAndersenVertex holds the Albanese and Andersen (2014) Vertex Exposures of a Projected Path of a
+ *  Simulation Run of a Collateral Hypothecation Group. The References are:
  *  
  *  - Albanese, C., and L. Andersen (2014): Accounting for OTC Derivatives: Funding Adjustments and the
  *  	Re-Hypothecation Option, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2482955, eSSRN.
@@ -66,36 +66,34 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlbaneseAndersenVertexExposure implements
-	org.drip.xva.hypothecation.CollateralGroupVertexExposure {
-	private double _dblForwardExposure = java.lang.Double.NaN;
-	private double _dblRealizedCashFlow = java.lang.Double.NaN;
+public class AlbaneseAndersenVertex extends org.drip.xva.hypothecation.CollateralGroupVertexExposure
+	implements org.drip.xva.hypothecation.CollateralGroupVertexExposureComponent {
 	private double _dblCollateralBalance = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
 
 	/**
-	 * AlbaneseAndersenVertexExposure Constructor
+	 * AlbaneseAndersenVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param dblForwardExposure The Forward Exposure at the Path Vertex Time Node
-	 * @param dblRealizedCashFlow The Default Window Realized Cash-flow at the Path Vertex Time Node
+	 * @param dblForward The Forward Exposure at the Path Vertex Time Node
+	 * @param dblAccrued The Default Window Accrued Cash-flow at the Path Vertex Time Node
 	 * @param dblCollateralBalance The Collateral Balance at the Path Vertex Time Node
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public AlbaneseAndersenVertexExposure (
+	public AlbaneseAndersenVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final double dblForwardExposure,
-		final double dblRealizedCashFlow,
+		final double dblForward,
+		final double dblAccrued,
 		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblForwardExposure = dblForwardExposure) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblRealizedCashFlow = dblRealizedCashFlow) ||
-			!org.drip.quant.common.NumberUtil.IsValid (_dblCollateralBalance = dblCollateralBalance))
-			throw new java.lang.Exception ("AlbaneseAndersenVertexExposure Constructor => Invalid Inputs");
+		super (dblForward, dblAccrued);
+
+		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
+			(_dblCollateralBalance = dblCollateralBalance))
+			throw new java.lang.Exception ("AlbaneseAndersenVertex Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -110,17 +108,6 @@ public class AlbaneseAndersenVertexExposure implements
 	}
 
 	/**
-	 * Retrieve the Forward Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Forward Exposure at the Path Vertex Time Node
-	 */
-
-	public double forwardExposure()
-	{
-		return _dblForwardExposure;
-	}
-
-	/**
 	 * Retrieve the Collateral Balance at the Path Vertex Time Node
 	 * 
 	 * @return The Collateral Balance at the Path Vertex Time Node
@@ -132,55 +119,33 @@ public class AlbaneseAndersenVertexExposure implements
 	}
 
 	/**
-	 * Retrieve the Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * 
-	 * @return The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 */
-
-	public double realizedCashFlow()
-	{
-		return _dblRealizedCashFlow;
-	}
-
-	/**
 	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
 	 * 
 	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
 	 */
 
-	public double collateralizedExposure()
+	public double collateralized()
 	{
-		return _dblForwardExposure + _dblRealizedCashFlow - _dblCollateralBalance;
-	}
-
-	/**
-	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
-	 */
-
-	public double uncollateralizedExposure()
-	{
-		return _dblForwardExposure + _dblRealizedCashFlow;
+		return forward() + accrued() - _dblCollateralBalance;
 	}
 
 	@Override public double credit()
 	{
-		double dblCreditExposure = collateralizedExposure();
+		double dblCreditExposure = collateralized();
 
 		return 0. < dblCreditExposure ? dblCreditExposure : 0.;
 	}
 
 	@Override public double debt()
 	{
-		double dblDebtExposure = collateralizedExposure();
+		double dblDebtExposure = collateralized();
 
 		return 0. > dblDebtExposure ? dblDebtExposure : 0.;
 	}
 
 	@Override public double funding()
 	{
-		double dblCreditExposure = collateralizedExposure();
+		double dblCreditExposure = collateralized();
 
 		return 0. < dblCreditExposure ? dblCreditExposure : 0.;
 	}

@@ -67,19 +67,20 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BurgardKjaerVertex {
+public class BurgardKjaerVertex extends org.drip.xva.hypothecation.CollateralGroupVertexExposure implements
+	org.drip.xva.hypothecation.CollateralGroupVertexExposureComponent {
 	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+	private org.drip.xva.hypothecation.BurgardKjaerVertexExposure _bkve = null;
 	private org.drip.xva.derivative.ReplicationPortfolioVertexBank _rpvb = null;
 	private org.drip.xva.hypothecation.CollateralGroupVertexCloseOut _cgvco = null;
-	private org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw _cgver = null;
-	private org.drip.xva.hypothecation.BurgardKjaerVertexExposure _cgvea = null;
 
 	/**
 	 * BurgardKjaerVertex Constructor
 	 * 
 	 * @param dtAnchor The Vertex Date Anchor
-	 * @param cgver The Collateral Group Vertex Exposure Raw
-	 * @param cgvea The Collateral Group Vertex Exposure Attribution
+	 * @param dblForward The Unrealized Forward Exposure
+	 * @param dblAccrued The Accrued Exposure
+	 * @param bkve The Collateral Group Vertex
 	 * @param cgvco The Collateral Group Vertex Close Out Instance
 	 * @param rpvb The Bank Replication Portfolio Vertex Instance
 	 * 
@@ -88,14 +89,17 @@ public class BurgardKjaerVertex {
 
 	public BurgardKjaerVertex (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw cgver,
-		final org.drip.xva.hypothecation.BurgardKjaerVertexExposure cgvea,
+		final double dblForward,
+		final double dblAccrued,
+		final org.drip.xva.hypothecation.BurgardKjaerVertexExposure bkve,
 		final org.drip.xva.hypothecation.CollateralGroupVertexCloseOut cgvco,
 		final org.drip.xva.derivative.ReplicationPortfolioVertexBank rpvb)
 		throws java.lang.Exception
 	{
-		if (null == (_dtAnchor = dtAnchor) || null == (_cgver = cgver) || null == (_cgvea = cgvea) || null ==
-			(_cgvco = cgvco) || null == (_rpvb = rpvb))
+		super (dblForward, dblAccrued);
+
+		if (null == (_dtAnchor = dtAnchor) || null == (_bkve = bkve) || null == (_cgvco = cgvco) || null ==
+			(_rpvb = rpvb))
 			throw new java.lang.Exception ("BurgardKjaerVertex Constructor => Invalid Inputs");
 	}
 
@@ -111,14 +115,14 @@ public class BurgardKjaerVertex {
 	}
 
 	/**
-	 * Retrieve the Forward Exposure at the Path Vertex Time Node
+	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
 	 * 
-	 * @return The Forward Exposure at the Path Vertex Time Node
+	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
 	 */
 
-	public double exposure()
+	public double collateralized()
 	{
-		return _cgver.uncollateralized();
+		return uncollateralized() - _bkve.collateralBalance();
 	}
 
 	/**
@@ -129,18 +133,7 @@ public class BurgardKjaerVertex {
 
 	public double collateralBalance()
 	{
-		return _cgvea.collateralBalance();
-	}
-
-	/**
-	 * Retrieve the Default Window Realized Cash-flow at the Path Vertex Time Node
-	 * 
-	 * @return The Default Window Realized Cash-flow at the Path Vertex Time Node
-	 */
-
-	public double realizedCashFlow()
-	{
-		return _cgver.realizedCashFlow();
+		return _bkve.collateralBalance();
 	}
 
 	/**
@@ -165,59 +158,19 @@ public class BurgardKjaerVertex {
 		return _cgvco.counterParty();
 	}
 
-	/**
-	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
-	 */
-
-	public double collateralizedExposure()
+	@Override public double credit()
 	{
-		return _cgver.gross() - _cgvea.collateralBalance();
+		return _bkve.credit();
 	}
 
-	/**
-	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
-	 */
-
-	public double uncollateralizedExposure()
+	@Override public double debt()
 	{
-		return _cgver.gross();
+		return _bkve.debt();
 	}
 
-	/**
-	 * Retrieve the Credit Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Credit Exposure at the Path Vertex Time Node
-	 */
-
-	public double creditExposure()
+	@Override public double funding()
 	{
-		return _cgvea.credit();
-	}
-
-	/**
-	 * Retrieve the Debt Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Debt Exposure at the Path Vertex Time Node
-	 */
-
-	public double debtExposure()
-	{
-		return _cgvea.debt();
-	}
-
-	/**
-	 * Retrieve the Funding Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Funding Exposure at the Path Vertex Time Node
-	 */
-
-	public double fundingExposure()
-	{
-		return _cgvea.funding();
+		return _bkve.funding();
 	}
 
 	/**
@@ -228,7 +181,7 @@ public class BurgardKjaerVertex {
 
 	public double hedgeError()
 	{
-		return _cgvea.funding();
+		return _bkve.funding();
 	}
 
 	/**

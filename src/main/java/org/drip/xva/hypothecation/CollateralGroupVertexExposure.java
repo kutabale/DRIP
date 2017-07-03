@@ -47,8 +47,8 @@ package org.drip.xva.hypothecation;
  */
 
 /**
- * CollateralGroupVertexExposure holds the Credit, the Debt, and the Funding Exposures, as well as the
- *  Collateral Balances at each Re-hypothecation Collateral Group.  The References are:
+ * CollateralGroupVertexExposure holds the Uncollateralized Exposure and the Collateral Balances at each
+ *  Re-hypothecation Collateral Group. The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -67,37 +67,59 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public interface CollateralGroupVertexExposure {
+public class CollateralGroupVertexExposure {
+	private double _dblAccrued = java.lang.Double.NaN;
+	private double _dblForward = java.lang.Double.NaN;
 
 	/**
-	 * Retrieve the Credit Exposure of the Collateral Group
+	 * CollateralGroupVertexExposure Constructor
 	 * 
-	 * @return The Credit Exposure
+	 * @param dblForward The Unrealized Forward Exposure
+	 * @param dblAccrued The Accrued Exposure
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public abstract double credit();
+	public CollateralGroupVertexExposure (
+		final double dblForward,
+		final double dblAccrued)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblForward = dblForward) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblAccrued = dblAccrued))
+			throw new java.lang.Exception ("CollateralGroupVertexExposure Constructor => Invalid Inputs");
+	}
 
 	/**
-	 * Retrieve the Debt Exposure of the Collateral Group
+	 * Retrieve the Unrealized Forward Exposure
 	 * 
-	 * @return The Debt Exposure
+	 * @return The Unrealized Forward Exposure
 	 */
 
-	public abstract double debt();
+	public double forward()
+	{
+		return _dblForward;
+	}
 
 	/**
-	 * Retrieve the Funding Exposure of the Collateral Group
+	 * Retrieve the Accrued Exposure
 	 * 
-	 * @return The Funding Exposure
+	 * @return The Accrued Exposure
 	 */
 
-	public abstract double funding();
+	public double accrued()
+	{
+		return _dblAccrued;
+	}
 
 	/**
-	 * Retrieve the Collateral Balance of the Collateral Group
+	 * Retrieve the Gross Uncollateralized Exposure
 	 * 
-	 * @return The Collateral Balance
+	 * @return The Gross Uncollateralized Exposure
 	 */
 
-	public abstract double collateralBalance();
+	public double uncollateralized()
+	{
+		return _dblForward + _dblAccrued;
+	}
 }

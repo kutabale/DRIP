@@ -68,7 +68,7 @@ package org.drip.xva.hypothecation;
  */
 
 public class CollateralGroupPath {
-	private org.drip.xva.hypothecation.AlbaneseAndersenVertexExposure[] _aHGV = null;
+	private org.drip.xva.hypothecation.AlbaneseAndersenVertex[] _aHGV = null;
 
 	/**
 	 * CollateralGroupPath Constructor
@@ -79,7 +79,7 @@ public class CollateralGroupPath {
 	 */
 
 	public CollateralGroupPath (
-		final org.drip.xva.hypothecation.AlbaneseAndersenVertexExposure[] aHGV)
+		final org.drip.xva.hypothecation.AlbaneseAndersenVertex[] aHGV)
 		throws java.lang.Exception
 	{
 		if (null == (_aHGV = aHGV))
@@ -105,7 +105,7 @@ public class CollateralGroupPath {
 	 * @return The Array of Netting Group Trajectory Vertexes
 	 */
 
-	public org.drip.xva.hypothecation.AlbaneseAndersenVertexExposure[] vertexes()
+	public org.drip.xva.hypothecation.AlbaneseAndersenVertex[] vertexes()
 	{
 		return _aHGV;
 	}
@@ -139,7 +139,7 @@ public class CollateralGroupPath {
 		double[] adblCollateralizedExposure = new double[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblCollateralizedExposure[i] = _aHGV[i].collateralizedExposure();
+			adblCollateralizedExposure[i] = _aHGV[i].collateralized();
 
 		return adblCollateralizedExposure;
 	}
@@ -156,7 +156,7 @@ public class CollateralGroupPath {
 		double[] adblUncollateralizedExposure = new double[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblUncollateralizedExposure[i] = _aHGV[i].uncollateralizedExposure();
+			adblUncollateralizedExposure[i] = _aHGV[i].uncollateralized();
 
 		return adblUncollateralizedExposure;
 	}

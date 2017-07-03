@@ -68,7 +68,8 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BurgardKjaerVertexExposure implements org.drip.xva.hypothecation.CollateralGroupVertexExposure {
+public class BurgardKjaerVertexExposure implements
+	org.drip.xva.hypothecation.CollateralGroupVertexExposureComponent {
 	private double _dblDebt = java.lang.Double.NaN;
 	private double _dblCredit = java.lang.Double.NaN;
 	private double _dblFunding = java.lang.Double.NaN;

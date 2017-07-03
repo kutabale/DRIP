@@ -493,8 +493,8 @@ public class ZeroThresholdCollateralPayableStochastic {
 			MarketVertex[] aNV = new MarketVertex [iNumStep + 1];
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			AlbaneseAndersenVertexExposure[] aCGV1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
-			AlbaneseAndersenVertexExposure[] aCGV2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertex[] aCGV1 = new AlbaneseAndersenVertex[iNumStep + 1];
+			AlbaneseAndersenVertex[] aCGV2 = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = (adtVertex[j] = dtSpot.addMonths (6 * j + 6));
@@ -575,14 +575,14 @@ public class ZeroThresholdCollateralPayableStochastic {
 					)
 				);
 
-				aCGV1[j] = new AlbaneseAndersenVertexExposure (
+				aCGV1[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblPortfolio1Value[i][j],
 					0.,
 					dblCollateralBalance1
 				);
 
-				aCGV2[j] = new AlbaneseAndersenVertexExposure (
+				aCGV2[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblPortfolio2Value[i][j],
 					0.,

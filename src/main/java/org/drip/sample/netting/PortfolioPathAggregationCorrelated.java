@@ -366,7 +366,7 @@ public class PortfolioPathAggregationCorrelated {
 			);
 
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
-			AlbaneseAndersenVertexExposure[] aHGVR = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -412,7 +412,7 @@ public class PortfolioPathAggregationCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = new AlbaneseAndersenVertexExposure (
+				aHGVR[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblCollateralPortfolio[i][j],
 					0.,

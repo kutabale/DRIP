@@ -434,7 +434,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 			);
 
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
-			AlbaneseAndersenVertexExposure[] aHGVR = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+			AlbaneseAndersenVertex[] aHGVR = new AlbaneseAndersenVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				aMV[j] = new MarketVertex (
@@ -480,7 +480,7 @@ public class UncollateralizedCollateralGroupCorrelated {
 
 				aadblCollateralBalance[i][j] = 0.;
 
-				aHGVR[j] = new AlbaneseAndersenVertexExposure (
+				aHGVR[j] = new AlbaneseAndersenVertex (
 					adtVertex[j],
 					aadblPortfolioValue[i][j],
 					0.,

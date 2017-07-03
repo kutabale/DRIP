@@ -83,7 +83,7 @@ public class BurgardKjaerVertexBuilder {
 
 	public static final org.drip.xva.hypothecation.BurgardKjaerVertex BankPortfolioBuilder (
 		final org.drip.analytics.date.JulianDate dtAnchor,
-		final org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw cgver,
+		final org.drip.xva.hypothecation.CollateralGroupVertexExposure cgver,
 		final org.drip.xva.universe.MarketEdge me,
 		final org.drip.xva.hypothecation.CollateralGroupVertexCloseOut cgvco,
 		final org.drip.xva.hypothecation.BurgardKjaerVertexExposure cgvea)
@@ -113,7 +113,7 @@ public class BurgardKjaerVertexBuilder {
 
 		double dblIncrementalBankSurvival = dblBankSurvivalFinish - me.start().bank().survivalProbability();
 
-		double dblAdjustedExposure = cgver.gross() + dblBankSurvivalFinish *
+		double dblAdjustedExposure = cgver.uncollateralized() + dblBankSurvivalFinish *
 			(dblCounterPartySurvivalFinish - me.start().counterParty().survivalProbability()) * cgvea.credit() +
 			dblCounterPartySurvivalFinish * dblIncrementalBankSurvival * cgvea.debt() +
 			dblCounterPartySurvivalFinish * dblIncrementalBankSurvival * dblFundingExposure -
@@ -122,7 +122,8 @@ public class BurgardKjaerVertexBuilder {
 		try {
 			new org.drip.xva.hypothecation.BurgardKjaerVertex (
 				dtAnchor,
-				cgver,
+				cgver.forward(),
+				cgver.accrued(),
 				cgvea,
 				cgvco,
 				new org.drip.xva.derivative.ReplicationPortfolioVertexBank (
@@ -186,7 +187,7 @@ public class BurgardKjaerVertexBuilder {
 		try {
 			return BankPortfolioBuilder (
 				dtAnchor,
-				new org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw (
+				new org.drip.xva.hypothecation.CollateralGroupVertexExposure (
 					dblExposure,
 					dblRealizedCashFlow
 				),
@@ -240,7 +241,7 @@ public class BurgardKjaerVertexBuilder {
 		try {
 			return BankPortfolioBuilder (
 				dtAnchor,
-				new org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw (
+				new org.drip.xva.hypothecation.CollateralGroupVertexExposure (
 					dblExposure,
 					dblRealizedCashFlow
 				),
@@ -293,7 +294,7 @@ public class BurgardKjaerVertexBuilder {
 		try {
 			return BankPortfolioBuilder (
 				dtAnchor,
-				new org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw (
+				new org.drip.xva.hypothecation.CollateralGroupVertexExposure (
 					dblExposure,
 					dblRealizedCashFlow
 				),
@@ -346,7 +347,7 @@ public class BurgardKjaerVertexBuilder {
 		try {
 			return BankPortfolioBuilder (
 				dtAnchor,
-				new org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw (
+				new org.drip.xva.hypothecation.CollateralGroupVertexExposure (
 					dblExposure,
 					dblRealizedCashFlow
 				),
@@ -405,7 +406,7 @@ public class BurgardKjaerVertexBuilder {
 		try {
 			return BankPortfolioBuilder (
 				dtAnchor,
-				new org.drip.xva.hypothecation.CollateralGroupVertexExposureRaw (
+				new org.drip.xva.hypothecation.CollateralGroupVertexExposure (
 					dblExposure,
 					dblRealizedCashFlow
 				),

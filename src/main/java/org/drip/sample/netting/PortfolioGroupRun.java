@@ -138,8 +138,8 @@ public class PortfolioGroupRun {
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
-		AlbaneseAndersenVertexExposure[] aHGVR1 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
-		AlbaneseAndersenVertexExposure[] aHGVR2 = new AlbaneseAndersenVertexExposure[iNumStep + 1];
+		AlbaneseAndersenVertex[] aHGVR1 = new AlbaneseAndersenVertex[iNumStep + 1];
+		AlbaneseAndersenVertex[] aHGVR2 = new AlbaneseAndersenVertex[iNumStep + 1];
 
 		JulianDate dtSpot = DateUtil.Today();
 
@@ -244,14 +244,14 @@ public class PortfolioGroupRun {
 				)
 			);
 
-			aHGVR1[i] = new AlbaneseAndersenVertexExposure (
+			aHGVR1[i] = new AlbaneseAndersenVertex (
 				adtVertex[i],
 				adblAssetValuePath1[i],
 				0.,
 				0.
 			);
 
-			aHGVR2[i] = new AlbaneseAndersenVertexExposure (
+			aHGVR2[i] = new AlbaneseAndersenVertex (
 				adtVertex[i],
 				adblAssetValuePath2[i],
 				0.,
@@ -260,11 +260,11 @@ public class PortfolioGroupRun {
 
 			System.out.println (
 				"\t| " + adtVertex[i] + " => " +
-				FormatUtil.FormatDouble (aHGVR1[i].collateralizedExposure(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aHGVR1[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR1[i].collateralized(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR1[i].uncollateralized(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aHGVR1[i].collateralBalance(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aHGVR2[i].collateralizedExposure(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aHGVR2[i].uncollateralizedExposure(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR2[i].collateralized(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aHGVR2[i].uncollateralized(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aHGVR2[i].collateralBalance(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].overnightIndexRate(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].bank().survivalProbability(), 1, 6, 1.) + " | " +
