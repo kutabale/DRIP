@@ -67,9 +67,7 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class BurgardKjaerVertex extends org.drip.xva.hypothecation.CollateralGroupVertexExposure implements
-	org.drip.xva.hypothecation.CollateralGroupVertexExposureComponent {
-	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+public class BurgardKjaerVertex extends org.drip.xva.hypothecation.CollateralGroupVertex {
 	private org.drip.xva.hypothecation.BurgardKjaerVertexExposure _bkve = null;
 	private org.drip.xva.derivative.ReplicationPortfolioVertexBank _rpvb = null;
 	private org.drip.xva.hypothecation.CollateralGroupVertexCloseOut _cgvco = null;
@@ -96,44 +94,10 @@ public class BurgardKjaerVertex extends org.drip.xva.hypothecation.CollateralGro
 		final org.drip.xva.derivative.ReplicationPortfolioVertexBank rpvb)
 		throws java.lang.Exception
 	{
-		super (dblForward, dblAccrued);
+		super (dtAnchor, dblForward, dblAccrued, bkve.collateralBalance());
 
-		if (null == (_dtAnchor = dtAnchor) || null == (_bkve = bkve) || null == (_cgvco = cgvco) || null ==
-			(_rpvb = rpvb))
+		if (null == (_bkve = bkve) || null == (_cgvco = cgvco) || null == (_rpvb = rpvb))
 			throw new java.lang.Exception ("BurgardKjaerVertex Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the Date Anchor
-	 * 
-	 * @return The Date Anchor
-	 */
-
-	public org.drip.analytics.date.JulianDate anchor()
-	{
-		return _dtAnchor;
-	}
-
-	/**
-	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
-	 */
-
-	public double collateralized()
-	{
-		return uncollateralized() - _bkve.collateralBalance();
-	}
-
-	/**
-	 * Retrieve the Collateral Balance at the Path Vertex Time Node
-	 * 
-	 * @return The Collateral Balance at the Path Vertex Time Node
-	 */
-
-	public double collateralBalance()
-	{
-		return _bkve.collateralBalance();
 	}
 
 	/**

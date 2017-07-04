@@ -66,10 +66,7 @@ package org.drip.xva.hypothecation;
  * @author Lakshmi Krishnamurthy
  */
 
-public class AlbaneseAndersenVertex extends org.drip.xva.hypothecation.CollateralGroupVertexExposure
-	implements org.drip.xva.hypothecation.CollateralGroupVertexExposureComponent {
-	private double _dblCollateralBalance = java.lang.Double.NaN;
-	private org.drip.analytics.date.JulianDate _dtAnchor = null;
+public class AlbaneseAndersenVertex extends org.drip.xva.hypothecation.CollateralGroupVertex {
 
 	/**
 	 * AlbaneseAndersenVertex Constructor
@@ -89,44 +86,7 @@ public class AlbaneseAndersenVertex extends org.drip.xva.hypothecation.Collatera
 		final double dblCollateralBalance)
 		throws java.lang.Exception
 	{
-		super (dblForward, dblAccrued);
-
-		if (null == (_dtAnchor = dtAnchor) || !org.drip.quant.common.NumberUtil.IsValid
-			(_dblCollateralBalance = dblCollateralBalance))
-			throw new java.lang.Exception ("AlbaneseAndersenVertex Constructor => Invalid Inputs");
-	}
-
-	/**
-	 * Retrieve the Date Anchor
-	 * 
-	 * @return The Date Anchor
-	 */
-
-	public org.drip.analytics.date.JulianDate anchor()
-	{
-		return _dtAnchor;
-	}
-
-	/**
-	 * Retrieve the Collateral Balance at the Path Vertex Time Node
-	 * 
-	 * @return The Collateral Balance at the Path Vertex Time Node
-	 */
-
-	public double collateralBalance()
-	{
-		return _dblCollateralBalance;
-	}
-
-	/**
-	 * Retrieve the Total Collateralized Exposure at the Path Vertex Time Node
-	 * 
-	 * @return The Total Collateralized Exposure at the Path Vertex Time Node
-	 */
-
-	public double collateralized()
-	{
-		return forward() + accrued() - _dblCollateralBalance;
+		super (dtAnchor, dblForward, dblAccrued, dblCollateralBalance);
 	}
 
 	@Override public double credit()

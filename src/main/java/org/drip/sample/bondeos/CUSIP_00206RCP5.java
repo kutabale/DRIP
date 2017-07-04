@@ -530,6 +530,7 @@ public class CUSIP_00206RCP5 {
 		int iFreq = 2;
 		String strCUSIP = "00206RCP5";
 		String strDayCount = "30/360";
+		String strCreditCurve = "CC";
 		int[] aiExerciseDate = new int[] {
 			DateUtil.CreateFromYMD (2034, 11, 15).julian(),
 		};
@@ -540,7 +541,7 @@ public class CUSIP_00206RCP5 {
 		BondComponent bond = BondBuilder.CreateSimpleFixed (
 			strCUSIP,
 			strCurrency,
-			"",
+			strCreditCurve,
 			dblCoupon,
 			iFreq,
 			strDayCount,
@@ -563,27 +564,31 @@ public class CUSIP_00206RCP5 {
 
 		bond.setEmbeddedCallSchedule (eos);
 
+		MergedDiscountForwardCurve mdfc = FundingCurve (
+			dtSpot,
+			strCurrency,
+			0.
+		); 
+
+		CurveSurfaceQuoteContainer csqc = MarketParamsBuilder.Create (
+			mdfc,
+			GovvieCurve (
+				dtSpot,
+				strTreasuryCode,
+				adblTreasuryCoupon,
+				adblTreasuryYield
+			),
+			null,
+			null,
+			null,
+			null,
+			null
+		);
+
 		RVMeasures (
 			bond,
 			dtSpot,
-			MarketParamsBuilder.Create (
-				FundingCurve (
-					dtSpot,
-					strCurrency,
-					0.
-				),
-				GovvieCurve (
-					dtSpot,
-					strTreasuryCode,
-					adblTreasuryCoupon,
-					adblTreasuryYield
-				),
-				null,
-				null,
-				null,
-				null,
-				null
-			),
+			csqc,
 			dblCleanPrice
 		);
 

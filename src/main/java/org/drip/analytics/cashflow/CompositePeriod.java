@@ -358,6 +358,35 @@ public abstract class CompositePeriod {
 	}
 
 	/**
+	 * Coupon Period Recovery
+	 * 
+	 * @param csqc Market Parameters
+	 * 
+	 * @return The Period Recovery
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double recovery (
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception
+	{
+		org.drip.state.identifier.CreditLabel creditLabel = creditLabel();
+
+		if (null == creditLabel) return 1.;
+
+		if (null == csqc) throw new java.lang.Exception ("CompositePeriod::recovery => Invalid Inputs");
+
+		org.drip.state.credit.CreditCurve cc = csqc.creditState (creditLabel);
+
+		if (null == cc)
+			throw new java.lang.Exception ("CompositePeriod::recovery => No Curve for " +
+				creditLabel.fullyQualifiedName());
+
+		return cc.recovery (_iPayDate);
+	}
+
+	/**
 	 * Coupon Period Discount Factor
 	 * 
 	 * @param csqs Market Parameters

@@ -151,7 +151,7 @@ public class BondStream extends org.drip.product.rates.Stream {
 
 			org.drip.param.period.CompositePeriodSetting cps = new
 				org.drip.param.period.CompositePeriodSetting (iFreq, strTenor, strCurrency, null, 1., null,
-					null, null, null);
+					null, null, creditLabel);
 
 			java.util.List<java.lang.Integer> lsStreamEdgeDate = bPeriodsFromForward ?
 				org.drip.analytics.support.CompositePeriodBuilder.ForwardEdgeDates (dtEffective, dtMaturity,

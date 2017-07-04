@@ -199,7 +199,7 @@ public class BondProcessor {
 
 		jsonResponse.put ("BondMaturityDate", dtMaturity.toString());
 
-		jsonResponse.put ("BondFirstCouponDate", bond.firstCouponDate());
+		jsonResponse.put ("BondFirstCouponDate", bond.firstCouponDate().toString());
 
 		jsonResponse.put ("BondCleanPrice", dblCleanPrice);
 

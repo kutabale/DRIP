@@ -68,33 +68,33 @@ package org.drip.xva.hypothecation;
  */
 
 public class CollateralGroupPath {
-	private org.drip.xva.hypothecation.AlbaneseAndersenVertex[] _aHGV = null;
+	private org.drip.xva.hypothecation.CollateralGroupVertex[] _aCGV = null;
 
 	/**
 	 * CollateralGroupPath Constructor
 	 * 
-	 * @param aHGV The Array of Collateral Hypothecation Group Trajectory Vertexes
+	 * @param aCGV The Array of Collateral Hypothecation Group Trajectory Vertexes
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
 	public CollateralGroupPath (
-		final org.drip.xva.hypothecation.AlbaneseAndersenVertex[] aHGV)
+		final org.drip.xva.hypothecation.CollateralGroupVertex[] aCGV)
 		throws java.lang.Exception
 	{
-		if (null == (_aHGV = aHGV))
+		if (null == (_aCGV = aCGV))
 			throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
-		int iNumPath = _aHGV.length;
+		int iNumPath = _aCGV.length;
 
 		if (1 >= iNumPath)
 			throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
 		for (int i = 0; i < iNumPath; ++i) {
-			if (null == _aHGV[i])
+			if (null == _aCGV[i])
 				throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 
-			if (0 != i && _aHGV[i - 1].anchor().julian() >= _aHGV[i].anchor().julian())
+			if (0 != i && _aCGV[i - 1].anchor().julian() >= _aCGV[i].anchor().julian())
 				throw new java.lang.Exception ("CollateralGroupPath Constructor => Invalid Inputs");
 		}
 	}
@@ -105,9 +105,9 @@ public class CollateralGroupPath {
 	 * @return The Array of Netting Group Trajectory Vertexes
 	 */
 
-	public org.drip.xva.hypothecation.AlbaneseAndersenVertex[] vertexes()
+	public org.drip.xva.hypothecation.CollateralGroupVertex[] vertexes()
 	{
-		return _aHGV;
+		return _aCGV;
 	}
 
 	/**
@@ -118,11 +118,11 @@ public class CollateralGroupPath {
 
 	public org.drip.analytics.date.JulianDate[] anchors()
 	{
-		int iNumVertex = _aHGV.length;
+		int iNumVertex = _aCGV.length;
 		org.drip.analytics.date.JulianDate[] adtVertex = new org.drip.analytics.date.JulianDate[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adtVertex[i] = _aHGV[i].anchor();
+			adtVertex[i] = _aCGV[i].anchor();
 
 		return adtVertex;
 	}
@@ -135,11 +135,11 @@ public class CollateralGroupPath {
 
 	public double[] collateralizedExposure()
 	{
-		int iNumVertex = _aHGV.length;
+		int iNumVertex = _aCGV.length;
 		double[] adblCollateralizedExposure = new double[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblCollateralizedExposure[i] = _aHGV[i].collateralized();
+			adblCollateralizedExposure[i] = _aCGV[i].collateralized();
 
 		return adblCollateralizedExposure;
 	}
@@ -152,11 +152,11 @@ public class CollateralGroupPath {
 
 	public double[] uncollateralizedExposure()
 	{
-		int iNumVertex = _aHGV.length;
+		int iNumVertex = _aCGV.length;
 		double[] adblUncollateralizedExposure = new double[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblUncollateralizedExposure[i] = _aHGV[i].uncollateralized();
+			adblUncollateralizedExposure[i] = _aCGV[i].uncollateralized();
 
 		return adblUncollateralizedExposure;
 	}
@@ -169,11 +169,11 @@ public class CollateralGroupPath {
 
 	public double[] creditExposure()
 	{
-		int iNumVertex = _aHGV.length;
+		int iNumVertex = _aCGV.length;
 		double[] adblCreditExposure = new double[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblCreditExposure[i] = _aHGV[i].credit();
+			adblCreditExposure[i] = _aCGV[i].credit();
 
 		return adblCreditExposure;
 	}
@@ -186,11 +186,11 @@ public class CollateralGroupPath {
 
 	public double[] debtExposure()
 	{
-		int iNumVertex = _aHGV.length;
+		int iNumVertex = _aCGV.length;
 		double[] adblDebtExposure = new double[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblDebtExposure[i] = _aHGV[i].debt();
+			adblDebtExposure[i] = _aCGV[i].debt();
 
 		return adblDebtExposure;
 	}
@@ -203,11 +203,11 @@ public class CollateralGroupPath {
 
 	public double[] fundingExposure()
 	{
-		int iNumVertex = _aHGV.length;
+		int iNumVertex = _aCGV.length;
 		double[] adblFundingExposure = new double[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblFundingExposure[i] = _aHGV[i].funding();
+			adblFundingExposure[i] = _aCGV[i].funding();
 
 		return adblFundingExposure;
 	}
@@ -220,11 +220,11 @@ public class CollateralGroupPath {
 
 	public double[] collateralBalance()
 	{
-		int iNumVertex = _aHGV.length;
+		int iNumVertex = _aCGV.length;
 		double[] adblCollateralizedBalance = new double[iNumVertex];
 
 		for (int i = 0; i < iNumVertex; ++i)
-			adblCollateralizedBalance[i] = _aHGV[i].collateralBalance();
+			adblCollateralizedBalance[i] = _aCGV[i].collateralBalance();
 
 		return adblCollateralizedBalance;
 	}
