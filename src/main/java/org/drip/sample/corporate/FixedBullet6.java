@@ -65,13 +65,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * CorporateFixedBullet6 demonstrates Non-EOS Fixed Coupon Agency Bond Pricing and Relative Value Measure
- *  Generation Functionality.
+ * FixedBullet6 demonstrates Non-EOS Fixed Coupon Agency Bond Pricing and Relative Value Measure Generation
+ *  Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CorporateFixedBullet6 {
+public class FixedBullet6 {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,

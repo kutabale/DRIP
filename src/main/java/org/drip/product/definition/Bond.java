@@ -12236,6 +12236,30 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate Yield from Price to Work-out after applying the Tax Credit Coupon Extension
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblPrice Price to Work-out
+	 * 
+	 * @return Yield from Price to Work-out after applying the Tax Credit Coupon Extension
+	 * 
+	 * @throws java.lang.Exception Thrown if the Yield cannot be calculated
+	 */
+
+	public abstract double yieldFromPriceTC (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblPrice)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate Yield from TSY Spread to Work-out
 	 * 
 	 * @param valParams Valuation Parameters

@@ -61,6 +61,7 @@ package org.drip.product.params;
  */
 
 public class CouponSetting implements org.drip.product.params.Validatable {
+	private double _dblCouponRateExtension = 0.;
 	private java.lang.String _strCouponType = "";
 	private org.drip.quant.common.Array2D _fs = null;
 	private double _dblCouponRate = java.lang.Double.NaN;
@@ -89,6 +90,33 @@ public class CouponSetting implements org.drip.product.params.Validatable {
 		_strCouponType = strCouponType;
 		_dblCouponFloorRate = dblCouponFloorRate;
 		_dblCouponCeilingRate = dblCouponCeilingRate;
+	}
+
+	/**
+	 * Construct the CouponSetting from the coupon schedule, coupon type, the coupon rate, and its extension
+	 * 
+	 * @param fs Coupon schedule
+	 * @param strCouponType Coupon Type
+	 * @param dblCouponRate Coupon Rate
+	 * @param dblCouponRateExtension Coupon Rate Extension
+	 * @param dblCouponCeilingRate Coupon Ceiling Rate
+	 * @param dblCouponFloorRate Coupon Floor Rate
+	 */
+
+	public CouponSetting (
+		final org.drip.quant.common.Array2D fs,
+		final java.lang.String strCouponType,
+		final double dblCouponRate,
+		final double dblCouponRateExtension,
+		final double dblCouponCeilingRate,
+		final double dblCouponFloorRate)
+	{
+		_fs = fs;
+		_dblCouponRate = dblCouponRate;
+		_strCouponType = strCouponType;
+		_dblCouponFloorRate = dblCouponFloorRate;
+		_dblCouponCeilingRate = dblCouponCeilingRate;
+		_dblCouponRateExtension = dblCouponRateExtension;
 	}
 
 	/**
@@ -129,7 +157,9 @@ public class CouponSetting implements org.drip.product.params.Validatable {
 
 	@Override public boolean validate()
 	{
-		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCouponRate)) return false;
+		if (!org.drip.quant.common.NumberUtil.IsValid (_dblCouponRate) ||
+			!org.drip.quant.common.NumberUtil.IsValid (_dblCouponRateExtension))
+			return false;
 
 		if (null == _fs) _fs = org.drip.quant.common.Array2D.BulletSchedule();
 
@@ -172,6 +202,17 @@ public class CouponSetting implements org.drip.product.params.Validatable {
 	public double couponRate()
 	{
 		return _dblCouponRate;
+	}
+
+	/**
+	 * Retrieve the Coupon Rate Extension
+	 * 
+	 * @return The Coupon Rate Extension
+	 */
+
+	public double couponRateExtension()
+	{
+		return _dblCouponRateExtension;
 	}
 
 	/**

@@ -61,13 +61,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * CorporateNonFixedBullet demonstrates Non-EOS Non-Fixed Coupon (Floater, Variable) Corporate Bond Pricing
- *  and Relative Value Measure Generation Functionality.
+ * NonFixedBullet demonstrates Non-EOS Non-Fixed Coupon (Floater, Variable) Corporate Bond Pricing and
+ *  Relative Value Measure Generation Functionality.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class CorporateNonFixedBullet {
+public class NonFixedBullet {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -458,6 +458,15 @@ public class CorporateNonFixedBullet {
 				adblCleanPrice[i]
 			);
 
+			double dblYTMBondEquivalent = aBond[i].yieldFromPrice (
+				valParams,
+				csqc,
+				ValuationCustomizationParams.BondEquivalent (aBond[i].currency()),
+				aBond[i].maturityDate().julian(),
+				1.,
+				adblCleanPrice[i]
+			);
+
 			double dblWALTW = aBond[i].weightedAverageLife (
 				valParams,
 				csqc,
@@ -517,6 +526,7 @@ public class CorporateNonFixedBullet {
 				FormatUtil.FormatDouble (dblAccrued, 1, 4, 100.) + "," +
 				FormatUtil.FormatDouble (wi.yield(), 1, 3, 100.) + "%," +
 				FormatUtil.FormatDouble (dblYTM, 1, 3, 100.) + "%," +
+				FormatUtil.FormatDouble (dblYTMBondEquivalent, 1, 3, 100.) + "%," +
 				FormatUtil.FormatDouble (dblWALTW, 1, 3, 1.) + "," +
 				FormatUtil.FormatDouble (dblWALTM, 1, 3, 1.) + "," +
 				FormatUtil.FormatDouble (dblBasePrice - dblBumpPrice, 1, 4, 10000.) + "," +
@@ -525,7 +535,7 @@ public class CorporateNonFixedBullet {
 		}
 
 		System.out.println
-			("Bond, Issue, Maturity, Floater Index, Spread, First Coupon, Clean Price, Accrued, Yield TW, Yield TM, WAL TW, WAL TM, Duration TW, Discount Margin TW, OAS TW");
+			("Bond, Issue, Maturity, Floater Index, Spread, First Coupon, Clean Price, Accrued, Yield TW, Yield TM, Bond Equivalent Yield TM, WAL TW, WAL TM, Duration TW, Discount Margin TW, OAS TW");
 
 		System.out.print (strSecularMetrics);
 	}

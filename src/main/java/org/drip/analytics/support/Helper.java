@@ -402,6 +402,52 @@ public class Helper {
 	}
 
 	/**
+	 * Convert the Nominal Yield to the Post Tax Equivalent Yield
+	 * 
+	 * @param dblNominalYield The Nominal Yield
+	 * @param dblTaxRate The Tax Rate
+	 * 
+	 * @return The Post Tax Equivalent Yield
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public static final double NominalYieldToPostTaxEquivalent (
+		final double dblNominalYield,
+		final double dblTaxRate)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblNominalYield) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblTaxRate))
+			throw new java.lang.Exception ("Helper::NominalYieldToPostTaxEquivalent => Invalid Inputs");
+
+		return dblNominalYield * (1. - dblTaxRate);
+	}
+
+	/**
+	 * Convert the Post Tax Equivalent Yield to the Nominal Yield
+	 * 
+	 * @param dblPostTaxEquivalentYield The Post Tax Equivalent Yield
+	 * @param dblTaxRate The Tax Rate
+	 * 
+	 * @return The Nominal Yield
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public static final double PostTaxEquivalentYieldToNominal (
+		final double dblPostTaxEquivalentYield,
+		final double dblTaxRate)
+		throws java.lang.Exception
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblPostTaxEquivalentYield) ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblTaxRate))
+			throw new java.lang.Exception ("Helper::PostTaxEquivalentYieldToNominal => Invalid Inputs");
+
+		return dblPostTaxEquivalentYield / (1. - dblTaxRate);
+	}
+
+	/**
 	 * Return the standard on-the-run benchmark treasury string from the valuation and the maturity dates
 	 * 
 	 * @param iValueDate the Valuation date
@@ -1055,7 +1101,7 @@ public class Helper {
 	 */
 
 	public static final java.util.Set<org.drip.analytics.cashflow.CompositePeriod> AggregateComponentPeriods
-	(final org.drip.product.definition.Component[] aComp)
+		(final org.drip.product.definition.Component[] aComp)
 	{
 		if (null == aComp) return null;
 

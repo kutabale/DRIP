@@ -70,6 +70,26 @@ public class ValuationCustomizationParams {
 	private org.drip.analytics.daycount.ActActDCParams _aapYield = null;
 
 	/**
+	 * Construct the BondEquivalent Instance of ValuationCustomizationParams
+	 * 
+	 * @param strCalendar The Calendar
+	 * 
+	 * @return The BondEquivalent Instance of ValuationCustomizationParams
+	 */
+
+	public static final ValuationCustomizationParams BondEquivalent (
+		final java.lang.String strCalendar)
+	{
+		try {
+			return new ValuationCustomizationParams ("30/360", 2, false, null, strCalendar, false);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Construct ValuationCustomizationParams from the Day Count and the Frequency parameters
 	 * 
 	 * @param strDC Quoting Day Count

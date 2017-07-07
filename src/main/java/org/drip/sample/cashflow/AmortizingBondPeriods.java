@@ -8,7 +8,7 @@ import org.drip.param.market.CurveSurfaceQuoteContainer;
 import org.drip.param.valuation.ValuationParams;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
-import org.drip.quant.common.FormatUtil;
+import org.drip.quant.common.*;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.creator.ScenarioCreditCurveBuilder;
@@ -62,12 +62,12 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * FixedCouponBondPeriods demonstrates the Cash Flow Period Details for a Fixed Coupon Bond.
+ * AmortizingBondPeriods demonstrates the Cash Flow Period Details for an Amortizing Fixed Coupon Bond.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class FixedCouponBondPeriods {
+public class AmortizingBondPeriods {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -224,13 +224,14 @@ public class FixedCouponBondPeriods {
 			0.0308  // 30Y
 		};
 
-		JulianDate dtEffective = DateUtil.CreateFromYMD (2015,  5,  4);
-		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2035,  5, 15);
-		double dblCoupon = 0.04500;
+		JulianDate dtEffective = DateUtil.CreateFromYMD (2014,  8, 11);
+		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2026,  9,  3);
+		double dblCoupon = 0.0375;
 		int iFreq = 2;
-		String strCUSIP = "00206RCP5";
+		String strCUSIP = "90932QAA4";
 		String strDayCount = "30/360";
 		String strCreditCurve = "CC";
+		String strDateFactor = "8/11/2014;1;3/3/2016;0.970903241;9/3/2016;0.942322722;3/3/2017;0.913786792;9/3/2017;0.885297621;3/3/2018;0.857293406;9/3/2018;0.829340734;3/3/2019;0.801442245;9/3/2019;0.77360076;3/3/2020;0.7458193;9/3/2020;0.718101103;3/3/2021;0.690449645;9/3/2021;0.66286866;3/3/2022;0.635362168;9/3/2022;0.607934498;3/3/2023;0.580590323;9/3/2023;0.553334692;3/3/2024;0.526173071;9/3/2024;0.499111382;3/3/2025;0.472156058;9/3/2025;0.445314095;3/3/2026;0.418593118";
 
 		BondComponent bond = BondBuilder.CreateSimpleFixed (
 			strCUSIP,
@@ -241,7 +242,10 @@ public class FixedCouponBondPeriods {
 			strDayCount,
 			dtEffective,
 			dtMaturity,
-			null,
+			Array2D.FromDateFactorVertex (
+				strDateFactor,
+				dtMaturity.julian()
+			),
 			null
 		);
 
@@ -329,7 +333,7 @@ public class FixedCouponBondPeriods {
 				p.couponCurrency() + " | " +
 				FormatUtil.FormatDouble (p.basis(), 1, 0, 10000.) + " | " +
 				FormatUtil.FormatDouble (p.baseNotional(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (p.notional (iEndDate), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (bond.notional (iEndDate), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (p.couponFactor (iEndDate), 1, 4, 1.) + " ||"
 			);
 		}
@@ -337,6 +341,8 @@ public class FixedCouponBondPeriods {
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
+
+		double dblPreviousPeriodNotional = bond.notional (dtEffective.julian());
 
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
 
@@ -387,6 +393,8 @@ public class FixedCouponBondPeriods {
 
 			double dblCouponDCF = p.couponDCF();
 
+			double dblCurrentPeriodNotional = bond.notional (iEndDate);
+
 			System.out.println ("\t|| " +
 				DateUtil.YYYYMMDD (iStartDate) + " => " +
 				DateUtil.YYYYMMDD (iEndDate) + " | " +
@@ -395,12 +403,14 @@ public class FixedCouponBondPeriods {
 				p.fundingLabel().fullyQualifiedName() + " | " +
 				FormatUtil.FormatDouble (dblCouponRate, 1, 2, 100.) + "% | " +
 				FormatUtil.FormatDouble (dblCouponDCF, 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (dblCouponRate * dblCouponDCF * p.notional (iEndDate) * p.couponFactor (iEndDate), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (p.notional (iStartDate) - p.notional (iEndDate), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (dblCouponRate * dblCouponDCF * dblCurrentPeriodNotional * p.couponFactor (iEndDate), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (dblPreviousPeriodNotional - dblCurrentPeriodNotional, 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (p.df (csqc), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (p.survival (csqc), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (p.recovery (csqc), 2, 0, 100.) + "% ||"
 			);
+
+			dblPreviousPeriodNotional = dblCurrentPeriodNotional;
 		}
 
 		System.out.println ("\t|| " +
