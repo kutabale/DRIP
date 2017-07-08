@@ -6,8 +6,10 @@ import org.drip.analytics.date.*;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
 import org.drip.param.valuation.ValuationParams;
+import org.drip.param.valuation.WorkoutInfo;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
+import org.drip.product.params.EmbeddedOptionSchedule;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
@@ -62,12 +64,12 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * FixedCouponBondPeriods demonstrates the Cash Flow Period Details for a Fixed Coupon Bond.
+ * EOSBondPeriods demonstrates the Cash Flow Period Details for a Bond with Embedded Options.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class FixedCouponBondPeriods {
+public class EOSBondPeriods {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -224,13 +226,26 @@ public class FixedCouponBondPeriods {
 			0.0308  // 30Y
 		};
 
-		JulianDate dtEffective = DateUtil.CreateFromYMD (2015,  5,  4);
-		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2035,  5, 15);
-		double dblCoupon = 0.04500;
+		JulianDate dtEffective = DateUtil.CreateFromYMD (2015, 11, 30);
+		JulianDate dtMaturity  = DateUtil.CreateFromYMD (2025,  5, 15);
+		double dblCoupon = 0.06375;
 		int iFreq = 2;
-		String strCUSIP = "00206RCP5";
+		double dblCleanPrice = 1.0687500;
+		String strCUSIP = "90932QAA4";
 		String strDayCount = "30/360";
 		String strCreditCurve = "CC";
+		int[] aiExerciseDate = new int[] {
+			DateUtil.CreateFromYMD (2020,  5, 15).julian(),
+			DateUtil.CreateFromYMD (2021,  5, 15).julian(),
+			DateUtil.CreateFromYMD (2022,  5, 15).julian(),
+			DateUtil.CreateFromYMD (2023,  5, 15).julian(),
+		};
+		double[] adblExercisePrice = new double[] {
+			1.03188,
+			1.02125,
+			1.01063,
+			1.00000,
+		};
 
 		BondComponent bond = BondBuilder.CreateSimpleFixed (
 			strCUSIP,
@@ -244,6 +259,19 @@ public class FixedCouponBondPeriods {
 			null,
 			null
 		);
+
+		EmbeddedOptionSchedule eos = new EmbeddedOptionSchedule (
+			aiExerciseDate,
+			adblExercisePrice,
+			false,
+			30,
+			false,
+			Double.NaN,
+			"",
+			Double.NaN
+		);
+
+		bond.setEmbeddedCallSchedule (eos);
 
 		MergedDiscountForwardCurve mdfc = FundingCurve (
 			dtSpot,
@@ -275,6 +303,13 @@ public class FixedCouponBondPeriods {
 		);
 
 		ValuationParams valParams = ValuationParams.Spot (dtSpot.julian());
+
+		WorkoutInfo wi = bond.exerciseYieldFromPrice (
+			valParams,
+			csqc,
+			null,
+			dblCleanPrice
+		);
 
 		System.out.println();
 
@@ -314,8 +349,18 @@ public class FixedCouponBondPeriods {
 
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------------||");
 
+		boolean bTerminateCashFlow = false;
+
 		for (CompositePeriod p : bond.couponPeriods()) {
+			if (bTerminateCashFlow) break;
+
 			int iEndDate = p.endDate();
+
+			if (iEndDate >= wi.date()) {
+				iEndDate = wi.date();
+
+				bTerminateCashFlow = true;
+			}
 
 			System.out.println ("\t|| " +
 				DateUtil.YYYYMMDD (p.startDate()) + " => " +
@@ -329,7 +374,7 @@ public class FixedCouponBondPeriods {
 				p.couponCurrency() + " | " +
 				FormatUtil.FormatDouble (p.basis(), 1, 0, 10000.) + " | " +
 				FormatUtil.FormatDouble (p.baseNotional(), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (p.notional (iEndDate), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (bond.notional (iEndDate), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (p.couponFactor (iEndDate), 1, 4, 1.) + " ||"
 			);
 		}
@@ -337,6 +382,8 @@ public class FixedCouponBondPeriods {
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
+
+		double dblPreviousPeriodNotional = bond.notional (dtEffective.julian());
 
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------||");
 
@@ -370,8 +417,18 @@ public class FixedCouponBondPeriods {
 
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------||");
 
+		bTerminateCashFlow = false;
+
 		for (CompositePeriod p : bond.couponPeriods()) {
+			if (bTerminateCashFlow) break;
+
 			int iEndDate = p.endDate();
+
+			if (iEndDate >= wi.date()) {
+				iEndDate = wi.date();
+
+				bTerminateCashFlow = true;
+			}
 
 			int iPayDate = p.payDate();
 
@@ -385,6 +442,8 @@ public class FixedCouponBondPeriods {
 
 			double dblCouponDCF = p.couponDCF();
 
+			double dblCurrentPeriodNotional = bond.notional (iEndDate);
+
 			System.out.println ("\t|| " +
 				DateUtil.YYYYMMDD (iStartDate) + " => " +
 				DateUtil.YYYYMMDD (iEndDate) + " | " +
@@ -392,23 +451,25 @@ public class FixedCouponBondPeriods {
 				p.fundingLabel().fullyQualifiedName() + " | " +
 				FormatUtil.FormatDouble (dblCouponRate, 1, 2, 100.) + "% | " +
 				FormatUtil.FormatDouble (dblCouponDCF, 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (dblCouponRate * dblCouponDCF * p.notional (iEndDate) * p.couponFactor (iEndDate), 1, 4, 1.) + " | " +
-				FormatUtil.FormatDouble (p.notional (iStartDate) - p.notional (iEndDate), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (dblCouponRate * dblCouponDCF * dblCurrentPeriodNotional * p.couponFactor (iEndDate), 1, 4, 1.) + " | " +
+				FormatUtil.FormatDouble (dblPreviousPeriodNotional - dblCurrentPeriodNotional, 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (p.df (csqc), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (p.survival (csqc), 1, 4, 1.) + " | " +
 				FormatUtil.FormatDouble (p.recovery (csqc), 2, 0, 100.) + "% ||"
 			);
+
+			dblPreviousPeriodNotional = dblCurrentPeriodNotional;
 		}
 
 		System.out.println ("\t|| " +
 			DateUtil.YYYYMMDD (dtEffective.julian()) + " => " +
-			DateUtil.YYYYMMDD (dtMaturity.julian()) + " | " +
+			DateUtil.YYYYMMDD (wi.date()) + " | " +
 			bond.creditLabel().fullyQualifiedName() + " | " +
 			bond.fundingLabel().fullyQualifiedName() + " | " +
 			FormatUtil.FormatDouble (0., 1, 2, 100.) + "% | " +
 			FormatUtil.FormatDouble (0., 1, 4, 1.) + " | " +
 			FormatUtil.FormatDouble (0., 1, 4, 1.) + " | " +
-			FormatUtil.FormatDouble (bond.notional (dtMaturity.julian()), 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (bond.notional (dtMaturity.julian()) * wi.factor(), 1, 4, 1.) + " | " +
 			FormatUtil.FormatDouble (mdfc.df (dtMaturity), 1, 4, 1.) + " | " +
 			FormatUtil.FormatDouble (cc.survival (dtMaturity), 1, 4, 1.) + " | " +
 			FormatUtil.FormatDouble (cc.recovery (dtMaturity), 2, 0, 100.) + "% ||"

@@ -344,39 +344,37 @@ public class AmortizingBondPeriods {
 
 		double dblPreviousPeriodNotional = bond.notional (dtEffective.julian());
 
-		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                                       PERIOD LABELS AND CURVE FACTORS                                       ||");
+		System.out.println ("\t||                                    PERIOD LABELS AND CURVE FACTORS                                    ||");
 
-		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||   L -> R:                                                                                                   ||");
+		System.out.println ("\t||   L -> R:                                                                                             ||");
 
-		System.out.println ("\t||           - Period Start Date                                                                               ||");
+		System.out.println ("\t||           - Period Start Date                                                                         ||");
 
-		System.out.println ("\t||           - Period End Date                                                                                 ||");
+		System.out.println ("\t||           - Period End Date                                                                           ||");
 
-		System.out.println ("\t||           - Period Collateral Label                                                                         ||");
+		System.out.println ("\t||           - Period Credit Label                                                                       ||");
 
-		System.out.println ("\t||           - Period Credit Label                                                                             ||");
+		System.out.println ("\t||           - Period Funding Label                                                                      ||");
 
-		System.out.println ("\t||           - Period Funding Label                                                                            ||");
+		System.out.println ("\t||           - Period Coupon Rate (%)                                                                    ||");
 
-		System.out.println ("\t||           - Period Coupon Rate (%)                                                                          ||");
+		System.out.println ("\t||           - Period Coupon Year Fraction                                                               ||");
 
-		System.out.println ("\t||           - Period Coupon Year Fraction                                                                     ||");
+		System.out.println ("\t||           - Period Coupon Amount                                                                      ||");
 
-		System.out.println ("\t||           - Period Coupon Amount                                                                            ||");
+		System.out.println ("\t||           - Period Principal Amount                                                                   ||");
 
-		System.out.println ("\t||           - Period Principal Amount                                                                         ||");
+		System.out.println ("\t||           - Period Discount Factor                                                                    ||");
 
-		System.out.println ("\t||           - Period Discount Factor                                                                          ||");
+		System.out.println ("\t||           - Period Survival Probability                                                               ||");
 
-		System.out.println ("\t||           - Period Survival Probability                                                                     ||");
+		System.out.println ("\t||           - Period Recovery                                                                           ||");
 
-		System.out.println ("\t||           - Period Recovery                                                                                 ||");
-
-		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------------------------------||");
 
 		for (CompositePeriod p : bond.couponPeriods()) {
 			int iEndDate = p.endDate();
@@ -398,7 +396,6 @@ public class AmortizingBondPeriods {
 			System.out.println ("\t|| " +
 				DateUtil.YYYYMMDD (iStartDate) + " => " +
 				DateUtil.YYYYMMDD (iEndDate) + " | " +
-				p.collateralLabel().fullyQualifiedName() + " | " +
 				p.creditLabel().fullyQualifiedName() + " | " +
 				p.fundingLabel().fullyQualifiedName() + " | " +
 				FormatUtil.FormatDouble (dblCouponRate, 1, 2, 100.) + "% | " +
@@ -416,7 +413,6 @@ public class AmortizingBondPeriods {
 		System.out.println ("\t|| " +
 			DateUtil.YYYYMMDD (dtEffective.julian()) + " => " +
 			DateUtil.YYYYMMDD (dtMaturity.julian()) + " | " +
-			bond.fundingLabel().fullyQualifiedName() + " | " +
 			bond.creditLabel().fullyQualifiedName() + " | " +
 			bond.fundingLabel().fullyQualifiedName() + " | " +
 			FormatUtil.FormatDouble (0., 1, 2, 100.) + "% | " +
@@ -428,7 +424,7 @@ public class AmortizingBondPeriods {
 			FormatUtil.FormatDouble (cc.recovery (dtMaturity), 2, 0, 100.) + "% ||"
 		);
 
-		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||-------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

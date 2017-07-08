@@ -172,7 +172,7 @@ public class ConvexityAdjustment {
 	{
 		if (!org.drip.quant.common.NumberUtil.IsValid (dblCollateralFX)) return false;
 
-		_dblCollateralFunding = dblCollateralFX;
+		_dblCollateralFX = dblCollateralFX;
 		return true;
 	}
 

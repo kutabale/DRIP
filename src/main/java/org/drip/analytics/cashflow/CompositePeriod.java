@@ -532,17 +532,6 @@ public abstract class CompositePeriod {
 	}
 
 	/**
-	 * Return the Collateral Label
-	 * 
-	 * @return The Collateral Label
-	 */
-
-	public org.drip.state.identifier.CollateralLabel collateralLabel()
-	{
-		return org.drip.state.identifier.CollateralLabel.Standard (_strPayCurrency);
-	}
-
-	/**
 	 * Return the Credit Label
 	 * 
 	 * @return The Credit Label
