@@ -1,8 +1,12 @@
 
 package org.drip.sample.cashflow;
 
+import org.drip.analytics.cashflow.ComposableUnitFloatingPeriod;
+import org.drip.analytics.cashflow.CompositeFloatingPeriod;
 import org.drip.analytics.cashflow.CompositePeriod;
+import org.drip.analytics.cashflow.ReferenceIndexPeriod;
 import org.drip.analytics.date.*;
+import org.drip.analytics.output.ConvexityAdjustment;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
 import org.drip.param.valuation.ValuationParams;
@@ -182,48 +186,63 @@ public class DepositPeriods {
 
 		ValuationParams valParams = ValuationParams.Spot (dtSpot.julian());
 
-		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||                                        CASH FLOW PERIOD DATES AND FACTORS                                         ||");
+		System.out.println ("\t||                                                           CASH FLOW PERIOD DATES AND FACTORS                                                             ||");
 
-		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		System.out.println ("\t||   L -> R:                                                                                                         ||");
+		System.out.println ("\t||   L -> R:                                                                                                                                                ||");
 
-		System.out.println ("\t||           - Period Start Date                                                                                     ||");
+		System.out.println ("\t||           - Period Start Date                                                                                                                            ||");
 
-		System.out.println ("\t||           - Period End Date                                                                                       ||");
+		System.out.println ("\t||           - Period End Date                                                                                                                              ||");
 
-		System.out.println ("\t||           - Period Pay Date                                                                                       ||");
+		System.out.println ("\t||           - Period Pay Date                                                                                                                              ||");
 
-		System.out.println ("\t||           - Period FX Fixing Date                                                                                 ||");
+		System.out.println ("\t||           - Period Index Reference Start Date                                                                                                            ||");
 
-		System.out.println ("\t||           - Period Is FX MTM?                                                                                     ||");
+		System.out.println ("\t||           - Period Index Reference End Date                                                                                                              ||");
 
-		System.out.println ("\t||           - Period Tenor                                                                                          ||");
+		System.out.println ("\t||           - Period Reset Date                                                                                                                            ||");
 
-		System.out.println ("\t||           - Period Coupon Frequency                                                                               ||");
+		System.out.println ("\t||           - Period FX Fixing Date                                                                                                                        ||");
 
-		System.out.println ("\t||           - Period Pay Currency                                                                                   ||");
+		System.out.println ("\t||           - Period Is FX MTM?                                                                                                                            ||");
 
-		System.out.println ("\t||           - Period Coupon Currency                                                                                ||");
+		System.out.println ("\t||           - Period Tenor                                                                                                                                 ||");
 
-		System.out.println ("\t||           - Period Basis                                                                                          ||");
+		System.out.println ("\t||           - Period Coupon Frequency                                                                                                                      ||");
 
-		System.out.println ("\t||           - Period Base Notional                                                                                  ||");
+		System.out.println ("\t||           - Period Pay Currency                                                                                                                          ||");
 
-		System.out.println ("\t||           - Period Notional                                                                                       ||");
+		System.out.println ("\t||           - Period Coupon Currency                                                                                                                       ||");
 
-		System.out.println ("\t||           - Period Coupon Factor                                                                                  ||");
+		System.out.println ("\t||           - Period Basis                                                                                                                                 ||");
 
-		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||           - Period Base Notional                                                                                                                         ||");
+
+		System.out.println ("\t||           - Period Notional                                                                                                                              ||");
+
+		System.out.println ("\t||           - Period Coupon Factor                                                                                                                         ||");
+
+		System.out.println ("\t||----------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (CompositePeriod p : sscDeposit.couponPeriods()) {
 			int iEndDate = p.endDate();
 
+			CompositeFloatingPeriod cfp = (CompositeFloatingPeriod) p;
+
+			ComposableUnitFloatingPeriod cufp = (ComposableUnitFloatingPeriod) cfp.periods().get(0);
+
+			ReferenceIndexPeriod rip = cufp.referenceIndexPeriod();
+
 			System.out.println ("\t|| " +
 				DateUtil.YYYYMMDD (p.startDate()) + " => " +
 				DateUtil.YYYYMMDD (iEndDate) + " | " +
+				DateUtil.YYYYMMDD (rip.startDate()) + " | " +
+				DateUtil.YYYYMMDD (rip.endDate()) + " | " +
+				DateUtil.YYYYMMDD (rip.fixingDate()) + " | " +
 				DateUtil.YYYYMMDD (p.payDate()) + " | " +
 				DateUtil.YYYYMMDD (p.fxFixingDate()) + " | " +
 				p.isFXMTM() + " | " +
@@ -238,7 +257,7 @@ public class DepositPeriods {
 			);
 		}
 
-		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------------||");
+		System.out.println ("\t||----------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 
@@ -297,6 +316,62 @@ public class DepositPeriods {
 		}
 
 		System.out.println ("\t||------------------------------------------------------------------------------------------------||");
+
+		System.out.println();
+
+		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||                                       CASH FLOW PERIODS CONVEXITY CORRECTION                                       ||");
+
+		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||    L -> R:                                                                                                         ||");
+
+		System.out.println ("\t||            - Collateral Credit Adjustment                                                                          ||");
+
+		System.out.println ("\t||            - Collateral Forward Adjustment                                                                         ||");
+
+		System.out.println ("\t||            - Collateral Funding Adjustment                                                                         ||");
+
+		System.out.println ("\t||            - Collateral FX Adjustment                                                                              ||");
+
+		System.out.println ("\t||            - Credit Forward Adjustment                                                                             ||");
+
+		System.out.println ("\t||            - Credit Funding Adjustment                                                                             ||");
+
+		System.out.println ("\t||            - Credit FX Adjustment                                                                                  ||");
+
+		System.out.println ("\t||            - Forward Funding Adjustment                                                                            ||");
+
+		System.out.println ("\t||            - Forward FX Adjustment                                                                                 ||");
+
+		System.out.println ("\t||            - Funding FX Adjustment                                                                                 ||");
+
+		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
+
+		for (CompositePeriod p : sscDeposit.couponPeriods()) {
+			ConvexityAdjustment ca = p.terminalConvexityAdjustment (
+				dtSpot.julian(),
+				csqc
+			);
+
+			System.out.println ("\t|| " +
+				DateUtil.YYYYMMDD (p.startDate()) + " => " +
+				DateUtil.YYYYMMDD (p.endDate()) + " | " +
+				FormatUtil.FormatDouble (ca.collateralCredit(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.collateralForward(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.collateralFunding(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.collateralFX(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.creditForward(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.creditFunding(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.creditFX(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.forwardFunding(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.forwardFX(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.fundingFX(), 1, 3, 1.) + " ||"
+			);
+		}
+
+		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

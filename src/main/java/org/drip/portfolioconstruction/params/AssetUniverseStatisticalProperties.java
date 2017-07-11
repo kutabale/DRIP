@@ -209,14 +209,18 @@ public class AssetUniverseStatisticalProperties {
 		throws java.lang.Exception
 	{
 		if (null == strID1 || strID1.isEmpty() || null == strID2 || strID2.isEmpty())
-			throw new java.lang.Exception ("AssetPoolStatisticalProperties::correlation => Invalid Inputs");
+			throw new java.lang.Exception
+				("AssetUniverseStatisticalProperties::correlation => Invalid Inputs");
 
 		if (strID1.equalsIgnoreCase (strID2)) return 1.;
 
 		java.lang.String strCorrelationSlot = strID1 + "@#" + strID2;
 
-		return _mapCorrelation.containsKey (strCorrelationSlot) ? _mapCorrelation.get (strCorrelationSlot) :
-			null;
+		if (!_mapCorrelation.containsKey (strCorrelationSlot))
+			throw new java.lang.Exception
+				("AssetUniverseStatisticalProperties::correlation => Invalid Inputs");
+
+		return _mapCorrelation.get (strCorrelationSlot);
 	}
 
 	/**

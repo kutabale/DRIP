@@ -1,16 +1,22 @@
 
 package org.drip.sample.cashflow;
 
+import java.util.List;
+
 import org.drip.analytics.cashflow.*;
 import org.drip.analytics.date.*;
 import org.drip.analytics.output.ConvexityAdjustment;
+import org.drip.analytics.support.CompositePeriodBuilder;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
-import org.drip.product.rates.FixFloatComponent;
+import org.drip.param.period.*;
+import org.drip.param.valuation.CashSettleParams;
+import org.drip.product.rates.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.service.template.*;
+import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.discount.MergedDiscountForwardCurve;
+import org.drip.state.identifier.ForwardLabel;
 
 /*
  * -*- mode: java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
@@ -58,12 +64,125 @@ import org.drip.state.discount.MergedDiscountForwardCurve;
  */
 
 /**
- * FixFloatInAdvancePeriods demonstrates the Cash Flow Period Details for an In-Advance Fix-Float Swap.
+ * FixFloatInAdvanceIMMPeriods demonstrates the Cash Flow Period Details for an In-Advance Fix-Float IMM
+ *  Swap.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class FixFloatInAdvancePeriods {
+public class FixFloatInAdvanceIMMPeriods {
+
+	private static final FixFloatComponent FixFloatInArrears (
+		final JulianDate dtEffective,
+		final String strCurrency,
+		final String strMaturityTenor)
+		throws Exception
+	{
+		UnitCouponAccrualSetting ucasFixed = new UnitCouponAccrualSetting (
+			2,
+			"Act/360",
+			false,
+			"Act/360",
+			false,
+			strCurrency,
+			true,
+			CompositePeriodBuilder.ACCRUAL_COMPOUNDING_RULE_GEOMETRIC
+		);
+
+		ComposableFloatingUnitSetting cfusFloating = new ComposableFloatingUnitSetting (
+			"6M",
+			CompositePeriodBuilder.EDGE_DATE_SEQUENCE_REGULAR,
+			null,
+			ForwardLabel.Create (
+				strCurrency,
+				"6M"
+			),
+			CompositePeriodBuilder.REFERENCE_PERIOD_IN_ADVANCE,
+			0.
+		);
+
+		ComposableFixedUnitSetting cfusFixed = new ComposableFixedUnitSetting (
+			"6M",
+			CompositePeriodBuilder.EDGE_DATE_SEQUENCE_REGULAR,
+			null,
+			0.,
+			0.,
+			strCurrency
+		);
+
+		CompositePeriodSetting cpsFloating = new CompositePeriodSetting (
+			2,
+			"6M",
+			strCurrency,
+			null,
+			-1.,
+			null,
+			null,
+			null,
+			null
+		);
+
+		CompositePeriodSetting cpsFixed = new CompositePeriodSetting (
+			2,
+			"6M",
+			strCurrency,
+			null,
+			1.,
+			null,
+			null,
+			null,
+			null
+		);
+
+		CashSettleParams csp = new CashSettleParams (
+			0,
+			strCurrency,
+			0
+		);
+
+		List<Integer> lsFixedStreamEdgeDate = CompositePeriodBuilder.IMMEdgeDates (
+			dtEffective,
+			3,
+			"6M",
+			strMaturityTenor,
+			null
+		);
+
+		List<Integer> lsFloatingStreamEdgeDate = CompositePeriodBuilder.IMMEdgeDates (
+			dtEffective,
+			3,
+			"6M",
+			strMaturityTenor,
+			null
+		);
+
+		Stream floatingStream = new Stream (
+			CompositePeriodBuilder.FloatingCompositeUnit (
+				lsFloatingStreamEdgeDate,
+				cpsFloating,
+				cfusFloating
+			)
+		);
+
+		Stream fixedStream = new Stream (
+			CompositePeriodBuilder.FixedCompositeUnit (
+				lsFixedStreamEdgeDate,
+				cpsFixed,
+				ucasFixed,
+				cfusFixed
+			)
+		);
+
+		FixFloatComponent irs = new FixFloatComponent (
+			fixedStream,
+			floatingStream,
+			csp
+		);
+
+		irs.setPrimaryCode ("IRS." + strMaturityTenor + "." + strCurrency);
+
+		return irs;
+	}
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -156,13 +275,10 @@ public class FixFloatInAdvancePeriods {
 
 		String strCurrency = "USD";
 
-		FixFloatComponent ffcInAdvance = OTCInstrumentBuilder.FixFloatStandard (
+		FixFloatComponent ffcInAdvanceIMM = FixFloatInArrears (
 			dtSpot,
 			strCurrency,
-			"NYC",
-			"8Y",
-			"MAIN",
-			0.024683
+			"8Y"
 		);
 
 		System.out.println();
@@ -219,7 +335,7 @@ public class FixFloatInAdvancePeriods {
 
 		System.out.println ("\t||-------------------------------------------------------------------------------------------------------------------||");
 
-		for (CompositePeriod p : ffcInAdvance.referenceStream().cashFlowPeriod()) {
+		for (CompositePeriod p : ffcInAdvanceIMM.referenceStream().cashFlowPeriod()) {
 			int iEndDate = p.endDate();
 
 			System.out.println ("\t|| " +
@@ -269,7 +385,7 @@ public class FixFloatInAdvancePeriods {
 
 		System.out.println ("\t||---------------------------------------------------------------------------------||");
 
-		for (CompositePeriod p : ffcInAdvance.referenceStream().cashFlowPeriod()) {
+		for (CompositePeriod p : ffcInAdvanceIMM.referenceStream().cashFlowPeriod()) {
 			int iEndDate = p.endDate();
 
 			int iStartDate = p.startDate();
@@ -339,7 +455,7 @@ public class FixFloatInAdvancePeriods {
 
 		System.out.println ("\t||----------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
-		for (CompositePeriod p : ffcInAdvance.derivedStream().cashFlowPeriod()) {
+		for (CompositePeriod p : ffcInAdvanceIMM.derivedStream().cashFlowPeriod()) {
 			int iEndDate = p.endDate();
 
 			CompositeFloatingPeriod cfp = (CompositeFloatingPeriod) p;
@@ -400,7 +516,7 @@ public class FixFloatInAdvancePeriods {
 
 		System.out.println ("\t||------------------------------------------------------------------------------------------------||");
 
-		for (CompositePeriod p : ffcInAdvance.derivedStream().cashFlowPeriod()) {
+		for (CompositePeriod p : ffcInAdvanceIMM.derivedStream().cashFlowPeriod()) {
 			int iEndDate = p.endDate();
 
 			int iStartDate = p.startDate();
@@ -461,7 +577,7 @@ public class FixFloatInAdvancePeriods {
 
 		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
 
-		for (CompositePeriod p : ffcInAdvance.couponPeriods()) {
+		for (CompositePeriod p : ffcInAdvanceIMM.couponPeriods()) {
 			ConvexityAdjustment ca = p.terminalConvexityAdjustment (
 				dtSpot.julian(),
 				csqc

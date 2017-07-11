@@ -3,6 +3,7 @@ package org.drip.sample.cashflow;
 
 import org.drip.analytics.cashflow.*;
 import org.drip.analytics.date.*;
+import org.drip.analytics.output.ConvexityAdjustment;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
 import org.drip.param.valuation.ValuationParams;
@@ -429,6 +430,64 @@ public class FloatingCouponBondPeriods {
 		);
 
 		System.out.println ("\t||----------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println();
+
+		System.out.println();
+
+		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||                                       CASH FLOW PERIODS CONVEXITY CORRECTION                                       ||");
+
+		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
+
+		System.out.println ("\t||    L -> R:                                                                                                         ||");
+
+		System.out.println ("\t||            - Collateral Credit Adjustment                                                                          ||");
+
+		System.out.println ("\t||            - Collateral Forward Adjustment                                                                         ||");
+
+		System.out.println ("\t||            - Collateral Funding Adjustment                                                                         ||");
+
+		System.out.println ("\t||            - Collateral FX Adjustment                                                                              ||");
+
+		System.out.println ("\t||            - Credit Forward Adjustment                                                                             ||");
+
+		System.out.println ("\t||            - Credit Funding Adjustment                                                                             ||");
+
+		System.out.println ("\t||            - Credit FX Adjustment                                                                                  ||");
+
+		System.out.println ("\t||            - Forward Funding Adjustment                                                                            ||");
+
+		System.out.println ("\t||            - Forward FX Adjustment                                                                                 ||");
+
+		System.out.println ("\t||            - Funding FX Adjustment                                                                                 ||");
+
+		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
+
+		for (CompositePeriod p : bond.couponPeriods()) {
+			ConvexityAdjustment ca = p.terminalConvexityAdjustment (
+				dtSpot.julian(),
+				csqc
+			);
+
+			System.out.println ("\t|| " +
+				DateUtil.YYYYMMDD (p.startDate()) + " => " +
+				DateUtil.YYYYMMDD (p.endDate()) + " | " +
+				FormatUtil.FormatDouble (ca.collateralCredit(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.collateralForward(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.collateralFunding(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.collateralFX(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.creditForward(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.creditFunding(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.creditFX(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.forwardFunding(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.forwardFX(), 1, 3, 1.) + " | " +
+				FormatUtil.FormatDouble (ca.fundingFX(), 1, 3, 1.) + " ||"
+			);
+		}
+
+		System.out.println ("\t||--------------------------------------------------------------------------------------------------------------------||");
 
 		System.out.println();
 	}

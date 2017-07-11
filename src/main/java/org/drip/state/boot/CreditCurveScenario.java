@@ -96,7 +96,7 @@ public class CreditCurveScenario {
 				pricerParams, org.drip.param.creator.MarketParamsBuilder.Credit (dc, cc), null,
 					0.01, dblQuote);
 
-		return new TranslatedQuoteMeasure ("Upfront", null == mapQSMeasures ? null : mapQSMeasures.get
+		return null == mapQSMeasures ? null : new TranslatedQuoteMeasure ("Upfront", mapQSMeasures.get
 			("Upfront"));
 	}
 
