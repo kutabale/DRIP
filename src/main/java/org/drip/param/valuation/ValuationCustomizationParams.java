@@ -66,6 +66,7 @@ public class ValuationCustomizationParams {
 	private boolean _bSpreadQuoted = false;
 	private java.lang.String _strYieldDC = "";
 	private boolean _bYieldApplyEOMAdj = false;
+	private boolean _bApplyFlatForwardRate = false;
 	private java.lang.String _strYieldCalendar = "";
 	private org.drip.analytics.daycount.ActActDCParams _aapYield = null;
 
@@ -81,7 +82,7 @@ public class ValuationCustomizationParams {
 		final java.lang.String strCalendar)
 	{
 		try {
-			return new ValuationCustomizationParams ("30/360", 2, false, null, strCalendar, false);
+			return new ValuationCustomizationParams ("30/360", 2, false, null, strCalendar, false, false);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
@@ -98,6 +99,7 @@ public class ValuationCustomizationParams {
 	 * @param aap - Quoting Act/Act Parameters
 	 * @param strCalendar - Quoting Calendar
 	 * @param bSpreadQuoted - TRUE - Market Quotes are Spread Quoted
+	 * @param bApplyFlatForwardRate - TRUE - Apply Flat Forward Rate
 	 * 
 	 * @throws java.lang.Exception Thrown if inputs are invalid
 	 */
@@ -108,7 +110,8 @@ public class ValuationCustomizationParams {
 		final boolean bApplyEOMAdj,
 		final org.drip.analytics.daycount.ActActDCParams aap,
 		final java.lang.String strCalendar,
-		final boolean bSpreadQuoted)
+		final boolean bSpreadQuoted,
+		final boolean bApplyFlatForwardRate)
 		throws java.lang.Exception
 	{
 		if (null == strDC || strDC.isEmpty() || 0 == iFrequency)
@@ -120,6 +123,7 @@ public class ValuationCustomizationParams {
 		_bSpreadQuoted = bSpreadQuoted;
 		_strYieldCalendar = strCalendar;
 		_bYieldApplyEOMAdj = bApplyEOMAdj;
+		_bApplyFlatForwardRate = bApplyFlatForwardRate;
 	}
 
 	/**
@@ -186,5 +190,16 @@ public class ValuationCustomizationParams {
 	public boolean applyYieldEOMAdj()
 	{
 		return _bYieldApplyEOMAdj;
+	}
+
+	/**
+	 * Indicate if Forward Rate is to be Projected using its Current Value
+	 * 
+	 * @return TRUE - Forward Rate is to be Projected using its Current Value
+	 */
+
+	public boolean applyFlatForwardRate()
+	{
+		return _bApplyFlatForwardRate;
 	}
 }

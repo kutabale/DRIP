@@ -102,7 +102,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 	private org.drip.product.params.CreditSetting _creditSetting = null;
 	private org.drip.product.params.FloaterSetting _floaterSetting = null;
 	private org.drip.product.params.NotionalSetting _notionalSetting = null;
-	private org.drip.product.params.QuoteConvention _marketConvention = null;
+	private org.drip.product.params.QuoteConvention _quoteConvention = null;
 	private org.drip.product.params.TerminationSetting _terminationSetting = null;
 	private org.drip.product.params.TreasuryBenchmarks _treasuryBenchmarks = null;
 
@@ -291,7 +291,9 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double dblPeriodYearFract = 0.;
 		double dblCumulativePeriodPV = 0.;
 		boolean bTerminateCouponFlow = false;
+		boolean bApplyFlatForwardRate = false;
 		int iCashPayDate = java.lang.Integer.MIN_VALUE;
+		double dblFlatForwardRate = java.lang.Double.NaN;
 		double dblScalingNotional = java.lang.Double.NaN;
 		org.drip.analytics.daycount.ActActDCParams aap = null;
 
@@ -308,8 +310,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		if (null == strCalendar || strCalendar.isEmpty()) strCalendar = redemptionCurrency();
 
-		org.drip.param.valuation.ValuationCustomizationParams vcpQuote = null == _marketConvention ? null :
-			_marketConvention.valuationCustomizationParams();
+		org.drip.param.valuation.ValuationCustomizationParams vcpQuote = null == _quoteConvention ? null :
+			_quoteConvention.valuationCustomizationParams();
 
 		if (null != vcp) {
 			strDC = vcp.yieldDayCount();
@@ -319,6 +321,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			strCalendar = vcp.yieldCalendar();
 
 			bApplyCpnEOMAdj = vcp.applyYieldEOMAdj();
+
+			bApplyFlatForwardRate = vcp.applyFlatForwardRate();
 		} else if (null != vcpQuote) {
 			strDC = vcpQuote.yieldDayCount();
 
@@ -327,6 +331,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			strCalendar = vcpQuote.yieldCalendar();
 
 			bApplyCpnEOMAdj = vcpQuote.applyYieldEOMAdj();
+
+			bApplyFlatForwardRate = vcpQuote.applyFlatForwardRate();
 		}
 
 		int iPeriodAmortizationMode = _notionalSetting.periodAmortizationMode();
@@ -368,10 +374,11 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 						iPeriodStartDate);
 			} else if (null != vcpQuote) {
 				if (null == (aap = vcpQuote.yieldAAP()))
-					aap = new org.drip.analytics.daycount.ActActDCParams (vcpQuote.yieldFreq(), iPeriodEndDate -
-						iPeriodStartDate);
+					aap = new org.drip.analytics.daycount.ActActDCParams (vcpQuote.yieldFreq(),
+						iPeriodEndDate - iPeriodStartDate);
 			} else
-				aap = new org.drip.analytics.daycount.ActActDCParams (iFrequency, iPeriodEndDate - iPeriodStartDate);
+				aap = new org.drip.analytics.daycount.ActActDCParams (iFrequency, iPeriodEndDate -
+					iPeriodStartDate);
 
 			double dblYieldAnnuity = org.drip.analytics.support.Helper.Yield2DF (iFrequency, dblYield,
 				s_bYieldDFOffofCouponAccrualDCF ? dblPeriodYearFract :
@@ -390,15 +397,19 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 				iPeriodAmortizationMode)
 				dblCouponNotional = notional (iPeriodStartDate, iPeriodEndDate);
 
-			dblCumulativePeriodPV += (period.accrualDCF (iPeriodEndDate) * (cpcm.rate() +
-				(bApplyCouponExtension ? _couponSetting.couponRateExtension() : 0.)) * dblCouponNotional +
-					dblPeriodStartNotional - dblPeriodEndNotional) * dblYieldAnnuity;
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = cpcm.rate();
+
+			dblCumulativePeriodPV += (period.accrualDCF (iPeriodEndDate) * (bApplyFlatForwardRate ?
+				dblFlatForwardRate : cpcm.rate() + (bApplyCouponExtension ?
+					_couponSetting.couponRateExtension() : 0.)) * dblCouponNotional + dblPeriodStartNotional
+						- dblPeriodEndNotional) * dblYieldAnnuity;
 
 			if (bTerminateCouponFlow) break;
 		}
 
 		try {
-			iCashPayDate = null != _marketConvention ? _marketConvention.settleDate (valParams) :
+			iCashPayDate = null != _quoteConvention ? _quoteConvention.settleDate (valParams) :
 				valParams.cashPayDate();
 		} catch (java.lang.Exception e) {
 			if (!s_bSuppressErrors) e.printStackTrace();
@@ -681,7 +692,13 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double dblFirstIndexRate = java.lang.Double.NaN;
 		double dblCreditRisklessDirtyIndexCouponPV = 0.;
 		double dblCreditRiskyParPV = java.lang.Double.NaN;
+		double dblFlatForwardCoupon = java.lang.Double.NaN;
 		double dblCreditRisklessParPV = java.lang.Double.NaN;
+
+		org.drip.param.valuation.ValuationCustomizationParams vcp = null == _quoteConvention ? null :
+			_quoteConvention.valuationCustomizationParams();
+
+		boolean bApplyFlatForwardRate = null == vcp ? false : vcp.applyFlatForwardRate();
 
 		try {
 			for (org.drip.analytics.cashflow.CompositePeriod period : couponPeriods()) {
@@ -703,11 +720,14 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 				if (null == cpcm) return null;
 
-				double dblPeriodCoupon = cpcm.rate();
+				if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardCoupon))
+					dblFlatForwardCoupon = cpcm.rate();
 
 				double dblPeriodBaseRate = period.periods().get (0).baseRate (csqc);
 
 				double dblPeriodAnnuity = dcFunding.df (iPeriodPayDate) * cpcm.cumulative();
+
+				double dblPeriodCoupon = bApplyFlatForwardRate ? dblFlatForwardCoupon : cpcm.rate();
 
 				if (bPeriodZero) {
 					bPeriodZero = false;
@@ -789,7 +809,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		int iCashPayDate = java.lang.Integer.MIN_VALUE;
 
 		try {
-			iCashPayDate = null != _marketConvention ? _marketConvention.settleDate (valParams) :
+			iCashPayDate = null != _quoteConvention ? _quoteConvention.settleDate (valParams) :
 				valParams.cashPayDate();
 		} catch (java.lang.Exception e) {
 			if (!s_bSuppressErrors) e.printStackTrace();
@@ -971,7 +991,13 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double dblPV = 0.;
 		boolean bTerminateCouponFlow = false;
 		int iCashPayDate = java.lang.Integer.MIN_VALUE;
+		double dblFlatForwardRate = java.lang.Double.NaN;
 		double dblScalingNotional = java.lang.Double.NaN;
+
+		org.drip.param.valuation.ValuationCustomizationParams vcp = null == _quoteConvention ? null :
+			_quoteConvention.valuationCustomizationParams();
+
+		boolean bApplyFlatForward = null == vcp ? false : vcp.applyFlatForwardRate();
 
 		if (null != _notionalSetting && _notionalSetting.priceOffOfOriginalNotional())
 			dblScalingNotional = 1.;
@@ -1030,7 +1056,11 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 				iPeriodAmortizationMode)
 				dblCouponNotional = notional (iPeriodStartDate, iNotionalEndDate);
 
-			dblPV += period.accrualDCF (iAccrualEndDate) * dblPeriodAnnuity * pcm.rate() * dblCouponNotional;
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = pcm.rate();
+
+			dblPV += period.accrualDCF (iAccrualEndDate) * dblPeriodAnnuity * (bApplyFlatForward ?
+				dblFlatForwardRate : pcm.rate()) * dblCouponNotional;
 
 			dblPV += (dblPeriodStartNotional - dblPeriodEndNotional) * dblPeriodAnnuity;
 
@@ -1038,7 +1068,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		}
 
 		try {
-			iCashPayDate = null != _marketConvention ? _marketConvention.settleDate (valParams) :
+			iCashPayDate = null != _quoteConvention ? _quoteConvention.settleDate (valParams) :
 				valParams.cashPayDate();
 		} catch (java.lang.Exception e) {
 			if (!s_bSuppressErrors) e.printStackTrace();
@@ -1178,14 +1208,14 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 	}
 
 	@Override public boolean setMarketConvention (
-		final org.drip.product.params.QuoteConvention marketConvention)
+		final org.drip.product.params.QuoteConvention quoteConvention)
 	{
-		return null == (_marketConvention = marketConvention);
+		return null == (_quoteConvention = quoteConvention);
 	}
 
 	@Override public org.drip.product.params.QuoteConvention marketConvention()
 	{
-		return _marketConvention;
+		return _quoteConvention;
 	}
 
 	@Override public boolean setCreditSetting (
@@ -1447,7 +1477,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 	@Override public org.drip.param.valuation.CashSettleParams cashSettleParams()
 	{
-		return null == _marketConvention ? null : _marketConvention.cashSettleParams();
+		return null == _quoteConvention ? null : _quoteConvention.cashSettleParams();
 	}
 
 	@Override public java.util.List<org.drip.analytics.cashflow.LossQuadratureMetrics> lossFlow (
@@ -1636,12 +1666,12 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 	@Override public java.lang.String calculationType()
 	{
-		return null == _marketConvention ? "" : _marketConvention.calculationType();
+		return null == _quoteConvention ? "" : _quoteConvention.calculationType();
 	}
 
 	@Override public double redemptionValue()
 	{
-		return null == _marketConvention ? java.lang.Double.NaN : _marketConvention.redemptionValue();
+		return null == _quoteConvention ? java.lang.Double.NaN : _quoteConvention.redemptionValue();
 	}
 
 	@Override public java.lang.String currency()
@@ -1939,6 +1969,12 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double dblPeriodEndTime = 0.;
 		boolean bTerminateCouponFlow = false;
 		double dblTimeWeightedTotalCashflow = 0.;
+		double dblFlatForwardRate = java.lang.Double.NaN;
+
+		org.drip.param.valuation.ValuationCustomizationParams vcp = null == _quoteConvention ? null :
+			_quoteConvention.valuationCustomizationParams();
+
+		boolean bApplyFlatForward = null == vcp ? false : vcp.applyFlatForwardRate();
 
 		for (org.drip.analytics.cashflow.CompositePeriod period : couponPeriods()) {
 			int iPeriodPayDate = period.payDate();
@@ -1981,8 +2017,11 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			double dblPeriodTimeWidth = period.accrualDCF (iAccrualEndDate) - period.accrualDCF
 				(iAccrualStartDate);
 
-			double dblPeriodCashflow = dblPeriodTimeWidth * cpcm.rate() * dblCouponNotional +
-				dblPeriodStartNotional - dblPeriodEndNotional;
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = cpcm.rate();
+
+			double dblPeriodCashflow = dblPeriodTimeWidth * (bApplyFlatForward ? dblFlatForwardRate :
+				cpcm.rate()) * dblCouponNotional + dblPeriodStartNotional - dblPeriodEndNotional;
 
 			dblTotalCashflow += dblPeriodCashflow;
 			dblPeriodEndTime += dblPeriodTimeWidth;
@@ -1995,7 +2034,6 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		dblTotalCashflow += dblTerminalCashflow;
 		dblTimeWeightedTotalCashflow += dblPeriodEndTime * dblTerminalCashflow;
-
 		return dblTimeWeightedTotalCashflow / dblTotalCashflow;
 	}
 
@@ -2028,9 +2066,20 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		double dblPV = 0.;
 		boolean bTerminateCouponFlow = false;
+		boolean bApplyFlatForwardRate = false;
 		org.drip.state.discount.ZeroCurve zc = null;
 		int iCashPayDate = java.lang.Integer.MIN_VALUE;
+		double dblFlatForwardRate = java.lang.Double.NaN;
 		double dblScalingNotional = java.lang.Double.NaN;
+
+		if (null != vcp)
+			bApplyFlatForwardRate = vcp.applyFlatForwardRate();
+		else {
+			org.drip.param.valuation.ValuationCustomizationParams vcpQuote =
+				_quoteConvention.valuationCustomizationParams();
+
+			if (null != vcpQuote) bApplyFlatForwardRate = vcpQuote.applyFlatForwardRate();
+		}
 
 		org.drip.state.discount.DiscountCurve dcBase = ZERO_OFF_OF_RATES_INSTRUMENTS_DISCOUNT_CURVE ==
 			iZeroCurveBaseDC ? csqc.fundingState (fundingLabel()) : csqc.govvieState (govvieLabel());
@@ -2039,7 +2088,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			throw new java.lang.Exception ("BondComponent::priceFromZeroCurve => Invalid Discount Curve");
 
 		try {
-			iCashPayDate = null != _marketConvention ? _marketConvention.settleDate (valParams) :
+			iCashPayDate = null != _quoteConvention ? _quoteConvention.settleDate (valParams) :
 				valParams.cashPayDate();
 		} catch (java.lang.Exception e) {
 			if (!s_bSuppressErrors) e.printStackTrace();
@@ -2055,8 +2104,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		try {
 			zc = org.drip.state.curve.DerivedZeroRate.FromBaseCurve (freq(), couponDC(), currency(),
 				_stream.couponEOMAdjustment(), lsCompositePeriod, iWorkoutDate, iValueDate, iCashPayDate,
-					dcBase, dblBump, null == vcp ? (null == _marketConvention ? null :
-						_marketConvention.valuationCustomizationParams()) : vcp, new
+					dcBase, dblBump, null == vcp ? (null == _quoteConvention ? null :
+						_quoteConvention.valuationCustomizationParams()) : vcp, new
 							org.drip.spline.params.SegmentCustomBuilderControl
 								(org.drip.spline.stretch.MultiSegmentSequenceBuilder.BASIS_SPLINE_POLYNOMIAL,
 									new org.drip.spline.basis.PolynomialFunctionSetParams (2),
@@ -2108,8 +2157,12 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 			if (null == cpcm) throw new java.lang.Exception ("BondComponent::priceFromZeroCurve => No PCM");
 
-			dblPV += (period.accrualDCF (iAccrualEndDate) * cpcm.rate() * dblCouponNotional +
-				dblPeriodStartNotional - dblPeriodEndNotional) * zc.df (iPeriodPayDate);
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = cpcm.rate();
+
+			dblPV += (period.accrualDCF (iAccrualEndDate) * (bApplyFlatForwardRate ? dblFlatForwardRate :
+				cpcm.rate()) * dblCouponNotional + dblPeriodStartNotional - dblPeriodEndNotional) * zc.df
+					(iPeriodPayDate);
 
 			if (bTerminateCouponFlow) break;
 		}
@@ -2187,6 +2240,12 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double dblScalingNotional = 1.;
 		boolean bTerminateCashFlow = false;
 		int iCashPayDate = java.lang.Integer.MIN_VALUE;
+		double dblFlatForwardRate = java.lang.Double.NaN;
+
+		org.drip.param.valuation.ValuationCustomizationParams vcp = null == _quoteConvention ? null :
+			_quoteConvention.valuationCustomizationParams();
+
+		boolean bApplyFlatForwardRate = null == vcp ? false : vcp.applyFlatForwardRate();
 
 		org.drip.param.pricer.CreditPricerParams pricerParams = new org.drip.param.pricer.CreditPricerParams
 			(7, null, false, s_iDiscretizationScheme);
@@ -2221,7 +2280,10 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			if (null == cpcm)
 				throw new java.lang.Exception ("BondComponent::priceFromCreditCurve => No PCM");
 
-			double dblPeriodCoupon = cpcm.rate();
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = cpcm.rate();
+
+			double dblPeriodCoupon = bApplyFlatForwardRate ? dblFlatForwardRate : cpcm.rate();
 
 			double dblPeriodStartNotional = notional (iPeriodStartDate);
 
@@ -2266,7 +2328,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		}
 
 		try {
-			iCashPayDate = null == _marketConvention ? valParams.cashPayDate() : _marketConvention.settleDate
+			iCashPayDate = null == _quoteConvention ? valParams.cashPayDate() : _quoteConvention.settleDate
 				(valParams);
 		} catch (java.lang.Exception e) {
 			if (!s_bSuppressErrors) e.printStackTrace();
@@ -6411,7 +6473,9 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double dblPeriodYearFract = 0.;
 		double dblCumulativePeriodPV = 0.;
 		boolean bTerminateCouponFlow = false;
+		boolean bApplyFlatForwardRate = false;
 		double dblCumulativePeriodDuration = 0.;
+		double dblFlatForwardRate = java.lang.Double.NaN;
 		org.drip.analytics.daycount.ActActDCParams aap = null;
 		org.drip.analytics.cashflow.CompositePeriod periodRef = null;
 
@@ -6425,8 +6489,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		if (null == strCalendar || strCalendar.isEmpty()) strCalendar = redemptionCurrency();
 
-		org.drip.param.valuation.ValuationCustomizationParams vcpQuote = null == _marketConvention ? null :
-			_marketConvention.valuationCustomizationParams();
+		org.drip.param.valuation.ValuationCustomizationParams vcpQuote = null == _quoteConvention ? null :
+			_quoteConvention.valuationCustomizationParams();
 
 		if (null != vcp) {
 			strDC = vcp.yieldDayCount();
@@ -6436,6 +6500,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			strCalendar = vcp.yieldCalendar();
 
 			bApplyCpnEOMAdj = vcp.applyYieldEOMAdj();
+
+			bApplyFlatForwardRate = vcp.applyFlatForwardRate();
 		} else if (null != vcpQuote) {
 			strDC = vcpQuote.yieldDayCount();
 
@@ -6444,6 +6510,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			strCalendar = vcpQuote.yieldCalendar();
 
 			bApplyCpnEOMAdj = vcpQuote.applyYieldEOMAdj();
+
+			bApplyFlatForwardRate = vcpQuote.applyFlatForwardRate();
 		}
 
 		int iAmortizationMode = _notionalSetting.periodAmortizationMode();
@@ -6506,8 +6574,11 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			else if (org.drip.product.params.NotionalSetting.PERIOD_AMORT_EFFECTIVE == iAmortizationMode)
 				dblCouponNotional = notional (iPeriodStartDate, iPeriodEndDate);
 
-			double dblCouponPV = period.accrualDCF (iPeriodEndDate) * cpcm.rate() * dblYieldAnnuity *
-				dblCouponNotional;
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = cpcm.rate();
+
+			double dblCouponPV = period.accrualDCF (iPeriodEndDate) * (bApplyFlatForwardRate ?
+				dblFlatForwardRate : cpcm.rate()) * dblYieldAnnuity * dblCouponNotional;
 
 			double dblPeriodNotionalPV = (dblPeriodStartNotional - dblPeriodEndNotional) * dblYieldAnnuity;
 			dblCumulativePeriodDuration += dblPeriodYearFract * (dblCouponPV + dblPeriodNotionalPV);
@@ -11623,6 +11694,17 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		double dblRecoveryPV = 0.;
 		double dblPrincipalPV = 0.;
 		double dblDirtyCouponPV = 0.;
+		boolean bApplyFlatForwardRate = false;
+		double dblFlatForwardRate = java.lang.Double.NaN;
+
+		if (null != vcp)
+			bApplyFlatForwardRate = vcp.applyFlatForwardRate();
+		else {
+			org.drip.param.valuation.ValuationCustomizationParams vcpQuote = null == _quoteConvention ? null
+				: _quoteConvention.valuationCustomizationParams();
+
+			if (null != vcpQuote) bApplyFlatForwardRate = vcpQuote.applyFlatForwardRate();
+		}
 
 		int iMaturityDate = maturityDate().julian();
 
@@ -11644,7 +11726,10 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 			if (null == cpcm) throw new java.lang.Exception ("BondComponent::pv => Invalid Inputs!");
 
-			double dblPeriodCoupon = cpcm.rate();
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = cpcm.rate();
+
+			double dblPeriodCoupon = bApplyFlatForwardRate ? dblFlatForwardRate : cpcm.rate();
 
 			double dblPeriodAnnuity = dcFunding.df (iPeriodPayDate) * cpcm.cumulative();
 
@@ -11696,7 +11781,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		if (null != cc && null != pricerParams) dblParPV *= cc.survival (iMaturityDate);
 
 		return (dblDirtyCouponPV + dblPrincipalPV + dblParPV + dblRecoveryPV) / dcFunding.df (null !=
-			_marketConvention ? _marketConvention.settleDate (valParams) : valParams.cashPayDate());
+			_quoteConvention ? _quoteConvention.settleDate (valParams) : valParams.cashPayDate());
 	}
 
 	@Override public org.drip.quant.calculus.WengertJacobian jackDDirtyPVDManifestMeasure (

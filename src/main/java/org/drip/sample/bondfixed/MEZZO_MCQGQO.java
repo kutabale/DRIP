@@ -7,6 +7,7 @@ import org.drip.param.market.CurveSurfaceQuoteContainer;
 import org.drip.param.valuation.*;
 import org.drip.product.creator.BondBuilder;
 import org.drip.product.credit.BondComponent;
+import org.drip.product.params.EmbeddedOptionSchedule;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
@@ -196,6 +197,37 @@ public class MEZZO_MCQGQO {
 		);
 	}
 
+	private static final void SetEOS (
+		final BondComponent bond,
+		final EmbeddedOptionSchedule eosCall,
+		final EmbeddedOptionSchedule eosPut)
+		throws java.lang.Exception
+	{
+		if (null != eosPut) bond.setEmbeddedPutSchedule (eosPut);
+
+		if (null != eosCall) bond.setEmbeddedCallSchedule (eosCall);
+	}
+
+	private static final int NextCallDate (
+		final BondComponent bond,
+		final int iSpotDate)
+		throws java.lang.Exception
+	{
+		EmbeddedOptionSchedule eosCall = bond.callSchedule();
+
+		return null == eosCall ? bond.maturityDate().julian() : eosCall.nextDate (iSpotDate);
+	}
+
+	private static final double NextCallFactor (
+		final BondComponent bond,
+		final int iSpotDate)
+		throws java.lang.Exception
+	{
+		EmbeddedOptionSchedule eosCall = bond.callSchedule();
+
+		return null == eosCall ? 1. : eosCall.nextFactor (iSpotDate);
+	}
+
 	public static final void main (
 		final String[] astrArgs)
 		throws Exception
@@ -219,6 +251,8 @@ public class MEZZO_MCQGQO {
 		double dblIssueAmount = 2.60e7;
 		String strTreasuryCode = "UST";
 		String strCouponDayCount = "30/360";
+		EmbeddedOptionSchedule eosPut = null;
+		EmbeddedOptionSchedule eosCall = null;
 
 		JulianDate dtEffective = DateUtil.CreateFromYMD (
 			2015,
@@ -245,6 +279,14 @@ public class MEZZO_MCQGQO {
 			null
 		);
 
+		SetEOS (
+			bond,
+			eosCall,
+			eosPut
+		);
+
+		int iSpotDate = dtSpot.julian();
+
 		JulianDate dtSettle = dtSpot.addBusDays (
 			iSettleLag,
 			strCurrency
@@ -256,16 +298,32 @@ public class MEZZO_MCQGQO {
 			strCurrency
 		);
 
-		CurveSurfaceQuoteContainer csqc = MarketParamsBuilder.Create (
+		GovvieCurve gc = GovvieCurve (
+			dtSpot,
+			strTreasuryCode
+		);
+
+		CurveSurfaceQuoteContainer csqcBase = MarketParamsBuilder.Create (
 			FundingCurve (
 				dtSpot,
 				strCurrency,
 				0.
 			),
-			GovvieCurve (
+			gc,
+			null,
+			null,
+			null,
+			null,
+			null
+		);
+
+		CurveSurfaceQuoteContainer csqcBumped = MarketParamsBuilder.Create (
+			FundingCurve (
 				dtSpot,
-				strTreasuryCode
+				strCurrency,
+				0.0001
 			),
+			gc,
 			null,
 			null,
 			null,
@@ -275,56 +333,93 @@ public class MEZZO_MCQGQO {
 
 		double dblAccrued = bond.accrued (
 			dtSettle.julian(),
-			csqc
+			csqcBase
 		);
 
 		WorkoutInfo wi = bond.exerciseYieldFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
+			null,
+			dblCleanPrice
+		);
+
+		double dblBondBasisToMaturity = bond.bondBasisFromPrice (
+			valParams,
+			csqcBase,
 			null,
 			dblCleanPrice
 		);
 
 		double dblYieldToMaturity = bond.yieldFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
 			null,
 			dblCleanPrice
 		);
 
 		double dblBondEquivalentYieldToMaturity = bond.yieldFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
 			ValuationCustomizationParams.BondEquivalent (strCurrency),
+			dblCleanPrice
+		);
+
+		double dblFlatForwardRateYieldToMaturity = bond.yieldFromPrice (
+			valParams,
+			csqcBase,
+			new ValuationCustomizationParams (
+				strCouponDayCount,
+				iCouponFreq,
+				false,
+				null,
+				strCurrency,
+				false,
+				true
+			),
 			dblCleanPrice
 		);
 
 		double dblYieldToWorst = bond.yieldFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
 			null,
 			wi.date(),
 			wi.factor(),
 			dblCleanPrice
 		);
 
+		double dblYieldToNextCall = bond.yieldFromPrice (
+			valParams,
+			csqcBase,
+			null,
+			NextCallDate (
+				bond,
+				iSpotDate
+			),
+			NextCallFactor (
+				bond,
+				iSpotDate
+			),
+			dblCleanPrice
+		);
+
 		double dblNominalYield = bond.yieldFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
 			null,
 			dblIssuePrice
 		);
 
 		double dblOASToMaturity = bond.oasFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
 			null,
 			dblCleanPrice
 		);
 
 		double dblOASToWorst = bond.oasFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
 			null,
 			wi.date(),
 			wi.factor(),
@@ -333,14 +428,14 @@ public class MEZZO_MCQGQO {
 
 		double dblZSpreadToMaturity = bond.zspreadFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
 			null,
 			dblCleanPrice
 		);
 
 		double dblZSpreadToWorst = bond.zspreadFromPrice (
 			valParams,
-			csqc,
+			csqcBase,
 			null,
 			wi.date(),
 			wi.factor(),
@@ -393,7 +488,7 @@ public class MEZZO_MCQGQO {
 
 		System.out.println (
 			"\t|| YTM fwdCpn              => " +
-			FormatUtil.FormatDouble (dblYieldToMaturity, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblFlatForwardRateYieldToMaturity, 1, 2, 100.) + "%"
 		);
 
 		System.out.println (
@@ -403,7 +498,7 @@ public class MEZZO_MCQGQO {
 
 		System.out.println (
 			"\t|| YIELD TO CALL           => " +
-			FormatUtil.FormatDouble (dblYieldToMaturity, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblYieldToNextCall, 1, 2, 100.) + "%"
 		);
 
 		System.out.println (

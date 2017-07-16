@@ -415,4 +415,50 @@ public class EmbeddedOptionSchedule {
 
 		return aiExerciseFactor;
 	}
+
+	/**
+	 * Retrieve the Next Exercise Date, starting from the Spot
+	 * 
+	 * @param iSpotDate The Spot Date
+	 * 
+	 * @return Next Exercise Date
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public int nextDate (
+		final int iSpotDate)
+		throws java.lang.Exception
+	{
+		int iExerciseSize = _aiDate.length;
+
+		for (int i = 0; i < iExerciseSize; ++i) {
+			if (_aiDate[i] - _iNoticePeriod >= iSpotDate) return _aiDate[i];
+		}
+
+		throw new java.lang.Exception ("EmbeddedOptionSchedule::nextDate => Invalid Inputs");
+	}
+
+	/**
+	 * Retrieve the Exercise Factor corresponding to the Next Exercise Date, starting from the Spot
+	 * 
+	 * @param iSpotDate The Spot Date
+	 * 
+	 * @return Next Exercise Factor
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public double nextFactor (
+		final int iSpotDate)
+		throws java.lang.Exception
+	{
+		int iExerciseSize = _aiDate.length;
+
+		for (int i = 0; i < iExerciseSize; ++i) {
+			if (_aiDate[i] - _iNoticePeriod >= iSpotDate) return _adblFactor[i];
+		}
+
+		throw new java.lang.Exception ("EmbeddedOptionSchedule::nextFactor => Invalid Inputs");
+	}
 }
