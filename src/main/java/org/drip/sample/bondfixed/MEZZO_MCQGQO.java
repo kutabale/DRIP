@@ -1,6 +1,8 @@
 
 package org.drip.sample.bondfixed;
 
+import java.util.*;
+
 import org.drip.analytics.date.*;
 import org.drip.param.creator.MarketParamsBuilder;
 import org.drip.param.market.CurveSurfaceQuoteContainer;
@@ -11,6 +13,7 @@ import org.drip.product.params.EmbeddedOptionSchedule;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.service.template.LatentMarketStateBuilder;
+import org.drip.state.credit.CreditCurve;
 import org.drip.state.discount.MergedDiscountForwardCurve;
 import org.drip.state.govvie.GovvieCurve;
 
@@ -144,6 +147,86 @@ public class MEZZO_MCQGQO {
 		);
 	}
 
+	private static final Map<String, MergedDiscountForwardCurve> TenorBumpedFundingCurve (
+		final JulianDate dtSpot,
+		final String strCurrency,
+		final double dblBump)
+		throws Exception
+	{
+		String[] astrDepositMaturityTenor = new String[] {
+			"2D"
+		};
+
+		double[] adblDepositQuote = new double[] {
+			0.0130411 // 2D
+		};
+
+		double[] adblFuturesQuote = new double[] {
+			0.02995,	// 97.005
+			0.01345,	// 98.655
+			0.01470,	// 98.530
+			0.01575,	// 98.425
+			0.01660,	// 98.340
+			0.01745     // 98.255
+		};
+
+		String[] astrFixFloatMaturityTenor = new String[] {
+			"02Y",
+			"03Y",
+			"04Y",
+			"05Y",
+			"06Y",
+			"07Y",
+			"08Y",
+			"09Y",
+			"10Y",
+			"11Y",
+			"12Y",
+			"15Y",
+			"20Y",
+			"25Y",
+			"30Y",
+			"40Y",
+			"50Y"
+		};
+
+		double[] adblFixFloatQuote = new double[] {
+			0.016410, //  2Y
+			0.017863, //  3Y
+			0.019030, //  4Y
+			0.020035, //  5Y
+			0.020902, //  6Y
+			0.021660, //  7Y
+			0.022307, //  8Y
+			0.022879, //  9Y
+			0.023363, // 10Y
+			0.023820, // 11Y
+			0.024172, // 12Y
+			0.024934, // 15Y
+			0.025581, // 20Y
+			0.025906, // 25Y
+			0.025973, // 30Y
+			0.025838, // 40Y
+			0.025560  // 50Y
+		};
+
+		return LatentMarketStateBuilder.BumpedFundingCurve (
+			dtSpot,
+			strCurrency,
+			astrDepositMaturityTenor,
+			adblDepositQuote,
+			"ForwardRate",
+			adblFuturesQuote,
+			"ForwardRate",
+			astrFixFloatMaturityTenor,
+			adblFixFloatQuote,
+			"SwapRate",
+			LatentMarketStateBuilder.SMOOTH,
+			dblBump,
+			false
+		);
+	}
+
 	private static final GovvieCurve GovvieCurve (
 		final JulianDate dtSpot,
 		final String strCode)
@@ -194,6 +277,154 @@ public class MEZZO_MCQGQO {
 			},
 			"Yield",
 			LatentMarketStateBuilder.SHAPE_PRESERVING
+		);
+	}
+
+	private static final Map<String, GovvieCurve> TenorBumpedGovvieCurve (
+		final JulianDate dtSpot,
+		final String strCode,
+		final double dblBump)
+		throws Exception
+	{
+		return LatentMarketStateBuilder.BumpedGovvieCurve (
+			strCode,
+			dtSpot,
+			new JulianDate[] {
+				dtSpot,
+				dtSpot,
+				dtSpot,
+				dtSpot,
+				dtSpot,
+				dtSpot,
+				dtSpot,
+				dtSpot
+			},
+			new JulianDate[] {
+				dtSpot.addTenor ("1Y"),
+				dtSpot.addTenor ("2Y"),
+				dtSpot.addTenor ("3Y"),
+				dtSpot.addTenor ("5Y"),
+				dtSpot.addTenor ("7Y"),
+				dtSpot.addTenor ("10Y"),
+				dtSpot.addTenor ("20Y"),
+				dtSpot.addTenor ("30Y")
+			},
+			new double[] {
+				0.01219, //  1Y
+				0.01391, //  2Y
+				0.01590, //  3Y
+				0.01937, //  5Y
+				0.02200, //  7Y
+				0.02378, // 10Y
+				0.02677, // 20Y
+				0.02927  // 30Y
+			},
+			new double[] {
+				0.01219, //  1Y
+				0.01391, //  2Y
+				0.01590, //  3Y
+				0.01937, //  5Y
+				0.02200, //  7Y
+				0.02378, // 10Y
+				0.02677, // 20Y
+				0.02927  // 30Y
+			},
+			"Yield",
+			LatentMarketStateBuilder.SHAPE_PRESERVING,
+			dblBump,
+			false
+		);
+	}
+
+	private static final CreditCurve CreditCurve (
+		final JulianDate dtSpot,
+		final String strCreditCurve,
+		final MergedDiscountForwardCurve mdfc,
+		final double dblBump)
+		throws Exception
+	{
+		return LatentMarketStateBuilder.CreditCurve (
+			dtSpot,
+			strCreditCurve,
+			new String[] {
+				"06M",
+				"01Y",
+				"02Y",
+				"03Y",
+				"04Y",
+				"05Y",
+				"07Y",
+				"10Y"
+			},
+			new double[] {
+				 60.,	//  6M
+				 68.,	//  1Y
+				 88.,	//  2Y
+				102.,	//  3Y
+				121.,	//  4Y
+				138.,	//  5Y
+				168.,	//  7Y
+				188.	// 10Y
+			},
+			new double[] {
+				 60. + dblBump,	//  6M
+				 68. + dblBump,	//  1Y
+				 88. + dblBump,	//  2Y
+				102. + dblBump,	//  3Y
+				121. + dblBump,	//  4Y
+				138. + dblBump,	//  5Y
+				168. + dblBump,	//  7Y
+				188. + dblBump	// 10Y
+			},
+			"FairPremium",
+			mdfc
+		);
+	}
+
+	private static final Map<String, CreditCurve> TenorBumpedCreditCurve (
+		final JulianDate dtSpot,
+		final String strCreditCurve,
+		final MergedDiscountForwardCurve mdfc,
+		final double dblBump)
+		throws Exception
+	{
+		return LatentMarketStateBuilder.BumpedCreditCurve (
+			dtSpot,
+			strCreditCurve,
+			new String[] {
+				"06M",
+				"01Y",
+				"02Y",
+				"03Y",
+				"04Y",
+				"05Y",
+				"07Y",
+				"10Y"
+			},
+			new double[] {
+				 60.,	//  6M
+				 68.,	//  1Y
+				 88.,	//  2Y
+				102.,	//  3Y
+				121.,	//  4Y
+				138.,	//  5Y
+				168.,	//  7Y
+				188.	// 10Y
+			},
+			new double[] {
+				 60.,	//  6M
+				 68.,	//  1Y
+				 88.,	//  2Y
+				102.,	//  3Y
+				121.,	//  4Y
+				138.,	//  5Y
+				168.,	//  7Y
+				188.	// 10Y
+			},
+			"FairPremium",
+			mdfc,
+			dblBump,
+			false
 		);
 	}
 
@@ -298,16 +529,47 @@ public class MEZZO_MCQGQO {
 			strCurrency
 		);
 
+		MergedDiscountForwardCurve mdfcBase = FundingCurve (
+			dtSpot,
+			strCurrency,
+			0.
+		);
+
 		GovvieCurve gc = GovvieCurve (
 			dtSpot,
 			strTreasuryCode
 		);
 
 		CurveSurfaceQuoteContainer csqcBase = MarketParamsBuilder.Create (
+			mdfcBase,
+			gc,
+			null,
+			null,
+			null,
+			null,
+			null
+		);
+
+		CurveSurfaceQuoteContainer csqcCreditBase = MarketParamsBuilder.Create (
+			mdfcBase,
+			gc,
+			CreditCurve (
+				dtSpot,
+				strName,
+				mdfcBase,
+				0.
+			),
+			null,
+			null,
+			null,
+			null
+		);
+
+		CurveSurfaceQuoteContainer csqcBumped01Up = MarketParamsBuilder.Create (
 			FundingCurve (
 				dtSpot,
 				strCurrency,
-				0.
+				0.0001
 			),
 			gc,
 			null,
@@ -317,14 +579,15 @@ public class MEZZO_MCQGQO {
 			null
 		);
 
-		CurveSurfaceQuoteContainer csqcBumped = MarketParamsBuilder.Create (
-			FundingCurve (
-				dtSpot,
-				strCurrency,
-				0.0001
-			),
+		CurveSurfaceQuoteContainer csqcCreditBumped01Up = MarketParamsBuilder.Create (
+			mdfcBase,
 			gc,
-			null,
+			CreditCurve (
+				dtSpot,
+				strName,
+				mdfcBase,
+				1.
+			),
 			null,
 			null,
 			null,
@@ -349,6 +612,15 @@ public class MEZZO_MCQGQO {
 			null,
 			dblCleanPrice
 		);
+
+		double dblModifiedDurationToMaturity = (
+			dblCleanPrice - bond.priceFromBondBasis (
+				valParams,
+				csqcBumped01Up,
+				null,
+				dblBondBasisToMaturity
+			)
+		) / dblCleanPrice;
 
 		double dblYieldToMaturity = bond.yieldFromPrice (
 			valParams,
@@ -442,6 +714,163 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
+		double dblParZSpreadToWorst = bond.zspreadFromPrice (
+			valParams,
+			csqcBase,
+			null,
+			wi.date(),
+			wi.factor(),
+			1.
+		);
+
+		double dblMacaulayDurationToMaturity = bond.macaulayDurationFromPrice (
+			valParams,
+			csqcBase,
+			null,
+			dblCleanPrice
+		);
+
+		double dblBondBasisToWorst = bond.bondBasisFromPrice (
+			valParams,
+			csqcBase,
+			null,
+			wi.date(),
+			wi.factor(),
+			dblCleanPrice
+		);
+
+		double dblModifiedDurationToWorst = (
+			dblCleanPrice - bond.priceFromBondBasis (
+				valParams,
+				csqcBumped01Up,
+				null,
+				wi.date(),
+				wi.factor(),
+				dblBondBasisToWorst
+			)
+		) / dblCleanPrice;
+
+		double dblDV01 = (
+			bond.priceFromYield (
+				valParams,
+				csqcBase,
+				null,
+				wi.date(),
+				wi.factor(),
+				dblYieldToWorst - 0.0020
+			) -
+			bond.priceFromYield (
+				valParams,
+				csqcBase,
+				null,
+				wi.date(),
+				wi.factor(),
+				dblYieldToWorst + 0.0020
+			)
+		) / 40.;
+
+		double dblEffectiveDuration = dblDV01 / dblCleanPrice;
+
+		double dblCreditBasisToExercise = bond.creditBasisFromPrice (
+			valParams,
+			csqcCreditBase,
+			null,
+			wi.date(),
+			wi.factor(),
+			dblCleanPrice
+		);
+
+		double dblEffectiveDurationAdj = (
+			bond.priceFromCreditBasis (
+				valParams,
+				csqcCreditBase,
+				null,
+				wi.date(),
+				wi.factor(),
+				dblCreditBasisToExercise - 20.
+			) -
+			bond.priceFromCreditBasis (
+				valParams,
+				csqcCreditBase,
+				null,
+				wi.date(),
+				wi.factor(),
+				dblCreditBasisToExercise + 20.
+			)
+		) / dblCleanPrice / 40.;
+
+		double dblSpreadDuration = 5. * (dblCleanPrice -
+			bond.priceFromZSpread (
+				valParams,
+				csqcBase,
+				null,
+				wi.date(),
+				wi.factor(),
+				dblZSpreadToWorst + 0.002
+			)
+		) / dblCleanPrice;
+
+		double dblCV01 = dblCleanPrice - bond.priceFromCreditBasis (
+			valParams,
+			csqcCreditBumped01Up,
+			null,
+			wi.date(),
+			wi.factor(),
+			dblCreditBasisToExercise
+		);
+
+		Map<String, Double> mapLIBORKRD = new HashMap<String, Double>();
+
+		Map<String, Double> mapLIBORKPRD = new HashMap<String, Double>();
+
+		Map<String, MergedDiscountForwardCurve> mapFundingCurve = TenorBumpedFundingCurve (
+			dtSpot,
+			strCurrency,
+			0.0001
+		);
+
+		for (Map.Entry<String, MergedDiscountForwardCurve> meFunding : mapFundingCurve.entrySet()) {
+			mapLIBORKRD.put (
+				meFunding.getKey(),
+				(dblCleanPrice - bond.priceFromZSpread (
+					valParams,
+					MarketParamsBuilder.Create (
+						meFunding.getValue(),
+						gc,
+						null,
+						null,
+						null,
+						null,
+						null
+					),
+					null,
+					wi.date(),
+					wi.factor(),
+					dblZSpreadToWorst
+				)) / dblCleanPrice
+			);
+
+			mapLIBORKPRD.put (
+				meFunding.getKey(),
+				1. - bond.priceFromZSpread (
+					valParams,
+					MarketParamsBuilder.Create (
+						meFunding.getValue(),
+						gc,
+						null,
+						null,
+						null,
+						null,
+						null
+					),
+					null,
+					wi.date(),
+					wi.factor(),
+					dblParZSpreadToWorst
+				)
+			);
+		}
+
 		System.out.println();
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -458,7 +887,7 @@ public class MEZZO_MCQGQO {
 
 		System.out.println (
 			"\t|| Market Value            => " +
-			FormatUtil.FormatDouble (dblCleanPrice * dblIssueAmount, 7, 0, 1.)
+			FormatUtil.FormatDouble (dblCleanPrice * dblIssueAmount, 7, 2, 1.)
 		);
 
 		System.out.println (
@@ -525,6 +954,72 @@ public class MEZZO_MCQGQO {
 			"\t|| TSY OAS                 => " +
 			FormatUtil.FormatDouble (dblOASToWorst, 3, 1, 10000.)
 		);
+
+		System.out.println (
+			"\t|| MOD DUR                 => " +
+			FormatUtil.FormatDouble (dblModifiedDurationToMaturity, 1, 3, 10000.)
+		);
+
+		System.out.println (
+			"\t|| MACAULAY DURATION       => " +
+			FormatUtil.FormatDouble (dblMacaulayDurationToMaturity, 1, 3, 1.)
+		);
+
+		System.out.println (
+			"\t|| MOD DUR TO WORST        => " +
+			FormatUtil.FormatDouble (dblModifiedDurationToWorst, 1, 3, 10000.)
+		);
+
+		System.out.println (
+			"\t|| EFFECTIVE DURATION      => " +
+			FormatUtil.FormatDouble (dblEffectiveDuration, 1, 3, 10000.)
+		);
+
+		System.out.println (
+			"\t|| EFFECTIVE DURATION ADJ  => " +
+			FormatUtil.FormatDouble (dblEffectiveDurationAdj, 1, 3, 10000.)
+		);
+
+		System.out.println (
+			"\t|| OAD MULT                => " +
+			FormatUtil.FormatDouble (dblEffectiveDurationAdj / dblEffectiveDuration, 1, 3, 1.)
+		);
+
+		System.out.println (
+			"\t|| Spread Dur              => " +
+			FormatUtil.FormatDouble (dblSpreadDuration, 1, 3, 100.)
+		);
+
+		System.out.println (
+			"\t|| Spread Dur              => " +
+			FormatUtil.FormatDouble (dblSpreadDuration * dblIssueAmount, 1, 3, 1.)
+		);
+
+		System.out.println (
+			"\t|| DV01                    => " +
+			FormatUtil.FormatDouble (dblDV01, 1, 3, 10000.)
+		);
+
+		System.out.println (
+			"\t|| CV01                    => " +
+			FormatUtil.FormatDouble (dblCV01, 1, 3, 10000.)
+		);
+
+		System.out.println ("\t||------------------------------------------------||");
+
+		for (Map.Entry<String, Double> meLIBORKRD : mapLIBORKRD.entrySet())
+			System.out.println (
+				"\t|| LIBOR KRD " + meLIBORKRD.getKey() + " => " +
+				FormatUtil.FormatDouble (meLIBORKRD.getValue(), 1, 3, 10000.)
+			);
+
+		System.out.println ("\t||------------------------------------------------||");
+
+		for (Map.Entry<String, Double> meLIBORKPRD : mapLIBORKPRD.entrySet())
+			System.out.println (
+				"\t|| LIBOR KPRD " + meLIBORKPRD.getKey() + " => " +
+				FormatUtil.FormatDouble (meLIBORKPRD.getValue(), 1, 3, 10000.)
+			);
 
 		System.out.println ("\t||------------------------------------------------||");
 
