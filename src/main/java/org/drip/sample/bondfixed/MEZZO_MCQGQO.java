@@ -70,6 +70,42 @@ import org.drip.state.govvie.GovvieCurve;
 
 public class MEZZO_MCQGQO {
 
+	private static final MergedDiscountForwardCurve EuroDollarFundingCurve (
+		final JulianDate dtSpot,
+		final String strCurrency)
+		throws Exception
+	{
+		String[] astrDepositMaturityTenor = new String[] {
+			"2D"
+		};
+
+		double[] adblDepositQuote = new double[] {
+			0.0130411 // 2D
+		};
+
+		double[] adblFuturesQuote = new double[] {
+			0.01345,	// 98.655
+			0.01470,	// 98.530
+			0.01575,	// 98.425
+			0.01660,	// 98.340
+			0.01745,    // 98.255
+			0.01845     // 98.155
+		};
+
+		return LatentMarketStateBuilder.SmoothFundingCurve (
+			dtSpot,
+			strCurrency,
+			astrDepositMaturityTenor,
+			adblDepositQuote,
+			"ForwardRate",
+			adblFuturesQuote,
+			"ForwardRate",
+			null,
+			null,
+			"SwapRate"
+		);
+	}
+
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
 		final String strCurrency,
@@ -85,12 +121,12 @@ public class MEZZO_MCQGQO {
 		};
 
 		double[] adblFuturesQuote = new double[] {
-			0.02995 + dblBump,	// 97.005
 			0.01345 + dblBump,	// 98.655
 			0.01470 + dblBump,	// 98.530
 			0.01575 + dblBump,	// 98.425
 			0.01660 + dblBump,	// 98.340
-			0.01745 + dblBump   // 98.255
+			0.01745 + dblBump,  // 98.255
+			0.01845 + dblBump   // 98.155
 		};
 
 		String[] astrFixFloatMaturityTenor = new String[] {
@@ -162,12 +198,12 @@ public class MEZZO_MCQGQO {
 		};
 
 		double[] adblFuturesQuote = new double[] {
-			0.02995,	// 97.005
 			0.01345,	// 98.655
 			0.01470,	// 98.530
 			0.01575,	// 98.425
 			0.01660,	// 98.340
-			0.01745     // 98.255
+			0.01745,    // 98.255
+			0.01845     // 98.155
 		};
 
 		String[] astrFixFloatMaturityTenor = new String[] {
@@ -651,7 +687,7 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
-		double dblYieldToWorst = bond.yieldFromPrice (
+		double dblYieldToExercise = bond.yieldFromPrice (
 			valParams,
 			csqcBase,
 			null,
@@ -689,7 +725,7 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
-		double dblOASToWorst = bond.oasFromPrice (
+		double dblOASToExercise = bond.oasFromPrice (
 			valParams,
 			csqcBase,
 			null,
@@ -705,7 +741,7 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
-		double dblZSpreadToWorst = bond.zspreadFromPrice (
+		double dblZSpreadToExercise = bond.zspreadFromPrice (
 			valParams,
 			csqcBase,
 			null,
@@ -714,7 +750,16 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
-		double dblParZSpreadToWorst = bond.zspreadFromPrice (
+		double dblParZSpreadToExercise = bond.zspreadFromPrice (
+			valParams,
+			csqcBase,
+			null,
+			wi.date(),
+			wi.factor(),
+			1.
+		);
+
+		double dblParOASToExercise = bond.oasFromPrice (
 			valParams,
 			csqcBase,
 			null,
@@ -730,7 +775,7 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
-		double dblBondBasisToWorst = bond.bondBasisFromPrice (
+		double dblBondBasisToExercise = bond.bondBasisFromPrice (
 			valParams,
 			csqcBase,
 			null,
@@ -746,7 +791,7 @@ public class MEZZO_MCQGQO {
 				null,
 				wi.date(),
 				wi.factor(),
-				dblBondBasisToWorst
+				dblBondBasisToExercise
 			)
 		) / dblCleanPrice;
 
@@ -757,7 +802,7 @@ public class MEZZO_MCQGQO {
 				null,
 				wi.date(),
 				wi.factor(),
-				dblYieldToWorst - 0.0020
+				dblYieldToExercise - 0.0020
 			) -
 			bond.priceFromYield (
 				valParams,
@@ -765,7 +810,7 @@ public class MEZZO_MCQGQO {
 				null,
 				wi.date(),
 				wi.factor(),
-				dblYieldToWorst + 0.0020
+				dblYieldToExercise + 0.0020
 			)
 		) / 40.;
 
@@ -778,6 +823,15 @@ public class MEZZO_MCQGQO {
 			wi.date(),
 			wi.factor(),
 			dblCleanPrice
+		);
+
+		double dblParCreditBasisToExercise = bond.creditBasisFromPrice (
+			valParams,
+			csqcCreditBase,
+			null,
+			wi.date(),
+			wi.factor(),
+			1.
 		);
 
 		double dblEffectiveDurationAdj = (
@@ -806,7 +860,7 @@ public class MEZZO_MCQGQO {
 				null,
 				wi.date(),
 				wi.factor(),
-				dblZSpreadToWorst + 0.002
+				dblZSpreadToExercise + 0.002
 			)
 		) / dblCleanPrice;
 
@@ -830,23 +884,25 @@ public class MEZZO_MCQGQO {
 		);
 
 		for (Map.Entry<String, MergedDiscountForwardCurve> meFunding : mapFundingCurve.entrySet()) {
+			CurveSurfaceQuoteContainer csqcFunding = MarketParamsBuilder.Create (
+				meFunding.getValue(),
+				gc,
+				null,
+				null,
+				null,
+				null,
+				null
+			);
+
 			mapLIBORKRD.put (
 				meFunding.getKey(),
 				(dblCleanPrice - bond.priceFromZSpread (
 					valParams,
-					MarketParamsBuilder.Create (
-						meFunding.getValue(),
-						gc,
-						null,
-						null,
-						null,
-						null,
-						null
-					),
+					csqcFunding,
 					null,
 					wi.date(),
 					wi.factor(),
-					dblZSpreadToWorst
+					dblZSpreadToExercise
 				)) / dblCleanPrice
 			);
 
@@ -854,22 +910,180 @@ public class MEZZO_MCQGQO {
 				meFunding.getKey(),
 				1. - bond.priceFromZSpread (
 					valParams,
-					MarketParamsBuilder.Create (
-						meFunding.getValue(),
-						gc,
-						null,
-						null,
-						null,
-						null,
-						null
-					),
+					csqcFunding,
 					null,
 					wi.date(),
 					wi.factor(),
-					dblParZSpreadToWorst
+					dblParZSpreadToExercise
 				)
 			);
 		}
+
+		Map<String, Double> mapGovvieKRD = new HashMap<String, Double>();
+
+		Map<String, Double> mapGovvieKPRD = new HashMap<String, Double>();
+
+		Map<String, GovvieCurve> mapGovvieCurve = TenorBumpedGovvieCurve (
+			dtSpot,
+			strTreasuryCode,
+			0.0001
+		);
+
+		for (Map.Entry<String, GovvieCurve> meGovvie : mapGovvieCurve.entrySet()) {
+			CurveSurfaceQuoteContainer csqcGovvie = MarketParamsBuilder.Create (
+				mdfcBase,
+				meGovvie.getValue(),
+				null,
+				null,
+				null,
+				null,
+				null
+			);
+
+			mapGovvieKRD.put (
+				meGovvie.getKey(),
+				(dblCleanPrice - bond.priceFromOAS (
+					valParams,
+					csqcGovvie,
+					null,
+					wi.date(),
+					wi.factor(),
+					dblOASToExercise
+				)) / dblCleanPrice
+			);
+
+			mapGovvieKPRD.put (
+				meGovvie.getKey(),
+				1. - bond.priceFromOAS (
+					valParams,
+					csqcGovvie,
+					null,
+					wi.date(),
+					wi.factor(),
+					dblParOASToExercise
+				)
+			);
+		}
+
+		Map<String, Double> mapCreditKRD = new HashMap<String, Double>();
+
+		Map<String, Double> mapCreditKPRD = new HashMap<String, Double>();
+
+		Map<String, CreditCurve> mapCreditCurve = TenorBumpedCreditCurve (
+			dtSpot,
+			strName,
+			mdfcBase,
+			1.
+		);
+
+		for (Map.Entry<String, CreditCurve> meCredit : mapCreditCurve.entrySet()) {
+			CurveSurfaceQuoteContainer csqcCredit = MarketParamsBuilder.Create (
+				mdfcBase,
+				gc,
+				meCredit.getValue(),
+				null,
+				null,
+				null,
+				null
+			);
+
+			mapCreditKRD.put (
+				meCredit.getKey(),
+				(dblCleanPrice - bond.priceFromCreditBasis (
+					valParams,
+					csqcCredit,
+					null,
+					wi.date(),
+					wi.factor(),
+					dblCreditBasisToExercise
+				)) / dblCleanPrice
+			);
+
+			mapCreditKPRD.put (
+				meCredit.getKey(),
+				1. - bond.priceFromCreditBasis (
+					valParams,
+					csqcCredit,
+					null,
+					wi.date(),
+					wi.factor(),
+					dblParCreditBasisToExercise
+				)
+			);
+		}
+
+		double dblConvexityToExercise = bond.convexityFromPrice (
+			valParams,
+			csqcBase,
+			null,
+			wi.date(),
+			wi.factor(),
+			dblCleanPrice
+		);
+
+		double dblDiscountMarginToExercise = dblYieldToExercise - mdfcBase.libor (
+			dtSpot,
+			"1M"
+		);
+
+		double dblESpreadToExercise = bond.zspreadFromPrice (
+			valParams,
+			MarketParamsBuilder.Create (
+				EuroDollarFundingCurve (
+					dtSpot,
+					strCurrency
+				),
+				gc,
+				null,
+				null,
+				null,
+				null,
+				null
+			),
+			null,
+			wi.date(),
+			wi.factor(),
+			dblCleanPrice
+		);
+
+		double dblISpreadToExercise = bond.iSpreadFromPrice (
+			valParams,
+			csqcBase,
+			null,
+			wi.date(),
+			wi.factor(),
+			dblCleanPrice
+		);
+
+		double dblJSpreadToExercise = dblYieldToExercise - gc.yield (
+			bond.weightedAverageMaturityDate (
+				valParams,
+				csqcBase,
+				wi.date(),
+				wi.factor()
+			)
+		);
+
+		double dblWALToExercise = bond.weightedAverageLife (
+			valParams,
+			csqcBase,
+			wi.date(),
+			wi.factor()
+		);
+
+		double dblWALPrincipalOnlyToExercise = bond.weightedAverageLifePrincipalOnly (
+			valParams,
+			csqcBase,
+			wi.date(),
+			wi.factor()
+		);
+
+		double dblWALCouponOnlyToExercise = bond.weightedAverageLifeCouponOnly (
+			valParams,
+			csqcBase,
+			wi.date(),
+			wi.factor()
+		);
 
 		System.out.println();
 
@@ -922,7 +1136,7 @@ public class MEZZO_MCQGQO {
 
 		System.out.println (
 			"\t|| Yield To Worst          => " +
-			FormatUtil.FormatDouble (dblYieldToWorst, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblYieldToExercise, 1, 2, 100.) + "%"
 		);
 
 		System.out.println (
@@ -947,12 +1161,12 @@ public class MEZZO_MCQGQO {
 
 		System.out.println (
 			"\t|| OAS                     => " +
-			FormatUtil.FormatDouble (dblZSpreadToWorst, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblZSpreadToExercise, 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| TSY OAS                 => " +
-			FormatUtil.FormatDouble (dblOASToWorst, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblOASToExercise, 3, 1, 10000.)
 		);
 
 		System.out.println (
@@ -1005,6 +1219,56 @@ public class MEZZO_MCQGQO {
 			FormatUtil.FormatDouble (dblCV01, 1, 3, 10000.)
 		);
 
+		System.out.println (
+			"\t|| Convexity               => " +
+			FormatUtil.FormatDouble (dblConvexityToExercise, 1, 3, 1000000.)
+		);
+
+		System.out.println (
+			"\t|| Modified Convexity      => " +
+			FormatUtil.FormatDouble (dblConvexityToExercise, 1, 3, 1000000.)
+		);
+
+		System.out.println (
+			"\t|| DISCOUNT MARGIN         => " +
+			FormatUtil.FormatDouble (dblDiscountMarginToExercise, 3, 1, 10000.)
+		);
+
+		System.out.println (
+			"\t|| E-Spread                => " +
+			FormatUtil.FormatDouble (dblESpreadToExercise, 3, 1, 10000.)
+		);
+
+		System.out.println (
+			"\t|| I-Spread                => " +
+			FormatUtil.FormatDouble (dblISpreadToExercise, 3, 1, 10000.)
+		);
+
+		System.out.println (
+			"\t|| J-Spread                => " +
+			FormatUtil.FormatDouble (dblJSpreadToExercise, 3, 1, 10000.)
+		);
+
+		System.out.println (
+			"\t|| WAL To Worst            => " +
+			FormatUtil.FormatDouble (dblWALToExercise, 1, 3, 1.)
+		);
+
+		System.out.println (
+			"\t|| WAL                     => " +
+			FormatUtil.FormatDouble (dblWALPrincipalOnlyToExercise, 1, 3, 1.)
+		);
+
+		System.out.println (
+			"\t|| WAL3                    => " +
+			FormatUtil.FormatDouble (dblWALCouponOnlyToExercise, 1, 3, 1.)
+		);
+
+		System.out.println (
+			"\t|| WAL4                    => " +
+			FormatUtil.FormatDouble (dblWALToExercise, 1, 3, 1.)
+		);
+
 		System.out.println ("\t||------------------------------------------------||");
 
 		for (Map.Entry<String, Double> meLIBORKRD : mapLIBORKRD.entrySet())
@@ -1019,6 +1283,38 @@ public class MEZZO_MCQGQO {
 			System.out.println (
 				"\t|| LIBOR KPRD " + meLIBORKPRD.getKey() + " => " +
 				FormatUtil.FormatDouble (meLIBORKPRD.getValue(), 1, 3, 10000.)
+			);
+
+		System.out.println ("\t||------------------------------------------------||");
+
+		for (Map.Entry<String, Double> meGovvieKRD : mapGovvieKRD.entrySet())
+			System.out.println (
+				"\t|| Govvie KRD " + meGovvieKRD.getKey() + " => " +
+				FormatUtil.FormatDouble (meGovvieKRD.getValue(), 1, 3, 10000.)
+			);
+
+		System.out.println ("\t||------------------------------------------------||");
+
+		for (Map.Entry<String, Double> meGovvieKPRD : mapGovvieKPRD.entrySet())
+			System.out.println (
+				"\t|| Govvie KPRD " + meGovvieKPRD.getKey() + " => " +
+				FormatUtil.FormatDouble (meGovvieKPRD.getValue(), 1, 3, 10000.)
+			);
+
+		System.out.println ("\t||------------------------------------------------||");
+
+		for (Map.Entry<String, Double> meCreditKRD : mapCreditKRD.entrySet())
+			System.out.println (
+				"\t|| Credit KRD " + meCreditKRD.getKey() + " => " +
+				FormatUtil.FormatDouble (meCreditKRD.getValue(), 1, 3, 10000.)
+			);
+
+		System.out.println ("\t||------------------------------------------------||");
+
+		for (Map.Entry<String, Double> meCreditKPRD : mapCreditKPRD.entrySet())
+			System.out.println (
+				"\t|| Credit KPRD " + meCreditKPRD.getKey() + " => " +
+				FormatUtil.FormatDouble (meCreditKPRD.getValue(), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");

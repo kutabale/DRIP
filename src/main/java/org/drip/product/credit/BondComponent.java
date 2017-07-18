@@ -1948,6 +1948,103 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		return 0.;
 	}
 
+	@Override public int weightedAverageMaturityDate (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor)
+		throws java.lang.Exception
+	{
+		if (null == valParams || !org.drip.quant.common.NumberUtil.IsValid (dblWorkoutFactor))
+			throw new java.lang.Exception ("BondComponent::weightedAverageMaturityDate => Invalid Inputs");
+
+		int iValueDate = valParams.valueDate();
+
+		if (iValueDate >= iWorkoutDate)
+			throw new java.lang.Exception ("BondComponent::weightedAverageMaturityDate => Val date " +
+				org.drip.analytics.date.DateUtil.YYYYMMDD (iValueDate) + " greater than Work-out " +
+					org.drip.analytics.date.DateUtil.YYYYMMDD (iWorkoutDate));
+
+		double iPeriodEndDate = 0.;
+		double dblTotalCashflow = 0.;
+		boolean bTerminateCouponFlow = false;
+		double dblTimeWeightedTotalCashflow = 0.;
+		double dblFlatForwardRate = java.lang.Double.NaN;
+
+		org.drip.param.valuation.ValuationCustomizationParams vcp = null == _quoteConvention ? null :
+			_quoteConvention.valuationCustomizationParams();
+
+		boolean bApplyFlatForward = null == vcp ? false : vcp.applyFlatForwardRate();
+
+		for (org.drip.analytics.cashflow.CompositePeriod period : couponPeriods()) {
+			int iPeriodPayDate = period.payDate();
+
+			if (iPeriodPayDate < iValueDate) continue;
+
+			int iNotionalEndDate = period.endDate();
+
+			int iPeriodStartDate = period.startDate();
+
+			int iAccrualEndDate = iNotionalEndDate;
+			int iAccrualStartDate = iPeriodStartDate > iValueDate ? iPeriodStartDate : iValueDate;
+
+			if (iAccrualEndDate >= iWorkoutDate) {
+				bTerminateCouponFlow = true;
+				iAccrualEndDate = iWorkoutDate;
+				iNotionalEndDate = iWorkoutDate;
+			}
+
+			org.drip.analytics.output.CompositePeriodCouponMetrics cpcm = couponMetrics (iAccrualEndDate,
+				valParams, csqc);
+
+			if (null == cpcm)
+				throw new java.lang.Exception ("BondComponent::weightedAverageMaturityDate => No CPCM");
+
+			double dblPeriodStartNotional = notional (iPeriodStartDate);
+
+			double dblPeriodEndNotional = notional (iNotionalEndDate);
+
+			double dblCouponNotional = dblPeriodStartNotional;
+
+			int iPeriodAmortizationMode = _notionalSetting.periodAmortizationMode();
+
+			if (org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_END == iPeriodAmortizationMode)
+				dblCouponNotional = dblPeriodEndNotional;
+			else if (org.drip.product.params.NotionalSetting.PERIOD_AMORT_EFFECTIVE ==
+				iPeriodAmortizationMode)
+				dblCouponNotional = notional (iPeriodStartDate, iNotionalEndDate);
+
+			double dblPeriodTimeWidth = period.accrualDCF (iAccrualEndDate) - period.accrualDCF
+				(iAccrualStartDate);
+
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = cpcm.rate();
+
+			double dblPeriodCashflow = dblPeriodTimeWidth * (bApplyFlatForward ? dblFlatForwardRate :
+				cpcm.rate()) * dblCouponNotional + dblPeriodStartNotional - dblPeriodEndNotional;
+
+			dblTotalCashflow += dblPeriodCashflow;
+			iPeriodEndDate += (iAccrualEndDate - iAccrualStartDate);
+			dblTimeWeightedTotalCashflow += iPeriodEndDate * dblPeriodCashflow;
+
+			if (bTerminateCouponFlow) break;
+		}
+
+		double dblTerminalCashflow = dblWorkoutFactor * notional (iWorkoutDate);
+
+		dblTotalCashflow += dblTerminalCashflow;
+		dblTimeWeightedTotalCashflow += iPeriodEndDate * dblTerminalCashflow;
+		return (int) (dblTimeWeightedTotalCashflow / dblTotalCashflow);
+	}
+
+	@Override public int weightedAverageMaturityDate (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception
+	{
+		return weightedAverageMaturityDate (valParams, csqc, maturityDate().julian(), 1.);
+	}
+
 	@Override public double weightedAverageLife (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -2043,6 +2140,170 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		throws java.lang.Exception
 	{
 		return weightedAverageLife (valParams, csqc, maturityDate().julian(), 1.);
+	}
+
+	@Override public double weightedAverageLifePrincipalOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor)
+		throws java.lang.Exception
+	{
+		if (null == valParams || !org.drip.quant.common.NumberUtil.IsValid (dblWorkoutFactor))
+			throw new java.lang.Exception
+				("BondComponent::weightedAverageLifePrincipalOnly => Invalid Inputs");
+
+		int iValueDate = valParams.valueDate();
+
+		if (iValueDate >= iWorkoutDate)
+			throw new java.lang.Exception ("BondComponent::weightedAverageLifePrincipalOnly => Val date " +
+				org.drip.analytics.date.DateUtil.YYYYMMDD (iValueDate) + " greater than Work-out " +
+					org.drip.analytics.date.DateUtil.YYYYMMDD (iWorkoutDate));
+
+		double dblTotalCashflow = 0.;
+		double dblPeriodEndTime = 0.;
+		boolean bTerminateCouponFlow = false;
+		double dblTimeWeightedTotalCashflow = 0.;
+
+		for (org.drip.analytics.cashflow.CompositePeriod period : couponPeriods()) {
+			int iPeriodPayDate = period.payDate();
+
+			if (iPeriodPayDate < iValueDate) continue;
+
+			int iNotionalEndDate = period.endDate();
+
+			int iPeriodStartDate = period.startDate();
+
+			int iAccrualEndDate = iNotionalEndDate;
+			int iAccrualStartDate = iPeriodStartDate > iValueDate ? iPeriodStartDate : iValueDate;
+
+			if (iAccrualEndDate >= iWorkoutDate) {
+				bTerminateCouponFlow = true;
+				iAccrualEndDate = iWorkoutDate;
+				iNotionalEndDate = iWorkoutDate;
+			}
+
+			double dblPeriodStartNotional = notional (iPeriodStartDate);
+
+			double dblPeriodEndNotional = notional (iNotionalEndDate);
+
+			double dblPeriodTimeWidth = period.accrualDCF (iAccrualEndDate) - period.accrualDCF
+				(iAccrualStartDate);
+
+			double dblPeriodCashflow = dblPeriodStartNotional - dblPeriodEndNotional;
+			dblTimeWeightedTotalCashflow += dblPeriodEndTime * dblPeriodCashflow;
+			dblTotalCashflow += dblPeriodCashflow;
+			dblPeriodEndTime += dblPeriodTimeWidth;
+
+			if (bTerminateCouponFlow) break;
+		}
+
+		double dblTerminalCashflow = dblWorkoutFactor * notional (iWorkoutDate);
+
+		dblTotalCashflow += dblTerminalCashflow;
+		dblTimeWeightedTotalCashflow += dblPeriodEndTime * dblTerminalCashflow;
+		return dblTimeWeightedTotalCashflow / dblTotalCashflow;
+	}
+
+	@Override public double weightedAverageLifePrincipalOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception
+	{
+		return weightedAverageLifePrincipalOnly (valParams, csqc, maturityDate().julian(), 1.);
+	}
+
+	@Override public double weightedAverageLifeCouponOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor)
+		throws java.lang.Exception
+	{
+		if (null == valParams || !org.drip.quant.common.NumberUtil.IsValid (dblWorkoutFactor))
+			throw new java.lang.Exception ("BondComponent::weightedAverageLifeCouponOnly => Invalid Inputs");
+
+		int iValueDate = valParams.valueDate();
+
+		if (iValueDate >= iWorkoutDate)
+			throw new java.lang.Exception ("BondComponent::weightedAverageLifeCouponOnly => Val date " +
+				org.drip.analytics.date.DateUtil.YYYYMMDD (iValueDate) + " greater than Work-out " +
+					org.drip.analytics.date.DateUtil.YYYYMMDD (iWorkoutDate));
+
+		double dblTotalCashflow = 0.;
+		double dblPeriodEndTime = 0.;
+		boolean bTerminateCouponFlow = false;
+		double dblTimeWeightedTotalCashflow = 0.;
+		double dblFlatForwardRate = java.lang.Double.NaN;
+
+		org.drip.param.valuation.ValuationCustomizationParams vcp = null == _quoteConvention ? null :
+			_quoteConvention.valuationCustomizationParams();
+
+		boolean bApplyFlatForward = null == vcp ? false : vcp.applyFlatForwardRate();
+
+		for (org.drip.analytics.cashflow.CompositePeriod period : couponPeriods()) {
+			int iPeriodPayDate = period.payDate();
+
+			if (iPeriodPayDate < iValueDate) continue;
+
+			int iNotionalEndDate = period.endDate();
+
+			int iPeriodStartDate = period.startDate();
+
+			int iAccrualEndDate = iNotionalEndDate;
+			int iAccrualStartDate = iPeriodStartDate > iValueDate ? iPeriodStartDate : iValueDate;
+
+			if (iAccrualEndDate >= iWorkoutDate) {
+				bTerminateCouponFlow = true;
+				iAccrualEndDate = iWorkoutDate;
+				iNotionalEndDate = iWorkoutDate;
+			}
+
+			org.drip.analytics.output.CompositePeriodCouponMetrics cpcm = couponMetrics (iAccrualEndDate,
+				valParams, csqc);
+
+			if (null == cpcm)
+				throw new java.lang.Exception ("BondComponent::weightedAverageLifeCouponOnly => No CPCM");
+
+			double dblPeriodStartNotional = notional (iPeriodStartDate);
+
+			double dblPeriodEndNotional = notional (iNotionalEndDate);
+
+			double dblCouponNotional = dblPeriodStartNotional;
+
+			int iPeriodAmortizationMode = _notionalSetting.periodAmortizationMode();
+
+			if (org.drip.product.params.NotionalSetting.PERIOD_AMORT_AT_END == iPeriodAmortizationMode)
+				dblCouponNotional = dblPeriodEndNotional;
+			else if (org.drip.product.params.NotionalSetting.PERIOD_AMORT_EFFECTIVE ==
+				iPeriodAmortizationMode)
+				dblCouponNotional = notional (iPeriodStartDate, iNotionalEndDate);
+
+			double dblPeriodTimeWidth = period.accrualDCF (iAccrualEndDate) - period.accrualDCF
+				(iAccrualStartDate);
+
+			if (!org.drip.quant.common.NumberUtil.IsValid (dblFlatForwardRate))
+				dblFlatForwardRate = cpcm.rate();
+
+			double dblPeriodCashflow = dblPeriodTimeWidth * (bApplyFlatForward ? dblFlatForwardRate :
+				cpcm.rate()) * dblCouponNotional;
+
+			dblTotalCashflow += dblPeriodCashflow;
+			dblPeriodEndTime += dblPeriodTimeWidth;
+			dblTimeWeightedTotalCashflow += dblPeriodEndTime * dblPeriodCashflow;
+
+			if (bTerminateCouponFlow) break;
+		}
+
+		return dblTimeWeightedTotalCashflow / dblTotalCashflow;
+	}
+
+	@Override public double weightedAverageLifeCouponOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception
+	{
+		return weightedAverageLifeCouponOnly (valParams, csqc, maturityDate().julian(), 1.);
 	}
 
 	@Override public double priceFromZeroCurve (

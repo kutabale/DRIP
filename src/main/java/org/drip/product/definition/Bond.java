@@ -522,6 +522,43 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate the Bond's Weighted Average Maturity Date from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqc ComponentMarketParams
+	 * @param iWorkoutDate Work-out date
+	 * @param dblWorkoutFactor Double Work-out factor
+	 * 
+	 * @return The Bond's Weighted Average Maturity Date from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Weighted Average Maturity Date cannot be calculated
+	 */
+
+	public abstract int weightedAverageMaturityDate (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate the Bond's Weighted Average Maturity Date To Maturity from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqc ComponentMarketParams
+	 * 
+	 * @return The Bond's Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Weighted Average Maturity Date To Maturity cannot be
+	 *  calculated
+	 */
+
+	public abstract int weightedAverageMaturityDate (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate the Bond's Weighted Average Life from the Valuation Date
 	 * 
 	 * @param valParams ValuationParams
@@ -553,6 +590,80 @@ public abstract class Bond extends CreditComponent {
 	 */
 
 	public abstract double weightedAverageLife (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate the Bond's Principal Only Weighted Average Life from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqc ComponentMarketParams
+	 * @param iWorkoutDate Work-out date
+	 * @param dblWorkoutFactor Double Work-out factor
+	 * 
+	 * @return The Bond's Principal Only Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Weighted Average Life cannot be calculated
+	 */
+
+	public abstract double weightedAverageLifePrincipalOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate the Bond's Principal Only Weighted Average Life To Maturity from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqc ComponentMarketParams
+	 * 
+	 * @return The Bond's Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Principal Only Weighted Average Life To Maturity
+	 *  cannot be calculated
+	 */
+
+	public abstract double weightedAverageLifePrincipalOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate the Bond's Coupon Only Weighted Average Life from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqc ComponentMarketParams
+	 * @param iWorkoutDate Work-out date
+	 * @param dblWorkoutFactor Double Work-out factor
+	 * 
+	 * @return The Bond's Coupon Only Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Weighted Average Life cannot be calculated
+	 */
+
+	public abstract double weightedAverageLifeCouponOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate the Bond's Coupon Only Weighted Average Life To Maturity from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqc ComponentMarketParams
+	 * 
+	 * @return The Bond's Coupon Only Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Coupon Only Weighted Average Life To Maturity cannot be
+	 *  calculated
+	 */
+
+	public abstract double weightedAverageLifeCouponOnly (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
 		throws java.lang.Exception;
