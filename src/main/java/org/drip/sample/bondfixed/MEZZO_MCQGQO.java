@@ -1055,13 +1055,13 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
-		double dblJSpreadToExercise = dblYieldToExercise - gc.yield (
-			bond.weightedAverageMaturityDate (
-				valParams,
-				csqcBase,
-				wi.date(),
-				wi.factor()
-			)
+		double dblJSpreadToExercise = bond.jSpreadFromPrice (
+			valParams,
+			csqcBase,
+			null,
+			wi.date(),
+			wi.factor(),
+			dblCleanPrice
 		);
 
 		double dblWALToExercise = bond.weightedAverageLife (
@@ -1074,6 +1074,13 @@ public class MEZZO_MCQGQO {
 		double dblWALPrincipalOnlyToExercise = bond.weightedAverageLifePrincipalOnly (
 			valParams,
 			csqcBase,
+			wi.date(),
+			wi.factor()
+		);
+
+		double dblWALLossOnlyToExercise = bond.weightedAverageLifeLossOnly (
+			valParams,
+			csqcCreditBase,
 			wi.date(),
 			wi.factor()
 		);
@@ -1257,6 +1264,11 @@ public class MEZZO_MCQGQO {
 		System.out.println (
 			"\t|| WAL                     => " +
 			FormatUtil.FormatDouble (dblWALPrincipalOnlyToExercise, 1, 3, 1.)
+		);
+
+		System.out.println (
+			"\t|| WAL2                    => " +
+			FormatUtil.FormatDouble (dblWALLossOnlyToExercise, 1, 3, 1.)
 		);
 
 		System.out.println (

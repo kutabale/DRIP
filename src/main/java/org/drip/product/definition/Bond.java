@@ -669,6 +669,43 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate the Bond's Weighted Average Life of Losses Only from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqc ComponentMarketParams
+	 * @param iWorkoutDate Work-out date
+	 * @param dblWorkoutFactor Double Work-out factor
+	 * 
+	 * @return The Bond's Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Weighted Average Life of Losses Only cannot be calculated
+	 */
+
+	public abstract double weightedAverageLifeLossOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate the Bond's Weighted Average Life of Losses Only To Maturity from the Valuation Date
+	 * 
+	 * @param valParams ValuationParams
+	 * @param csqc ComponentMarketParams
+	 * 
+	 * @return The Bond's Weighted Average Life from the Valuation Date
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond's Weighted Average Life of Losses Only To Maturity cannot
+	 *  be calculated
+	 */
+
+	public abstract double weightedAverageLifeLossOnly (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate the bond's non-credit risky theoretical price from the Bumped Zero Curve
 	 * 
 	 * @param valParams ValuationParams
@@ -1080,6 +1117,70 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate ASW from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return ASW from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the ASW cannot be calculated
+	 */
+
+	public abstract double aswFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate ASW from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return ASW from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if ASW cannot be calculated
+	 */
+
+	public abstract double aswFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate ASW from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return ASW from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if ASW cannot be calculated
+	 */
+
+	public abstract double aswFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
 		throws java.lang.Exception;
 
 	/**
@@ -1848,6 +1949,70 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Bond Basis from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return Bond Basis from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the Bond Basis cannot be calculated
+	 */
+
+	public abstract double bondBasisFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Bond Basis from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Bond Basis from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond Basis cannot be calculated
+	 */
+
+	public abstract double bondBasisFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Bond Basis from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Bond Basis from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Bond Basis cannot be calculated
+	 */
+
+	public abstract double bondBasisFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
 		throws java.lang.Exception;
 
 	/**
@@ -2683,6 +2848,70 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate Convexity from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return Convexity from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the Convexity cannot be calculated
+	 */
+
+	public abstract double convexityFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Convexity from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Convexity from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Convexity cannot be calculated
+	 */
+
+	public abstract double convexityFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Convexity from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Convexity from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Convexity cannot be calculated
+	 */
+
+	public abstract double convexityFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate Convexity from OAS to Work-out
 	 * 
 	 * @param valParams Valuation Parameters
@@ -3451,6 +3680,70 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate Credit Basis from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return Credit Basis from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the Credit Basis cannot be calculated
+	 */
+
+	public abstract double creditBasisFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Credit Basis from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Credit Basis from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Credit Basis cannot be calculated
+	 */
+
+	public abstract double creditBasisFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Credit Basis from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Credit Basis from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Credit Basis cannot be calculated
+	 */
+
+	public abstract double creditBasisFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate Credit Basis from OAS to Work-out
 	 * 
 	 * @param valParams Valuation Parameters
@@ -4216,6 +4509,70 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Discount Margin from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return Discount Margin from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the Discount Margin cannot be calculated
+	 */
+
+	public abstract double discountMarginFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Discount Margin from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Discount Margin from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Discount Margin cannot be calculated
+	 */
+
+	public abstract double discountMarginFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Discount Margin from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Discount Margin from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Discount Margin cannot be calculated
+	 */
+
+	public abstract double discountMarginFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
 		throws java.lang.Exception;
 
 	/**
@@ -5051,6 +5408,70 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate Duration from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return Duration from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if Duration cannot be calculated
+	 */
+
+	public abstract double durationFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Duration from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Duration from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Duration cannot be calculated
+	 */
+
+	public abstract double durationFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Duration from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Duration from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Duration cannot be calculated
+	 */
+
+	public abstract double durationFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate Duration from OAS to Work-out
 	 * 
 	 * @param valParams Valuation Parameters
@@ -5816,6 +6237,70 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate G Spread from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return G Spread from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the G Spread cannot be calculated
+	 */
+
+	public abstract double gSpreadFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate G Spread from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return G Spread from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if G Spread cannot be calculated
+	 */
+
+	public abstract double gSpreadFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate G Spread from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return G Spread from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if G Spread cannot be calculated
+	 */
+
+	public abstract double gSpreadFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
 		throws java.lang.Exception;
 
 	/**
@@ -6587,6 +7072,70 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate I Spread from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return J Spread from G Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double iSpreadFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate I Spread from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return I Spread from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if I Spread cannot be calculated
+	 */
+
+	public abstract double iSpreadFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate I Spread from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return I Spread from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if I Spread cannot be calculated
+	 */
+
+	public abstract double iSpreadFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate I Spread from OAS to Work-out
 	 * 
 	 * @param valParams Valuation Parameters
@@ -7035,6 +7584,838 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate J Spread from ASW to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblASW ASW to Work-out
+	 * 
+	 * @return J Spread from ASW to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromASW (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblASW)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from ASW to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblASW ASW to Maturity
+	 * 
+	 * @return J Spread from ASW to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromASW (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblASW)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from ASW to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblASW ASW to Optimal Exercise
+	 * 
+	 * @return J Spread from ASW to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromASWToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblASW)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Bond Basis to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblBondBasis Bond Basis to Work-out
+	 * 
+	 * @return J Spread from Bond Basis to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromBondBasis (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblBondBasis)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Bond Basis to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblBondBasis Bond Basis to Maturity
+	 * 
+	 * @return J Spread from Bond Basis to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromBondBasis (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblBondBasis)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Bond Basis to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblBondBasis Bond Basis to Optimal Exercise
+	 * 
+	 * @return J Spread from Bond Basis to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromBondBasisToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblBondBasis)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Credit Basis to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblCreditBasis Credit Basis to Work-out
+	 * 
+	 * @return J Spread from Credit Basis to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromCreditBasis (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblCreditBasis)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Credit Basis to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblCreditBasis Credit Basis to Maturity
+	 * 
+	 * @return J Spread from Credit Basis to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromCreditBasis (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblCreditBasis)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Credit Basis to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblCreditBasis Credit Basis to Optimal Exercise
+	 * 
+	 * @return J Spread from Credit Basis to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromCreditBasisToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblCreditBasis)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Discount Margin to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblDiscountMargin Discount Margin to Work-out
+	 * 
+	 * @return J Spread from Discount Margin to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromDiscountMargin (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblDiscountMargin)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Discount Margin to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblDiscountMargin Discount Margin to Maturity
+	 * 
+	 * @return J Spread from Discount Margin to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromDiscountMargin (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblDiscountMargin)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Discount Margin to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblDiscountMargin Discount Margin to Optimal Exercise
+	 * 
+	 * @return J Spread from Discount Margin to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromDiscountMarginToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblDiscountMargin)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from G Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblGSpread G Spread to Work-out
+	 * 
+	 * @return J Spread from G Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromGSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblGSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from G Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblGSpread G Spread to Maturity
+	 * 
+	 * @return J Spread from G Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromGSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblGSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from G Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblGSpread G Spread to Optimal Exercise
+	 * 
+	 * @return J Spread from G Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromGSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblGSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from I Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblISpread I Spread to Work-out
+	 * 
+	 * @return J Spread from I Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromISpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from I Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblISpread I Spread to Maturity
+	 * 
+	 * @return J Spread from I Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromISpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from I Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblISpread I Spread to Optimal Exercise
+	 * 
+	 * @return J Spread from I Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromISpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from OAS to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblOAS OAS to Work-out
+	 * 
+	 * @return J Spread from OAS to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromOAS (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblOAS)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from OAS to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblOAS OAS to Maturity
+	 * 
+	 * @return J Spread from OAS to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromOAS (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblOAS)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from OAS to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblOAS OAS to Optimal Exercise
+	 * 
+	 * @return J Spread from OAS to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromOASToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblOAS)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from PECS to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblPECS PECS to Work-out
+	 * 
+	 * @return J Spread from PECS to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromPECS (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblPECS)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from PECS to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblPECS PECS to Maturity
+	 * 
+	 * @return J Spread from PECS to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromPECS (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblPECS)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from PECS to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblPECS PECS to Optimal Exercise
+	 * 
+	 * @return J Spread from PECS to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromPECSToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblPECS)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Price to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblPrice Price to Work-out
+	 * 
+	 * @return J Spread from Price to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromPrice (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblPrice)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Price to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblPrice Price to Maturity
+	 * 
+	 * @return J Spread from Price to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromPrice (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblPrice)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Price to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblPrice Price to Optimal Exercise
+	 * 
+	 * @return J Spread from Price to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromPriceToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblPrice)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from TSY Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblTSYSpread TSY Spread to Work-out
+	 * 
+	 * @return J Spread from TSY Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromTSYSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblTSYSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from TSY Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblTSYSpread TSY Spread to Maturity
+	 * 
+	 * @return J Spread from TSY Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromTSYSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblTSYSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from TSY Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblTSYSpread TSY Spread to Optimal Exercise
+	 * 
+	 * @return J Spread from TSY Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromTSYSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblTSYSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Yield to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblYield Yield to Work-out
+	 * 
+	 * @return J Spread from Yield to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromYield (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblYield)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Yield to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblYield Yield to Maturity
+	 * 
+	 * @return J Spread from Yield to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromYield (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblYield)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Yield to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblYield Yield to Optimal Exercise
+	 * 
+	 * @return J Spread from Yield to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromYieldToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblYield)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Yield Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblYieldSpread Yield Spread to Work-out
+	 * 
+	 * @return J Spread from Yield Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromYieldSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblYieldSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Yield Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblYieldSpread Yield Spread to Maturity
+	 * 
+	 * @return J Spread from Yield Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromYieldSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblYieldSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Yield Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblYieldSpread Yield Spread to Optimal Exercise
+	 * 
+	 * @return J Spread from Yield Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromYieldSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblYieldSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Z Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblZSpread Z Spread to Work-out
+	 * 
+	 * @return J Spread from Z Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromZSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblZSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Z Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblZSpread Z Spread to Maturity
+	 * 
+	 * @return J Spread from Z Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromZSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblZSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate J Spread from Z Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblZSpread Z Spread to Optimal Exercise
+	 * 
+	 * @return J Spread from Z Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if J Spread cannot be calculated
+	 */
+
+	public abstract double jSpreadFromZSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblZSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate Macaulay Duration from ASW to Work-out
 	 * 
 	 * @param valParams Valuation Parameters
@@ -7416,6 +8797,70 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Macaulay Duration from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return Macaulay Duration from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if Macaulay Duration cannot be calculated
+	 */
+
+	public abstract double macaulayDurationFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Macaulay Duration from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Macaulay Duration from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Macaulay Duration cannot be calculated
+	 */
+
+	public abstract double macaulayDurationFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Macaulay Duration from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Macaulay Duration from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Macaulay Duration cannot be calculated
+	 */
+
+	public abstract double macaulayDurationFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
 		throws java.lang.Exception;
 
 	/**
@@ -8251,6 +9696,70 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate Modified Duration from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread JSpread to Work-out
+	 * 
+	 * @return Modified Duration from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if Modified Duration cannot be calculated
+	 */
+
+	public abstract double modifiedDurationFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Modified Duration from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Modified Duration from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Modified Duration cannot be calculated
+	 */
+
+	public abstract double modifiedDurationFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Modified Duration from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Modified Duration from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Modified Duration cannot be calculated
+	 */
+
+	public abstract double modifiedDurationFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate Modified Duration from OAS to Work-out
 	 * 
 	 * @param valParams Valuation Parameters
@@ -9083,6 +10592,70 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate OAS from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return OAS from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the OAS cannot be calculated
+	 */
+
+	public abstract double oasFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate OAS from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return OAS from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if OAS cannot be calculated
+	 */
+
+	public abstract double oasFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate OAS from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread JSpread to Optimal Exercise
+	 * 
+	 * @return OAS from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if OAS cannot be calculated
+	 */
+
+	public abstract double oasFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate OAS from PECS to Work-out
 	 * 
 	 * @param valParams Valuation Parameters
@@ -9851,6 +11424,70 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate PECS from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return PECS from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the PECS cannot be calculated
+	 */
+
+	public abstract double pecsFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate PECS from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return PECS from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if PECS cannot be calculated
+	 */
+
+	public abstract double pecsFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate PECS from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread JSpread to Optimal Exercise
+	 * 
+	 * @return PECS from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if PECS cannot be calculated
+	 */
+
+	public abstract double pecsFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate PECS from OAS to Work-out
 	 * 
 	 * @param valParams Valuation Parameters
@@ -10599,6 +12236,70 @@ public abstract class Bond extends CreditComponent {
 		throws java.lang.Exception;
 
 	/**
+	 * Calculate Price from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Price from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Price cannot be calculated
+	 */
+
+	public abstract double priceFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Price from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return Price from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the Price cannot be calculated
+	 */
+
+	public abstract double priceFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Price from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Price from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Price cannot be calculated
+	 */
+
+	public abstract double priceFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
 	 * Calculate Price from I Spread to Optimal Exercise
 	 * 
 	 * @param valParams Valuation Parameters
@@ -11320,6 +13021,70 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate TSY Spread from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return TSY Spread from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the TSY Spread cannot be calculated
+	 */
+
+	public abstract double tsySpreadFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate TSY Spread from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return TSY Spread from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if TSY Spread cannot be calculated
+	 */
+
+	public abstract double tsySpreadFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate TSY Spread from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return TSY Spread from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if TSY Spread cannot be calculated
+	 */
+
+	public abstract double tsySpreadFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
 		throws java.lang.Exception;
 
 	/**
@@ -12132,6 +13897,70 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final double dblISpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Yield from J Spread to Optimal Exercise
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Optimal Exercise
+	 * 
+	 * @return Yield from J Spread to Optimal Exercise
+	 * 
+	 * @throws java.lang.Exception Thrown if Yield cannot be calculated
+	 */
+
+	public abstract double yieldFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Yield from J Spread to Work-out
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param iWorkoutDate Work-out Date
+	 * @param dblWorkoutFactor Work-out Factor
+	 * @param dblJSpread J Spread to Work-out
+	 * 
+	 * @return Yield from J Spread to Work-out
+	 * 
+	 * @throws java.lang.Exception Thrown if the Yield cannot be calculated
+	 */
+
+	public abstract double yieldFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception;
+
+	/**
+	 * Calculate Yield from J Spread to Maturity
+	 * 
+	 * @param valParams Valuation Parameters
+	 * @param csqs Market Parameters
+	 * @param vcp Valuation Customization Parameters
+	 * @param dblJSpread J Spread to Maturity
+	 * 
+	 * @return Yield from J Spread to Maturity
+	 * 
+	 * @throws java.lang.Exception Thrown if Yield cannot be calculated
+	 */
+
+	public abstract double yieldFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
 		throws java.lang.Exception;
 
 	/**
