@@ -415,7 +415,7 @@ public class CUSIP_04015CAA6 {
 				1.
 			);
 
-			dblZSpreadTW = bond.zspreadFromYield (
+			dblZSpreadTW = bond.zSpreadFromYield (
 				valParams,
 				csqc,
 				null,

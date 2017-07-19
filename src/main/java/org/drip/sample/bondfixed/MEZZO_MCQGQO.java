@@ -734,14 +734,14 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
-		double dblZSpreadToMaturity = bond.zspreadFromPrice (
+		double dblZSpreadToMaturity = bond.zSpreadFromPrice (
 			valParams,
 			csqcBase,
 			null,
 			dblCleanPrice
 		);
 
-		double dblZSpreadToExercise = bond.zspreadFromPrice (
+		double dblZSpreadToExercise = bond.zSpreadFromPrice (
 			valParams,
 			csqcBase,
 			null,
@@ -750,7 +750,7 @@ public class MEZZO_MCQGQO {
 			dblCleanPrice
 		);
 
-		double dblParZSpreadToExercise = bond.zspreadFromPrice (
+		double dblParZSpreadToExercise = bond.zSpreadFromPrice (
 			valParams,
 			csqcBase,
 			null,
@@ -1026,7 +1026,7 @@ public class MEZZO_MCQGQO {
 			"1M"
 		);
 
-		double dblESpreadToExercise = bond.zspreadFromPrice (
+		double dblESpreadToExercise = bond.zSpreadFromPrice (
 			valParams,
 			MarketParamsBuilder.Create (
 				EuroDollarFundingCurve (

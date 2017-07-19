@@ -440,7 +440,7 @@ public class YAS {
 
 		double dblISpread = bond.iSpreadFromPrice (valParams, mktParams, null, wi.date(), wi.factor(), dblPrice);
 
-		double dblZSpread = bond.zspreadFromPrice (valParams, mktParams, null, wi.date(), wi.factor(), dblPrice);
+		double dblZSpread = bond.zSpreadFromPrice (valParams, mktParams, null, wi.date(), wi.factor(), dblPrice);
 
 		double dblASW = bond.aswFromPrice (valParams, mktParams, null, wi.date(), wi.factor(), dblPrice);
 

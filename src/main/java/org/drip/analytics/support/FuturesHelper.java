@@ -114,7 +114,7 @@ public class FuturesHelper {
 		if (null == bond)
 			throw new java.lang.Exception ("FuturesHelper::ForwardBondZSpreadPrice => Invalid Inputs");
 
-		return bond.priceFromZSpread (valParamsForward, csqc, vcp, bond.zspreadFromPrice (valParamsSpot,
+		return bond.priceFromZSpread (valParamsForward, csqc, vcp, bond.zSpreadFromPrice (valParamsSpot,
 			csqc, vcp, dblCleanPrice));
 	}
 
@@ -236,7 +236,7 @@ public class FuturesHelper {
 			throw new java.lang.Exception ("FuturesHelper::ForwardBondZSpreadPrice => Invalid Inputs");
 
 		return bond.priceFromZSpread (org.drip.param.valuation.ValuationParams.Spot (dtForward.julian()),
-			csqc, null, bond.zspreadFromPrice (org.drip.param.valuation.ValuationParams.Spot
+			csqc, null, bond.zSpreadFromPrice (org.drip.param.valuation.ValuationParams.Spot
 				(dtSpot.julian()), csqc, null, dblCleanPrice));
 	}
 

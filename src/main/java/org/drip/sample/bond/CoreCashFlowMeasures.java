@@ -756,7 +756,7 @@ public class CoreCashFlowMeasures {
 				System.out.println (
 					"\tZ Spread From Price: " +
 					FormatUtil.FormatDouble (
-						aBond[i].zspreadFromPrice (
+						aBond[i].zSpreadFromPrice (
 							valParams,
 							mktParams,
 							null,

@@ -238,7 +238,7 @@ public class BondProcessor {
 			(iSpotDate, dtMaturity.julian()));
 
 		try {
-			jsonResponse.put ("BondZSpread", bond.zspreadFromPrice (valParams, csqc, null, dblCleanPrice));
+			jsonResponse.put ("BondZSpread", bond.zSpreadFromPrice (valParams, csqc, null, dblCleanPrice));
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
