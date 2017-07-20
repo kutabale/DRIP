@@ -2815,6 +2815,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		return aswFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1., dblDiscountMargin);
 	}
 
+	@Override public double aswFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return aswFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double aswFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return aswFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double aswFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::aswFromESpreadToOptimalExercise => " +
+				"Cannot calc ASW from E Spread to optimal exercise for bonds w emb option");
+
+		return aswFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
 	@Override public double aswFromGSpread (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -3318,6 +3355,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		return bondBasisFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1.,
 			dblDiscountMargin);
+	}
+
+	@Override public double bondBasisFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return bondBasisFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double bondBasisFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return bondBasisFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double bondBasisFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::bondBasisFromESpreadToOptimalExercise => " +
+				"Cant calc Bond Basis from E Spread to optimal exercise for bonds w emb option");
+
+		return bondBasisFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
 	}
 
 	@Override public double bondBasisFromGSpread (
@@ -3846,6 +3920,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			dblDiscountMargin);
 	}
 
+	@Override public double convexityFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return convexityFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double convexityFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return convexityFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double convexityFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::convexityFromESpreadToOptimalExercise => " +
+				"Cant calc Convexity from E Spread to optimal exercise for bonds w emb option");
+
+		return convexityFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
 	@Override public double convexityFromGSpread (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -4337,6 +4448,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			dblDiscountMargin);
 	}
 
+	@Override public double creditBasisFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return creditBasisFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double creditBasisFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return creditBasisFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double creditBasisFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::creditBasisFromESpreadToOptimalExercise => " +
+				"Cant calc Credit Basis from E Spread to optimal exercise for bonds w emb option");
+
+		return creditBasisFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
 	@Override public double creditBasisFromGSpread (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -4823,6 +4971,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		return discountMarginFromCreditBasis (valParams, csqc, vcp, maturityDate().julian(), 1.,
 			dblCreditBasis);
+	}
+
+	@Override public double discountMarginFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return discountMarginFromYield (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor,
+			yieldFromESpread (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double discountMarginFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return discountMarginFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double discountMarginFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::discountMarginFromESpreadToOptimalExercise =>" +
+				" => Cant calc Discount Margin from E Spread to optimal exercise for bonds w emb option");
+
+		return discountMarginFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
 	}
 
 	@Override public double discountMarginFromGSpread (
@@ -5364,6 +5549,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			dblDiscountMargin);
 	}
 
+	@Override public double durationFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return durationFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double durationFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return durationFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double durationFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::durationFromESpreadToOptimalExercise => " +
+				"Cant calc Duration from E Spread to optimal exercise for bonds w emb option");
+
+		return durationFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
 	@Override public double durationFromGSpread (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -5733,6 +5955,493 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		return durationFromZSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblZSpread);
 	}
 
+	@Override public double eSpreadFromASW (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblASW)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromASW
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblASW));
+	}
+
+	@Override public double eSpreadFromASW (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblASW)
+		throws java.lang.Exception
+	{
+		return eSpreadFromASW (valParams, csqc, vcp, maturityDate().julian(), 1., dblASW);
+	}
+
+	@Override public double eSpreadFromASWToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblASW)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromASWToOptimalExercise => " +
+				"Cant calc E Spread from ASW to optimal exercise for bonds w emb option");
+
+		return eSpreadFromASW (valParams, csqc, vcp, maturityDate().julian(), 1., dblASW);
+	}
+
+	@Override public double eSpreadFromBondBasis (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblBondBasis)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromBondBasis
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblBondBasis));
+	}
+
+	@Override public double eSpreadFromBondBasis (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblBondBasis)
+		throws java.lang.Exception
+	{
+		return eSpreadFromBondBasis (valParams, csqc, vcp, maturityDate().julian(), 1., dblBondBasis);
+	}
+
+	@Override public double eSpreadFromBondBasisToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblBondBasis)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromBondBasisToOptimalExercise => " +
+				"Cant calc E Spread from Bond Basis to optimal exercise for bonds w emb option");
+
+		return eSpreadFromBondBasis (valParams, csqc, vcp, maturityDate().julian(), 1., dblBondBasis);
+	}
+
+	@Override public double eSpreadFromCreditBasis (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblCreditBasis)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromCreditBasis
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblCreditBasis));
+	}
+
+	@Override public double eSpreadFromCreditBasis (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblCreditBasis)
+		throws java.lang.Exception
+	{
+		return eSpreadFromCreditBasis (valParams, csqc, vcp, maturityDate().julian(), 1., dblCreditBasis);
+	}
+
+	@Override public double eSpreadFromCreditBasisToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblCreditBasis)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromCreditBasisToOptimalExercise => " +
+				"Cant calc E Spread from Credit Basis to optimal exercise for bonds w emb option");
+
+		return eSpreadFromCreditBasis (valParams, csqc, vcp, maturityDate().julian(), 1., dblCreditBasis);
+	}
+
+	@Override public double eSpreadFromDiscountMargin (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblDiscountMargin)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor,
+			priceFromDiscountMargin (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor,
+				dblDiscountMargin));
+	}
+
+	@Override public double eSpreadFromDiscountMargin (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblDiscountMargin)
+		throws java.lang.Exception
+	{
+		return eSpreadFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1.,
+			dblDiscountMargin);
+	}
+
+	@Override public double eSpreadFromDiscountMarginToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblDiscountMargin)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception
+				("BondComponent::eSpreadFromDiscountMarginToOptimalExercise => " +
+					"Cant calc E Spread from Discount Margin to optimal exercise for bonds w emb option");
+
+		return eSpreadFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1.,
+			dblDiscountMargin);
+	}
+
+	@Override public double eSpreadFromGSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblGSpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromGSpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblGSpread));
+	}
+
+	@Override public double eSpreadFromGSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblGSpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromGSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblGSpread);
+	}
+
+	@Override public double eSpreadFromGSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblGSpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromGSpreadToOptimalExercise => " +
+				"Cant calc E Spread from G Spread to optimal exercise for bonds w emb option");
+
+		return eSpreadFromGSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblGSpread);
+	}
+
+	@Override public double eSpreadFromISpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblISpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromISpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblISpread));
+	}
+
+	@Override public double eSpreadFromISpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblISpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromISpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblISpread);
+	}
+
+	@Override public double eSpreadFromISpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblISpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromISpreadToOptimalExercise => " +
+				"Cant calc E Spread from I Spread to optimal exercise for bonds w emb option");
+
+		return eSpreadFromISpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblISpread);
+	}
+
+	@Override public double eSpreadFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblJSpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromJSpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblJSpread));
+	}
+
+	@Override public double eSpreadFromJSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromJSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblJSpread);
+	}
+
+	@Override public double eSpreadFromJSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblJSpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromJSpreadToOptimalExercise => " +
+				"Cant calc E Spread from J Spread to optimal exercise for bonds w emb option");
+
+		return eSpreadFromJSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblJSpread);
+	}
+
+	@Override public double eSpreadFromOAS (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblOAS)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromOAS
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblOAS));
+	}
+
+	@Override public double eSpreadFromOAS (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblOAS)
+		throws java.lang.Exception
+	{
+		return eSpreadFromOAS (valParams, csqc, vcp, maturityDate().julian(), 1., dblOAS);
+	}
+
+	@Override public double eSpreadFromOASToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblOAS)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromOASToOptimalExercise => " +
+				"Cant calc E Spread from OAS to optimal exercise for bonds w emb option");
+
+		return eSpreadFromOAS (valParams, csqc, vcp, maturityDate().julian(), 1., dblOAS);
+	}
+
+	@Override public double eSpreadFromPECS (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblPECS)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromPECS
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblPECS));
+	}
+
+	@Override public double eSpreadFromPECS (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblPECS)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPECS (valParams, csqc, vcp, maturityDate().julian(), 1., dblPECS);
+	}
+
+	@Override public double eSpreadFromPECSToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblPECS)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromPECSToOptimalExercise => " +
+				"Cant calc E Spread from PECS to optimal exercise for bonds w emb option");
+
+		return eSpreadFromPECS (valParams, csqc, vcp, maturityDate().julian(), 1., dblPECS);
+	}
+
+	@Override public double eSpreadFromPrice (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblPrice)
+		throws java.lang.Exception
+	{
+		return new BondCalibrator (this, false).calibrateZSpreadFromPrice (valParams, csqc, vcp,
+			ZERO_OFF_OF_RATES_INSTRUMENTS_DISCOUNT_CURVE, iWorkoutDate, dblWorkoutFactor, dblPrice);
+	}
+
+	@Override public double eSpreadFromPrice (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblPrice)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, maturityDate().julian(), 1., dblPrice);
+	}
+
+	@Override public double eSpreadFromPriceToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblPrice)
+		throws java.lang.Exception
+	{
+		org.drip.param.valuation.WorkoutInfo wi = exerciseYieldFromPrice (valParams, csqc, vcp, dblPrice);
+
+		if (null == wi)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromPriceToOptimalExercise => " +
+				"Cant calc Workout from Price to optimal exercise for bonds w emb option");
+
+		return eSpreadFromPrice (valParams, csqc, vcp, wi.date(), wi.factor(), dblPrice);
+	}
+
+	@Override public double eSpreadFromTSYSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblTSYSpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromTSYSpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblTSYSpread));
+	}
+
+	@Override public double eSpreadFromTSYSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblTSYSpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromTSYSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblTSYSpread);
+	}
+
+	@Override public double eSpreadFromTSYSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblTSYSpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromTSYSpreadToOptimalExercise => " +
+				"Cant calc E Spread from TSY Spread to optimal exercise for bonds w emb option");
+
+		return eSpreadFromTSYSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblTSYSpread);
+	}
+
+	@Override public double eSpreadFromYield (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblYield)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromYield
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblYield));
+	}
+
+	@Override public double eSpreadFromYield (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblYield)
+		throws java.lang.Exception
+	{
+		return eSpreadFromYield (valParams, csqc, vcp, maturityDate().julian(), 1., dblYield);
+	}
+
+	@Override public double eSpreadFromYieldToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblYield)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromYieldToOptimalExercise => " +
+				"Cant calc E Spread from Yield to optimal exercise for bonds w emb option");
+
+		return eSpreadFromYield (valParams, csqc, vcp, maturityDate().julian(), 1., dblYield);
+	}
+
+	@Override public double eSpreadFromYieldSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblYieldSpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromYieldSpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblYieldSpread));
+	}
+
+	@Override public double eSpreadFromYieldSpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblYieldSpread)
+		throws java.lang.Exception
+	{
+		return eSpreadFromYieldSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblYieldSpread);
+	}
+
+	@Override public double eSpreadFromYieldSpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblYieldSpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::eSpreadFromYieldSpreadToOptimalExercise => " +
+				"Cant calc E Spread from Yield Spread to optimal exercise for bonds w emb option");
+
+		return eSpreadFromYieldSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblYieldSpread);
+	}
+
 	@Override public double gSpreadFromASW (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
@@ -5882,6 +6591,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		return gSpreadFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1.,
 			dblDiscountMargin);
+	}
+
+	@Override public double gSpreadFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return gSpreadFromYield (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, yieldFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double gSpreadFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return gSpreadFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double gSpreadFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::gSpreadFromESpreadToOptimalExercise => " +
+				"Cant calc G Spread from E Spread to optimal exercise for bonds w emb option");
+
+		return gSpreadFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
 	}
 
 	@Override public double gSpreadFromISpread (
@@ -6377,6 +7123,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			dblDiscountMargin);
 	}
 
+	@Override public double iSpreadFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return iSpreadFromYield (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, yieldFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double iSpreadFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return iSpreadFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double iSpreadFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::iSpreadFromESpreadToOptimalExercise => " +
+				"Cant calc I Spread from E Spread to optimal exercise for bonds w emb option");
+
+		return iSpreadFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
 	@Override public double iSpreadFromGSpread (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -6868,6 +7651,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		return jSpreadFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1.,
 			dblDiscountMargin);
+	}
+
+	@Override public double jSpreadFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return jSpreadFromYield (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, yieldFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double jSpreadFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return jSpreadFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double jSpreadFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::jSpreadFromESpreadToOptimalExercise => " +
+				"Cant calc J Spread from E Spread to optimal exercise for bonds w emb option");
+
+		return jSpreadFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
 	}
 
 	@Override public double jSpreadFromGSpread (
@@ -7369,6 +8189,44 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		return macaulayDurationFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1.,
 			dblDiscountMargin);
+	}
+
+	@Override public double macaulayDurationFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return macaulayDurationFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor,
+			priceFromESpread (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double macaulayDurationFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return macaulayDurationFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double macaulayDurationFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception
+				("BondComponent::macaulayDurationFromESpreadToOptimalExercise => " +
+					"Cant calc Macaulay Duration from E Spread to optimal exercise for bonds w emb option");
+
+		return macaulayDurationFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
 	}
 
 	@Override public double macaulayDurationFromGSpread (
@@ -8049,6 +8907,44 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			dblDiscountMargin);
 	}
 
+	@Override public double modifiedDurationFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return modifiedDurationFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor,
+			priceFromESpread (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double modifiedDurationFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return modifiedDurationFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double modifiedDurationFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception
+				("BondComponent::modifiedDurationFromESpreadToOptimalExercise => " +
+					"Cant calc Modified Duration from E Spread to optimal exercise for bonds w emb option");
+
+		return modifiedDurationFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
 	@Override public double modifiedDurationFromGSpread (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -8590,6 +9486,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		return oasFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1., dblDiscountMargin);
 	}
 
+	@Override public double oasFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return oasFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double oasFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return oasFromGSpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double oasFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::oasFromESpreadToOptimalExercise => " +
+				"Cant calc OAS from E Spread to optimal exercise for bonds w emb option");
+
+		return oasFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
 	@Override public double oasFromGSpread (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -9071,6 +10004,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 				"Cant calc PECS from Discount Margin to optimal exercise for bonds w emb option");
 
 		return pecsFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1., dblDiscountMargin);
+	}
+
+	@Override public double pecsFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return pecsFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double pecsFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return pecsFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double pecsFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::pecsFromESpreadToOptimalExercise => " +
+				"Cant calc PECS from E Spread to optimal exercise for bonds w emb option");
+
+		return pecsFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
 	}
 
 	@Override public double pecsFromGSpread (
@@ -9578,6 +10548,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 			dblDiscountMargin);
 	}
 
+	@Override public double priceFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return priceFromYield (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, yieldFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double priceFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return priceFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double priceFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::priceFromESpreadToOptimalExercise => " +
+				"Cant calc Price from E Spread to optimal exercise for bonds w emb option");
+
+		return priceFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
 	@Override public double priceFromGSpread (
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
@@ -10058,6 +11065,43 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 
 		return tsySpreadFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1.,
 			dblDiscountMargin);
+	}
+
+	@Override public double tsySpreadFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return tsySpreadFromYield (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, yieldFromESpread
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double tsySpreadFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return tsySpreadFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double tsySpreadFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::tsySpreadFromESpreadToOptimalExercise => " +
+				"Cant calc TSY Spread from E Spread to optimal exercise for bonds w emb option");
+
+		return tsySpreadFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
 	}
 
 	@Override public double tsySpreadFromGSpread (
@@ -10555,6 +11599,44 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 	{
 		return yieldFromDiscountMargin (valParams, csqc, vcp, maturityDate().julian(), 1.,
 			dblDiscountMargin);
+	}
+
+	@Override public double yieldFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final int iWorkoutDate,
+		final double dblWorkoutFactor,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return yieldFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromZeroCurve
+			(valParams, csqc, vcp, ZERO_OFF_OF_RATES_INSTRUMENTS_DISCOUNT_CURVE, iWorkoutDate,
+				dblWorkoutFactor, dblESpread));
+	}
+
+	@Override public double yieldFromESpread (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		return yieldFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
+	}
+
+	@Override public double yieldFromESpreadToOptimalExercise (
+		final org.drip.param.valuation.ValuationParams valParams,
+		final org.drip.param.market.CurveSurfaceQuoteContainer csqc,
+		final org.drip.param.valuation.ValuationCustomizationParams vcp,
+		final double dblESpread)
+		throws java.lang.Exception
+	{
+		if (null != _eosCall || null != _eosPut)
+			throw new java.lang.Exception ("BondComponent::yieldFromESpreadToOptimalExercise => " +
+				"Cant calc Yield from E Spread to optimal exercise for bonds w emb option");
+
+		return yieldFromESpread (valParams, csqc, vcp, maturityDate().julian(), 1., dblESpread);
 	}
 
 	@Override public double yieldFromGSpread (
@@ -11992,8 +13074,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		final double dblBondBasis)
 		throws java.lang.Exception
 	{
-		return zSpreadFromBondBasis (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor,
-			priceFromBondBasis (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblBondBasis));
+		return zSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromBondBasis
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblBondBasis));
 	}
 
 	@Override public double zSpreadFromBondBasis (
@@ -12029,8 +13111,8 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		final double dblCreditBasis)
 		throws java.lang.Exception
 	{
-		return zSpreadFromCreditBasis (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor,
-			priceFromCreditBasis (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblCreditBasis));
+		return zSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromCreditBasis
+			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblCreditBasis));
 	}
 
 	@Override public double zSpreadFromCreditBasis (
@@ -12107,7 +13189,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		final double dblGSpread)
 		throws java.lang.Exception
 	{
-		return zSpreadFromGSpread (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromGSpread
+		return zSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromGSpread
 			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblGSpread));
 	}
 
@@ -12218,7 +13300,7 @@ public class BondComponent extends org.drip.product.definition.Bond implements
 		final double dblOAS)
 		throws java.lang.Exception
 	{
-		return zSpreadFromOAS (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromOAS
+		return zSpreadFromPrice (valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, priceFromOAS
 			(valParams, csqc, vcp, iWorkoutDate, dblWorkoutFactor, dblOAS));
 	}
 
