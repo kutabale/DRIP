@@ -53,7 +53,27 @@ package org.drip.service.scenario;
  */
 
 public class NamedFieldArray {
+	private double[] _adblValue = null;
 	private java.lang.String _strName = "";
+
+	/**
+	 * NamedFieldArray Constructor
+	 * 
+	 * @param strName Field Name
+	 * @param adblValue Field Value Value
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	public NamedFieldArray (
+		final java.lang.String strName,
+		final double[] adblValue)
+		throws java.lang.Exception
+	{
+		if (null == (_strName = strName) || _strName.isEmpty() || null == _adblValue || 0 ==
+			_adblValue.length || !org.drip.quant.common.NumberUtil.IsValid (_adblValue))
+			throw new java.lang.Exception ("NamedFieldArray Constructor => Invalid Inputs");
+	}
 
 	/**
 	 * Retrieve the Field Name
@@ -64,5 +84,16 @@ public class NamedFieldArray {
 	public java.lang.String name()
 	{
 		return _strName;
+	}
+
+	/**
+	 * Retrieve the Field Value Array
+	 * 
+	 * @return The Field Value Array
+	 */
+
+	public double[] value()
+	{
+		return _adblValue;
 	}
 }

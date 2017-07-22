@@ -228,6 +228,7 @@ org.drip.service.engine
 org.drip.service.env
 org.drip.service.json
 org.drip.service.product
+org.drip.service.scenario
 org.drip.service.state
 org.drip.service.template
 org.drip.spaces.big

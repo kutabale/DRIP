@@ -72,16 +72,18 @@ public class AladdinReplicator {
 	private org.drip.product.credit.BondComponent _bond = null;
 	private double _dblFundingCurveFlatBump = java.lang.Double.NaN;
 
-	private org.drip.state.govvie.GovvieCurve _gcBase = null;
 	private org.drip.analytics.date.JulianDate _dtSettle = null;
 	private org.drip.param.valuation.ValuationParams _valParams = null;
-	private org.drip.state.discount.MergedDiscountForwardCurve _mdfcBase = null;
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcCreditBase = null;
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcCredit01Up = null;
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFundingBase = null;
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFunding01Up = null;
-	private java.util.Map<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve>
-		_mapTenorFunding = null;
+	private java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+		_mapCSQCCredit = null;
+	private java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+		_mapCSQCGovvie = null;
+	private java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+		_mapCSQCFunding = null;
 
 	/**
 	 * AladdinReplicator Constructor
@@ -155,42 +157,83 @@ public class AladdinReplicator {
 
 		_valParams = new org.drip.param.valuation.ValuationParams (_dtSpot, _dtSettle, strCurrency);
 
-		if (null == (_mdfcBase = org.drip.service.template.LatentMarketStateBuilder.SmoothFundingCurve
-			(_dtSpot, strCurrency, _astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote,
-				"ForwardRate", _astrFixFloatTenor, _adblFixFloatQuote, "SwapRate")))
+		org.drip.state.discount.MergedDiscountForwardCurve mdfc =
+			org.drip.service.template.LatentMarketStateBuilder.SmoothFundingCurve (_dtSpot, strCurrency,
+				_astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote, "ForwardRate",
+					_astrFixFloatTenor, _adblFixFloatQuote, "SwapRate");
+
+		if (null == mdfc) throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+
+		org.drip.analytics.date.JulianDate[] adtSpot = org.drip.analytics.support.Helper.SpotDateArray
+			(_dtSpot, null == _astrGovvieTenor ? 0 : _astrGovvieTenor.length);
+
+		org.drip.analytics.date.JulianDate[] adtMaturity = org.drip.analytics.support.Helper.FromTenor
+			(_dtSpot, _astrGovvieTenor);
+
+		org.drip.state.govvie.GovvieCurve gc = org.drip.service.template.LatentMarketStateBuilder.GovvieCurve
+			(_strGovvieCode, _dtSpot, adtSpot, adtMaturity, _adblGovvieQuote, _adblGovvieQuote, "Yield",
+				org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING);
+
+		if (null == gc) throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+
+		if (null == (_csqcFundingBase = org.drip.param.creator.MarketParamsBuilder.Create (mdfc, gc, null,
+			null, null, null, null)))
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 
-		if (null == (_mapTenorFunding = org.drip.service.template.LatentMarketStateBuilder.BumpedFundingCurve
-			(_dtSpot, strCurrency, _astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote,
-				"ForwardRate", _astrFixFloatTenor, _adblFixFloatQuote, "SwapRate",
-					org.drip.service.template.LatentMarketStateBuilder.SMOOTH, 0.0001, false)))
+		java.util.Map<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve> mapTenorFunding =
+			org.drip.service.template.LatentMarketStateBuilder.BumpedFundingCurve (_dtSpot, strCurrency,
+				_astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote, "ForwardRate",
+					_astrFixFloatTenor, _adblFixFloatQuote, "SwapRate",
+						org.drip.service.template.LatentMarketStateBuilder.SMOOTH, 0.0001, false);
+
+		if (null == mapTenorFunding)
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 
-		if (null == (_gcBase = org.drip.service.template.LatentMarketStateBuilder.GovvieCurve
-			(_strGovvieCode, _dtSpot, org.drip.analytics.support.Helper.SpotDateArray (_dtSpot, null ==
-				_astrGovvieTenor ? 0 : _astrGovvieTenor.length), org.drip.analytics.support.Helper.FromTenor
-					(_dtSpot, _astrGovvieTenor), _adblGovvieQuote, _adblGovvieQuote, "Yield",
-						org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING)))
+		for (java.util.Map.Entry<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve>
+			meTenorFunding : mapTenorFunding.entrySet())
+			_mapCSQCFunding.put (meTenorFunding.getKey(), org.drip.param.creator.MarketParamsBuilder.Create
+				(meTenorFunding.getValue(), gc, null, null, null, null, null));
+
+		java.util.Map<java.lang.String, org.drip.state.govvie.GovvieCurve> mapTenorGovvie =
+			org.drip.service.template.LatentMarketStateBuilder.BumpedGovvieCurve (_strGovvieCode, _dtSpot,
+				adtSpot, adtMaturity,_adblGovvieQuote, _adblGovvieQuote, "Yield",
+					org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING, 0.0001, false);
+
+		if (null == mapTenorGovvie)
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 
-		if (null == (_csqcFundingBase = org.drip.param.creator.MarketParamsBuilder.Create (_mdfcBase,
-			_gcBase, null, null, null, null, null)))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+		for (java.util.Map.Entry<java.lang.String, org.drip.state.govvie.GovvieCurve> meTenorGovvie :
+			mapTenorGovvie.entrySet())
+			_mapCSQCGovvie.put (meTenorGovvie.getKey(), org.drip.param.creator.MarketParamsBuilder.Create
+				(mdfc, meTenorGovvie.getValue(), null, null, null, null, null));
 
 		org.drip.state.identifier.CreditLabel cl = _bond.creditLabel();
 
 		if (null != cl) {
 			java.lang.String strReferenceEntity = cl.referenceEntity();
 
-			_csqcCreditBase = org.drip.param.creator.MarketParamsBuilder.Create (_mdfcBase, _gcBase,
+			_csqcCreditBase = org.drip.param.creator.MarketParamsBuilder.Create (mdfc, gc,
 				org.drip.service.template.LatentMarketStateBuilder.CreditCurve (_dtSpot, strReferenceEntity,
-					_astrCreditTenor, _adblCreditQuote, _adblCreditQuote, "FairPremium", _mdfcBase), null,
-						null, null, null);
+					_astrCreditTenor, _adblCreditQuote, _adblCreditQuote, "FairPremium", mdfc), null, null,
+						null, null);
 
-			_csqcCredit01Up = org.drip.param.creator.MarketParamsBuilder.Create (_mdfcBase, _gcBase,
+			_csqcCredit01Up = org.drip.param.creator.MarketParamsBuilder.Create (mdfc, gc,
 				org.drip.service.template.LatentMarketStateBuilder.CreditCurve (_dtSpot, strReferenceEntity,
 					_astrCreditTenor, _adblCreditQuote, org.drip.analytics.support.Helper.ParallelNodeBump
-						(_adblCreditQuote, 1.), "FairPremium", _mdfcBase), null, null, null, null);
+						(_adblCreditQuote, 1.), "FairPremium", mdfc), null, null, null, null);
+
+			java.util.Map<java.lang.String, org.drip.state.credit.CreditCurve> mapTenorCredit =
+				org.drip.service.template.LatentMarketStateBuilder.BumpedCreditCurve (_dtSpot,
+					strReferenceEntity, _astrCreditTenor, _adblCreditQuote, _adblCreditQuote, "FairPremium",
+						mdfc, 0.0001, false);
+
+			if (null == mapTenorCredit)
+				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+
+			for (java.util.Map.Entry<java.lang.String, org.drip.state.credit.CreditCurve> meTenorCredit :
+				mapTenorCredit.entrySet())
+				_mapCSQCCredit.put (meTenorCredit.getKey(), org.drip.param.creator.MarketParamsBuilder.Create
+					(mdfc, gc, meTenorCredit.getValue(), null, null, null, null));
 		}
 
 		if (null == (_csqcFunding01Up = org.drip.param.creator.MarketParamsBuilder.Create
@@ -199,7 +242,7 @@ public class AladdinReplicator {
 					0.0001), "ForwardRate", org.drip.analytics.support.Helper.ParallelNodeBump
 						(_adblFuturesQuote, 0.0001), "ForwardRate", _astrFixFloatTenor,
 							org.drip.analytics.support.Helper.ParallelNodeBump (_adblFixFloatQuote, 0.0001),
-								"SwapRate"), _gcBase, null, null, null, null, null)))
+								"SwapRate"), gc, null, null, null, null, null)))
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 	}
 
@@ -424,37 +467,39 @@ public class AladdinReplicator {
 	}
 
 	/**
-	 * Retrieve the Base Instance of the Funding Curve
+	 * Retrieve the Map of the Tenor Bumped Instances of the Funding Curve CSQC
 	 * 
-	 * @return The Base Instance of the Funding Curve
+	 * @return The Map of the Tenor Bumped Instances of the Funding Curve CSQC
 	 */
 
-	public org.drip.state.discount.MergedDiscountForwardCurve fundingBase()
+	public java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+		fundingTenorCSQC()
 	{
-		return _mdfcBase;
+		return _mapCSQCFunding;
 	}
 
 	/**
-	 * Retrieve the Map of the Tenor Bumped Instances of the Funding Curve
+	 * Retrieve the Map of the Tenor Bumped Instances of the Govvie Curve CSQC
 	 * 
-	 * @return The Map of the Tenor Bumped Instances of the Funding Curve
+	 * @return The Map of the Tenor Bumped Instances of the Govvie Curve CSQC
 	 */
 
-	public java.util.Map<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve>
-		fundingTenorBumped()
+	public java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+		govvieTenorCSQC()
 	{
-		return _mapTenorFunding;
+		return _mapCSQCGovvie;
 	}
 
 	/**
-	 * Retrieve the Base Instance of the Govvie Curve
+	 * Retrieve the Map of the Tenor Bumped Instances of the Credit Curve CSQC
 	 * 
-	 * @return The Base Instance of the Govvie Curve
+	 * @return The Map of the Tenor Bumped Instances of the Credit Curve CSQC
 	 */
 
-	public org.drip.state.govvie.GovvieCurve govvieBase()
+	public java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+		creditTenorCSQC()
 	{
-		return _gcBase;
+		return _mapCSQCCredit;
 	}
 
 	/**
@@ -499,5 +544,86 @@ public class AladdinReplicator {
 	public org.drip.param.market.CurveSurfaceQuoteContainer credit01UpCSQC()
 	{
 		return _csqcCredit01Up;
+	}
+
+	/**
+	 * Generate an Instance of a Replication Run
+	 * 
+	 * @return Instance of a Replication Run
+	 */
+
+	public org.drip.service.scenario.AladdinReplicationRun generateRun()
+	{
+		int iMaturityDate = _bond.maturityDate().julian();
+
+		double dblNextPutFactor = 1.;
+		double dblNextCallFactor = 1.;
+		int iNextPutDate = iMaturityDate;
+		int iNextCallDate = iMaturityDate;
+
+		int iSpotDate = _dtSpot.julian();
+
+		java.lang.String strCurrency = _bond.currency();
+
+		org.drip.product.params.EmbeddedOptionSchedule eosPut = _bond.putSchedule();
+
+		org.drip.product.params.EmbeddedOptionSchedule eosCall = _bond.callSchedule();
+
+		org.drip.service.scenario.AladdinReplicationRun arr = new
+				org.drip.service.scenario.AladdinReplicationRun();
+
+		org.drip.param.valuation.WorkoutInfo wi = _bond.exerciseYieldFromPrice (_valParams, _csqcFundingBase,
+			null, _dblCurrentPrice);
+
+		try {
+			if (null != eosCall) {
+				iNextCallDate = eosCall.nextDate (iSpotDate);
+
+				dblNextCallFactor = eosCall.nextFactor (iSpotDate);
+			}
+
+			if (null != eosPut) {
+				iNextPutDate = eosPut.nextDate (iSpotDate);
+
+				dblNextPutFactor = eosPut.nextFactor (iSpotDate);
+			}
+
+			double dblAccrued = _bond.accrued (_dtSettle.julian(), _csqcFundingBase);
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued", dblAccrued));
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued$", dblAccrued));
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued Interest Factor",
+				dblAccrued * _dblFX));
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Maturity",
+				_bond.yieldFromPrice (_valParams, _csqcFundingBase, null, _dblCurrentPrice)));
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Maturity CBE",
+				_bond.yieldFromPrice (_valParams, _csqcFundingBase,
+					org.drip.param.valuation.ValuationCustomizationParams.BondEquivalent (strCurrency),
+						_dblCurrentPrice)));
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("YTM fwdCpn", _bond.yieldFromPrice
+				(_valParams, _csqcFundingBase, new org.drip.param.valuation.ValuationCustomizationParams
+					(_bond.couponDC(), _bond.freq(), false, null, strCurrency, false, true),
+						_dblCurrentPrice)));
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Worst", wi.yield()));
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("YIELD TO CALL",
+				_bond.yieldFromPrice (_valParams, _csqcFundingBase, null, iNextCallDate, dblNextCallFactor,
+					_dblCurrentPrice)));
+
+			arr.addNamedField (new org.drip.service.scenario.NamedField ("YIELD TO PUT", _bond.yieldFromPrice
+				(_valParams, _csqcFundingBase, null, iNextPutDate, dblNextPutFactor, _dblCurrentPrice)));
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		return arr;
 	}
 }

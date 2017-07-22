@@ -1032,7 +1032,7 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
-		final double dblGSpread)
+		final double dblESpread)
 		throws java.lang.Exception;
 
 	/**
@@ -1052,7 +1052,7 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
-		final double dblGSpread)
+		final double dblESpread)
 		throws java.lang.Exception;
 
 	/**
@@ -4680,7 +4680,7 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.valuation.ValuationParams valParams,
 		final org.drip.param.market.CurveSurfaceQuoteContainer csqs,
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
-		final double dblGSpread)
+		final double dblESpread)
 		throws java.lang.Exception;
 
 	/**
@@ -16524,7 +16524,7 @@ public abstract class Bond extends CreditComponent {
 		final org.drip.param.valuation.ValuationCustomizationParams vcp,
 		final int iWorkoutDate,
 		final double dblWorkoutFactor,
-		final double dblGESpread)
+		final double dblESpread)
 		throws java.lang.Exception;
 
 	/**
