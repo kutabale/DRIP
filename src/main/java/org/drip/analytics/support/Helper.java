@@ -1269,4 +1269,81 @@ public class Helper {
 
 		return "" + (iBaseTimeUnit + iRollTimeUnit) + chBaseTenor;
 	}
+
+	/**
+	 * Convert the Array of Tenors into Dates off of a Spot
+	 * 
+	 * @param dtSpot Spot Date
+	 * @param astrTenor Array of Tenors
+	 * 
+	 * @return Array of Dates
+	 */
+
+	public static final org.drip.analytics.date.JulianDate[] FromTenor (
+		final org.drip.analytics.date.JulianDate dtSpot,
+		final java.lang.String[] astrTenor)
+	{
+		if (null == dtSpot || null == astrTenor) return null;
+
+		int iNumTenor = astrTenor.length;
+		org.drip.analytics.date.JulianDate[] adt = 0 == iNumTenor ? null : new
+			org.drip.analytics.date.JulianDate[iNumTenor];
+
+		if (0 == iNumTenor) return null;
+
+		for (int i = 0; i < iNumTenor; ++i) {
+			if (null == (adt[i] = dtSpot.addTenor (astrTenor[i]))) return null;
+		}
+
+		return adt;
+	}
+
+	/**
+	 * Generate an Array of Repeated Spot Dates
+	 * 
+	 * @param dtSpot Spot Date
+	 * @param iCount Repeat Count
+	 * 
+	 * @return Array of the Repeated Spot Dates
+	 */
+
+	public static final org.drip.analytics.date.JulianDate[] SpotDateArray (
+		final org.drip.analytics.date.JulianDate dtSpot,
+		final int iCount)
+	{
+		if (null == dtSpot || 0 >= iCount) return null;
+
+		org.drip.analytics.date.JulianDate[] adtSpot = new org.drip.analytics.date.JulianDate[iCount];
+
+		for (int i = 0; i < iCount; ++i)
+			adtSpot[i] = dtSpot;
+
+		return adtSpot;
+	}
+
+	/**
+	 * Generate an Array of Bumped Nodes
+	 * 
+	 * @param adblNode Array of Unbumped Nodes
+	 * @param dblBump Bump Amount
+	 * 
+	 * @return Array of Bumped Nodes
+	 */
+
+	public static final double[] ParallelNodeBump (
+		final double[] adblNode,
+		final double dblBump)
+	{
+		if (null == adblNode) return null;
+
+		int iNumNode = adblNode.length;
+		double[] adblBumpedNode = 0 == iNumNode ? null : new double[iNumNode];
+
+		for (int i = 0; i < iNumNode; ++i) {
+			if (!org.drip.quant.common.NumberUtil.IsValid (adblBumpedNode[i] = adblNode[i] + dblBump))
+				return null;
+		}
+
+		return adblBumpedNode;
+	}
 }

@@ -70,13 +70,18 @@ public class AladdinReplicator {
 	private double _dblCurrentPrice = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtSpot = null;
 	private org.drip.product.credit.BondComponent _bond = null;
-	private double _dblCreditCurveTenorBump = java.lang.Double.NaN;
-	private double _dblGovvieCurveTenorBump = java.lang.Double.NaN;
-	private double _dblFundingCurveBaseBump = java.lang.Double.NaN;
-	private double _dblFundingCurveTenorBump = java.lang.Double.NaN;
+	private double _dblFundingCurveFlatBump = java.lang.Double.NaN;
 
+	private org.drip.state.govvie.GovvieCurve _gcBase = null;
 	private org.drip.analytics.date.JulianDate _dtSettle = null;
 	private org.drip.param.valuation.ValuationParams _valParams = null;
+	private org.drip.state.discount.MergedDiscountForwardCurve _mdfcBase = null;
+	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcCreditBase = null;
+	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcCredit01Up = null;
+	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFundingBase = null;
+	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFunding01Up = null;
+	private java.util.Map<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve>
+		_mapTenorFunding = null;
 
 	/**
 	 * AladdinReplicator Constructor
@@ -90,15 +95,12 @@ public class AladdinReplicator {
 	 * @param adblFuturesQuote Array of Futures Quotes
 	 * @param astrFixFloatTenor Array of Fix-Float Tenors
 	 * @param adblFixFloatQuote Array of Fix-Float Quotes
-	 * @param dblFundingCurveBaseBump Funding Curve Base Bump
-	 * @param dblFundingCurveTenorBump Funding Curve Tenor Bump
+	 * @param dblFundingCurveFlatBump Base Funding Curve Flat Bump
 	 * @param strGovvieCode Govvie Code
 	 * @param astrGovvieTenor Array of Govvie Tenor
 	 * @param adblGovvieQuote Array of Govvie Quotes
-	 * @param dblGovvieCurveTenorBump Govvie Curve Tenor Bump
 	 * @param astrCreditTenor Array of Credit Tenors
 	 * @param adblCreditQuote Array of Credit Quotes
-	 * @param dblCreditCurveTenorBump Credit Curve Tenor Bump
 	 * @param dblFX FX Rate Applicable
 	 * @param iSettleLag Settlement Lag
 	 * @param bond Bond Component Instance
@@ -116,15 +118,12 @@ public class AladdinReplicator {
 		final double[] adblFuturesQuote,
 		final java.lang.String[] astrFixFloatTenor,
 		final double[] adblFixFloatQuote,
-		final double dblFundingCurveBaseBump,
-		final double dblFundingCurveTenorBump,
+		final double dblFundingCurveFlatBump,
 		final java.lang.String strGovvieCode,
 		final java.lang.String[] astrGovvieTenor,
 		final double[] adblGovvieQuote,
-		final double dblGovvieCurveTenorBump,
 		final java.lang.String[] astrCreditTenor,
 		final double[] adblCreditQuote,
-		final double dblCreditCurveTenorBump,
 		final double dblFX,
 		final int iSettleLag,
 		final org.drip.product.credit.BondComponent bond)
@@ -147,10 +146,7 @@ public class AladdinReplicator {
 		_adblFuturesQuote = adblFuturesQuote;
 		_adblFixFloatQuote = adblFixFloatQuote;
 		_astrFixFloatTenor = astrFixFloatTenor;
-		_dblCreditCurveTenorBump = dblCreditCurveTenorBump;
-		_dblGovvieCurveTenorBump = dblGovvieCurveTenorBump;
-		_dblFundingCurveBaseBump = dblFundingCurveBaseBump;
-		_dblFundingCurveTenorBump = dblFundingCurveTenorBump;
+		_dblFundingCurveFlatBump = dblFundingCurveFlatBump;
 
 		java.lang.String strCurrency = _bond.currency();
 
@@ -158,6 +154,53 @@ public class AladdinReplicator {
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 
 		_valParams = new org.drip.param.valuation.ValuationParams (_dtSpot, _dtSettle, strCurrency);
+
+		if (null == (_mdfcBase = org.drip.service.template.LatentMarketStateBuilder.SmoothFundingCurve
+			(_dtSpot, strCurrency, _astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote,
+				"ForwardRate", _astrFixFloatTenor, _adblFixFloatQuote, "SwapRate")))
+			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+
+		if (null == (_mapTenorFunding = org.drip.service.template.LatentMarketStateBuilder.BumpedFundingCurve
+			(_dtSpot, strCurrency, _astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote,
+				"ForwardRate", _astrFixFloatTenor, _adblFixFloatQuote, "SwapRate",
+					org.drip.service.template.LatentMarketStateBuilder.SMOOTH, 0.0001, false)))
+			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+
+		if (null == (_gcBase = org.drip.service.template.LatentMarketStateBuilder.GovvieCurve
+			(_strGovvieCode, _dtSpot, org.drip.analytics.support.Helper.SpotDateArray (_dtSpot, null ==
+				_astrGovvieTenor ? 0 : _astrGovvieTenor.length), org.drip.analytics.support.Helper.FromTenor
+					(_dtSpot, _astrGovvieTenor), _adblGovvieQuote, _adblGovvieQuote, "Yield",
+						org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING)))
+			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+
+		if (null == (_csqcFundingBase = org.drip.param.creator.MarketParamsBuilder.Create (_mdfcBase,
+			_gcBase, null, null, null, null, null)))
+			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+
+		org.drip.state.identifier.CreditLabel cl = _bond.creditLabel();
+
+		if (null != cl) {
+			java.lang.String strReferenceEntity = cl.referenceEntity();
+
+			_csqcCreditBase = org.drip.param.creator.MarketParamsBuilder.Create (_mdfcBase, _gcBase,
+				org.drip.service.template.LatentMarketStateBuilder.CreditCurve (_dtSpot, strReferenceEntity,
+					_astrCreditTenor, _adblCreditQuote, _adblCreditQuote, "FairPremium", _mdfcBase), null,
+						null, null, null);
+
+			_csqcCredit01Up = org.drip.param.creator.MarketParamsBuilder.Create (_mdfcBase, _gcBase,
+				org.drip.service.template.LatentMarketStateBuilder.CreditCurve (_dtSpot, strReferenceEntity,
+					_astrCreditTenor, _adblCreditQuote, org.drip.analytics.support.Helper.ParallelNodeBump
+						(_adblCreditQuote, 1.), "FairPremium", _mdfcBase), null, null, null, null);
+		}
+
+		if (null == (_csqcFunding01Up = org.drip.param.creator.MarketParamsBuilder.Create
+			(org.drip.service.template.LatentMarketStateBuilder.SmoothFundingCurve (_dtSpot, strCurrency,
+				_astrDepositTenor, org.drip.analytics.support.Helper.ParallelNodeBump (_adblDepositQuote,
+					0.0001), "ForwardRate", org.drip.analytics.support.Helper.ParallelNodeBump
+						(_adblFuturesQuote, 0.0001), "ForwardRate", _astrFixFloatTenor,
+							org.drip.analytics.support.Helper.ParallelNodeBump (_adblFixFloatQuote, 0.0001),
+								"SwapRate"), _gcBase, null, null, null, null, null)))
+			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -260,25 +303,14 @@ public class AladdinReplicator {
 	}
 
 	/**
-	 * Retrieve the Funding Curve Base Bump
+	 * Retrieve the Base Funding Curve Flat Bump
 	 * 
-	 * @return The Funding Curve Base Bump
+	 * @return The Base Funding Curve Flat Bump
 	 */
 
-	public double fundingCurveBaseBump()
+	public double fundingCurveFlatBump()
 	{
-		return _dblFundingCurveBaseBump;
-	}
-
-	/**
-	 * Retrieve the Funding Curve Tenor Bump
-	 * 
-	 * @return The Funding Curve Tenor Bump
-	 */
-
-	public double fundingCurveTenorBump()
-	{
-		return _dblFundingCurveTenorBump;
+		return _dblFundingCurveFlatBump;
 	}
 
 	/**
@@ -315,17 +347,6 @@ public class AladdinReplicator {
 	}
 
 	/**
-	 * Retrieve the Govvie Curve Tenor Bump
-	 * 
-	 * @return The Govvie Curve Tenor Bump
-	 */
-
-	public double govvieCurveTenorBump()
-	{
-		return _dblGovvieCurveTenorBump;
-	}
-
-	/**
 	 * Retrieve the Array of CDS Instrument Maturity Tenors
 	 * 
 	 * @return The Array of CDS Instrument Maturity Tenors
@@ -345,17 +366,6 @@ public class AladdinReplicator {
 	public double[] creditQuote()
 	{
 		return _adblCreditQuote;
-	}
-
-	/**
-	 * Retrieve the Credit Curve Tenor Bump
-	 * 
-	 * @return The Credit Curve Tenor Bump
-	 */
-
-	public double creditCurveTenorBump()
-	{
-		return _dblCreditCurveTenorBump;
 	}
 
 	/**
@@ -411,5 +421,83 @@ public class AladdinReplicator {
 	public org.drip.param.valuation.ValuationParams valuationParameters()
 	{
 		return _valParams;
+	}
+
+	/**
+	 * Retrieve the Base Instance of the Funding Curve
+	 * 
+	 * @return The Base Instance of the Funding Curve
+	 */
+
+	public org.drip.state.discount.MergedDiscountForwardCurve fundingBase()
+	{
+		return _mdfcBase;
+	}
+
+	/**
+	 * Retrieve the Map of the Tenor Bumped Instances of the Funding Curve
+	 * 
+	 * @return The Map of the Tenor Bumped Instances of the Funding Curve
+	 */
+
+	public java.util.Map<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve>
+		fundingTenorBumped()
+	{
+		return _mapTenorFunding;
+	}
+
+	/**
+	 * Retrieve the Base Instance of the Govvie Curve
+	 * 
+	 * @return The Base Instance of the Govvie Curve
+	 */
+
+	public org.drip.state.govvie.GovvieCurve govvieBase()
+	{
+		return _gcBase;
+	}
+
+	/**
+	 * Retrieve the CSQC built out of the Base Funding Curve
+	 * 
+	 * @return The CSQC built out of the Base Funding Curve
+	 */
+
+	public org.drip.param.market.CurveSurfaceQuoteContainer fundingBaseCSQC()
+	{
+		return _csqcFundingBase;
+	}
+
+	/**
+	 * Retrieve the CSQC built out of the Base Credit Curve
+	 * 
+	 * @return The CSQC built out of the Base Credit Curve
+	 */
+
+	public org.drip.param.market.CurveSurfaceQuoteContainer creditBaseCSQC()
+	{
+		return _csqcCreditBase;
+	}
+
+	/**
+	 * Retrieve the CSQC built out of the Funding Curve Flat Bumped 1 bp
+	 * 
+	 * @return The CSQC built out of the Funding Curve Flat Bumped 1 bp
+	 */
+
+	public org.drip.param.market.CurveSurfaceQuoteContainer funding01UpCSQC()
+	{
+		return _csqcFunding01Up;
+	}
+
+	/**
+	 * Retrieve the CSQC built out of the Credit Curve Flat Bumped 1 bp
+	 * 
+	 * @return The CSQC built out of the Credit Curve Flat Bumped 1 bp
+	 */
+
+	public org.drip.param.market.CurveSurfaceQuoteContainer credit01UpCSQC()
+	{
+		return _csqcCredit01Up;
 	}
 }
