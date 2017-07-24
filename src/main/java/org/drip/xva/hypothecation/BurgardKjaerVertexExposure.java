@@ -76,6 +76,32 @@ public class BurgardKjaerVertexExposure implements
 	private double _dblCollateralBalance = java.lang.Double.NaN;
 
 	/**
+	 * Generate an Initial Instance of Burgard Kjaer Vertex Exposure
+	 * 
+	 * @param dblUncollateralizedExposure The Uncollateralized Exposure
+	 * @param cgvco Collateral Group Vertex Close Out
+	 * 
+	 * @return Initial Instance of Burgard Kjaer Vertex Exposure
+	 */
+
+	public static final BurgardKjaerVertexExposure Initial (
+		final double dblUncollateralizedExposure,
+		final org.drip.xva.hypothecation.CollateralGroupVertexCloseOut cgvco)
+	{
+		if (!org.drip.quant.common.NumberUtil.IsValid (dblUncollateralizedExposure) || null == cgvco)
+			return null;
+
+		try {
+			return new BurgardKjaerVertexExposure (dblUncollateralizedExposure - cgvco.counterParty(),
+				dblUncollateralizedExposure - cgvco.bank(), 0., 0.);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * BurgardKjaerVertexExposure Constructor
 	 * 
 	 * @param dblCredit The Credit Exposure of the Collateral Group

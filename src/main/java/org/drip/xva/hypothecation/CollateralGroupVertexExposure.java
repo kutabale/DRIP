@@ -72,6 +72,26 @@ public class CollateralGroupVertexExposure {
 	private double _dblForward = java.lang.Double.NaN;
 
 	/**
+	 * Construct the Unaccrued CollateralGroupVertexExposure Instance
+	 * 
+	 * @param dblForward The Unrealized Forward Exposure
+	 * 
+	 * @return Unaccrued CollateralGroupVertexExposure Instance
+	 */
+
+	public static final CollateralGroupVertexExposure Unaccrued (
+		final double dblForward)
+	{
+		try {
+			return new CollateralGroupVertexExposure (dblForward, 0.);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * CollateralGroupVertexExposure Constructor
 	 * 
 	 * @param dblForward The Unrealized Forward Exposure

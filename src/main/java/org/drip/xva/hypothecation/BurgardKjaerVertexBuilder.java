@@ -70,6 +70,81 @@ package org.drip.xva.hypothecation;
 public class BurgardKjaerVertexBuilder {
 
 	/**
+	 * Construct the Initial Dynamic Bank Portfolio
+	 * 
+	 * @param dtAnchor The Anchor Date
+	 * @param dblForward The Unrealized Forward Exposure
+	 * @param mv The Market Vertex
+	 * @param cog The Generic Close Out Instance
+	 * 
+	 * @return The Burgard Kjaer Bank Portfolio Vertex
+	 */
+
+	public static final org.drip.xva.hypothecation.BurgardKjaerVertex Initial (
+		final org.drip.analytics.date.JulianDate dtAnchor,
+		final double dblForward,
+		final org.drip.xva.universe.MarketVertex mv,
+		final org.drip.xva.definition.CloseOutGeneral cog)
+	{
+		if (null == mv) return null;
+
+		org.drip.xva.hypothecation.CollateralGroupVertexCloseOut cgvco =
+			org.drip.xva.hypothecation.CollateralGroupVertexCloseOut.Standard (cog, dblForward, 0.);
+
+		org.drip.xva.hypothecation.BurgardKjaerVertexExposure cgvea =
+			org.drip.xva.hypothecation.BurgardKjaerVertexExposure.Initial (dblForward, cgvco);
+
+		if (null == cgvea) return null;
+
+		double dblFundingExposure = cgvea.funding();
+
+		double dblBankDefaultCloseOut = cgvco.bank();
+
+		org.drip.xva.universe.EntityMarketVertex emvBank = mv.bank();
+
+		org.drip.xva.universe.NumeraireMarketVertex nmvBankSubordinate =
+			emvBank.subordinateFundingNumeraire();
+
+		if (null == nmvBankSubordinate) return null;
+
+		double dblBankSurvival = emvBank.survivalProbability();
+
+		double dblBankSeniorRecovery = emvBank.seniorRecoveryRate();
+
+		double dblBankSubordinateRecovery = emvBank.subordinateRecoveryRate();
+
+		double dblCounterPartySurvival = mv.counterParty().survivalProbability();
+
+		double dblIncrementalBankSurvival = dblBankSurvival - 1.;
+
+		double dblAdjustedExposure = dblForward + dblBankSurvival *
+			(dblCounterPartySurvival - 1.) * cgvea.credit() +
+			dblCounterPartySurvival * dblIncrementalBankSurvival * cgvea.debt() +
+			dblCounterPartySurvival * dblIncrementalBankSurvival * dblFundingExposure -
+			dblBankSurvival * dblCounterPartySurvival * mv.collateralSchemeSpread() * cgvea.collateralBalance();
+
+		try {
+			return new org.drip.xva.hypothecation.BurgardKjaerVertex (
+				dtAnchor,
+				dblForward,
+				0.,
+				cgvea,
+				cgvco,
+				new org.drip.xva.derivative.ReplicationPortfolioVertexBank (
+					(dblFundingExposure + dblBankSubordinateRecovery * dblAdjustedExposure - dblBankDefaultCloseOut) /
+						(dblBankSeniorRecovery - dblBankSubordinateRecovery) / emvBank.seniorFundingNumeraire().forward(),
+					(dblFundingExposure + dblBankSeniorRecovery * dblAdjustedExposure - dblBankDefaultCloseOut) /
+						(dblBankSubordinateRecovery - dblBankSeniorRecovery) / nmvBankSubordinate.forward()
+				)
+			);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Construct a Path-wise Dynamic Bank Portfolio
 	 * 
 	 * @param dtAnchor The Anchor Date
@@ -94,6 +169,8 @@ public class BurgardKjaerVertexBuilder {
 
 		double dblBankDefaultCloseOut = cgvco.bank();
 
+		org.drip.xva.universe.MarketVertex mvStart = me.start();
+
 		org.drip.xva.universe.MarketVertex mvFinish = me.finish();
 
 		org.drip.xva.universe.EntityMarketVertex emvBankFinish = mvFinish.bank();
@@ -111,16 +188,16 @@ public class BurgardKjaerVertexBuilder {
 
 		double dblCounterPartySurvivalFinish = mvFinish.counterParty().survivalProbability();
 
-		double dblIncrementalBankSurvival = dblBankSurvivalFinish - me.start().bank().survivalProbability();
+		double dblIncrementalBankSurvival = dblBankSurvivalFinish - mvStart.bank().survivalProbability();
 
 		double dblAdjustedExposure = cgver.uncollateralized() + dblBankSurvivalFinish *
-			(dblCounterPartySurvivalFinish - me.start().counterParty().survivalProbability()) * cgvea.credit() +
+			(dblCounterPartySurvivalFinish - mvStart.counterParty().survivalProbability()) * cgvea.credit() +
 			dblCounterPartySurvivalFinish * dblIncrementalBankSurvival * cgvea.debt() +
 			dblCounterPartySurvivalFinish * dblIncrementalBankSurvival * dblFundingExposure -
 			dblBankSurvivalFinish * dblCounterPartySurvivalFinish * mvFinish.collateralSchemeSpread() * cgvea.collateralBalance();
 
 		try {
-			new org.drip.xva.hypothecation.BurgardKjaerVertex (
+			return new org.drip.xva.hypothecation.BurgardKjaerVertex (
 				dtAnchor,
 				cgver.forward(),
 				cgver.accrued(),
