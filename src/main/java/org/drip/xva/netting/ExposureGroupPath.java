@@ -561,7 +561,7 @@ public class ExposureGroupPath {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double bilateralCollateralValueAdjustment()
+	public double bilateralCollateralAdjustment()
 		throws java.lang.Exception
 	{
 		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
@@ -599,7 +599,7 @@ public class ExposureGroupPath {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double unilateralCollateralValueAdjustment()
+	public double unilateralCollateralAdjustment()
 		throws java.lang.Exception
 	{
 		org.drip.xva.universe.MarketVertex[] aMV = _mp.vertexes();
@@ -635,10 +635,10 @@ public class ExposureGroupPath {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public double collateralValueAdjustment()
+	public double collateralAdjustment()
 		throws java.lang.Exception
 	{
-		return bilateralCollateralValueAdjustment();
+		return bilateralCollateralAdjustment();
 	}
 
 	/**

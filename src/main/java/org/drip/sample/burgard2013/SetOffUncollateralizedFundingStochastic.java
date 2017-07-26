@@ -2,7 +2,6 @@
 package org.drip.sample.burgard2013;
 
 import org.drip.analytics.date.*;
-import org.drip.measure.bridge.BrokenDateInterpolatorLinearT;
 import org.drip.measure.crng.RandomNumberGenerator;
 import org.drip.measure.discrete.CorrelatedPathVertexDimension;
 import org.drip.measure.dynamics.*;
@@ -16,7 +15,6 @@ import org.drip.xva.basel.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.definition.*;
 import org.drip.xva.hypothecation.*;
-import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -66,16 +64,16 @@ import org.drip.xva.universe.*;
  */
 
 /**
- * SemiReplicationZeroThresholdFundingStochastic examines the Basel BCBS 2012 OTC Accounting Impact to a
- *  Portfolio of 10 Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA
- *  Schemes. Simulation is carried out under the following Criteria using one of the Generalized Burgard
- *  Kjaer (2013) Scheme.
+ * SetOffUncollateralizedFundingStochastic examines the Basel BCBS 2012 OTC Accounting Impact to a Portfolio
+ *  of 10 Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA Schemes.
+ *  Simulation is carried out under the following Criteria using one of the Generalized Burgard Kjaer (2013)
+ *  Scheme.
  *  
- *    - Collateralization Status - Zero Threshold
+ *    - Collateralization Status - Uncollateralized
  *    - Aggregation Unit         - Funding Group
  *    - Added Swap Type          - Zero Upfront Par Swap (Neutral)
  *    - Market Dynamics          - Stochastic (Dynamic Market Evolution)
- *    - Funding Strategy         - Perfect Replication
+ *    - Funding Strategy         - Set Off
  *  
  * The References are:
  *  
@@ -96,7 +94,7 @@ import org.drip.xva.universe.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class SemiReplicationZeroThresholdFundingStochastic {
+public class SetOffUncollateralizedFundingStochastic {
 
 	private static final double[] NumeraireValueRealization (
 		final DiffusionEvolver deNumeraireValue,
@@ -113,6 +111,7 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
+
 
 		JumpDiffusionEdge[] aJDE = deNumeraireValue.incrementSequence (
 			new JumpDiffusionVertex (
@@ -184,6 +183,7 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
+
 
 		JumpDiffusionEdge[] aJDE = deATMSwapRateOffset.incrementSequence (
 			new JumpDiffusionVertex (
@@ -293,12 +293,10 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 		double dblCounterPartyRecoveryRateInitial = 0.30;
 		double dblBankSeniorFundingSpreadDrift = 0.00002;
 		double dblBankSeniorFundingSpreadVolatility = 0.002;
-		double dblBankSubordinateFundingSpreadDrift = 0.00002;
-		double dblBankSubordinateFundingSpreadVolatility = 0.002;
+		double dblBankSubordinateFundingSpreadDrift = 0.00001;
+		double dblBankSubordinateFundingSpreadVolatility = 0.001;
 		double dblCounterPartyFundingSpreadDrift = 0.000022;
 		double dblCounterPartyFundingSpreadVolatility = 0.0022;
-		double dblBankThreshold = 0.;
-		double dblCounterPartyThreshold = 0.;
 
 		double[][] aadblCorrelation = new double[][] {
 			{1.00,  0.00,  0.03,  0.07,  0.04,  0.05,  0.00,  0.08,  0.00,  0.00,  0.00},  // PORTFOLIO
@@ -314,20 +312,13 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 			{0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  1.00}   // COUNTER PARTY FUNDING SPREAD
 		};
 
-		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
-			"FIXEDTHRESHOLD",
-			dblCounterPartyThreshold,
-			dblBankThreshold
-		);
-
-		CounterPartyGroupSpecification cpgs = CounterPartyGroupSpecification.Standard ("CPGROUP");
-
 		JulianDate dtSpot = DateUtil.Today();
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
+		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		MonoPathExposureAdjustment[] aCPGPGround = new MonoPathExposureAdjustment[iNumPath];
 		MonoPathExposureAdjustment[] aCPGPExtended = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankSeniorFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankSeniorRecoveryRateInitial);
@@ -531,26 +522,11 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 				iNumStep
 			);
 
-			JulianDate dtStart = dtSpot;
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
-			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
-			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
 			CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
 			CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				JulianDate dtEnd = (adtVertex[j] = dtSpot.addMonths (6 * j + 6));
-
-				double dblCollateralBalance1 = 0.;
-				double dblCollateralBalance2 = 0.;
-				double dblValueEnd1 = aadblPortfolio1Value[i][j];
-				double dblValueEnd2 = aadblPortfolio2Value[i][j];
-
-				CloseOutGeneral cog = new CloseOutBilateral (
-					adblBankSeniorRecoveryRate[j],
-					adblCounterPartyRecoveryRate[j]
-				);
-
 				aMV[j] = new MarketVertex (
 					adtVertex[j] = dtSpot.addMonths (6 * j),
 					Double.NaN,
@@ -595,57 +571,34 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 					)
 				);
 
+				aadblCollateralBalance[i][j] = 0.;
+
+				CloseOutGeneral cog = new CloseOutBilateral (
+					adblBankSeniorRecoveryRate[j],
+					adblCounterPartyRecoveryRate[j]
+				);
+
 				if (0 != j) {
-					CollateralAmountEstimator cae1 = new CollateralAmountEstimator (
-						cgs,
-						cpgs,
-						new BrokenDateInterpolatorLinearT (
-							dtStart.julian(),
-							dtEnd.julian(),
-							dblValueStart1,
-							dblValueEnd1
-						),
-						Double.NaN
-					);
-
-					dblCollateralBalance1 = cae1.postingRequirement (dtEnd);
-
-					CollateralAmountEstimator cae2 = new CollateralAmountEstimator (
-						cgs,
-						cpgs,
-						new BrokenDateInterpolatorLinearT (
-							dtStart.julian(),
-							dtEnd.julian(),
-							dblValueStart2,
-							dblValueEnd2
-						),
-						Double.NaN
-					);
-
-					dblCollateralBalance2 = cae2.postingRequirement (dtEnd);
-
-					aCGV1[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
+					aCGV1[j] = BurgardKjaerVertexBuilder.SetOff (
 						adtVertex[j],
 						aadblPortfolio1Value[i][j],
 						0.,
-						dblCollateralBalance1,
+						0.,
 						new MarketEdge (
 							aMV[j - 1],
 							aMV[j]
-						),
-						cog
+						)
 					);
-	
-					aCGV2[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
+
+					aCGV2[j] = BurgardKjaerVertexBuilder.SetOff (
 						adtVertex[j],
 						aadblPortfolio2Value[i][j],
 						0.,
-						dblCollateralBalance2,
+						0.,
 						new MarketEdge (
 							aMV[j - 1],
 							aMV[j]
-						),
-						cog
+						)
 					);
 				} else {
 					aCGV1[j] = BurgardKjaerVertexBuilder.Initial (
@@ -654,7 +607,7 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 						aMV[j],
 						cog
 					);
-	
+
 					aCGV2[j] = BurgardKjaerVertexBuilder.Initial (
 						adtVertex[j],
 						aadblPortfolio2Value[i][0],
@@ -668,10 +621,6 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 
 			CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {
 				new CollateralGroupPath (aCGV1)
-			};
-
-			CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGV2)
 			};
 
 			aCPGPGround[i] = new MonoPathExposureAdjustment (
@@ -688,6 +637,10 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 					)
 				}
 			);
+
+			CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {
+				new CollateralGroupPath (aCGV2)
+			};
 
 			aCPGPExtended[i] = new MonoPathExposureAdjustment (
 				new AlbaneseAndersenNettingGroupPath[] {
@@ -733,8 +686,6 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 
 		UnivariateDiscreteThin udtCVA = cpgd.cva();
 
-		UnivariateDiscreteThin udtDVA = cpgd.dva();
-
 		UnivariateDiscreteThin udtFVA = cpgd.fva();
 
 		UnivariateDiscreteThin udtFDA = cpgd.fda();
@@ -746,21 +697,21 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 		UnivariateDiscreteThin udtSFVA = cpgd.sfva();
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
@@ -769,7 +720,6 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 			FormatUtil.FormatDouble (udtFTDCVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtDVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.average(), 2, 2, 1.) + "  | " +
@@ -783,7 +733,6 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 			FormatUtil.FormatDouble (udtFTDCVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtDVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.minimum(), 2, 2, 1.) + "  | " +
@@ -797,7 +746,6 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 			FormatUtil.FormatDouble (udtFTDCVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtDVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.maximum(), 2, 2, 1.) + "  | " +
@@ -811,7 +759,6 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 			FormatUtil.FormatDouble (udtFTDCVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtDVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.error(), 2, 2, 1.) + "  | " +
@@ -820,7 +767,7 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 	}
 
@@ -833,21 +780,21 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 		System.out.println();
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
@@ -856,7 +803,6 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 			FormatUtil.FormatDouble (cpgdExpanded.ftdcva().average() - cpgdGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.cvacl().average() - cpgdGround.cvacl().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.cva().average() - cpgdGround.cva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.dva().average() - cpgdGround.dva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.fva().average() - cpgdGround.fva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.fda().average() - cpgdGround.fda().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (cpgdExpanded.fca().average() - cpgdGround.fca().average(), 3, 1, 10000.) + "  | " +
@@ -865,7 +811,7 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 	}
 
@@ -979,17 +925,17 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 		ExposureAdjustmentDigest cpgdExtended = cpgaExtended.digest();
 
 		CPGDDump (
-			"\t||                                        GROUND BOOK ADJUSTMENT METRICS                                        ||",
+			"\t||                                   GROUND BOOK ADJUSTMENT METRICS                                   ||",
 			cpgdGround
 		);
 
 		CPGDDump (
-			"\t||                                       EXTENDED BOOK ADJUSTMENT METRICS                                       ||",
+			"\t||                                  EXTENDED BOOK ADJUSTMENT METRICS                                  ||",
 			cpgdExtended
 		);
 
 		CPGDDiffDump (
-			"\t||                                   TRADE INCREMENT ADJUSTMENT METRICS (bp)                                    ||",
+			"\t||                              TRADE INCREMENT ADJUSTMENT METRICS (bp)                               ||",
 			cpgdGround,
 			cpgdExtended
 		);

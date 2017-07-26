@@ -517,6 +517,39 @@ public class MonoPathExposureAdjustment implements org.drip.xva.cpty.PathExposur
 		return adblFundingExposurePV;
 	}
 
+	@Override public double unilateralCollateralAdjustment()
+		throws java.lang.Exception
+	{
+		int iNumCreditDebtGroup = _aCDGP.length;
+		double dbUnilateralCollateralAdjustment = 0.;
+
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex)
+			dbUnilateralCollateralAdjustment +=
+				_aCDGP[iCreditDebtGroupIndex].unilateralCollateralAdjustment();
+
+		return dbUnilateralCollateralAdjustment;
+	}
+
+	@Override public double bilateralCollateralAdjustment()
+		throws java.lang.Exception
+	{
+		int iNumCreditDebtGroup = _aCDGP.length;
+		double dbBilateralCollateralAdjustment = 0.;
+
+		for (int iCreditDebtGroupIndex = 0; iCreditDebtGroupIndex < iNumCreditDebtGroup;
+			++iCreditDebtGroupIndex)
+			dbBilateralCollateralAdjustment += _aCDGP[iCreditDebtGroupIndex].bilateralCollateralAdjustment();
+
+		return dbBilateralCollateralAdjustment;
+	}
+
+	@Override public double collateralAdjustment()
+		throws java.lang.Exception
+	{
+		return unilateralCollateralAdjustment();
+	}
+
 	@Override public double unilateralCreditAdjustment()
 		throws java.lang.Exception
 	{

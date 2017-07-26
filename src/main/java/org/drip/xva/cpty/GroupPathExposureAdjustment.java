@@ -513,6 +513,40 @@ public class GroupPathExposureAdjustment implements org.drip.xva.cpty.PathExposu
 		return adblFundingExposure;
 	}
 
+	@Override public double unilateralCollateralAdjustment()
+		throws java.lang.Exception
+	{
+		double dblUnilateralCollateralAdjustment = 0.;
+		int iNumCounterPartyGroup = _aMPEA.length;
+
+		for (int iCounterPartyGroupIndex = 0; iCounterPartyGroupIndex < iNumCounterPartyGroup;
+			++iCounterPartyGroupIndex)
+			dblUnilateralCollateralAdjustment +=
+				_aMPEA[iCounterPartyGroupIndex].unilateralCollateralAdjustment();
+
+		return dblUnilateralCollateralAdjustment;
+	}
+
+	@Override public double bilateralCollateralAdjustment()
+		throws java.lang.Exception
+	{
+		double dblBilateralCollateralAdjustment = 0.;
+		int iNumCounterPartyGroup = _aMPEA.length;
+
+		for (int iCounterPartyGroupIndex = 0; iCounterPartyGroupIndex < iNumCounterPartyGroup;
+			++iCounterPartyGroupIndex)
+			dblBilateralCollateralAdjustment +=
+				_aMPEA[iCounterPartyGroupIndex].bilateralCollateralAdjustment();
+
+		return dblBilateralCollateralAdjustment;
+	}
+
+	@Override public double collateralAdjustment()
+		throws java.lang.Exception
+	{
+		return bilateralCollateralAdjustment();
+	}
+
 	@Override public double unilateralCreditAdjustment()
 		throws java.lang.Exception
 	{

@@ -66,16 +66,16 @@ import org.drip.xva.universe.*;
  */
 
 /**
- * SemiReplicationZeroThresholdFundingStochastic examines the Basel BCBS 2012 OTC Accounting Impact to a
- *  Portfolio of 10 Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA
- *  Schemes. Simulation is carried out under the following Criteria using one of the Generalized Burgard
- *  Kjaer (2013) Scheme.
+ * SetOffZeroThresholdFundingStohastic examines the Basel BCBS 2012 OTC Accounting Impact to a Portfolio of
+ *  10 Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA Schemes.
+ *  Simulation is carried out under the following Criteria using one of the Generalized Burgard Kjaer (2013)
+ *  Scheme.
  *  
  *    - Collateralization Status - Zero Threshold
  *    - Aggregation Unit         - Funding Group
  *    - Added Swap Type          - Zero Upfront Par Swap (Neutral)
  *    - Market Dynamics          - Stochastic (Dynamic Market Evolution)
- *    - Funding Strategy         - Perfect Replication
+ *    - Funding Strategy         - Set Off
  *  
  * The References are:
  *  
@@ -96,7 +96,7 @@ import org.drip.xva.universe.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class SemiReplicationZeroThresholdFundingStochastic {
+public class SetOffZeroThresholdFundingStochastic {
 
 	private static final double[] NumeraireValueRealization (
 		final DiffusionEvolver deNumeraireValue,
@@ -624,7 +624,7 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 
 					dblCollateralBalance2 = cae2.postingRequirement (dtEnd);
 
-					aCGV1[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
+					aCGV1[j] = BurgardKjaerVertexBuilder.SetOff (
 						adtVertex[j],
 						aadblPortfolio1Value[i][j],
 						0.,
@@ -632,11 +632,10 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 						new MarketEdge (
 							aMV[j - 1],
 							aMV[j]
-						),
-						cog
+						)
 					);
 	
-					aCGV2[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
+					aCGV2[j] = BurgardKjaerVertexBuilder.SetOff (
 						adtVertex[j],
 						aadblPortfolio2Value[i][j],
 						0.,
@@ -644,8 +643,7 @@ public class SemiReplicationZeroThresholdFundingStochastic {
 						new MarketEdge (
 							aMV[j - 1],
 							aMV[j]
-						),
-						cog
+						)
 					);
 				} else {
 					aCGV1[j] = BurgardKjaerVertexBuilder.Initial (

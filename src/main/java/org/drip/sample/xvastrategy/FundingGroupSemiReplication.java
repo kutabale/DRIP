@@ -1,5 +1,5 @@
 
-package org.drip.sample.netting;
+package org.drip.sample.xvastrategy;
 
 import org.drip.analytics.date.*;
 import org.drip.measure.discrete.SequenceGenerator;
@@ -9,6 +9,8 @@ import org.drip.measure.realization.*;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
 import org.drip.xva.cpty.*;
+import org.drip.xva.definition.*;
+import org.drip.xva.derivative.ReplicationPortfolioVertexBank;
 import org.drip.xva.hypothecation.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
@@ -59,7 +61,8 @@ import org.drip.xva.universe.*;
  */
 
 /**
- * PortfolioGroupRun demonstrates the Simulation Run of the Netting Group Exposure. The References are:
+ * FundingGroupSemiReplication demonstrates the Simulation Run of the Funding Group Exposure using the "Semi
+ *  Replication" Funding Strategy laid out in Burgard and Kjaer (2013). The References are:
  *  
  *  - Burgard, C., and M. Kjaer (2014): PDE Representations of Derivatives with Bilateral Counter-party Risk
  *  	and Funding Costs, Journal of Credit Risk, 7 (3) 1-19.
@@ -78,7 +81,7 @@ import org.drip.xva.universe.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class PortfolioGroupRun {
+public class FundingGroupSemiReplication {
 
 	private static final double[] AssetValueRealization (
 		final DiffusionEvolver deAssetValue,
@@ -129,19 +132,26 @@ public class PortfolioGroupRun {
 		double dblOISRate = 0.004;
 		double dblCSADrift = 0.01;
 		double dblBankHazardRate = 0.015;
-		double dblBankRecoveryRate = 0.40;
+		double dblBankSeniorRecoveryRate = 0.40;
+		double dblBankSubordinateRecoveryRate = 0.15;
 		double dblCounterPartyHazardRate = 0.030;
 		double dblCounterPartyRecoveryRate = 0.30;
 
 		double dblTimeWidth = dblTime / iNumStep;
 		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
-		double dblBankFundingSpread = dblBankHazardRate / (1. - dblBankRecoveryRate);
+		BurgardKjaerVertex[] aBKV1 = new BurgardKjaerVertex[iNumStep + 1];
+		BurgardKjaerVertex[] aBKV2 = new BurgardKjaerVertex[iNumStep + 1];
+		double dblBankSeniorFundingSpread = dblBankHazardRate / (1. - dblBankSeniorRecoveryRate);
+		double dblBankSubordinateFundingSpread = dblBankHazardRate / (1. - dblBankSubordinateRecoveryRate);
 		double dblCounterPartyFundingSpread = dblCounterPartyHazardRate / (1. - dblCounterPartyRecoveryRate);
-		CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
-		CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
 
 		JulianDate dtSpot = DateUtil.Today();
+
+		CloseOutGeneral cog = new CloseOutBilateral (
+			dblBankSeniorRecoveryRate,
+			dblCounterPartyRecoveryRate
+		);
 
 		DiffusionEvolver deAssetValue = new DiffusionEvolver (
 			DiffusionEvaluatorLogarithmic.Standard (
@@ -219,15 +229,18 @@ public class PortfolioGroupRun {
 				new EntityMarketVertex (
 					Math.exp (-0.5 * dblBankHazardRate * i),
 					dblBankHazardRate,
-					dblBankRecoveryRate,
-					dblBankFundingSpread,
+					dblBankSeniorRecoveryRate,
+					dblBankSeniorFundingSpread,
 					new NumeraireMarketVertex (
-						Math.exp (-0.5 * dblBankHazardRate * (1. - dblBankRecoveryRate) * iNumStep),
-						Math.exp (-0.5 * dblBankHazardRate * (1. - dblBankRecoveryRate) * (iNumStep - i))
+						Math.exp (-0.5 * dblBankHazardRate * (1. - dblBankSeniorRecoveryRate) * iNumStep),
+						Math.exp (-0.5 * dblBankHazardRate * (1. - dblBankSeniorRecoveryRate) * (iNumStep - i))
 					),
-					Double.NaN,
-					Double.NaN,
-					null
+					dblBankSubordinateRecoveryRate,
+					dblBankSubordinateFundingSpread,
+					new NumeraireMarketVertex (
+						Math.exp (-0.5 * dblBankHazardRate * (1. - dblBankSubordinateRecoveryRate) * iNumStep),
+						Math.exp (-0.5 * dblBankHazardRate * (1. - dblBankSubordinateRecoveryRate) * (iNumStep - i))
+					)
 				),
 				new EntityMarketVertex (
 					Math.exp (-0.5 * dblCounterPartyHazardRate * i),
@@ -244,28 +257,55 @@ public class PortfolioGroupRun {
 				)
 			);
 
-			aCGV1[i] = new AlbaneseAndersenVertex (
-				adtVertex[i],
-				adblAssetValuePath1[i],
-				0.,
-				0.
-			);
 
-			aCGV2[i] = new AlbaneseAndersenVertex (
-				adtVertex[i],
-				adblAssetValuePath2[i],
-				0.,
-				0.
-			);
+			if (0 != i) {
+				aBKV1[i] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
+					adtVertex[i],
+					adblAssetValuePath1[i],
+					0.,
+					0.,
+					new MarketEdge (
+						aMV[i - 1],
+						aMV[i]
+					),
+					cog
+				);
+
+				aBKV2[i] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
+					adtVertex[i],
+					adblAssetValuePath2[i],
+					0.,
+					0.,
+					new MarketEdge (
+						aMV[i - 1],
+						aMV[i]
+					),
+					cog
+				);
+			} else {
+				aBKV1[i] = BurgardKjaerVertexBuilder.Initial (
+					adtVertex[i],
+					adblAssetValuePath1[i],
+					aMV[i],
+					cog
+				);
+
+				aBKV2[i] = BurgardKjaerVertexBuilder.Initial (
+					adtVertex[i],
+					adblAssetValuePath2[i],
+					aMV[i],
+					cog
+				);
+			}
 
 			System.out.println (
 				"\t| " + adtVertex[i] + " => " +
-				FormatUtil.FormatDouble (aCGV1[i].collateralized(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV1[i].uncollateralized(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV1[i].collateralBalance(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV2[i].collateralized(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV2[i].uncollateralized(), 1, 6, 1.) + " | " +
-				FormatUtil.FormatDouble (aCGV2[i].collateralBalance(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aBKV1[i].collateralized(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aBKV1[i].uncollateralized(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aBKV1[i].collateralBalance(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aBKV2[i].collateralized(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aBKV2[i].uncollateralized(), 1, 6, 1.) + " | " +
+				FormatUtil.FormatDouble (aBKV2[i].collateralBalance(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].overnightIndexRate(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].bank().survivalProbability(), 1, 6, 1.) + " | " +
 				FormatUtil.FormatDouble (aMV[i].bank().seniorRecoveryRate(), 1, 6, 1.) + " | " +
@@ -277,9 +317,9 @@ public class PortfolioGroupRun {
 
 		MarketPath mp = new MarketPath (aMV);
 
-		CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV1)};
+		CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {new CollateralGroupPath (aBKV1)};
 
-		CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aCGV2)};
+		CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {new CollateralGroupPath (aBKV2)};
 
 		AlbaneseAndersenNettingGroupPath ngpaa2014_1 = new AlbaneseAndersenNettingGroupPath (
 			aCGP1,
@@ -552,5 +592,61 @@ public class PortfolioGroupRun {
 		System.out.println ("\t||  SFVA  => " + FormatUtil.FormatDouble (eaa.sfva().amount(), 2, 2, 100.) + "% ||");
 
 		System.out.println ("\t||-------------------||");
+
+		System.out.println();
+
+		System.out.println ("\t||----------------------------------------||");
+
+		System.out.println ("\t|| BURGARD KJAER REPLICATION PORTFOLIO #1 ||");
+
+		System.out.println ("\t||----------------------------------------||");
+
+		System.out.println ("\t||    L -> R:                             ||");
+
+		System.out.println ("\t||           - Bank Bond Units            ||");
+
+		System.out.println ("\t||           - Bank Subordinate Units     ||");
+
+		System.out.println ("\t||----------------------------------------||");
+
+		for (int i = 0; i <= iNumStep; ++i) {
+			ReplicationPortfolioVertexBank rpvb = aBKV1[i].bankReplicationPortfolio();
+
+			System.out.println ("\t|| [" + adtVertex[i] + "] =>   " +
+				FormatUtil.FormatDouble (rpvb.seniorNumeraireUnits(), 1, 3, 1.) + "  |  " +
+				FormatUtil.FormatDouble (rpvb.subordinateNumeraireUnits(), 1, 3, 1.) + "   || "
+			);
+		}
+
+		System.out.println ("\t||----------------------------------------||");
+
+		System.out.println();
+
+		System.out.println ("\t||----------------------------------------||");
+
+		System.out.println ("\t|| BURGARD KJAER REPLICATION PORTFOLIO #2 ||");
+
+		System.out.println ("\t||----------------------------------------||");
+
+		System.out.println ("\t||    L -> R:                             ||");
+
+		System.out.println ("\t||           - Bank Bond Units            ||");
+
+		System.out.println ("\t||           - Bank Subordinate Units     ||");
+
+		System.out.println ("\t||----------------------------------------||");
+
+		for (int i = 0; i <= iNumStep; ++i) {
+			ReplicationPortfolioVertexBank rpvb = aBKV2[i].bankReplicationPortfolio();
+
+			System.out.println ("\t|| [" + adtVertex[i] + "] =>   " +
+				FormatUtil.FormatDouble (rpvb.seniorNumeraireUnits(), 1, 3, 1.) + "  |  " +
+				FormatUtil.FormatDouble (rpvb.subordinateNumeraireUnits(), 1, 3, 1.) + "   || "
+			);
+		}
+
+		System.out.println ("\t||----------------------------------------||");
+
+		System.out.println();
 	}
 }

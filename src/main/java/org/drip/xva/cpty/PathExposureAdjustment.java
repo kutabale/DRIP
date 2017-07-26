@@ -222,6 +222,39 @@ public interface PathExposureAdjustment {
 	abstract public double[] fundingExposurePV();
 
 	/**
+	 * Compute Path Unilateral Collateral Adjustment
+	 * 
+	 * @return The Path Unilateral Collateral Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	abstract public double unilateralCollateralAdjustment()
+		throws java.lang.Exception;
+
+	/**
+	 * Compute Path Bilateral Collateral Adjustment
+	 * 
+	 * @return The Path Bilateral Collateral Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	abstract public double bilateralCollateralAdjustment()
+		throws java.lang.Exception;
+
+	/**
+	 * Compute Path Collateral Adjustment
+	 * 
+	 * @return The Path Collateral Adjustment
+	 * 
+	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
+	 */
+
+	abstract public double collateralAdjustment()
+		throws java.lang.Exception;
+
+	/**
 	 * Compute Path Unilateral Credit Adjustment
 	 * 
 	 * @return The Path Unilateral Credit Adjustment
