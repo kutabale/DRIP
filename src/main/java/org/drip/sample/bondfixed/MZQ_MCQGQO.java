@@ -63,12 +63,12 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * MEZZO_MCQGQO demonstrates the Analytics Calculation for MEZZO_MCQGQO.
+ * MZQ_MCQGQO demonstrates the Analytics Calculation for the Bond MCQGQO.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class MEZZO_MCQGQO {
+public class MZQ_MCQGQO {
 
 	private static final MergedDiscountForwardCurve EuroDollarFundingCurve (
 		final JulianDate dtSpot,

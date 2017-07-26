@@ -71,7 +71,7 @@ import org.drip.xva.universe.*;
  *  
  *    - Collateralization Status - Collateralized
  *    - Aggregation Unit         - Funding Group
- *    - Added Swap Type          - Positive Upfront Swap (Payable)
+ *    - Added Swap Type          - Zero Upfront Par Swap (Neutral)
  *    - Market Dynamics          - Deterministic (Static Market Evolution)
  *    - Funding Strategy         - Perfect Replication
  *  
@@ -294,8 +294,8 @@ public class PerfectReplicationCollateralizedFunding {
 			JulianDate dtStart = dtSpot;
 			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
 			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
-			CollateralGroupVertex[] aCGVR1 = new CollateralGroupVertex[iNumStep + 1];
-			CollateralGroupVertex[] aCGVR2 = new CollateralGroupVertex[iNumStep + 1];
+			CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
+			CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
 				JulianDate dtEnd = adtVertex[j];
@@ -333,7 +333,7 @@ public class PerfectReplicationCollateralizedFunding {
 
 					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
 
-					aCGVR1[j] = BurgardKjaerVertexBuilder.HedgeErrorDualBond (
+					aCGV1[j] = BurgardKjaerVertexBuilder.HedgeErrorDualBond (
 						adtVertex[j],
 						aadblPortfolio1Value[i][j],
 						0.,
@@ -346,7 +346,7 @@ public class PerfectReplicationCollateralizedFunding {
 						cog
 					);
 
-					aCGVR2[j] = BurgardKjaerVertexBuilder.HedgeErrorDualBond (
+					aCGV2[j] = BurgardKjaerVertexBuilder.HedgeErrorDualBond (
 						adtVertex[j],
 						aadblPortfolio2Value[i][j],
 						0.,
@@ -359,14 +359,14 @@ public class PerfectReplicationCollateralizedFunding {
 						cog
 					);
 				} else {
-					aCGVR1[j] = BurgardKjaerVertexBuilder.Initial (
+					aCGV1[j] = BurgardKjaerVertexBuilder.Initial (
 						adtVertex[j],
 						aadblPortfolio1Value[i][0],
 						aMV[j],
 						cog
 					);
 
-					aCGVR2[j] = BurgardKjaerVertexBuilder.Initial (
+					aCGV2[j] = BurgardKjaerVertexBuilder.Initial (
 						adtVertex[j],
 						aadblPortfolio2Value[i][0],
 						aMV[j],
@@ -382,11 +382,11 @@ public class PerfectReplicationCollateralizedFunding {
 			MarketPath mp = new MarketPath (aMV);
 
 			CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGVR1)
+				new CollateralGroupPath (aCGV1)
 			};
 
 			CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGVR2)
+				new CollateralGroupPath (aCGV2)
 			};
 
 			aMPEAGround[i] = new MonoPathExposureAdjustment (
@@ -418,8 +418,8 @@ public class PerfectReplicationCollateralizedFunding {
 				new AlbaneseAndersenFundingGroupPath[] {
 					new AlbaneseAndersenFundingGroupPath (
 						new CollateralGroupPath[] {
-							new CollateralGroupPath (aCGVR1),
-							new CollateralGroupPath (aCGVR2)
+							new CollateralGroupPath (aCGV1),
+							new CollateralGroupPath (aCGV2)
 						},
 						mp
 					)

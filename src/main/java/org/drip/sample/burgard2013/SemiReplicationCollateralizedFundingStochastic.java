@@ -66,16 +66,16 @@ import org.drip.xva.universe.*;
  */
 
 /**
- * PerfectReplicationCollateralizedFundingStochastic examines the Basel BCBS 2012 OTC Accounting Impact to a
+ * SemiReplicationCollateralizedFundingStochastic examines the Basel BCBS 2012 OTC Accounting Impact to a
  *  Portfolio of 10 Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA
  *  Schemes. Simulation is carried out under the following Criteria using one of the Generalized Burgard
  *  Kjaer (2013) Scheme.
  *  
  *    - Collateralization Status - Collateralized
  *    - Aggregation Unit         - Funding Group
- *    - Added Swap Type          - Positive Upfront Swap (Payable)
+ *    - Added Swap Type          - Zero Upfront Par Swap (Neutral)
  *    - Market Dynamics          - Stochastic (Dynamic Market Evolution)
- *    - Funding Strategy         - Perfect Replication
+ *    - Funding Strategy         - Semi Replication Dual Bond
  *  
  * The References are:
  *  
@@ -96,7 +96,7 @@ import org.drip.xva.universe.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class PerfectReplicationCollateralizedFundingStochastic {
+public class SemiReplicationCollateralizedFundingStochastic {
 
 	private static final double[] NumeraireValueRealization (
 		final DiffusionEvolver deNumeraireValue,
@@ -624,12 +624,11 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 
 					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
 
-					aCGV1[j] = BurgardKjaerVertexBuilder.HedgeErrorDualBond (
+					aCGV1[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
 						adtVertex[j],
 						aadblPortfolio1Value[i][j],
 						0.,
 						dblCollateralBalance1,
-						0.,
 						new MarketEdge (
 							aMV[j - 1],
 							aMV[j]
@@ -637,12 +636,11 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 						cog
 					);
 
-					aCGV2[j] = BurgardKjaerVertexBuilder.HedgeErrorDualBond (
+					aCGV2[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
 						adtVertex[j],
 						aadblPortfolio2Value[i][j],
 						0.,
 						dblCollateralBalance2,
-						0.,
 						new MarketEdge (
 							aMV[j - 1],
 							aMV[j]

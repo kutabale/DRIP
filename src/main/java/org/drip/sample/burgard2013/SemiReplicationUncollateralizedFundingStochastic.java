@@ -2,7 +2,6 @@
 package org.drip.sample.burgard2013;
 
 import org.drip.analytics.date.*;
-import org.drip.measure.bridge.BrokenDateInterpolatorLinearT;
 import org.drip.measure.crng.RandomNumberGenerator;
 import org.drip.measure.discrete.CorrelatedPathVertexDimension;
 import org.drip.measure.dynamics.*;
@@ -16,7 +15,6 @@ import org.drip.xva.basel.*;
 import org.drip.xva.cpty.*;
 import org.drip.xva.definition.*;
 import org.drip.xva.hypothecation.*;
-import org.drip.xva.set.*;
 import org.drip.xva.strategy.*;
 import org.drip.xva.universe.*;
 
@@ -66,16 +64,16 @@ import org.drip.xva.universe.*;
  */
 
 /**
- * PerfectReplicationCollateralizedFundingStochastic examines the Basel BCBS 2012 OTC Accounting Impact to a
+ * SemiReplicationUncollateralizedFundingStochastic examines the Basel BCBS 2012 OTC Accounting Impact to a
  *  Portfolio of 10 Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA
  *  Schemes. Simulation is carried out under the following Criteria using one of the Generalized Burgard
  *  Kjaer (2013) Scheme.
  *  
- *    - Collateralization Status - Collateralized
+ *    - Collateralization Status - Uncollateralized
  *    - Aggregation Unit         - Funding Group
- *    - Added Swap Type          - Positive Upfront Swap (Payable)
+ *    - Added Swap Type          - Zero Upfront Par Swap (Neutral)
  *    - Market Dynamics          - Stochastic (Dynamic Market Evolution)
- *    - Funding Strategy         - Perfect Replication
+ *    - Funding Strategy         - Semi Replication Dual Bond
  *  
  * The References are:
  *  
@@ -96,7 +94,7 @@ import org.drip.xva.universe.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class PerfectReplicationCollateralizedFundingStochastic {
+public class SemiReplicationUncollateralizedFundingStochastic {
 
 	private static final double[] NumeraireValueRealization (
 		final DiffusionEvolver deNumeraireValue,
@@ -113,6 +111,7 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
+
 
 		JumpDiffusionEdge[] aJDE = deNumeraireValue.incrementSequence (
 			new JumpDiffusionVertex (
@@ -184,6 +183,7 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
+
 
 		JumpDiffusionEdge[] aJDE = deATMSwapRateOffset.incrementSequence (
 			new JumpDiffusionVertex (
@@ -297,8 +297,6 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 		double dblBankSubordinateFundingSpreadVolatility = 0.001;
 		double dblCounterPartyFundingSpreadDrift = 0.000022;
 		double dblCounterPartyFundingSpreadVolatility = 0.0022;
-		double dblBankThreshold = -0.1;
-		double dblCounterPartyThreshold = 0.1;
 
 		double[][] aadblCorrelation = new double[][] {
 			{1.00,  0.00,  0.03,  0.07,  0.04,  0.05,  0.00,  0.08,  0.00,  0.00,  0.00},  // PORTFOLIO
@@ -314,22 +312,15 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 			{0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  1.00}   // COUNTER PARTY FUNDING SPREAD
 		};
 
-		CollateralGroupSpecification cgs = CollateralGroupSpecification.FixedThreshold (
-			"FIXEDTHRESHOLD",
-			dblCounterPartyThreshold,
-			dblBankThreshold
-		);
-
-		CounterPartyGroupSpecification cpgs = CounterPartyGroupSpecification.Standard ("CPGROUP");
-
 		JulianDate dtSpot = DateUtil.Today();
 
 		double dblTimeWidth = dblTime / iNumStep;
 		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
-		MonoPathExposureAdjustment[] aMPEAGround = new MonoPathExposureAdjustment[iNumPath];
-		MonoPathExposureAdjustment[] aMPEAExtended = new MonoPathExposureAdjustment[iNumPath];
+		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
+		MonoPathExposureAdjustment[] aCPGPGround = new MonoPathExposureAdjustment[iNumPath];
+		MonoPathExposureAdjustment[] aCPGPExtended = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankSeniorFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankSeniorRecoveryRateInitial);
 		double dblBankSubordinateFundingSpreadInitial = dblBankHazardRateInitial / (1. - dblBankSubordinateRecoveryRateInitial);
 		double dblCounterPartyFundingSpreadInitial = dblCounterPartyHazardRateInitial / (1. - dblCounterPartyRecoveryRateInitial);
@@ -531,26 +522,11 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 				iNumStep
 			);
 
-			JulianDate dtStart = dtSpot;
 			MarketVertex[] aMV = new MarketVertex [iNumStep + 1];
-			double dblValueStart1 = dblTime * dblATMSwapRateOffsetStart1;
-			double dblValueStart2 = dblTime * dblATMSwapRateOffsetStart2;
 			CollateralGroupVertex[] aCGV1 = new CollateralGroupVertex[iNumStep + 1];
 			CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				JulianDate dtEnd = (adtVertex[j] = dtSpot.addMonths (6 * j + 6));
-
-				double dblCollateralBalance1 = 0.;
-				double dblCollateralBalance2 = 0.;
-				double dblValueEnd1 = aadblPortfolio1Value[i][j];
-				double dblValueEnd2 = aadblPortfolio2Value[i][j];
-
-				CloseOutGeneral cog = new CloseOutBilateral (
-					adblBankSeniorRecoveryRate[j],
-					adblCounterPartyRecoveryRate[j]
-				);
-
 				aMV[j] = new MarketVertex (
 					adtVertex[j] = dtSpot.addMonths (6 * j),
 					Double.NaN,
@@ -595,40 +571,18 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 					)
 				);
 
+				aadblCollateralBalance[i][j] = 0.;
+
+				CloseOutGeneral cog = new CloseOutBilateral (
+					adblBankSeniorRecoveryRate[j],
+					adblCounterPartyRecoveryRate[j]
+				);
+
 				if (0 != j) {
-					CollateralAmountEstimator hae1 = new CollateralAmountEstimator (
-						cgs,
-						cpgs,
-						new BrokenDateInterpolatorLinearT (
-							dtStart.julian(),
-							dtEnd.julian(),
-							dblValueStart1,
-							dblValueEnd1
-						),
-						Double.NaN
-					);
-
-					dblCollateralBalance1 = hae1.postingRequirement (dtEnd);
-
-					CollateralAmountEstimator hae2 = new CollateralAmountEstimator (
-						cgs,
-						cpgs,
-						new BrokenDateInterpolatorLinearT (
-							dtStart.julian(),
-							dtEnd.julian(),
-							dblValueStart2,
-							dblValueEnd2
-						),
-						Double.NaN
-					);
-
-					dblCollateralBalance2 = hae2.postingRequirement (dtEnd);
-
-					aCGV1[j] = BurgardKjaerVertexBuilder.HedgeErrorDualBond (
+					aCGV1[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
 						adtVertex[j],
 						aadblPortfolio1Value[i][j],
 						0.,
-						dblCollateralBalance1,
 						0.,
 						new MarketEdge (
 							aMV[j - 1],
@@ -637,11 +591,10 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 						cog
 					);
 
-					aCGV2[j] = BurgardKjaerVertexBuilder.HedgeErrorDualBond (
+					aCGV2[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
 						adtVertex[j],
 						aadblPortfolio2Value[i][j],
 						0.,
-						dblCollateralBalance2,
 						0.,
 						new MarketEdge (
 							aMV[j - 1],
@@ -666,97 +619,101 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 				}
 			}
 
-			MarketPath mp = new MarketPath (aMV);
+			MarketPath np = new MarketPath (aMV);
 
-			CollateralGroupPath[] aHGPGround = new CollateralGroupPath[] {
+			CollateralGroupPath[] aCGP1 = new CollateralGroupPath[] {
 				new CollateralGroupPath (aCGV1)
 			};
 
-			aMPEAGround[i] = new MonoPathExposureAdjustment (
+			aCPGPGround[i] = new MonoPathExposureAdjustment (
 				new AlbaneseAndersenNettingGroupPath[] {
 					new AlbaneseAndersenNettingGroupPath (
-						aHGPGround,
-						mp
+						aCGP1,
+						np
 					)
 				},
 				new AlbaneseAndersenFundingGroupPath[] {
 					new AlbaneseAndersenFundingGroupPath (
-						aHGPGround,
-						mp
+						aCGP1,
+						np
 					)
 				}
 			);
 
-			CollateralGroupPath[] aHGPExtended = new CollateralGroupPath[] {
-				new CollateralGroupPath (aCGV1),
+			CollateralGroupPath[] aCGP2 = new CollateralGroupPath[] {
 				new CollateralGroupPath (aCGV2)
 			};
 
-			aMPEAExtended[i] = new MonoPathExposureAdjustment (
+			aCPGPExtended[i] = new MonoPathExposureAdjustment (
 				new AlbaneseAndersenNettingGroupPath[] {
 					new AlbaneseAndersenNettingGroupPath (
-						aHGPExtended,
-						mp
+						aCGP1,
+						np
+					),
+					new AlbaneseAndersenNettingGroupPath (
+						aCGP2,
+						np
 					)
 				},
 				new AlbaneseAndersenFundingGroupPath[] {
 					new AlbaneseAndersenFundingGroupPath (
-						aHGPExtended,
-						mp
+						new CollateralGroupPath[] {
+							new CollateralGroupPath (aCGV1),
+							new CollateralGroupPath (aCGV2)
+						},
+						np
 					)
 				}
 			);
 		}
 
 		return new ExposureAdjustmentAggregator[] {
-			new ExposureAdjustmentAggregator (aMPEAGround),
-			new ExposureAdjustmentAggregator (aMPEAExtended)
+			new ExposureAdjustmentAggregator (aCPGPGround),
+			new ExposureAdjustmentAggregator (aCPGPExtended)
 		};
 	}
 
 	private static final void CPGDDump (
 		final String strHeader,
-		final ExposureAdjustmentDigest ead)
+		final ExposureAdjustmentDigest cpgd)
 		throws Exception
 	{
 		System.out.println();
 
-		UnivariateDiscreteThin udtUCVA = ead.ucva();
+		UnivariateDiscreteThin udtUCVA = cpgd.ucva();
 
-		UnivariateDiscreteThin udtFTDCVA = ead.ftdcva();
+		UnivariateDiscreteThin udtFTDCVA = cpgd.ftdcva();
 
-		UnivariateDiscreteThin udtCVACL = ead.cvacl();
+		UnivariateDiscreteThin udtCVACL = cpgd.cvacl();
 
-		UnivariateDiscreteThin udtCVA = ead.cva();
+		UnivariateDiscreteThin udtCVA = cpgd.cva();
 
-		UnivariateDiscreteThin udtDVA = ead.dva();
+		UnivariateDiscreteThin udtFVA = cpgd.fva();
 
-		UnivariateDiscreteThin udtFVA = ead.fva();
+		UnivariateDiscreteThin udtFDA = cpgd.fda();
 
-		UnivariateDiscreteThin udtFDA = ead.fda();
+		UnivariateDiscreteThin udtFCA = cpgd.fca();
 
-		UnivariateDiscreteThin udtFCA = ead.fca();
+		UnivariateDiscreteThin udtFBA = cpgd.fba();
 
-		UnivariateDiscreteThin udtFBA = ead.fba();
-
-		UnivariateDiscreteThin udtSFVA = ead.sfva();
+		UnivariateDiscreteThin udtSFVA = cpgd.sfva();
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
@@ -765,7 +722,6 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 			FormatUtil.FormatDouble (udtFTDCVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.average(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtDVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.average(), 2, 2, 1.) + "  | " +
@@ -779,7 +735,6 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 			FormatUtil.FormatDouble (udtFTDCVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.minimum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtDVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.minimum(), 2, 2, 1.) + "  | " +
@@ -793,7 +748,6 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 			FormatUtil.FormatDouble (udtFTDCVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.maximum(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtDVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.maximum(), 2, 2, 1.) + "  | " +
@@ -807,7 +761,6 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 			FormatUtil.FormatDouble (udtFTDCVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVA.error(), 2, 2, 1.) + "  | " +
-			FormatUtil.FormatDouble (udtDVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFDA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFCA.error(), 2, 2, 1.) + "  | " +
@@ -816,68 +769,67 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 	}
 
 	private static final void CPGDDiffDump (
 		final String strHeader,
-		final ExposureAdjustmentDigest eadGround,
-		final ExposureAdjustmentDigest eadExpanded)
+		final ExposureAdjustmentDigest cpgdGround,
+		final ExposureAdjustmentDigest cpgdExpanded)
 		throws Exception
 	{
 		System.out.println();
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
 			"\t|| Average => " +
-			FormatUtil.FormatDouble (eadExpanded.ucva().average() - eadGround.ucva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (eadExpanded.ftdcva().average() - eadGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (eadExpanded.cvacl().average() - eadGround.cvacl().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (eadExpanded.cva().average() - eadGround.cva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (eadExpanded.dva().average() - eadGround.dva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (eadExpanded.fva().average() - eadGround.fva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (eadExpanded.fda().average() - eadGround.fda().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (eadExpanded.fca().average() - eadGround.fca().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (eadExpanded.fba().average() - eadGround.fba().average(), 3, 1, 10000.) + "  | " + 
-			FormatUtil.FormatDouble (eadExpanded.sfva().average() - eadGround.sfva().average(), 3, 1, 10000.) + "  ||"
+			FormatUtil.FormatDouble (cpgdExpanded.ucva().average() - cpgdGround.ucva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.ftdcva().average() - cpgdGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.cvacl().average() - cpgdGround.cvacl().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.cva().average() - cpgdGround.cva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.fva().average() - cpgdGround.fva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.fda().average() - cpgdGround.fda().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.fca().average() - cpgdGround.fca().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (cpgdExpanded.fba().average() - cpgdGround.fba().average(), 3, 1, 10000.) + "  | " + 
+			FormatUtil.FormatDouble (cpgdExpanded.sfva().average() - cpgdGround.sfva().average(), 3, 1, 10000.) + "  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||----------------------------------------------------------------------------------------------------||"
 		);
 	}
 
 	private static final void BaselAccountingMetrics (
 		final String strHeader,
-		final ExposureAdjustmentAggregator eaaGround,
-		final ExposureAdjustmentAggregator eaaExpanded)
+		final ExposureAdjustmentAggregator cpgaGround,
+		final ExposureAdjustmentAggregator cpgaExpanded)
 		throws Exception
 	{
-		OTCAccountingModus oasFCAFBA = new OTCAccountingModusFCAFBA (eaaGround);
+		OTCAccountingModus oasFCAFBA = new OTCAccountingModusFCAFBA (cpgaGround);
 
-		OTCAccountingModus oasFVAFDA = new OTCAccountingModusFVAFDA (eaaGround);
+		OTCAccountingModus oasFVAFDA = new OTCAccountingModusFVAFDA (cpgaGround);
 
-		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (eaaExpanded);
+		OTCAccountingPolicy oapFCAFBA = oasFCAFBA.feePolicy (cpgaExpanded);
 
-		OTCAccountingPolicy oapFVAFDA = oasFVAFDA.feePolicy (eaaExpanded);
+		OTCAccountingPolicy oapFVAFDA = oasFVAFDA.feePolicy (cpgaExpanded);
 
 		System.out.println();
 
@@ -967,33 +919,33 @@ public class PerfectReplicationCollateralizedFundingStochastic {
 			1.
 		);
 
-		ExposureAdjustmentAggregator eaaGround = aCPGA[0];
-		ExposureAdjustmentAggregator eaaExtended = aCPGA[1];
+		ExposureAdjustmentAggregator cpgaGround = aCPGA[0];
+		ExposureAdjustmentAggregator cpgaExtended = aCPGA[1];
 
-		ExposureAdjustmentDigest eadGround = eaaGround.digest();
+		ExposureAdjustmentDigest cpgdGround = cpgaGround.digest();
 
-		ExposureAdjustmentDigest eadExtended = eaaExtended.digest();
+		ExposureAdjustmentDigest cpgdExtended = cpgaExtended.digest();
 
 		CPGDDump (
-			"\t||                                        GROUND BOOK ADJUSTMENT METRICS                                        ||",
-			eadGround
+			"\t||                                   GROUND BOOK ADJUSTMENT METRICS                                   ||",
+			cpgdGround
 		);
 
 		CPGDDump (
-			"\t||                                       EXTENDED BOOK ADJUSTMENT METRICS                                       ||",
-			eadExtended
+			"\t||                                  EXTENDED BOOK ADJUSTMENT METRICS                                  ||",
+			cpgdExtended
 		);
 
 		CPGDDiffDump (
-			"\t||                                   TRADE INCREMENT ADJUSTMENT METRICS (bp)                                    ||",
-			eadGround,
-			eadExtended
+			"\t||                              TRADE INCREMENT ADJUSTMENT METRICS (bp)                               ||",
+			cpgdGround,
+			cpgdExtended
 		);
 
 		BaselAccountingMetrics (
 			"\t||           ALBANESE & ANDERSEN (2015) BCBS OTC ACCOUNTING            ||",
-			eaaGround,
-			eaaExtended
+			cpgaGround,
+			cpgaExtended
 		);
 	}
 }
