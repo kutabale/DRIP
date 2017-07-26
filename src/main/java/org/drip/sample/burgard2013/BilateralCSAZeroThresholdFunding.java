@@ -62,16 +62,16 @@ import org.drip.xva.universe.*;
  */
 
 /**
- * PerfectReplicationUncollateralizedFunding examines the Basel BCBS 2012 OTC Accounting Impact to a
- *  Portfolio of 10 Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA
- *  Schemes. Simulation is carried out under the following Criteria using one of the Generalized Burgard
- *  Kjaer (2013) Scheme.
+ * BilateralCSAZeroThresholdFunding examines the Basel BCBS 2012 OTC Accounting Impact to a Portfolio of 10
+ *  Swaps resulting from the Addition of a New Swap - Comparison via both FVA/FDA and FCA/FBA Schemes.
+ *  Simulation is carried out under the following Criteria using one of the Generalized Burgard Kjaer (2013)
+ *  Scheme.
  *  
- *    - Collateralization Status - Uncollateralized
+ *    - Collateralization Status - Zero Threshold
  *    - Aggregation Unit         - Funding Group
  *    - Added Swap Type          - Zero Upfront Par Swap (Neutral)
  *    - Market Dynamics          - Deterministic (Static Market Evolution)
- *    - Funding Strategy         - Semi Replication
+ *    - Funding Strategy         - Gold Plated Two Way CSA
  *  
  * The References are:
  *  
@@ -92,7 +92,7 @@ import org.drip.xva.universe.*;
  * @author Lakshmi Krishnamurthy
  */
 
-public class SemiReplicationUncollateralizedFunding {
+public class BilateralCSAZeroThresholdFunding {
 
 	private static final double[] ATMSwapRateOffsetRealization (
 		final DiffusionEvolver deATMSwapRateOffset,
@@ -109,7 +109,6 @@ public class SemiReplicationUncollateralizedFunding {
 
 		for (int i = 0; i < iNumStep; ++i)
 			adblTimeWidth[i] = dblTimeWidth;
-
 
 		JumpDiffusionEdge[] aJDE = deATMSwapRateOffset.incrementSequence (
 			new JumpDiffusionVertex (
@@ -190,11 +189,10 @@ public class SemiReplicationUncollateralizedFunding {
 		JulianDate dtSpot = DateUtil.Today();
 
 		double dblTimeWidth = dblTime / iNumStep;
-		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		MarketVertex[] aMV = new MarketVertex[iNumStep + 1];
+		JulianDate[] adtVertex = new JulianDate[iNumStep + 1];
 		double[][] aadblPortfolio1Value = new double[iNumPath][iNumStep + 1];
 		double[][] aadblPortfolio2Value = new double[iNumPath][iNumStep + 1];
-		double[][] aadblCollateralBalance = new double[iNumPath][iNumStep + 1];
 		MonoPathExposureAdjustment[] aCPGPGround = new MonoPathExposureAdjustment[iNumPath];
 		MonoPathExposureAdjustment[] aCPGPExtended = new MonoPathExposureAdjustment[iNumPath];
 		double dblBankSeniorFundingSpread = dblBankHazardRate / (1. - dblBankSeniorRecoveryRate);
@@ -285,13 +283,10 @@ public class SemiReplicationUncollateralizedFunding {
 			CollateralGroupVertex[] aCGV2 = new CollateralGroupVertex[iNumStep + 1];
 
 			for (int j = 0; j <= iNumStep; ++j) {
-				aadblCollateralBalance[i][j] = 0.;
-
 				if (0 != j) {
-					aCGV1[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
+					aCGV1[j] = BurgardKjaerVertexBuilder.GoldPlatedTwoWayCSA (
 						adtVertex[j],
 						aadblPortfolio1Value[i][j],
-						0.,
 						0.,
 						new MarketEdge (
 							aMV[j - 1],
@@ -300,10 +295,9 @@ public class SemiReplicationUncollateralizedFunding {
 						cog
 					);
 
-					aCGV2[j] = BurgardKjaerVertexBuilder.SemiReplicationDualBond (
+					aCGV2[j] = BurgardKjaerVertexBuilder.GoldPlatedTwoWayCSA (
 						adtVertex[j],
 						aadblPortfolio2Value[i][j],
-						0.,
 						0.,
 						new MarketEdge (
 							aMV[j - 1],
