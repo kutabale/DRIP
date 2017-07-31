@@ -591,51 +591,57 @@ public class UncollateralizedCollateralPayableStochastic {
 
 	private static final void CPGDDump (
 		final String strHeader,
-		final ExposureAdjustmentDigest cpgd)
+		final ExposureAdjustmentDigest ead)
 		throws Exception
 	{
 		System.out.println();
 
-		UnivariateDiscreteThin udtUCVA = cpgd.ucva();
+		UnivariateDiscreteThin udtUCOLVA = ead.ucolva();
 
-		UnivariateDiscreteThin udtFTDCVA = cpgd.ftdcva();
+		UnivariateDiscreteThin udtFTDCOLVA = ead.ftdcolva();
 
-		UnivariateDiscreteThin udtCVACL = cpgd.cvacl();
+		UnivariateDiscreteThin udtUCVA = ead.ucva();
 
-		UnivariateDiscreteThin udtCVA = cpgd.cva();
+		UnivariateDiscreteThin udtFTDCVA = ead.ftdcva();
 
-		UnivariateDiscreteThin udtDVA = cpgd.dva();
+		UnivariateDiscreteThin udtCVACL = ead.cvacl();
 
-		UnivariateDiscreteThin udtFVA = cpgd.fva();
+		UnivariateDiscreteThin udtCVA = ead.cva();
 
-		UnivariateDiscreteThin udtFDA = cpgd.fda();
+		UnivariateDiscreteThin udtDVA = ead.dva();
 
-		UnivariateDiscreteThin udtFCA = cpgd.fca();
+		UnivariateDiscreteThin udtFVA = ead.fva();
 
-		UnivariateDiscreteThin udtFBA = cpgd.fba();
+		UnivariateDiscreteThin udtFDA = ead.fda();
 
-		UnivariateDiscreteThin udtSFVA = cpgd.sfva();
+		UnivariateDiscreteThin udtFCA = ead.fca();
+
+		UnivariateDiscreteThin udtFBA = ead.fba();
+
+		UnivariateDiscreteThin udtSFVA = ead.sfva();
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  => UCOLVA  | FTDCOLVA |  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
 			"\t|| Average => " +
+			FormatUtil.FormatDouble (udtUCOLVA.average(), 2, 2, 1.) + "  |  " +
+			FormatUtil.FormatDouble (udtFTDCOLVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtUCVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFTDCVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.average(), 2, 2, 1.) + "  | " +
@@ -650,6 +656,8 @@ public class UncollateralizedCollateralPayableStochastic {
 
 		System.out.println (
 			"\t|| Minimum => " +
+			FormatUtil.FormatDouble (udtUCOLVA.minimum(), 2, 2, 1.) + "  |  " +
+			FormatUtil.FormatDouble (udtFTDCOLVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtUCVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFTDCVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.minimum(), 2, 2, 1.) + "  | " +
@@ -664,6 +672,8 @@ public class UncollateralizedCollateralPayableStochastic {
 
 		System.out.println (
 			"\t|| Maximum => " +
+			FormatUtil.FormatDouble (udtUCOLVA.maximum(), 2, 2, 1.) + "  |  " +
+			FormatUtil.FormatDouble (udtFTDCOLVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtUCVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFTDCVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.maximum(), 2, 2, 1.) + "  | " +
@@ -678,6 +688,8 @@ public class UncollateralizedCollateralPayableStochastic {
 
 		System.out.println (
 			"\t||  Error  => " +
+			FormatUtil.FormatDouble (udtUCOLVA.error(), 2, 2, 1.) + "  |  " +
+			FormatUtil.FormatDouble (udtFTDCOLVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtUCVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFTDCVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.error(), 2, 2, 1.) + "  | " +
@@ -691,52 +703,54 @@ public class UncollateralizedCollateralPayableStochastic {
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 	}
 
 	private static final void CPGDDiffDump (
 		final String strHeader,
-		final ExposureAdjustmentDigest cpgdGround,
-		final ExposureAdjustmentDigest cpgdExpanded)
+		final ExposureAdjustmentDigest eadGround,
+		final ExposureAdjustmentDigest eadExpanded)
 		throws Exception
 	{
 		System.out.println();
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  => UCOLVA  | FTDCOLVA |  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
 			"\t|| Average => " +
-			FormatUtil.FormatDouble (cpgdExpanded.ucva().average() - cpgdGround.ucva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.ftdcva().average() - cpgdGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.cvacl().average() - cpgdGround.cvacl().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.cva().average() - cpgdGround.cva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.dva().average() - cpgdGround.dva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.fva().average() - cpgdGround.fva().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.fda().average() - cpgdGround.fda().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.fca().average() - cpgdGround.fca().average(), 3, 1, 10000.) + "  | " +
-			FormatUtil.FormatDouble (cpgdExpanded.fba().average() - cpgdGround.fba().average(), 3, 1, 10000.) + "  | " + 
-			FormatUtil.FormatDouble (cpgdExpanded.sfva().average() - cpgdGround.sfva().average(), 3, 1, 10000.) + "  ||"
+			FormatUtil.FormatDouble (eadExpanded.ucolva().average() - eadGround.ucolva().average(), 3, 1, 10000.) + "  |  " +
+			FormatUtil.FormatDouble (eadExpanded.ftdcolva().average() - eadGround.ftdcolva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.ucva().average() - eadGround.ucva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.ftdcva().average() - eadGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.cvacl().average() - eadGround.cvacl().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.cva().average() - eadGround.cva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.dva().average() - eadGround.dva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.fva().average() - eadGround.fva().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.fda().average() - eadGround.fda().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.fca().average() - eadGround.fca().average(), 3, 1, 10000.) + "  | " +
+			FormatUtil.FormatDouble (eadExpanded.fba().average() - eadGround.fba().average(), 3, 1, 10000.) + "  | " + 
+			FormatUtil.FormatDouble (eadExpanded.sfva().average() - eadGround.sfva().average(), 3, 1, 10000.) + "  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 	}
 
@@ -850,17 +864,17 @@ public class UncollateralizedCollateralPayableStochastic {
 		ExposureAdjustmentDigest cpgdExtended = cpgaExtended.digest();
 
 		CPGDDump (
-			"\t||                                        GROUND BOOK ADJUSTMENT METRICS                                        ||",
+			"\t||                                                  GROUND BOOK ADJUSTMENT METRICS                                                   ||",
 			cpgdGround
 		);
 
 		CPGDDump (
-			"\t||                                       EXTENDED BOOK ADJUSTMENT METRICS                                       ||",
+			"\t||                                                 EXTENDED BOOK ADJUSTMENT METRICS                                                  ||",
 			cpgdExtended
 		);
 
 		CPGDDiffDump (
-			"\t||                                   TRADE INCREMENT ADJUSTMENT METRICS (bp)                                    ||",
+			"\t||                                             TRADE INCREMENT ADJUSTMENT METRICS (bp)                                               ||",
 			cpgdGround,
 			cpgdExtended
 		);

@@ -193,12 +193,12 @@ public class ArmijoEvolutionMetrics {
 
 		System.out.println ("\t|--------------------------------------------||\n\n");
 
-		ConstrainedMeanVarianceOptimizer cmva = new ConstrainedMeanVarianceOptimizer (
+		ConstrainedMeanVarianceOptimizer cmvo = new ConstrainedMeanVarianceOptimizer (
 			ipbc,
 			LineStepEvolutionControl.NocedalWrightArmijo (false)
 		);
 
-		BoundedPortfolioConstructionParameters pdp = new BoundedPortfolioConstructionParameters (
+		BoundedPortfolioConstructionParameters bpcp = new BoundedPortfolioConstructionParameters (
 			astrAssetName,
 			CustomRiskUtilitySettings.VarianceMinimizer(),
 			new PortfolioEqualityConstraintSettings (
@@ -208,14 +208,14 @@ public class ArmijoEvolutionMetrics {
 		);
 
 		for (int i = 0; i < astrAssetName.length; ++i)
-			pdp.addBound (
+			bpcp.addBound (
 				astrAssetName[i],
 				adblAssetLowerBound[i],
 				adblAssetUpperBound[i]
 			);
 
-		cmva.allocate (
-			pdp,
+		cmvo.allocate (
+			bpcp,
 			ausp
 		);
 	}

@@ -402,6 +402,10 @@ public class CollateralizedFundingNeutral {
 	{
 		System.out.println();
 
+		UnivariateDiscreteThin udtUCOLVA = ead.ucolva();
+
+		UnivariateDiscreteThin udtFTDCOLVA = ead.ftdcolva();
+
 		UnivariateDiscreteThin udtUCVA = ead.ucva();
 
 		UnivariateDiscreteThin udtFTDCVA = ead.ftdcva();
@@ -423,25 +427,27 @@ public class CollateralizedFundingNeutral {
 		UnivariateDiscreteThin udtSFVA = ead.sfva();
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  => UCOLVA  | FTDCOLVA |  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
 			"\t|| Average => " +
+			FormatUtil.FormatDouble (udtUCOLVA.average(), 2, 2, 1.) + "  |  " +
+			FormatUtil.FormatDouble (udtFTDCOLVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtUCVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFTDCVA.average(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.average(), 2, 2, 1.) + "  | " +
@@ -456,6 +462,8 @@ public class CollateralizedFundingNeutral {
 
 		System.out.println (
 			"\t|| Minimum => " +
+			FormatUtil.FormatDouble (udtUCOLVA.minimum(), 2, 2, 1.) + "  |  " +
+			FormatUtil.FormatDouble (udtFTDCOLVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtUCVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFTDCVA.minimum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.minimum(), 2, 2, 1.) + "  | " +
@@ -470,6 +478,8 @@ public class CollateralizedFundingNeutral {
 
 		System.out.println (
 			"\t|| Maximum => " +
+			FormatUtil.FormatDouble (udtUCOLVA.maximum(), 2, 2, 1.) + "  |  " +
+			FormatUtil.FormatDouble (udtFTDCOLVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtUCVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFTDCVA.maximum(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.maximum(), 2, 2, 1.) + "  | " +
@@ -484,6 +494,8 @@ public class CollateralizedFundingNeutral {
 
 		System.out.println (
 			"\t||  Error  => " +
+			FormatUtil.FormatDouble (udtUCOLVA.error(), 2, 2, 1.) + "  |  " +
+			FormatUtil.FormatDouble (udtFTDCOLVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtUCVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtFTDCVA.error(), 2, 2, 1.) + "  | " +
 			FormatUtil.FormatDouble (udtCVACL.error(), 2, 2, 1.) + "  | " +
@@ -497,7 +509,7 @@ public class CollateralizedFundingNeutral {
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 	}
 
@@ -510,25 +522,27 @@ public class CollateralizedFundingNeutral {
 		System.out.println();
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (strHeader);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
-			"\t||  OODLE  =>  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
+			"\t||  OODLE  => UCOLVA  | FTDCOLVA |  UCVA   | FTDCVA  |  CVACL  |   CVA   |   DVA   |   FVA   |   FDA   |   FCA   |   FBA   |   SFVA  ||"
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 
 		System.out.println (
 			"\t|| Average => " +
+			FormatUtil.FormatDouble (eadExpanded.ucolva().average() - eadGround.ucolva().average(), 3, 1, 10000.) + "  |  " +
+			FormatUtil.FormatDouble (eadExpanded.ftdcolva().average() - eadGround.ftdcolva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (eadExpanded.ucva().average() - eadGround.ucva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (eadExpanded.ftdcva().average() - eadGround.ftdcva().average(), 3, 1, 10000.) + "  | " +
 			FormatUtil.FormatDouble (eadExpanded.cvacl().average() - eadGround.cvacl().average(), 3, 1, 10000.) + "  | " +
@@ -542,7 +556,7 @@ public class CollateralizedFundingNeutral {
 		);
 
 		System.out.println (
-			"\t||--------------------------------------------------------------------------------------------------------------||"
+			"\t||-----------------------------------------------------------------------------------------------------------------------------------||"
 		);
 	}
 
