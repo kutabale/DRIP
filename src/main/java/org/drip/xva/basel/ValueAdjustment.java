@@ -212,6 +212,26 @@ public class ValueAdjustment {
 	}
 
 	/**
+	 * Construct the COLVA Value Adjustment Instance
+	 * 
+	 * @param dblAmount Valuation Adjustment Amount
+	 * 
+	 * @return The COLVA Value Adjustment Instance
+	 */
+
+	public static final ValueAdjustment COLVA (
+		final double dblAmount)
+	{
+		try {
+			return new ValueAdjustment (dblAmount, org.drip.xva.basel.ValueCategory.CF6());
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Construct the HYBRID Value Adjustment Instance
 	 * 
 	 * @param dblAmount Valuation Adjustment Amount

@@ -106,12 +106,15 @@ public class OTCAccountingModusFVAFDA extends org.drip.xva.basel.OTCAccountingMo
 
 		org.drip.xva.cpty.ExposureAdjustmentAggregator eaa = aggregator();
 
-		double dblIncome = eaaNext.dva().amount() + eaaNext.fda().amount() + eaaNext.cvacl().amount() -
-			eaa.dva().amount() - eaa.fda().amount() - eaa.cvacl().amount();
+		double dblCollateralVAChange = eaaNext.colva().amount() - eaa.colva().amount();
+
+		double dblContraLiabilityChange = eaaNext.dva().amount() + eaaNext.fda().amount() +
+			eaaNext.cvacl().amount() - eaa.dva().amount() - eaa.fda().amount() - eaa.cvacl().amount();
 
 		try {
 			return new org.drip.xva.basel.OTCAccountingPolicy (eaaNext.ucva().amount() +
-				eaaNext.fva().amount() - eaa.ucva().amount() - eaa.fva().amount(), 0., dblIncome, dblIncome);
+				eaaNext.fva().amount() - eaa.ucva().amount() - eaa.fva().amount() + dblCollateralVAChange,
+					0., dblContraLiabilityChange, dblContraLiabilityChange);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

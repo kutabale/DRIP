@@ -648,6 +648,75 @@ public class ExposureAdjustmentAggregator {
 	}
 
 	/**
+	 * Retrieve the Expected Unilateral Collateral VA
+	 * 
+	 * @return The Expected Unilateral Collateral VA
+	 */
+
+	public org.drip.xva.basel.ValueAdjustment ucolva()
+	{
+		double dblUCOLVA = 0.;
+		int iNumPath = _aPEA.length;
+
+		try {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+				dblUCOLVA += _aPEA[iPathIndex].unilateralCollateralAdjustment();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		return org.drip.xva.basel.ValueAdjustment.COLVA (dblUCOLVA / iNumPath);
+	}
+
+	/**
+	 * Retrieve the Expected Bilateral Collateral VA
+	 * 
+	 * @return The Expected Bilateral Collateral VA
+	 */
+
+	public org.drip.xva.basel.ValueAdjustment ftdcolva()
+	{
+		double dblFTDCOLVA = 0.;
+		int iNumPath = _aPEA.length;
+
+		try {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+				dblFTDCOLVA += _aPEA[iPathIndex].bilateralCollateralAdjustment();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		return org.drip.xva.basel.ValueAdjustment.COLVA (dblFTDCOLVA / iNumPath);
+	}
+
+	/**
+	 * Retrieve the Expected Collateral VA
+	 * 
+	 * @return The Expected Collateral VA
+	 */
+
+	public org.drip.xva.basel.ValueAdjustment colva()
+	{
+		double dblCOLVA = 0.;
+		int iNumPath = _aPEA.length;
+
+		try {
+			for (int iPathIndex = 0; iPathIndex < iNumPath; ++iPathIndex)
+				dblCOLVA += _aPEA[iPathIndex].unilateralCollateralAdjustment();
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+
+			return null;
+		}
+
+		return org.drip.xva.basel.ValueAdjustment.COLVA (dblCOLVA / iNumPath);
+	}
+
+	/**
 	 * Retrieve the Expected Unilateral CVA
 	 * 
 	 * @return The Expected Unilateral CVA
@@ -849,7 +918,7 @@ public class ExposureAdjustmentAggregator {
 
 	public double total()
 	{
-		return cva().amount() + dva().amount() + fva().amount();
+		return cva().amount() + dva().amount() + fva().amount() + colva().amount();
 	}
 
 	/**
@@ -873,7 +942,9 @@ public class ExposureAdjustmentAggregator {
 		double[] adblSFVA = new double[iNumPath];
 		double[] adblCVACL = new double[iNumPath];
 		double[] adblFTDCVA = new double[iNumPath];
+		double[] adblUCOLVA = new double[iNumPath];
 		double[] adblTotalVA = new double[iNumPath];
+		double[] adblFTDCOLVA = new double[iNumPath];
 		double[][] aadblDebtExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblCreditExposure = new double[iNumVertex][iNumPath];
 		double[][] aadblDebtExposurePV = new double[iNumVertex][iNumPath];
@@ -976,6 +1047,10 @@ public class ExposureAdjustmentAggregator {
 
 				adblFTDCVA[iPathIndex] = _aPEA[iPathIndex].bilateralCreditAdjustment();
 
+				adblUCOLVA[iPathIndex] = _aPEA[iPathIndex].unilateralCollateralAdjustment();
+
+				adblFTDCOLVA[iPathIndex] = _aPEA[iPathIndex].bilateralCollateralAdjustment();
+
 				adblTotalVA[iPathIndex] = _aPEA[iPathIndex].totalAdjustment();
 			} catch (java.lang.Exception e) {
 				e.printStackTrace();
@@ -1019,6 +1094,8 @@ public class ExposureAdjustmentAggregator {
 
 		try {
 			return new org.drip.xva.cpty.ExposureAdjustmentDigest (
+				adblUCOLVA,
+				adblFTDCOLVA,
 				adblUCVA,
 				adblFTDCVA,
 				adblCVA,

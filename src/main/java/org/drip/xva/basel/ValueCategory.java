@@ -158,6 +158,23 @@ public class ValueCategory {
 	}
 
 	/**
+	 * Retrieve an Instance of the CF6 Cash Flow
+	 * 
+	 * @return An Instance of the CF6 Cash Flow
+	 */
+
+	public static final ValueCategory CF6()
+	{
+		try {
+			return new ValueCategory ("CF6", "CSA Related Cash Flow", false);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Retrieve an Instance of the HYBRID Cash Flow
 	 * 
 	 * @return An Instance of the HYBRID Cash Flow

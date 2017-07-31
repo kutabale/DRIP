@@ -132,6 +132,7 @@ org.drip.sample.bondfloat
 org.drip.sample.bondsink
 org.drip.sample.burgard2011
 org.drip.sample.burgard2012
+org.drip.sample.burgard2013
 org.drip.sample.capfloor
 org.drip.sample.cashflow
 org.drip.sample.classifier
@@ -219,6 +220,7 @@ org.drip.sample.xccy
 org.drip.sample.xva
 org.drip.sample.xvabasel
 org.drip.sample.xvadigest
+org.drip.sample.xvastrategy
 org.drip.sequence.custom
 org.drip.sequence.functional
 org.drip.sequence.metrics

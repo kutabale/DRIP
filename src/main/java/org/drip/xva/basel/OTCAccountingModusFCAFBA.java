@@ -108,10 +108,12 @@ public class OTCAccountingModusFCAFBA extends org.drip.xva.basel.OTCAccountingMo
 
 		double dblContraLiabilityChange = eaaNext.fba().amount() - eaa.fba().amount();
 
+		double dblCollateralVAChange = eaaNext.colva().amount() - eaa.colva().amount();
+
 		try {
 			return new org.drip.xva.basel.OTCAccountingPolicy (eaaNext.ucva().amount() +
-				eaaNext.sfva().amount() - eaa.ucva().amount() - eaa.sfva().amount(), -1. *
-					dblContraLiabilityChange, dblContraLiabilityChange, 0.);
+				eaaNext.sfva().amount() - eaa.ucva().amount() - eaa.sfva().amount() + dblCollateralVAChange,
+					dblCollateralVAChange - dblContraLiabilityChange, dblContraLiabilityChange, 0.);
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}

@@ -79,7 +79,9 @@ public class ExposureAdjustmentDigest {
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtSFVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtCVACL = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtFTDCVA = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin _udtUCOLVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin _udtTotalVA = null;
+	private org.drip.measure.statistics.UnivariateDiscreteThin _udtFTDCOLVA = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTCollateralizedExposure = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTUncollateralizedExposure = null;
 	private org.drip.measure.statistics.UnivariateDiscreteThin[] _aUDTCollateralizedExposurePV = null;
@@ -108,6 +110,8 @@ public class ExposureAdjustmentDigest {
 	/**
 	 * ExposureAdjustmentDigest Constructor
 	 * 
+	 * @param adblUCOLVA The Array of Unilateral Collateral VA
+	 * @param adblFTDCOLVA The Array of Bilateral Collateral VA
 	 * @param adblUCVA The Array of UCVA
 	 * @param adblFTDCVA The Array of FTD CVA
 	 * @param adblCVA The Array of CVA
@@ -142,6 +146,8 @@ public class ExposureAdjustmentDigest {
 	 */
 
 	public ExposureAdjustmentDigest (
+		final double[] adblUCOLVA,
+		final double[] adblFTDCOLVA,
 		final double[] adblUCVA,
 		final double[] adblFTDCVA,
 		final double[] adblCVA,
@@ -173,23 +179,28 @@ public class ExposureAdjustmentDigest {
 		final double[][] aadblFundingExposurePV)
 		throws java.lang.Exception
 	{
-		if (null == adblUCVA || null == adblFTDCVA || null == adblCVA || null == adblCVACL || null == adblDVA
-			|| null == adblFVA || null == adblFCA ||  null == adblFBA || null == adblSFVA || null ==
-				adblTotalVA || null ==aadblCollateralizedExposure || null == aadblCollateralizedExposurePV ||
-					null == aadblCollateralizedPositiveExposure || null ==
-						aadblCollateralizedPositiveExposurePV || null == aadblCollateralizedNegativeExposure
-							|| null == aadblCollateralizedNegativeExposurePV || null ==
-								aadblUncollateralizedExposure || null == aadblUncollateralizedExposurePV ||
-									null == aadblUncollateralizedPositiveExposure || null ==
-										aadblUncollateralizedPositiveExposurePV || null ==
-											aadblUncollateralizedNegativeExposure || null ==
-												aadblUncollateralizedNegativeExposurePV || null ==
-													aadblCreditExposure || null == aadblCreditExposurePV ||
-														null == aadblDebtExposure || null ==
-															aadblDebtExposurePV || null ==
-																aadblFundingExposure || null ==
-																	aadblFundingExposurePV)
+		if (null == adblUCOLVA || null == adblFTDCOLVA || null == adblUCVA || null == adblFTDCVA || null ==
+			adblCVA || null == adblCVACL || null == adblDVA || null == adblFVA || null == adblFCA ||  null ==
+				adblFBA || null == adblSFVA || null == adblTotalVA || null == aadblCollateralizedExposure ||
+					null == aadblCollateralizedExposurePV || null == aadblCollateralizedPositiveExposure ||
+						null == aadblCollateralizedPositiveExposurePV || null ==
+							aadblCollateralizedNegativeExposure || null ==
+								aadblCollateralizedNegativeExposurePV || null ==
+									aadblUncollateralizedExposure || null == aadblUncollateralizedExposurePV
+										|| null == aadblUncollateralizedPositiveExposure || null ==
+											aadblUncollateralizedPositiveExposurePV || null ==
+												aadblUncollateralizedNegativeExposure || null ==
+													aadblUncollateralizedNegativeExposurePV || null ==
+														aadblCreditExposure || null == aadblCreditExposurePV
+															|| null == aadblDebtExposure || null ==
+																aadblDebtExposurePV || null ==
+																	aadblFundingExposure || null ==
+																		aadblFundingExposurePV)
 			throw new java.lang.Exception ("ExposureAdjustmentDigest Constructor => Invalid Inputs");
+
+		_udtUCOLVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblUCOLVA);
+
+		_udtFTDCOLVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblFTDCOLVA);
 
 		_udtUCVA = new org.drip.measure.statistics.UnivariateDiscreteThin (adblUCVA);
 
@@ -497,6 +508,28 @@ public class ExposureAdjustmentDigest {
 	public org.drip.measure.statistics.UnivariateDiscreteThin[] fundingExposurePV()
 	{
 		return _aUDTFundingExposurePV;
+	}
+
+	/**
+	 * Retrieve the Univariate Thin Statistics for Unilateral Collateral VA
+	 * 
+	 * @return Univariate Thin Statistics for Unilateral Collateral VA
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin ucolva()
+	{
+		return _udtUCOLVA;
+	}
+
+	/**
+	 * Retrieve the Univariate Thin Statistics for Bilateral Collateral VA
+	 * 
+	 * @return Univariate Thin Statistics for Bilateral Collateral VA
+	 */
+
+	public org.drip.measure.statistics.UnivariateDiscreteThin ftdcolva()
+	{
+		return _udtFTDCOLVA;
 	}
 
 	/**
