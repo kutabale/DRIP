@@ -67,11 +67,14 @@ public class AladdinReplicator {
 	private java.lang.String[] _astrFixFloatTenor = null;
 	private double _dblIssuePrice = java.lang.Double.NaN;
 	private double _dblIssueAmount = java.lang.Double.NaN;
+	private double _dblZSpreadBump = java.lang.Double.NaN;
 	private double _dblCurrentPrice = java.lang.Double.NaN;
-	private double _dblCustomDV01Bump = java.lang.Double.NaN;
+	private double _dblCustomYieldBump = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtSpot = null;
 	private org.drip.product.credit.BondComponent _bond = null;
 	private double _dblFundingCurveFlatBump = java.lang.Double.NaN;
+	private double _dblCustomCreditBasisBump = java.lang.Double.NaN;
+	private double _dblSpreadDurationMultiplier = java.lang.Double.NaN;
 
 	private org.drip.analytics.date.JulianDate _dtSettle = null;
 	private org.drip.param.valuation.ValuationParams _valParams = null;
@@ -79,6 +82,7 @@ public class AladdinReplicator {
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcCredit01Up = null;
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFundingBase = null;
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFunding01Up = null;
+	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFundingEuroDollar = null;
 	private java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
 		_mapCSQCCredit = null;
 	private java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
@@ -99,7 +103,10 @@ public class AladdinReplicator {
 	 * @param astrFixFloatTenor Array of Fix-Float Tenors
 	 * @param adblFixFloatQuote Array of Fix-Float Quotes
 	 * @param dblFundingCurveFlatBump Base Funding Curve Flat Bump
-	 * @param dblCustomDV01Bump Custom DV01 Bump
+	 * @param dblCustomYieldBump Custom Yield Bump
+	 * @param dblCustomCreditBasisBump Custom Credit Basis Bump
+	 * @param dblZSpreadBump Z Spread Bump
+	 * @param dblSpreadDurationMultiplier Spread Duration Multiplier
 	 * @param strGovvieCode Govvie Code
 	 * @param astrGovvieTenor Array of Govvie Tenor
 	 * @param adblGovvieQuote Array of Govvie Quotes
@@ -123,7 +130,10 @@ public class AladdinReplicator {
 		final java.lang.String[] astrFixFloatTenor,
 		final double[] adblFixFloatQuote,
 		final double dblFundingCurveFlatBump,
-		final double dblCustomDV01Bump,
+		final double dblCustomYieldBump,
+		final double dblCustomCreditBasisBump,
+		final double dblZSpreadBump,
+		final double dblSpreadDurationMultiplier,
 		final java.lang.String strGovvieCode,
 		final java.lang.String[] astrGovvieTenor,
 		final double[] adblGovvieQuote,
@@ -142,6 +152,7 @@ public class AladdinReplicator {
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 
 		_strGovvieCode = strGovvieCode;
+		_dblZSpreadBump = dblZSpreadBump;
 		_adblCreditQuote = adblCreditQuote;
 		_astrCreditTenor = astrCreditTenor;
 		_adblGovvieQuote = adblGovvieQuote;
@@ -151,8 +162,10 @@ public class AladdinReplicator {
 		_adblFuturesQuote = adblFuturesQuote;
 		_adblFixFloatQuote = adblFixFloatQuote;
 		_astrFixFloatTenor = astrFixFloatTenor;
-		_dblCustomDV01Bump = dblCustomDV01Bump;
+		_dblCustomYieldBump = dblCustomYieldBump;
 		_dblFundingCurveFlatBump = dblFundingCurveFlatBump;
+		_dblCustomCreditBasisBump = dblCustomCreditBasisBump;
+		_dblSpreadDurationMultiplier = dblSpreadDurationMultiplier;
 
 		java.lang.String strCurrency = _bond.currency();
 
@@ -182,6 +195,12 @@ public class AladdinReplicator {
 
 		if (null == (_csqcFundingBase = org.drip.param.creator.MarketParamsBuilder.Create (mdfc, gc, null,
 			null, null, null, null)))
+			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+
+		if (null == (_csqcFundingEuroDollar = org.drip.param.creator.MarketParamsBuilder.Create
+			(org.drip.service.template.LatentMarketStateBuilder.SmoothFundingCurve (_dtSpot, strCurrency,
+				_astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote, "ForwardRate", null,
+					null, "SwapRate"), gc, null, null, null, null, null)))
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 
 		java.util.Map<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve> mapTenorFunding =
@@ -361,14 +380,47 @@ public class AladdinReplicator {
 	}
 
 	/**
-	 * Retrieve the Custom DV01 Bump
+	 * Retrieve the Custom Yield Bump
 	 * 
-	 * @return The Custom DV01 Bump
+	 * @return The Custom Yield Bump
 	 */
 
-	public double customDV01Bump()
+	public double customYieldBump()
 	{
-		return _dblCustomDV01Bump;
+		return _dblCustomYieldBump;
+	}
+
+	/**
+	 * Retrieve the Custom Credit Basis Bump
+	 * 
+	 * @return The Custom Credit Basis Bump
+	 */
+
+	public double customCreditBasisBump()
+	{
+		return _dblCustomCreditBasisBump;
+	}
+
+	/**
+	 * Retrieve the Z Spread Bump
+	 * 
+	 * @return The Z Spread Bump
+	 */
+
+	public double zSpreadBump()
+	{
+		return _dblZSpreadBump;
+	}
+
+	/**
+	 * Retrieve the Spread Duration Multiplier
+	 * 
+	 * @return The Spread Duration Multiplier
+	 */
+
+	public double spreadDurationMultiplier()
+	{
+		return _dblSpreadDurationMultiplier;
 	}
 
 	/**
@@ -529,6 +581,17 @@ public class AladdinReplicator {
 	}
 
 	/**
+	 * Retrieve the CSQC built out of the Base Euro Dollar Curve
+	 * 
+	 * @return The CSQC built out of the Base Euro Dollar Curve
+	 */
+
+	public org.drip.param.market.CurveSurfaceQuoteContainer fundingEuroDollarCSQC()
+	{
+		return _csqcFundingEuroDollar;
+	}
+
+	/**
 	 * Retrieve the CSQC built out of the Base Credit Curve
 	 * 
 	 * @return The CSQC built out of the Base Credit Curve
@@ -613,47 +676,37 @@ public class AladdinReplicator {
 
 			double dblAccrued = _bond.accrued (_dtSettle.julian(), _csqcFundingBase);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued", dblAccrued));
+			double dblYieldToMaturity = _bond.yieldFromPrice (_valParams, _csqcFundingBase, null,
+				_dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued$", dblAccrued));
+			double dblBondEquivalentYieldToMaturity = _bond.yieldFromPrice (_valParams, _csqcFundingBase,
+				org.drip.param.valuation.ValuationCustomizationParams.BondEquivalent (strCurrency),
+					_dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued Interest Factor",
-				dblAccrued * _dblFX));
+			double dblYieldToMaturityFwdCoupon = _bond.yieldFromPrice (_valParams, _csqcFundingBase, new
+				org.drip.param.valuation.ValuationCustomizationParams (_bond.couponDC(), _bond.freq(), false,
+					null, strCurrency, false, true), _dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Maturity",
-				_bond.yieldFromPrice (_valParams, _csqcFundingBase, null, _dblCurrentPrice)));
+			double dblYieldFromPriceNextCall = _bond.yieldFromPrice (_valParams, _csqcFundingBase, null,
+				iNextCallDate, dblNextCallFactor, _dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Maturity CBE",
-				_bond.yieldFromPrice (_valParams, _csqcFundingBase,
-					org.drip.param.valuation.ValuationCustomizationParams.BondEquivalent (strCurrency),
-						_dblCurrentPrice)));
+			double dblYieldFromPriceNextPut = _bond.yieldFromPrice (_valParams, _csqcFundingBase, null,
+				iNextPutDate, dblNextPutFactor, _dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("YTM fwdCpn", _bond.yieldFromPrice
-				(_valParams, _csqcFundingBase, new org.drip.param.valuation.ValuationCustomizationParams
-					(_bond.couponDC(), _bond.freq(), false, null, strCurrency, false, true),
-						_dblCurrentPrice)));
+			double dblNominalYield = _bond.yieldFromPrice (_valParams, _csqcFundingBase, null,
+				_dblIssuePrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Worst",
-				dblYieldToExercise));
+			double dblOASToMaturity = _bond.oasFromPrice (_valParams, _csqcFundingBase, null,
+				_dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("YIELD TO CALL",
-				_bond.yieldFromPrice (_valParams, _csqcFundingBase, null, iNextCallDate, dblNextCallFactor,
-					_dblCurrentPrice)));
+			double dblZSpreadToMaturity = _bond.zSpreadFromPrice (_valParams, _csqcFundingBase, null,
+				_dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("YIELD TO PUT", _bond.yieldFromPrice
-				(_valParams, _csqcFundingBase, null, iNextPutDate, dblNextPutFactor, _dblCurrentPrice)));
+			double dblZSpreadToExercise = _bond.zSpreadFromPrice (_valParams, _csqcFundingBase, null,
+				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("NominalYield", _bond.yieldFromPrice
-				(_valParams, _csqcFundingBase, null, _dblIssuePrice)));
-
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("Z_Spread", _bond.oasFromPrice
-				(_valParams, _csqcFundingBase, null, _dblCurrentPrice)));
-
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("Z_Vol_OAS", _bond.zSpreadFromPrice
-				(_valParams, _csqcFundingBase, null, _dblCurrentPrice)));
-
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("OAS", _bond.oasFromPrice
-				(_valParams, _csqcFundingBase, null, iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice)));
+			double dblOASFromWorkout = _bond.oasFromPrice (_valParams, _csqcFundingBase, null, iWorkoutDate,
+				dblWorkoutFactor, _dblCurrentPrice);
 
 			double dblBondBasisToMaturity = _bond.bondBasisFromPrice (_valParams, _csqcFundingBase, null,
 				_dblCurrentPrice);
@@ -661,24 +714,163 @@ public class AladdinReplicator {
 			double dblBondBasisToExercise = _bond.bondBasisFromPrice (_valParams, _csqcFundingBase, null,
 				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("MOD DUR", (_dblCurrentPrice -
-				_bond.priceFromBondBasis (_valParams, _csqcFunding01Up, null, dblBondBasisToMaturity)) /
-					_dblCurrentPrice));
+			double dblModifiedDurationFromBondBasis = (_dblCurrentPrice - _bond.priceFromBondBasis
+				(_valParams, _csqcFunding01Up, null, dblBondBasisToMaturity)) / _dblCurrentPrice;
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("MACAULAY DURATION",
-				_bond.macaulayDurationFromPrice (_valParams, _csqcFundingBase, null, _dblCurrentPrice)));
+			double dblMacaulayDurationToMaturity = _bond.macaulayDurationFromPrice (_valParams,
+				_csqcFundingBase, null, _dblCurrentPrice);
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("MOD DUR TO WORST",
-				(_dblCurrentPrice - _bond.priceFromBondBasis (_valParams, _csqcFunding01Up, null,
-					iWorkoutDate, dblWorkoutFactor, dblBondBasisToExercise)) / _dblCurrentPrice));
+			double dblModifiedDurationFromBondBasisToWorst = (_dblCurrentPrice - _bond.priceFromBondBasis
+				(_valParams, _csqcFunding01Up, null, iWorkoutDate, dblWorkoutFactor, dblBondBasisToExercise))
+					/ _dblCurrentPrice;
 
 			double dblDV01 = 0.5 * (_bond.priceFromYield (_valParams, _csqcFundingBase, null, iWorkoutDate,
-				dblWorkoutFactor, dblYieldToExercise - 0.0001 * _dblCustomDV01Bump) - _bond.priceFromYield
+				dblWorkoutFactor, dblYieldToExercise - 0.0001 * _dblCustomYieldBump) - _bond.priceFromYield
 					(_valParams, _csqcFundingBase, null, iWorkoutDate, dblWorkoutFactor, dblYieldToExercise +
-						0.0001 * _dblCustomDV01Bump)) / _dblCustomDV01Bump;
+						0.0001 * _dblCustomYieldBump)) / _dblCustomYieldBump;
 
-			arr.addNamedField (new org.drip.service.scenario.NamedField ("EFFECTIVE DURATION", dblDV01 /
-				_dblCurrentPrice));
+			double dblCreditBasisToExercise = _bond.creditBasisFromPrice (_valParams, _csqcCreditBase, null,
+				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
+
+			double dblEffectiveDurationAdjusted = 0.5 * (_bond.priceFromCreditBasis (_valParams,
+				_csqcCreditBase, null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise -
+					_dblCustomCreditBasisBump) - _bond.priceFromCreditBasis (_valParams, _csqcCreditBase,
+						null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise +
+							_dblCustomCreditBasisBump)) / _dblCurrentPrice / _dblCustomCreditBasisBump;
+
+			double dblSpreadDuration = _dblSpreadDurationMultiplier * (_dblCurrentPrice -
+				_bond.priceFromZSpread (_valParams, _csqcFundingBase, null, iWorkoutDate, dblWorkoutFactor,
+					dblZSpreadToExercise + 0.0001 * _dblZSpreadBump)) / _dblCurrentPrice;
+
+			double dblCV01 = _dblCurrentPrice - _bond.priceFromCreditBasis (_valParams, _csqcCredit01Up,
+				null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise);
+
+			double dblConvexityToExercise = _bond.convexityFromPrice (_valParams, _csqcFundingBase, null,
+				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
+
+			double dblDiscountMarginToExercise = dblYieldToExercise - _csqcFundingBase.fundingState
+				(_bond.fundingLabel()).libor (_valParams.valueDate(), "1M");
+
+			double dblESpreadToExercise = _bond.zSpreadFromPrice (_valParams, _csqcFundingEuroDollar, null,
+				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
+
+			double dblISpreadToExercise = _bond.iSpreadFromPrice (_valParams, _csqcFundingBase, null,
+				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
+
+			double dblJSpreadToExercise = _bond.jSpreadFromPrice (_valParams, _csqcFundingBase, null,
+				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
+
+			double dblAccruedInterestFactor = dblAccrued * _dblFX;
+			double dblEffectiveDuration = dblDV01 / _dblCurrentPrice;
+			double dblSpreadDuration$ = dblSpreadDuration * _dblIssueAmount;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued", dblAccrued)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued$", dblAccrued)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued Interest Factor",
+				dblAccruedInterestFactor)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Maturity",
+				dblYieldToMaturity)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Maturity CBE",
+				dblBondEquivalentYieldToMaturity)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("YTM fwdCpn",
+				dblYieldToMaturityFwdCoupon)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Yield To Worst",
+				dblYieldToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("YIELD TO CALL",
+				dblYieldFromPriceNextCall)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("YIELD TO PUT",
+				dblYieldFromPriceNextPut)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("NominalYield",
+				dblNominalYield)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Z_Spread", dblOASToMaturity)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Z_Vol_OAS",
+				dblZSpreadToMaturity)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("OAS", dblOASFromWorkout)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("MOD DUR",
+				dblModifiedDurationFromBondBasis)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("MACAULAY DURATION",
+				dblMacaulayDurationToMaturity)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("MOD DUR TO WORST",
+				dblModifiedDurationFromBondBasisToWorst)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("EFFECTIVE DURATION",
+				dblEffectiveDuration)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("EFFECTIVE DURATION ADJ",
+				dblEffectiveDurationAdjusted)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("OAD MULT",
+				dblEffectiveDurationAdjusted / dblEffectiveDuration)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Spread Dur",
+				dblSpreadDuration)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Spread Dur $",
+				dblSpreadDuration$)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("DV01", dblDV01))) return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("CV01", dblCV01))) return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Convexity",
+				dblConvexityToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Modified Convexity",
+				dblConvexityToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("DISCOUNT MARGIN",
+				dblDiscountMarginToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("E-Spread",
+				dblESpreadToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("I-Spread",
+				dblISpreadToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("J-Spread",
+				dblJSpreadToExercise)))
+				return null;
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 
