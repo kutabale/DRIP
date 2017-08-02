@@ -639,7 +639,7 @@ public class BilateralCSACollateralizedFunding {
 			0.,
 			100.,
 			5.,
-			0.05,
+			0.,
 			1.
 		);
 
