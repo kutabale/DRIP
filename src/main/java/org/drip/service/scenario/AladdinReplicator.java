@@ -72,7 +72,6 @@ public class AladdinReplicator {
 	private double _dblCustomYieldBump = java.lang.Double.NaN;
 	private org.drip.analytics.date.JulianDate _dtSpot = null;
 	private org.drip.product.credit.BondComponent _bond = null;
-	private double _dblFundingCurveFlatBump = java.lang.Double.NaN;
 	private double _dblCustomCreditBasisBump = java.lang.Double.NaN;
 	private double _dblSpreadDurationMultiplier = java.lang.Double.NaN;
 
@@ -83,12 +82,18 @@ public class AladdinReplicator {
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFundingBase = null;
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFunding01Up = null;
 	private org.drip.param.market.CurveSurfaceQuoteContainer _csqcFundingEuroDollar = null;
+
 	private java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
-		_mapCSQCCredit = null;
+		_mapCSQCCredit = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<org.drip.param.market.CurveSurfaceQuoteContainer>();
+
 	private java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
-		_mapCSQCGovvie = null;
+		_mapCSQCGovvie = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<org.drip.param.market.CurveSurfaceQuoteContainer>();
+
 	private java.util.Map<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
-		_mapCSQCFunding = null;
+		_mapCSQCFunding = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<org.drip.param.market.CurveSurfaceQuoteContainer>();
 
 	/**
 	 * AladdinReplicator Constructor
@@ -102,7 +107,6 @@ public class AladdinReplicator {
 	 * @param adblFuturesQuote Array of Futures Quotes
 	 * @param astrFixFloatTenor Array of Fix-Float Tenors
 	 * @param adblFixFloatQuote Array of Fix-Float Quotes
-	 * @param dblFundingCurveFlatBump Base Funding Curve Flat Bump
 	 * @param dblCustomYieldBump Custom Yield Bump
 	 * @param dblCustomCreditBasisBump Custom Credit Basis Bump
 	 * @param dblZSpreadBump Z Spread Bump
@@ -129,7 +133,6 @@ public class AladdinReplicator {
 		final double[] adblFuturesQuote,
 		final java.lang.String[] astrFixFloatTenor,
 		final double[] adblFixFloatQuote,
-		final double dblFundingCurveFlatBump,
 		final double dblCustomYieldBump,
 		final double dblCustomCreditBasisBump,
 		final double dblZSpreadBump,
@@ -163,7 +166,6 @@ public class AladdinReplicator {
 		_adblFixFloatQuote = adblFixFloatQuote;
 		_astrFixFloatTenor = astrFixFloatTenor;
 		_dblCustomYieldBump = dblCustomYieldBump;
-		_dblFundingCurveFlatBump = dblFundingCurveFlatBump;
 		_dblCustomCreditBasisBump = dblCustomCreditBasisBump;
 		_dblSpreadDurationMultiplier = dblSpreadDurationMultiplier;
 
@@ -213,9 +215,12 @@ public class AladdinReplicator {
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 
 		for (java.util.Map.Entry<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve>
-			meTenorFunding : mapTenorFunding.entrySet())
+			meTenorFunding : mapTenorFunding.entrySet()) {
+			System.out.println (meTenorFunding);
+
 			_mapCSQCFunding.put (meTenorFunding.getKey(), org.drip.param.creator.MarketParamsBuilder.Create
 				(meTenorFunding.getValue(), gc, null, null, null, null, null));
+		}
 
 		java.util.Map<java.lang.String, org.drip.state.govvie.GovvieCurve> mapTenorGovvie =
 			org.drip.service.template.LatentMarketStateBuilder.BumpedGovvieCurve (_strGovvieCode, _dtSpot,
@@ -366,17 +371,6 @@ public class AladdinReplicator {
 	public double[] fixFloatQuote()
 	{
 		return _adblFixFloatQuote;
-	}
-
-	/**
-	 * Retrieve the Base Funding Curve Flat Bump
-	 * 
-	 * @return The Base Funding Curve Flat Bump
-	 */
-
-	public double fundingCurveFlatBump()
-	{
-		return _dblFundingCurveFlatBump;
 	}
 
 	/**
@@ -661,6 +655,24 @@ public class AladdinReplicator {
 
 		double dblYieldToExercise = wi.yield();
 
+		java.util.Map<java.lang.String, java.lang.Double> mapLIBORKRD = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<java.lang.Double>();
+
+		java.util.Map<java.lang.String, java.lang.Double> mapLIBORKPRD = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<java.lang.Double>();
+
+		java.util.Map<java.lang.String, java.lang.Double> mapGovvieKRD = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<java.lang.Double>();
+
+		java.util.Map<java.lang.String, java.lang.Double> mapGovvieKPRD = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<java.lang.Double>();
+
+		java.util.Map<java.lang.String, java.lang.Double> mapCreditKRD = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<java.lang.Double>();
+
+		java.util.Map<java.lang.String, java.lang.Double> mapCreditKPRD = new
+			org.drip.analytics.support.CaseInsensitiveHashMap<java.lang.Double>();
+
 		try {
 			if (null != eosCall) {
 				iNextCallDate = eosCall.nextDate (iSpotDate);
@@ -732,6 +744,9 @@ public class AladdinReplicator {
 			double dblCreditBasisToExercise = _bond.creditBasisFromPrice (_valParams, _csqcCreditBase, null,
 				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
 
+			double dblParCreditBasisToExercise = _bond.creditBasisFromPrice (_valParams, _csqcCreditBase,
+				null, iWorkoutDate, dblWorkoutFactor, 1.);
+
 			double dblEffectiveDurationAdjusted = 0.5 * (_bond.priceFromCreditBasis (_valParams,
 				_csqcCreditBase, null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise -
 					_dblCustomCreditBasisBump) - _bond.priceFromCreditBasis (_valParams, _csqcCreditBase,
@@ -760,9 +775,71 @@ public class AladdinReplicator {
 			double dblJSpreadToExercise = _bond.jSpreadFromPrice (_valParams, _csqcFundingBase, null,
 				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
 
+			double dblWALToExercise = _bond.weightedAverageLife (_valParams, _csqcFundingBase, iWorkoutDate,
+				dblWorkoutFactor);
+
+			double dblWALPrincipalOnlyToExercise = _bond.weightedAverageLifePrincipalOnly (_valParams,
+				_csqcFundingBase, iWorkoutDate, dblWorkoutFactor);
+
+			double dblWALLossOnlyToExercise = _bond.weightedAverageLifeLossOnly (_valParams, _csqcCreditBase,
+				iWorkoutDate, dblWorkoutFactor);
+
+			double dblWALCouponOnlyToExercise = _bond.weightedAverageLifeCouponOnly (_valParams,
+				_csqcFundingBase, iWorkoutDate, dblWorkoutFactor);
+
+			double dblOASToExercise = _bond.oasFromPrice (_valParams, _csqcFundingBase, null, iWorkoutDate,
+				dblWorkoutFactor, _dblCurrentPrice);
+
+			double dblParOASToExercise = _bond.oasFromPrice (_valParams, _csqcFundingBase, null,
+				iWorkoutDate, dblWorkoutFactor, 1.);
+
 			double dblAccruedInterestFactor = dblAccrued * _dblFX;
 			double dblEffectiveDuration = dblDV01 / _dblCurrentPrice;
 			double dblSpreadDuration$ = dblSpreadDuration * _dblIssueAmount;
+
+			for (java.util.Map.Entry<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+				meCSQC : _mapCSQCFunding.entrySet()) {
+				java.lang.String strKey = meCSQC.getKey();
+
+				org.drip.param.market.CurveSurfaceQuoteContainer csqcTenor = meCSQC.getValue();
+
+				mapLIBORKRD.put (strKey, (_dblCurrentPrice - _bond.priceFromZSpread (_valParams, csqcTenor,
+					null, iWorkoutDate, dblWorkoutFactor, dblZSpreadToExercise)) / _dblCurrentPrice);
+
+				mapLIBORKPRD.put (strKey, (1. - _bond.priceFromZSpread (_valParams, csqcTenor, null,
+					iWorkoutDate, dblWorkoutFactor, dblZSpreadToExercise)));
+			}
+
+			for (java.util.Map.Entry<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+				meCSQC : _mapCSQCGovvie.entrySet()) {
+				java.lang.String strKey = meCSQC.getKey();
+
+				org.drip.param.market.CurveSurfaceQuoteContainer csqcTenor = meCSQC.getValue();
+
+				mapGovvieKRD.put (strKey, (_dblCurrentPrice - _bond.priceFromOAS (_valParams, csqcTenor,
+					null, iWorkoutDate, dblWorkoutFactor, dblOASToExercise)) / _dblCurrentPrice);
+
+				mapGovvieKPRD.put (strKey, (1. - _bond.priceFromOAS (_valParams, csqcTenor, null,
+					iWorkoutDate, dblWorkoutFactor, dblParOASToExercise)));
+			}
+
+			for (java.util.Map.Entry<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
+				meCSQC : _mapCSQCCredit.entrySet()) {
+				java.lang.String strKey = meCSQC.getKey();
+
+				org.drip.param.market.CurveSurfaceQuoteContainer csqcTenor = meCSQC.getValue();
+
+				mapCreditKRD.put (strKey, (_dblCurrentPrice - _bond.priceFromCreditBasis (_valParams,
+					csqcTenor, null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise)) /
+						_dblCurrentPrice);
+
+				mapCreditKPRD.put (strKey, (1. - _bond.priceFromCreditBasis (_valParams, csqcTenor, null,
+					iWorkoutDate, dblWorkoutFactor, dblParCreditBasisToExercise)));
+			}
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("CleanPrice",
+				_dblCurrentPrice)))
+				return null;
 
 			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued", dblAccrued)))
 				return null;
@@ -870,6 +947,46 @@ public class AladdinReplicator {
 
 			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("J-Spread",
 				dblJSpreadToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL To Worst",
+				dblWALToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL2",
+				dblWALPrincipalOnlyToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL3",
+				dblWALLossOnlyToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL4",
+				dblWALCouponOnlyToExercise)))
+				return null;
+
+			if (!arr.addNamedFieldMap (new org.drip.service.scenario.NamedFieldMap ("LIBOR KRD",
+				mapLIBORKRD)))
+				return null;
+
+			if (!arr.addNamedFieldMap (new org.drip.service.scenario.NamedFieldMap ("LIBOR KPRD",
+				mapLIBORKPRD)))
+				return null;
+
+			if (!arr.addNamedFieldMap (new org.drip.service.scenario.NamedFieldMap ("Govvie KRD",
+				mapGovvieKRD)))
+				return null;
+
+			if (!arr.addNamedFieldMap (new org.drip.service.scenario.NamedFieldMap ("Govvie KPRD",
+				mapGovvieKPRD)))
+				return null;
+
+			if (!arr.addNamedFieldMap (new org.drip.service.scenario.NamedFieldMap ("Credit KRD",
+				mapCreditKRD)))
+				return null;
+
+			if (!arr.addNamedFieldMap (new org.drip.service.scenario.NamedFieldMap ("Credit KPRD",
+				mapCreditKPRD)))
 				return null;
 		} catch (java.lang.Exception e) {
 			e.printStackTrace();

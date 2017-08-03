@@ -56,8 +56,8 @@ public class AladdinReplicationRun {
 	private java.util.Map<java.lang.String, org.drip.service.scenario.NamedField> _mapNF = new
 		org.drip.analytics.support.CaseInsensitiveHashMap<org.drip.service.scenario.NamedField>();
 
-	private java.util.Map<java.lang.String, org.drip.service.scenario.NamedFieldArray> _mapNFA = new
-		org.drip.analytics.support.CaseInsensitiveHashMap<org.drip.service.scenario.NamedFieldArray>();
+	private java.util.Map<java.lang.String, org.drip.service.scenario.NamedFieldMap> _mapNFM = new
+		org.drip.analytics.support.CaseInsensitiveHashMap<org.drip.service.scenario.NamedFieldMap>();
 
 	/**
 	 * Empty AladdinReplicationRun Constructor
@@ -86,19 +86,19 @@ public class AladdinReplicationRun {
 	}
 
 	/**
-	 * Add a Named Field Array
+	 * Add a Named Field Map
 	 * 
-	 * @param nfa The Named Field Array
+	 * @param nfm The Named Field Map
 	 * 
-	 * @return TRUE - The Named Field Array Successfully added
+	 * @return TRUE - The Named Field Map Successfully added
 	 */
 
-	public boolean addNamedFieldArray (
-		final org.drip.service.scenario.NamedFieldArray nfa)
+	public boolean addNamedFieldMap (
+		final org.drip.service.scenario.NamedFieldMap nfm)
 	{
-		if (null == nfa) return false;
+		if (null == nfm) return false;
 
-		_mapNFA.put (nfa.name(), nfa);
+		_mapNFM.put (nfm.name(), nfm);
 
 		return true;
 	}
@@ -115,13 +115,13 @@ public class AladdinReplicationRun {
 	}
 
 	/**
-	 * Retrieve the Named Field Array Metrics
+	 * Retrieve the Named Field Map Metrics
 	 * 
-	 * @return The Named Field Array Metrics
+	 * @return The Named Field Map Metrics
 	 */
 
-	public java.util.Map<java.lang.String, org.drip.service.scenario.NamedFieldArray> namedFieldArray()
+	public java.util.Map<java.lang.String, org.drip.service.scenario.NamedFieldMap> namedFieldMap()
 	{
-		return _mapNFA;
+		return _mapNFM;
 	}
 }

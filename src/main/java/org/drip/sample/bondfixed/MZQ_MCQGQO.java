@@ -12,6 +12,7 @@ import org.drip.product.credit.BondComponent;
 import org.drip.product.params.EmbeddedOptionSchedule;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
+import org.drip.service.scenario.AladdinReplicator;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.credit.CreditCurve;
 import org.drip.state.discount.MergedDiscountForwardCurve;
@@ -69,42 +70,6 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 public class MZQ_MCQGQO {
-
-	private static final MergedDiscountForwardCurve EuroDollarFundingCurve (
-		final JulianDate dtSpot,
-		final String strCurrency)
-		throws Exception
-	{
-		String[] astrDepositMaturityTenor = new String[] {
-			"2D"
-		};
-
-		double[] adblDepositQuote = new double[] {
-			0.0130411 // 2D
-		};
-
-		double[] adblFuturesQuote = new double[] {
-			0.01345,	// 98.655
-			0.01470,	// 98.530
-			0.01575,	// 98.425
-			0.01660,	// 98.340
-			0.01745,    // 98.255
-			0.01845     // 98.155
-		};
-
-		return LatentMarketStateBuilder.SmoothFundingCurve (
-			dtSpot,
-			strCurrency,
-			astrDepositMaturityTenor,
-			adblDepositQuote,
-			"ForwardRate",
-			adblFuturesQuote,
-			"ForwardRate",
-			null,
-			null,
-			"SwapRate"
-		);
-	}
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -265,7 +230,8 @@ public class MZQ_MCQGQO {
 
 	private static final GovvieCurve GovvieCurve (
 		final JulianDate dtSpot,
-		final String strCode)
+		final String strCode,
+		final double[] adblGovvieYield)
 		throws Exception
 	{
 		return LatentMarketStateBuilder.GovvieCurve (
@@ -291,26 +257,8 @@ public class MZQ_MCQGQO {
 				dtSpot.addTenor ("20Y"),
 				dtSpot.addTenor ("30Y")
 			},
-			new double[] {
-				0.01219, //  1Y
-				0.01391, //  2Y
-				0.01590, //  3Y
-				0.01937, //  5Y
-				0.02200, //  7Y
-				0.02378, // 10Y
-				0.02677, // 20Y
-				0.02927  // 30Y
-			},
-			new double[] {
-				0.01219, //  1Y
-				0.01391, //  2Y
-				0.01590, //  3Y
-				0.01937, //  5Y
-				0.02200, //  7Y
-				0.02378, // 10Y
-				0.02677, // 20Y
-				0.02927  // 30Y
-			},
+			adblGovvieYield,
+			adblGovvieYield,
 			"Yield",
 			LatentMarketStateBuilder.SHAPE_PRESERVING
 		);
@@ -319,7 +267,8 @@ public class MZQ_MCQGQO {
 	private static final Map<String, GovvieCurve> TenorBumpedGovvieCurve (
 		final JulianDate dtSpot,
 		final String strCode,
-		final double dblBump)
+		final double dblBump,
+		final double[] adblGovvieYield)
 		throws Exception
 	{
 		return LatentMarketStateBuilder.BumpedGovvieCurve (
@@ -345,26 +294,8 @@ public class MZQ_MCQGQO {
 				dtSpot.addTenor ("20Y"),
 				dtSpot.addTenor ("30Y")
 			},
-			new double[] {
-				0.01219, //  1Y
-				0.01391, //  2Y
-				0.01590, //  3Y
-				0.01937, //  5Y
-				0.02200, //  7Y
-				0.02378, // 10Y
-				0.02677, // 20Y
-				0.02927  // 30Y
-			},
-			new double[] {
-				0.01219, //  1Y
-				0.01391, //  2Y
-				0.01590, //  3Y
-				0.01937, //  5Y
-				0.02200, //  7Y
-				0.02378, // 10Y
-				0.02677, // 20Y
-				0.02927  // 30Y
-			},
+			adblGovvieYield,
+			adblGovvieYield,
 			"Yield",
 			LatentMarketStateBuilder.SHAPE_PRESERVING,
 			dblBump,
@@ -376,22 +307,14 @@ public class MZQ_MCQGQO {
 		final JulianDate dtSpot,
 		final String strCreditCurve,
 		final MergedDiscountForwardCurve mdfc,
+		final String[] astrCreditTenor,
 		final double dblBump)
 		throws Exception
 	{
 		return LatentMarketStateBuilder.CreditCurve (
 			dtSpot,
 			strCreditCurve,
-			new String[] {
-				"06M",
-				"01Y",
-				"02Y",
-				"03Y",
-				"04Y",
-				"05Y",
-				"07Y",
-				"10Y"
-			},
+			astrCreditTenor,
 			new double[] {
 				 60.,	//  6M
 				 68.,	//  1Y
@@ -507,6 +430,107 @@ public class MZQ_MCQGQO {
 			10
 		);
 
+		String[] astrDepositTenor = new String[] {
+			"2D"
+		};
+
+		double[] adblDepositQuote = new double[] {
+			0.0130411 // 2D
+		};
+
+		double[] adblFuturesQuote = new double[] {
+			0.01345,	// 98.655
+			0.01470,	// 98.530
+			0.01575,	// 98.425
+			0.01660,	// 98.340
+			0.01745,    // 98.255
+			0.01845     // 98.155
+		};
+
+		String[] astrFixFloatTenor = new String[] {
+			"02Y",
+			"03Y",
+			"04Y",
+			"05Y",
+			"06Y",
+			"07Y",
+			"08Y",
+			"09Y",
+			"10Y",
+			"11Y",
+			"12Y",
+			"15Y",
+			"20Y",
+			"25Y",
+			"30Y",
+			"40Y",
+			"50Y"
+		};
+
+		String[] astrGovvieTenor = new String[] {
+			"1Y",
+			"2Y",
+			"3Y",
+			"5Y",
+			"7Y",
+			"10Y",
+			"20Y",
+			"30Y"
+		};
+
+		double[] adblFixFloatQuote = new double[] {
+			0.016410, //  2Y
+			0.017863, //  3Y
+			0.019030, //  4Y
+			0.020035, //  5Y
+			0.020902, //  6Y
+			0.021660, //  7Y
+			0.022307, //  8Y
+			0.022879, //  9Y
+			0.023363, // 10Y
+			0.023820, // 11Y
+			0.024172, // 12Y
+			0.024934, // 15Y
+			0.025581, // 20Y
+			0.025906, // 25Y
+			0.025973, // 30Y
+			0.025838, // 40Y
+			0.025560  // 50Y
+		};
+
+		double[] adblGovvieYield = new double[] {
+			0.01219, //  1Y
+			0.01391, //  2Y
+			0.01590, //  3Y
+			0.01937, //  5Y
+			0.02200, //  7Y
+			0.02378, // 10Y
+			0.02677, // 20Y
+			0.02927  // 30Y
+		};
+
+		String[] astrCreditTenor = new String[] {
+			"06M",
+			"01Y",
+			"02Y",
+			"03Y",
+			"04Y",
+			"05Y",
+			"07Y",
+			"10Y"
+		};
+
+		double[] adblCreditQuote = new double[] {
+			 60.,	//  6M
+			 68.,	//  1Y
+			 88.,	//  2Y
+			102.,	//  3Y
+			121.,	//  4Y
+			138.,	//  5Y
+			168.,	//  7Y
+			188.	// 10Y
+		};
+
 		double dblFX = 1.;
 		int iSettleLag = 3;
 		int iCouponFreq = 12;
@@ -514,12 +538,16 @@ public class MZQ_MCQGQO {
 		double dblCleanPrice = 1.;
 		double dblIssuePrice = 1.;
 		String strCurrency = "USD";
+		double dblZSpreadBump = 20.;
 		double dblCouponRate = 0.0425;
 		double dblIssueAmount = 2.60e7;
 		String strTreasuryCode = "UST";
+		double dblCustomYieldBump = 20.;
 		String strCouponDayCount = "30/360";
 		EmbeddedOptionSchedule eosPut = null;
 		EmbeddedOptionSchedule eosCall = null;
+		double dblCustomCreditBasisBump = 20.;
+		double dblSpreadDurationMultiplier = 5.;
 
 		JulianDate dtEffective = DateUtil.CreateFromYMD (
 			2015,
@@ -573,7 +601,8 @@ public class MZQ_MCQGQO {
 
 		GovvieCurve gc = GovvieCurve (
 			dtSpot,
-			strTreasuryCode
+			strTreasuryCode,
+			adblGovvieYield
 		);
 
 		CurveSurfaceQuoteContainer csqcBase = MarketParamsBuilder.Create (
@@ -593,6 +622,7 @@ public class MZQ_MCQGQO {
 				dtSpot,
 				strName,
 				mdfcBase,
+				astrCreditTenor,
 				0.
 			),
 			null,
@@ -622,6 +652,7 @@ public class MZQ_MCQGQO {
 				dtSpot,
 				strName,
 				mdfcBase,
+				astrCreditTenor,
 				1.
 			),
 			null,
@@ -795,14 +826,14 @@ public class MZQ_MCQGQO {
 			)
 		) / dblCleanPrice;
 
-		double dblDV01 = (
+		double dblDV01 = 0.5 * (
 			bond.priceFromYield (
 				valParams,
 				csqcBase,
 				null,
 				wi.date(),
 				wi.factor(),
-				dblYieldToExercise - 0.0020
+				dblYieldToExercise - 0.0001 * dblCustomYieldBump
 			) -
 			bond.priceFromYield (
 				valParams,
@@ -810,9 +841,9 @@ public class MZQ_MCQGQO {
 				null,
 				wi.date(),
 				wi.factor(),
-				dblYieldToExercise + 0.0020
+				dblYieldToExercise + 0.0001 * dblCustomYieldBump
 			)
-		) / 40.;
+		) / dblCustomYieldBump;
 
 		double dblEffectiveDuration = dblDV01 / dblCleanPrice;
 
@@ -834,14 +865,14 @@ public class MZQ_MCQGQO {
 			1.
 		);
 
-		double dblEffectiveDurationAdj = (
+		double dblEffectiveDurationAdj = 0.5 * (
 			bond.priceFromCreditBasis (
 				valParams,
 				csqcCreditBase,
 				null,
 				wi.date(),
 				wi.factor(),
-				dblCreditBasisToExercise - 20.
+				dblCreditBasisToExercise - dblCustomCreditBasisBump
 			) -
 			bond.priceFromCreditBasis (
 				valParams,
@@ -849,18 +880,18 @@ public class MZQ_MCQGQO {
 				null,
 				wi.date(),
 				wi.factor(),
-				dblCreditBasisToExercise + 20.
+				dblCreditBasisToExercise + dblCustomCreditBasisBump
 			)
-		) / dblCleanPrice / 40.;
+		) / dblCleanPrice / dblCustomCreditBasisBump;
 
-		double dblSpreadDuration = 5. * (dblCleanPrice -
+		double dblSpreadDuration = dblSpreadDurationMultiplier * (dblCleanPrice -
 			bond.priceFromZSpread (
 				valParams,
 				csqcBase,
 				null,
 				wi.date(),
 				wi.factor(),
-				dblZSpreadToExercise + 0.002
+				dblZSpreadToExercise + 0.001 * dblZSpreadBump
 			)
 		) / dblCleanPrice;
 
@@ -926,7 +957,8 @@ public class MZQ_MCQGQO {
 		Map<String, GovvieCurve> mapGovvieCurve = TenorBumpedGovvieCurve (
 			dtSpot,
 			strTreasuryCode,
-			0.0001
+			0.0001,
+			adblGovvieYield
 		);
 
 		for (Map.Entry<String, GovvieCurve> meGovvie : mapGovvieCurve.entrySet()) {
@@ -1029,9 +1061,17 @@ public class MZQ_MCQGQO {
 		double dblESpreadToExercise = bond.zSpreadFromPrice (
 			valParams,
 			MarketParamsBuilder.Create (
-				EuroDollarFundingCurve (
+				LatentMarketStateBuilder.SmoothFundingCurve (
 					dtSpot,
-					strCurrency
+					strCurrency,
+					astrDepositTenor,
+					adblDepositQuote,
+					"ForwardRate",
+					adblFuturesQuote,
+					"ForwardRate",
+					null,
+					null,
+					"SwapRate"
 				),
 				gc,
 				null,
@@ -1093,6 +1133,32 @@ public class MZQ_MCQGQO {
 		);
 
 		System.out.println();
+
+		AladdinReplicator ar = new AladdinReplicator (
+			dblCleanPrice,
+			dblIssuePrice,
+			dblIssueAmount,
+			dtSpot,
+			astrDepositTenor,
+			adblDepositQuote,
+			adblFuturesQuote,
+			astrFixFloatTenor,
+			adblFixFloatQuote,
+			dblCustomYieldBump,
+			dblCustomCreditBasisBump,
+			dblZSpreadBump,
+			dblSpreadDurationMultiplier,
+			strTreasuryCode,
+			astrGovvieTenor,
+			adblGovvieYield,
+			astrCreditTenor,
+			adblCreditQuote,
+			dblFX,
+			iSettleLag,
+			bond
+		);
+
+		System.out.println (ar.generateRun());
 
 		System.out.println ("\t||------------------------------------------------||");
 

@@ -47,32 +47,32 @@ package org.drip.service.scenario;
  */
 
 /**
- * NamedFieldArray holds an Array Double Field Values and their Name.
+ * NamedFieldMap holds a Double Map of Field Values and their Name.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class NamedFieldArray {
-	private double[] _adblValue = null;
+public class NamedFieldMap {
 	private java.lang.String _strName = "";
+	private java.util.Map<java.lang.String, java.lang.Double> _mapValue = null;
 
 	/**
-	 * NamedFieldArray Constructor
+	 * NamedFieldMap Constructor
 	 * 
 	 * @param strName Field Name
-	 * @param adblValue Field Value Value
+	 * @param mapValue Field Value Map
 	 * 
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public NamedFieldArray (
+	public NamedFieldMap (
 		final java.lang.String strName,
-		final double[] adblValue)
+		final java.util.Map<java.lang.String, java.lang.Double>  mapValue)
 		throws java.lang.Exception
 	{
-		if (null == (_strName = strName) || _strName.isEmpty() || null == _adblValue || 0 ==
-			_adblValue.length || !org.drip.quant.common.NumberUtil.IsValid (_adblValue))
-			throw new java.lang.Exception ("NamedFieldArray Constructor => Invalid Inputs");
+		if (null == (_strName = strName) || _strName.isEmpty() || null == (_mapValue = mapValue) || 0 ==
+			mapValue.size())
+			throw new java.lang.Exception ("NamedFieldMap Constructor => Invalid Inputs");
 	}
 
 	/**
@@ -87,13 +87,13 @@ public class NamedFieldArray {
 	}
 
 	/**
-	 * Retrieve the Field Value Array
+	 * Retrieve the Field Value Map
 	 * 
-	 * @return The Field Value Array
+	 * @return The Field Value Map
 	 */
 
-	public double[] value()
+	public java.util.Map<java.lang.String, java.lang.Double> value()
 	{
-		return _adblValue;
+		return _mapValue;
 	}
 }
