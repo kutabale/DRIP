@@ -1,6 +1,6 @@
 # DRIP
 
-**v3.01**  *31 July 2017*
+**v3.02**  *2 August 2017*
 
 DRIP aims to collects the models and provides libraries for fixed income valuation and adjustments, asset allocation and transaction cost analytics, and supporting libraries in numerical optimization and statistical learning.
 
