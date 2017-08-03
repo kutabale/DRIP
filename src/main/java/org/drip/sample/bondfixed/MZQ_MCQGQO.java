@@ -1154,6 +1154,7 @@ public class MZQ_MCQGQO {
 			astrCreditTenor,
 			adblCreditQuote,
 			dblFX,
+			Double.NaN,
 			iSettleLag,
 			bond
 		);
@@ -1167,6 +1168,14 @@ public class MZQ_MCQGQO {
 		NamedFieldMap nfmLIBORKRD = mapNFM.get ("LIBOR KRD");
 
 		NamedFieldMap nfmLIBORKPRD = mapNFM.get ("LIBOR KPRD");
+
+		NamedFieldMap nfmGovvieKRD = mapNFM.get ("Govvie KRD");
+
+		NamedFieldMap nfmGovvieKPRD = mapNFM.get ("Govvie KPRD");
+
+		NamedFieldMap nfmCreditKRD = mapNFM.get ("Credit KRD");
+
+		NamedFieldMap nfmCreditKPRD = mapNFM.get ("Credit KPRD");
 
 		System.out.println ("\t||------------------------------------------------||");
 
@@ -1414,7 +1423,8 @@ public class MZQ_MCQGQO {
 		for (Map.Entry<String, Double> meGovvieKRD : mapGovvieKRD.entrySet())
 			System.out.println (
 				"\t|| Govvie KRD " + meGovvieKRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meGovvieKRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meGovvieKRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmGovvieKRD.value().get (meGovvieKRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1422,7 +1432,8 @@ public class MZQ_MCQGQO {
 		for (Map.Entry<String, Double> meGovvieKPRD : mapGovvieKPRD.entrySet())
 			System.out.println (
 				"\t|| Govvie KPRD " + meGovvieKPRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meGovvieKPRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meGovvieKPRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmGovvieKPRD.value().get (meGovvieKPRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1430,7 +1441,8 @@ public class MZQ_MCQGQO {
 		for (Map.Entry<String, Double> meCreditKRD : mapCreditKRD.entrySet())
 			System.out.println (
 				"\t|| Credit KRD " + meCreditKRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meCreditKRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meCreditKRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmCreditKRD.value().get (meCreditKRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1438,7 +1450,8 @@ public class MZQ_MCQGQO {
 		for (Map.Entry<String, Double> meCreditKPRD : mapCreditKPRD.entrySet())
 			System.out.println (
 				"\t|| Credit KPRD " + meCreditKPRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meCreditKPRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meCreditKPRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmCreditKPRD.value().get (meCreditKPRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
