@@ -215,12 +215,9 @@ public class AladdinReplicator {
 			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
 
 		for (java.util.Map.Entry<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve>
-			meTenorFunding : mapTenorFunding.entrySet()) {
-			System.out.println (meTenorFunding);
-
+			meTenorFunding : mapTenorFunding.entrySet())
 			_mapCSQCFunding.put (meTenorFunding.getKey(), org.drip.param.creator.MarketParamsBuilder.Create
 				(meTenorFunding.getValue(), gc, null, null, null, null, null));
-		}
 
 		java.util.Map<java.lang.String, org.drip.state.govvie.GovvieCurve> mapTenorGovvie =
 			org.drip.service.template.LatentMarketStateBuilder.BumpedGovvieCurve (_strGovvieCode, _dtSpot,
@@ -717,9 +714,6 @@ public class AladdinReplicator {
 			double dblZSpreadToExercise = _bond.zSpreadFromPrice (_valParams, _csqcFundingBase, null,
 				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
 
-			double dblOASFromWorkout = _bond.oasFromPrice (_valParams, _csqcFundingBase, null, iWorkoutDate,
-				dblWorkoutFactor, _dblCurrentPrice);
-
 			double dblBondBasisToMaturity = _bond.bondBasisFromPrice (_valParams, _csqcFundingBase, null,
 				_dblCurrentPrice);
 
@@ -837,14 +831,18 @@ public class AladdinReplicator {
 					iWorkoutDate, dblWorkoutFactor, dblParCreditBasisToExercise)));
 			}
 
-			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("CleanPrice",
-				_dblCurrentPrice)))
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Price", _dblCurrentPrice)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Market Value",
+				_dblCurrentPrice * _dblIssueAmount)))
 				return null;
 
 			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued", dblAccrued)))
 				return null;
 
-			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued$", dblAccrued)))
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued$", dblAccrued *
+				_dblIssueAmount)))
 				return null;
 
 			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Accrued Interest Factor",
@@ -875,7 +873,7 @@ public class AladdinReplicator {
 				dblYieldFromPriceNextPut)))
 				return null;
 
-			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("NominalYield",
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Nominal Yield",
 				dblNominalYield)))
 				return null;
 
@@ -886,7 +884,10 @@ public class AladdinReplicator {
 				dblZSpreadToMaturity)))
 				return null;
 
-			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("OAS", dblOASFromWorkout)))
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("OAS", dblZSpreadToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("TSY OAS", dblOASToExercise)))
 				return null;
 
 			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("MOD DUR",
@@ -953,16 +954,19 @@ public class AladdinReplicator {
 				dblWALToExercise)))
 				return null;
 
-			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL2",
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL",
 				dblWALPrincipalOnlyToExercise)))
 				return null;
 
-			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL3",
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL2",
 				dblWALLossOnlyToExercise)))
 				return null;
 
-			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL4",
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL3",
 				dblWALCouponOnlyToExercise)))
+				return null;
+
+			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL4", dblWALToExercise)))
 				return null;
 
 			if (!arr.addNamedFieldMap (new org.drip.service.scenario.NamedFieldMap ("LIBOR KRD",
