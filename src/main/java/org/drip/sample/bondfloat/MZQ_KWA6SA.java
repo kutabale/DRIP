@@ -13,7 +13,7 @@ import org.drip.product.credit.BondComponent;
 import org.drip.product.params.EmbeddedOptionSchedule;
 import org.drip.quant.common.FormatUtil;
 import org.drip.service.env.EnvManager;
-import org.drip.service.scenario.AladdinReplicator;
+import org.drip.service.scenario.*;
 import org.drip.service.template.LatentMarketStateBuilder;
 import org.drip.state.credit.CreditCurve;
 import org.drip.state.discount.MergedDiscountForwardCurve;
@@ -540,7 +540,6 @@ public class MZQ_KWA6SA {
 		double dblIssuePrice = 1.;
 		String strCurrency = "USD";
 		double dblZSpreadBump = 20.;
-		String strRateIndex = "USD-3M";
 		double dblIssueAmount = 2.60e7;
 		String strTreasuryCode = "UST";
 		double dblCustomYieldBump = 20.;
@@ -584,18 +583,19 @@ public class MZQ_KWA6SA {
 
 		double dblUSD3MLIBOR = mdfcBase.libor (
 			dtSpot,
-			"3M"
+			(12 / iCouponFreq) + "M"
 		);
 
-		double dblResetRate = dblFullFirstCoupon - dblUSD3MLIBOR;
+		double dblResetRate = dblUSD3MLIBOR;
+		String strRateIndex = strCurrency + "-" + (12 / iCouponFreq) + "M";
 
 		BondComponent bond = BondBuilder.CreateSimpleFloater (
 			strName,
 			strCurrency,
 			strRateIndex,
 			strName,
-			dblResetRate,
-			2,
+			dblFullFirstCoupon - dblUSD3MLIBOR,
+			iCouponFreq,
 			"30/360",
 			dtEffective,
 			dtMaturity,
@@ -1213,7 +1213,23 @@ public class MZQ_KWA6SA {
 			bond
 		);
 
-		System.out.println (ar);
+		AladdinReplicationRun arr = ar.generateRun();
+
+		Map<String, NamedField> mapNF = arr.namedField();
+
+		Map<String, NamedFieldMap> mapNFM = arr.namedFieldMap();
+
+		NamedFieldMap nfmLIBORKRD = mapNFM.get ("LIBOR KRD");
+
+		NamedFieldMap nfmLIBORKPRD = mapNFM.get ("LIBOR KPRD");
+
+		NamedFieldMap nfmGovvieKRD = mapNFM.get ("Govvie KRD");
+
+		NamedFieldMap nfmGovvieKPRD = mapNFM.get ("Govvie KPRD");
+
+		NamedFieldMap nfmCreditKRD = mapNFM.get ("Credit KRD");
+
+		NamedFieldMap nfmCreditKPRD = mapNFM.get ("Credit KPRD");
 
 		System.out.println();
 
@@ -1226,182 +1242,218 @@ public class MZQ_KWA6SA {
 
 		System.out.println (
 			"\t|| Price                   => " +
-			FormatUtil.FormatDouble (dblCleanPrice, 3, 3, 100.)
+			FormatUtil.FormatDouble (dblCleanPrice, 3, 3, 100.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Price").value(), 3, 3, 100.)
 		);
 
 		System.out.println (
 			"\t|| Market Value            => " +
-			FormatUtil.FormatDouble (dblCleanPrice * dblIssueAmount, 7, 2, 1.)
+			FormatUtil.FormatDouble (dblCleanPrice * dblIssueAmount, 7, 2, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Market Value").value(), 7, 2, 1.)
 		);
 
 		System.out.println (
 			"\t|| Accrued                 => " +
-			FormatUtil.FormatDouble (dblAccrued, 1, 4, 1.)
+			FormatUtil.FormatDouble (dblAccrued, 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Accrued").value(), 1, 4, 1.)
 		);
 
 		System.out.println (
 			"\t|| Accrued                 => " +
-			FormatUtil.FormatDouble (dblAccrued * dblIssueAmount, 5, 2, 1.)
+			FormatUtil.FormatDouble (dblAccrued * dblIssueAmount, 5, 2, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Accrued$").value(), 5, 2, 1.)
 		);
 
 		System.out.println (
 			"\t|| Accrued Interest Factor => " +
-			FormatUtil.FormatDouble (dblAccrued * dblFX, 1, 4, 1.)
+			FormatUtil.FormatDouble (dblAccrued * dblFX, 1, 4, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Accrued Interest Factor").value(), 1, 4, 1.)
 		);
 
 		System.out.println (
 			"\t|| Yield To Maturity       => " +
-			FormatUtil.FormatDouble (dblYieldToMaturity, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblYieldToMaturity, 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (mapNF.get ("Yield To Maturity").value(), 1, 2, 100.) + "%"
 		);
 
 		System.out.println (
 			"\t|| Yield To Maturity CBE   => " +
-			FormatUtil.FormatDouble (dblBondEquivalentYieldToMaturity, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblBondEquivalentYieldToMaturity, 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (mapNF.get ("Yield To Maturity CBE").value(), 1, 2, 100.) + "%"
 		);
 
 		System.out.println (
 			"\t|| YTM fwdCpn              => " +
-			FormatUtil.FormatDouble (dblFlatForwardRateYieldToMaturity, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblFlatForwardRateYieldToMaturity, 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (mapNF.get ("YTM fwdCpn").value(), 1, 2, 100.) + "%"
 		);
 
 		System.out.println (
 			"\t|| Yield To Worst          => " +
-			FormatUtil.FormatDouble (dblYieldToExercise, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblYieldToExercise, 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (mapNF.get ("Yield To Worst").value(), 1, 2, 100.) + "%"
 		);
 
 		System.out.println (
 			"\t|| YIELD TO CALL           => " +
-			FormatUtil.FormatDouble (dblYieldToNextCall, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblYieldToNextCall, 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (mapNF.get ("YIELD TO CALL").value(), 1, 2, 100.) + "%"
 		);
 
 		System.out.println (
 			"\t|| Nominal Yield           => " +
-			FormatUtil.FormatDouble (dblNominalYield, 1, 2, 100.) + "%"
+			FormatUtil.FormatDouble (dblNominalYield, 1, 2, 100.) + "% | " +
+			FormatUtil.FormatDouble (mapNF.get ("Nominal Yield").value(), 1, 2, 100.) + "%"
 		);
 
 		System.out.println (
 			"\t|| Z_Spread                => " +
-			FormatUtil.FormatDouble (dblOASToMaturity, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblOASToMaturity, 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Z_Spread").value(), 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| Z_Vol_OAS               => " +
-			FormatUtil.FormatDouble (dblZSpreadToMaturity, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblZSpreadToMaturity, 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Z_Vol_OAS").value(), 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| OAS                     => " +
-			FormatUtil.FormatDouble (dblZSpreadToExercise, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblZSpreadToExercise, 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("OAS").value(), 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| TSY OAS                 => " +
-			FormatUtil.FormatDouble (dblOASToExercise, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblOASToExercise, 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("TSY OAS").value(), 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| MOD DUR                 => " +
-			FormatUtil.FormatDouble (dblModifiedDurationToMaturity, 1, 3, 10000.)
+			FormatUtil.FormatDouble (dblModifiedDurationToMaturity, 1, 3, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("MOD DUR").value(), 1, 3, 10000.)
 		);
 
 		System.out.println (
 			"\t|| MACAULAY DURATION       => " +
-			FormatUtil.FormatDouble (dblMacaulayDurationToMaturity, 1, 3, 1.)
+			FormatUtil.FormatDouble (dblMacaulayDurationToMaturity, 1, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("MACAULAY DURATION").value(), 1, 3, 1.)
 		);
 
 		System.out.println (
 			"\t|| MOD DUR TO WORST        => " +
-			FormatUtil.FormatDouble (dblModifiedDurationToWorst, 1, 3, 10000.)
+			FormatUtil.FormatDouble (dblModifiedDurationToWorst, 1, 3, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("MOD DUR TO WORST").value(), 1, 3, 10000.)
 		);
 
 		System.out.println (
 			"\t|| EFFECTIVE DURATION      => " +
-			FormatUtil.FormatDouble (dblEffectiveDuration, 1, 3, 10000.)
+			FormatUtil.FormatDouble (dblEffectiveDuration, 1, 3, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("EFFECTIVE DURATION").value(), 1, 3, 10000.)
 		);
 
 		System.out.println (
 			"\t|| EFFECTIVE DURATION ADJ  => " +
-			FormatUtil.FormatDouble (dblEffectiveDurationAdj, 1, 3, 10000.)
+			FormatUtil.FormatDouble (dblEffectiveDurationAdj, 1, 3, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("EFFECTIVE DURATION ADJ").value(), 1, 3, 10000.)
 		);
 
 		System.out.println (
 			"\t|| OAD MULT                => " +
-			FormatUtil.FormatDouble (dblEffectiveDurationAdj / dblEffectiveDuration, 1, 3, 1.)
+			FormatUtil.FormatDouble (dblEffectiveDurationAdj / dblEffectiveDuration, 1, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("OAD MULT").value(), 1, 3, 1.)
 		);
 
 		System.out.println (
 			"\t|| Spread Dur              => " +
-			FormatUtil.FormatDouble (dblSpreadDuration, 1, 3, 100.)
+			FormatUtil.FormatDouble (dblSpreadDuration, 1, 3, 100.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Spread Dur").value(), 1, 3, 100.)
 		);
 
 		System.out.println (
 			"\t|| Spread Dur              => " +
-			FormatUtil.FormatDouble (dblSpreadDuration * dblIssueAmount, 1, 3, 1.)
+			FormatUtil.FormatDouble (dblSpreadDuration * dblIssueAmount, 1, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Spread Dur $").value(), 1, 3, 1.)
 		);
 
 		System.out.println (
 			"\t|| DV01                    => " +
-			FormatUtil.FormatDouble (dblDV01, 1, 3, 10000.)
+			FormatUtil.FormatDouble (dblDV01, 1, 3, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("DV01").value(), 1, 3, 10000.)
 		);
 
 		System.out.println (
 			"\t|| CV01                    => " +
-			FormatUtil.FormatDouble (dblCV01, 1, 3, 10000.)
+			FormatUtil.FormatDouble (dblCV01, 1, 3, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("CV01").value(), 1, 3, 10000.)
 		);
 
 		System.out.println (
 			"\t|| Convexity               => " +
-			FormatUtil.FormatDouble (dblConvexityToExercise, 1, 3, 1000000.)
+			FormatUtil.FormatDouble (dblConvexityToExercise, 1, 3, 1000000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Convexity").value(), 1, 3, 1000000.)
 		);
 
 		System.out.println (
 			"\t|| Modified Convexity      => " +
-			FormatUtil.FormatDouble (dblConvexityToExercise, 1, 3, 1000000.)
+			FormatUtil.FormatDouble (dblConvexityToExercise, 1, 3, 1000000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("Modified Convexity").value(), 1, 3, 1000000.)
 		);
 
 		System.out.println (
 			"\t|| DISCOUNT MARGIN         => " +
-			FormatUtil.FormatDouble (dblDiscountMarginToExercise, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblDiscountMarginToExercise, 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("DISCOUNT MARGIN").value(), 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| E-Spread                => " +
-			FormatUtil.FormatDouble (dblESpreadToExercise, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblESpreadToExercise, 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("E-Spread").value(), 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| I-Spread                => " +
-			FormatUtil.FormatDouble (dblISpreadToExercise, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblISpreadToExercise, 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("I-Spread").value(), 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| J-Spread                => " +
-			FormatUtil.FormatDouble (dblJSpreadToExercise, 3, 1, 10000.)
+			FormatUtil.FormatDouble (dblJSpreadToExercise, 3, 1, 10000.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("J-Spread").value(), 3, 1, 10000.)
 		);
 
 		System.out.println (
 			"\t|| WAL To Worst            => " +
-			FormatUtil.FormatDouble (dblWALToExercise, 1, 3, 1.)
+			FormatUtil.FormatDouble (dblWALToExercise, 1, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("WAL To Worst").value(), 1, 3, 1.)
 		);
 
 		System.out.println (
 			"\t|| WAL                     => " +
-			FormatUtil.FormatDouble (dblWALPrincipalOnlyToExercise, 1, 3, 1.)
+			FormatUtil.FormatDouble (dblWALPrincipalOnlyToExercise, 1, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("WAL").value(), 1, 3, 1.)
 		);
 
 		System.out.println (
 			"\t|| WAL2                    => " +
-			FormatUtil.FormatDouble (dblWALLossOnlyToExercise, 1, 3, 1.)
+			FormatUtil.FormatDouble (dblWALLossOnlyToExercise, 1, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("WAL2").value(), 1, 3, 1.)
 		);
 
 		System.out.println (
 			"\t|| WAL3                    => " +
-			FormatUtil.FormatDouble (dblWALCouponOnlyToExercise, 1, 3, 1.)
+			FormatUtil.FormatDouble (dblWALCouponOnlyToExercise, 1, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("WAL3").value(), 1, 3, 1.)
 		);
 
 		System.out.println (
 			"\t|| WAL4                    => " +
-			FormatUtil.FormatDouble (dblWALToExercise, 1, 3, 1.)
+			FormatUtil.FormatDouble (dblWALToExercise, 1, 3, 1.) + " | " +
+			FormatUtil.FormatDouble (mapNF.get ("WAL4").value(), 1, 3, 1.)
 		);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1409,7 +1461,8 @@ public class MZQ_KWA6SA {
 		for (Map.Entry<String, Double> meLIBORKRD : mapLIBORKRD.entrySet())
 			System.out.println (
 				"\t|| LIBOR KRD " + meLIBORKRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meLIBORKRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meLIBORKRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmLIBORKRD.value().get (meLIBORKRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1417,7 +1470,8 @@ public class MZQ_KWA6SA {
 		for (Map.Entry<String, Double> meLIBORKPRD : mapLIBORKPRD.entrySet())
 			System.out.println (
 				"\t|| LIBOR KPRD " + meLIBORKPRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meLIBORKPRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meLIBORKPRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmLIBORKPRD.value().get (meLIBORKPRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1425,7 +1479,8 @@ public class MZQ_KWA6SA {
 		for (Map.Entry<String, Double> meGovvieKRD : mapGovvieKRD.entrySet())
 			System.out.println (
 				"\t|| Govvie KRD " + meGovvieKRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meGovvieKRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meGovvieKRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmGovvieKRD.value().get (meGovvieKRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1433,7 +1488,8 @@ public class MZQ_KWA6SA {
 		for (Map.Entry<String, Double> meGovvieKPRD : mapGovvieKPRD.entrySet())
 			System.out.println (
 				"\t|| Govvie KPRD " + meGovvieKPRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meGovvieKPRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meGovvieKPRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmGovvieKPRD.value().get (meGovvieKPRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1441,7 +1497,8 @@ public class MZQ_KWA6SA {
 		for (Map.Entry<String, Double> meCreditKRD : mapCreditKRD.entrySet())
 			System.out.println (
 				"\t|| Credit KRD " + meCreditKRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meCreditKRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meCreditKRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmCreditKRD.value().get (meCreditKRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");
@@ -1449,7 +1506,8 @@ public class MZQ_KWA6SA {
 		for (Map.Entry<String, Double> meCreditKPRD : mapCreditKPRD.entrySet())
 			System.out.println (
 				"\t|| Credit KPRD " + meCreditKPRD.getKey() + " => " +
-				FormatUtil.FormatDouble (meCreditKPRD.getValue(), 1, 3, 10000.)
+				FormatUtil.FormatDouble (meCreditKPRD.getValue(), 1, 3, 10000.) + " | " +
+				FormatUtil.FormatDouble (nfmCreditKPRD.value().get (meCreditKPRD.getKey()), 1, 3, 10000.)
 			);
 
 		System.out.println ("\t||------------------------------------------------||");

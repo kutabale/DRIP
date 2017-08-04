@@ -835,9 +835,12 @@ public class AladdinReplicator {
 						null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise +
 							_dblCustomCreditBasisBump)) / _dblCurrentPrice / _dblCustomCreditBasisBump;
 
-			double dblSpreadDuration = _dblSpreadDurationMultiplier * (_dblCurrentPrice -
-				_bond.priceFromZSpread (_valParams, _csqcFundingBase, null, iWorkoutDate, dblWorkoutFactor,
-					dblZSpreadToExercise + 0.0001 * _dblZSpreadBump)) / _dblCurrentPrice;
+			double dblSpreadDuration = _dblSpreadDurationMultiplier * (_dblCurrentPrice - (_bond.isFloater()
+				? _bond.priceFromDiscountMargin (_valParams, _csqcFundingBase, null, iWorkoutDate,
+					dblWorkoutFactor, dblZSpreadToExercise + 0.0001 * _dblZSpreadBump) :
+						_bond.priceFromZSpread (_valParams, _csqcFundingBase, null, iWorkoutDate,
+							dblWorkoutFactor, dblZSpreadToExercise + 0.0001 * _dblZSpreadBump))) /
+								_dblCurrentPrice;
 
 			double dblCV01 = _dblCurrentPrice - _bond.priceFromCreditBasis (_valParams, _csqcCredit01Up,
 				null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise);
