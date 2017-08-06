@@ -47,12 +47,12 @@ package org.drip.service.scenario;
  */
 
 /**
- * AladdinReplicationRun holds the Results of a Full Aladdin Replication Run,
+ * AladdinBondReplicationRun holds the Results of a Full Aladdin Bond Replication Run,
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class AladdinReplicationRun {
+public class AladdinBondReplicationRun {
 	private java.util.Map<java.lang.String, org.drip.service.scenario.NamedField> _mapNF = new
 		org.drip.analytics.support.CaseInsensitiveHashMap<org.drip.service.scenario.NamedField>();
 
@@ -63,7 +63,7 @@ public class AladdinReplicationRun {
 	 * Empty AladdinReplicationRun Constructor
 	 */
 
-	public AladdinReplicationRun()
+	public AladdinBondReplicationRun()
 	{
 	}
 
@@ -123,5 +123,85 @@ public class AladdinReplicationRun {
 	public java.util.Map<java.lang.String, org.drip.service.scenario.NamedFieldMap> namedFieldMap()
 	{
 		return _mapNFM;
+	}
+
+	/**
+	 * Generate The Headers
+	 * 
+	 * @return The Headers
+	 */
+
+	public java.lang.String header()
+	{
+		java.lang.String strHeader = "";
+
+		for (java.util.Map.Entry<java.lang.String, org.drip.service.scenario.NamedField> meNF :
+			_mapNF.entrySet())
+			strHeader = strHeader + meNF.getKey() + ",";
+
+		for (java.util.Map.Entry<java.lang.String, org.drip.service.scenario.NamedFieldMap> meNFM :
+			_mapNFM.entrySet()) {
+			java.lang.String strNFMKey = meNFM.getKey() + ",";
+
+			org.drip.service.scenario.NamedFieldMap nfm = meNFM.getValue();
+
+			for (java.util.Map.Entry<java.lang.String, java.lang.Double> meNFMEntry : nfm.value().entrySet())
+				strHeader = strHeader + strNFMKey + "::" + meNFMEntry.getKey() + ",";
+		}
+
+		return strHeader;
+	}
+
+	/**
+	 * Generate The Values
+	 * 
+	 * @return The Values
+	 */
+
+	public java.lang.String value()
+	{
+		java.lang.String strValue = "";
+
+		for (java.util.Map.Entry<java.lang.String, org.drip.service.scenario.NamedField> meNF :
+			_mapNF.entrySet())
+			strValue = strValue + meNF.getValue().value() + ",";
+
+		for (java.util.Map.Entry<java.lang.String, org.drip.service.scenario.NamedFieldMap> meNFM :
+			_mapNFM.entrySet()) {
+			org.drip.service.scenario.NamedFieldMap nfm = meNFM.getValue();
+
+			for (java.util.Map.Entry<java.lang.String, java.lang.Double> meNFMEntry : nfm.value().entrySet())
+				strValue = strValue + meNFMEntry.getValue() + ",";
+		}
+
+		return strValue;
+	}
+
+	/**
+	 * Display the Measures
+	 * 
+	 * @return The Measures
+	 */
+
+	public java.lang.String display()
+	{
+		java.lang.String strValue = "";
+
+		for (java.util.Map.Entry<java.lang.String, org.drip.service.scenario.NamedField> meNF :
+			_mapNF.entrySet())
+			strValue = strValue + meNF.getKey() + " => " + meNF.getValue().value() + "\n";
+
+		for (java.util.Map.Entry<java.lang.String, org.drip.service.scenario.NamedFieldMap> meNFM :
+			_mapNFM.entrySet()) {
+			org.drip.service.scenario.NamedFieldMap nfm = meNFM.getValue();
+
+			java.lang.String strNFMKey = meNFM.getKey();
+
+			for (java.util.Map.Entry<java.lang.String, java.lang.Double> meNFMEntry : nfm.value().entrySet())
+				strValue = strValue + strNFMKey + "::" + meNFMEntry.getKey() + " => " + meNFMEntry.getValue()
+					+ "\n";
+		}
+
+		return strValue;
 	}
 }

@@ -1,5 +1,5 @@
 
-package org.drip.sample.bondfloat;
+package org.drip.sample.aladdin;
 
 import java.util.*;
 
@@ -65,12 +65,12 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * MZQ_KWA6SA demonstrates the Analytics Calculation for the Bond KWA6SA.
+ * Reconciler_Float demonstrates the Analytics Calculation/Reconciliation for the Floater Bond KWA6SA.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class MZQ_KWA6SA {
+public class Reconciler_Float {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -535,7 +535,7 @@ public class MZQ_KWA6SA {
 		double dblFX = 1.;
 		int iSettleLag = 3;
 		int iCouponFreq = 12;
-		String strName = "MCQGQO";
+		String strName = "KWA6SA";
 		double dblCleanPrice = 1.;
 		double dblIssuePrice = 1.;
 		String strCurrency = "USD";
@@ -545,8 +545,6 @@ public class MZQ_KWA6SA {
 		double dblCustomYieldBump = 20.;
 		double dblFullFirstCoupon = 0.0425;
 		String strCouponDayCount = "30/360";
-		EmbeddedOptionSchedule eosPut = null;
-		EmbeddedOptionSchedule eosCall = null;
 		double dblCustomCreditBasisBump = 20.;
 		double dblSpreadDurationMultiplier = 5.;
 
@@ -609,8 +607,21 @@ public class MZQ_KWA6SA {
 
 		SetEOS (
 			bond,
-			eosCall,
-			eosPut
+			new EmbeddedOptionSchedule (
+				new int[] {
+					DateUtil.CreateFromYMD (2019, 02, 14).julian(),
+				},
+				new double[] {
+					1.0000,
+				},
+				false,
+				15,
+				false,
+				Double.NaN,
+				"",
+				Double.NaN
+			),
+			null
 		);
 
 		GovvieCurve gc = GovvieCurve (
@@ -1188,7 +1199,7 @@ public class MZQ_KWA6SA {
 			wi.factor()
 		);
 
-		AladdinReplicator ar = new AladdinReplicator (
+		AladdinBondReplicator ar = new AladdinBondReplicator (
 			dblCleanPrice,
 			dblIssuePrice,
 			dblIssueAmount,
@@ -1213,7 +1224,7 @@ public class MZQ_KWA6SA {
 			bond
 		);
 
-		AladdinReplicationRun arr = ar.generateRun();
+		AladdinBondReplicationRun arr = ar.generateRun();
 
 		Map<String, NamedField> mapNF = arr.namedField();
 

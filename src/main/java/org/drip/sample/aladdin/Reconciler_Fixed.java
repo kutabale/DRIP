@@ -1,5 +1,5 @@
 
-package org.drip.sample.bondfixed;
+package org.drip.sample.aladdin;
 
 import java.util.*;
 
@@ -64,12 +64,13 @@ import org.drip.state.govvie.GovvieCurve;
  */
 
 /**
- * MZQ_MCQGQO demonstrates the Analytics Calculation for the Bond MCQGQO.
+ * Reconciler_Fixed demonstrates the Analytics Calculation/Reconciliation for the the Fixed Coupon Bond
+ *  MCQGQO.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class MZQ_MCQGQO {
+public class Reconciler_Fixed {
 
 	private static final MergedDiscountForwardCurve FundingCurve (
 		final JulianDate dtSpot,
@@ -544,8 +545,6 @@ public class MZQ_MCQGQO {
 		String strTreasuryCode = "UST";
 		double dblCustomYieldBump = 20.;
 		String strCouponDayCount = "30/360";
-		EmbeddedOptionSchedule eosPut = null;
-		EmbeddedOptionSchedule eosCall = null;
 		double dblCustomCreditBasisBump = 20.;
 		double dblSpreadDurationMultiplier = 5.;
 
@@ -576,8 +575,8 @@ public class MZQ_MCQGQO {
 
 		SetEOS (
 			bond,
-			eosCall,
-			eosPut
+			null,
+			null
 		);
 
 		int iSpotDate = dtSpot.julian();
@@ -1134,7 +1133,7 @@ public class MZQ_MCQGQO {
 
 		System.out.println();
 
-		AladdinReplicator ar = new AladdinReplicator (
+		AladdinBondReplicator ar = new AladdinBondReplicator (
 			dblCleanPrice,
 			dblIssuePrice,
 			dblIssueAmount,
@@ -1159,7 +1158,7 @@ public class MZQ_MCQGQO {
 			bond
 		);
 
-		AladdinReplicationRun arr = ar.generateRun();
+		AladdinBondReplicationRun arr = ar.generateRun();
 
 		Map<String, NamedField> mapNF = arr.namedField();
 

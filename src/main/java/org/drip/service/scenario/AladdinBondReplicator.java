@@ -47,12 +47,12 @@ package org.drip.service.scenario;
  */
 
 /**
- * AladdinReplicatorSettings generates a Target Set of Sensitivity and Relative Value Runs.
+ * AladdinBondReplicator generates a Target Set of Sensitivity and Relative Value Runs.
  * 
  * @author Lakshmi Krishnamurthy
  */
 
-public class AladdinReplicator {
+public class AladdinBondReplicator {
 	private int _iSettleLag = -1;
 	private double[] _adblGovvieQuote = null;
 	private double[] _adblCreditQuote = null;
@@ -98,7 +98,7 @@ public class AladdinReplicator {
 			org.drip.analytics.support.CaseInsensitiveHashMap<org.drip.param.market.CurveSurfaceQuoteContainer>();
 
 	/**
-	 * AladdinReplicator Constructor
+	 * AladdinBondReplicator Constructor
 	 * 
 	 * @param dblCurrentPrice Current Price
 	 * @param dblIssuePrice Issue Price
@@ -126,7 +126,7 @@ public class AladdinReplicator {
 	 * @throws java.lang.Exception Thrown if the Inputs are Invalid
 	 */
 
-	public AladdinReplicator (
+	public AladdinBondReplicator (
 		final double dblCurrentPrice,
 		final double dblIssuePrice,
 		final double dblIssueAmount,
@@ -156,7 +156,7 @@ public class AladdinReplicator {
 				!org.drip.quant.common.NumberUtil.IsValid (_dblIssueAmount = dblIssueAmount) || null ==
 					(_dtSpot = dtSpot) || !org.drip.quant.common.NumberUtil.IsValid (_dblFX = dblFX) || 0. >=
 						_dblFX || 0 > (_iSettleLag = iSettleLag) || null == (_bond = bond))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		_dblResetRate = dblResetRate;
 		_strGovvieCode = strGovvieCode;
@@ -177,7 +177,7 @@ public class AladdinReplicator {
 		java.lang.String strCurrency = _bond.currency();
 
 		if (null == (_dtSettle = _dtSpot.addBusDays (_iSettleLag, strCurrency)))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		_valParams = new org.drip.param.valuation.ValuationParams (_dtSpot, _dtSettle, strCurrency);
 
@@ -186,7 +186,8 @@ public class AladdinReplicator {
 				_astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote, "ForwardRate",
 					_astrFixFloatTenor, _adblFixFloatQuote, "SwapRate");
 
-		if (null == mdfc) throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+		if (null == mdfc)
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		org.drip.analytics.date.JulianDate[] adtSpot = org.drip.analytics.support.Helper.SpotDateArray
 			(_dtSpot, null == _astrGovvieTenor ? 0 : _astrGovvieTenor.length);
@@ -198,7 +199,8 @@ public class AladdinReplicator {
 			(_strGovvieCode, _dtSpot, adtSpot, adtMaturity, _adblGovvieQuote, _adblGovvieQuote, "Yield",
 				org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING);
 
-		if (null == gc) throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+		if (null == gc)
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		if (_bond.isFloater()) {
 			org.drip.analytics.cashflow.CompositeFloatingPeriod cfp =
@@ -211,12 +213,12 @@ public class AladdinReplicator {
 
 		if (null == (_csqcFundingBase = org.drip.param.creator.MarketParamsBuilder.Create (mdfc, gc, null,
 			null, null, null, null)))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		org.drip.state.identifier.ForwardLabel fl = _bond.isFloater() ? _bond.floaterSetting().fri() : null;
 
 		if (_bond.isFloater() && !_csqcFundingBase.setFixing (_iResetDate, fl, _dblResetRate))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		if (null == (_csqcFunding01Up = org.drip.param.creator.MarketParamsBuilder.Create
 			(org.drip.service.template.LatentMarketStateBuilder.SmoothFundingCurve (_dtSpot, strCurrency,
@@ -225,19 +227,19 @@ public class AladdinReplicator {
 						(_adblFuturesQuote, 0.0001), "ForwardRate", _astrFixFloatTenor,
 							org.drip.analytics.support.Helper.ParallelNodeBump (_adblFixFloatQuote, 0.0001),
 								"SwapRate"), gc, null, null, null, null, null)))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		if (_bond.isFloater() && !_csqcFunding01Up.setFixing (_iResetDate, fl, _dblResetRate + 0.0001))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		if (null == (_csqcFundingEuroDollar = org.drip.param.creator.MarketParamsBuilder.Create
 			(org.drip.service.template.LatentMarketStateBuilder.SmoothFundingCurve (_dtSpot, strCurrency,
 				_astrDepositTenor, _adblDepositQuote, "ForwardRate", _adblFuturesQuote, "ForwardRate", null,
 					null, "SwapRate"), gc, null, null, null, null, null)))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		if (_bond.isFloater() && !_csqcFundingEuroDollar.setFixing (_iResetDate, fl, _dblResetRate))
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		java.util.Map<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve> mapTenorFunding =
 			org.drip.service.template.LatentMarketStateBuilder.BumpedFundingCurve (_dtSpot, strCurrency,
@@ -246,7 +248,7 @@ public class AladdinReplicator {
 						org.drip.service.template.LatentMarketStateBuilder.SMOOTH, 0.0001, false);
 
 		if (null == mapTenorFunding)
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		for (java.util.Map.Entry<java.lang.String, org.drip.state.discount.MergedDiscountForwardCurve>
 			meTenorFunding : mapTenorFunding.entrySet()) {
@@ -255,12 +257,12 @@ public class AladdinReplicator {
 					null, null, null);
 
 			if (null == csqcFundingTenor)
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 			_mapCSQCFunding.put (meTenorFunding.getKey(), csqcFundingTenor);
 
 			if (_bond.isFloater() && !csqcFundingTenor.setFixing (_iResetDate, fl, _dblResetRate + 0.0001))
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 		}
 
 		java.util.Map<java.lang.String, org.drip.state.govvie.GovvieCurve> mapTenorGovvie =
@@ -269,7 +271,7 @@ public class AladdinReplicator {
 					org.drip.service.template.LatentMarketStateBuilder.SHAPE_PRESERVING, 0.0001, false);
 
 		if (null == mapTenorGovvie)
-			throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+			throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 		for (java.util.Map.Entry<java.lang.String, org.drip.state.govvie.GovvieCurve> meTenorGovvie :
 			mapTenorGovvie.entrySet()) {
@@ -278,12 +280,12 @@ public class AladdinReplicator {
 					null, null, null, null);
 
 			if (null == csqcGovvieTenor)
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 			_mapCSQCGovvie.put (meTenorGovvie.getKey(), csqcGovvieTenor);
 
 			if (_bond.isFloater() && !csqcGovvieTenor.setFixing (_iResetDate, fl, _dblResetRate))
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 		}
 
 		org.drip.state.identifier.CreditLabel cl = _bond.creditLabel();
@@ -295,19 +297,19 @@ public class AladdinReplicator {
 				org.drip.service.template.LatentMarketStateBuilder.CreditCurve (_dtSpot, strReferenceEntity,
 					_astrCreditTenor, _adblCreditQuote, _adblCreditQuote, "FairPremium", mdfc), null, null,
 						null, null)))
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 			if (_bond.isFloater() && !_csqcCreditBase.setFixing (_iResetDate, fl, _dblResetRate))
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 			if (null == (_csqcCredit01Up = org.drip.param.creator.MarketParamsBuilder.Create (mdfc, gc,
 				org.drip.service.template.LatentMarketStateBuilder.CreditCurve (_dtSpot, strReferenceEntity,
 					_astrCreditTenor, _adblCreditQuote, org.drip.analytics.support.Helper.ParallelNodeBump
 						(_adblCreditQuote, 1.), "FairPremium", mdfc), null, null, null, null)))
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 			if (_bond.isFloater() && !_csqcCredit01Up.setFixing (_iResetDate, fl, _dblResetRate))
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 			java.util.Map<java.lang.String, org.drip.state.credit.CreditCurve> mapTenorCredit =
 				org.drip.service.template.LatentMarketStateBuilder.BumpedCreditCurve (_dtSpot,
@@ -315,7 +317,7 @@ public class AladdinReplicator {
 						mdfc, 1., false);
 
 			if (null == mapTenorCredit)
-				throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+				throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 			for (java.util.Map.Entry<java.lang.String, org.drip.state.credit.CreditCurve> meTenorCredit :
 				mapTenorCredit.entrySet()) {
@@ -324,12 +326,12 @@ public class AladdinReplicator {
 						null, null, null, null);
 
 				if (null == csqcCreditTenor)
-					throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+					throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 
 				_mapCSQCCredit.put (meTenorCredit.getKey(), csqcCreditTenor);
 
 				if (_bond.isFloater() && !csqcCreditTenor.setFixing (_iResetDate, fl, _dblResetRate))
-					throw new java.lang.Exception ("AladdinReplicator Constructor => Invalid Inputs");
+					throw new java.lang.Exception ("AladdinBondReplicator Constructor => Invalid Inputs");
 			}
 		}
 	}
@@ -706,7 +708,7 @@ public class AladdinReplicator {
 	 * @return Instance of a Replication Run
 	 */
 
-	public org.drip.service.scenario.AladdinReplicationRun generateRun()
+	public org.drip.service.scenario.AladdinBondReplicationRun generateRun()
 	{
 		int iMaturityDate = _bond.maturityDate().julian();
 
@@ -723,8 +725,8 @@ public class AladdinReplicator {
 
 		org.drip.product.params.EmbeddedOptionSchedule eosCall = _bond.callSchedule();
 
-		org.drip.service.scenario.AladdinReplicationRun arr = new
-			org.drip.service.scenario.AladdinReplicationRun();
+		org.drip.service.scenario.AladdinBondReplicationRun arr = new
+			org.drip.service.scenario.AladdinBondReplicationRun();
 
 		org.drip.param.valuation.WorkoutInfo wi = _bond.exerciseYieldFromPrice (_valParams, _csqcFundingBase,
 			null, _dblCurrentPrice);
@@ -1059,7 +1061,8 @@ public class AladdinReplicator {
 				return null;
 
 			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL3",
-				dblWALCouponOnlyToExercise)))
+				!org.drip.quant.common.NumberUtil.IsValid (dblWALCouponOnlyToExercise) ? 0. :
+					dblWALCouponOnlyToExercise)))
 				return null;
 
 			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("WAL4", dblWALToExercise)))
