@@ -112,6 +112,7 @@ org.drip.regression.curvejacobian
 org.drip.regression.fixedpointfinder
 org.drip.regression.spline
 org.drip.sample.agency
+org.drip.sample.aladdin
 org.drip.sample.algo
 org.drip.sample.alm
 org.drip.sample.almgren2003

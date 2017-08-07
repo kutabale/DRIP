@@ -69,7 +69,7 @@ public class Array2D {
 	 * 
 	 * @param strDateAmountVertex The String Array consisting of the Date and the Amount Vertexes
 	 * @param iMaturityDate The Maturity Date
-	 * @param dblInitialAmount The Initial Amount\
+	 * @param dblInitialAmount The Initial Amount
 	 * 
 	 * @return The Array2D Instance
 	 */
@@ -118,6 +118,59 @@ public class Array2D {
 
 		for (int i = 0; i < iNumVertex; ++i)
 			adblVertexFactor[i] = adblVertexOutstanding[i] / dblInitialAmount;
+
+		adblVertexDate[iNumVertex - 1] = iMaturityDate;
+
+		return FromArray (adblVertexDate, adblVertexFactor);
+	}
+
+	/**
+	 * Generate an Array2D Instance from the String Array containing semi-colon delimited Date/Factor Vertex
+	 *  Pair
+	 * 
+	 * @param strDateFactorVertex The String Array containing semi-colon delimited Date/Edge Pair
+	 * @param iMaturityDate The Maturity Date
+	 * @param dblInitialAmount The Initial Amount
+	 * 
+	 * @return The Array2D Instance
+	 */
+
+	public static final Array2D FromDateFactorVertex (
+		final java.lang.String strDateFactorVertex,
+		final int iMaturityDate,
+		final double dblInitialAmount)
+	{
+		if (null == strDateFactorVertex || strDateFactorVertex.isEmpty() ||
+			!org.drip.quant.common.NumberUtil.IsValid (dblInitialAmount))
+			return null;
+
+		java.lang.String[] astrDateFactorVertex = org.drip.quant.common.StringUtil.Split
+			(strDateFactorVertex, ";");
+
+		if (null == astrDateFactorVertex) return null;
+
+		int iNumDateFactorPair = astrDateFactorVertex.length;
+		int iNumVertex = iNumDateFactorPair / 2 + 1;
+		double[] adblVertexDate = new double[iNumVertex];
+		double[] adblVertexFactor = new double[iNumVertex];
+		adblVertexFactor[0] = 1.;
+
+		if (0 == iNumDateFactorPair || 1 == iNumDateFactorPair % 2) return null;
+
+		for (int i = 0; i < iNumVertex - 1; ++i) {
+			org.drip.analytics.date.JulianDate dt = org.drip.analytics.date.DateUtil.FromMDY
+				(astrDateFactorVertex[2 * i], "/");
+
+			java.lang.String strFactor = astrDateFactorVertex[2 * i + 1];
+
+			if (null == dt || null == strFactor || strFactor.isEmpty()) return null;
+
+			adblVertexDate[i] = dt.julian();
+
+			if (!org.drip.quant.common.NumberUtil.IsValid (adblVertexFactor[i + 1] =
+				java.lang.Double.parseDouble (strFactor.trim()) / dblInitialAmount))
+				return null;
+		}
 
 		adblVertexDate[iNumVertex - 1] = iMaturityDate;
 

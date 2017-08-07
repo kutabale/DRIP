@@ -829,7 +829,7 @@ public class AladdinBondReplicator {
 				iWorkoutDate, dblWorkoutFactor, _dblCurrentPrice);
 
 			double dblParCreditBasisToExercise = _bond.creditBasisFromPrice (_valParams, _csqcCreditBase,
-				null, iWorkoutDate, dblWorkoutFactor, 1.);
+				null, iWorkoutDate, dblWorkoutFactor, _dblIssuePrice);
 
 			double dblEffectiveDurationAdjusted = 0.5 * (_bond.priceFromCreditBasis (_valParams,
 				_csqcCreditBase, null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise -
@@ -880,7 +880,7 @@ public class AladdinBondReplicator {
 				dblWorkoutFactor, _dblCurrentPrice);
 
 			double dblParOASToExercise = _bond.oasFromPrice (_valParams, _csqcFundingBase, null,
-				iWorkoutDate, dblWorkoutFactor, 1.);
+				iWorkoutDate, dblWorkoutFactor, _dblIssuePrice);
 
 			double dblAccruedInterestFactor = dblAccrued * _dblFX;
 			double dblEffectiveDuration = dblDV01 / _dblCurrentPrice;
@@ -899,7 +899,7 @@ public class AladdinBondReplicator {
 
 				mapLIBORKRD.put (strKey, (_dblCurrentPrice - dblTenorPrice) / _dblCurrentPrice);
 
-				mapLIBORKPRD.put (strKey, 1. - dblTenorPrice);
+				mapLIBORKPRD.put (strKey, (_dblIssuePrice - dblTenorPrice) / _dblIssuePrice);
 			}
 
 			for (java.util.Map.Entry<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
@@ -911,8 +911,8 @@ public class AladdinBondReplicator {
 				mapGovvieKRD.put (strKey, (_dblCurrentPrice - _bond.priceFromOAS (_valParams, csqcTenor,
 					null, iWorkoutDate, dblWorkoutFactor, dblOASToExercise)) / _dblCurrentPrice);
 
-				mapGovvieKPRD.put (strKey, (1. - _bond.priceFromOAS (_valParams, csqcTenor, null,
-					iWorkoutDate, dblWorkoutFactor, dblParOASToExercise)));
+				mapGovvieKPRD.put (strKey, (_dblIssuePrice - _bond.priceFromOAS (_valParams, csqcTenor, null,
+					iWorkoutDate, dblWorkoutFactor, dblParOASToExercise)) / _dblIssuePrice);
 			}
 
 			for (java.util.Map.Entry<java.lang.String, org.drip.param.market.CurveSurfaceQuoteContainer>
@@ -925,8 +925,9 @@ public class AladdinBondReplicator {
 					csqcTenor, null, iWorkoutDate, dblWorkoutFactor, dblCreditBasisToExercise)) /
 						_dblCurrentPrice);
 
-				mapCreditKPRD.put (strKey, (1. - _bond.priceFromCreditBasis (_valParams, csqcTenor, null,
-					iWorkoutDate, dblWorkoutFactor, dblParCreditBasisToExercise)));
+				mapCreditKPRD.put (strKey, (_dblIssuePrice - _bond.priceFromCreditBasis (_valParams,
+					csqcTenor, null, iWorkoutDate, dblWorkoutFactor, dblParCreditBasisToExercise)) /
+						_dblIssuePrice);
 			}
 
 			if (!arr.addNamedField (new org.drip.service.scenario.NamedField ("Price", _dblCurrentPrice)))
